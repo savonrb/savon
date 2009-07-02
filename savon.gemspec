@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.extra_rdoc_files = ["README.rdoc"]
   s.files = ["README.rdoc", "lib/savon.rb", "lib/savon/service.rb", "lib/savon/wsdl.rb", "lib/savon/response.rb"]
-  s.test_files = ["tests/savon_test.rb", "tests/helper.rb", "tests/factories/wsdl.rb",
+  s.test_files = ["tests/savon_test.rb", "tests/helper.rb", "tests/factories/wsdl.rb", "tests/fixtures/soap_response.rb",
     "tests/savon/service_test.rb", "tests/savon/wsdl_test.rb", "tests/savon/response_test.rb"]
 
   s.requirements << 'mocha, v0.9.7 or greater for testing'
