@@ -23,14 +23,8 @@ module Savon
   #   response.to_hash
   class Service
 
-    # The default namespace.
-    Namespace = "wsdl"
-
-    # Setter for the HTTP connection instance.
+    # Sets the HTTP connection instance.
     attr_writer :http
-
-    # The HTTP read timeout in seconds.
-    attr_accessor :read_timeout
 
     # Initializer to set the endpoint URI.
     def initialize(endpoint)
@@ -49,8 +43,8 @@ module Savon
     # Savon::Response object.
     def call_service
       headers = { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => @action }
-      body = ApricotEatsGorilla.soap_envelope(Namespace => wsdl.namespace_uri) do
-        ApricotEatsGorilla("#{Namespace}:#{@action}" => namespaced_options)
+      body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
+        ApricotEatsGorilla("wsdl:#{@action}" => namespaced_options)
       end
       response = @http.request_post(@uri.path, body, headers)
       Savon::Response.new(response)
@@ -62,7 +56,7 @@ module Savon
         raise ArgumentError, "Invalid endpoint URI" unless @uri.scheme
         @http = Net::HTTP.new(@uri.host, @uri.port)
         #@http.set_debug_output(STDOUT)
-        @http.read_timeout = @read_timeout ? @read_timeout : 5
+        #@http.read_timeout = 5
       end
       @http
     end
@@ -82,7 +76,7 @@ module Savon
 
       options = {}
       @options.each do |key, value|
-        key = "#{Namespace}:#{key}" if wsdl.choice_elements.include? key.to_s
+        key = "wsdl:#{key}" if wsdl.choice_elements.include? key.to_s
 
         current = options[key]
         case current
