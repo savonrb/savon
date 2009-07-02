@@ -6,32 +6,38 @@ require 'apricoteatsgorilla'
 
 module Savon
 
-  # Savon::Service is the SOAP client implementation.
+  # Savon::Service is the actual SOAP client implementation to use.
   #
-  # Instantiate a new Savon::Service object and pass in the WSDL of the service
-  # you would like to work with. Then simply call the SOAP service method on your
-  # instance and pass in a Hash of options you would like to send.
+  # Instantiate Savon::Service and pass in the WSDL of the service you would
+  # like to work with. Then simply call the SOAP service method on your
+  # instance (which will be catched via method_missing) and pass in a Hash
+  # of options you would like to send.
   #
   # Example:
   #   proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
   #   response = proxy.findExampleById(:id => "123")
   #
-  # Get the raw SOAP response XML:
+  # Get the raw response XML:
   #   response.to_s
   #
-  # Get the SOAP response as a Hash:
+  # Get it as a Hash (offers optional XPath expression to set a custom root node):
   #   response.to_hash
+  #   response.to_hash("//return")
+  #
+  # Or as a Mash object (also offers specifying a custom root node):
+  #   response.to_mash
+  #   response.to_mash("//user/email")
   class Service
 
     # Sets the HTTP connection instance.
     attr_writer :http
 
-    # Initializer to set the endpoint URI.
+    # Initializer sets the endpoint URI.
     def initialize(endpoint)
       @uri = URI(endpoint)
     end
 
-    # Returns an Wsdl object instance.
+    # Returns an Wsdl instance.
     def wsdl
       @wsdl = Savon::Wsdl.new(@uri, http) if @wsdl.nil?
       @wsdl
