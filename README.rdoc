@@ -1,0 +1,11 @@
+= Savon
+
+Savon is a lightweight SOAP client.
+
+== Install
+
+  $ sudo gem install smacks-savon --source http://gems.github.com
+
+== Dependencies
+
+  Hpricot 0.6.164 (also available for JRuby)
