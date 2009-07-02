@@ -73,17 +73,21 @@ class WsdlFactory
         end
       end
       wsdl << '</xs:sequence></xs:complexType>'
-      wsdl << choice_elements.map { |c_method, c_elements|
+      wsdl << build_complex_types_choice_elements
+      wsdl << '<xs:complexType name="' << method << 'Response"><xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:result" />
+        </xs:sequence></xs:complexType>'
+    }.to_s
+  end
+
+  def build_complex_types_choice_elements
+    choice_elements.map { |c_method, c_elements|
         c_elements.map { |c_element|
           '<xs:complexType name="' << c_element << 'Value"><xs:sequence>
           <xs:element minOccurs="0" name="' << c_element << '" type="xs:string" />
           </xs:sequence></xs:complexType>'
         }.to_s
       }.to_s
-      wsdl << '<xs:complexType name="' << method << 'Response"><xs:sequence>
-          <xs:element minOccurs="0" name="return" type="tns:result" />
-        </xs:sequence></xs:complexType>'
-    }.to_s
   end
 
   def build_messages
