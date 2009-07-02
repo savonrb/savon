@@ -17,7 +17,9 @@ Gem::Specification.new do |s|
   s.test_files = ["tests/savon_test.rb", "tests/helper.rb", "tests/factories/wsdl.rb", "tests/fixtures/soap_response.rb",
     "tests/savon/service_test.rb", "tests/savon/wsdl_test.rb", "tests/savon/response_test.rb"]
 
-  s.requirements << 'mocha, v0.9.7 or greater for testing'
+  s.requirements << 'mocha for testing'
+  s.requirements << 'shoulda for testing'
+  s.requirements << 'apricoteatsgorilla for testing'
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
