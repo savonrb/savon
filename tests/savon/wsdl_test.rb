@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 require File.join(File.dirname(__FILE__), "..", "helper")
-require File.join(File.dirname(__FILE__), "..", "..", "lib", "savon", "wsdl")
 
 class SavonWsdlTest < Test::Unit::TestCase
 

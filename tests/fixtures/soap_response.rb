@@ -3,14 +3,11 @@ module SoapResponseFixture
   def some_soap_response
     '<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
       <soap:Body>
-        <ns2:authenticateResponse xmlns:ns2="http://v1_0.ws.example.com/">
+        <ns2:result xmlns:ns2="http://example.com/">
           <return>
-            <authValue>
-              <token>secret</token>
-              <client>example</client>
-            </authValue>
+            <token>secret</token>
           </return>
-        </ns2:authenticateResponse>
+        </ns2:result>
       </soap:Body>
     </soap:Envelope>'
   end
