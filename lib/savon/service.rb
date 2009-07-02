@@ -29,6 +29,9 @@ module Savon
     # Setter for the HTTP connection instance.
     attr_writer :http
 
+    # The HTTP read timeout in seconds.
+    attr_accessor :read_timeout
+
     # Initializer to set the endpoint URI.
     def initialize(endpoint)
       @uri = URI(endpoint)
@@ -59,7 +62,7 @@ module Savon
         raise ArgumentError, "Invalid endpoint URI" unless @uri.scheme
         @http = Net::HTTP.new(@uri.host, @uri.port)
         #@http.set_debug_output(STDOUT)
-        @http.read_timeout = 5
+        @http.read_timeout = @read_timeout ? @read_timeout : 5
       end
       @http
     end

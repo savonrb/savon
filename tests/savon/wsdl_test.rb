@@ -3,6 +3,8 @@ require File.join(File.dirname(__FILE__), "..", "helper")
 
 class SavonWsdlTest < Test::Unit::TestCase
 
+  include TestHelper
+
   context "Savon::Wsdl without choice elements" do
     setup do
       @some_factory = WsdlFactory.new
@@ -38,25 +40,6 @@ class SavonWsdlTest < Test::Unit::TestCase
     should "return the raw SOAP response on to_s" do
       assert_equal @choice_factory.build, @choice_wsdl.to_s
     end
-  end
-
-  def some_uri
-    URI("http://example.com")
-  end
-
-  def http_mock(response_body)
-    http_mock = mock()
-    http_mock.expects(:get).returns(response_mock(response_body))
-    http_mock
-  end
-
-  def response_mock(response_body)
-    response_mock = mock('Net::HTTPResponse')
-    response_mock.stubs(
-      :code => '200', :message => "OK", :content_type => "text/html",
-      :body => response_body
-    )
-    response_mock
   end
 
 end

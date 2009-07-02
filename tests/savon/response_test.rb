@@ -2,6 +2,8 @@
 require File.join(File.dirname(__FILE__), "..", "helper")
 
 class SavonResponseTest < Test::Unit::TestCase
+
+  include TestHelper
   include SoapResponseFixture
 
   context "Savon::Response with some SOAP response" do
@@ -21,15 +23,6 @@ class SavonResponseTest < Test::Unit::TestCase
     should "return the raw XML response on to_s" do
       assert_equal some_soap_response, @response.to_s
     end
-  end
-
-  def response_mock(response_body)
-    response_mock = mock('Net::HTTPResponse')
-    response_mock.stubs(
-      :code => '200', :message => "OK", :content_type => "text/html",
-      :body => response_body
-    )
-    response_mock
   end
 
 end
