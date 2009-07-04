@@ -20,6 +20,14 @@ class SavonResponseTest < Test::Unit::TestCase
       assert_equal ApricotEatsGorilla(some_soap_response, "//return"), @response.to_hash
     end
 
+    should "return a Mash object on to_mash" do
+      assert_kind_of Savon::Mash, @response.to_mash
+    end
+
+    should "return a Mash object equal to the response on to_mash" do
+      assert_equal "secret", @response.to_mash.token
+    end
+
     should "return the raw XML response on to_s" do
       assert_equal some_soap_response, @response.to_s
     end
