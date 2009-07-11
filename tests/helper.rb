@@ -1,13 +1,10 @@
-require 'rubygems'
-require 'test/unit'
-require 'mocha'
-require 'shoulda'
+require "rubygems"
+require "test/unit"
+require "mocha"
+require "shoulda"
 require "apricoteatsgorilla"
 
-["service", "wsdl", "response"].each do |file|
-  require File.join(File.dirname(__FILE__), "..", "lib", "savon", file)
-end
-
+require File.join(File.dirname(__FILE__), "..", "lib", "savon")
 require File.join(File.dirname(__FILE__), "factories", "wsdl")
 require File.join(File.dirname(__FILE__), "fixtures", "soap_response")
 
@@ -35,10 +32,18 @@ module TestHelper
   end
 
   def response_mock(response_body)
-    response_mock = mock('Net::HTTPResponse')
+    build_response_mock("200", "OK", response_body)
+  end
+
+  def response_fault_mock
+    build_response_mock("404", "NotFound")
+  end
+
+  def build_response_mock(code, message, body = nil)
+    response_mock = mock("Net::HTTPResponse")
     response_mock.stubs(
-      :code => '200', :message => "OK", :content_type => "text/html",
-      :body => response_body
+      :code => code, :message => message, :content_type => "text/html",
+      :body => body
     )
     response_mock
   end

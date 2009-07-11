@@ -2,6 +2,11 @@
 
 Savon is a lightweight SOAP client.
 
+Instantiate Savon::Service and pass in the WSDL of the service you would
+like to use. Then just call the SOAP service method on your Savon::Service
+instance (catched via method_missing) and pass in a Hash of options for the
+service method to receive.
+
 == Install
 
   $ gem install smacks-savon --s http://gems.github.com
@@ -9,3 +14,30 @@ Savon is a lightweight SOAP client.
 == Dependencies
 
   Hpricot 0.6.164 (also available for JRuby)
+
+=== Usage example
+
+  proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
+  response = proxy.findExampleById(:id => 123)
+
+=== Check for available SOAP service methods
+
+  proxy.wsdl.service_methods
+  # => [ "findExampleById", "findExampleByName" ]
+
+=== Response formats
+
+  # raw XML response:
+  response.to_s
+
+  # response as a Hash
+  response.to_hash
+
+  # response as a Hash starting at a custom root node (via XPath)
+  response.to_hash("//item")
+
+  # response as a Mash
+  response.to_mash
+
+  # response as a Mash starting at a custom root node (via XPath)
+  response.to_mash("//user/email")
