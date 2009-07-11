@@ -12,9 +12,9 @@ Gem::Specification.new do |s|
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
   s.extra_rdoc_files = ["README.rdoc"]
   s.files = ["README.rdoc", "lib/savon.rb", "lib/savon/service.rb", "lib/savon/wsdl.rb", "lib/savon/response.rb"]
-  s.test_files = ["tests/savon_test.rb","tests/helper.rb", "tests/factories/wsdl.rb",
-    "tests/fixtures/soap_response.rb", "tests/savon/service_test.rb", "tests/savon/response_test.rb",
-    "tests/savon/wsdl_test.rb", "tests/savon/mash_test.rb"]
+  s.test_files = ["test/savon_test.rb","test/helper.rb", "test/factories/wsdl.rb",
+    "test/fixtures/soap_response.rb", "test/savon/service_test.rb", "test/savon/response_test.rb",
+    "test/savon/wsdl_test.rb", "test/savon/mash_test.rb"]
 
   s.requirements << 'mocha and shoulda for testing'
 
