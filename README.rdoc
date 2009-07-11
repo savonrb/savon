@@ -26,7 +26,7 @@ service method to receive.
 === Check for available SOAP service methods
 
   proxy.wsdl.service_methods
-  => [ "findExampleById", "findExampleByName" ]
+  # => [ "findExampleById", "findExampleByName" ]
 
 === Checking for HTTP and SOAP faults
 
