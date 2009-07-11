@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
-  s.name = "smacks-savon"
-  s.version = "0.0.6"
+  s.name = "savon"
+  s.version = "0.0.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.author = "Daniel Harrington"
