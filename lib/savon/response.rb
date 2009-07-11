@@ -57,7 +57,7 @@ module Savon
 
     # Returns true if the request was not successful, false otherwise.
     def fault?
-      !@fault.nil?
+      !@fault_code.nil?
     end
 
     # Returns the SOAP response message as a Hash. Call with XPath expession
