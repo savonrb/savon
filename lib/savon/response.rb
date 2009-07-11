@@ -34,7 +34,11 @@ module Savon
   #   response.to_mash("//user/email")
   class Response
 
-    attr_reader :fault, :fault_code
+    # The HTTP/SOAP fault.
+    attr_reader :fault
+
+    # The HTTP/SOAP fault code.
+    attr_reader :fault_code
 
     # Initializer to set the SOAP response.
     #
@@ -88,7 +92,7 @@ module Savon
 
   private
 
-    # Checks for and stores HTTP and SOAP-Fault errors.
+    # Checks for and stores HTTP and SOAP fault errors.
     def validate
       if @response.code.to_i >= 300
         @fault = @response.message
