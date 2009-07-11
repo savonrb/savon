@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require File.join(File.dirname(__FILE__), "..", "helper")
 
 class SavonServiceTest < Test::Unit::TestCase

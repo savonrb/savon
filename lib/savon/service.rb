@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'rubygems'
 require 'net/http'
 require 'uri'
@@ -49,8 +48,8 @@ module Savon
     # Savon::Response object.
     def call_service
       headers = { 'Content-Type' => 'text/xml; charset=utf-8', 'SOAPAction' => @action }
-      body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
-        ApricotEatsGorilla("wsdl:#{@action}" => namespaced_options)
+      body = ApricotEatsGorilla.soap_envelope :wsdl => wsdl.namespace_uri do
+        ApricotEatsGorilla["wsdl:#{@action}" => namespaced_options]
       end
       response = @http.request_post(@uri.path, body, headers)
       Savon::Response.new(response)

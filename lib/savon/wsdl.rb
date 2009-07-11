@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'rubygems'
 require 'net/http'
 require 'hpricot'
