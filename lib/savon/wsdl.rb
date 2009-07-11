@@ -44,6 +44,10 @@ module Savon
     def get_wsdl
       @response = @http.get("#{@uri.path}?#{@uri.query}")
       @doc = Hpricot.XML(@response.body)
+
+      if !@doc.at("//wsdl:definitions")
+        raise ArgumentError, "Unable to find WSDL at given endpoint URI."
+      end
     end
 
     # Parses the WSDL to find and store the namespace URI.
