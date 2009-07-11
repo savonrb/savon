@@ -14,7 +14,7 @@ service method to receive.
 == Dependencies
 
   hpricot 0.6.164 (also available for JRuby)
-  smacks-apricoteatsgorilla >= 0.3.31
+  smacks-apricoteatsgorilla >= 0.3.5
 
 == How to use
 
