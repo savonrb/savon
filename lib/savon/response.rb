@@ -32,8 +32,6 @@ module Savon
   #
   #   # response as a Mash starting at a custom root node (via XPath)
   #   response.to_mash("//user/email")
-  #
-  # ===
   class Response
 
     attr_reader :fault, :fault_code
