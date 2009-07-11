@@ -22,7 +22,7 @@ module Savon
   #   proxy.wsdl.service_methods
   #   # => [ "findExampleById", "findExampleByName" ]
   #
-  # === Response formats
+  # === Working with different response formats
   #
   #   # raw XML response:
   #   response.to_s
@@ -40,7 +40,7 @@ module Savon
   #   response.to_mash("//user/email")
   class Service
 
-    # Sets the Net::HTTP connection instance to use.
+    # The Net::HTTP connection instance to use.
     attr_writer :http
 
     # Initializer sets the WSDL +endpoint+ URI.

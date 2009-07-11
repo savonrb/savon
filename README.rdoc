@@ -23,9 +23,19 @@ service method to receive.
 === Check for available SOAP service methods
 
   proxy.wsdl.service_methods
-  # => [ "findExampleById", "findExampleByName" ]
+  => [ "findExampleById", "findExampleByName" ]
 
-=== Response formats
+=== Checking for HTTP and SOAP faults
+
+  response.success?
+  response.fault?
+
+=== Access the fault message and code
+
+  response.fault
+  response.fault_code
+
+=== Working with different response formats
 
   # raw XML response:
   response.to_s
