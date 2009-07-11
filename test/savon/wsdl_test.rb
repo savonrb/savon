@@ -41,4 +41,12 @@ class SavonWsdlTest < Test::Unit::TestCase
     end
   end
 
+  context "Savon::Wsdl with an invalid (non-WSDL) response" do
+    should "raise an ArgumentError" do
+      assert_raise ArgumentError do
+        Savon::Wsdl.new(some_uri, http_mock("Non-WSDL response"))
+      end
+    end
+  end
+
 end
