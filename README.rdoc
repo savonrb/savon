@@ -9,7 +9,7 @@ service method to receive.
 
 == Install
 
-  $ gem install smacks-savon --s http://gems.github.com
+  $ gem install smacks-savon -s http://gems.github.com
 
 == Dependencies
 
