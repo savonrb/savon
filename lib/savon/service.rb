@@ -116,8 +116,7 @@ module Savon
     # * +method+ - The SOAP service method to call.
     # * +options+ - Hash of options for the service method to receive.
     def method_missing(method, options = {})
-      @action = method.to_s
-      @options = options
+      @action, @options = method.to_s, options
       validate_action
       call_service
     end

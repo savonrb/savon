@@ -24,8 +24,7 @@ module Savon
     # * +uri+ - The URI to access.
     # * +http+ - The Net::HTTP connection instance to use.
     def initialize(uri, http)
-      @uri = uri
-      @http = http
+      @uri, @http = uri, http
       get_wsdl
 
       parse_namespace_uri

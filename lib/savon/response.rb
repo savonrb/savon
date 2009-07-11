@@ -95,8 +95,7 @@ module Savon
     # Checks for and stores HTTP and SOAP fault errors.
     def validate
       if @response.code.to_i >= 300
-        @fault = @response.message
-        @fault_code = @response.code
+        @fault, @fault_code = @response.message, @response.code
       else
         fault = to_hash("//soap:Fault")
         @fault = fault[:faultstring] unless fault.nil?
