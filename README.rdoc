@@ -16,6 +16,8 @@ service method to receive.
   hpricot 0.6.164 (also available for JRuby)
   smacks-apricoteatsgorilla >= 0.3.31
 
+== How to use
+
 === Usage example
 
   proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
