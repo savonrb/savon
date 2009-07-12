@@ -71,23 +71,23 @@ module Savon
     # Prepares and processes the SOAP request. Returns a Savon::Response object.
     def call_service
       headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => @action }
+
+      ApricotEatsGorilla.setup do |s|
+        s.nodes_to_namespace = wsdl.choice_elements
+        s.node_namespace = "wsdl"
+      end
       body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
-        ApricotEatsGorilla["wsdl:#{@action}" => options]
+        ApricotEatsGorilla["wsdl:#{@action}" => @options]
       end
 
       debug do |logger|
-        logger.info "==============="
-        logger.info "--- Request ---"
-        logger.info "URI: %s" % [@uri]
+        logger.info "Request; #{@uri}"
         logger.info headers.map { |key, value| "#{key}: #{value}" }.join("\n")
-        logger.info "---"
         logger.info body
       end
       response = @http.request_post(@uri.path, body, headers)
       debug do |logger|
-        logger.info "--- Response ---"
-        logger.info "HTTP Status: %s" % [response.code]
-        logger.info "---"
+        logger.info "Response (Status #{response.code}):"
         logger.info response.body
       end
       Savon::Response.new(response)
@@ -110,29 +110,8 @@ module Savon
       end
     end
 
-    # Checks if there were any choice elements found in the WSDL and namespaces
-    # the corresponding keys from the passed in Hash of options. Also converts
-    # option keys to lowerCamelCase.
-    def options
-      return @options if wsdl.choice_elements.empty?
-
-      options = {}
-      @options.each do |key, value|
-        key = "wsdl:#{key}" if wsdl.choice_elements.include? key.to_s
-
-        current = options[key]
-        case current
-        when Array
-          options[key] << value
-        when nil
-          options[key] = value
-        else
-          options[key] = [current.dup, value]
-        end
-      end
-      options
-    end
-
+    # Debug method. Outputs a given +message+ to the defined @@logger or
+    # yields the @@logger to a +block+ in case one was given.
     def debug(message = nil)
       if @@logger
         if message

@@ -25,13 +25,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new("1.2.0") then
       s.add_runtime_dependency("hpricot", "0.6.164")
-      s.add_runtime_dependency("smacks-apricoteatsgorilla", ">= 0.3.7")
+      s.add_runtime_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
     else
       s.add_dependency("hpricot", "0.6.164")
-      s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.7")
+      s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
     end
   else
     s.add_dependency("hpricot", "0.6.164")
-    s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.7")
+    s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
   end
 end
