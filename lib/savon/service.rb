@@ -40,6 +40,9 @@ module Savon
   #   response.to_mash("//user/email")
   class Service
 
+    # The logger to use.
+    @@logger = nil
+
     # The Net::HTTP connection instance to use.
     attr_writer :http
 
@@ -58,15 +61,35 @@ module Savon
       @wsdl
     end
 
+    # Sets the logger to use.
+    def self.logger=(logger)
+      @@logger = logger
+    end
+
   private
 
     # Prepares and processes the SOAP request. Returns a Savon::Response object.
     def call_service
       headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => @action }
       body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
-        ApricotEatsGorilla["wsdl:#{@action}" => namespaced_options]
+        ApricotEatsGorilla["wsdl:#{@action}" => options]
+      end
+
+      debug do |logger|
+        logger.info "==============="
+        logger.info "--- Request ---"
+        logger.info "URI: %s" % [@uri]
+        logger.info headers.map { |key, value| "#{key}: #{value}" }.join("\n")
+        logger.info "---"
+        logger.info body
       end
       response = @http.request_post(@uri.path, body, headers)
+      debug do |logger|
+        logger.info "--- Response ---"
+        logger.info "HTTP Status: %s" % [response.code]
+        logger.info "---"
+        logger.info response.body
+      end
       Savon::Response.new(response)
     end
 
@@ -88,8 +111,9 @@ module Savon
     end
 
     # Checks if there were any choice elements found in the WSDL and namespaces
-    # the corresponding keys from the passed in Hash of options.
-    def namespaced_options
+    # the corresponding keys from the passed in Hash of options. Also converts
+    # option keys to lowerCamelCase.
+    def options
       return @options if wsdl.choice_elements.empty?
 
       options = {}
@@ -107,6 +131,17 @@ module Savon
         end
       end
       options
+    end
+
+    def debug(message = nil)
+      if @@logger
+        if message
+          @@logger.info(message)
+        end
+        if block_given?
+          yield @@logger
+        end
+      end
     end
 
     # Intercepts calls to SOAP service methods.
