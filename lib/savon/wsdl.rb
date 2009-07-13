@@ -4,7 +4,7 @@ require "hpricot"
 
 module Savon
 
-  # Savon::Wsdl gets, parses and represents the SOAP-WSDL.
+  # Savon::Wsdl gets, parses and represents the WSDL.
   class Wsdl
 
     # The namespace URI.
@@ -21,7 +21,7 @@ module Savon
     #
     # === Parameters
     #
-    # * +uri+ - The URI to access.
+    # * +uri+ - The URI of the WSDL.
     # * +http+ - The Net::HTTP connection instance to use.
     def initialize(uri, http)
       @uri, @http = uri, http
@@ -49,15 +49,13 @@ module Savon
       end
     end
 
-    # Parses the WSDL to find and store the namespace URI.
+    # Parses the WSDL for the namespace URI.
     def parse_namespace_uri
       node = @doc.at("//wsdl:definitions")
-      if node
-        @namespace_uri = node.get_attribute("targetNamespace")
-      end
+      @namespace_uri = node.get_attribute("targetNamespace") if node
     end
 
-    # Parses the WSDL to find and store the available SOAP service methods.
+    # Parses the WSDL for available SOAP service methods.
     def parse_service_methods
       @service_methods, node = [], @doc.search("//soap:operation")
       if node
@@ -67,7 +65,7 @@ module Savon
       end
     end
 
-    # Parses the WSDL to find and store any choice elements.
+    # Parses the WSDL for choice elements.
     def parse_choice_elements
       @choice_elements, node = [], @doc.search("//xs:choice//xs:element")
       if node

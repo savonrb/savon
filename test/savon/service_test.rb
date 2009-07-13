@@ -7,6 +7,10 @@ class SavonServiceTest < Test::Unit::TestCase
 
   context "Savon::Service" do
     setup do
+      @some_factory = WsdlFactory.new
+      @some_wsdl = Savon::Wsdl.new(some_uri, http_mock(@some_factory.build))
+      Savon::Wsdl.stubs(:new).returns(@some_wsdl)
+
       @service = Savon::Service.new(some_url)
       @service.http = service_http_mock(some_soap_response)
       @result = @service.findById

@@ -5,42 +5,15 @@ require "apricoteatsgorilla"
 module Savon
 
   # Savon::Response represents the HTTP response.
-  #
-  # === Checking for HTTP and SOAP faults
-  #
-  #   response.success?
-  #   response.fault?
-  #
-  # === Access the fault message and code
-  #
-  #   response.fault
-  #   response.fault_code
-  #
-  # === Different response formats
-  #
-  #   # raw XML response:
-  #   response.to_s
-  #
-  #   # response as a Hash
-  #   response.to_hash
-  #
-  #   # response as a Hash starting at a custom root node (via XPath)
-  #   response.to_hash("//item")
-  #
-  #   # response as a Mash
-  #   response.to_mash
-  #
-  #   # response as a Mash starting at a custom root node (via XPath)
-  #   response.to_mash("//user/email")
   class Response
 
-    # The HTTP/SOAP fault.
+    # The HTTP or SOAP fault message.
     attr_reader :fault
 
-    # The HTTP/SOAP fault code.
+    # The HTTP or SOAP fault code.
     attr_reader :fault_code
 
-    # Initializer to set the SOAP response.
+    # Initializer expects the HTTP response and checks for HTTP or SOAP faults.
     #
     # === Parameters
     #
@@ -55,18 +28,18 @@ module Savon
       @fault_code.nil?
     end
 
-    # Returns true if the request was not successful, false otherwise.
+    # Returns true if there was a HTTP or SOAP fault, false otherwise.
     def fault?
       !@fault_code.nil?
     end
 
     # Returns the SOAP response message as a Hash. Call with XPath expession
-    # to define a custom +root_node+ to start parsing at. Defaults to "//return".
-    # The root node itself will not be included in the Hash.
+    # (Hpricot search) to define a custom +root_node+ to start parsing at.
+    # Defaults to "//return". The root node will not be included in the Hash.
     #
     # === Parameters
     #
-    # * +root_node+ - Optional. Custom root node to start parsing at. Defaults to "//return".
+    # * +root_node+ - Optional. Custom root node to start parsing at.
     def to_hash(root_node = "//return")
       return nil if fault?
       ApricotEatsGorilla[@response.body, root_node]
@@ -74,25 +47,25 @@ module Savon
 
     # Returns the SOAP response message as a Savon::Mash object. Call with
     # XPath expession to define a custom +root_node+. Defaults to "//return".
-    # The root node itself will not be included in the Mash object.
+    # The root node will not be included in the Mash object.
     #
     # === Parameters
     #
-    # * +root_node+ - Optional. Custom root node to start parsing at. Defaults to "//return".
+    # * +root_node+ - Optional. Custom root node to start parsing at.
     def to_mash(root_node = "//return")
       return nil if fault?
       hash = to_hash(root_node)
       Savon::Mash.new(hash)
     end
 
-    # Returns the raw XML response.
+    # Returns the SOAP response XML.
     def to_s
       @response.body
     end
 
   private
 
-    # Checks for and stores HTTP and SOAP fault errors.
+    # Checks for HTTP and SOAP faults.
     def validate
       if @response.code.to_i >= 300
         @fault, @fault_code = @response.message, @response.code

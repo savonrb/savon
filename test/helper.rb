@@ -19,15 +19,15 @@ module TestHelper
   end
 
   def service_http_mock(response_body)
-    http_mock = mock()
-    http_mock.expects(:get).returns(response_mock(WsdlFactory.new.build))
-    http_mock.expects(:request_post).returns(response_mock(response_body))
+    http_mock = mock("Net::HTTP")
+    http_mock.stubs(:get).returns(response_mock(WsdlFactory.new.build))
+    http_mock.stubs(:request_post).returns(response_mock(response_body))
     http_mock
   end
 
   def http_mock(response_body)
-    http_mock = mock()
-    http_mock.expects(:get).returns(response_mock(response_body))
+    http_mock = mock("Net::HTTP")
+    http_mock.stubs(:get).returns(response_mock(response_body))
     http_mock
   end
 
@@ -41,10 +41,7 @@ module TestHelper
 
   def build_response_mock(code, message, body = nil)
     response_mock = mock("Net::HTTPResponse")
-    response_mock.stubs(
-      :code => code, :message => message, :content_type => "text/html",
-      :body => body
-    )
+    response_mock.stubs(:code => code, :message => message, :body => body)
     response_mock
   end
 

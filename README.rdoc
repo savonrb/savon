@@ -1,11 +1,12 @@
 = Savon
 
-Savon is a lightweight SOAP client.
+Ruby SOAP client library to enjoy.
 
-Instantiate Savon::Service and pass in the WSDL of the service you would
-like to use. Then just call the SOAP service method on your Savon::Service
-instance (catched via method_missing) and pass in a Hash of options for the
-service method to receive.
+Communicating with a SOAP webservice can be done in two lines of code.
+Instantiate a new Savon::Service passing in the URI to the WSDL of the
+service you would like to use. Then call the SOAP service method on your
+Savon::Service instance (catched via method_missing) and pass in a Hash
+of options for the service method to receive.
 
 == Install
 
@@ -14,43 +15,66 @@ service method to receive.
 == Dependencies
 
   hpricot 0.6.164 (also available for JRuby)
-  smacks-apricoteatsgorilla >= 0.3.5
+  smacks-apricoteatsgorilla >= 0.4.1
 
 == How to use
 
-=== Usage example
+Instantiate a new Savon::Service instance passing in the WSDL of your service.
 
   proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
+
+Call the SOAP service method you would like to choose on your Savon::Service
+instance passing in a Hash of options for the service method to receive.
+
   response = proxy.findExampleById(:id => 123)
 
 === Check for available SOAP service methods
 
+You can use the service_methods method of the WSDL in your Savon::Service
+instance to get a list of available SOAP service methods.
+
   proxy.wsdl.service_methods
   # => [ "findExampleById", "findExampleByName" ]
 
-=== Checking for HTTP and SOAP faults
+=== Handle HTTP and SOAP errors
+
+Check if the SOAP request was successful.
 
   response.success?
   response.fault?
 
-=== Access the fault message and code
+Access the fault message and code.
 
   response.fault
   response.fault_code
 
-=== Working with different response formats
+=== Different response formats
 
-  # raw XML response:
+To work with the response of the service you need to convert the response
+object using one of the following methods.
+
+  # SOAP response XML:
   response.to_s
 
   # response as a Hash
   response.to_hash
 
-  # response as a Hash starting at a custom root node (via XPath)
-  response.to_hash("//item")
-
   # response as a Mash
   response.to_mash
 
-  # response as a Mash starting at a custom root node (via XPath)
+The to_hash and to_mash methods accept an XPath expression (Hpricot search)
+as second parameter to define a custom root node to start translating the
+response XML at.
+
+  # response as a Hash starting at a custom root node
+  response.to_hash("//item")
+
+  # response as a Mash starting at a custom root node
   response.to_mash("//user/email")
+
+=== Logging request and response
+
+You should specify the logger to use before working with any services.
+
+  # example for Ruby on Rails
+  Savon::Service.logger = RAILS_DEFAULT_LOGGER

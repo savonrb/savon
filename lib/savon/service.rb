@@ -5,60 +5,39 @@ require "apricoteatsgorilla"
 
 module Savon
 
-  # Savon is a lightweight SOAP client.
+  # Ruby SOAP client library to enjoy.
   #
-  # Instantiate Savon::Service and pass in the WSDL of the service you would
-  # like to use. Then just call the SOAP service method on your Savon::Service
-  # instance (catched via method_missing) and pass in a Hash of options for the
-  # service method to receive.
-  #
-  # === Usage example
-  #
-  #   proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
-  #   response = proxy.findExampleById(:id => 123)
-  #
-  # === Check for available SOAP service methods
-  #
-  #   proxy.wsdl.service_methods
-  #   # => [ "findExampleById", "findExampleByName" ]
-  #
-  # === Working with different response formats
-  #
-  #   # raw XML response:
-  #   response.to_s
-  #
-  #   # response as a Hash
-  #   response.to_hash
-  #
-  #   # response as a Hash starting at a custom root node (via XPath)
-  #   response.to_hash("//item")
-  #
-  #   # response as a Mash
-  #   response.to_mash
-  #
-  #   # response as a Mash starting at a custom root node (via XPath)
-  #   response.to_mash("//user/email")
+  # Communicating with a SOAP webservice can be done in two lines of code.
+  # Instantiate a new Savon::Service passing in the URI to the WSDL of the
+  # service you would like to use. Then call the SOAP service method on your
+  # Savon::Service instance (catched via method_missing) and pass in a Hash
+  # of options for the service method to receive.
   class Service
 
     # The logger to use.
     @@logger = nil
 
-    # The Net::HTTP connection instance to use.
-    attr_writer :http
-
-    # Initializer sets the WSDL +endpoint+ URI.
+    # Initializer expects the WSDL +endpoint+ URI to use and sets up
+    # Apricot eats Gorilla.
     #
     # ==== Parameters
     #
-    # * +endpoint+ - The WSDL endpoint URI.
+    # * +endpoint+ - WSDL endpoint URI to use.
     def initialize(endpoint)
       @uri = URI(endpoint)
+      ApricotEatsGorilla.nodes_to_namespace = wsdl.choice_elements
+      ApricotEatsGorilla.node_namespace = "wsdl"
     end
 
     # Returns an instance of the WSDL.
     def wsdl
       @wsdl = Savon::Wsdl.new(@uri, http) if @wsdl.nil?
       @wsdl
+    end
+
+    # Sets the Net::HTTP instance to use.
+    def http=(http)
+      @http = http
     end
 
     # Sets the logger to use.
@@ -68,20 +47,16 @@ module Savon
 
   private
 
-    # Prepares and processes the SOAP request. Returns a Savon::Response object.
+    # Sets up and dispatches the SOAP request. Returns a Savon::Response object.
     def call_service
       headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => @action }
 
-      ApricotEatsGorilla.setup do |s|
-        s.nodes_to_namespace = wsdl.choice_elements
-        s.node_namespace = "wsdl"
-      end
       body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
         ApricotEatsGorilla["wsdl:#{@action}" => @options]
       end
 
       debug do |logger|
-        logger.info "Request; #{@uri}"
+        logger.info "Requesting #{@uri}"
         logger.info headers.map { |key, value| "#{key}: #{value}" }.join("\n")
         logger.info body
       end
@@ -110,20 +85,19 @@ module Savon
       end
     end
 
-    # Debug method. Outputs a given +message+ to the defined @@logger or
-    # yields the @@logger to a +block+ in case one was given.
+    # Logs a given +message+ using the @@logger instance or yields the logger
+    # to a given +block+ for logging multiple things at once.
     def debug(message = nil)
       if @@logger
-        if message
-          @@logger.info(message)
-        end
-        if block_given?
-          yield @@logger
-        end
+        @@logger.info(message) if message
+        yield @@logger if block_given?
       end
     end
 
-    # Intercepts calls to SOAP service methods.
+    # Method missing catches SOAP service methods called on this object. This
+    # is the default way of calling a SOAP service. The given +method+ will be
+    # validated against the WSDL and dispatched if available. Values supplied
+    # through the optional Hash of +options+ will be send to the service method.
     #
     # === Parameters
     #

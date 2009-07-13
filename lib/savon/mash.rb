@@ -3,8 +3,8 @@ module Savon
   # Savon::Mash converts a given Hash into an Object.
   class Mash
 
-    # Loops through a given +hash+, stores each value in an instance variable
-    # and creates getter and setter methods.
+    # Iterates through a given +hash+, stores each value in an instance
+    # variable and creates getter and setter methods.
     #
     # === Parameters
     #
@@ -19,9 +19,9 @@ module Savon
           end
         end
 
-        set_instance_variable key, value
-        define_reader key
-        define_writer key
+        set_instance_variable(key, value)
+        define_reader(key)
+        define_writer(key)
       end
     end
 

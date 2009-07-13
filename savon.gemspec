@@ -1,12 +1,12 @@
 Gem::Specification.new do |s|
   s.name = "savon"
-  s.version = "0.0.91"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.author = "Daniel Harrington"
-  s.description = "Savon is a lightweight SOAP client."
+  s.description = "Ruby SOAP client library to enjoy."
   s.homepage = "http://github.com/smacks/savon"
-  s.summary = "Savon is a lightweight SOAP client."
+  s.summary = "Ruby SOAP client library to enjoy."
 
   s.has_rdoc = true
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
@@ -25,13 +25,13 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new("1.2.0") then
       s.add_runtime_dependency("hpricot", "0.6.164")
-      s.add_runtime_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
+      s.add_runtime_dependency("smacks-apricoteatsgorilla", ">= 0.4.1")
     else
       s.add_dependency("hpricot", "0.6.164")
-      s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
+      s.add_dependency("smacks-apricoteatsgorilla", ">= 0.4.1")
     end
   else
     s.add_dependency("hpricot", "0.6.164")
-    s.add_dependency("smacks-apricoteatsgorilla", ">= 0.3.8")
+    s.add_dependency("smacks-apricoteatsgorilla", ">= 0.4.1")
   end
 end
