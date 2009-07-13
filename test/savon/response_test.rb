@@ -35,16 +35,16 @@ class SavonResponseTest < Test::Unit::TestCase
       assert_equal true, @response.success?
     end
 
-    should "return 'false' on fault?" do
-      assert_equal false, @response.fault?
+    should "return 'false' on error?" do
+      assert_equal false, @response.error?
     end
 
-    should "return 'nil' for fault" do
-      assert_equal nil, @response.fault
+    should "return 'nil' for error_message" do
+      assert_equal nil, @response.error_message
     end
 
-    should "return 'nil' for fault_code" do
-      assert_equal nil, @response.fault_code
+    should "return 'nil' for error_code" do
+      assert_equal nil, @response.error_code
     end
   end
 
@@ -70,16 +70,16 @@ class SavonResponseTest < Test::Unit::TestCase
       assert_equal false, @response.success?
     end
 
-    should "return 'true' on fault?" do
-      assert_equal true, @response.fault?
+    should "return 'true' on error?" do
+      assert_equal true, @response.error?
     end
 
-    should "return the fault on fault" do
-      assert_equal soap_fault, @response.fault
+    should "return the error message on error_message" do
+      assert_equal soap_fault, @response.error_message
     end
 
-    should "return the fault_code on fault_code" do
-      assert_equal soap_fault_code, @response.fault_code
+    should "return the error code on error_code" do
+      assert_equal soap_fault_code, @response.error_code
     end
   end
 
@@ -105,16 +105,16 @@ class SavonResponseTest < Test::Unit::TestCase
       assert_equal false, @response.success?
     end
 
-    should "return 'true' on fault?" do
-      assert_equal true, @response.fault?
+    should "return 'true' on error?" do
+      assert_equal true, @response.error?
     end
 
-    should "return the fault on fault" do
-      assert_equal "NotFound", @response.fault
+    should "return the error message on error_message" do
+      assert_equal "NotFound", @response.error_message
     end
 
-    should "return the fault_code on fault_code" do
-      assert_equal "404", @response.fault_code
+    should "return the error code on error_code" do
+      assert_equal "404", @response.error_code
     end
 
   end

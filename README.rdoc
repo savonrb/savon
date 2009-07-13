@@ -41,12 +41,12 @@ instance to get a list of available SOAP service methods.
 Check if the SOAP request was successful.
 
   response.success?
-  response.fault?
+  response.error?
 
-Access the fault message and code.
+Access error message and code in case a request was not successful.
 
-  response.fault
-  response.fault_code
+  response.error_message
+  response.error_code
 
 === Different response formats
 

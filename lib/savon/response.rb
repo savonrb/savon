@@ -7,11 +7,11 @@ module Savon
   # Savon::Response represents the HTTP response.
   class Response
 
-    # The HTTP or SOAP fault message.
-    attr_reader :fault
+    # The HTTP error or SOAP fault message.
+    attr_reader :error_message
 
-    # The HTTP or SOAP fault code.
-    attr_reader :fault_code
+    # The HTTP error or SOAP fault code.
+    attr_reader :error_code
 
     # Initializer expects the HTTP response and checks for HTTP or SOAP faults.
     #
@@ -25,12 +25,12 @@ module Savon
 
     # Returns true if the request was successful, false otherwise.
     def success?
-      @fault_code.nil?
+      @error_code.nil?
     end
 
     # Returns true if there was a HTTP or SOAP fault, false otherwise.
-    def fault?
-      !@fault_code.nil?
+    def error?
+      !@error_code.nil?
     end
 
     # Returns the SOAP response message as a Hash. Call with XPath expession
@@ -41,7 +41,7 @@ module Savon
     #
     # * +root_node+ - Optional. Custom root node to start parsing at.
     def to_hash(root_node = "//return")
-      return nil if fault?
+      return nil if error?
       ApricotEatsGorilla[@response.body, root_node]
     end
 
@@ -53,7 +53,7 @@ module Savon
     #
     # * +root_node+ - Optional. Custom root node to start parsing at.
     def to_mash(root_node = "//return")
-      return nil if fault?
+      return nil if error?
       hash = to_hash(root_node)
       Savon::Mash.new(hash)
     end
@@ -65,14 +65,14 @@ module Savon
 
   private
 
-    # Checks for HTTP and SOAP faults.
+    # Checks for HTTP errors and SOAP faults.
     def validate
       if @response.code.to_i >= 300
-        @fault, @fault_code = @response.message, @response.code
+        @error_message, @error_code = @response.message, @response.code
       else
-        fault = to_hash("//soap:Fault")
-        @fault = fault[:faultstring] unless fault.nil?
-        @fault_code = fault[:faultcode] unless fault.nil?
+        soap_fault = to_hash("//soap:Fault")
+        @error_message = soap_fault[:faultstring] unless soap_fault.nil?
+        @error_code = soap_fault[:faultcode] unless soap_fault.nil?
       end
     end
 
