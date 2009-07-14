@@ -10,12 +10,12 @@ module Savon
     #
     # * +hash+ - The Hash to convert.
     def initialize(hash)
-      hash.each do |key,value|
+      hash.each do |key, value|
         value = Savon::Mash.new(value) if value.is_a? Hash
 
         if value.is_a? Array
           value = value.map do |item|
-            if item.is_a?(Hash) then Savon::Mash.new(item) else item end
+            if item.is_a? Hash then Savon::Mash.new(item) else item end
           end
         end
 
