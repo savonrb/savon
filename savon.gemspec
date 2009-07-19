@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
     "lib/savon/wsdl.rb", "lib/savon/response.rb", ]
   s.test_files = [
     "test/savon_test.rb","test/helper.rb", "test/factories/wsdl.rb",
-    "test/fixtures/soap_response.rb", "test/savon/service_test.rb",
+    "test/fixtures/soap_response_fixture.rb", "test/savon/service_test.rb",
     "test/savon/response_test.rb", "test/savon/wsdl_test.rb"]
 
   s.requirements << 'mocha and shoulda for testing'
