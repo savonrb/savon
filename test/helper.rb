@@ -6,7 +6,7 @@ require "apricoteatsgorilla"
 
 require File.join(File.dirname(__FILE__), "..", "lib", "savon")
 require File.join(File.dirname(__FILE__), "factories", "wsdl")
-require File.join(File.dirname(__FILE__), "fixtures", "soap_response")
+require File.join(File.dirname(__FILE__), "fixtures", "soap_response_fixture")
 
 module TestHelper
 

@@ -18,11 +18,6 @@ module Savon
 
     # Initializer expects an endpoint +uri+ and an +http+ connection instance,
     # then gets and parses the WSDL at the given URI.
-    #
-    # === Parameters
-    #
-    # * +uri+ - The URI of the WSDL.
-    # * +http+ - The Net::HTTP connection instance to use.
     def initialize(uri, http)
       @uri, @http = uri, http
       get_wsdl
