@@ -131,6 +131,7 @@ module Savon
     # Returns a value from the response Hash. Tries to convert the given +key+
     # into a Symbol or a String to find the value to return.
     def value_from_hash(key)
+      return nil unless @hash
       @hash[key.to_sym] || @hash[key.to_s]
     end
 
