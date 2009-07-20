@@ -36,13 +36,13 @@ module SoapResponseFixture
        '<soap:Body>' <<
           '<soap:Fault>' <<
              '<faultcode>' << soap_fault_code << '</faultcode>' <<
-             '<faultstring>' << soap_fault << '</faultstring>' <<
+             '<faultstring>' << soap_fault_message << '</faultstring>' <<
           '</soap:Fault>' <<
        '</soap:Body>' <<
     '</soap:Envelope>'
   end
 
-  def soap_fault
+  def soap_fault_message
     "Failed to authenticate client."
   end
 

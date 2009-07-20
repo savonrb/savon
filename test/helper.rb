@@ -35,7 +35,7 @@ module TestHelper
     build_response_mock("200", "OK", response_body)
   end
 
-  def response_fault_mock
+  def response_error_mock
     build_response_mock("404", "NotFound")
   end
 

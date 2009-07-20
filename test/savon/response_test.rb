@@ -6,13 +6,13 @@ class SavonResponseTest < Test::Unit::TestCase
   include SoapResponseFixture
 
   context "A Savon::Response instance" do
+    setup do
+      ApricotEatsGorilla.sort_keys = true
+      Savon::Response.core_methods_to_shadow = [:id] # set to default
+    end
 
     context "initialized with a Net::HTTPResponse containing a successful SOAP response" do
-      setup do
-        ApricotEatsGorilla.sort_keys = true
-        Savon::Response.core_methods_to_shadow = [:id] # set to default
-        @response = Savon::Response.new response_mock(some_soap_response)
-      end
+      setup { @response = Savon::Response.new response_mock(some_soap_response) }
 
       should "return that the request was successful" do
         assert_equal true, @response.success?
@@ -74,11 +74,7 @@ class SavonResponseTest < Test::Unit::TestCase
     end
 
     context "initialized with a Hash" do
-      setup do
-        ApricotEatsGorilla.sort_keys = true
-        Savon::Response.core_methods_to_shadow = [:id] # set to default
-        @response = Savon::Response.new some_response_hash
-      end
+      setup { @response = Savon::Response.new some_response_hash }
 
       should "return nil for HTTP::Response-specific methods" do
         assert_nil @response.success?
@@ -127,6 +123,66 @@ class SavonResponseTest < Test::Unit::TestCase
         response_with_inspect = Savon::Response.new response_hash_with_inspect
 
         assert_equal response_hash_with_inspect[:inspect], response_with_inspect.inspect
+      end
+    end
+
+    context "initialized with a Net::HTTPResponse containing a SOAP fault" do
+      setup { @response = Savon::Response.new response_mock(soap_fault_response) }
+
+      should "return that the request was not successful" do
+        assert_equal false, @response.success?
+        assert_equal true, @response.error?
+      end
+
+      should "return the error_code and error_message" do
+        assert_equal soap_fault_code, @response.error_code
+        assert_equal soap_fault_message, @response.error_message
+      end
+
+      should "return the SOAP response XML when calling to_s" do
+        assert_equal soap_fault_response, @response.to_s
+      end
+
+      should "return nil when calling to_hash" do
+        assert_nil @response.to_hash
+      end
+
+      should "return nil when trying to access Hash values through []" do
+        assert_nil @response[:some_key]
+      end
+
+      should "return nil when trying to access Hash values through method_missing" do
+        assert_nil @response.some_key
+      end
+    end
+
+    context "initialized with a Net::HTTPResponse error" do
+      setup { @response = Savon::Response.new response_error_mock }
+
+      should "return that the request was not successful" do
+        assert_equal false, @response.success?
+        assert_equal true, @response.error?
+      end
+
+      should "return the error_code and error_message" do
+        assert_equal "404", @response.error_code
+        assert_equal "NotFound", @response.error_message
+      end
+
+      should "return nil when calling to_s" do
+        assert_nil @response.to_s
+      end
+
+      should "return nil when calling to_hash" do
+        assert_nil @response.to_hash
+      end
+
+      should "return nil when trying to access Hash values through []" do
+        assert_nil @response[:some_key]
+      end
+
+      should "return nil when trying to access Hash values through method_missing" do
+        assert_nil @response.some_key
       end
     end
 
