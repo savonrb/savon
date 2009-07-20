@@ -7,6 +7,19 @@ module Savon
   # Savon::Response validates and represents the HTTP/SOAP response.
   class Response
 
+    # The default root node to start parsing the SOAP response at.
+    @@default_root_node = "//return"
+
+    # Returns the default root node.
+    def self.default_root_node
+      @@default_root_node
+    end
+
+    # Sets the default root node.
+    def self.default_root_node=(root_node)
+      @@default_root_node = root_node if root_node.kind_of? String
+    end
+
     # The core (inherited) methods to shadow.
     @@core_methods_to_shadow = [:id]
 
@@ -57,9 +70,11 @@ module Savon
       !@error_code.nil?
     end
 
-    # Returns the response Hash.
-    def to_hash
-      @hash
+    # Returns the response Hash. Takes an optional +root_node+ to start parsing
+    # the SOAP response at instead of the +@@default_root_node+.
+    def to_hash(root_node = nil)
+      return @hash if root_node.nil?
+      response_to_hash(root_node)
     end
 
     # Returns the response body in case there is any, +nil+ otherwise.
@@ -73,9 +88,9 @@ module Savon
     # Returns a new Savon::Response instance containing the value or returns
     # the actual value in case it is not a Hash.
     def method_missing(method, *args)
-      value = value_from_hash method
+      value = value_from_hash(method)
       return value unless value.kind_of? Hash
-      Savon::Response.new value
+      Savon::Response.new(value)
     end
 
   private
@@ -90,8 +105,8 @@ module Savon
       validate_response
 
       if success?
-        root_node ||= "//return"
-        hash = ApricotEatsGorilla[@response.body, root_node]
+        root_node ||= @@default_root_node
+        hash = response_to_hash(root_node)
         initialize_from_hash hash
       end
     end
@@ -126,6 +141,10 @@ module Savon
           self.class.send(:define_method, method) { value_from_hash(method) }
         end
       end
+    end
+
+    def response_to_hash(root_node = nil)
+      ApricotEatsGorilla[@response.body, root_node]
     end
 
     # Returns a value from the response Hash. Tries to convert the given +key+
