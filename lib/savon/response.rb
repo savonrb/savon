@@ -4,8 +4,57 @@ require "apricoteatsgorilla"
 
 module Savon
 
+  # Savon::HTTPResponse containes methods exclusive to a Net::HTTPResponse
+  # to be included in Savon::Response.
+  module HTTPResponse
+
+    # Returns the error code.
+    attr_reader :error_code
+
+    # Returns the error message.
+    attr_reader :error_message
+
+    # Returns +true+ in case the request was successful, +false+ otherwise
+    # or +nil+ in case there's no request at all.
+    def success?
+      return nil unless @response
+      @error_code.nil?
+    end
+
+    # Returns +false+ in case the request was not successful, +false+ otherwise
+    # or +nil+ in case there's no request at all.
+    def error?
+      return nil unless @response
+      !@error_code.nil?
+    end
+
+  private
+
+    # Validates the response against HTTP errors and SOAP faults and sets the
+    # +error_code+ and +error_message+ in case the request was not successful.
+    def validate_response
+      if @response.code.to_i >= 300
+        @error_message = @response.message
+        @error_code = @response.code
+      else
+        soap_fault = ApricotEatsGorilla[@response.body, "//soap:Fault"]
+        unless soap_fault.nil?
+          @error_message = soap_fault[:faultstring]
+          @error_code = soap_fault[:faultcode]
+        end
+      end
+    end
+
+    def response_to_hash(root_node = nil)
+      ApricotEatsGorilla[@response.body, root_node]
+    end
+
+  end
+
   # Savon::Response validates and represents the HTTP/SOAP response.
   class Response
+
+    include Savon::HTTPResponse
 
     # The default root node to start parsing the SOAP response at.
     @@default_root_node = "//return"
@@ -33,12 +82,6 @@ module Savon
       @@core_methods_to_shadow = methods if methods.kind_of? Array
     end
 
-    # Returns the error code.
-    attr_reader :error_code
-
-    # Returns the error message.
-    attr_reader :error_message
-
     # Initializer expects the +source+ to initialize from. Sets up the instance
     # from a given Net::HTTPResponse or a Hash depending on the given +source+.
     # May be called with a custom +root_node+ to start parsing the response at
@@ -54,20 +97,6 @@ module Savon
     # Returns the value from a given +key+ from the response Hash.
     def [](key)
       value_from_hash(key)
-    end
-
-    # Returns +true+ in case the request was successful, +false+ otherwise
-    # or +nil+ in case there's no request at all.
-    def success?
-      return nil unless @response
-      @error_code.nil?
-    end
-
-    # Returns +false+ in case the request was not successful, +false+ otherwise
-    # or +nil+ in case there's no request at all.
-    def error?
-      return nil unless @response
-      !@error_code.nil?
     end
 
     # Returns the response Hash. Takes an optional +root_node+ to start parsing
@@ -117,21 +146,6 @@ module Savon
       shadow_core_methods
     end
 
-    # Validates the response against HTTP errors and SOAP faults and sets the
-    # +error_code+ and +error_message+ in case the request was not successful.
-    def validate_response
-      if @response.code.to_i >= 300
-        @error_message = @response.message
-        @error_code = @response.code
-      else
-        soap_fault = ApricotEatsGorilla[@response.body, "//soap:Fault"]
-        unless soap_fault.nil?
-          @error_message = soap_fault[:faultstring]
-          @error_code = soap_fault[:faultcode]
-        end
-      end
-    end
-
     # Dynamically defines methods from the Array of +@@core_methods_to_shadow+
     # to "shadow" inherited methods. Returns a value from the response Hash in
     # case a matching public method and a key from the Hash could be found.
@@ -143,16 +157,12 @@ module Savon
       end
     end
 
-    def response_to_hash(root_node = nil)
-      ApricotEatsGorilla[@response.body, root_node]
-    end
-
     # Returns a value from the response Hash. Tries to convert the given +key+
     # into a Symbol or a String to find the value to return.
     def value_from_hash(key)
       return nil unless @hash
       @hash[key.to_sym] || @hash[key.to_s]
     end
-
   end
+
 end
