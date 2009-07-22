@@ -4,7 +4,7 @@ require "hpricot"
 
 module Savon
 
-  # Savon::Wsdl gets, parses and represents the WSDL.
+  # Savon::Wsdl represents the WSDL.
   class Wsdl
 
     # The namespace URI.

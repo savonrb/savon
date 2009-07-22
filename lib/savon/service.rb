@@ -5,7 +5,7 @@ require "apricoteatsgorilla"
 
 module Savon
 
-  # Ruby SOAP client library to enjoy.
+  # Savon - Ruby SOAP client library to enjoy.
   #
   # Communicating with a SOAP webservice can be done in two lines of code.
   # Instantiate a new Savon::Service passing in the URI to the WSDL of the

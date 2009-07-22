@@ -15,14 +15,14 @@ module Savon
     attr_reader :error_message
 
     # Returns +true+ in case the request was successful, +false+ otherwise
-    # or +nil+ in case there's no request at all.
+    # or +nil+ in case there was no request at all.
     def success?
       return nil unless @response
       @error_code.nil?
     end
 
-    # Returns +false+ in case the request was not successful, +false+ otherwise
-    # or +nil+ in case there's no request at all.
+    # Returns +false+ in case the request was not successful, +true+ otherwise
+    # or +nil+ in case there was no request at all.
     def error?
       return nil unless @response
       !@error_code.nil?
@@ -51,7 +51,7 @@ module Savon
 
   end
 
-  # Savon::Response validates and represents the HTTP/SOAP response.
+  # Savon::Response represents the HTTP/SOAP response.
   class Response
 
     include Savon::HTTPResponse
