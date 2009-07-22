@@ -45,6 +45,8 @@ module Savon
       end
     end
 
+    # Translates the response body into a Hash. Takes an optional +root_node+
+    # argument to start parsing the response body at a custom root node.
     def response_to_hash(root_node = nil)
       ApricotEatsGorilla[@response.body, root_node]
     end
