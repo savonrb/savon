@@ -68,7 +68,7 @@ module Savon
 
     # Sets the default root node.
     def self.default_root_node=(root_node)
-      @@default_root_node = root_node if root_node.kind_of? String
+      @@default_root_node = root_node if root_node.kind_of?(String)
     end
 
     # The core (inherited) methods to shadow.
@@ -81,7 +81,7 @@ module Savon
 
     # Sets the core +methods+ to shadow.
     def self.core_methods_to_shadow=(methods)
-      @@core_methods_to_shadow = methods if methods.kind_of? Array
+      @@core_methods_to_shadow = methods if methods.kind_of?(Array)
     end
 
     # Initializer expects the +source+ to initialize from. Sets up the instance
@@ -90,14 +90,15 @@ module Savon
     # in case the given +source+ is a Net::HTTPResponse.
     def initialize(source, root_node = nil)
       if source.kind_of? Hash
-        initialize_from_hash source
+        initialize_from_hash(source)
       elsif source.respond_to? :body
-        initialize_from_response source, root_node
+        initialize_from_response(source, root_node)
       end
     end
 
     # Returns the value from a given +key+ from the response Hash.
     def [](key)
+      return @hash unless @hash.kind_of?(Hash)
       value_from_hash(key)
     end
 
@@ -119,8 +120,10 @@ module Savon
     # Returns a new Savon::Response instance containing the value or returns
     # the actual value in case it is not a Hash.
     def method_missing(method, *args)
+      return @hash unless @hash.kind_of?(Hash)
+
       value = value_from_hash(method)
-      return value unless value.kind_of? Hash
+      return value unless value.kind_of?(Hash)
       Savon::Response.new(value)
     end
 
@@ -138,7 +141,7 @@ module Savon
       if success?
         root_node ||= @@default_root_node
         hash = response_to_hash(root_node)
-        initialize_from_hash hash
+        initialize_from_hash(hash)
       end
     end
 
