@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), "..", "helper")
 
-class SavonServiceTest < Test::Unit::TestCase
+class TestSavonService < Test::Unit::TestCase
 
   include TestHelper
   include SoapResponseFixture

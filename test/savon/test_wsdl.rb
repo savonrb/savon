@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), "..", "helper")
 
-class SavonWsdlTest < Test::Unit::TestCase
+class TestSavonWsdl < Test::Unit::TestCase
 
   include TestHelper
 
