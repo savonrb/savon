@@ -38,7 +38,7 @@ module Savon
         @error_code = @response.code
       else
         soap_fault = ApricotEatsGorilla[@response.body, "//soap:Fault"]
-        unless soap_fault.nil?
+        unless soap_fault.nil? || soap_fault.empty?
           @error_message = soap_fault[:faultstring]
           @error_code = soap_fault[:faultcode]
         end
