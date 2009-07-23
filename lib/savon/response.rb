@@ -145,7 +145,7 @@ module Savon
     # Initializes the instance from a given +hash+.
     def initialize_from_hash(hash)
       @hash = hash
-      shadow_core_methods
+      shadow_core_methods if @hash.kind_of?(Hash)
     end
 
     # Dynamically defines methods from the Array of +@@core_methods_to_shadow+
@@ -153,7 +153,7 @@ module Savon
     # case a matching public method and a key from the Hash could be found.
     def shadow_core_methods
       @@core_methods_to_shadow.each do |method|
-        if self.public_methods.include?(method.to_s) && @hash.kind_of?(Hash) && value_from_hash(method)
+        if self.public_methods.include?(method.to_s) && value_from_hash(method)
           self.class.send(:define_method, method) { value_from_hash(method) }
         end
       end
