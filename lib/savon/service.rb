@@ -24,8 +24,6 @@ module Savon
     # namespace for Apricot eats Gorilla.
     def initialize(endpoint)
       @uri = URI(endpoint)
-      ApricotEatsGorilla.nodes_to_namespace = wsdl.choice_elements
-      ApricotEatsGorilla.node_namespace = "wsdl"
     end
 
     # Returns an instance of the Savon::Wsdl.
@@ -89,6 +87,12 @@ module Savon
       end
     end
 
+    # Sets options for the XML parser.
+    def setup_parser
+      ApricotEatsGorilla.nodes_to_namespace = wsdl.choice_elements
+      ApricotEatsGorilla.node_namespace = "wsdl"
+    end
+
     # Logs a given +message+ using the +@@logger+ instance or yields the logger
     # to a given +block+ for logging multiple messages at once.
     def debug(message = nil)
@@ -109,6 +113,7 @@ module Savon
       @soap_action = ApricotEatsGorilla.to_lower_camel_case(method)
       @options = options
       validate_soap_action
+      setup_parser
       dispatch(root_node)
     end
 
