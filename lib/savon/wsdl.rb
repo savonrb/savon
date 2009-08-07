@@ -1,6 +1,6 @@
-require "rubygems"
-require "net/http"
-require "hpricot"
+%w(rubygems net/http hpricot).each do |gem|
+  require gem
+end
 
 module Savon
 

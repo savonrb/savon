@@ -1,6 +1,6 @@
-require "rubygems"
-require "hpricot"
-require "apricoteatsgorilla"
+%w(rubygems hpricot apricoteatsgorilla).each do |gem|
+  require gem
+end
 
 module Savon
 

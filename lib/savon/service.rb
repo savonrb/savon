@@ -1,7 +1,6 @@
-require "rubygems"
-require "net/http"
-require "uri"
-require "apricoteatsgorilla"
+%w(rubygems net/http uri apricoteatsgorilla).each do |gem|
+  require gem
+end
 
 module Savon
 

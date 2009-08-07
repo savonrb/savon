@@ -1,8 +1,6 @@
-require "rubygems"
-require "test/unit"
-require "mocha"
-require "shoulda"
-require "apricoteatsgorilla"
+%w(rubygems test/unit shoulda mocha apricoteatsgorilla).each do |gem|
+  require gem
+end
 
 require File.join(File.dirname(__FILE__), "..", "lib", "savon")
 require File.join(File.dirname(__FILE__), "factories", "wsdl")
