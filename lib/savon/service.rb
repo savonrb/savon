@@ -8,7 +8,7 @@ module Savon
   #
   # ==== Example
   #
-  #   proxy = Savon::Service.new("http://example.com?wsdl")
+  #   proxy = Savon::Service.new("http://example.com/ExampleService?wsdl")
   #   response = proxy.find_user_by_id(:id => 123)
   class Service
 
