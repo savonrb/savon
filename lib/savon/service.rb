@@ -3,118 +3,104 @@
 end
 
 module Savon
+  module Service
 
-  # Savon - Ruby SOAP client library to enjoy.
-  #
-  # Communicating with a SOAP webservice can be done in two lines of code.
-  # Instantiate a new Savon::Service passing in the URI to the WSDL of the
-  # service you would like to use. Then call the SOAP service method on your
-  # Savon::Service instance (catched via method_missing) and pass in a Hash
-  # of options for the service method to receive.
-  class Service
+    HTTPError = Class.new(RuntimeError)
+    SOAPFault = Class.new(RuntimeError)
 
-    # The logger instance to use.
-    @@logger = nil
-
-    # The log level to use.
-    @@log_level = :debug
-
-    # Initializer expects the WSDL +endpoint+ URI and defines nodes to
-    # namespace for Apricot eats Gorilla.
-    def initialize(endpoint)
-      @uri = URI(endpoint)
+    def self.included(klass)
+      klass.extend ClassMethods
     end
 
-    # Returns an instance of the Savon::Wsdl.
+    module ClassMethods
+
+      # Dual-purpose accessor. Sets the WSDL endpoint to the given +endpoint+
+      # if it is a String, returns the existing endpoint otherwise.
+      def endpoint(endpoint = nil)
+        @endpoint = URI(endpoint) if endpoint.kind_of?(String)
+        @endpoint
+      end
+
+      # Dual-purpose accessor. Adds SOAP accessors to the existing accessors
+      # if +soap_attr+ is a Hash, returns the existing accessors otherwise.
+      def soap_attr(soap_attr = {})
+        return @soap_attr unless soap_attr.kind_of?(Hash)
+        @soap_attr ||= {}
+        @soap_attr.update(soap_attr)
+      end
+    end
+
     def wsdl
-      @wsdl = Savon::Wsdl.new(@uri, http) unless @wsdl
+      @wsdl = Savon::Wsdl.new(@endpoint, http) unless @wsdl
       @wsdl
-    end
-
-    # Sets the Net::HTTP instance to use.
-    def http=(http)
-      @http = http
-    end
-
-    # Sets the logger instance to use.
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
-    # Sets the log level to use.
-    def self.log_level=(log_level)
-      @@log_level = log_level
     end
 
   private
 
-    # Constructs and dispatches the SOAP request. Returns a Savon::Response.
-    def dispatch(root_node = nil)
-      headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => @soap_action }
+    def dispatch(soap_action, soap_body)
+      ApricotEatsGorilla.nodes_to_namespace = { :wsdl => wsdl.choice_elements }
 
-      body = ApricotEatsGorilla.soap_envelope("wsdl" => wsdl.namespace_uri) do
-        ApricotEatsGorilla["wsdl:#{@soap_action}" => @options]
+      headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => soap_action }
+      body = ApricotEatsGorilla.soap_envelope(:wsdl => wsdl.namespace_uri) do
+        ApricotEatsGorilla["wsdl:#{soap_action}" => soap_body]
       end
+      @soap_response = http.request_post(@endpoint.path, body, headers)
 
-      debug do |logger|
-        logger.send @@log_level, "Requesting #{@uri}"
-        logger.send @@log_level, headers.map { |key, value| "#{key}: #{value}" }.join("\n")
-        logger.send @@log_level, body
-      end
-      response = http.request_post(@uri.path, body, headers)
-      debug do |logger|
-        logger.send @@log_level, "Response (Status #{response.code}):"
-        logger.send @@log_level, response.body
-      end
-      Savon::Response.new response, root_node
+      soap_fault = ApricotEatsGorilla[@soap_response.body, "//soap:Fault"]
+      handle_soap_fault(soap_fault) unless soap_fault.nil? || soap_fault.empty?
+      handle_http_error if @soap_response.code.to_i >= 300 && !@soap_fault
+
+      @soap_attr.each { |attr, xpath| create_soap_attr(attr, xpath) }
     end
 
-    # Returns the Net::HTTP instance to use.
+    def create_soap_attr(attr, xpath)
+      instance_variable_set("@#{attr}", ApricotEatsGorilla[@soap_response.body, xpath])
+      self.class.send(:define_method, attr.to_sym, proc { instance_variable_get("@#{attr}") })
+      self.class.send(:define_method, "#{attr}=", proc { |value| instance_variable_set("@#{attr}", value) })
+    end
+
+    def handle_http_error
+      @http_error = true
+      on_http_error(@soap_response.code, @soap_response.message, @soap_response.body)
+    end
+
+    def on_http_error(code, message, body)
+      raise HTTPError, "HTTPError #{message} (#{code}) #{body}"
+    end
+
+    def handle_soap_fault(soap_fault)
+      @soap_fault = true
+      on_soap_fault(soap_fault[:faultcode], soap_fault[:faultstring])
+    end
+
+    # Raises an error
+    def on_soap_fault(code, message)
+      raise SOAPFault, "SOAPFault (#{code}) #{message}"
+    end
+
     def http
-      if @http.nil?
-        raise ArgumentError, "Invalid endpoint URI: #{@uri}" unless @uri.scheme
-        @http = Net::HTTP.new(@uri.host, @uri.port)
-      end
-      @http
+      return @http unless @http.nil?
+      raise ArgumentError, "Invalid endpoint URI" if @endpoint.nil? || !@endpoint.scheme
+      @http = Net::HTTP.new(@endpoint.host, @endpoint.port)
     end
 
-    # Checks if the requested SOAP action was found on the WSDL.
-    # Raises an ArgumentError in case it was not found.
-    def validate_soap_action
-      unless wsdl.service_methods.include? @soap_action
-        raise ArgumentError, "Invalid service method: #{@soap_action}"
-      end
+    def method_missing(method, *args)
+      soap_action = to_lower_camel_case(method)
+      soap_body = args.first
+      inherit_attributes
+      super unless wsdl.service_methods.include?(soap_action)
+      dispatch(soap_action, soap_body)
     end
 
-    # Sets options for the XML parser.
-    def setup_parser
-      ApricotEatsGorilla.nodes_to_namespace = wsdl.choice_elements
-      ApricotEatsGorilla.node_namespace = "wsdl"
+    # Inherits attributes defined at class instance level.
+    def inherit_attributes
+      @endpoint = self.class.endpoint
+      @soap_attr = self.class.soap_attr
     end
 
-    # Logs a given +message+ using the +@@logger+ instance or yields the logger
-    # to a given +block+ for logging multiple messages at once.
-    def debug(message = nil)
-      if @@logger
-        @@logger.send(@@log_level, message) if message
-        yield @@logger if block_given?
-      end
+    # Converts a given given +string+ from snake_case to lowerCamelCase.
+    def to_lower_camel_case(string)
+      string.to_s.gsub(/_(.)/) { $1.upcase }
     end
-
-    # Catches SOAP actions called on the Savon::Service instance.
-    # This is the default way of calling a SOAP action.
-    # 
-    # The given +method+ will be validated against available SOAP actions found
-    # on the WSDL and dispatched if available. Options for the SOAP action to
-    # receive can be given through the optional Hash of +options+. A custom
-    # +root_node+ to start parsing the SOAP response at might be supplied as well.
-    def method_missing(method, options = {}, root_node = nil)
-      @soap_action = ApricotEatsGorilla.to_lower_camel_case(method)
-      @options = options
-      validate_soap_action
-      setup_parser
-      dispatch(root_node)
-    end
-
   end
 end

@@ -4,16 +4,16 @@ end
 
 module Savon
 
-  # Savon::Wsdl represents the WSDL.
+  # Savon::Wsdl represents the WSDL document.
   class Wsdl
 
-    # The namespace URI.
+    # Namespace URI found in the WSDL.
     attr_reader :namespace_uri
 
-    # SOAP service methods.
+    # SOAP service methods found in the WSDL.
     attr_reader :service_methods
 
-    # Choice elements.
+    # Choice elements found in the WSDL.
     attr_reader :choice_elements
 
     # Initializer expects an endpoint +uri+ and an +http+ connection instance,
@@ -34,7 +34,7 @@ module Savon
 
   private
 
-    # Gets the WSDL at the given URI.
+    # Gets the WSDL from the specified URI.
     def get_wsdl
       @response = @http.get("#{@uri.path}?#{@uri.query}")
       @doc = Hpricot.XML(@response.body)
@@ -52,23 +52,23 @@ module Savon
 
     # Parses the WSDL for available SOAP service methods.
     def parse_service_methods
-      @service_methods, node = [], @doc.search("//soap:operation")
-      if node
-        node.each do |operation|
-          service_methods << operation.parent.get_attribute("name")
-        end
-      end
+      @service_methods = []
+      node = @doc.search("//soap:operation")
+
+      node.each do |operation|
+        service_methods << operation.parent.get_attribute("name")
+      end if node
     end
 
     # Parses the WSDL for choice elements.
     def parse_choice_elements
-      @choice_elements, node = [], @doc.search("//xs:choice//xs:element")
-      if node
-        node.each do |choice|
-          name = choice.get_attribute("ref").sub(/(.+):/, "")
-          choice_elements << name unless @choice_elements.include? name
-        end
-      end
+      @choice_elements = []
+      node = @doc.search("//xs:choice//xs:element")
+
+      node.each do |choice|
+        name = choice.get_attribute("ref").sub(/(.+):/, "")
+        choice_elements << name unless @choice_elements.include?(name)
+      end if node
     end
 
   end
