@@ -10,10 +10,10 @@ alternative to other libraries.
 
 == Dependencies
 
-  smacks-apricoteatsgorilla >= 0.5.2
+  rubiii-apricoteatsgorilla >= 0.5.2
   hpricot 0.8.241 (the latest JRuby-compatible version)
 
-Hpricot 0.8.241 is also available at: {Apricot eats Gorilla Downloads}[http://github.com/smacks/apricoteatsgorilla/downloads]
+Hpricot 0.8.241 is also available at: {Apricot eats Gorilla Downloads}[http://github.com/rubiii/apricoteatsgorilla/downloads]
 
 == How to use
 

@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
   s.has_rdoc = true
-  s.homepage = %q{http://github.com/smacks/savon}
+  s.homepage = %q{http://github.com/rubiii/savon}
   s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--main", "README.rdoc", "--line-numbers", "--inline-source"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.1}
@@ -47,18 +47,18 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_runtime_dependency(%q<smacks-apricoteatsgorilla>, ["= 0.5.2"])
+      s.add_runtime_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.3"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_development_dependency(%q<rr>, [">= 0.10.0"])
     else
       s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_dependency(%q<smacks-apricoteatsgorilla>, ["= 0.5.2"])
+      s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.3"])
       s.add_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_dependency(%q<rr>, [">= 0.10.0"])
     end
   else
     s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-    s.add_dependency(%q<smacks-apricoteatsgorilla>, ["= 0.5.2"])
+    s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.3"])
     s.add_dependency(%q<rspec>, [">= 1.2.8"])
     s.add_dependency(%q<rr>, [">= 0.10.0"])
   end

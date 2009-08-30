@@ -24,7 +24,7 @@ begin
     spec.name = "savon"
     spec.author = "Daniel Harrington"
     spec.email = "me@d-harrington.com"
-    spec.homepage = "http://github.com/smacks/savon"
+    spec.homepage = "http://github.com/rubiii/savon"
     spec.summary = "SOAP client library to enjoy."
     spec.description = spec.summary
 
@@ -38,7 +38,7 @@ begin
     ]
 
     spec.add_runtime_dependency("hpricot", "0.8.241")
-    spec.add_runtime_dependency("smacks-apricoteatsgorilla", "0.5.2")
+    spec.add_runtime_dependency("rubiii-apricoteatsgorilla", "0.5.3")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
     spec.add_development_dependency("rr", ">= 0.10.0")
