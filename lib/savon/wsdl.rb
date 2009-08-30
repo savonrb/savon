@@ -37,7 +37,8 @@ module Savon
       unless @document
         @response = @http.get("#{@uri.path}?#{@uri.query}")
         @document = Hpricot.XML(@response.body)
-        raise ArgumentError, "Unable to find WSDL at: #{@uri}" unless soap_actions
+        raise ArgumentError, "Unable to find WSDL at: #{@uri}" if
+          !soap_actions || soap_actions.empty?
       end
       @document
     end
