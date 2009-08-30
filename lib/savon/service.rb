@@ -6,7 +6,10 @@ module Savon
   # the overhead of working with SOAP services and provide a lightweight
   # alternative to other libraries.
   #
-  # Working with a SOAP service is 
+  # ==== Example
+  #
+  #   proxy = Savon::Service.new("http://example.com?wsdl")
+  #   response = proxy.find_user_by_id(:id => 123)
   class Service
 
     # Initializer expects an +endpoint+ URI.

@@ -3,25 +3,22 @@ module Savon
   # Savon::WSDL represents the WSDL document.
   class WSDL
 
-    # @return [String] Namespace URI of the WSDL.
+    # Returns the namespace URI.
     def namespace_uri
       @namespace ||= parse_namespace_uri
     end
 
-    # @return [Array] SOAP service methods of the WSDL.
+    # Returns an Array of available SOAP actions.
     def soap_actions
       @soap_actions ||= parse_soap_actions
     end
 
-    # @return [Array] Choice elements of the WSDL.
+    # Returns an Array of choice elements.
     def choice_elements
       @choice_elements ||= parse_choice_elements
     end
 
-    # Initializer expects an instance of Savon::HTTP to retrieve the WSDL.
-    #
-    # ==== Parameters
-    # * <tt>http</tt> - [Net::HTTP] Net::HTTP instance to retrieve the WSDL
+    # Initializer expects the endpoint +uri+ and a Net::HTTP instance (+http+).
     def initialize(uri, http)
       @uri, @http = uri, http
     end
@@ -33,6 +30,8 @@ module Savon
 
   private
 
+    # Returns an Hpricot::Document of the WSDL. Retrieves the WSDL from the
+    # endpoint URI in case it wasn't retrieved already.
     def document
       unless @document
         @response = @http.get("#{@uri.path}?#{@uri.query}")
@@ -49,7 +48,7 @@ module Savon
       definitions.get_attribute("targetNamespace") if definitions
     end
 
-    # Parses the WSDL for available SOAP service methods.
+    # Parses the WSDL for available SOAP actions.
     def parse_soap_actions
       soap_actions = document.search("//soap:operation")
 
