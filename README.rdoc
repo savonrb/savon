@@ -6,7 +6,7 @@ alternative to other libraries.
 
 == Install
 
-  $ gem install smacks-savon -s http://gems.github.com
+  $ gem install rubiii-savon -s http://gems.github.com
 
 == Dependencies
 
