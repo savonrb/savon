@@ -1,0 +1,13 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:findUserResponse xmlns:ns2="http://v1_0.ws.user.example.com">
+         <return>
+            <id>123</id>
+            <email>thedude@example.com</email>
+            <username>thedude</username>
+            <firstname>The</firstname>
+            <lastname>Dude</lastname>
+         </return>
+      </ns2:findUserResponse>
+   </soap:Body>
+</soap:Envelope>

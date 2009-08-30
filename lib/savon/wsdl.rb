@@ -1,74 +1,69 @@
-%w(rubygems net/http hpricot).each do |gem|
-  require gem
-end
-
 module Savon
 
-  # Savon::Wsdl represents the WSDL document.
-  class Wsdl
+  # Savon::WSDL represents the WSDL document.
+  class WSDL
 
-    # Namespace URI found in the WSDL.
-    attr_reader :namespace_uri
-
-    # SOAP service methods found in the WSDL.
-    attr_reader :service_methods
-
-    # Choice elements found in the WSDL.
-    attr_reader :choice_elements
-
-    # Initializer expects an endpoint +uri+ and an +http+ connection instance,
-    # then gets and parses the WSDL at the given URI.
-    def initialize(uri, http)
-      @uri, @http = uri, http
-      get_wsdl
-
-      parse_namespace_uri
-      parse_service_methods
-      parse_choice_elements
+    # @return [String] Namespace URI of the WSDL.
+    def namespace_uri
+      @namespace ||= parse_namespace_uri
     end
 
-    # Returns the response body from the WSDL request.
+    # @return [Array] SOAP service methods of the WSDL.
+    def soap_actions
+      @soap_actions ||= parse_soap_actions
+    end
+
+    # @return [Array] Choice elements of the WSDL.
+    def choice_elements
+      @choice_elements ||= parse_choice_elements
+    end
+
+    # Initializer expects an instance of Savon::HTTP to retrieve the WSDL.
+    #
+    # ==== Parameters
+    # * <tt>http</tt> - [Net::HTTP] Net::HTTP instance to retrieve the WSDL
+    def initialize(uri, http)
+      @uri, @http = uri, http
+    end
+
+    # Returns the body of the Net::HTTPResponse from the WSDL request.
     def to_s
-      @response.body
+      @response ? @response.body : nil
     end
 
   private
 
-    # Gets the WSDL from the specified URI.
-    def get_wsdl
-      @response = @http.get("#{@uri.path}?#{@uri.query}")
-      @doc = Hpricot.XML(@response.body)
-
-      if !@doc.at("//wsdl:definitions")
-        raise ArgumentError, "Unable to find WSDL at given endpoint URI."
+    def document
+      unless @document
+        @response = @http.get("#{@uri.path}?#{@uri.query}")
+        @document = Hpricot.XML(@response.body)
+        raise ArgumentError, "Unable to find WSDL at: #{@uri}" unless soap_actions
       end
+      @document
     end
 
     # Parses the WSDL for the namespace URI.
     def parse_namespace_uri
-      node = @doc.at("//wsdl:definitions")
-      @namespace_uri = node.get_attribute("targetNamespace") if node
+      definitions = document.at("//wsdl:definitions")
+      definitions.get_attribute("targetNamespace") if definitions
     end
 
     # Parses the WSDL for available SOAP service methods.
-    def parse_service_methods
-      @service_methods = []
-      node = @doc.search("//soap:operation")
+    def parse_soap_actions
+      soap_actions = document.search("//soap:operation")
 
-      node.each do |operation|
-        service_methods << operation.parent.get_attribute("name")
-      end if node
+      soap_actions.collect do |soap_action|
+        soap_action.parent.get_attribute("name")
+      end if soap_actions
     end
 
     # Parses the WSDL for choice elements.
     def parse_choice_elements
-      @choice_elements = []
-      node = @doc.search("//xs:choice//xs:element")
+      choice_elements = document.search("//xs:choice//xs:element")
 
-      node.each do |choice|
-        name = choice.get_attribute("ref").sub(/(.+):/, "")
-        choice_elements << name unless @choice_elements.include?(name)
-      end if node
+      choice_elements.collect do |choice_element|
+        choice_element.get_attribute("ref").sub(/(.+):/, "")
+      end if choice_elements
     end
 
   end
