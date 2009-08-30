@@ -30,6 +30,7 @@ Or pass in a Hash of options for the SOAP service to receive.
   response = proxy.find_user_by_id(:id => 123)
 
 Or specify a custom XPath-Expression to start translating the SOAP response at.
+By default the response is translated starting at "//return".
 
   response = proxy.find_user_by_id(nil, "//user/email")
 
