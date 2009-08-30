@@ -1,12 +1,8 @@
 = Savon
 
-Ruby SOAP client library to enjoy.
-
-Communicating with a SOAP webservice can be done in two lines of code.
-Instantiate a new Savon::Service passing in the URI to the WSDL of the
-service you would like to use. Then call the SOAP service method on your
-Savon::Service instance (catched via method_missing) and pass in a Hash
-of options for the service method to receive.
+Savon::Service is a SOAP client library to enjoy. The goal is to minimize
+the overhead of working with SOAP services and provide a lightweight
+alternative to other libraries.
 
 == Install
 
@@ -14,67 +10,48 @@ of options for the service method to receive.
 
 == Dependencies
 
-  hpricot 0.6.164 (also available for JRuby)
-  smacks-apricoteatsgorilla >= 0.4.1
+  smacks-apricoteatsgorilla >= 0.5.2
+  hpricot 0.8.241 (the latest JRuby-compatible version)
+
+Hpricot 0.8.241 is also available at: {Apricot eats Gorilla Downloads}[http://github.com/smacks/apricoteatsgorilla/downloads]
 
 == How to use
 
 Instantiate a new Savon::Service instance passing in the WSDL of your service.
 
-  proxy = Savon::Service.new "http://example.com/ExampleService?wsdl"
+  proxy = Savon::Service.new("http://example.com/ExampleService?wsdl")
 
-Call the SOAP service method of your choice on your Savon::Service instance
-passing in a Hash of options for the service method to receive.
+Call the SOAP service method of your choice on your Savon::Service instance.
 
-  response = proxy.findExampleById(:id => 123)
+  response = proxy.get_all_users
 
-=== Check for available SOAP service methods
+Or pass in a Hash of options for the SOAP service to receive.
 
-You can use the service_methods method of the WSDL in your Savon::Service
-instance to get a list of available SOAP service methods.
+  response = proxy.find_user_by_id(:id => 123)
 
-  proxy.wsdl.service_methods
-  # => [ "findExampleById", "findExampleByName" ]
+Or specify a custom XPath-Expression to start translating the SOAP response at.
 
-=== Handle HTTP and SOAP errors
+  response = proxy.find_user_by_id(nil, "//user/email")
 
-Check if the SOAP request was successful.
+=== Check for available SOAP actions
 
-  response.success?
-  response.error?
+Access the WSDL to get an Array of SOAP actions found in the WSDL document.
 
-Access error message and code in case a request was not successful.
+  proxy.wsdl.soap_actions
+  # => [ "getAllUsers", "findUserById" ]
 
-  response.error_message
-  response.error_code
+=== Handle HTTP error and SOAP faults
 
-=== Different response formats
-
-To work with the response of the service you need to convert the response
-object using one of the following methods.
-
-  # SOAP response XML:
-  response.to_s
-
-  # response as a Hash
-  response.to_hash
-
-  # response as a Mash
-  response.to_mash
-
-The to_hash and to_mash methods accept an XPath expression (Hpricot search)
-as second parameter to define a custom root node to start translating the
-response XML at.
-
-  # response as a Hash starting at a custom root node
-  response.to_hash("//item")
-
-  # response as a Mash starting at a custom root node
-  response.to_mash("//user/email")
+Savon::Service raises a Savon::SOAPFault in case of a SOAP fault and a
+Savon::HTTPError in case of an HTTP error.
 
 === Logging request and response
 
-You should specify the logger to use before working with any services.
+You should specify the logger to use before working with any service.
 
   # example for Ruby on Rails
-  Savon::Service.logger = RAILS_DEFAULT_LOGGER
+  Savon.logger = RAILS_DEFAULT_LOGGER
+
+Of course you can also specify the log level if needed. By default it's set to :debug.
+
+  Savon.log_level = :info
