@@ -6,8 +6,15 @@ describe Savon::Service do
   # initialize
   describe "initialize" do
     it "raises an ArgumentError when called with an invalid endpoint" do
-      ["", nil, "invalid", 123].each do |arg|
-        lambda { Savon::Service.new(arg) }.should raise_error(ArgumentError)
+      ["", nil, "invalid", 123].each do |argument|
+        lambda { Savon::Service.new(argument) }.should raise_error(ArgumentError)
+      end
+    end
+
+    it "raises an ArgumentError when called with an invalid version" do
+      ["", nil, "invalid", 123].each do |argument|
+        lambda { Savon::Service.new("http://example.com", argument) }.
+          should raise_error(ArgumentError)
       end
     end
   end
@@ -42,7 +49,7 @@ describe Savon::Service do
       @service.find_user(nil, "//email").should == "thedude@example.com"
     end
 
-    it "returns nil if a given XPath does not match anything in the SOAP response" do
+    it "returns nil if a given XPath does not match anything from the SOAP response" do
       @service.find_user(nil, "//doesNotMatchAnything").should be_nil
     end
 

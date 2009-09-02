@@ -12,10 +12,18 @@ module Savon
   #   response = proxy.find_user_by_id(:id => 123)
   class Service
 
-    # Initializer expects an +endpoint+ URI.
-    def initialize(endpoint)
+    # Supported SOAP versions.
+    SOAPVersions = [1, 2]
+
+    # Content-Types by SOAP version.
+    ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
+
+    # Initializer expects an +endpoint+ URI and takes an optional SOAP +version+.
+    def initialize(endpoint, version = 1)
       raise ArgumentError, "Invalid endpoint: #{endpoint}" unless /^http.+/ === endpoint
+      raise ArgumentError, "Invalid version: #{version}" unless SOAPVersions.include? version
       @endpoint = URI(endpoint)
+      @version = version
     end
 
     # Returns an instance of Savon::WSDL.
@@ -50,8 +58,9 @@ module Savon
     # Expects the requested +soap_action+ and +soap_body+ and builds and
     # returns the request header and body to dispatch a SOAP request.
     def build_request_parameters(soap_action, soap_body)
-      headers = { "Content-Type" => "text/xml; charset=utf-8", "SOAPAction" => soap_action }
-      body = ApricotEatsGorilla.soap_envelope(:wsdl => wsdl.namespace_uri) do
+      headers = { "Content-Type" => ContentType[@version], "SOAPAction" => soap_action }
+      namespaces = { :wsdl => wsdl.namespace_uri }
+      body = ApricotEatsGorilla.soap_envelope(namespaces, @version) do
         ApricotEatsGorilla["wsdl:#{soap_action}" => soap_body]
       end
       [headers, body]
@@ -60,7 +69,13 @@ module Savon
     # Expects a Hash containing information about a SOAP fault and raises
     # a Savon::SOAPFault.
     def raise_soap_fault(soap_fault)
-      raise SOAPFault, "#{soap_fault[:faultcode]}: #{soap_fault[:faultstring]}"
+      message = case @version
+        when 1
+          "#{soap_fault[:faultcode]}: #{soap_fault[:faultstring]}"
+        else
+          "#{soap_fault[:code][:value]}: #{soap_fault[:reason][:text]}"
+      end
+      raise SOAPFault, message
     end
 
     # Expects a Net::HTTPResponse and raises a Savon::HTTPError.
