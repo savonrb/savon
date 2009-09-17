@@ -35,11 +35,9 @@ module Savon
 
 end
 
-%w(net/http uri rubygems hpricot).each do |gem|
+%w(net/http uri rubygems hpricot apricoteatsgorilla).each do |gem|
   require gem
 end
-
-require File.join(File.dirname(__FILE__), "..", "..", "apricoteatsgorilla", "lib", "apricoteatsgorilla")
 
 %w(service wsdl).each do |file|
   require File.join(File.dirname(__FILE__), "savon", file)
