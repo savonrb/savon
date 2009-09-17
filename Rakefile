@@ -38,7 +38,7 @@ begin
     ]
 
     spec.add_runtime_dependency("hpricot", "0.8.241")
-    spec.add_runtime_dependency("rubiii-apricoteatsgorilla", "0.5.6")
+    spec.add_runtime_dependency("rubiii-apricoteatsgorilla", "0.5.8")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
     spec.add_development_dependency("rr", ">= 0.10.0")
