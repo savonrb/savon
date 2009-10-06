@@ -18,6 +18,15 @@ module Savon
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
 
+    # Accessor for the WSSE username.
+    attr_accessor :wsse_username
+
+    # Accessor for the WSSE password.
+    attr_accessor :wsse_password
+
+    # Sets whether the WSSE password should be encrypted.
+    attr_writer :wsse_password_digest
+
     # Initializer expects an +endpoint+ URI and takes an optional SOAP +version+.
     def initialize(endpoint, version = 1)
       raise ArgumentError, "Invalid endpoint: #{endpoint}" unless /^http.+/ === endpoint
@@ -29,6 +38,11 @@ module Savon
     # Returns an instance of Savon::WSDL.
     def wsdl
       @wsdl ||= WSDL.new(@endpoint, http)
+    end
+
+    # Returns whether the WSSE password should be encrypted. Defaults to +false+.
+    def wsse_password_digest?
+      @wsse_password_digest == true
     end
 
   private
@@ -45,7 +59,7 @@ module Savon
 
       response = http.request_post(@endpoint.path, body, headers)
 
-      Savon.log("SOAP response (status #{response.code})")
+      Savon.log("SOAP response (status #{response.code}):")
       Savon.log(response.body)
 
       soap_fault = ApricotEatsGorilla[response.body, "//soap:Fault"]
@@ -60,10 +74,21 @@ module Savon
     def build_request_parameters(soap_action, soap_body)
       headers = { "Content-Type" => ContentType[@version], "SOAPAction" => soap_action }
       namespaces = { :wsdl => wsdl.namespace_uri }
-      body = ApricotEatsGorilla.soap_envelope(namespaces, @version) do
+
+      body = ApricotEatsGorilla.soap_envelope(namespaces, wsse, @version) do
         ApricotEatsGorilla["wsdl:#{soap_action}" => soap_body]
       end
       [headers, body]
+    end
+
+    # Returns the WSSE arguments if :wsse_username and :wsse_password are set.
+    def wsse
+      if @wsse_username && @wsse_password
+        { :username => @wsse_username, :password => @wsse_password,
+          :password_digest => wsse_password_digest? }
+      else
+        nil
+      end
     end
 
     # Expects a Hash containing information about a SOAP fault and raises

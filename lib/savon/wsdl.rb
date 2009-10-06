@@ -50,7 +50,7 @@ module Savon
 
     # Parses the WSDL for available SOAP actions.
     def parse_soap_actions
-      soap_actions = document.search("//soap:operation")
+      soap_actions = document.search("[@soapAction]")
 
       soap_actions.collect do |soap_action|
         soap_action.parent.get_attribute("name")

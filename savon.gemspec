@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.2.6"
+  s.version = "0.2.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
-  s.date = %q{2009-09-17}
+  s.date = %q{2009-10-06}
   s.description = %q{SOAP client library to enjoy}
   s.email = %q{me@rubiii.com}
   s.extra_rdoc_files = [
@@ -32,12 +32,12 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/rubiii/savon}
   s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--main", "README.rdoc", "--line-numbers", "--inline-source"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.3.4}
+  s.rubygems_version = %q{1.3.5}
   s.summary = %q{SOAP client library to enjoy}
   s.test_files = [
-    "spec/spec_helper.rb",
-     "spec/savon/service_spec.rb",
-     "spec/savon/wsdl_spec.rb"
+    "spec/savon/service_spec.rb",
+     "spec/savon/wsdl_spec.rb",
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -46,18 +46,18 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_runtime_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.8"])
+      s.add_runtime_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_development_dependency(%q<rr>, [">= 0.10.0"])
     else
       s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.8"])
+      s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
       s.add_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_dependency(%q<rr>, [">= 0.10.0"])
     end
   else
     s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-    s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.8"])
+    s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
     s.add_dependency(%q<rspec>, [">= 1.2.8"])
     s.add_dependency(%q<rr>, [">= 0.10.0"])
   end
