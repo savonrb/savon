@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.2.7"
+  s.version = "0.2.8"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
@@ -46,18 +46,18 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_runtime_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
+      s.add_runtime_dependency(%q<apricoteatsgorilla>, ["= 0.5.9"])
       s.add_development_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_development_dependency(%q<rr>, [">= 0.10.0"])
     else
       s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-      s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
+      s.add_dependency(%q<apricoteatsgorilla>, ["= 0.5.9"])
       s.add_dependency(%q<rspec>, [">= 1.2.8"])
       s.add_dependency(%q<rr>, [">= 0.10.0"])
     end
   else
     s.add_dependency(%q<hpricot>, ["= 0.8.241"])
-    s.add_dependency(%q<rubiii-apricoteatsgorilla>, ["= 0.5.9"])
+    s.add_dependency(%q<apricoteatsgorilla>, ["= 0.5.9"])
     s.add_dependency(%q<rspec>, [">= 1.2.8"])
     s.add_dependency(%q<rr>, [">= 0.10.0"])
   end
