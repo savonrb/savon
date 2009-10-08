@@ -27,6 +27,9 @@ module Savon
     # Sets whether the WSSE password should be encrypted.
     attr_writer :wsse_digest
 
+    # Sets whether the response should be returned as is.
+    attr_writer :pure_response
+
     # Initializer expects an +endpoint+ URI and takes an optional SOAP +version+.
     def initialize(endpoint, version = 1)
       raise ArgumentError, "Invalid endpoint: #{endpoint}" unless /^http.+/ === endpoint
@@ -43,6 +46,11 @@ module Savon
     # Returns whether the WSSE password should be encrypted. Defaults to +false+.
     def wsse_digest?
       @wsse_digest == true
+    end
+
+    # Returns whether the response should be returned as is. Defaults to +false+.
+    def pure_response?
+      @pure_response == true
     end
 
   private
@@ -66,7 +74,11 @@ module Savon
       raise_soap_fault(soap_fault) if soap_fault && !soap_fault.empty?
       raise_http_error(response) if response.code.to_i >= 300
 
-      ApricotEatsGorilla[response.body, response_xpath]
+      if pure_response?
+        response.body
+      else
+        ApricotEatsGorilla[response.body, response_xpath]
+      end
     end
 
     # Expects the requested +soap_action+ and +soap_body+ and builds and

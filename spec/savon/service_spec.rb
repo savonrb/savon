@@ -67,5 +67,10 @@ describe Savon::Service do
       @service = new_service_instance(:soap_fault => true, :http_error => true)
       lambda { @service.find_user }.should raise_error(Savon::SOAPFault)
     end
+
+    it "returns the raw response body when :pure_response was set to +true+" do
+      @service.pure_response = true
+      @service.find_user.should == UserFixture.user_response
+    end
   end
 end
