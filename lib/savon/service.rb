@@ -25,7 +25,7 @@ module Savon
     attr_accessor :wsse_password
 
     # Sets whether the WSSE password should be encrypted.
-    attr_writer :wsse_password_digest
+    attr_writer :wsse_digest
 
     # Initializer expects an +endpoint+ URI and takes an optional SOAP +version+.
     def initialize(endpoint, version = 1)
@@ -41,8 +41,8 @@ module Savon
     end
 
     # Returns whether the WSSE password should be encrypted. Defaults to +false+.
-    def wsse_password_digest?
-      @wsse_password_digest == true
+    def wsse_digest?
+      @wsse_digest == true
     end
 
   private
@@ -73,7 +73,7 @@ module Savon
     # returns the request header and body to dispatch a SOAP request.
     def build_request_parameters(soap_action, soap_body)
       headers = { "Content-Type" => ContentType[@version], "SOAPAction" => soap_action }
-      namespaces = { :wsdl => wsdl.namespace_uri }
+      namespaces = { "xmlns:wsdl" => wsdl.namespace_uri }
 
       body = ApricotEatsGorilla.soap_envelope(namespaces, wsse, @version) do
         ApricotEatsGorilla["wsdl:#{soap_action}" => soap_body]
@@ -84,8 +84,7 @@ module Savon
     # Returns the WSSE arguments if :wsse_username and :wsse_password are set.
     def wsse
       if @wsse_username && @wsse_password
-        { :username => @wsse_username, :password => @wsse_password,
-          :password_digest => wsse_password_digest? }
+        { :username => @wsse_username, :password => @wsse_password, :digest => wsse_digest? }
       else
         nil
       end
