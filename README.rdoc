@@ -6,11 +6,15 @@ alternative to other libraries.
 
 == Install
 
-  $ gem install rubiii-savon -s http://gems.github.com
+  The gem for Savon is in the {gemcutter}[http://gemcutter.org] repository.
+  Please follow the steps on their website to set up your rubygems installation.
+  Afterwards you can install the gem like this:
+
+  $ gem install savon
 
 == Dependencies
 
-  rubiii-apricoteatsgorilla >= 0.5.2
+  rubiii-apricoteatsgorilla >= 0.5.10
   hpricot 0.8.241 (the latest JRuby-compatible version)
 
 Hpricot 0.8.241 is also available at: {Apricot eats Gorilla Downloads}[http://github.com/rubiii/apricoteatsgorilla/downloads]
