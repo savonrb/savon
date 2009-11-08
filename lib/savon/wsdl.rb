@@ -44,25 +44,25 @@ module Savon
 
     # Parses the WSDL for the namespace URI.
     def parse_namespace_uri
-      definitions = document.at("//wsdl:definitions")
-      definitions.get_attribute("targetNamespace") if definitions
+      definitions = document.at('//wsdl:definitions')
+      definitions.get_attribute('targetNamespace') if definitions
     end
 
     # Parses the WSDL for available SOAP actions.
     def parse_soap_actions
-      soap_actions = document.search("[@soapAction]")
+      soap_actions = document.search('[@soapAction]')
 
       soap_actions.collect do |soap_action|
-        soap_action.parent.get_attribute("name")
+        soap_action.parent.get_attribute('name')
       end if soap_actions
     end
 
     # Parses the WSDL for choice elements.
     def parse_choice_elements
-      choice_elements = document.search("//xs:choice//xs:element")
+      choice_elements = document.search('//xs:choice//xs:element')
 
       choice_elements.collect do |choice_element|
-        choice_element.get_attribute("ref").sub(/(.+):/, "")
+        choice_element.get_attribute('ref').sub(/(.+):/, '')
       end if choice_elements
     end
 
