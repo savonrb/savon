@@ -1,14 +1,26 @@
+require 'uri'
+
 module Savon
   class Options
 
     # Supported SOAP versions.
     SoapVersions = [1, 2]
 
-    # The default SOAP version to use.
-    DefaultSoapVersion = 1
+    # The default SOAP version.
+    @@default_soap_version = 1
 
-    # The default XML root node to use.
-    DefaultRootNode = "//return"
+    # Sets the default SOAP version to use.
+    def self.default_soap_version=(soap_version)
+      @@default_soap_version = soap_version
+    end
+
+    # The default XML root node.
+    @@default_root_node = "//return"
+
+    # Sets the default XML root node.
+    def self.default_root_node=(root_node)
+      @@default_root_node = root_node
+    end
 
     # Returns the endpoint.
     attr_reader :endpoint
@@ -19,9 +31,9 @@ module Savon
       @endpoint = URI endpoint
     end
 
-    # Returns the SOAP version. Defaults to +DefaultSoapVersion+.
+    # Returns the SOAP version. Defaults to +@@default_soap_version+.
     def soap_version
-      @soap_version || DefaultSoapVersion
+      @soap_version || @@default_soap_version
     end
 
     # Sets the SOAP version to the given +soap_version+.
@@ -30,12 +42,12 @@ module Savon
       @soap_version = soap_version
     end
 
-    # Returns the XML root node. Defaults to +DefaultRootNode+.
+    # Returns the XML root node. Defaults to +@@default_root_node+.
     def root_node
-      @root_node || DefaultRootNode
+      @root_node || @@default_root_node
     end
 
-    # Sets the root node to the given +root_node+.
+    # Sets the XML root node to the given +root_node+.
     def root_node=(root_node)
       @root_node = root_node if root_node.kind_of? String
     end
@@ -78,13 +90,13 @@ module Savon
 
     # Sets options from a given Hash of +options+.
     def from_hash(options)
-      all_options.each { |option| self.send option, options[options] }
+      available_options.each { |option| self.send option, options[option] }
     end
 
   private
 
-    # Returns an Array of all available options.
-    def all_options
+    # Returns an Array containing all available options.
+    def available_options
       [:soap_version, :root_node, :xml_response, :wsse_username, :wsse_password, :wsse_digest]
     end
 
