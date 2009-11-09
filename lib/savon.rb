@@ -35,6 +35,6 @@ module Savon
 
 end
 
-%w(service options http wsdl).each do |file|
+%w(service options http wsdl request).each do |file|
   require File.join(File.dirname(__FILE__), "savon", file)
 end
