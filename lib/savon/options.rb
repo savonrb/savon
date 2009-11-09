@@ -6,6 +6,12 @@ module Savon
     # Supported SOAP versions.
     SoapVersions = [1, 2]
 
+    # SOAP namespaces by SOAP version.
+    SOAPNamespace = {
+      1 => 'http://schemas.xmlsoap.org/soap/envelope/',
+      2 => 'http://www.w3.org/2003/05/soap-envelope'
+    }
+
     # The default SOAP version.
     @@default_soap_version = 1
 
@@ -15,7 +21,7 @@ module Savon
     end
 
     # The default XML root node.
-    @@default_root_node = "//return"
+    @@default_root_node = '//return'
 
     # Sets the default XML root node.
     def self.default_root_node=(root_node)
@@ -27,7 +33,7 @@ module Savon
 
     # Sets the endpoint to the given +endpoint+.
     def endpoint=(endpoint)
-      raise ArgumentError, "Invalid endpoint: #{endpoint}" unless valid_endpoint? endpoint
+      raise ArgumentError, 'Invalid endpoint: #{endpoint}' unless valid_endpoint? endpoint
       @endpoint = URI endpoint
     end
 
@@ -38,7 +44,7 @@ module Savon
 
     # Sets the SOAP version to the given +soap_version+.
     def soap_version=(soap_version)
-      raise ArgumentError, "Invalid SOAP version: #{soap_version}" unless valid_soap_version? soap_version
+      raise ArgumentError, 'Invalid SOAP version: #{soap_version}' unless valid_soap_version? soap_version
       @soap_version = soap_version
     end
 
@@ -52,12 +58,10 @@ module Savon
       @root_node = root_node if root_node.kind_of? String
     end
 
-    # Sets whether the SOAP response should be returned as pure XML.
-    attr_writer :xml_response
+    attr_reader :namespaces
 
-    # Returns whether the SOAP response should be returned as pure XML.
-    def xml_response?
-      @xml_response
+    def namespaces=(namespaces)
+      @namespaces = namespaces if namespaces.kind_of? Hash
     end
 
     # Returns the WSSE username.
@@ -86,6 +90,10 @@ module Savon
     # Returns whether WSSE authentication should be used.
     def wsse?
       wsse_username && wsse_password
+    end
+
+    def soap_namespace
+      SOAPNamespace[soap_version]
     end
 
     # Sets options from a given Hash of +options+.

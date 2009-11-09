@@ -6,9 +6,10 @@ module Savon
   # Savon::WSDL represents the WSDL document.
   class WSDL
 
-    # Initializer expects instances of Savon::Options and Savon::HTTP.
-    def initialize(options, http)
-      @options, @http = options, http
+    # Initializer expects instances of Savon::HTTP and Savon::Options.
+    def initialize(http, options)
+      @http = http
+      @options = options
     end
 
     # Returns the namespace URI.

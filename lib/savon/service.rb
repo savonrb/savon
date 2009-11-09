@@ -12,8 +12,7 @@ module Savon
   #   response = proxy.find_user_by_id(:id => 123)
   class Service
 
-    # Content-Types by SOAP version.
-    ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
+    attr_reader :response
 
     def options
       setup_infrastructure unless @options
@@ -40,7 +39,7 @@ module Savon
     # Dispatches a SOAP request, handles any HTTP errors and SOAP faults
     # and returns the SOAP response.
     def dispatch(soap_action, soap_body)
-      @response = @http.perform_soap_request
+      @response = @http.request soap_action, soap_body
       
       
       
@@ -86,7 +85,8 @@ p "method_missing"
       @options = Options.new
       @options.endpoint = @endpoint
       @http = HTTP.new @options
-      @wsdl = WSDL.new @options, @http
+      @wsdl = WSDL.new @http, @options
+      @http.namespace_uri = @wsdl.namespace_uri
     end
 
     # Returns the SOAP body from given +args+.

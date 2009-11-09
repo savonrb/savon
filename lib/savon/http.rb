@@ -1,7 +1,13 @@
 require 'net/http'
+require 'rubygems'
+require 'cobravsmongoose'
 
 module Savon
   class HTTP
+
+    attr_reader :response
+
+    attr_writer :namespace_uri
 
     # Initializer expects an instance of Savon::Options.
     def initialize(options)
@@ -13,8 +19,43 @@ module Savon
       http.get wsdl_endpoint
     end
 
-    def perform_soap_request
+    def request(soap_action, soap_body)
+      request = Request.new soap_action, soap_body, @namespace_uri, @options
+
+p "------------------------------------------------"
+p request.body
+p "------------------------------------------------"
+
+      @response = http.request_post @options.endpoint.path, request.body, request.headers
+      @response.body
       
+      
+      
+      
+      
+=begin
+      ApricotEatsGorilla.nodes_to_namespace = { :wsdl => wsdl.choice_elements }
+      headers, body = build_request_parameters(soap_action, soap_body)
+
+      Savon.log("SOAP request: #{@endpoint}")
+      Savon.log(headers.map { |k, v| "#{k}: #{v}" }.join(", "))
+      Savon.log(body)
+
+      response = http.request_post(@endpoint.path, body, headers)
+
+      Savon.log("SOAP response (status #{response.code}):")
+      Savon.log(response.body)
+
+      soap_fault = ApricotEatsGorilla[response.body, "//soap:Fault"]
+      raise_soap_fault(soap_fault) if soap_fault && !soap_fault.empty?
+      raise_http_error(response) if response.code.to_i >= 300
+
+      if pure_response?
+        response.body
+      else
+        ApricotEatsGorilla[response.body, response_xpath]
+      end
+=end
     end
 
     # Returns the WSDL endpoint.
@@ -25,8 +66,33 @@ module Savon
   private
 
     def http
-      @http ||= Net::HTTP.new(@options.endpoint.host, @options.endpoint.port)
+      @http ||= Net::HTTP.new @options.endpoint.host, @options.endpoint.port
     end
+
+
+      
+      
+=begin
+      namespaces = {} unless namespaces.kind_of? Hash
+      if namespaces["xmlns:env"].nil? && SOAPNamespace[version]
+        namespaces["xmlns:env"] = SOAPNamespace[version]
+      end
+
+      header = xml_node("env:Header") { wsse_soap_header(wsse) }
+      body = xml_node("env:Body") { (yield if block_given?) || nil }
+
+      xml_node("env:Envelope", namespaces) { header + body }
+      
+      
+      
+      <env:Envelope xmlns:wsdl="http://v1_0.ws.inforeason.marge.blau.de/"
+                    xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+        <env:Header />
+        <env:Body>
+          <wsdl:getAllInfoReasons></wsdl:getAllInfoReasons>
+        </env:Body>
+      </env:Envelope>
+=end
 
 =begin
     # Expects the requested +soap_action+ and +soap_body+ and builds and
