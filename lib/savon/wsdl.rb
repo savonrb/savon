@@ -27,7 +27,14 @@ module Savon
       @choice_elements ||= parse_choice_elements
     end
 
+    # Returns the lowerCamelCase or CamelCase name of a SOAP action for a given
+    # +string+. The string may be either lowerCamelCase, CamelCase or snake_case.
+    def soap_action_for(string)
+      mapped_soap_actions[Inflector.snake_case string]
+    end
+
     # Returns the body of the Net::HTTPResponse from the WSDL request.
+    # Defaults to +nil+ in case of a missing or invalid WSDL.
     def to_s
       wsdl_response ? wsdl_response.body : nil
     end
@@ -65,18 +72,29 @@ module Savon
     def parse_soap_actions
       soap_actions = wsdl_document.search('[@soapAction]')
 
+      return [] unless soap_actions
       soap_actions.collect do |soap_action|
         soap_action.parent.get_attribute('name')
-      end if soap_actions
+      end
     end
 
     # Parses the WSDL for choice elements.
     def parse_choice_elements
       choice_elements = wsdl_document.search('//xs:choice//xs:element')
 
+      return [] unless choice_elements
       choice_elements.collect do |choice_element|
         choice_element.get_attribute('ref').sub(/(.+):/, '')
-      end if choice_elements
+      end
+    end
+
+    # Returns a Hash containing all available SOAP actions with keys containing
+    # the name of the SOAP action converted to snake_case and the values containing
+    # the original name of the SOAP action (probably lowerCamelCase/CamelCase).
+    def mapped_soap_actions
+      @mapped_soap_actions ||= soap_actions.inject({}) do |hash, soap_action|
+        hash.merge Inflector.snake_case(soap_action) => soap_action
+      end
     end
 
   end

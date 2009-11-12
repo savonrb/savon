@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'hpricot'
+require 'cobravsmongoose'
+
 module Savon
 
   # == Savon::Service
@@ -5,11 +9,6 @@ module Savon
   # Savon::Service is a SOAP client library to enjoy. The goal is to minimize
   # the overhead of working with SOAP services and provide a lightweight
   # alternative to other libraries.
-  #
-  # ==== Example
-  #
-  #   proxy = Savon::Service.new("http://example.com/ExampleService?wsdl")
-  #   response = proxy.find_user_by_id(:id => 123)
   class Service
 
     attr_reader :response
@@ -39,45 +38,43 @@ module Savon
     # Dispatches a SOAP request, handles any HTTP errors and SOAP faults
     # and returns the SOAP response.
     def dispatch(soap_action, soap_body)
-      @response = @http.request soap_action, soap_body
-      
-      
-      
-      
-=begin
-      ApricotEatsGorilla.nodes_to_namespace = { :wsdl => wsdl.choice_elements }
-      headers, body = build_request_parameters(soap_action, soap_body)
+      response = @http.request soap_action, soap_body
 
-      Savon.log("SOAP request: #{@endpoint}")
-      Savon.log(headers.map { |k, v| "#{k}: #{v}" }.join(", "))
-      Savon.log(body)
+      soap_fault = Hpricot.XML(response.body).at '//soap:Fault'
+      raise_soap_fault soap_fault if soap_fault
+      raise_http_error response if response.code.to_i >= 300
 
-      response = http.request_post(@endpoint.path, body, headers)
-
-      Savon.log("SOAP response (status #{response.code}):")
-      Savon.log(response.body)
-
-      soap_fault = ApricotEatsGorilla[response.body, "//soap:Fault"]
-      raise_soap_fault(soap_fault) if soap_fault && !soap_fault.empty?
-      raise_http_error(response) if response.code.to_i >= 300
-
-      if pure_response?
-        response.body
-      else
-        ApricotEatsGorilla[response.body, response_xpath]
-      end
-=end
+      @options.process_response.call response
     end
 
-    # Catches calls to SOAP actions, checks if the method called was found in
-    # the WSDL and dispatches the SOAP action if it's valid.
-    def method_missing(method, *args)
-p "method_missing"
-      soap_action = camelize method
-      soap_body = extract_soap_body args[0]
-      setup_infrastructure
+    # Expects a Hpricot document containing a Soap:Fault node and raises
+    # a Savon::SOAPFault.
+    def raise_soap_fault(soap_fault)
+      case @options.soap_version
+        when 1
+          code_node, info_node = '//faultcode', '//faultstring'
+        else
+          code_node, info_node = '//code/value', '//reason/text'
+      end
+      code = soap_fault.at(code_node).inner_text
+      info = soap_fault.at(info_node).inner_text
 
-      super unless @wsdl.soap_actions.include? soap_action
+      raise SOAPFault, "#{code}: #{info}"
+    end
+
+    # Expects a Net::HTTPResponse and raises a Savon::HTTPError.
+    def raise_http_error(response)
+      raise HTTPError, "#{response.message} (#{response.code}): #{response.body}"
+    end
+
+    # Catches calls to SOAP actions, checks if the method called was found
+    # in the WSDL and dispatches the SOAP action if it's valid.
+    def method_missing(method, *args)
+      setup_infrastructure
+      soap_action = @wsdl.soap_action_for method
+      soap_body = extract_soap_body args[0]
+
+      super unless soap_action
       dispatch soap_action, soap_body
     end
 

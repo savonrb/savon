@@ -1,60 +1,71 @@
-= Savon
+h1. Savon
 
-Savon::Service is a SOAP client library to enjoy. The goal is to minimize
-the overhead of working with SOAP services and provide a lightweight
-alternative to other libraries.
-
-== Install
-
-The gem for Savon is in the {gemcutter}[http://gemcutter.org] repository.
+p. Savon can be installed as a gem from the "gemcutter":http://gemcutter.org repository.
 Please follow the steps on their website to set up your rubygems installation.
-Afterwards you can install the gem like this:
 
-  $ gem install savon
+bc. $ gem install savon
 
-== Dependencies
+h3. Dependencies
 
-  cobravsmongoose = 0.0.2
-  hpricot 0.8.2 (JRuby-compatible version)
+bc. cobravsmongoose = 0.0.2
+hpricot 0.8.2 (JRuby-compatible version)
 
-== How to use
+h2. Getting started
 
-Instantiate a new Savon::Service instance passing in the WSDL of your service.
+p. Instantiate a new instance of Savon::Service, passing in the WSDL of your service.
 
-  proxy = Savon::Service.new("http://example.com/ExampleService?wsdl")
+bc. proxy = Savon::Service.new 'http://example.com/UserService?wsdl'
 
-Call the SOAP service method of your choice on your Savon::Service instance.
+h3. The WSDL
 
-  response = proxy.get_all_users
+p. Use the WSDL object to find out about the SOAP actions offered by the service.
 
-Or pass in a Hash of options for the SOAP service to receive.
+bc. proxy.wsdl.soap_actions
+=> ["getAllUsers", "getUserById"]
 
-  response = proxy.find_user_by_id(:id => 123)
+p. Find out more about the [[WSDL]] object.
 
-Or specify a custom XPath-Expression to start translating the SOAP response at.
-By default the response is translated starting at "//return".
+h3. Calling a SOAP action
 
-  response = proxy.find_user_by_id(nil, "//user/email")
+p. Now without any setup (assuming your service applies to the default [[Options]]),
+you can just call any available SOAP action.
 
-=== Check for available SOAP actions
+bc. response = proxy.getAllUsers
 
-Access the WSDL to get an Array of SOAP actions found in the WSDL document.
+p. In case your SOAP actions are named in lowerCamelCase or CamelCase you can also
+call them using snake_case, which feels much more natural.
 
-  proxy.wsdl.soap_actions
-  # => [ "getAllUsers", "findUserById" ]
+bc. response = proxy.get_all_users
 
-=== Handle HTTP error and SOAP faults
+h3. Parameters
 
-Savon::Service raises a Savon::SOAPFault in case of a SOAP fault and a
-Savon::HTTPError in case of an HTTP error.
+p. Specifying parameters to be received by the SOAP service, can be done by passing
+a Hash to the SOAP action call.
 
-=== Logging request and response
+bc. response = proxy.get_user_by_id 'id' => { '$' => "666" }
 
-You should specify the logger to use before working with any service.
+p. Like to learn more about Parameters? Then take a look at: [[BadgerFish]].
 
-  # example for Ruby on Rails
-  Savon.logger = RAILS_DEFAULT_LOGGER
+h3. The response
 
-Of course you can also specify the log level if needed. By default it's set to :debug.
+p. The SOAP (XML) response is translated into a Hash following the [[BadgerFish]]
+convention. By default (see [[Options]]) translation starts at the '//return' (XPath
+expression) node of the XML response.
 
-  Savon.log_level = :info
+bc. p proxy.get_user_by_id 'id' => { '$' => "666" }
+=> { 'user' => { '@id' => '666', '@username' => 'dude', '$' => 'biography' } }
+
+h3. HTTP errors and SOAP faults
+
+p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError
+in case of an HTTP error. More information about [[Errors]].
+
+h3. Logging
+
+p. Savon logs each request and response, but you need to specify the logger and
+log level to use.
+
+bc. Savon.logger = Logger.new STDOUT
+Savon.log_level = :info
+
+Read more about [[Logging]].

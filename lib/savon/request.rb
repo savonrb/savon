@@ -2,7 +2,7 @@ module Savon
   class Request
 
     # Content-Types by SOAP version.
-    ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
+    ContentType = { 1 => 'text/xml', 2 => 'application/soap+xml' }
 
     def initialize(soap_action, soap_body, namespace_uri, options)
       @soap_action = soap_action
@@ -12,7 +12,10 @@ module Savon
     end
 
     def headers
-      { 'Content-Type' => ContentType[@options.soap_version], 'SOAPAction' => @soap_action }
+      @headers ||= {
+        'Content-Type' => ContentType[@options.soap_version],
+        'SOAPAction' => @soap_action
+      }
     end
 
     def body
@@ -37,7 +40,7 @@ module Savon
     def envelope_header
       header = { 'env:Header' => { '$' => '%s' } }
       header = CobraVsMongoose.hash_to_xml header
-      header % "" #TODO: add wsse support
+      header % '' #TODO: add wsse support
     end
 
     def envelope_body

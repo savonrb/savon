@@ -13,20 +13,34 @@ module Savon
     }
 
     # The default SOAP version.
-    @@default_soap_version = 1
+    @@soap_version = 1
 
     # Sets the default SOAP version to use.
-    def self.default_soap_version=(soap_version)
-      @@default_soap_version = soap_version
+    def self.soap_version=(soap_version)
+      @@soap_version = soap_version
     end
 
-    # The default XML root node.
-    @@default_root_node = '//return'
-
-    # Sets the default XML root node.
-    def self.default_root_node=(root_node)
-      @@default_root_node = root_node
+    # The default response processing.
+    @@process_response = lambda do |response|
+      doc = Hpricot.XML response.body
+      nodes = doc.search '//return'
+      
+      if nodes.size > 1
+        nodes.map { |node| CobraVsMongoose.xml_to_hash node }
+      else
+        CobraVsMongoose.xml_to_hash nodes
+      end
     end
+
+    # Returns a Proc object to process the response.
+    def process_response
+      @process_response || @@process_response
+    end
+
+    # Sets the Proc object to process the response.
+    def process_response=(process_response)
+      @process_response if process_response.respond_to? :call
+    end    
 
     # Returns the endpoint.
     attr_reader :endpoint
@@ -39,7 +53,7 @@ module Savon
 
     # Returns the SOAP version. Defaults to +@@default_soap_version+.
     def soap_version
-      @soap_version || @@default_soap_version
+      @soap_version || @@soap_version
     end
 
     # Sets the SOAP version to the given +soap_version+.
@@ -50,7 +64,7 @@ module Savon
 
     # Returns the XML root node. Defaults to +@@default_root_node+.
     def root_node
-      @root_node || @@default_root_node
+      @root_node || @@root_node
     end
 
     # Sets the XML root node to the given +root_node+.
