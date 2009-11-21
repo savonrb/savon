@@ -24,7 +24,8 @@ class UserFixture
   private
 
     def load_fixture(file)
-      IO.readlines("fixtures/#{file}.xml", "").to_s
+      file_path = File.join File.dirname(__FILE__), file
+      IO.readlines(file_path, "").to_s
     end
 
   end
