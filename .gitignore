@@ -2,4 +2,5 @@
 nbproject
 pkg
 rdoc
+rcov
 .autotest
