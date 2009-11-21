@@ -22,7 +22,7 @@ p. You can find out about the SOAP actions available on the webservice by using
 the WSDL object.
 
 bc. proxy.wsdl.soap_actions
-=> [:get_all_users, :get_user_by_i
+=> [:get_all_users, :get_user_by_id, :user_magic]
 
 p. Find out more about the [[WSDL]] object.
 
@@ -42,16 +42,16 @@ h3. Parameters
 p. Specifying parameters for the SOAP service, can be done by simply passing a
 Hash to the SOAP action call.
 
-bc. response = proxy.get_user_by_id 'id' => { '$' => '666' }
+bc. response = proxy.get_user_by_id :id => { '$' => '666' }
 
-p. Like to learn more about [[Parameters]] or the [[BadgerFish]] convention?
+p. Learn more about [[Parameters]], [[Value mapping]] and the [[BadgerFish]] convention.
 
 h3. The response
 
 p. By default, the SOAP response is translated into a Hash. Take a look at the
 [[Config]] for more information.
 
-bc. proxy.get_user_by_id 'id' => { '$' => '666' }
+bc. proxy.get_user_by_id :id => { '$' => '666' }
 => { 'user' => { '@id' => '666', '@username' => 'dude', '$' => 'biography' } }
 
 h3. HTTP errors and SOAP faults
