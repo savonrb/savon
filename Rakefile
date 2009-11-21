@@ -8,6 +8,8 @@ task :default => :spec
 Spec::Rake::SpecTask.new do |spec|
   spec.spec_files = FileList["spec/**/*_spec.rb"]
   spec.spec_opts << "--color"
+  spec.rcov = true
+  spec.rcov_dir = "rcov"
 end
 
 Rake::RDocTask.new do |rdoc|
@@ -37,11 +39,11 @@ begin
       "--inline-source"
     ]
 
-    spec.add_runtime_dependency("cobravsmongoose", "0.0.2")
-    spec.add_runtime_dependency("hpricot", "0.8.2")
+    spec.add_runtime_dependency("cobravsmongoose", ">= 0.0.2")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
     spec.add_development_dependency("rr", ">= 0.10.0")
+    spec.add_development_dependency("fakeweb", ">= 1.2.7")
   end
 rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
