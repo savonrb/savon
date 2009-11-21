@@ -1,90 +1,37 @@
-require File.join(File.dirname(__FILE__), "..", "spec_helper")
+require "spec_helper"
 
 describe Savon::WSDL do
-#  include SpecHelperMethods
+  before { @wsdl = Savon::WSDL.new SpecHelper.some_endpoint_uri }
 
   describe "initialize" do
-    it "expects an instance of Savon::HTTP" do
-      #Savon::WSDL.new some_savon_http_instance
+    it "expects a URI object of the endpoint" do
+      Savon::WSDL.new SpecHelper.some_endpoint_uri
     end
   end
 
   describe "namespace_uri" do
-    it "blaaas" do
-      wsdl = Savon::WSDL.new savon_http_retrieve_wsdl_mock
-      wsdl.namespace_uri == "s"
-    end
-  end
-
-  def savon_http_retrieve_wsdl_mock
-    http_wsdl_mock = Net::HTTPResponse.new 200, 3, 
-    mock(http_wsdl_mock).body { UserFixture.user_wsdl }
-
-    savon_http_mock = Savon::HTTP.new URI("http://example.com")
-    mock(savon_http_mock).retrieve_wsdl { http_wsdl_mock }
-    savon_http_mock
-  end
-=begin
-  include SpecHelper
-
-  #namespace_uri
-  describe "namespace_uri" do
-    before { @wsdl = new_wsdl }
-
     it "returns the namespace URI from the WSDL" do
-      @wsdl.namespace_uri == UserFixture.namespace_uri
-    end
-
-    it "returns the same object every time" do
-      @wsdl.namespace_uri.should equal(@wsdl.namespace_uri)
+      @wsdl.namespace_uri.should == UserFixture.namespace_uri
     end
   end
 
-  # soap_actions
   describe "soap_actions" do
-    before { @wsdl = new_wsdl }
-
-    it "returns the SOAP actions from the WSDL" do
-      @wsdl.soap_actions == UserFixture.soap_actions
-    end
-
-    it "returns the same object every time" do
-      @wsdl.soap_actions.should equal(@wsdl.soap_actions)
+    it "returns an Array containing all available SOAP actions" do
+      @wsdl.soap_actions.should == UserFixture.soap_actions.keys
     end
   end
 
-  # choice_elements
-  describe "choice_elements" do
-    before { @wsdl = new_wsdl }
-
-    it "returns the choice elements from the WSDL" do
-      @wsdl.choice_elements == UserFixture.choice_elements
-    end
-
-    it "returns the same object every time" do
-      @wsdl.choice_elements.should equal(@wsdl.choice_elements)
+  describe "soap_action_for" do
+    it "returns the name of a SOAP action for a snake_case alias" do
+      @wsdl.soap_action_for(UserFixture.soap_actions.keys.first).should ==
+        UserFixture.soap_actions.values.first
     end
   end
 
-  # initialize
-  describe "initialize" do
-    it "expects an endpoint URI and a Net::HTTP instance" do
-      @wsdl = Savon::WSDL.new(some_uri, some_http)
-    end
-  end
-
-  # to_s
   describe "to_s" do
-    before { @wsdl = new_wsdl }
-
-    it "returns nil before the WSDL document was retrieved" do
-      @wsdl.to_s.should be_nil
-    end
-
-    it "returns the response body when available" do
-      @wsdl.soap_actions # trigger http request
+    it "returns the WSDL document" do
       @wsdl.to_s.should == UserFixture.user_wsdl
     end
   end
-=end
+
 end

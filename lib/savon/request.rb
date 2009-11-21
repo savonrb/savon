@@ -63,7 +63,7 @@ module Savon
 
     def translate_soap_body
       return @soap_body.to_s unless @soap_body.kind_of? Hash
-      CobraVsMongoose.hash_to_xml @soap_body.soap_compatible
+      CobraVsMongoose.hash_to_xml @soap_body.soap_request_mapping
     end
 
   end

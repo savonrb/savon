@@ -35,10 +35,10 @@ module Savon
 
       if nodes.parent.elements.size > 1
         doc.elements.collect("//return") do |node|
-          CobraVsMongoose.xml_to_hash(node.to_s)["return"].soap_response_magic
+          CobraVsMongoose.xml_to_hash(node.to_s)["return"].soap_response_mapping
         end
       else
-        CobraVsMongoose.xml_to_hash(nodes.to_s)["return"].soap_response_magic
+        CobraVsMongoose.xml_to_hash(nodes.to_s)["return"].soap_response_mapping
       end
     end
 

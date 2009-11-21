@@ -1,13 +1,13 @@
 class Hash
 
-  def soap_compatible
+  def soap_request_mapping
     dup.inject({}) do |result, (key, value)|
       result[soap_compatible_key(key)] = map_soap_request_value value
       result
     end
   end
 
-  def soap_response_magic
+  def soap_response_mapping
     dup.inject({}) do |result, (key, value)|
       result[key] = map_soap_response_value value
       result
@@ -22,7 +22,7 @@ private
 
   def map_soap_request_value(value)
     case value
-      when Hash  then value.soap_compatible
+      when Hash  then value.soap_request_mapping
       when Array then value.map { |single| map_soap_request_value single }
                  else translate_soap_request_value value
     end
@@ -42,7 +42,7 @@ private
 
   def map_soap_response_value(value)
     case value
-      when Hash  then value.soap_response_magic
+      when Hash  then value.soap_response_mapping
       when Array then value.map { |single| map_soap_response_value single }
                  else translate_soap_response_value value
     end

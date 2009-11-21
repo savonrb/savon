@@ -8,13 +8,6 @@
             <firstname>The</firstname>
             <lastname>Dude</lastname>
          </return>
-         <return>
-            <id>123</id>
-            <email>thedude@example.com</email>
-            <username>thedude</username>
-            <firstname>The</firstname>
-            <lastname>Dude</lastname>
-         </return>
       </ns2:findUserResponse>
    </soap:Body>
 </soap:Envelope>
