@@ -1,99 +1,81 @@
-require 'rubygems'
-require 'hpricot'
+require "rexml/document"
 
 module Savon
 
-  # Savon::WSDL represents the WSDL document.
+  # Savon::WSDL
+  #
+  # Savon::WSDL represents the WSDL document of a SOAP service. The WSDL
+  # contains information about available SOAP actions and serves as a more
+  # or less qualitative API documentation.
   class WSDL
+    include HTTP
 
-    # Initializer expects instances of Savon::HTTP and Savon::Options.
-    def initialize(http, options)
-      @http = http
-      @options = options
+    # Initializer expects the WSDL +endpoint+ URI.
+    def initialize(endpoint)
+      @endpoint = endpoint
     end
 
-    # Returns the namespace URI.
+    # Returns the namespace URI from the WSDL.
     def namespace_uri
-      @namespace ||= parse_namespace_uri
+      @namespace_uri ||= parse_namespace_uri
     end
 
-    # Returns an Array of available SOAP actions.
+    # Returns an Array of available SOAP actions from the WSDL.
     def soap_actions
-      @soap_actions ||= parse_soap_actions
+      map_soap_actions.keys
     end
 
-    # Returns an Array of choice elements.
-    def choice_elements
-      @choice_elements ||= parse_choice_elements
+    # Returns the original SOAP action name for a given +method+ name.
+    # Defaults to +nil+ in case no SOAP action name could be found.
+    def soap_action_for(method)
+      map_soap_actions[method]
     end
 
-    # Returns the lowerCamelCase or CamelCase name of a SOAP action for a given
-    # +string+. The string may be either lowerCamelCase, CamelCase or snake_case.
-    def soap_action_for(string)
-      mapped_soap_actions[Inflector.snake_case string]
-    end
-
-    # Returns the body of the Net::HTTPResponse from the WSDL request.
-    # Defaults to +nil+ in case of a missing or invalid WSDL.
+    # Returns the WSDL or +nil+ in case the WSDL could not be retrieved.
     def to_s
       wsdl_response ? wsdl_response.body : nil
     end
 
   private
 
+    # Retrieves and returns the WSDL.
+    # Raises an ArgumentError in case the WSDL seems to be invalid. 
     def wsdl_response
       unless @wsdl_response
-        @wsdl_response = @http.retrieve_wsdl
-        validate_wsdl!
+        @wsdl_response = http_get_wsdl
+        #raise ArgumentError, "Invalid WSDL at: #{@endpoint}" #unless valid_wsdl?
       end
       @wsdl_response
     end
 
-    # Returns an Hpricot::Document of the WSDL. Retrieves the WSDL from the
-    # endpoint URI in case it wasn't retrieved already.
+    # Returns an Hpricot::Document of the WSDL.
     def wsdl_document
-      @wsdl_document = Hpricot.XML(wsdl_response.body) unless @wsdl_document
-      @wsdl_document
+      @wsdl_document ||= REXML::Document.new wsdl_response.body
     end
 
-    def validate_wsdl!
-      if !soap_actions || soap_actions.empty?
-        raise ArgumentError, "Unable to find WSDL at: #{@options.endpoint}"
-      end
+    # Returns whether the WSDL seems to be valid.
+    def valid_wsdl?
+      soap_actions && !soap_actions.empty?
     end
 
     # Parses the WSDL for the namespace URI.
     def parse_namespace_uri
-      definitions = wsdl_document.at('//wsdl:definitions')
-      definitions.get_attribute('targetNamespace') if definitions
+      definitions = wsdl_document.elements["//wsdl:definitions"]
+      definitions.attributes["targetNamespace"] if definitions
     end
 
     # Parses the WSDL for available SOAP actions.
     def parse_soap_actions
-      soap_actions = wsdl_document.search('[@soapAction]')
-
-      return [] unless soap_actions
-      soap_actions.collect do |soap_action|
-        soap_action.parent.get_attribute('name')
+      wsdl_document.elements.collect "//[@soapAction]" do |element|
+        element.parent.attributes["name"]
       end
     end
 
-    # Parses the WSDL for choice elements.
-    def parse_choice_elements
-      choice_elements = wsdl_document.search('//xs:choice//xs:element')
-
-      return [] unless choice_elements
-      choice_elements.collect do |choice_element|
-        choice_element.get_attribute('ref').sub(/(.+):/, '')
-      end
-    end
-
-    # Returns a Hash containing all available SOAP actions with keys containing
-    # the name of the SOAP action converted to snake_case and the values containing
-    # the original name of the SOAP action (probably lowerCamelCase/CamelCase).
-    def mapped_soap_actions
-      @mapped_soap_actions ||= soap_actions.inject({}) do |hash, soap_action|
-        hash.merge Inflector.snake_case(soap_action) => soap_action
+    # Takes an Array of +soap_actions+ and returns a Hash containing the SOAP
+    # actions converted to snake_case (keys) and their original names (values). 
+    def map_soap_actions
+      @soap_action_map ||= parse_soap_actions.inject({}) do |hash, soap_action|
+        hash.merge soap_action.snakecase.to_sym => soap_action
       end
     end
 

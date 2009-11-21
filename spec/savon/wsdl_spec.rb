@@ -1,6 +1,30 @@
 require File.join(File.dirname(__FILE__), "..", "spec_helper")
 
 describe Savon::WSDL do
+#  include SpecHelperMethods
+
+  describe "initialize" do
+    it "expects an instance of Savon::HTTP" do
+      #Savon::WSDL.new some_savon_http_instance
+    end
+  end
+
+  describe "namespace_uri" do
+    it "blaaas" do
+      wsdl = Savon::WSDL.new savon_http_retrieve_wsdl_mock
+      wsdl.namespace_uri == "s"
+    end
+  end
+
+  def savon_http_retrieve_wsdl_mock
+    http_wsdl_mock = Net::HTTPResponse.new 200, 3, 
+    mock(http_wsdl_mock).body { UserFixture.user_wsdl }
+
+    savon_http_mock = Savon::HTTP.new URI("http://example.com")
+    mock(savon_http_mock).retrieve_wsdl { http_wsdl_mock }
+    savon_http_mock
+  end
+=begin
   include SpecHelper
 
   #namespace_uri
@@ -62,4 +86,5 @@ describe Savon::WSDL do
       @wsdl.to_s.should == UserFixture.user_wsdl
     end
   end
+=end
 end

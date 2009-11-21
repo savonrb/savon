@@ -1,84 +1,79 @@
-require 'net/http'
-require 'rubygems'
-require 'cobravsmongoose'
+require "net/http"
+require "rubygems"
+require "cobravsmongoose"
 
 module Savon
-  class HTTP
+  module HTTP
 
-    attr_reader :response
+    @@logger = Logger.new STDOUT
 
-    attr_writer :namespace_uri
+    @@log_level = :debug
 
-    # Initializer expects an instance of Savon::Options.
-    def initialize(options)
-      @options = options
+    def self.logger
+      @@logger
+    end
+
+    def self.logger=(logger)
+      @@logger = logger
+    end
+
+    def self.log_level
+      @@log_level
+    end
+
+    def self.log_level=(log_level)
+      @@log_level = log_level
     end
 
     # Retrieves and returns the WSDL document from the Web.
-    def retrieve_wsdl
-      http.get wsdl_endpoint
+    def http_get_wsdl
+      log "Retrieving WSDL from: #{@endpoint}"
+      http.get @endpoint.to_s
     end
 
-    def request(soap_action, soap_body)
-      request = Request.new soap_action, soap_body, @namespace_uri, @options
+    def http_soap_call(soap_action, soap_body, namespace_uri = nil)
+      setup_http_request soap_action, soap_body, namespace_uri
 
-      log_request request.headers, request.body
-      @response = http.request_post @options.endpoint.path, request.body, request.headers
+      log_request
+      @http_response = http.request_post *soap_call_arguments
       log_response
-      
-      @response
-    end
 
-    # Returns the WSDL endpoint.
-    def wsdl_endpoint
-      "#{@options.endpoint.path}?#{@options.endpoint.query}"
+      @http_response
     end
 
   private
 
     def http
-      @http ||= Net::HTTP.new @options.endpoint.host, @options.endpoint.port
+      @http ||= Net::HTTP.new @endpoint.host, @endpoint.port
     end
 
-    def log_request(headers, body)
-      Savon.log "SOAP request: #{@endpoint}"
-      Savon.log headers.map { |k, v| "#{k}: #{v}" }.join(', ')
-      Savon.log body
+    def setup_http_request(soap_action, soap_body, namespace_uri)
+      @http_request ||= Request.new
+      @http_request.soap_action = soap_action
+      @http_request.soap_body = soap_body
+      @http_request.namespace_uri = namespace_uri if namespace_uri
+    end
+
+    def log_request
+      log "SOAP request: #{@endpoint}"
+      log @http_request.headers.map { |k, v| "#{k}: #{v}" }.join ", "
+      log @http_request.body
+    end
+
+    def soap_call_arguments
+      [@endpoint.path, @http_request.body, @http_request.headers]
     end
 
     def log_response
-      Savon.log "SOAP response (status #{@response.code}):"
-      Savon.log @response.body
+      log "SOAP response (status #{@http_response.code}):"
+      log @http_response.body
     end
 
-=begin
-
-    # Returns the WSSE arguments if :wsse_username and :wsse_password are set.
-    def wsse
-      if @wsse_username && @wsse_password
-        { :username => @wsse_username, :password => @wsse_password, :digest => wsse_digest? }
-      else
-        nil
-      end
+    # Logs a given +message+ using the +@@logger+ instance or yields the logger
+    # to a given +block+.
+    def log(message)
+      HTTP.logger.send HTTP.log_level, message if HTTP.logger.respond_to? HTTP.log_level
     end
-
-    # Expects a Hash containing information about a SOAP fault and raises
-    # a Savon::SOAPFault.
-    def raise_soap_fault(soap_fault)
-      message = case @version
-        when 1
-          "#{soap_fault[:faultcode]}: #{soap_fault[:faultstring]}"
-        else
-          "#{soap_fault[:code][:value]}: #{soap_fault[:reason][:text]}"
-      end
-      raise SOAPFault, message
-    end
-
-    # Expects a Net::HTTPResponse and raises a Savon::HTTPError.
-    def raise_http_error(response)
-      raise HTTPError, "#{response.message} (#{response.code}): #{response.body}"
-    end
-=end
 
   end
 end

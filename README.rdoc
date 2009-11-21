@@ -18,41 +18,40 @@ bc. proxy = Savon::Service.new 'http://example.com/UserService?wsdl'
 
 h3. The WSDL
 
-p. Use the WSDL object to find out about the SOAP actions offered by the service.
+p. You can find out about the SOAP actions available on the webservice by using
+the WSDL object.
 
 bc. proxy.wsdl.soap_actions
-=> ["getAllUsers", "getUserById"]
+=> [:get_all_users, :get_user_by_i
 
 p. Find out more about the [[WSDL]] object.
 
 h3. Calling a SOAP action
 
-p. Now without any setup (assuming your service applies to the default [[Options]]),
-you can just call any available SOAP action.
-
-bc. response = proxy.getAllUsers
-
-p. In case your SOAP actions are named in lowerCamelCase or CamelCase you can also
-call them using snake_case, which feels much more natural.
+p. Now, assuming your service applies to the default [[Config]], you can just
+call any available SOAP action.
 
 bc. response = proxy.get_all_users
 
+p. Savon lets you call SOAP actions using snake_case, because even though they
+will propably be written in lowerCamelCase or CamelCase, it just feels much
+more natural.
+
 h3. Parameters
 
-p. Specifying parameters to be received by the SOAP service, can be done by passing
-a Hash to the SOAP action call.
+p. Specifying parameters for the SOAP service, can be done by simply passing a
+Hash to the SOAP action call.
 
-bc. response = proxy.get_user_by_id 'id' => { '$' => "666" }
+bc. response = proxy.get_user_by_id 'id' => { '$' => '666' }
 
-p. Like to learn more about Parameters? Then take a look at: [[BadgerFish]].
+p. Like to learn more about [[Parameters]] or the [[BadgerFish]] convention?
 
 h3. The response
 
-p. The SOAP (XML) response is translated into a Hash following the [[BadgerFish]]
-convention. By default (see [[Options]]) translation starts at the '//return' (XPath
-expression) node of the XML response.
+p. By default, the SOAP response is translated into a Hash. Take a look at the
+[[Config]] for more information.
 
-bc. p proxy.get_user_by_id 'id' => { '$' => "666" }
+bc. proxy.get_user_by_id 'id' => { '$' => '666' }
 => { 'user' => { '@id' => '666', '@username' => 'dude', '$' => 'biography' } }
 
 h3. HTTP errors and SOAP faults
@@ -62,10 +61,9 @@ in case of an HTTP error. More information about [[Errors]].
 
 h3. Logging
 
-p. Savon logs each request and response, but you need to specify the logger and
-log level to use.
+p. By default Savon logs each request and response to STDOUT. Specifying your
+own logger is as easy as it gets:
 
-bc. Savon.logger = Logger.new STDOUT
-Savon.log_level = :info
+bc. Savon::HTTP.logger = RAILS_DEFAULT_LOGGER
 
 Read more about [[Logging]].
