@@ -9,6 +9,9 @@ require "savon/service"
 
 module Savon
 
+  # The current version.
+  VERSION = "0.5.0"
+
   # Raised in case of an HTTP error.
   class HTTPError < StandardError; end
 
