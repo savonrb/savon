@@ -12,7 +12,8 @@ hpricot 0.8.2 (JRuby-compatible version)
 
 h2. Warning
 
-p. To use a heavy metal library like this, you have to be familiar with SOAP, WSDL and tools like soapUI.
+p. To use a heavy metal library like this, you have to be familiar with SOAP,
+WSDL and tools like soapUI.
 
 h2. First step
 
