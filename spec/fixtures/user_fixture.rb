@@ -14,13 +14,6 @@ class UserFixture
       :soap_response_hash_id, :soap_response_hash_username,
       :soap_response_hash_email, :soap_response_hash_registered
 
-    def soap_response_hash
-      { "id" => @soap_response_hash_id,
-        "username" => @soap_response_hash_username,
-        "email" => @soap_response_hash_email,
-        "registered" => @soap_response_hash_registered }
-    end
-
     def user_wsdl
       load_fixture :user_wsdl
     end
