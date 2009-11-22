@@ -4,6 +4,9 @@ class SpecHelper
   @some_endpoint = @soap_call_endpoint + "?wsdl"
   @some_endpoint_uri = URI @some_endpoint
 
+  @soap_multiple_endpoint = "http://multiple.example.com/UserService"
+  @multiple_endpoint = @soap_multiple_endpoint + "?wsdl"
+
   @soap_soapfault_endpoint = "http://soapfault.example.com/UserService"
   @soapfault_endpoint = @soap_soapfault_endpoint + "?wsdl"
 
@@ -15,6 +18,7 @@ class SpecHelper
 
   class << self
     attr_accessor :soap_call_endpoint, :some_endpoint, :some_endpoint_uri,
+      :soap_multiple_endpoint , :multiple_endpoint,
       :soap_soapfault_endpoint, :soapfault_endpoint,
       :soap_httperror_endpoint, :httperror_endpoint,
       :wsse_security_nodes

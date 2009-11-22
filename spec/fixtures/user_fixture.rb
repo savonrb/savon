@@ -8,11 +8,14 @@ class UserFixture
   @soap_response_hash_email = { "$" => "thedude@example.com" }
   @soap_response_hash_registered = { "$" => DateTime.new(2000, 01, 22, 22, 11, 21) }
 
+  @soap_response_hash_id2 = { "$" => "999" }
+
   class << self
 
     attr_accessor :namespace_uri, :soap_actions,
       :soap_response_hash_id, :soap_response_hash_username,
-      :soap_response_hash_email, :soap_response_hash_registered
+      :soap_response_hash_email, :soap_response_hash_registered,
+      :soap_response_hash_id2
 
     def user_wsdl
       load_fixture :user_wsdl
