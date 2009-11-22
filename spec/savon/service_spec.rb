@@ -62,6 +62,11 @@ describe Savon::Service do
       @proxy.http_request.body.should include "<id>666</id>"
     end
 
+    it "accepts a String containing the SOAP request body" do
+      @proxy.find_user "<id>666</id>"
+      @proxy.http_request.body.should include "<id>666</id>"
+    end
+
     describe "Hash configuration per request" do
       it "uses the value from :soap_body for the SOAP request body" do
         @proxy.find_user :soap_body => { :id => { "$" => 666 } }
