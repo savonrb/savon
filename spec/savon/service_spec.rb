@@ -1,8 +1,33 @@
 require "spec_helper"
 
 describe Savon::Service do
+  before { @proxy = Savon::Service.new SpecHelper.some_endpoint }
 
-  it 'bla'
+  describe "initialize" do
+    it "expects the endpoint URI as a String" do
+      Savon::Service.new SpecHelper.some_endpoint
+    end
+  end
+
+  describe "wsdl" do
+    it "returns the WSDL object" do
+      @proxy.wsdl.should be_an_instance_of Savon::WSDL
+    end
+
+    it "always returns the same WSDL object" do 
+      @proxy.wsdl.should equal @proxy.wsdl
+    end
+  end
+
+  describe "respond_to?" do
+    it "returns true for SOAP actions" do
+      @proxy.respond_to?(UserFixture.soap_actions.keys.first).should be_true
+    end
+
+    it "delegates to super" do
+      @proxy.respond_to?(:object_id).should be_true
+    end
+  end
 
 =begin
   include SpecHelper

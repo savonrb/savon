@@ -27,4 +27,5 @@ end
 
 require "fixtures/user_fixture"
 
+# WSDL request
 FakeWeb.register_uri :get, SpecHelper.some_endpoint, :body => UserFixture.user_wsdl
