@@ -1,3 +1,4 @@
+require "logger"
 require "net/http"
 require "rubygems"
 require "cobravsmongoose"
