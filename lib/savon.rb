@@ -1,5 +1,3 @@
-require "logger"
-
 require "savon/config"
 require "savon/core_ext"
 require "savon/http"
