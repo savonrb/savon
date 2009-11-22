@@ -22,6 +22,10 @@ class UserFixture
       load_fixture :user_response
     end
 
+    def multiple_user_response
+      load_fixture :multiple_user_response
+    end
+
     def soap_fault
       load_fixture :soap_fault
     end
