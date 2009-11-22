@@ -10,7 +10,11 @@ h3. Dependencies
 bc. cobravsmongoose = 0.0.2
 hpricot 0.8.2 (JRuby-compatible version)
 
-h2. Getting started
+h2. Warning
+
+p. To use a heavy metal library like this, you have to be familiar with SOAP, WSDL and tools like soapUI.
+
+h2. First step
 
 p. Instantiate a new instance of Savon::Service, passing in the WSDL of your service.
 
