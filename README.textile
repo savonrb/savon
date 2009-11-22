@@ -14,7 +14,7 @@ h2. Getting started
 
 p. Instantiate a new instance of Savon::Service, passing in the WSDL of your service.
 
-bc. proxy = Savon::Service.new 'http://example.com/UserService?wsdl'
+bc. proxy = Savon::Service.new "http://example.com/UserService?wsdl"
 
 h3. The WSDL
 
@@ -42,7 +42,7 @@ h3. Parameters
 p. Specifying parameters for the SOAP service, can be done by simply passing a
 Hash to the SOAP action call.
 
-bc. response = proxy.get_user_by_id :id => { '$' => '666' }
+bc. response = proxy.get_user_by_id :id => { "$" => "666" }
 
 p. Learn more about [[Parameters]], [[Value mapping]] and the [[BadgerFish]] convention.
 
@@ -51,8 +51,8 @@ h3. The response
 p. By default, the SOAP response is translated into a Hash. Take a look at the
 [[Config]] for more information.
 
-bc. proxy.get_user_by_id :id => { '$' => '666' }
-=> { 'user' => { '@id' => '666', '@username' => 'dude', '$' => 'biography' } }
+bc. proxy.get_user_by_id :id => { "$" => "666" }
+=> { "user" => { "@id" => "666", "@username" => "dude", "$" => "biography" } }
 
 h3. HTTP errors and SOAP faults
 
