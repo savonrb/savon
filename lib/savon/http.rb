@@ -26,6 +26,8 @@ module Savon
       @@log_level = log_level
     end
 
+    attr_reader :http_request
+
     # Retrieves and returns the WSDL document from the Web.
     def http_get_wsdl
       log "Retrieving WSDL from: #{@endpoint}"

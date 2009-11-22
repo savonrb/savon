@@ -2,11 +2,12 @@
    <soap:Body>
       <ns2:findUserResponse xmlns:ns2="http://v1_0.ws.user.example.com">
          <return>
-            <id>123</id>
+            <id>666</id>
             <email>thedude@example.com</email>
             <username>thedude</username>
             <firstname>The</firstname>
             <lastname>Dude</lastname>
+						<registered>2000-01-22T22:11:21</registered>
          </return>
       </ns2:findUserResponse>
    </soap:Body>

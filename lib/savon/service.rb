@@ -13,10 +13,10 @@ module Savon
     include HTTP
 
     # XPath to the SOAP fault code by SOAP version. 
-    SOAPFaultCodeXpath = { 1 => "//faultcode", 2 => "//code/value" }
+    SOAPFaultCodeXPath = { 1 => "//faultcode", 2 => "//code/value" }
 
     # XPath to the SOAP fault message by SOAP version.
-    SOAPFaultMessageXpath = { 1 => "//faultstring", 2 => "//reason/text" }
+    SOAPFaultMessageXPath = { 1 => "//faultstring", 2 => "//reason/text" }
 
     # Returns the Net::HTTP response of the last SOAP request.
     attr_reader :response
@@ -64,13 +64,13 @@ module Savon
 
     # Returns the SOAP fault code.
     def soap_fault_code
-      xpath = SOAPFaultCodeXpath[savon_config.soap_version]
+      xpath = SOAPFaultCodeXPath[savon_config.soap_version]
       soap_fault.elements[xpath].get_text
     end
 
     # Returns the SOAP fault message.
     def soap_fault_message
-      xpath = SOAPFaultMessageXpath[savon_config.soap_version]
+      xpath = SOAPFaultMessageXPath[savon_config.soap_version]
       soap_fault.elements[xpath].get_text
     end
 

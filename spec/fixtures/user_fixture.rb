@@ -1,12 +1,24 @@
 class UserFixture
+
+  @namespace_uri = "http://v1_0.ws.user.example.com"
+  @soap_actions = { :find_user => "findUser" }
+
+  @soap_response_hash_id = { "$" => "666" }
+  @soap_response_hash_username = { "$" => "thedude" }
+  @soap_response_hash_email = { "$" => "thedude@example.com" }
+  @soap_response_hash_registered = { "$" => DateTime.new(2000, 01, 22, 22, 11, 21) }
+
   class << self
 
-    def namespace_uri
-      "http://v1_0.ws.user.example.com"
-    end
+    attr_accessor :namespace_uri, :soap_actions,
+      :soap_response_hash_id, :soap_response_hash_username,
+      :soap_response_hash_email, :soap_response_hash_registered
 
-    def soap_actions
-      { :find_user => "findUser" }
+    def soap_response_hash
+      { "id" => @soap_response_hash_id,
+        "username" => @soap_response_hash_username,
+        "email" => @soap_response_hash_email,
+        "registered" => @soap_response_hash_registered }
     end
 
     def user_wsdl

@@ -41,7 +41,7 @@ module Savon
       header["env:Header"] = envelope_wsse_header if savon_config.wsse?
       CobraVsMongoose.hash_to_xml header
     end
-
+=begin
     def envelope_wsse_header
       created_at = Time.now.strftime Savon::SOAPDateTimeFormat
 
@@ -54,7 +54,7 @@ module Savon
         end
       end
     end
-
+=end
     def envelope_body
       body = { "env:Body" => { "wsdl:#{@soap_action}" => { "$" => "%s" } } }
       body = CobraVsMongoose.hash_to_xml body
@@ -62,8 +62,23 @@ module Savon
     end
 
     def translate_soap_body
-      return @soap_body.to_s unless @soap_body.kind_of? Hash
+      if @soap_body.kind_of? Hash
+        translate_soap_body_hash
+      else
+        @soap_body.to_s
+      end
+    end
+
+    def translate_soap_body_hash
+      return translate_multiple_root_nodes if @soap_body.keys.length > 1
       CobraVsMongoose.hash_to_xml @soap_body.soap_request_mapping
+    end
+
+    def translate_multiple_root_nodes
+      @soap_body.keys.map do |key|
+        hash = { key => @soap_body[key] }.soap_request_mapping
+        CobraVsMongoose.hash_to_xml hash
+      end.join
     end
 
   end

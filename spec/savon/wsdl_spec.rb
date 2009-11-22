@@ -23,8 +23,9 @@ describe Savon::WSDL do
 
   describe "soap_action_for" do
     it "returns the name of a SOAP action for a snake_case alias" do
-      @wsdl.soap_action_for(UserFixture.soap_actions.keys.first).should ==
-        UserFixture.soap_actions.values.first
+      UserFixture.soap_actions.each do |key, value|
+        @wsdl.soap_action_for(key).should == value
+      end
     end
   end
 
