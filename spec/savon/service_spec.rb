@@ -89,6 +89,42 @@ describe Savon::Service do
       @proxy.http_request.body.should include "<id>666</id>"
     end
 
+    describe "Hash configuration per request" do
+      it "uses the value from :soap_body for the SOAP request body" do
+        @proxy.find_user :soap_body => { :id => { "$" => 666 } }
+        @proxy.http_request.body.should include "<id>666</id>"
+      end
+
+      it "uses the value from :soap_version to specify the SOAP version" do
+        @proxy.find_user :soap_body => {}, :soap_version => 2
+        Savon::Config.instance.soap_version.should == 2
+      end
+
+      it "handles WSSE authentication" do
+        @proxy.find_user :soap_body => {}, :wsse => {
+          :username => "thedude", :password => "secret"
+        }
+
+        request_body = @proxy.http_request.body
+        request_body.should include *SpecHelper.wsse_security_nodes
+        request_body.should include the_unencrypted_wsse_password
+      end
+
+      it "handles WSSE digest authentication" do
+        @proxy.find_user :soap_body => {}, :wsse => {
+          :username => "thedude", :password => "secret", :digest => true
+        }
+
+        request_body = @proxy.http_request.body
+        request_body.should include *SpecHelper.wsse_security_nodes
+        request_body.should_not include the_unencrypted_wsse_password
+      end
+
+      def the_unencrypted_wsse_password
+        "<wsse:Password>#{savon_config.wsse_password}</wsse:Password>"
+      end
+    end
+
     it "converts parameter keys specified as Symbols to lowerCamelCase" do
       @proxy.find_user :totally_rad => { "$" => "true" }
       @proxy.http_request.body.should include "<totallyRad>true</totallyRad>"
@@ -116,7 +152,7 @@ describe Savon::Service do
 
     it "converts parameter values responding to :to_s into Strings" do
       @proxy.find_user :before => { "$" => 2012 }, :with => { "$" => :superpowers }
-      @proxy.http_request.body.should include "<before>2012</before><with>superpowers</with>"
+      @proxy.http_request.body.should include "<before>2012</before>", "<with>superpowers</with>"
     end
   end
 

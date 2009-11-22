@@ -1,5 +1,11 @@
+require "base64"
+require "digest/sha1"
+require "rubygems"
+require "builder"
+
 module Savon
   class Request
+    include WSSE
 
     # SOAP namespaces by SOAP version.
     SOAPNamespace = {
@@ -21,52 +27,35 @@ module Savon
 
     def body
       unless @body
-        envelope = { "env:Envelope" => { "$" => "%s" } }
-        envelope["env:Envelope"].merge! envelope_namespaces
-        envelope = CobraVsMongoose.hash_to_xml envelope
-        @body = envelope % (envelope_header << envelope_body)
+        builder = Builder::XmlMarkup.new
+
+        @body = builder.env(:Envelope, envelope_namespaces) do |xml|
+          xml.env(:Header) { envelope_header xml }
+          xml.env(:Body) { envelope_body xml }
+        end
       end
       @body
     end
 
   private
 
+    def envelope_header(header)
+      return nil unless savon_config.wsse?
+      wsse_header header
+    end
+
     def envelope_namespaces
-      { "@xmlns:env" => SOAPNamespace[savon_config.soap_version],
-        "@xmlns:wsdl" => @namespace_uri }
+      { "xmlns:env" => SOAPNamespace[savon_config.soap_version],
+        "xmlns:wsdl" => @namespace_uri }
     end
 
-    def envelope_header
-      header = { "env:Header" => {} }
-      header["env:Header"] = envelope_wsse_header if savon_config.wsse?
-      CobraVsMongoose.hash_to_xml header
-    end
-=begin
-    def envelope_wsse_header
-      created_at = Time.now.strftime Savon::SOAPDateTimeFormat
-
-      xml_node("wsse:Security", "xmlns:wsse" => WSENamespace) do
-        xml_node("wsse:UsernameToken", "xmlns:wsu" => WSUNamespace) do
-          xml_node("wsse:Username") { username } <<
-          password_node(password, created_at, digest) <<
-          xml_node("wsse:Nonce") { nonce(created_at) } <<
-          xml_node("wsu:Created") { created_at }
-        end
-      end
-    end
-=end
-    def envelope_body
-      body = { "env:Body" => { "wsdl:#{@soap_action}" => { "$" => "%s" } } }
-      body = CobraVsMongoose.hash_to_xml body
-      body % translate_soap_body
+    def envelope_body(xml)
+      xml.wsdl(:"#{@soap_action}") { xml << translate_soap_body }
     end
 
     def translate_soap_body
-      if @soap_body.kind_of? Hash
-        translate_soap_body_hash
-      else
-        @soap_body.to_s
-      end
+      return @soap_body.to_s unless @soap_body.kind_of? Hash
+      translate_soap_body_hash
     end
 
     def translate_soap_body_hash
@@ -75,10 +64,11 @@ module Savon
     end
 
     def translate_multiple_root_nodes
-      @soap_body.keys.map do |key|
-        hash = { key => @soap_body[key] }.soap_request_mapping
-        CobraVsMongoose.hash_to_xml hash
-      end.join
+      @soap_body.inject("") do |xml, (key, value)|
+        xml << CobraVsMongoose.hash_to_xml(
+          { key => value }.soap_request_mapping
+        )
+      end
     end
 
   end

@@ -30,9 +30,9 @@ private
 
   def translate_soap_request_value(value)
     if value.kind_of? DateTime
-      value.strftime soap_datetime_format
+      value.strftime Savon::SOAPDateTimeFormat
     elsif !value.kind_of?(String) && value.respond_to?(:to_datetime)
-      value.to_datetime.strftime soap_datetime_format
+      value.to_datetime.strftime Savon::SOAPDateTimeFormat
     elsif value.respond_to? :to_s
       value.to_s
     else
@@ -50,19 +50,11 @@ private
 
   def translate_soap_response_value(value)
     case value
-      when soap_datetime_regexp then DateTime.parse value
-      when "true"               then true
-      when "false"              then false
-                                else value
+      when Savon::SOAPDateTimeRegexp then DateTime.parse value
+      when "true"                    then true
+      when "false"                   then false
+                                     else value
     end
-  end
-
-  def soap_datetime_format
-    "%Y-%m-%dT%H:%M:%S"
-  end
-
-  def soap_datetime_regexp
-    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
   end
 
 end

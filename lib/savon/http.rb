@@ -1,29 +1,15 @@
 require "logger"
 require "net/http"
-require "rubygems"
-require "cobravsmongoose"
 
 module Savon
   module HTTP
 
-    @@logger = Logger.new STDOUT
+    @logger = Logger.new STDOUT
 
-    @@log_level = :debug
+    @log_level = :debug
 
-    def self.logger
-      @@logger
-    end
-
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
-    def self.log_level
-      @@log_level
-    end
-
-    def self.log_level=(log_level)
-      @@log_level = log_level
+    class << self
+      attr_accessor :logger, :log_level
     end
 
     attr_reader :http_request

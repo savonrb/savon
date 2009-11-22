@@ -105,8 +105,14 @@ module Savon
 
     # Returns the SOAP body from given +options+.
     def extract_soap_body(options)
-      soap_body = options[:soap_body] if options.kind_of? Hash
-      soap_body ? soap_body : options
+      soap_body = options[:soap_body] if soap_body_via_per_request options
+      soap_body ||= options
+      (!soap_body || soap_body.empty?) ? "" : soap_body
+    end
+
+    # Returns whether the SOAP body was specified via per request configuration.
+    def soap_body_via_per_request(options)
+      options.kind_of?(Hash) && options.keys.include?(:soap_body)
     end
 
   end

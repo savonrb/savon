@@ -40,6 +40,7 @@ begin
       "--inline-source"
     ]
 
+    spec.add_runtime_dependency("builder", ">= 2.1.2")
     spec.add_runtime_dependency("cobravsmongoose", ">= 0.0.2")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
