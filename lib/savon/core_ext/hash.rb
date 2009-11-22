@@ -33,10 +33,8 @@ private
       value.strftime Savon::SOAPDateTimeFormat
     elsif !value.kind_of?(String) && value.respond_to?(:to_datetime)
       value.to_datetime.strftime Savon::SOAPDateTimeFormat
-    elsif value.respond_to? :to_s
-      value.to_s
     else
-      nil
+      value.to_s
     end
   end
 
