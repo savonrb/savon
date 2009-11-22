@@ -38,17 +38,17 @@ module Savon
 
   private
 
-    # Retrieves and returns the WSDL.
-    # Raises an ArgumentError in case the WSDL seems to be invalid. 
+    # Retrieves and returns the WSDL. Raises an ArgumentError in case the WSDL
+    # seems to be invalid. 
     def wsdl_response
       unless @wsdl_response
         @wsdl_response = http_get_wsdl
-        #raise ArgumentError, "Invalid WSDL at: #{@endpoint}" #unless valid_wsdl?
+        raise ArgumentError, "Invalid WSDL at: #{@endpoint}" unless valid_wsdl?
       end
       @wsdl_response
     end
 
-    # Returns an Hpricot::Document of the WSDL.
+    # Returns a REXML::Document of the WSDL.
     def wsdl_document
       @wsdl_document ||= REXML::Document.new wsdl_response.body
     end
