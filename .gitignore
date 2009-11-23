@@ -2,4 +2,6 @@
 nbproject
 pkg
 rdoc
+.loadpath
+.project
 .autotest
