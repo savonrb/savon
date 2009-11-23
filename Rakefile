@@ -37,8 +37,8 @@ begin
       "--inline-source"
     ]
 
-    spec.add_runtime_dependency("hpricot", ">= 0.8.2")
-    spec.add_runtime_dependency("apricoteatsgorilla", "0.5.12")
+    spec.add_runtime_dependency("hpricot", "0.8.241")
+    spec.add_runtime_dependency("apricoteatsgorilla", "0.5.13")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
     spec.add_development_dependency("rr", ">= 0.10.0")
