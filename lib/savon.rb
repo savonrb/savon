@@ -35,7 +35,7 @@ module Savon
 
 end
 
-%w(net/http uri rubygems hpricot apricoteatsgorilla).each do |gem|
+%w(net/http net/https uri rubygems hpricot apricoteatsgorilla).each do |gem|
   require gem
 end
 

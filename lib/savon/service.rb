@@ -36,6 +36,7 @@ module Savon
       raise ArgumentError, "Invalid version: #{version}" unless SOAPVersions.include? version
       @endpoint = URI(endpoint)
       @version = version
+      @ssl = /^https.+/ === endpoint
     end
 
     # Returns an instance of Savon::WSDL.
@@ -122,6 +123,7 @@ module Savon
     # Returns a Net::HTTP instance.
     def http
       @http ||= Net::HTTP.new(@endpoint.host, @endpoint.port)
+      @http.use_ssl = true if @ssl
     end
 
     # Catches calls to SOAP actions, checks if the method called was found in
