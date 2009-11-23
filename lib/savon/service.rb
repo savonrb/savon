@@ -122,8 +122,11 @@ module Savon
 
     # Returns a Net::HTTP instance.
     def http
-      @http ||= Net::HTTP.new(@endpoint.host, @endpoint.port)
-      @http.use_ssl = true if @ssl
+      unless @http
+        @http ||= Net::HTTP.new(@endpoint.host, @endpoint.port)
+        @http.use_ssl = true if @ssl
+      end
+      @http
     end
 
     # Catches calls to SOAP actions, checks if the method called was found in
