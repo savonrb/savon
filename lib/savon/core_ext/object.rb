@@ -11,11 +11,4 @@ class Object
     to_datetime.to_soap_value
   end
 
-private
-
-  # The xs:dateTime format.
-  def soap_datetime_format
-    Savon::SOAPDateTimeFormat
-  end
-
 end
