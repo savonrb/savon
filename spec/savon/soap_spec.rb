@@ -3,6 +3,11 @@ require "spec_helper"
 describe Savon::SOAP do
   before { @soap = new_soap_instance }
 
+  def new_soap_instance(options = {})
+    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
+      options, UserFixture.namespace_uri
+  end
+
   describe "@version" do
     it "defaults to 1" do
       Savon::SOAP.version.should == 1
@@ -73,11 +78,6 @@ describe Savon::SOAP do
     it "returns the default SOAP version otherwise" do
       @soap.version.should == Savon::SOAP.version
     end
-  end
-
-  def new_soap_instance(options = {})
-    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
-      options, UserFixture.namespace_uri
   end
 
   describe "SOAPNamespace" do

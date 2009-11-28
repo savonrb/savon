@@ -16,8 +16,10 @@ module Savon
     end
 
     class << self
+
       # Accessor for the default response block.
       attr_accessor :response_process
+
     end
 
     # Expects a SOAP +endpoint+ String.
@@ -29,16 +31,8 @@ module Savon
     # Returns the Savon::WSDL.
     attr_reader :wsdl
 
-    # Returns the Net::HTTPResponse of the last SOAP request.
-    attr_reader :response
-
-    # Dispatches a given +soap_action+ with a given +soap_body+, +options+
-    # and a +response_process+.
-    def dispatch(soap_action, soap_body, options, response_process = nil)
-      @soap = SOAP.new soap_action, soap_body, options, @wsdl.namespace_uri
-      @response = @request.soap @soap
-      response_process(response_process).call @response
-    end
+    # Returns the Savon::Request.
+    attr_reader :request
 
     # Behaves as usual, but also returns +true+ for available SOAP actions.
     def respond_to?(method)
@@ -57,6 +51,14 @@ module Savon
       soap_body, options = args[0], args[1] || {}
       validate_arguments! soap_body, options, block
       dispatch soap_action, soap_body, options, block
+    end
+
+    # Dispatches a given +soap_action+ with a given +soap_body+, +options+
+    # and a +response_process+.
+    def dispatch(soap_action, soap_body, options, response_process = nil)
+      @soap = SOAP.new soap_action, soap_body, options, @wsdl.namespace_uri
+      @response = @request.soap @soap
+      response_process(response_process).call @response
     end
 
     # Returns the response process to use.

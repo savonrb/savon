@@ -67,6 +67,13 @@ describe Savon::Request do
     end
   end
 
+  describe "response" do
+    it "returns the Net::HTTPResponse" do
+      @request.soap new_soap_instance
+      @request.response.body.should == UserFixture.user_response
+    end
+  end
+
   describe "wsdl" do
     it "retrieves the WSDL document and returns the Net::HTTPResponse" do
       wsdl_response = @request.wsdl
@@ -78,13 +85,16 @@ describe Savon::Request do
 
   describe "soap" do
     it "executes a SOAP request and returns the Net::HTTPResponse" do
-      soap = Savon::SOAP.new UserFixture.soap_actions.values.first,
-        { :id => 666 }, options, UserFixture.namespace_uri
-      soap_response = @request.soap(soap)
+      soap_response = @request.soap new_soap_instance
 
       soap_response.should be_a Net::HTTPResponse
       soap_response.body.should == UserFixture.user_response
     end
+  end
+
+  def new_soap_instance(options = {})
+    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
+      options, UserFixture.namespace_uri
   end
 
 end

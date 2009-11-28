@@ -39,6 +39,9 @@ module Savon
     # Returns the endpoint URI.
     attr_reader :endpoint
 
+    # Returns the Net::HTTPResponse.
+    attr_reader :response
+
     # Retrieves WSDL document and returns the Net::HTTPResponse.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"

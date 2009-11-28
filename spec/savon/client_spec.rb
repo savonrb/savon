@@ -1,7 +1,11 @@
 require "spec_helper"
 
 describe Savon::Client do
-  before { @client = Savon::Client.new SpecHelper.some_endpoint }
+  before { @client = new_client_instance }
+
+  def new_client_instance
+    Savon::Client.new SpecHelper.some_endpoint
+  end
 
   describe "@response_process" do
     it "expects a Net::HTTPResponse, translates the response" <<
@@ -13,6 +17,59 @@ describe Savon::Client do
         response[key].should == value
       end
     end
+
+    it "has accessor methods" do
+      response_process = Savon::Client.response_process
+
+      Savon::Client.response_process = "process"
+      Savon::Client.response_process.should == "process"
+      Savon::Client.response_process = response_process
+      Savon::Client.response_process.should == response_process
+    end
+  end
+
+  describe "initialize" do
+    it "expects a SOAP endpoint String" do
+      new_client_instance
+    end
+
+    it "raises an ArgumentError in case of an invaluid endpoint" do
+      lambda { Savon::Client.new "invalid" }.should raise_error ArgumentError
+    end
+  end
+
+  describe "wsdl" do
+    it "returns the Savon::WSDL" do
+      @client.find_user
+
+      @client.wsdl.should be_a Savon::WSDL
+      @client.wsdl.to_s.should == UserFixture.user_wsdl
+    end
+  end
+  
+  describe "request" do
+    it "returns the Savon::Request" do
+      @client.find_user
+
+      @client.request.should be_a Savon::Request
+      @client.request.response.body.should == UserFixture.user_response
+    end
+  end
+
+  describe "respond_to?" do
+    it "returns true for available SOAP actions" do
+      @client.respond_to?(UserFixture.soap_actions.keys.first).
+        should be_true
+    end
+
+    it "still behaves like usual otherwise" do
+      @client.respond_to?(:object_id).should be_true
+      @client.respond_to?(:unavailable_method).should be_false
+    end
+  end
+
+  describe "method_missing" do
+    it "needs specs"
   end
 
   def http_response_mock
