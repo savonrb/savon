@@ -33,7 +33,7 @@ describe Savon::Client do
       new_client_instance
     end
 
-    it "raises an ArgumentError in case of an invaluid endpoint" do
+    it "raises an ArgumentError in case of an invalid endpoint" do
       lambda { Savon::Client.new "invalid" }.should raise_error ArgumentError
     end
   end
