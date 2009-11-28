@@ -22,7 +22,7 @@ describe Savon::Validation do
 
     describe ":soap_version" do
       it "returns true for valid SOAP versions" do
-        Savon::Validation::SOAPVersions.each do |soap_version|
+        Savon::SOAPVersions.each do |soap_version|
           @validation.validate!(:soap_version, soap_version).should be_true
         end
       end

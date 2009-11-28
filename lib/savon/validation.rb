@@ -1,9 +1,6 @@
 module Savon
   module Validation
 
-    # Supported SOAP versions.
-    SOAPVersions = [1, 2]
-
     # Validates a given +value+ of a given +type+. Raises an ArgumentError
     # in case the value is not valid. 
     def validate!(type, value)

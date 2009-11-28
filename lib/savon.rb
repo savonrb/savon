@@ -3,6 +3,9 @@ module Savon
   # Current version.
   VERSION = "0.5.0"
 
+  # Supported SOAP versions.
+  SOAPVersions = [1, 2]
+
   # SOAP xs:dateTime format.
   SOAPDateTimeFormat = "%Y-%m-%dT%H:%M:%S"
 
