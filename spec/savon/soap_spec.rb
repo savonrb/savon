@@ -11,7 +11,8 @@ describe Savon::SOAP do
   describe "SOAPNamespace" do
     it "contains the SOAP namespace for each supported SOAP version" do
       Savon::Validation::SOAPVersions.each do |soap_version|
-        Savon::SOAP::SOAPNamespace[soap_version].should_not be_nil
+        Savon::SOAP::SOAPNamespace[soap_version].should be_a String
+        Savon::SOAP::SOAPNamespace[soap_version].should_not be_empty
       end
     end
   end
@@ -19,7 +20,8 @@ describe Savon::SOAP do
   describe "ContentType" do
     it "contains the Content-Types for each supported SOAP version" do
       Savon::Validation::SOAPVersions.each do |soap_version|
-        Savon::SOAP::ContentType[soap_version].should_not be_nil
+        Savon::SOAP::ContentType[soap_version].should be_a String
+        Savon::SOAP::ContentType[soap_version].should_not be_empty
       end
     end
   end
