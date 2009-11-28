@@ -16,7 +16,7 @@ describe Savon::Validation do
 
       it "raises an ArgumentError in case of invalid endpoints" do
         lambda { @validation.validate! :endpoint, "invalid" }.
-          should raise_error(ArgumentError)
+          should raise_error ArgumentError
       end
     end
 
@@ -30,7 +30,7 @@ describe Savon::Validation do
       it "raises an ArgumentError in case of invalid SOAP versions" do
         [5, 9, nil, false, "upcoming"].each do |soap_version|
           lambda { @validation.validate! :soap_version, soap_version }.
-            should raise_error(ArgumentError)
+            should raise_error ArgumentError
         end
       end
     end
@@ -53,7 +53,7 @@ describe Savon::Validation do
         end
 
         lambda { @validation.validate! :endpoint, singleton }.
-          should raise_error(ArgumentError)
+          should raise_error ArgumentError
       end
     end
 
@@ -65,7 +65,7 @@ describe Savon::Validation do
       it "raises an ArgumentError for an invalid response process" do
         [123, "block", [], {}].each do |response_process|
           lambda { @validation.validate! :response_process, response_process }.
-            should raise_error(ArgumentError)
+            should raise_error ArgumentError
         end
       end
     end
@@ -79,7 +79,7 @@ describe Savon::Validation do
       it "returns false for invalid WSSE credentials" do
         [{ :username => "user" }, { :password => "secret" }].each do |wsse_credentials|
           lambda { @validation.validate! :wsse_credentials, wsse_credentials }.
-            should raise_error(ArgumentError)
+            should raise_error ArgumentError
         end
       end
     end
