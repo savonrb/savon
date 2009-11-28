@@ -42,24 +42,24 @@ describe Hash do
     end
 
     it "converts DateTime objects to xs:dateTime compliant Strings" do
-      { :before => DateTime.new(2010, 11, 22, 11, 22, 33) }.to_soap_xml.
-        should == "<before>2010-11-22T11:22:33</before>"
+      { :before => UserFixture.datetime_object }.to_soap_xml.
+        should == "<before>" << UserFixture.datetime_string << "</before>"
     end
 
     it "converts Objects responding to to_datetime to xs:dateTime compliant Strings" do
       singleton = Object.new
       def singleton.to_datetime
-        DateTime.new 2010, 11, 22, 11, 22, 33
+        UserFixture.datetime_object
       end
 
       { :before => singleton }.to_soap_xml.
-        should == "<before>2010-11-22T11:22:33</before>"
+        should == "<before>" << UserFixture.datetime_string << "</before>"
     end
 
     it "calls to_s on Strings even if they respond to to_datetime" do
       singleton = "gorilla"
       def singleton.to_datetime
-        DateTime.new 2010, 11, 22, 11, 22, 33
+        UserFixture.datetime_object
       end
 
       { :name => singleton }.to_soap_xml.should == "<name>gorilla</name>"

@@ -3,15 +3,17 @@ class UserFixture
   @namespace_uri = "http://v1_0.ws.user.example.com"
   @soap_actions = { :find_user => "findUser" }
 
-  @datetime_string = "2000-01-22T22:11:21"
+  @datetime_string = "2010-11-22T11:22:33"
+  @datetime_object = DateTime.parse @datetime_string
+
   @response_hash = { :id => "666", :active => true, :username => "thedude",
     :firstname => "The", :lastname => "Dude", :email => "thedude@example.com",
-    :registered => DateTime.parse(@datetime_string) }
+    :registered => @datetime_object }
 
   class << self
 
     attr_accessor :namespace_uri, :soap_actions,
-      :datetime_string, :response_hash
+      :datetime_string, :datetime_object, :response_hash
 
     def user_wsdl
       load_fixture :user_wsdl

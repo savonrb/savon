@@ -12,10 +12,10 @@ describe Object do
     it "returns an xs:dateTime compliant String for Objects responding to to_datetime" do
       singleton = Object.new
       def singleton.to_datetime
-        DateTime.new 2010, 11, 22, 11, 22, 33
+        UserFixture.datetime_object
       end
 
-      singleton.to_soap_value.should == "2010-11-22T11:22:33"
+      singleton.to_soap_value.should == UserFixture.datetime_string
     end
 
     it "calls to_s unless the Object responds to to_datetime" do
