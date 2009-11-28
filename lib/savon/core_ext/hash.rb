@@ -7,7 +7,7 @@ class Hash
   #   { :find_user => { :id => 666 } }.to_soap_xml
   #   => "<findUser><id>666</id></findUser>"
   def to_soap_xml
-    @soap_xml ||= Builder::XmlMarkup.new
+    @soap_xml = Builder::XmlMarkup.new
     each { |key, value| nested_data_to_soap_xml key, value }
     @soap_xml.target!
   end
@@ -26,7 +26,7 @@ class Hash
         when String
           value.map_soap_response
         else
-          value
+          value.to_s
       end
       hash.merge key => value
     end
