@@ -2,15 +2,15 @@ module Savon
 
   # == Savon::Client
   #
-  # Heavy metal Ruby SOAP client library. This library is supposed to minimize
-  # the overhead of working with SOAP services and XML.
+  # Heavy metal Ruby SOAP client library. Minimizes the overhead of working
+  # with SOAP services and XML.
   class Client
     include Validation
 
     @response_block = lambda do |response|
-      hash = Crack::XML.parse response.body
-      hash = hash["soap:Envelope"]["soap:Body"]
-      hash[hash.keys.first]["return"].map_soap_response
+      hash = Crack::XML.parse(response.body)["soap:Envelope"]["soap:Body"]
+      hash = hash[hash.keys.first]["return"] rescue hash[hash.keys.first]
+      hash.map_soap_response
     end
 
     class << self
