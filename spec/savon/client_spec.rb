@@ -64,12 +64,38 @@ describe Savon::Client do
 
     it "still behaves like usual otherwise" do
       @client.respond_to?(:object_id).should be_true
-      @client.respond_to?(:unavailable_method).should be_false
+      @client.respond_to?(:some_missing_method).should be_false
     end
   end
 
   describe "method_missing" do
-    it "needs specs"
+    it "dispatches SOAP requests for available SOAP actions" do
+      @client.find_user.should be_a Hash
+    end
+
+    it "still returns a NoMethodError for missing methods" do
+      lambda { @client.some_missing_method }.should raise_error NoMethodError
+    end
+
+    it "accepts a Hash for specifying the SOAP body" do
+      soap_body_hash = { :id => 666 }
+      @client.find_user soap_body_hash
+
+      @client.instance_variable_get("@soap").body.
+        should include soap_body_hash.to_soap_xml
+    end
+
+    it "accepts a String for specifying the SOAP body" do
+      soap_body_xml = "<username>dude</username>"
+      @client.find_user soap_body_xml
+
+      @client.instance_variable_get("@soap").body.
+        should include soap_body_xml
+    end
+
+    #it "" do
+    #  
+    #end
   end
 
   def http_response_mock
