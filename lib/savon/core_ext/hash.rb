@@ -1,17 +1,19 @@
 class Hash
 
-  # Returns the Hash as SOAP request compatible XML.
+  # Returns the Hash translated into SOAP request compatible XML.
   #
-  # === Example
+  # === Examples
   #
-  #   { :person_request => { :id => 666 } }.to_soap_xml
-  #   => "<personRequest><id>666</id></personRequest>"
+  #   { :find_user => { :id => 666 } }.to_soap_xml
+  #   => "<findUser><id>666</id></findUser>"
   def to_soap_xml
     @soap_xml ||= Builder::XmlMarkup.new
     each { |key, value| nested_data_to_soap_xml key, value }
     @soap_xml.target!
   end
 
+  # Maps keys and values of a Hash created from SOAP response XML to more
+  # convenient Ruby Objects.
   def map_soap_response
     inject({}) do |hash, (key, value)|
       key = key.strip_namespace.snakecase.to_sym
