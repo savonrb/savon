@@ -15,7 +15,7 @@ private
 
   # The xs:dateTime format.
   def soap_datetime_format
-    "%Y-%m-%dT%H:%M:%S"
+    Savon::SOAPDateTimeFormat
   end
 
 end
