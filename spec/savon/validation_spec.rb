@@ -57,7 +57,6 @@ describe Savon::Validation do
       end
     end
 
-
     describe ":response_process" do
       it "returns true for Objects responding to call" do
         @validation.validate!(:response_process, Proc.new {}).should be_true
