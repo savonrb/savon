@@ -3,25 +3,15 @@ require "spec_helper"
 describe Savon::SOAP do
   before { @soap = new_soap_instance }
 
-  def new_soap_instance(options = {})
-    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
-      options, UserFixture.namespace_uri
-  end
-
-  describe "SOAPNamespace" do
-    it "contains the SOAP namespace for each supported SOAP version" do
-      Savon::SOAPVersions.each do |soap_version|
-        Savon::SOAP::SOAPNamespace[soap_version].should be_a String
-        Savon::SOAP::SOAPNamespace[soap_version].should_not be_empty
-      end
+  describe "@version" do
+    it "defaults to 1" do
+      Savon::SOAP.version.should == 1
     end
-  end
 
-  describe "ContentType" do
-    it "contains the Content-Types for each supported SOAP version" do
-      Savon::SOAPVersions.each do |soap_version|
-        Savon::SOAP::ContentType[soap_version].should be_a String
-        Savon::SOAP::ContentType[soap_version].should_not be_empty
+    it "has accessor methods" do
+      [1, 2].each do |soap_version|
+        Savon::SOAP.version = soap_version
+        Savon::SOAP.version.should == soap_version
       end
     end
   end
@@ -82,6 +72,29 @@ describe Savon::SOAP do
 
     it "returns the default SOAP version otherwise" do
       @soap.version.should == Savon::SOAP.version
+    end
+  end
+
+  def new_soap_instance(options = {})
+    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
+      options, UserFixture.namespace_uri
+  end
+
+  describe "SOAPNamespace" do
+    it "contains the SOAP namespace for each supported SOAP version" do
+      Savon::SOAPVersions.each do |soap_version|
+        Savon::SOAP::SOAPNamespace[soap_version].should be_a String
+        Savon::SOAP::SOAPNamespace[soap_version].should_not be_empty
+      end
+    end
+  end
+
+  describe "ContentType" do
+    it "contains the Content-Types for each supported SOAP version" do
+      Savon::SOAPVersions.each do |soap_version|
+        Savon::SOAP::ContentType[soap_version].should be_a String
+        Savon::SOAP::ContentType[soap_version].should_not be_empty
+      end
     end
   end
 

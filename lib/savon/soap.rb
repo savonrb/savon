@@ -15,8 +15,10 @@ module Savon
     @version = 1
 
     class << self
+
       # Accessor for the default SOAP version.
       attr_accessor :version
+
     end
 
     # Expects a SOAP +action+, +body+, +options+ and the +namespace_uri+.
