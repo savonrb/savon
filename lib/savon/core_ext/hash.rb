@@ -1,57 +1,47 @@
 class Hash
 
-  def soap_request_mapping
-    dup.inject({}) do |result, (key, value)|
-      result[soap_compatible_key(key)] = map_soap_request_value value
-      result
-    end
+  # Returns the Hash as SOAP request compatible XML.
+  #
+  # === Example
+  #
+  #   { :person_request => { :id => 666 } }.to_soap_xml
+  #   => "<personRequest><id>666</id></personRequest>"
+  def to_soap_xml
+    @soap_xml ||= Builder::XmlMarkup.new
+    each { |key, value| nested_data_to_soap_xml key, value }
+    @soap_xml.target!
   end
 
-  def soap_response_mapping
-    dup.inject({}) do |result, (key, value)|
-      result[key] = map_soap_response_value value
-      result
+  def map_soap_response
+    inject({}) do |hash, (key, value)|
+      key = key.strip_namespace.snakecase.to_sym
+
+      value = case value
+        when Hash
+          value["xsi:nil"] ? nil : value.map_soap_response
+        when Array
+          value.map { |a_value| a_value.map_soap_response rescue a_value }
+        else
+          value
+      end
+      hash.merge key => value
     end
   end
 
 private
 
-  def soap_compatible_key(key)
-    key.kind_of?(Symbol) ? key.to_s.lower_camelcase : key.to_s
-  end
-
-  def map_soap_request_value(value)
+  # Expects a Hash +key+ and +value+ and recursively creates an XML structure
+  # representing the Hash content.
+  def nested_data_to_soap_xml(key, value)
     case value
-      when Hash  then value.soap_request_mapping
-      when Array then value.map { |single| map_soap_request_value single }
-                 else translate_soap_request_value value
-    end
-  end
-
-  def translate_soap_request_value(value)
-    if value.kind_of? DateTime
-      value.strftime Savon::SOAPDateTimeFormat
-    elsif !value.kind_of?(String) && value.respond_to?(:to_datetime)
-      value.to_datetime.strftime Savon::SOAPDateTimeFormat
-    else
-      value.to_s
-    end
-  end
-
-  def map_soap_response_value(value)
-    case value
-      when Hash  then value.soap_response_mapping
-      when Array then value.map { |single| map_soap_response_value single }
-                 else translate_soap_response_value value
-    end
-  end
-
-  def translate_soap_response_value(value)
-    case value
-      when Savon::SOAPDateTimeRegexp then DateTime.parse value
-      when "true"                    then true
-      when "false"                   then false
-                                     else value
+      when Array
+        value.map { |sitem| nested_data_to_soap_xml key, sitem }
+      when Hash
+        @soap_xml.tag!(key.to_soap_key) do
+          value.each { |subkey, subvalue| nested_data_to_soap_xml subkey, subvalue }
+        end
+      else
+        @soap_xml.tag!(key.to_soap_key) { @soap_xml << value.to_soap_value }
     end
   end
 

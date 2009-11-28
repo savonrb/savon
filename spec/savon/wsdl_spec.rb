@@ -1,11 +1,11 @@
 require "spec_helper"
 
 describe Savon::WSDL do
-  before { @wsdl = Savon::WSDL.new SpecHelper.some_endpoint_uri }
+  before { @wsdl = Savon::WSDL.new Savon::Request.new SpecHelper.some_endpoint }
 
   describe "initialize" do
-    it "expects a URI object of the endpoint" do
-      Savon::WSDL.new SpecHelper.some_endpoint_uri
+    it "expects a Savon::Request object" do
+      Savon::WSDL.new Savon::Request.new SpecHelper.some_endpoint
     end
   end
 
@@ -21,11 +21,9 @@ describe Savon::WSDL do
     end
   end
 
-  describe "soap_action_for" do
-    it "returns the name of a SOAP action for a snake_case alias" do
-      UserFixture.soap_actions.each do |key, value|
-        @wsdl.soap_action_for(key).should == value
-      end
+  describe "mapped_soap_actions" do
+   it "returns a Hash containing all available SOAP actions and their original names" do
+      @wsdl.mapped_soap_actions.should == UserFixture.soap_actions
     end
   end
 

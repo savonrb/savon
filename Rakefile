@@ -9,8 +9,8 @@ Spec::Rake::SpecTask.new do |spec|
   spec.spec_files = FileList["spec/**/*_spec.rb"]
   spec.spec_opts << "--color"
   spec.libs << "lib"
-  spec.rcov = true
-  spec.rcov_dir = "rcov"
+  #spec.rcov = true
+  #spec.rcov_dir = "rcov"
 end
 
 Rake::RDocTask.new do |rdoc|

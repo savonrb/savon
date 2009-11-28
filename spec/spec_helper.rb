@@ -8,7 +8,7 @@ Spec::Runner.configure do |config|
 end
 
 require "savon"
-Savon::HTTP.logger = nil
+Savon::Request.logger = nil
 
 require "fixtures/user_fixture"
 require "spec_helper_methods"
