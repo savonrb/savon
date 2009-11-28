@@ -11,11 +11,11 @@ module Savon
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
 
-    # The default SOAP version to use.
+    # The default SOAP version.
     @version = 1
 
     class << self
-      # Accessor for the default SOAP version to use.
+      # Accessor for the default SOAP version.
       attr_accessor :version
     end
 
