@@ -22,7 +22,7 @@ require "savon/client"
 
 module Savon
 
-  # The current version.
+  # Current version.
   VERSION = "0.5.0"
 
   # SOAP datetime format.
