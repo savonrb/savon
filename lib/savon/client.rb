@@ -7,6 +7,9 @@ module Savon
   class Client
     include Validation
 
+    # Default block for processing the SOAP response. Translates the response
+    # into a Hash, strips out the SOAP envelope and returns the content from
+    # the SOAP response body.
     @response_block = lambda do |response|
       hash = Crack::XML.parse(response.body)["soap:Envelope"]["soap:Body"]
       hash = hash[hash.keys.first]["return"] rescue hash[hash.keys.first]
@@ -14,6 +17,7 @@ module Savon
     end
 
     class << self
+      # Accessor for the default response block.
       attr_accessor :response_block
     end
 
@@ -23,10 +27,14 @@ module Savon
       @wsdl = WSDL.new @request
     end
 
-    # Returns the Savon::WSDL object.
-    attr_reader :response, :wsdl
+    # Returns the Savon::WSDL.
+    attr_reader :wsdl
 
-    # Dispatches a given +soap_action+ with a given +soap_body+ and +options+.
+    # Returns the Net::HTTPResponse of the last SOAP request.
+    attr_reader :response
+
+    # Dispatches a given +soap_action+ with a given +soap_body+, +options+
+    # and a +response_block+.
     def dispatch(soap_action, soap_body, options, response_block = nil)
       @soap = SOAP.new soap_action, soap_body, options, @wsdl.namespace_uri
       @response = @request.soap @soap
@@ -52,14 +60,15 @@ module Savon
       dispatch soap_action, soap_body, options, block
     end
 
+    # Returns the response process.
     def response_process(response_block)
-      response_block || self.class.response_block 
+      response_process || self.class.response_process
     end
 
-    # Validates a given +soap_body+ and +options+.
-    def validate_arguments!(soap_body, options = {}, response_block = nil)
+    # Validates the given +soap_body+, +options+ and +response_process+.
+    def validate_arguments!(soap_body, options = {}, response_process = nil)
       validate! :soap_body, soap_body if soap_body
-      validate! :response_block, response_block if response_block
+      validate! :response_process, response_process if response_process
       validate! :soap_version, options[:soap_version] if options[:soap_version]
       validate! :wsse_credentials, options[:wsse] if options[:wsse].kind_of? Hash
     end
