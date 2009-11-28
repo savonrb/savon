@@ -78,7 +78,7 @@ describe Savon::Request do
 
   describe "soap" do
     it "executes a SOAP request and returns the Net::HTTPResponse" do
-      soap = Savon::SOAP.new UserFixture.soap_actions[:find_user],
+      soap = Savon::SOAP.new UserFixture.soap_actions.keys.first,
         { :id => 666 }, options, UserFixture.namespace_uri
       soap_response = @request.soap(soap)
 
