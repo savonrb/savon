@@ -1,7 +1,7 @@
 module Savon
   module Validation
 
-    # Valid SOAP versions.
+    # Supported SOAP versions.
     SOAPVersions = [1, 2]
 
     # Validates a given +value+ of a given +type+. Raises an ArgumentError
