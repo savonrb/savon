@@ -35,7 +35,7 @@ module Savon
         soap_body.kind_of?(Hash) || soap_body.respond_to?(:to_s)
     end
 
-    # Validates a given +response_block+.
+    # Validates a given +response_process+.
     def validate_response_process(response_process)
       invalid :response_process, response_process unless
         response_process.respond_to? :call
