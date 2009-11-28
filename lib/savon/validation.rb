@@ -11,7 +11,7 @@ module Savon
         when :endpoint then validate_endpoint value
         when :soap_version then validate_soap_version value
         when :soap_body then validate_soap_body value
-        when :response_block then validate_response_block value
+        when :response_process then validate_response_process value
         when :wsse_credentials then validate_wsse_credentials value
       end
       true
@@ -36,8 +36,9 @@ module Savon
     end
 
     # Validates a given +response_block+.
-    def validate_response_block(response_block)
-      invalid :response_block, response_block unless response_block.respond_to? :call
+    def validate_response_process(response_process)
+      invalid :response_process, response_process unless
+        response_process.respond_to? :call
     end
 
     # Validates a given Hash of +wsse_credentials+.

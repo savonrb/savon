@@ -58,14 +58,14 @@ describe Savon::Validation do
     end
 
 
-    describe ":response_block" do
+    describe ":response_process" do
       it "returns true for Objects responding to call" do
-        @validation.validate!(:response_block, Proc.new {}).should be_true
+        @validation.validate!(:response_process, Proc.new {}).should be_true
       end
 
-      it "raises an ArgumentError for invalid response blocks" do
-        [123, "block", [], {}].each do |response_block|
-          lambda { @validation.validate! :response_block, response_block }.
+      it "raises an ArgumentError for an invalid response process" do
+        [123, "block", [], {}].each do |response_process|
+          lambda { @validation.validate! :response_process, response_process }.
             should raise_error(ArgumentError)
         end
       end
