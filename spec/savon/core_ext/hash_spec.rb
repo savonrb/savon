@@ -14,8 +14,10 @@ describe Hash do
       end
 
       it "for a Hash with multiple keys" do
-        { :all => "users", :before => "whatever" }.to_soap_xml.
-          should == "<all>users</all><before>whatever</before>"
+        soap_xml = { :all => "users", :before => "whatever" }.to_soap_xml
+
+        soap_xml.should include "<all>users</all>"
+        soap_xml.should include "<before>whatever</before>"
       end
 
       it "for a Hash containing an Array" do
