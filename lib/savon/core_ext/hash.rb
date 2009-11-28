@@ -23,6 +23,8 @@ class Hash
           value["xsi:nil"] ? nil : value.map_soap_response
         when Array
           value.map { |a_value| a_value.map_soap_response rescue a_value }
+        when String
+          value.map_soap_response
         else
           value
       end

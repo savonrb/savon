@@ -7,10 +7,9 @@ module Savon
   class Client
     include Validation
 
-    # Default block for processing the SOAP response. Translates the response
-    # into a Hash, strips out the SOAP envelope and returns the content from
-    # the SOAP response body.
-    @response_block = lambda do |response|
+    # Default behavior for processing the SOAP response. Translates the
+    # response into a Hash and returns the SOAP response body.
+    @response_process = lambda do |response|
       hash = Crack::XML.parse(response.body)["soap:Envelope"]["soap:Body"]
       hash = hash[hash.keys.first]["return"] rescue hash[hash.keys.first]
       hash.map_soap_response
@@ -18,7 +17,7 @@ module Savon
 
     class << self
       # Accessor for the default response block.
-      attr_accessor :response_block
+      attr_accessor :response_process
     end
 
     # Expects a SOAP +endpoint+ String.
@@ -34,11 +33,11 @@ module Savon
     attr_reader :response
 
     # Dispatches a given +soap_action+ with a given +soap_body+, +options+
-    # and a +response_block+.
-    def dispatch(soap_action, soap_body, options, response_block = nil)
+    # and a +response_process+.
+    def dispatch(soap_action, soap_body, options, response_process = nil)
       @soap = SOAP.new soap_action, soap_body, options, @wsdl.namespace_uri
       @response = @request.soap @soap
-      response_process(response_block).call @response
+      response_process(response_process).call @response
     end
 
     # Behaves as usual, but also returns +true+ for available SOAP actions.
@@ -60,8 +59,8 @@ module Savon
       dispatch soap_action, soap_body, options, block
     end
 
-    # Returns the response process.
-    def response_process(response_block)
+    # Returns the response process to use.
+    def response_process(response_process)
       response_process || self.class.response_process
     end
 

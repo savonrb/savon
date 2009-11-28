@@ -3,19 +3,15 @@ class UserFixture
   @namespace_uri = "http://v1_0.ws.user.example.com"
   @soap_actions = { :find_user => "findUser" }
 
-  @soap_response_hash_id = { "$" => "666" }
-  @soap_response_hash_username = { "$" => "thedude" }
-  @soap_response_hash_email = { "$" => "thedude@example.com" }
-  @soap_response_hash_registered = { "$" => DateTime.new(2000, 01, 22, 22, 11, 21) }
-
-  @soap_response_hash_id2 = { "$" => "999" }
+  @datetime_string = "2000-01-22T22:11:21"
+  @response_hash = { :id => "666", :active => true, :username => "thedude",
+    :firstname => "The", :lastname => "Dude", :email => "thedude@example.com",
+    :registered => DateTime.parse(@datetime_string) }
 
   class << self
 
     attr_accessor :namespace_uri, :soap_actions,
-      :soap_response_hash_id, :soap_response_hash_username,
-      :soap_response_hash_email, :soap_response_hash_registered,
-      :soap_response_hash_id2
+      :datetime_string, :response_hash
 
     def user_wsdl
       load_fixture :user_wsdl

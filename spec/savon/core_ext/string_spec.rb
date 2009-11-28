@@ -24,6 +24,25 @@ describe String do
     end
   end
 
+  describe "map_soap_response" do
+    it "returns a DateTime Object for Strings matching the xs:dateTime format" do
+      UserFixture.datetime_string.map_soap_response.should ==
+        DateTime.parse(UserFixture.datetime_string)
+    end
+
+    it "returns true for Strings matching 'true'" do
+      "true".map_soap_response.should be_true
+    end
+
+    it "returns false for Strings matching 'false'" do
+      "false".map_soap_response.should be_false
+    end
+
+    it "defaults to return the original value" do
+      "whatever".map_soap_response.should == "whatever"
+    end
+  end
+
   describe "to_soap_value" do
     it "calls to_s, bypassing Rails to_datetime extension for Strings" do
       "string".to_soap_value.should == "string".to_s
