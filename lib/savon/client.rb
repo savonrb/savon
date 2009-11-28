@@ -31,8 +31,8 @@ module Savon
     # Returns the Savon::WSDL.
     attr_reader :wsdl
 
-    # Returns the Savon::Request.
-    attr_reader :request
+    # Returns the Net::HTTPResponse of the last SOAP request.
+    attr_reader :response
 
     # Behaves as usual, but also returns +true+ for available SOAP actions.
     def respond_to?(method)

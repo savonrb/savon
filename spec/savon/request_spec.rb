@@ -67,13 +67,6 @@ describe Savon::Request do
     end
   end
 
-  describe "response" do
-    it "returns the Net::HTTPResponse" do
-      @request.soap new_soap_instance
-      @request.response.body.should == UserFixture.user_response
-    end
-  end
-
   describe "wsdl" do
     it "retrieves the WSDL document and returns the Net::HTTPResponse" do
       wsdl_response = @request.wsdl

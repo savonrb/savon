@@ -47,12 +47,12 @@ describe Savon::Client do
     end
   end
   
-  describe "request" do
-    it "returns the Savon::Request" do
+  describe "response" do
+    it "returns the Net::HTTPResponse of the last SOAP request" do
       @client.find_user
 
-      @client.request.should be_a Savon::Request
-      @client.request.response.body.should == UserFixture.user_response
+      @client.response.should be_a Net::HTTPResponse
+      @client.response.body.should == UserFixture.user_response
     end
   end
 
