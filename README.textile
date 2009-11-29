@@ -11,7 +11,7 @@ crack >= 0.1.4
 
 h2. Warning
 
-p. To use a heavy metal library like this, you have to be familiar with SOAP, WSDL and tools like soapUI.
+p. To use this heavy metal library, you should be familiar with SOAP, WSDL and tools like soapUI.
 
 h2. First step
 
