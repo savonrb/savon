@@ -35,7 +35,7 @@ begin
 
     spec.rdoc_options += [
       "--title", "Savon",
-      "--main", "README.rdoc",
+      "--main", "README.textile",
       "--line-numbers",
       "--inline-source"
     ]
