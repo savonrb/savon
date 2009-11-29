@@ -26,11 +26,11 @@ p. You can find out about the SOAP actions available on the webservice by using 
 bc. proxy.wsdl.soap_actions
 => [:get_all_users, :get_user_by_id, :user_magic]
 
-p. Find out more about the [[WSDL]] object.
+p. Find out more about the "WSDL":http://wiki.github.com/rubiii/savon/wsdl object.
 
 h3. Calling a SOAP action
 
-p. Now, assuming your service applies to the default [[Options]], you can just call any available SOAP action.
+p. Now, assuming your service applies to the default "Options":http://wiki.github.com/rubiii/savon/options, you can just call any available SOAP action.
 
 bc. response = proxy.get_all_users
 
@@ -46,14 +46,14 @@ p. Learn more about [[Parameters]].
 
 h3. The response
 
-p. By default, the SOAP response is translated into a Hash. Take a look at the [[Options]] for more information.
+p. By default, the SOAP response is translated into a Hash. Take a look at the "Options":http://wiki.github.com/rubiii/savon/options for more information.
 
 bc. proxy.get_user_by_id :id => 666
 => { :user_response => { :id => "666", :username => "gorilla" } }
 
 h3. HTTP errors and SOAP faults
 
-p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error. More information about [[Errors]].
+p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error. More information about "Errors":http://wiki.github.com/rubiii/savon/errors.
 
 h3. Logging
 
@@ -61,4 +61,4 @@ p. By default Savon logs each request and response to STDOUT. Specifying your ow
 
 bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
-Read more about [[Logging]].
+Read more about "Logging":http://wiki.github.com/rubiii/savon/options.
