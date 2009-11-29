@@ -62,3 +62,7 @@ p. By default Savon logs each request and response to STDOUT. Specifying your ow
 bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
 Read more about "Logging":http://wiki.github.com/rubiii/savon/logging.
+
+h3. RDoc and Wiki
+
+p. Further information: "Wiki":http://wiki.github.com/rubiii/savon and "RDoc":http://rdoc.info/projects/rubiii/savon
