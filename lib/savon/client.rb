@@ -7,18 +7,36 @@ module Savon
   class Client
     include Validation
 
-    # Default behavior for processing the SOAP response. Translates the
-    # response into a Hash and returns the SOAP response body.
+    # Default behavior for processing the SOAP response. Expects an instance
+    # of Net::HTTPResponse and returns the SOAP response body as a Hash.
     @response_process = lambda do |response|
-      hash = Crack::XML.parse(response.body)["soap:Envelope"]["soap:Body"]
-      hash = hash[hash.keys.first]["return"] rescue hash[hash.keys.first]
-      hash.map_soap_response
+      response_hash = Crack::XML.parse response.body
+      error_handling.call response, response_hash
+
+      response_hash = response_hash["soap:Envelope"]["soap:Body"]
+      response_hash = response_hash[response_hash.keys.first]
+      (response_hash["return"] || response_hash).map_soap_response
+    end
+
+    # Default error handling. Expects an instance of Net::HTTPResponse and
+    # a SOAP response body Hash. Raises a Savon::SOAPFault in case of a SOAP
+    # fault or a Savon::HTTPError in case of an HTTP error.
+    @error_handling = lambda do |response, response_hash|
+      soap_fault = response_hash.to_soap_fault_message
+      raise Savon::SOAPFault, soap_fault if soap_fault
+
+      http_error = "#{response.message} (#{response.code})"
+      http_error += ": #{response.body}" unless response.body.empty?
+      raise Savon::HTTPError, http_error if response.code.to_i >= 300
     end
 
     class << self
 
       # Accessor for the default response block.
       attr_accessor :response_process
+
+      # Accessor for the default error handling.
+      attr_accessor :error_handling
 
     end
 
@@ -54,16 +72,16 @@ module Savon
     end
 
     # Dispatches a given +soap_action+ with a given +soap_body+, +options+
-    # and a +response_process+.
-    def dispatch(soap_action, soap_body, options, response_process = nil)
+    # and a +block+.
+    def dispatch(soap_action, soap_body, options, block = nil)
       @soap = SOAP.new soap_action, soap_body, options, @wsdl.namespace_uri
       @response = @request.soap @soap
-      response_process(response_process).call @response
+      response_process(block).call @response
     end
 
     # Returns the response process to use.
-    def response_process(response_process)
-      response_process || self.class.response_process
+    def response_process(block)
+      block || self.class.response_process
     end
 
     # Validates the given +soap_body+, +options+ and +response_process+.

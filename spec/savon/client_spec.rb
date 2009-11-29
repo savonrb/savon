@@ -121,6 +121,11 @@ describe Savon::Client do
         should == UserFixture.user_response
     end
 
+    it "raises a Savon::SOAPFault in case of a SOAP fault" do
+      client = Savon::Client.new SpecHelper.soapfault_endpoint
+      lambda { client.find_user }.should raise_error Savon::SOAPFault
+    end
+
     it "raises a Savon::HTTPError in case of an HTTP error" do
       client = Savon::Client.new SpecHelper.httperror_endpoint
       lambda { client.find_user }.should raise_error Savon::HTTPError
