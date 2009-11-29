@@ -56,7 +56,7 @@ Gem::Specification.new do |s|
      "spec/spec_helper_methods.rb"
   ]
   s.homepage = %q{http://github.com/rubiii/savon}
-  s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--main", "README.rdoc", "--line-numbers", "--inline-source"]
+  s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--main", "README.textile", "--line-numbers", "--inline-source"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Heavy metal Ruby SOAP client library}
