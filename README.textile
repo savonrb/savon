@@ -30,7 +30,7 @@ p. Find out more about the [[WSDL]] object.
 
 h3. Calling a SOAP action
 
-p. Now, assuming your service applies to the default [[Config]], you can just call any available SOAP action.
+p. Now, assuming your service applies to the default [[Options]], you can just call any available SOAP action.
 
 bc. response = proxy.get_all_users
 
