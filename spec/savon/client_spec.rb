@@ -28,6 +28,42 @@ describe Savon::Client do
     end
   end
 
+  describe "@error_handling" do
+    before { @error_handling = Savon::Client.error_handling }
+
+    it "raises a Savon::SOAPFault in case it finds a SOAP fault" do
+      body = { "soapenv:Fault" => {
+        "faultcode" => "soap:Server",
+        "faultstring" => "Fault occurred while processing."
+      } }
+
+      lambda { @error_handling.call(http_response_mock, body) }.
+        should raise_error Savon::SOAPFault
+    end
+
+    it "raises a Savon::SOAPFault in case it finds both HTTPError and SOAP fault" do
+      body = { "soapenv:Fault" => {
+        "faultcode" => "soap:Server",
+        "faultstring" => "Fault occurred while processing."
+      } }
+
+      lambda { @error_handling.call(http_response_mock(500), body) }.
+        should raise_error Savon::SOAPFault
+    end
+
+    it "raises a Savon::HTTPError in case it finds an HTTP error" do
+      body = { "someResponse" => "whatever" }
+
+      lambda { @error_handling.call(http_response_mock(404), body) }.
+        should raise_error Savon::HTTPError
+    end
+
+    it "passes without raising anything otherwise" do
+      body = { "someResponse" => "whatever" }
+      @error_handling.call(http_response_mock, body).should be_nil
+    end
+  end
+
   describe "initialize" do
     it "expects a SOAP endpoint String" do
       new_client_instance
@@ -132,13 +168,11 @@ describe Savon::Client do
     end
   end
 
-  def http_response_mock
-    unless @http_response_mock
-      @http_response_mock = mock "Net::HTTPResponse"
-      @http_response_mock.stubs :code => "200", :message => "OK",
+  def http_response_mock(code = 200)
+    http_response_mock = mock "Net::HTTPResponse"
+    http_response_mock.stubs :code => code.to_s, :message => "OK",
         :content_type => "text/html", :body => UserFixture.user_response
-    end
-    @http_response_mock
+    http_response_mock
   end
 
 end
