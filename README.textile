@@ -1,14 +1,13 @@
 h1. Savon
 
-p. Savon can be installed as a gem from the "gemcutter":http://gemcutter.org repository.
-Please follow the steps on their website to set up your rubygems installation.
+p. Savon can be installed as a gem via:
 
 bc. $ gem install savon
 
 h3. Dependencies
 
-bc. cobravsmongoose = 0.0.2
-hpricot 0.8.2 (JRuby-compatible version)
+bc. builder >= 2.1.2
+crack >= 0.1.4
 
 h2. Warning
 
@@ -17,9 +16,9 @@ WSDL and tools like soapUI.
 
 h2. First step
 
-p. Instantiate a new instance of Savon::Service, passing in the WSDL of your service.
+p. Instantiate a new instance of Savon::Client, passing in the WSDL of your service.
 
-bc. proxy = Savon::Service.new "http://example.com/UserService?wsdl"
+bc. proxy = Savon::Client.new "http://example.com/UserService?wsdl"
 
 h3. The WSDL
 
@@ -45,19 +44,19 @@ more natural.
 h3. Parameters
 
 p. Specifying parameters for the SOAP service, can be done by simply passing a
-Hash to the SOAP action call.
+Hash to the SOAP action.
 
-bc. response = proxy.get_user_by_id :id => { "$" => 666 }
+bc. response = proxy.get_user_by_id :id => 666
 
-p. Learn more about [[Parameters]], [[Value mapping]] and the [[BadgerFish]] convention.
+p. Learn more about [[Parameters]].
 
 h3. The response
 
 p. By default, the SOAP response is translated into a Hash. Take a look at the
-[[Config]] for more information.
+[[Options]] for more information.
 
-bc. proxy.get_user_by_id :id => { "$" => 666 }
-=> { "user" => { "@id" => "666", "@username" => "dude", "$" => "biography" } }
+bc. proxy.get_user_by_id :id => 666
+=> { :user_response => { :id => "666", :username => "gorilla" } }
 
 h3. HTTP errors and SOAP faults
 
@@ -69,6 +68,6 @@ h3. Logging
 p. By default Savon logs each request and response to STDOUT. Specifying your
 own logger is as easy as it gets:
 
-bc. Savon::HTTP.logger = RAILS_DEFAULT_LOGGER
+bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
 Read more about [[Logging]].
