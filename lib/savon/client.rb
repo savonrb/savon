@@ -10,20 +10,21 @@ module Savon
     # Default behavior for processing the SOAP response. Expects an instance
     # of Net::HTTPResponse and returns the SOAP response body as a Hash.
     @response_process = lambda do |response|
-      response_hash = Crack::XML.parse response.body
-      error_handling.call response, response_hash
+      body = Crack::XML.parse response.body
+      body = body.find_regexp [/.+:Envelope/, /.+:Body/]
+      error_handling.call response, body
 
-      response_hash = response_hash["soap:Envelope"]["soap:Body"]
-      response_hash = response_hash[response_hash.keys.first]
-      (response_hash["return"] || response_hash).map_soap_response
+      body = body.find_regexp /.+/
+      (body["return"] || body).map_soap_response
     end
 
     # Default error handling. Expects an instance of Net::HTTPResponse and
     # a SOAP response body Hash. Raises a Savon::SOAPFault in case of a SOAP
     # fault or a Savon::HTTPError in case of an HTTP error.
-    @error_handling = lambda do |response, response_hash|
-      soap_fault = response_hash.to_soap_fault_message
-      raise Savon::SOAPFault, soap_fault if soap_fault
+    @error_handling = lambda do |response, body|
+      soap_fault = body.find_regexp [/.+:Fault/]
+      soap_fault_message = soap_fault.to_soap_fault_message
+      raise Savon::SOAPFault, soap_fault_message if soap_fault_message
 
       http_error = "#{response.message} (#{response.code})"
       http_error += ": #{response.body}" unless response.body.empty?

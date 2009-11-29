@@ -2,6 +2,29 @@ require "spec_helper"
 
 describe Hash do
 
+  describe "find_regexp" do
+    before do
+      @soap_fault_hash = { "soap:Envelope" => { "soap:Body" => { "soap:Fault" => {
+        "faultcode" => "soap:Server", "faultstring" => "Fault occurred while processing."
+      } } } }
+    end
+
+    it "returns an empty Hash in case it did not find the specified value" do
+      result = @soap_fault_hash.find_regexp "soap:Fault"
+
+      result.should be_a Hash
+      result.should be_empty
+    end
+
+    it "returns the value of the last Regexp filter found in the Hash" do
+      @soap_fault_hash.find_regexp([".+:Envelope", ".+:Body"]).
+        should == @soap_fault_hash["soap:Envelope"]["soap:Body"]
+
+      @soap_fault_hash.find_regexp([/.+:Envelope/, /.+:Body/, /.+Fault/]).
+        should == @soap_fault_hash["soap:Envelope"]["soap:Body"]["soap:Fault"]
+    end
+  end
+
   describe "to_soap_xml" do
     describe "returns SOAP request compatible XML" do
       it "for a simple Hash" do
@@ -74,20 +97,20 @@ describe Hash do
 
   describe "to_soap_fault_message" do
     it "returns a SOAP fault message for SOAP version 1" do
-      soap_fault = soap_fault_hash(
+      soap_fault = {
         "faultcode" => "soap:Server",
         "faultstring" => "Fault occurred while processing."
-      )
+      }
 
       soap_fault.to_soap_fault_message.should be_a String
       soap_fault.to_soap_fault_message.should_not be_empty
     end
 
     it "returns a SOAP fault message for SOAP version 2" do
-      soap_fault = soap_fault_hash(
+      soap_fault = {
         "code" => { "value" => "soap:Server" },
         "reason" => { "text" => "Fault occurred while processing." }
-      )
+      }
 
       soap_fault.to_soap_fault_message.should be_a String
       soap_fault.to_soap_fault_message.should_not be_empty
@@ -95,14 +118,6 @@ describe Hash do
 
     it "returns nil in case the Hash does not include a SOAP fault" do
       { :soap_fault => false }.to_soap_fault_message.should be_nil
-    end
-
-    it "returns nil for unknown SOAP faults" do
-      soap_fault_hash.to_soap_fault_message.should be_nil
-    end
-
-    def soap_fault_hash(details = {})
-      { "soap:Envelope" => { "soap:Body" => { "soap:Fault" => details } } }
     end
   end
 

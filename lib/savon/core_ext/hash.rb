@@ -1,5 +1,20 @@
 class Hash
 
+  # Expects an Array of Regexp Objects of which every Regexp recursively
+  # matches a key to be accessed. Returns the value of the last Regexp filter
+  # found in the Hash or an empty Hash in case the path of Regexp filters
+  # did not match the Hash structure.
+  def find_regexp(regexp)
+    regexp = [regexp] unless regexp.kind_of? Array
+    result = dup
+
+    regexp.each do |pattern|
+      result_key = result.keys.find { |key| key.to_s.match pattern }
+      result = result[result_key] ? result[result_key] : {}
+    end
+    result
+  end
+
   # Returns the Hash translated into SOAP request compatible XML.
   #
   # === Example
@@ -15,13 +30,10 @@ class Hash
   # Tries to generate a SOAP fault message from the Hash. Returns nil in
   # case no SOAP fault could be found or generated.
   def to_soap_fault_message
-    soap_fault = self["soap:Envelope"]["soap:Body"]["soap:Fault"] rescue {}
-    return nil unless soap_fault
-
-    if soap_fault.keys.include? "faultcode"
-      "(#{soap_fault['faultcode']}) #{soap_fault['faultstring']}"
-    elsif soap_fault.keys.include? "code"
-      "(#{soap_fault['code']['value']}) #{soap_fault['reason']['text']}"
+    if keys.include? "faultcode"
+      "(#{self['faultcode']}) #{self['faultstring']}"
+    elsif keys.include? "code"
+      "(#{self['code']['value']}) #{self['reason']['text']}"
     else
       nil
     end
