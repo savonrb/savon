@@ -93,9 +93,33 @@ describe Savon::Client do
         should include soap_body_xml
     end
 
-    #it "" do
-    #  
-    #end
+    describe "accepts a Hash of per request options" do
+      it "to specify the SOAP version" do
+        @client.find_user nil, :soap_version => 2
+        @client.instance_variable_get("@soap").version.should == 2
+      end
+
+      it "to specify credentials for WSSE authentication" do
+        @client.find_user nil, :wsse =>
+          { :username => "gorilla", :password => "secret" }
+
+        @client.instance_variable_get("@soap").body.should include "gorilla"
+        @client.instance_variable_get("@soap").body.should include "secret"
+      end
+
+      it "to specify credentials for WSSE digestauthentication" do
+        @client.find_user nil, :wsse =>
+          { :username => "gorilla", :password => "secret", :digest => true }
+
+        @client.instance_variable_get("@soap").body.should include "gorilla"
+        @client.instance_variable_get("@soap").body.should_not include "secret"
+      end
+    end
+
+    it "accepts a block for specifying the response process per request" do
+      @client.find_user { |response| response.body }.
+        should == UserFixture.user_response
+    end
   end
 
   def http_response_mock

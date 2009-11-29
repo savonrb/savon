@@ -48,7 +48,7 @@ module Savon
       soap_action = @wsdl.mapped_soap_actions[method]
       super unless soap_action
 
-      soap_body, options = args[0], args[1] || {}
+      soap_body, options = args[0] || {}, args[1] || {}
       validate_arguments! soap_body, options, block
       dispatch soap_action, soap_body, options, block
     end
