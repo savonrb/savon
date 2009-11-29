@@ -51,11 +51,11 @@ p. By default, the SOAP response is translated into a Hash. Take a look at the "
 bc. proxy.get_user_by_id :id => 666
 => { :user_response => { :id => "666", :username => "gorilla" } }
 
-h4. HTTP errors and SOAP faults
+h2. HTTP errors and SOAP faults
 
 p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error. More information about "Errors":http://wiki.github.com/rubiii/savon/errors.
 
-h4. Logging
+h2. Logging
 
 p. By default Savon logs each request and response to STDOUT. Specifying your own logger is as easy as it gets:
 
@@ -63,6 +63,6 @@ bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
 Read more about "Logging":http://wiki.github.com/rubiii/savon/logging.
 
-h4. RDoc and Wiki
+h2. RDoc and Wiki
 
 p. Further information: "Wiki":http://wiki.github.com/rubiii/savon and "RDoc":http://rdoc.info/projects/rubiii/savon
