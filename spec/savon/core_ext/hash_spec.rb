@@ -73,7 +73,40 @@ describe Hash do
   end
 
   describe "map_soap_response" do
-    it "needs specs"
+    it "converts Hash key Strings to snake_case Symbols" do
+      { "userResponse" => { "accountStatus" => "active" } }.map_soap_response.
+        should == { :user_response => { :account_status => "active" } }
+    end
+
+    it "strips namespaces from Hash keys" do
+      { "ns:userResponse" => { "ns2:id" => "666" } }.map_soap_response.
+        should == { :user_response => { :id => "666" } }
+    end
+
+    it "converts Hash keys and values in Arrays" do
+      { "response" => [{ "name" => "dude" }, { "name" => "gorilla" }] }.map_soap_response.
+        should == { :response=> [{ :name => "dude" }, { :name => "gorilla" }] }
+    end
+
+    it "converts xsi:nil values to nil Objects" do
+      { "userResponse" => { "xsi:nil" => "true" } }.map_soap_response.
+        should == { :user_response => nil }
+    end
+
+    it "converts Hash values matching the xs:dateTime format into DateTime Objects" do
+      { "response" => { "at" => UserFixture.datetime_string } }.map_soap_response.
+        should == { :response => { :at => UserFixture.datetime_object } }
+    end
+
+    it "converts Hash values matching 'true' into TrueClass" do
+      { "response" => { "active" => "false" } }.map_soap_response.
+        should == { :response => { :active => false } }
+    end
+
+    it "converst Hash values matching 'false' into FalseClass" do
+      { "response" => { "active" => "true" } }.map_soap_response.
+        should == { :response => { :active => true } }
+    end
   end
 
 end
