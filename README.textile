@@ -1,10 +1,10 @@
-h1. Savon
+h2. Savon
 
 p. Savon can be installed as a gem via:
 
 bc. $ gem install savon
 
-h3. Dependencies
+h4. Dependencies
 
 bc. builder >= 2.1.2
 crack >= 0.1.4
@@ -13,13 +13,13 @@ h2. Warning
 
 p. To use this heavy metal library, you should be familiar with SOAP, WSDL and tools like soapUI.
 
-h2. First step
+h2. Instantiate Savon::Client
 
 p. Instantiate a new instance of Savon::Client, passing in the WSDL of your service.
 
 bc. proxy = Savon::Client.new "http://example.com/UserService?wsdl"
 
-h3. The WSDL
+h2. The WSDL
 
 p. You can find out about the SOAP actions available on the webservice by using the WSDL object.
 
@@ -28,7 +28,7 @@ bc. proxy.wsdl.soap_actions
 
 p. Find out more about the "WSDL":http://wiki.github.com/rubiii/savon/wsdl object.
 
-h3. Calling a SOAP action
+h2. Calling a SOAP action
 
 p. Now, assuming your service applies to the default "Options":http://wiki.github.com/rubiii/savon/options, you can just call any available SOAP action.
 
@@ -36,7 +36,7 @@ bc. response = proxy.get_all_users
 
 p. Savon lets you call SOAP actions using snake_case, because even though they will propably be written in lowerCamelCase or CamelCase, it just feels much more natural.
 
-h3. Parameters
+h2. Parameters
 
 p. Specifying parameters for the SOAP service, can be done by simply passing a Hash to the SOAP action.
 
@@ -44,18 +44,18 @@ bc. response = proxy.get_user_by_id :id => 666
 
 p. Learn more about [[Parameters]].
 
-h3. The response
+h2. The response
 
 p. By default, the SOAP response is translated into a Hash. Take a look at the "Options":http://wiki.github.com/rubiii/savon/options for more information.
 
 bc. proxy.get_user_by_id :id => 666
 => { :user_response => { :id => "666", :username => "gorilla" } }
 
-h3. HTTP errors and SOAP faults
+h4. HTTP errors and SOAP faults
 
 p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error. More information about "Errors":http://wiki.github.com/rubiii/savon/errors.
 
-h3. Logging
+h4. Logging
 
 p. By default Savon logs each request and response to STDOUT. Specifying your own logger is as easy as it gets:
 
@@ -63,6 +63,6 @@ bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
 Read more about "Logging":http://wiki.github.com/rubiii/savon/logging.
 
-h3. RDoc and Wiki
+h4. RDoc and Wiki
 
 p. Further information: "Wiki":http://wiki.github.com/rubiii/savon and "RDoc":http://rdoc.info/projects/rubiii/savon
