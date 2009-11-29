@@ -25,8 +25,6 @@ class Hash
           value.map { |a_value| a_value.map_soap_response rescue a_value }
         when String
           value.map_soap_response
-        else
-          value.to_s
       end
       hash.merge key => value
     end

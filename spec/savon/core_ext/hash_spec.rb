@@ -98,12 +98,12 @@ describe Hash do
         should == { :response => { :at => UserFixture.datetime_object } }
     end
 
-    it "converts Hash values matching 'true' into TrueClass" do
+    it "converts Hash values matching 'true' to TrueClass" do
       { "response" => { "active" => "false" } }.map_soap_response.
         should == { :response => { :active => false } }
     end
 
-    it "converst Hash values matching 'false' into FalseClass" do
+    it "converts Hash values matching 'false' to FalseClass" do
       { "response" => { "active" => "true" } }.map_soap_response.
         should == { :response => { :active => true } }
     end
