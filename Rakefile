@@ -16,8 +16,7 @@ end
 Rake::RDocTask.new do |rdoc|
   rdoc.title = "Savon"
   rdoc.rdoc_dir = "rdoc"
-  rdoc.main = "README.textile"
-  rdoc.rdoc_files.include("README.textile", "lib/**/*.rb")
+  rdoc.rdoc_files.include("lib/**/*.rb")
   rdoc.options = ["--line-numbers", "--inline-source"]
 end
 
@@ -35,7 +34,6 @@ begin
 
     spec.rdoc_options += [
       "--title", "Savon",
-      "--main", "README.textile",
       "--line-numbers",
       "--inline-source"
     ]

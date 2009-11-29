@@ -120,6 +120,11 @@ describe Savon::Client do
       @client.find_user { |response| response.body }.
         should == UserFixture.user_response
     end
+
+    it "raises a Savon::HTTPError in case of an HTTP error" do
+      client = Savon::Client.new SpecHelper.httperror_endpoint
+      lambda { client.find_user }.should raise_error Savon::HTTPError
+    end
   end
 
   def http_response_mock
