@@ -28,7 +28,7 @@ begin
     spec.author = "Daniel Harrington"
     spec.email = "me@rubiii.com"
     spec.homepage = "http://github.com/rubiii/savon"
-    spec.summary = "SOAP client library to enjoy"
+    spec.summary = "Heavy metal Ruby SOAP client library"
     spec.description = spec.summary
 
     spec.files = FileList["[A-Z]*", "{lib,spec}/**/*.{rb,xml}"]
@@ -41,10 +41,10 @@ begin
     ]
 
     spec.add_runtime_dependency("builder", ">= 2.1.2")
-    spec.add_runtime_dependency("cobravsmongoose", ">= 0.0.2")
+    spec.add_runtime_dependency("crack", ">= 0.1.4")
 
     spec.add_development_dependency("rspec", ">= 1.2.8")
-    spec.add_development_dependency("rr", ">= 0.10.0")
+    spec.add_development_dependency("mocha", ">= 0.9.7")
     spec.add_development_dependency("fakeweb", ">= 1.2.7")
   end
 rescue LoadError
