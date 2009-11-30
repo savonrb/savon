@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.5.1"
+  s.version = "0.5.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
-  s.date = %q{2009-11-29}
+  s.date = %q{2009-11-30}
   s.description = %q{Heavy metal Ruby SOAP client library}
   s.email = %q{me@rubiii.com}
   s.extra_rdoc_files = [
