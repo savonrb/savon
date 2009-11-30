@@ -1,7 +1,7 @@
 class UserFixture
 
   @namespace_uri = "http://v1_0.ws.user.example.com"
-  @soap_actions = { :find_user => "findUser" }
+  @soap_actions = { :user_find_by_id => "User.FindById", :find_user => "findUser" }
 
   @datetime_string = "2010-11-22T11:22:33"
   @datetime_object = DateTime.parse @datetime_string

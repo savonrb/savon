@@ -22,7 +22,7 @@ describe Savon::WSDL do
   end
 
   describe "mapped_soap_actions" do
-   it "returns a Hash containing all available SOAP actions and their original names" do
+    it "returns a Hash containing all available SOAP actions and their original names" do  
       @wsdl.mapped_soap_actions.should == UserFixture.soap_actions
     end
   end

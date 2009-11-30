@@ -15,11 +15,13 @@
       xmlns:tns="http://v1_0.ws.user.example.com"
       xmlns:xs="http://www.w3.org/2001/XMLSchema">
       <xs:element name="findUser" type="tns:findUser" />
+			<xs:element name="User.FindById" type="tns:findUser" />
       <xs:element name="findUserRequest" type="tns:findUserRequest" />
       <xs:element name="baseFindUserRequest" type="tns:baseFindUserRequest" />
       <xs:element name="idCredential" type="tns:idCredential" />
       <xs:element name="emailCredential" type="tns:emailCredential" />
       <xs:element name="findUserResponse" type="tns:findUserResponse" />
+			<xs:element name="User.FindByIdResponse" type="tns:findUserResponse" />
       <xs:element name="userResponse" type="tns:userResponse" />
 
       <xs:complexType name="findUser">
@@ -78,6 +80,13 @@
     <wsdl:part element="tns:findUserResponse" name="parameters"></wsdl:part>
   </wsdl:message>
 
+  <wsdl:message name="User.FindById">
+    <wsdl:part element="tns:findUser" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="User.FindByIdResponse">
+    <wsdl:part element="tns:findUserResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+
   <wsdl:portType name="UserWebService">
     <wsdl:operation name="findUser">
       <wsdl:input message="tns:findUser" name="findUser"></wsdl:input>
@@ -93,6 +102,15 @@
         <soap:body use="literal" />
       </wsdl:input>
       <wsdl:output name="findUserResponse">
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+		<wsdl:operation name="User.FindById">
+      <soap:operation soapAction="" style="document" />
+      <wsdl:input name="User.FindById">
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="User.FindByIdResponse">
         <soap:body use="literal" />
       </wsdl:output>
     </wsdl:operation>

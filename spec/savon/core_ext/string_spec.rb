@@ -6,6 +6,10 @@ describe String do
     it "converts a lowerCamelCase String to snakecase" do
       "lowerCamelCase".snakecase.should == "lower_camel_case"
     end
+
+    it "converts period characters to underscores" do
+      "User.GetEmail".snakecase.should == "user_get_email"
+    end
   end
 
   describe "lower_camelcase" do
