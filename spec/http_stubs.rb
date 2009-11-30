@@ -18,3 +18,8 @@ FakeWeb.register_uri :post, SpecHelper.soap_soapfault_endpoint, :body => UserFix
 FakeWeb.register_uri :get, SpecHelper.httperror_endpoint, :body => UserFixture.user_wsdl
 FakeWeb.register_uri :post, SpecHelper.soap_httperror_endpoint, :body => "",
   :status => ["404", "Not Found"]
+
+# Register fake WSDL and SOAP request for an invalid endpoint.
+FakeWeb.register_uri :get, SpecHelper.invalid_endpoint, :body => ""
+FakeWeb.register_uri :post, SpecHelper.soap_invalid_endpoint, :body => "",
+  :status => ["404", "Not Found"]

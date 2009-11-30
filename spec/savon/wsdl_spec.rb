@@ -19,6 +19,11 @@ describe Savon::WSDL do
     it "returns an Array containing all available SOAP actions" do
       @wsdl.soap_actions.should == UserFixture.soap_actions.keys
     end
+
+    it "raises an ArgumentError in case the WSDL seems to be invalid" do
+      wsdl = Savon::WSDL.new Savon::Request.new SpecHelper.invalid_endpoint
+      lambda { wsdl.soap_actions }.should raise_error ArgumentError
+    end
   end
 
   describe "mapped_soap_actions" do
