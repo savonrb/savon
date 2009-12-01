@@ -86,7 +86,7 @@ describe Savon::Request do
   end
 
   def new_soap_instance(options = {})
-    Savon::SOAP.new UserFixture.soap_actions[:find_user], { :id => 666 },
+    Savon::SOAP.new UserFixture.soap_action_map[:find_user], { :id => 666 },
       options, UserFixture.namespace_uri
   end
 

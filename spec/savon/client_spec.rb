@@ -94,7 +94,7 @@ describe Savon::Client do
 
   describe "respond_to?" do
     it "returns true for available SOAP actions" do
-      @client.respond_to?(UserFixture.soap_actions.keys.first).
+      @client.respond_to?(UserFixture.soap_action_map.keys.first).
         should be_true
     end
 

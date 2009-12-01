@@ -64,7 +64,7 @@ module Savon
     # Behaves as usual, but dispatches SOAP requests to SOAP actions matching
     # the given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      soap_action = @wsdl.mapped_soap_actions[method]
+      soap_action = @wsdl.soap_action_map[method]
       super unless soap_action
 
       soap_body, options = args[0] || {}, args[1] || {}

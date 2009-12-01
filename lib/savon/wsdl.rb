@@ -19,19 +19,20 @@ module Savon
 
     # Returns an Array of available SOAP actions from the WSDL.
     def soap_actions
-      mapped_soap_actions.keys
+      soap_action_map.keys
     end
 
-    # Returns a Hash of available SOAP actions and their original names.
-    def mapped_soap_actions
-      @mapped_soap_actions ||= parse_soap_actions.inject Hash.new do |hash, soap_action|
-        hash.merge soap_action.snakecase.to_sym => soap_action
+    # Returns a Hash of available SOAP actions mapped to snake_case (keys)
+    # and their original names and inputs in another Hash (values).
+    def soap_action_map
+      @soap_action_map ||= parse_soap_operations.inject({}) do |hash, (input, action)|
+        hash.merge input.snakecase.to_sym => { :name => action, :input => input }
       end
     end
 
-    # Returns the WSDL or +nil+ in case the WSDL could not be retrieved.
+    # Returns the WSDL document.
     def to_s
-      wsdl_response ? wsdl_response.body : nil
+      wsdl_response.body
     end
 
   private
@@ -41,7 +42,7 @@ module Savon
     def wsdl_response
       unless @wsdl_response
         @wsdl_response ||= @request.wsdl
-        invalid! :wsdl, @request.endpoint unless soap_actions && !soap_actions.empty?
+        invalid! :wsdl, @request.endpoint if soap_actions.empty?
       end
       @wsdl_response
     end
@@ -57,10 +58,14 @@ module Savon
       definitions.attributes["targetNamespace"] if definitions
     end
 
-    # Parses the WSDL for available SOAP actions.
-    def parse_soap_actions
-      document.elements.collect "//[@soapAction]" do |element|
-        element.parent.attributes["name"]
+    # Parses the WSDL for available SOAP actions and inputs. Returns a Hash
+    # containing the SOAP action inputs and corresponding SOAP actions.
+    def parse_soap_operations
+      document.elements.inject("//soap:operation", {}) do |hash, operation|
+        action = operation.attributes["soapAction"] || ""
+        action = operation.parent.attributes["name"] if action.empty?
+
+        hash.merge action.split("/").last => action
       end
     end
 

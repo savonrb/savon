@@ -64,7 +64,9 @@ module Savon
     # Expects an instance of Builder::XmlMarkup and returns the XML for the
     # SOAP envelope body.
     def envelope_body(xml)
-      xml.wsdl(@action.to_sym) { xml << (@body.to_soap_xml rescue @body.to_s) }
+      xml.wsdl(@action[:input].to_sym) do
+        xml << (@body.to_soap_xml rescue @body.to_s)
+      end
     end
 
   end

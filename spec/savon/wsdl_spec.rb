@@ -17,7 +17,7 @@ describe Savon::WSDL do
 
   describe "soap_actions" do
     it "returns an Array containing all available SOAP actions" do
-      @wsdl.soap_actions.should == UserFixture.soap_actions.keys
+      @wsdl.soap_actions.should == UserFixture.soap_action_map.keys
     end
 
     it "raises an ArgumentError in case the WSDL seems to be invalid" do
@@ -26,9 +26,10 @@ describe Savon::WSDL do
     end
   end
 
-  describe "mapped_soap_actions" do
-    it "returns a Hash containing all available SOAP actions and their original names" do  
-      @wsdl.mapped_soap_actions.should == UserFixture.soap_actions
+  describe "soap_action_map" do
+    it "returns a Hash containing all available SOAP actions, as well as" <<
+       "their original names and inputs" do  
+      @wsdl.soap_action_map.should == UserFixture.soap_action_map
     end
   end
 

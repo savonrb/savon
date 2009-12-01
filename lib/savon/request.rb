@@ -86,7 +86,8 @@ module Savon
 
     # Returns a Hash containing the header for an HTTP request.
     def http_header
-      { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
+      { "Content-Type" => ContentType[@soap.version],
+        "SOAPAction" => @soap.action[:name] }
     end
 
     # Logs a given +message+.
