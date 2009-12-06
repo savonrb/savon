@@ -1,25 +1,18 @@
-h2. Savon
-
-p. Savon can be installed as a gem via:
+h3. Savon
 
 bc. $ gem install savon
 
-h4. Dependencies
-
-bc. builder >= 2.1.2
-crack >= 0.1.4
-
-h2. Warning
+h3. Warning
 
 p. To use this heavy metal library, you should be familiar with SOAP, WSDL and tools like soapUI.
 
-h2. Instantiate Savon::Client
+h3. Instantiate Savon::Client
 
 p. Instantiate Savon::Client, passing in the WSDL of your service.
 
 bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
-h2. The WSDL
+h3. The WSDL
 
 p. You can find out about the SOAP actions available on the webservice by using the WSDL object.
 
@@ -28,7 +21,7 @@ bc. client.wsdl.soap_actions.keys
 
 p. Find out more about the "WSDL":http://wiki.github.com/rubiii/savon/wsdl object.
 
-h2. Calling a SOAP action
+h3. Calling a SOAP action
 
 p. Now, assuming your service applies to the default "Options":http://wiki.github.com/rubiii/savon/options, you can just call any available SOAP action.
 
@@ -36,7 +29,7 @@ bc. response = client.get_all_users
 
 p. Savon lets you call SOAP actions using snake_case, because even though they will propably be written in lowerCamelCase or CamelCase, it just feels much more natural.
 
-h2. The SOAP object
+h3. The SOAP object
 
 p. Pass a block to the SOAP request which expects a single variable and Savon will hand you the SOAP object to specify various SOAP-related options.
 
@@ -44,7 +37,7 @@ bc. response = client.get_user_by_id { |soap| soap.body = { :id => 666 } }
 
 p. Learn more about the "SOAP":http://wiki.github.com/rubiii/savon/soap object.
 
-h2. The WSSE object
+h3. The WSSE object
 
 p. Pass a block to the SOAP request which expects two variables and Savon will yield the SOAP and WSSE objects.
 
@@ -56,15 +49,15 @@ end
 
 p. Learn more about the "WSSE":http://wiki.github.com/rubiii/savon/wsse object.
 
-h2. The response
+h3. The response
 
 p. The response is wrapped in an object to give you various options of handling it. Take a look at the "Response":http://wiki.github.com/rubiii/savon/response for more information.
 
-h2. HTTP errors and SOAP faults
+h3. HTTP errors and SOAP faults
 
 p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error. More information about "Errors":http://wiki.github.com/rubiii/savon/errors.
 
-h2. Logging
+h3. Logging
 
 p. By default Savon logs each request and response to STDOUT. Specifying your own logger is as easy as it gets:
 
@@ -72,6 +65,6 @@ bc. Savon::Request.logger = RAILS_DEFAULT_LOGGER
 
 Read more about "Logging":http://wiki.github.com/rubiii/savon/logging.
 
-h2. RDoc and Wiki
+h3. RDoc and Wiki
 
 p. Further information: "Wiki":http://wiki.github.com/rubiii/savon and "RDoc":http://rdoc.info/projects/rubiii/savon
