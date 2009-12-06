@@ -4,8 +4,8 @@ Heavy metal Ruby SOAP client library
 
 bc. $ gem install savon
 
-p. Wiki: http://wiki.github.com/rubiii/savon
-RDoc: http://rdoc.info/projects/rubiii/savon
+p. Wiki: "http://wiki.github.com/rubiii/savon":http://wiki.github.com/rubiii/savon
+RDoc: "http://rdoc.info/projects/rubiii/savon":http://rdoc.info/projects/rubiii/savon
 
 p. *Warning:* you should be familiar with SOAP, WSDL and tools like soapUI.
 
