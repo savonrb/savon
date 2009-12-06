@@ -1,5 +1,6 @@
 h3. Savon
-h2. Heavy metal Ruby SOAP client library
+
+Heavy metal Ruby SOAP client library
 
 bc. $ gem install savon
 
