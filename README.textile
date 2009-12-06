@@ -17,13 +17,13 @@ h2. Instantiate Savon::Client
 
 p. Instantiate a new instance of Savon::Client, passing in the WSDL of your service.
 
-bc. proxy = Savon::Client.new "http://example.com/UserService?wsdl"
+bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
 h2. The WSDL
 
 p. You can find out about the SOAP actions available on the webservice by using the WSDL object.
 
-bc. proxy.wsdl.soap_actions
+bc. client.wsdl.soap_actions.keys
 => [:get_all_users, :get_user_by_id, :user_magic]
 
 p. Find out more about the "WSDL":http://wiki.github.com/rubiii/savon/wsdl object.
@@ -32,24 +32,35 @@ h2. Calling a SOAP action
 
 p. Now, assuming your service applies to the default "Options":http://wiki.github.com/rubiii/savon/options, you can just call any available SOAP action.
 
-bc. response = proxy.get_all_users
+bc. response = client.get_all_users
 
 p. Savon lets you call SOAP actions using snake_case, because even though they will propably be written in lowerCamelCase or CamelCase, it just feels much more natural.
 
-h2. Parameters
+h2. The SOAP object
 
-p. Specifying parameters for the SOAP service, can be done by simply passing a Hash to the SOAP action.
+p. Pass a block to the SOAP request which expects a single variable and Savon will hand you the SOAP object to specify various SOAP-related options.  
 
-bc. response = proxy.get_user_by_id :id => 666
+bc. response = client.get_user_by_id do |soap|
+  soap.body = { :id => 666 }
+end
 
-p. Learn more about [[Parameters]].
+p. Learn more about the "SOAP":http://wiki.github.com/rubiii/savon/soap object.
+
+h2. The WSSE object
+
+p. Pass a block to the SOAP request which expects two variables and Savon will yield the SOAP and WSSE objects.  
+
+bc. response = client.get_user_by_id do |soap, wsse|
+  wsse.username = "gorilla"
+  wsse.password = "secret"
+  soap.body = { :id => 666 }
+end
+
+p. Learn more about the "WSSE":http://wiki.github.com/rubiii/savon/wsse object.
 
 h2. The response
 
-p. By default, the SOAP response is translated into a Hash. Take a look at the "Options":http://wiki.github.com/rubiii/savon/options for more information.
-
-bc. proxy.get_user_by_id :id => 666
-=> { :user_response => { :id => "666", :username => "gorilla" } }
+p. The response is wrapped in an object to give you various options of handling it. Take a look at the "Response":http://wiki.github.com/rubiii/savon/response for more information.
 
 h2. HTTP errors and SOAP faults
 
