@@ -12,10 +12,10 @@ module Savon
     WSUNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
     # Default WSSE username.
-    @username = ""
+    @username = nil
 
     # Default WSSE password.
-    @password = ""
+    @password = nil
 
     # Default for whether to use WSSE digest.
     @digest = false
@@ -28,6 +28,7 @@ module Savon
       # Sets the default WSSE username.
       def username=(username)
         @username = username.to_s if username.respond_to? :to_s
+        @username = nil if username.nil?
       end
 
       # Returns the default WSSE password.
@@ -36,6 +37,7 @@ module Savon
       # Sets the default WSSE password.
       def password=(password)
         @password = password.to_s if password.respond_to? :to_s
+        @password = nil if password.nil?
       end
 
       # Sets whether to use WSSE digest by default.
@@ -51,6 +53,7 @@ module Savon
     # Sets the WSSE username.
     def username=(username)
       @username = username.to_s if username.respond_to? :to_s
+      @username = nil if username.nil?
     end
 
     # Returns the WSSE username. Defaults to the global default.
@@ -61,6 +64,7 @@ module Savon
     # Sets the WSSE password.
     def password=(password)
       @password = password.to_s if password.respond_to? :to_s
+      @password = nil if password.nil?
     end
 
     # Returns the WSSE password. Defaults to the global default.

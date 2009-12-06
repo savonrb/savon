@@ -38,17 +38,15 @@ p. Savon lets you call SOAP actions using snake_case, because even though they w
 
 h2. The SOAP object
 
-p. Pass a block to the SOAP request which expects a single variable and Savon will hand you the SOAP object to specify various SOAP-related options.  
+p. Pass a block to the SOAP request which expects a single variable and Savon will hand you the SOAP object to specify various SOAP-related options.
 
-bc. response = client.get_user_by_id do |soap|
-  soap.body = { :id => 666 }
-end
+bc. response = client.get_user_by_id { |soap| soap.body = { :id => 666 } }
 
 p. Learn more about the "SOAP":http://wiki.github.com/rubiii/savon/soap object.
 
 h2. The WSSE object
 
-p. Pass a block to the SOAP request which expects two variables and Savon will yield the SOAP and WSSE objects.  
+p. Pass a block to the SOAP request which expects two variables and Savon will yield the SOAP and WSSE objects.
 
 bc. response = client.get_user_by_id do |soap, wsse|
   wsse.username = "gorilla"

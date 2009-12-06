@@ -2,9 +2,12 @@ require "spec_helper"
 
 describe Savon::WSSE do
   before do
+    Savon::WSSE.username = nil
+    Savon::WSSE.password = nil
+    Savon::WSSE.digest = false
+
     @wsse = Savon::WSSE.new
-    @username = "gorilla"
-    @password = "secret"
+    @username, @password = "gorilla", "secret"
   end
 
   describe "WSENamespace" do
@@ -22,28 +25,24 @@ describe Savon::WSSE do
   end
 
   describe "@username" do
-    it "defaults to an empty String" do
-      Savon::WSSE.username.should be_a String
-      Savon::WSSE.username.should be_empty
+    it "defaults to nil" do
+      Savon::WSSE.username.should be_nil
     end
 
     it "has accessor methods" do
       Savon::WSSE.username = "gorilla"
       Savon::WSSE.username.should == "gorilla"
-      Savon::WSSE.username = ""
     end
   end
 
   describe "@password" do
-    it "defaults to an empty String" do
-      Savon::WSSE.password.should be_a String
-      Savon::WSSE.password.should be_empty
+    it "defaults to nil" do
+      Savon::WSSE.password.should be_nil
     end
 
     it "has accessor methods" do
       Savon::WSSE.password = "secret"
       Savon::WSSE.password.should == "secret"
-      Savon::WSSE.password = ""
     end
   end
 
@@ -55,33 +54,28 @@ describe Savon::WSSE do
     it "has accessor methods" do
       Savon::WSSE.digest = true
       Savon::WSSE.digest?.should == true
-      Savon::WSSE.digest = false
     end
   end
 
   describe "username" do
-    it "defaults to an empty String" do
-      @wsse.username.should be_a String
-      @wsse.username.should be_empty
+    it "defaults to nil" do
+      @wsse.username.should be_nil
     end
 
     it "has accessor methods" do
       @wsse.username = "gorilla"
       @wsse.username.should == "gorilla"
-      @wsse.username = nil
     end
   end
 
   describe "password" do
-    it "defaults to an empty String" do
-      @wsse.password.should be_a String
-      @wsse.password.should be_empty
+    it "defaults to nil" do
+      @wsse.password.should be_nil
     end
 
     it "has accessor methods" do
       @wsse.password = "secret"
       @wsse.password.should == "secret"
-      @wsse.password = nil
     end
   end
 
@@ -93,7 +87,6 @@ describe Savon::WSSE do
     it "has accessor methods" do
       @wsse.digest = true
       @wsse.digest?.should == true
-      @wsse.digest = false
     end
   end
 
@@ -117,9 +110,6 @@ describe Savon::WSSE do
         header.should include_security_namespaces
         header.should include @username
         header.should include @password
-
-        Savon::WSSE.username = ""
-        Savon::WSSE.password = ""
       end
     end
 
