@@ -27,18 +27,6 @@ class Hash
     @soap_xml.target!
   end
 
-  # Tries to generate a SOAP fault message from the Hash. Returns nil in
-  # case no SOAP fault could be found or generated.
-  def to_soap_fault_message
-    if keys.include? "faultcode"
-      "(#{self['faultcode']}) #{self['faultstring']}"
-    elsif keys.include? "code"
-      "(#{self['code']['value']}) #{self['reason']['text']}"
-    else
-      nil
-    end
-  end
-
   # Maps keys and values of a Hash created from SOAP response XML to
   # more convenient Ruby Objects.
   def map_soap_response

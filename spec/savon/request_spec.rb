@@ -1,10 +1,14 @@
 require "spec_helper"
 
 describe Savon::Request do
-  before { @request = new_request_instance }
+  before { @request = some_request_instance }
 
-  def new_request_instance
+  def some_request_instance
     Savon::Request.new SpecHelper.some_endpoint
+  end
+
+  def some_soap_instance(options = {})
+    Savon::SOAP.new UserFixture.soap_actions[:find_user]
   end
 
   describe "ContentType" do
@@ -53,7 +57,7 @@ describe Savon::Request do
 
   describe "initialize" do
     it "expects a SOAP endpoint String" do
-      new_request_instance
+      some_request_instance
     end
 
     it "raises an ArgumentError in case of an invaluid endpoint" do
@@ -78,16 +82,11 @@ describe Savon::Request do
 
   describe "soap" do
     it "executes a SOAP request and returns the Net::HTTPResponse" do
-      soap_response = @request.soap new_soap_instance
+      soap_response = @request.soap some_soap_instance
 
       soap_response.should be_a Net::HTTPResponse
       soap_response.body.should == UserFixture.user_response
     end
-  end
-
-  def new_soap_instance(options = {})
-    Savon::SOAP.new UserFixture.soap_action_map[:find_user], { :id => 666 },
-      options, UserFixture.namespace_uri
   end
 
 end

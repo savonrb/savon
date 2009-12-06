@@ -1,11 +1,15 @@
 require "spec_helper"
 
 describe Savon::WSDL do
-  before { @wsdl = Savon::WSDL.new Savon::Request.new SpecHelper.some_endpoint }
+  before { @wsdl = some_wsdl_instance }
+
+  def some_wsdl_instance
+    Savon::WSDL.new Savon::Request.new SpecHelper.some_endpoint
+  end
 
   describe "initialize" do
     it "expects a Savon::Request object" do
-      Savon::WSDL.new Savon::Request.new SpecHelper.some_endpoint
+      some_wsdl_instance
     end
   end
 
@@ -16,8 +20,9 @@ describe Savon::WSDL do
   end
 
   describe "soap_actions" do
-    it "returns an Array containing all available SOAP actions" do
-      @wsdl.soap_actions.should == UserFixture.soap_action_map.keys
+    it "returns a Hash containing all available SOAP actions, as well as" <<
+       "their original names and inputs" do  
+      @wsdl.soap_actions.should == UserFixture.soap_actions
     end
 
     it "raises an ArgumentError in case the WSDL seems to be invalid" do
@@ -26,10 +31,15 @@ describe Savon::WSDL do
     end
   end
 
-  describe "soap_action_map" do
-    it "returns a Hash containing all available SOAP actions, as well as" <<
-       "their original names and inputs" do  
-      @wsdl.soap_action_map.should == UserFixture.soap_action_map
+  describe "respond_to?" do
+    it "returns true for available SOAP actions" do
+      @wsdl.respond_to?(UserFixture.soap_actions.keys.first).
+        should be_true
+    end
+
+    it "still behaves like usual otherwise" do
+      @wsdl.respond_to?(:object_id).should be_true
+      @wsdl.respond_to?(:some_undefined_method).should be_false
     end
   end
 

@@ -1,6 +1,9 @@
 module Savon
+
+  # == Savon::SOAP
+  #
+  # Represents the SOAP parameters and envelope.
   class SOAP
-    include WSSE
 
     # SOAP namespaces by SOAP version.
     SOAPNamespace = {
@@ -16,57 +19,86 @@ module Savon
 
     class << self
 
-      # Accessor for the default SOAP version.
-      attr_accessor :version
+      # Returns the default SOAP version.
+      attr_reader :version
 
-    end
-
-    # Expects a SOAP +action+, +body+, +options+ and the +namespace_uri+.
-    def initialize(action, body, options, namespace_uri)
-      @action, @body = action, body
-      @options, @namespace_uri = options, namespace_uri
-    end
-
-    # Returns the SOAP action.
-    attr_reader :action
-
-    # Returns the SOAP options.
-    attr_reader :options
-
-    # Returns the XML for a SOAP request.
-    def body
-      builder = Builder::XmlMarkup.new
-
-      @xml_body ||= builder.env :Envelope, envelope_namespaces do |xml|
-        xml.env(:Header) { envelope_header xml }
-        xml.env(:Body) { envelope_body xml }
+      # Sets the default SOAP version.
+      def version=(version)
+        @version = version if Savon::SOAPVersions.include? version
       end
+
     end
 
-    # Returns the SOAP version to use.
+    # Expects an +action_map+ containing the name of the SOAP action and input.
+    def initialize(action_map)
+      @action = action_map[:name]
+      @input = action_map[:input]
+    end
+
+    # Sets the WSSE options.
+    attr_writer :wsse
+
+    # Accessor for the SOAP action.
+    attr_accessor :action
+
+    # Sets the SOAP header. Expected to be a Hash that can be translated
+    # to XML via Hash.to_soap_xml or any other Object responding to to_s.
+    attr_writer :header
+
+    # Returns the SOAP header. Defaults to an empty Hash.
+    def header
+      @header ||= {}
+    end
+
+    # Sets the SOAP body. Expected to be a Hash that can be translated to
+    # XML via Hash.to_soap_xml or any other Object responding to to_s.
+    attr_writer :body
+
+    # Sets the namespaces. Expected to be a Hash containing the namespaces
+    # (keys) and the corresponding URI's (values).
+    attr_writer :namespaces
+
+    # Returns the namespaces. A Hash containing the namespaces (keys) and
+    # the corresponding URI's (values).
+    def namespaces
+      @namespaces ||= { "xmlns:env" => SOAPNamespace[version] }
+    end
+
+    # Sets the SOAP version.
+    def version=(version)
+      @version = version if Savon::SOAPVersions.include? version
+    end
+
+    # Returns the SOAP version. Defaults to the global default.
     def version
-      @options[:soap_version] || self.class.version
+      @version ||= self.class.version
+    end
+
+    # Returns the SOAP envelope XML.
+    def to_xml
+      unless @xml_body
+        builder = Builder::XmlMarkup.new
+
+        @xml_body = builder.env :Envelope, namespaces do |xml|
+          xml.env(:Header) do
+            xml << (header.to_soap_xml rescue header.to_s) + wsse_header
+          end
+          xml.env(:Body) do
+            xml.wsdl(@input.to_sym) do
+              xml << (@body.to_soap_xml rescue @body.to_s)
+            end
+          end
+        end
+      end
+      @xml_body
     end
 
   private
 
-    # Returns a Hash of namespaces for the SOAP envelope.
-    def envelope_namespaces
-      { "xmlns:env" => SOAPNamespace[version], "xmlns:wsdl" => @namespace_uri }
-    end
-
-    # Expects an instance of Builder::XmlMarkup and returns the XML for the
-    # SOAP envelope header.
-    def envelope_header(xml)
-      wsse_header xml if wsse?
-    end
-
-    # Expects an instance of Builder::XmlMarkup and returns the XML for the
-    # SOAP envelope body.
-    def envelope_body(xml)
-      xml.wsdl(@action[:input].to_sym) do
-        xml << (@body.to_soap_xml rescue @body.to_s)
-      end
+    # Returns the WSSE header or an empty String in case WSSE was not set.
+    def wsse_header
+      return "" unless @wsse.respond_to? :header
+      @wsse.header
     end
 
   end

@@ -1,5 +1,10 @@
 class String
 
+  # Returns a random String of a given +length+.
+  def self.random(length = 100)
+    (0...length).map { ("a".."z").to_a[rand(26)] }.join
+  end
+
   # Returns the String in snake_case.
   def snakecase
     str = dup

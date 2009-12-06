@@ -1,8 +1,5 @@
 module Savon
 
-  # Current version.
-  VERSION = "0.5.0"
-
   # Supported SOAP versions.
   SOAPVersions = [1, 2]
 
@@ -20,24 +17,17 @@ module Savon
 
 end
 
-# stdlib
-require "logger"
-require "net/http"
-require "net/https"
-require "uri"
-require "base64"
-require "digest/sha1"
-require "rexml/document"
+# standard libs
+%w(logger net/http net/https uri base64 digest/sha1 rexml/document).each do |lib|
+  require lib
+end
 
 # gems
-require "builder"
-require "crack/xml"
+%w(builder crack/xml).each do |gem|
+  require gem
+end
 
-# savon
-require "savon/core_ext"
-require "savon/validation"
-require "savon/wsse"
-require "savon/soap"
-require "savon/request"
-require "savon/wsdl"
-require "savon/client"
+# core files
+%w(core_ext wsse soap request response wsdl client).each do |file|
+  require "savon/#{file}"
+end

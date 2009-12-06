@@ -2,13 +2,6 @@ require "spec_helper"
 
 describe Savon do
 
-  describe "VERSION" do
-    it "contains the current version of the library" do
-      Savon::VERSION.should be_a String
-      Savon::VERSION.should_not be_empty
-    end
-  end
-
   describe "SOAPVersions" do
     it "contains an Array of supported SOAP versions" do
       Savon::SOAPVersions.should be_an Array

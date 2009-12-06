@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.5.3"
+  s.version = "0.6.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
-  s.date = %q{2009-11-30}
+  s.date = %q{2009-12-06}
   s.description = %q{Heavy metal Ruby SOAP client library}
   s.email = %q{me@rubiii.com}
   s.extra_rdoc_files = [
@@ -29,8 +29,8 @@ Gem::Specification.new do |s|
      "lib/savon/core_ext/symbol.rb",
      "lib/savon/core_ext/uri.rb",
      "lib/savon/request.rb",
+     "lib/savon/response.rb",
      "lib/savon/soap.rb",
-     "lib/savon/validation.rb",
      "lib/savon/wsdl.rb",
      "lib/savon/wsse.rb",
      "spec/fixtures/multiple_user_response.xml",
@@ -47,9 +47,9 @@ Gem::Specification.new do |s|
      "spec/savon/core_ext/symbol_spec.rb",
      "spec/savon/core_ext/uri_spec.rb",
      "spec/savon/request_spec.rb",
+     "spec/savon/response_spec.rb",
      "spec/savon/savon_spec.rb",
      "spec/savon/soap_spec.rb",
-     "spec/savon/validation_spec.rb",
      "spec/savon/wsdl_spec.rb",
      "spec/savon/wsse_spec.rb",
      "spec/spec_helper.rb",
@@ -71,9 +71,9 @@ Gem::Specification.new do |s|
      "spec/savon/core_ext/symbol_spec.rb",
      "spec/savon/core_ext/uri_spec.rb",
      "spec/savon/request_spec.rb",
+     "spec/savon/response_spec.rb",
      "spec/savon/savon_spec.rb",
      "spec/savon/soap_spec.rb",
-     "spec/savon/validation_spec.rb",
      "spec/savon/wsdl_spec.rb",
      "spec/savon/wsse_spec.rb",
      "spec/spec_helper.rb",

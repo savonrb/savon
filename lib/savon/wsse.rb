@@ -2,8 +2,8 @@ module Savon
 
   # Savon::WSSE
   #
-  # Includes support methods for adding WSSE authentication to a SOAP request.
-  module WSSE
+  # Represents parameters for WSSE authentication.
+  class WSSE
 
     # Namespace for WS Security Secext.
     WSENamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
@@ -12,99 +12,104 @@ module Savon
     WSUNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
     # Default WSSE username.
-    @username = nil
+    @username = ""
 
     # Default WSSE password.
-    @password = nil
+    @password = ""
 
     # Default for whether to use WSSE digest.
     @digest = false
 
     class << self
 
-      # Accessor for the default WSSE username.
-      attr_accessor :username
+      # Returns the default WSSE username.
+      attr_reader :username
 
-      # Accessor for the default WSSE password.
-      attr_accessor :password
+      # Sets the default WSSE username.
+      def username=(username)
+        @username = username.to_s if username.respond_to? :to_s
+      end
+
+      # Returns the default WSSE password.
+      attr_reader :password
+
+      # Sets the default WSSE password.
+      def password=(password)
+        @password = password.to_s if password.respond_to? :to_s
+      end
 
       # Sets whether to use WSSE digest by default.
       attr_writer :digest
 
-      # Returns whether to use WSSE digest by default. 
+      # Returns whether to use WSSE digest by default.
       def digest?
         @digest
       end
 
     end
 
-    # Returns whether WSSE authentication was set via options.
-    def wsse?
-      options[:wsse] = {} unless options[:wsse].kind_of? Hash
-      wsse_username && wsse_password
+    # Sets the WSSE username.
+    def username=(username)
+      @username = username.to_s if username.respond_to? :to_s
     end
 
-    # Takes a Builder::XmlMarkup instance and appends a WSSE header.
-    def wsse_header(xml)
-      options[:wsse] = {} unless options[:wsse].kind_of? Hash
+    # Returns the WSSE username. Defaults to the global default.
+    def username
+      @username || self.class.username
+    end
 
-      xml.wsse :Security, "xmlns:wsse" => WSENamespace do
+    # Sets the WSSE password.
+    def password=(password)
+      @password = password.to_s if password.respond_to? :to_s
+    end
+
+    # Returns the WSSE password. Defaults to the global default.
+    def password
+      @password || self.class.password
+    end
+
+    # Sets whether to use WSSE digest.
+    attr_writer :digest
+
+    # Returns whether to use WSSE digest. Defaults to the global default. 
+    def digest?
+      @digest || self.class.digest?
+    end
+
+    # Returns the XML for a WSSE header or an empty String unless username
+    # and password are specified.
+    def header
+      return "" unless username && password
+
+      builder = Builder::XmlMarkup.new
+      builder.wsse :Security, "xmlns:wsse" => WSENamespace do |xml|
         xml.wsse :UsernameToken, "xmlns:wsu" => WSUNamespace do
-          wsse_nodes xml
+          xml.wsse :Username, username
+          xml.wsse :Nonce, nonce
+          xml.wsu :Created, timestamp
+          xml.wsse :Password, password_node
         end
       end
     end
 
   private
 
-    # Returns the WSSE username or false in case no username was found.
-    def wsse_username
-      username = options[:wsse][:username] || WSSE.username
-      username ? username : false
-    end
-
-    # Returns the WSSE password or false in case no password was found.
-    def wsse_password
-      password = options[:wsse][:password] || WSSE.password
-      password ? password : false
-    end
-
-    # Returns whether to use WSSE digest authentication based on options.
-    def digest?
-      digest = options[:wsse][:digest] || WSSE.digest?
-      digest ? true : false
-    end
-
-    # Takes a Builder::XmlMarkup instance and appends the credentials for
-    # WSSE authentication.
-    def wsse_nodes(xml)
-      xml.wsse :Username, wsse_username
-      xml.wsse :Nonce, wsse_nonce
-      xml.wsu :Created, wsse_timestamp
-      xml.wsse :Password, wsse_password_node
-    end
-
     # Returns the WSSE password. Encrypts the password for digest authentication.
-    def wsse_password_node
-      return wsse_password unless digest?
+    def password_node
+      return password unless digest?
 
-      token = wsse_nonce + wsse_timestamp + wsse_password
+      token = nonce + timestamp + password
       Base64.encode64(Digest::SHA1.hexdigest(token)).chomp!
     end
 
     # Returns a WSSE nonce.
-    def wsse_nonce
-      @wsse_nonce ||= Digest::SHA1.hexdigest random_string + wsse_timestamp
+    def nonce
+      @nonce ||= Digest::SHA1.hexdigest String.random + timestamp
     end
 
     # Returns a WSSE timestamp.
-    def wsse_timestamp
-      @wsse_timestamp ||= Time.now.strftime Savon::SOAPDateTimeFormat
-    end
-
-    # Returns a random String of a given +length+.
-    def random_string(length = 100)
-      (0...length).map { ("a".."z").to_a[rand(26)] }.join
+    def timestamp
+      @timestamp ||= Time.now.strftime Savon::SOAPDateTimeFormat
     end
 
   end

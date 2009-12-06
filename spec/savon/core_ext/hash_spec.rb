@@ -95,32 +95,6 @@ describe Hash do
     end
   end
 
-  describe "to_soap_fault_message" do
-    it "returns a SOAP fault message for SOAP version 1" do
-      soap_fault = {
-        "faultcode" => "soap:Server",
-        "faultstring" => "Fault occurred while processing."
-      }
-
-      soap_fault.to_soap_fault_message.should be_a String
-      soap_fault.to_soap_fault_message.should_not be_empty
-    end
-
-    it "returns a SOAP fault message for SOAP version 2" do
-      soap_fault = {
-        "code" => { "value" => "soap:Server" },
-        "reason" => { "text" => "Fault occurred while processing." }
-      }
-
-      soap_fault.to_soap_fault_message.should be_a String
-      soap_fault.to_soap_fault_message.should_not be_empty
-    end
-
-    it "returns nil in case the Hash does not include a SOAP fault" do
-      { :soap_fault => false }.to_soap_fault_message.should be_nil
-    end
-  end
-
   describe "map_soap_response" do
     it "converts Hash key Strings to snake_case Symbols" do
       { "userResponse" => { "accountStatus" => "active" } }.map_soap_response.

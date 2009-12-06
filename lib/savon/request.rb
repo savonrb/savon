@@ -1,6 +1,9 @@
 module Savon
+
+  # == Savon::Request
+  #
+  # Handles both WSDL and SOAP HTTP requests.
   class Request
-    include Validation
 
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
@@ -30,9 +33,12 @@ module Savon
       attr_accessor :log_level
     end
 
-    # Expects an endpoint String.
+    # Expects an endpoint String. Raises an exception in case the given
+    # +endpoint+ does not seem to be valid.
     def initialize(endpoint)
-      validate! :endpoint, endpoint
+      raise ArgumentError, "Invalid endpoint: #{endpoint}" unless
+        /^(http|https):\/\// === endpoint
+
       @endpoint = URI endpoint
     end
 
@@ -45,11 +51,15 @@ module Savon
       http.get @endpoint.to_s
     end
 
-    # Executes a SOAP request using a given Savon::SOAP (+soap+) instance
-    # and returns the Net::HTTPResponse.
+    # Executes a SOAP request using a given Savon::SOAP instance and
+    # returns the Net::HTTPResponse.
     def soap(soap)
       @soap = soap
-      soap_request
+
+      log_request
+      @response = http.request_post @endpoint.path, @soap.to_xml, http_header
+      log_response
+      @response
     end
 
   private
@@ -58,15 +68,7 @@ module Savon
     def log_request
       log "SOAP request: #{@endpoint}"
       log http_header.map { |key, value| "#{key}: #{value}" }.join ", "
-      log @soap.body
-    end
-
-    # Executes a SOAP request and returns the Net::HTTPResponse.
-    def soap_request
-      log_request
-      @response = http.request_post @endpoint.path, @soap.body, http_header
-      log_response
-      @response
+      log @soap.to_xml
     end
 
     # Logs the SOAP response.
@@ -86,8 +88,7 @@ module Savon
 
     # Returns a Hash containing the header for an HTTP request.
     def http_header
-      { "Content-Type" => ContentType[@soap.version],
-        "SOAPAction" => @soap.action[:name] }
+      { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
     end
 
     # Logs a given +message+.
