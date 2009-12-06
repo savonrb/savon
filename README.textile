@@ -15,7 +15,7 @@ p. To use this heavy metal library, you should be familiar with SOAP, WSDL and t
 
 h2. Instantiate Savon::Client
 
-p. Instantiate a new instance of Savon::Client, passing in the WSDL of your service.
+p. Instantiate Savon::Client, passing in the WSDL of your service.
 
 bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
