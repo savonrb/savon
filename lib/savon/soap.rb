@@ -41,6 +41,9 @@ module Savon
     # Accessor for the SOAP action.
     attr_accessor :action
 
+    # Accessor for the SOAP input.
+    attr_writer :input
+
     # Sets the SOAP header. Expected to be a Hash that can be translated
     # to XML via Hash.to_soap_xml or any other Object responding to to_s.
     attr_writer :header

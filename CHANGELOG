@@ -1,6 +1,7 @@
-== 0.6.2 (upcoming)
-
-* Added a CHANGELOG.
+== 0.6.2 (2009-12-06)
+* 1 minor improvement
+  * Support for changing the name of the SOAP input node.
+  * Added a CHANGELOG.
 
 == 0.6.1 (2009-12-06)
 * 1 minor patch

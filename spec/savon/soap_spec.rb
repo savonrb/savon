@@ -60,6 +60,12 @@ describe Savon::SOAP do
     end
   end
 
+  describe "input" do
+    it "sets the name of the SOAP input node" do
+      @soap.input = "FindUserRequest"
+    end
+  end
+
   describe "header" do
     it "is an accessor for the SOAP header" do
       @soap.header.should be_a Hash
