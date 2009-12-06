@@ -4,7 +4,7 @@ p. Heavy metal Ruby SOAP client library
 
 bc. $ gem install savon
 
-p. *Warning:* you should be familiar with SOAP, WSDL and tools like soapUI.
+p. Savon expects you to be familiar with SOAP, WSDL and tools like soapUI.
 
 h3. Instantiate a client
 
@@ -27,7 +27,7 @@ p. Savon::WSDL represents the WSDL of your service, including information like t
 bc. client.wsdl.soap_actions.keys
 => [:get_all_users, :get_user_by_id, :user_magic]
 
-p. More information: "WSDL":http://wiki.github.com/rubiii/savon/wsdl object.
+p. More information: "WSDL":http://wiki.github.com/rubiii/savon/wsdl
 
 h3. The SOAP object
 
@@ -35,7 +35,7 @@ p. Savon::SOAP represents the SOAP request. Pass a block to your SOAP call and t
 
 bc. response = client.get_user_by_id { |soap| soap.body = { :id => 666 } }
 
-p. More information: "SOAP":http://wiki.github.com/rubiii/savon/soap object.
+p. More information: "SOAP":http://wiki.github.com/rubiii/savon/soap
 
 h3. The WSSE object
 
@@ -47,22 +47,22 @@ bc. response = client.get_user_by_id do |soap, wsse|
   soap.body = { :id => 666 }
 end
 
-p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse object.
+p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse
 
 h3. The Response object
 
 p. Savon::Response represents the HTTP and SOAP response. It contains and raises errors in case of an HTTP error or SOAP fault (unless disabled). Also you can get the response as XML (for parsing it with an XML library) or translated into a Hash.
-More information: "Response":http://wiki.github.com/rubiii/savon/response object.
+More information: "Response":http://wiki.github.com/rubiii/savon/response
 
 h3. HTTP errors and SOAP faults
 
 p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error.
-More information: "Errors":http://wiki.github.com/rubiii/savon/errors.
+More information: "Errors":http://wiki.github.com/rubiii/savon/errors
 
 h3. Logging
 
 p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behaviour.
-More information: "Logging":http://wiki.github.com/rubiii/savon/logging.
+More information: "Logging":http://wiki.github.com/rubiii/savon/logging
 
 h3. Documentation
 
