@@ -1,11 +1,8 @@
 h3. Savon
 
-Heavy metal Ruby SOAP client library
+p. Heavy metal Ruby SOAP client library
 
 bc. $ gem install savon
-
-p. Wiki: "http://wiki.github.com/rubiii/savon":http://wiki.github.com/rubiii/savon
-RDoc: "http://rdoc.info/projects/rubiii/savon":http://rdoc.info/projects/rubiii/savon
 
 p. *Warning:* you should be familiar with SOAP, WSDL and tools like soapUI.
 
@@ -66,3 +63,8 @@ h3. Logging
 
 p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behaviour.
 More information: "Logging":http://wiki.github.com/rubiii/savon/logging.
+
+h3. Documentation
+
+p. Wiki: "wiki.github.com/rubiii/savon":http://wiki.github.com/rubiii/savon
+RDoc: "rdoc.info/projects/rubiii/savon":http://rdoc.info/projects/rubiii/savon
