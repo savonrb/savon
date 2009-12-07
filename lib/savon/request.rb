@@ -67,7 +67,7 @@ module Savon
     # Logs the SOAP request.
     def log_request
       log "SOAP request: #{@endpoint}"
-      log http_header.map { |key, value| "#{key}: #{value}" }.join ", "
+      log http_header.map { |key, value| "#{key}: #{value}" }.join( ", " )
       log @soap.to_xml
     end
 

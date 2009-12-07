@@ -33,7 +33,7 @@ class String
 
   # Translates SOAP response values to more convenient Ruby Objects.
   def map_soap_response
-    return DateTime.parse self if Savon::SOAPDateTimeRegexp === self
+    return DateTime.parse( self ) if Savon::SOAPDateTimeRegexp === self
     return true if self.strip.downcase == "true"
     return false if self.strip.downcase == "false"
     self
