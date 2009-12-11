@@ -1,5 +1,6 @@
 == 0.6.3 (2009-12-11)
   * Removing 2 ruby deprecation warnings for parenthesized arguments. (Dave Woodward <dave@futuremint.com>)
+  * Much faster XPath expressions for parsing the WSDL document.
   * Added global and per request options for disabling Savon::WSDL.
 
 == 0.6.2 (2009-12-06)
