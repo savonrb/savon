@@ -29,10 +29,10 @@ module Savon
 
     end
 
-    # Expects an +action_map+ containing the name of the SOAP action and input.
-    def initialize(action_map)
-      @action = action_map[:name]
-      @input = action_map[:input]
+    # Expects a Hash containing the name of the SOAP action and input.
+    def initialize(action = nil)
+      @action = action.kind_of?(Hash) ? action[:name] : ""
+      @input = action.kind_of?(Hash) ? action[:input] : ""
     end
 
     # Sets the WSSE options.
@@ -87,7 +87,7 @@ module Savon
             xml << (header.to_soap_xml rescue header.to_s) + wsse_header
           end
           xml.env(:Body) do
-            xml.wsdl(@input.to_sym) do
+            xml.tag!(:wsdl, *input_array) do
               xml << (@body.to_soap_xml rescue @body.to_s)
             end
           end
@@ -97,6 +97,15 @@ module Savon
     end
 
   private
+
+    # Returns an Array of SOAP input names to append to the :wsdl namespace.
+    # Defaults to use the name of the SOAP action and may be an empty Array
+    # in case the specified SOAP input seems invalid.
+    def input_array
+      return [@input.to_sym] if @input && !@input.empty?
+      return [@action.to_sym] if @action && !@action.empty?
+      []
+    end
 
     # Returns the WSSE header or an empty String in case WSSE was not set.
     def wsse_header

@@ -6,14 +6,27 @@ module Savon
   # with SOAP services and XML.
   class Client
 
+    # Defines whether to use Savon::WSDL.
+    @wsdl = true
+
+    class << self
+      # Accessor for whether to use Savon::WSDL.
+      attr_accessor :wsdl
+    end
+
     # Expects a SOAP +endpoint+ String.
     def initialize(endpoint)
       @request = Request.new endpoint
       @wsdl = WSDL.new @request
     end
 
-    # Returns the Savon::WSDL.
-    attr_reader :wsdl
+    # Accessor for Savon::WSDL.
+    attr_accessor :wsdl
+
+    # Returns whether to use Savon::WSDL.
+    def wsdl?
+      self.class.wsdl && @wsdl
+    end
 
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
@@ -25,7 +38,7 @@ module Savon
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      super unless @wsdl.respond_to? method
+      super if wsdl? && !@wsdl.respond_to?(method)
 
       setup method, &block
       dispatch method
@@ -34,12 +47,12 @@ module Savon
     # Expects a SOAP action and sets up Savon::SOAP and Savon::WSSE.
     # Yields them to a given +block+ in case one was given.
     def setup(soap_action, &block)
-      @soap = SOAP.new @wsdl.soap_actions[soap_action]
+      @soap = SOAP.new(wsdl? ? @wsdl.soap_actions[soap_action] : nil)
       @wsse = WSSE.new
 
       yield_parameters &block if block
 
-      @soap.namespaces["xmlns:wsdl"] = @wsdl.namespace_uri
+      @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if wsdl?
       @soap.wsse = @wsse
     end
 
