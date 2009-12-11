@@ -12,7 +12,7 @@ module Savon
 
     # Returns the namespace URI from the WSDL.
     def namespace_uri
-      @namespace_uri ||= parse_namespace_uri
+      @namespace_uri ||= document.root.attributes["targetNamespace"] || ""
     end
 
     # Returns a Hash of available SOAP actions mapped to snake_case (keys)
@@ -51,19 +51,13 @@ module Savon
       @document ||= REXML::Document.new wsdl_response.body
     end
 
-    # Parses the WSDL for the namespace URI.
-    def parse_namespace_uri
-      definitions = document.elements["//wsdl:definitions"]
-      definitions.attributes["targetNamespace"] if definitions
-    end
-
     # Parses the WSDL for available SOAP actions and inputs. Returns a Hash
     # containing the SOAP action inputs and corresponding SOAP actions.
     def parse_soap_operations
-      wsdl_binding = document.elements["//wsdl:binding"]
+      wsdl_binding = document.elements["wsdl:definitions/wsdl:binding"]
       return {} unless wsdl_binding
 
-      wsdl_binding.elements.inject("//wsdl:operation", {}) do |hash, operation|
+      wsdl_binding.elements.inject("wsdl:operation", {}) do |hash, operation|
         action = operation.elements["*:operation"].attributes["soapAction"] || ""
         action = operation.attributes["name"] if action.empty?
 
