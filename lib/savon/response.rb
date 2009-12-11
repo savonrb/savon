@@ -100,7 +100,7 @@ module Savon
     def handle_http_error
       if @response.code.to_i >= 300
         @http_error = "#{@response.message} (#{@response.code})"
-        @http_error += ": #{@response.body}" unless @response.body.empty?
+        @http_error << ": #{@response.body}" unless @response.body.empty?
         raise Savon::HTTPError, http_error if self.class.raise_errors?
       end
     end
