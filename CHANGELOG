@@ -1,5 +1,6 @@
-== UPCOMING
+== 0.6.3 (2009-12-11)
   * Removing 2 ruby deprecation warnings for parenthesized arguments. (Dave Woodward <dave@futuremint.com>)
+  * Added global and per request options for disabling Savon::WSDL.
 
 == 0.6.2 (2009-12-06)
   * Support for changing the name of the SOAP input node.

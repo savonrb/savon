@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.6.2"
+  s.version = "0.6.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
-  s.date = %q{2009-12-06}
+  s.date = %q{2009-12-11}
   s.description = %q{Heavy metal Ruby SOAP client library}
   s.email = %q{me@rubiii.com}
   s.extra_rdoc_files = [
@@ -62,23 +62,23 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Heavy metal Ruby SOAP client library}
   s.test_files = [
-    "spec/fixtures/user_fixture.rb",
-     "spec/http_stubs.rb",
-     "spec/savon/client_spec.rb",
-     "spec/savon/core_ext/datetime_spec.rb",
-     "spec/savon/core_ext/hash_spec.rb",
-     "spec/savon/core_ext/object_spec.rb",
-     "spec/savon/core_ext/string_spec.rb",
-     "spec/savon/core_ext/symbol_spec.rb",
-     "spec/savon/core_ext/uri_spec.rb",
-     "spec/savon/request_spec.rb",
+    "spec/spec_helper.rb",
      "spec/savon/response_spec.rb",
      "spec/savon/savon_spec.rb",
-     "spec/savon/soap_spec.rb",
      "spec/savon/wsdl_spec.rb",
+     "spec/savon/request_spec.rb",
+     "spec/savon/client_spec.rb",
+     "spec/savon/soap_spec.rb",
+     "spec/savon/core_ext/symbol_spec.rb",
+     "spec/savon/core_ext/hash_spec.rb",
+     "spec/savon/core_ext/string_spec.rb",
+     "spec/savon/core_ext/datetime_spec.rb",
+     "spec/savon/core_ext/object_spec.rb",
+     "spec/savon/core_ext/uri_spec.rb",
      "spec/savon/wsse_spec.rb",
-     "spec/spec_helper.rb",
-     "spec/spec_helper_methods.rb"
+     "spec/spec_helper_methods.rb",
+     "spec/http_stubs.rb",
+     "spec/fixtures/user_fixture.rb"
   ]
 
   if s.respond_to? :specification_version then
