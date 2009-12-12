@@ -1,5 +1,23 @@
-class SpecHelper
+class EndpointHelper
+  class << self
 
+    def wsdl_endpoint(type = nil)
+      soap_endpoint(type) << "?wsdl"
+    end
+
+    def soap_endpoint(type = nil)
+      case type
+        when :multiple   then "http://multiple.example.com/UserService"
+        when :soap_fault then "http://soapfault.example.com/UserService"
+        when :http_error then "http://httperror.example.com/UserService"
+        when :invalid    then "http://invalid.example.com/UserService"
+        else                  "http://services.example.com/UserService"
+      end
+    end
+
+  end
+end
+=begin
   @soap_call_endpoint = "http://services.example.com/UserService"
   @some_endpoint = @soap_call_endpoint + "?wsdl"
   @some_endpoint_uri = URI @some_endpoint
@@ -15,9 +33,6 @@ class SpecHelper
 
   @soap_invalid_endpoint = "http://invalid.example.com/UserService"
   @invalid_endpoint = @soap_invalid_endpoint + "?wsdl"
-  
-  @wsse_security_nodes =  ["wsse:Security", "wsse:UsernameToken",
-    "wsse:Username", "wsse:Password", "wsse:Nonce", "wsu:Created"]
 
   class << self
 
@@ -30,4 +45,17 @@ class SpecHelper
 
   end
 
+=end
+
+class SpecHelper
+=begin
+  @wsse_security_nodes =  ["wsse:Security", "wsse:UsernameToken",
+    "wsse:Username", "wsse:Password", "wsse:Nonce", "wsu:Created"]
+
+  class << self
+
+    attr_accessor :wsse_security_nodes
+
+  end
+=end
 end

@@ -11,5 +11,5 @@ require "savon"
 Savon::Request.log = false
 
 require "fixtures/user_fixture"
-require "spec_helper_methods"
+require "spec_helper_classes"
 require "http_stubs"

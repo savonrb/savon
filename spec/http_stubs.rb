@@ -2,24 +2,22 @@ require "fakeweb"
 
 FakeWeb.allow_net_connect = false
 
-# Register fake WSDL and SOAP request.
-FakeWeb.register_uri :get, SpecHelper.some_endpoint, :body => UserFixture.user_wsdl
-FakeWeb.register_uri :post, SpecHelper.soap_call_endpoint, :body => UserFixture.user_response
+# Some WSDL and SOAP request.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint, :body => UserFixture.user_wsdl
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint, :body => UserFixture.user_response
 
-# Register fake WSDL and SOAP request with multiple "//return" nodes.
-FakeWeb.register_uri :get, SpecHelper.multiple_endpoint, :body => UserFixture.user_wsdl
-FakeWeb.register_uri :post, SpecHelper.soap_multiple_endpoint, :body => UserFixture.multiple_user_response
+# WSDL and SOAP request with multiple "//return" nodes.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:multiple), :body => UserFixture.user_wsdl
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:multiple), :body => UserFixture.multiple_user_response
 
-# Register fake WSDL and SOAP request for a Savon::SOAPFault.
-FakeWeb.register_uri :get, SpecHelper.soapfault_endpoint, :body => UserFixture.user_wsdl
-FakeWeb.register_uri :post, SpecHelper.soap_soapfault_endpoint, :body => UserFixture.soap_fault
+# WSDL and SOAP request with a Savon::SOAPFault.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:soap_fault), :body => UserFixture.user_wsdl
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:soap_fault), :body => UserFixture.soap_fault
 
-# Register fake WSDL and SOAP request for a Savon::HTTPError.
-FakeWeb.register_uri :get, SpecHelper.httperror_endpoint, :body => UserFixture.user_wsdl
-FakeWeb.register_uri :post, SpecHelper.soap_httperror_endpoint, :body => "",
-  :status => ["404", "Not Found"]
+# WSDL and SOAP request with a Savon::HTTPError.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:http_error), :body => UserFixture.user_wsdl
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:http_error), :body => "", :status => ["404", "Not Found"]
 
-# Register fake WSDL and SOAP request for an invalid endpoint.
-FakeWeb.register_uri :get, SpecHelper.invalid_endpoint, :body => ""
-FakeWeb.register_uri :post, SpecHelper.soap_invalid_endpoint, :body => "",
-  :status => ["404", "Not Found"]
+# WSDL and SOAP request with an invalid endpoint.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:invalid), :body => ""
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:invalid), :body => "", :status => ["404", "Not Found"]

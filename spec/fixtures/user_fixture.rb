@@ -1,9 +1,9 @@
 class UserFixture
 
   @namespace_uri = "http://v1_0.ws.user.example.com"
-  @soap_actions = {
-    :user_find_by_id => { :name => "User.FindById", :input => "User.FindById" },
-    :find_user => { :name => "findUser", :input => "findUser" }
+  @operations = {
+    :user_find_by_id => { :action => "User.FindById", :input => "User.FindById" },
+    :find_user => { :action => "findUser", :input => "findUser" }
   }
 
   @datetime_string = "2010-11-22T11:22:33"
@@ -24,8 +24,12 @@ class UserFixture
 
   class << self
 
-    attr_accessor :namespace_uri, :soap_actions,
+    attr_accessor :namespace_uri, :operations,
       :datetime_string, :datetime_object, :response_hash
+
+    def soap_actions
+      @operations.keys
+    end
 
     def user_wsdl
       load_fixture :user_wsdl
