@@ -1,5 +1,6 @@
 == 0.6.4 (2009-12-13)
   * Refactored specs.
+  * Added a getter for the Savon::Request to Savon::Client and a read_timeout method for HTTP requests.
   * Replaced WSDL document with stream parsing.
 
     Benchmarks (1000 SOAP calls):
