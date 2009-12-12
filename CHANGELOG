@@ -1,10 +1,33 @@
+== 0.6.4 (2009-12-13)
+  * Refactored specs.
+  * Replaced WSDL document with stream parsing.
+
+    Benchmarks (1000 SOAP calls):
+
+           user        system     total       real
+    0.6.4  72.180000   8.280000   80.460000   (750.799011)
+    0.6.3  192.900000  19.630000  212.530000  (914.031865)
+
 == 0.6.3 (2009-12-11)
   * Removing 2 ruby deprecation warnings for parenthesized arguments. (Dave Woodward <dave@futuremint.com>)
-  * Much faster XPath expressions for parsing the WSDL document.
   * Added global and per request options for disabling Savon::WSDL.
 
+    Benchmarks (1000 SOAP calls):
+
+                   user        system     total       real
+    WSDL           192.900000  19.630000  212.530000  (914.031865)
+    disabled WSDL  5.680000    1.340000   7.020000    (298.265318)
+
+  * Improved XPath expressions for parsing the WSDL document.
+
+    Benchmarks (1000 SOAP calls):
+
+           user        system     total       real
+    0.6.3  192.900000  19.630000  212.530000  (914.031865)
+    0.6.2  574.720000  78.380000  653.100000  (1387.778539)
+
 == 0.6.2 (2009-12-06)
-  * Support for changing the name of the SOAP input node.
+  * Added support for changing the name of the SOAP input node.
   * Added a CHANGELOG.
 
 == 0.6.1 (2009-12-06)
@@ -12,14 +35,14 @@
 
 == 0.6.0 (2009-12-06)
   * method_missing now yields the SOAP and WSSE objects to a given block.
-  * The response_process (which previously was a block passed to method_missing) was replaced by the Savon::Response object.
-  * Improved SOAP action handling (another problem that came up with Issue #1).
+  * The response_process (which previously was a block passed to method_missing) was replaced by Savon::Response.
+  * Improved SOAP action handling (another problem that came up with issue #1).
 
 == 0.5.3 (2009-11-30)
-  * Fix for Issue #2 (NoMethodError: undefined method `invalid!' for Savon::WSDL)
+  * Patch for issue #2 (NoMethodError: undefined method `invalid!' for Savon::WSDL)
 
 == 0.5.2 (2009-11-30)
-  * Patch for Issue #1 (Calls fail if api methods have periods in them)
+  * Patch for issue #1 (Calls fail if api methods have periods in them)
 
 == 0.5.1 (2009-11-29)
   * Optimized default response process.
