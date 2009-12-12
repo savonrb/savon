@@ -29,20 +29,22 @@ module Savon
 
     end
 
-    # Expects a Hash containing the name of the SOAP action and input.
-    def initialize(action = nil)
-      @action = action.kind_of?(Hash) ? action[:name] : ""
-      @input = action.kind_of?(Hash) ? action[:input] : ""
-    end
-
     # Sets the WSSE options.
     attr_writer :wsse
 
     # Accessor for the SOAP action.
-    attr_accessor :action
+    attr_writer :action
+
+    def action
+      @action ||= ""
+    end
 
     # Accessor for the SOAP input.
     attr_writer :input
+
+    def input
+      @input ||= ""
+    end
 
     # Sets the SOAP header. Expected to be a Hash that can be translated
     # to XML via Hash.to_soap_xml or any other Object responding to to_s.
@@ -102,8 +104,8 @@ module Savon
     # Defaults to use the name of the SOAP action and may be an empty Array
     # in case the specified SOAP input seems invalid.
     def input_array
-      return [@input.to_sym] if @input && !@input.empty?
-      return [@action.to_sym] if @action && !@action.empty?
+      return [input.to_sym] if input && !input.empty?
+      return [action.to_sym] if action && !action.empty?
       []
     end
 

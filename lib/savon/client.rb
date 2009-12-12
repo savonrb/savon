@@ -47,7 +47,9 @@ module Savon
     # Expects a SOAP action and sets up Savon::SOAP and Savon::WSSE.
     # Yields them to a given +block+ in case one was given.
     def setup(soap_action, &block)
-      @soap = SOAP.new(wsdl? ? @wsdl.soap_actions[soap_action] : nil)
+      @soap = SOAP.new
+      @soap.action = @wsdl.operations[soap_action][:action] if wsdl?
+      @soap.input = @wsdl.operations[soap_action][:input] if wsdl?
       @wsse = WSSE.new
 
       yield_parameters &block if block

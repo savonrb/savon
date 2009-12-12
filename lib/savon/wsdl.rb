@@ -5,35 +5,41 @@ module Savon
   # Represents the WSDL document.
   class WSDL
 
-    # Expects a Savon::Request object.
+    # Initializer, expects a Savon::Request.
     def initialize(request)
       @request = request
     end
 
-    # Returns the namespace URI from the WSDL.
+    # Returns the namespace URI of the WSDL.
     def namespace_uri
       @namespace_uri ||= stream.namespace_uri
     end
 
-    # Returns a Hash of available SOAP actions mapped to snake_case (keys)
-    # and their original names and inputs in another Hash (values).
+    # Returns an Array of available SOAP actions.
     def soap_actions
-      @soap_actions ||= stream.soap_actions
+      @soap_actions ||= stream.operations.keys
+    end
+
+    # Returns a Hash of SOAP operations including their corresponding
+    # SOAP actions and inputs.
+    def operations
+      @operations ||= stream.operations
     end
 
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
-      return true if soap_actions.keys.include? method
+      return true if soap_actions.include? method
       super
     end
 
-    # Returns the WSDL document.
+    # Returns the raw WSDL document.
     def to_s
       @document ||= @request.wsdl.body
     end
 
   private
 
+    # Returns the Savon::WSDLStream.
     def stream
       unless @stream
         @stream = WSDLStream.new
@@ -46,36 +52,52 @@ module Savon
 
   # Savon::WSDLStream
   #
-  # Stream listener parsing the WSDL document.
+  # Stream listener for parsing the WSDL document.
   class WSDLStream
 
-    # Sets the initial state.
+    # Initializer, sets an empty Hash of operations.
     def initialize
-      @namespace_uri = ""
-      @soap_actions = {}
-      @wsdl_binding = false
+      @operations = {}
     end
 
+    # Returns the namespace URI from the WSDL document.
     attr_reader :namespace_uri
 
-    attr_reader :soap_actions
+    # Returns the SOAP operations found in the WSDL document.
+    attr_reader :operations
  
+    # Hook method called when the stream parser encounters a tag.
     def tag_start(name, attrs)
-      @namespace_uri = attrs["targetNamespace"] if name == "wsdl:definitions"
-      @wsdl_binding = true if name == "wsdl:binding"
-      soap_action(name, attrs) if @wsdl_binding && /.+:operation/ === name
+      section_from name
+      @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
+      operation_from name, attrs if @section == :binding && /.+:operation/ === name
     end
 
-    def soap_action(name, attrs)
+    # Sets the current section of the WSDL document from a given tag +name+.
+    def section_from(name)
+      section = case name
+        when "wsdl:definitions" then :definitions
+        when "wsdl:types"       then :types
+        when "wsdl:message"     then :message
+        when "wsdl:portType"    then :port_type
+        when "wsdl:binding"     then :binding
+        when "wsdl:service"     then :service
+      end
+      @section = section if section
+    end
+
+    # Stores available operations from a given tag +name+ and +attrs+.
+    def operation_from(name, attrs)
       if name == "wsdl:operation"
         @action = attrs["name"]
       elsif /.+:operation/ === name
-        @action = attrs["soapAction"] unless attrs["soapAction"].empty?
+        @action = attrs["soapAction"] if attrs["soapAction"] && !attrs["soapAction"].empty?
         input = @action.split("/").last
-        @soap_actions[input.snakecase.to_sym] = { :name => @action, :input => input }
+        @operations[input.snakecase.to_sym] = { :action => @action, :input => input }
       end
     end
 
+    # Catches calls to unimplemented hook methods.
     def method_missing(method, *args)
     end
 
