@@ -1,6 +1,7 @@
 == 0.6.4 (2009-12-13)
   * Refactored specs to be less unit-like.
   * Added a getter for the Savon::Request to Savon::Client and a read_timeout setter for HTTP requests.
+  * wsdl.soap_actions now returns an Array of SOAP actions. For the previous "mapping" please use wsdl.operations.
   * Replaced WSDL document with stream parsing.
 
     Benchmarks (1000 SOAP calls):
