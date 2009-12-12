@@ -2,7 +2,7 @@ module Savon
 
   # Savon::WSDL
   #
-  # Represents a WSDL document.
+  # Represents the WSDL document.
   class WSDL
 
     # Expects a Savon::Request object.
@@ -12,15 +12,13 @@ module Savon
 
     # Returns the namespace URI from the WSDL.
     def namespace_uri
-      @namespace_uri ||= document.root.attributes["targetNamespace"] || ""
+      @namespace_uri ||= stream.namespace_uri
     end
 
     # Returns a Hash of available SOAP actions mapped to snake_case (keys)
     # and their original names and inputs in another Hash (values).
     def soap_actions
-      @soap_actions ||= parse_soap_operations.inject({}) do |hash, (input, action)|
-        hash.merge input.snakecase.to_sym => { :name => action, :input => input }
-      end
+      @soap_actions ||= stream.soap_actions
     end
 
     # Returns +true+ for available methods and SOAP actions.
@@ -31,38 +29,54 @@ module Savon
 
     # Returns the WSDL document.
     def to_s
-      wsdl_response.body
+      @document ||= @request.wsdl.body
     end
 
   private
 
-    # Retrieves and returns the WSDL response. Raises an ArgumentError in
-    # case the WSDL seems to be invalid. 
-    def wsdl_response
-      unless @wsdl_response
-        @wsdl_response ||= @request.wsdl
-        raise ArgumentError, "Invalid WSDL: #{@request.endpoint}" if soap_actions.empty?
+    def stream
+      unless @stream
+        @stream = WSDLStream.new
+        REXML::Document.parse_stream to_s, @stream
       end
-      @wsdl_response
+      @stream
     end
 
-    # Returns a REXML::Document of the WSDL.
-    def document
-      @document ||= REXML::Document.new wsdl_response.body
+  end
+
+  # Savon::WSDLStream
+  #
+  # Stream listener parsing the WSDL document.
+  class WSDLStream
+
+    # Sets the initial state.
+    def initialize
+      @namespace_uri = ""
+      @soap_actions = {}
+      @wsdl_binding = false
     end
 
-    # Parses the WSDL for available SOAP actions and inputs. Returns a Hash
-    # containing the SOAP action inputs and corresponding SOAP actions.
-    def parse_soap_operations
-      wsdl_binding = document.elements["wsdl:definitions/wsdl:binding"]
-      return {} unless wsdl_binding
+    attr_reader :namespace_uri
 
-      wsdl_binding.elements.inject("wsdl:operation", {}) do |hash, operation|
-        action = operation.elements["*:operation"].attributes["soapAction"] || ""
-        action = operation.attributes["name"] if action.empty?
+    attr_reader :soap_actions
+ 
+    def tag_start(name, attrs)
+      @namespace_uri = attrs["targetNamespace"] if name == "wsdl:definitions"
+      @wsdl_binding = true if name == "wsdl:binding"
+      soap_action(name, attrs) if @wsdl_binding && /.+:operation/ === name
+    end
 
-        hash.merge action.split("/").last => action
+    def soap_action(name, attrs)
+      if name == "wsdl:operation"
+        @action = attrs["name"]
+      elsif /.+:operation/ === name
+        @action = attrs["soapAction"] unless attrs["soapAction"].empty?
+        input = @action.split("/").last
+        @soap_actions[input.snakecase.to_sym] = { :name => @action, :input => input }
       end
+    end
+
+    def method_missing(method, *args)
     end
 
   end
