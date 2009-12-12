@@ -23,6 +23,9 @@ module Savon
     # Accessor for Savon::WSDL.
     attr_accessor :wsdl
 
+    # Returns the Savon::Request.
+    attr_reader :request
+
     # Returns whether to use Savon::WSDL.
     def wsdl?
       self.class.wsdl && @wsdl

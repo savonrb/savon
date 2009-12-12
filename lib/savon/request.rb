@@ -45,6 +45,11 @@ module Savon
     # Returns the endpoint URI.
     attr_reader :endpoint
 
+    # Sets the read timeout for HTTP requests.
+    def read_timeout(sec)
+      @http.read_timeout = sec
+    end
+
     # Retrieves WSDL document and returns the Net::HTTPResponse.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"
