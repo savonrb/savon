@@ -51,6 +51,10 @@ describe Savon::Request do
     @request.endpoint.should == URI(EndpointHelper.wsdl_endpoint)
   end
 
+  it "has a setter for specifying an open_timeout" do
+    @request.open_timeout = 30
+  end
+
   it "has a setter for specifying a read_timeout" do
     @request.read_timeout = 30
   end

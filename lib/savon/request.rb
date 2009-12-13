@@ -45,6 +45,11 @@ module Savon
     # Returns the endpoint URI.
     attr_reader :endpoint
 
+    # Sets the open timeout for HTTP requests.
+    def open_timeout=(sec)
+      http.open_timeout = sec
+    end
+
     # Sets the read timeout for HTTP requests.
     def read_timeout=(sec)
       http.read_timeout = sec

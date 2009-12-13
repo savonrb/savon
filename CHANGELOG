@@ -1,3 +1,6 @@
+== 0.6.5 (2009-12-13)
+  * Added an open_timeout method to Savon::Request.
+
 == 0.6.4 (2009-12-13)
   * Refactored specs to be less unit-like.
   * Added a getter for the Savon::Request to Savon::Client and a read_timeout setter for HTTP requests.
