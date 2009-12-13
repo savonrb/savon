@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{savon}
-  s.version = "0.6.4"
+  s.version = "0.6.5"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Daniel Harrington"]
-  s.date = %q{2009-12-12}
+  s.date = %q{2009-12-13}
   s.description = %q{Heavy metal Ruby SOAP client library}
   s.email = %q{me@rubiii.com}
   s.extra_rdoc_files = [
@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
      "lib/savon/soap.rb",
      "lib/savon/wsdl.rb",
      "lib/savon/wsse.rb",
+     "spec/endpoint_helper.rb",
      "spec/fixtures/multiple_user_response.xml",
      "spec/fixtures/soap_fault.xml",
      "spec/fixtures/user_fixture.rb",
@@ -53,8 +54,7 @@ Gem::Specification.new do |s|
      "spec/savon/soap_spec.rb",
      "spec/savon/wsdl_spec.rb",
      "spec/savon/wsse_spec.rb",
-     "spec/spec_helper.rb",
-     "spec/spec_helper_classes.rb"
+     "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/rubiii/savon}
   s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--line-numbers", "--inline-source"]
@@ -62,7 +62,8 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Heavy metal Ruby SOAP client library}
   s.test_files = [
-    "spec/fixtures/user_fixture.rb",
+    "spec/endpoint_helper.rb",
+     "spec/fixtures/user_fixture.rb",
      "spec/http_stubs.rb",
      "spec/savon/client_spec.rb",
      "spec/savon/core_ext/datetime_spec.rb",
@@ -77,8 +78,7 @@ Gem::Specification.new do |s|
      "spec/savon/soap_spec.rb",
      "spec/savon/wsdl_spec.rb",
      "spec/savon/wsse_spec.rb",
-     "spec/spec_helper.rb",
-     "spec/spec_helper_classes.rb"
+     "spec/spec_helper.rb"
   ]
 
   if s.respond_to? :specification_version then
