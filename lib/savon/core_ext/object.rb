@@ -1,5 +1,12 @@
 class Object
 
+  # Returns +true+ if the Object is false, empty, or a whitespace string.
+  # For example, "", false, nil, [], and {} are blank.
+  # Implementation from ActiveSupport.
+  def blank?
+    respond_to?(:empty?) ? empty? : !self
+  end unless defined? blank?
+
   # Returns the Object as a SOAP request compliant key.
   def to_soap_key
     to_s
