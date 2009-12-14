@@ -43,16 +43,22 @@ module Savon
     def method_missing(method, *args, &block) #:doc:
       super if wsdl? && !@wsdl.respond_to?(method)
 
-      setup method, &block
+      setup operation_from(method), &block
       dispatch method
     end
 
-    # Expects a SOAP action and sets up Savon::SOAP and Savon::WSSE.
+    # Returns a SOAP operation Hash containing the SOAP action and input
+    # for a given +method+.
+    def operation_from(method)
+      return @wsdl.operations[method] if wsdl?
+      { :action => method.to_soap_key, :input => method.to_soap_key }
+    end
+
+    # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE.
     # Yields them to a given +block+ in case one was given.
-    def setup(soap_action, &block)
+    def setup(operation, &block)
       @soap = SOAP.new
-      @soap.action = @wsdl.operations[soap_action][:action] if wsdl?
-      @soap.input = @wsdl.operations[soap_action][:input] if wsdl?
+      @soap.action, @soap.input = operation[:action], operation[:input]
       @wsse = WSSE.new
 
       yield_parameters &block if block
