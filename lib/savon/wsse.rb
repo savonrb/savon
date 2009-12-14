@@ -11,77 +11,79 @@ module Savon
     # Namespace for WS Security Utility.
     WSUNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
-    # Default WSSE username.
-    @username = nil
+    # Global WSSE username.
+    @@username = nil
 
-    # Default WSSE password.
-    @password = nil
-
-    # Default for whether to use WSSE digest.
-    @digest = false
-
-    class << self
-
-      # Returns the default WSSE username.
-      attr_reader :username
-
-      # Sets the default WSSE username.
-      def username=(username)
-        @username = username.to_s if username.respond_to? :to_s
-        @username = nil if username.nil?
-      end
-
-      # Returns the default WSSE password.
-      attr_reader :password
-
-      # Sets the default WSSE password.
-      def password=(password)
-        @password = password.to_s if password.respond_to? :to_s
-        @password = nil if password.nil?
-      end
-
-      # Sets whether to use WSSE digest by default.
-      attr_writer :digest
-
-      # Returns whether to use WSSE digest by default.
-      def digest?
-        @digest
-      end
-
+    # Returns the global WSSE username.
+    def self.username
+      @@username
     end
 
-    # Sets the WSSE username.
+    # Sets the global WSSE username.
+    def self.username=(username)
+      @@username = username.to_s if username.respond_to? :to_s
+      @@username = nil if username.nil?
+    end
+
+    # Global WSSE password.
+    @@password = nil
+
+    # Returns the global WSSE password.
+    def self.password
+      @@password
+    end
+
+    # Sets the global WSSE password.
+    def self.password=(password)
+      @@password = password.to_s if password.respond_to? :to_s
+      @@password = nil if password.nil?
+    end
+
+    # Global setting of whether to use WSSE digest.
+    @@digest = false
+
+    # Returns the global setting of whether to use WSSE digest.
+    def self.digest?
+      @@digest
+    end
+
+    # Global setting of whether to use WSSE digest.
+    def self.digest=(digest)
+      @@digest = digest
+    end
+
+    # Sets the WSSE username per request.
     def username=(username)
       @username = username.to_s if username.respond_to? :to_s
       @username = nil if username.nil?
     end
 
-    # Returns the WSSE username. Defaults to the global default.
+    # Returns the WSSE username. Defaults to the global setting.
     def username
       @username || self.class.username
     end
 
-    # Sets the WSSE password.
+    # Sets the WSSE password per request.
     def password=(password)
       @password = password.to_s if password.respond_to? :to_s
       @password = nil if password.nil?
     end
 
-    # Returns the WSSE password. Defaults to the global default.
+    # Returns the WSSE password. Defaults to the global setting.
     def password
       @password || self.class.password
     end
 
-    # Sets whether to use WSSE digest.
+    # Sets whether to use WSSE digest per request.
     attr_writer :digest
 
-    # Returns whether to use WSSE digest. Defaults to the global default. 
+    # Returns whether to use WSSE digest. Defaults to the global setting. 
     def digest?
       @digest || self.class.digest?
     end
 
-    # Returns the XML for a WSSE header or an empty String unless username
-    # and password are specified.
+    # Returns the XML for a WSSE header or an empty String unless both
+    # username and password were specified.
     def header
       return "" unless username && password
 
