@@ -55,7 +55,10 @@ module Savon
   # Stream listener for parsing the WSDL document.
   class WSDLStream
 
-    # Initializer, sets an empty Hash of operations.
+    # Defines the core sections of a WSDL document.
+    Sections = ["wsdl:definitions", "wsdl:types", "wsdl:message",
+      "wsdl:portType", "wsdl:binding", "wsdl:service"]
+
     def initialize
       @operations = {}
     end
@@ -67,31 +70,19 @@ module Savon
     attr_reader :operations
  
     # Hook method called when the stream parser encounters a tag.
-    def tag_start(name, attrs)
-      section_from name
-      @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
-      operation_from name, attrs if @section == :binding && /.+:operation/ === name
-    end
+    def tag_start(tag, attrs)
+      @section = tag.strip_namespace.to_sym if Sections.include? tag
 
-    # Sets the current section of the WSDL document from a given tag +name+.
-    def section_from(name)
-      section = case name
-        when "wsdl:definitions" then :definitions
-        when "wsdl:types"       then :types
-        when "wsdl:message"     then :message
-        when "wsdl:portType"    then :port_type
-        when "wsdl:binding"     then :binding
-        when "wsdl:service"     then :service
-      end
-      @section = section if section
+      @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
+      operation_from tag, attrs if @section == :binding && tag =~ /.+:operation/
     end
 
     # Stores available operations from a given tag +name+ and +attrs+.
-    def operation_from(name, attrs)
-      if name == "wsdl:operation"
-        @action = attrs["name"]
-      elsif /.+:operation/ === name
-        @action = attrs["soapAction"] if attrs["soapAction"] && !attrs["soapAction"].empty?
+    def operation_from(tag, attrs)
+      @action = attrs["name"] if attrs["name"]
+
+      unless tag == "wsdl:operation"
+        @action = attrs["soapAction"] unless attrs["soapAction"].blank?
         input = @action.split("/").last
         @operations[input.snakecase.to_sym] = { :action => @action, :input => input }
       end
