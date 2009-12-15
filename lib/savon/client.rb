@@ -19,8 +19,9 @@ module Savon
       @@wsdl
     end
 
-    # Expects a SOAP +endpoint+ String.
-    def initialize(endpoint, proxy = '')
+    # Expects a SOAP +endpoint+ String. Also accepts an optional String
+    # containing the URI to a proxy server.
+    def initialize(endpoint, proxy = "")
       @request = Request.new endpoint, proxy
       @wsdl = WSDL.new @request
     end

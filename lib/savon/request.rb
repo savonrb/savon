@@ -47,14 +47,12 @@ module Savon
       @@log_level
     end
 
-    # Expects an endpoint String. Raises an exception in case the given
-    # +endpoint+ does not seem to be valid.
-    def initialize(endpoint, proxy = '')
-      raise ArgumentError, "Invalid endpoint: #{endpoint}" unless
-        /^(http|https):\/\// === endpoint
-
-      raise ArgumentError, "Invalid proxy: #{proxy}" unless
-        /^(http|https):\/\// === proxy || proxy.empty?
+    # Expects an +endpoint+ String. Also accepts an optional +proxy+ String.
+    # Raises an exception in case the given +endpoint+ or +proxy+ does not
+    # seem to be valid.
+    def initialize(endpoint, proxy = "")
+      raise ArgumentError, "Invalid endpoint: #{endpoint}" unless valid_uri?(endpoint)
+      raise ArgumentError, "Invalid proxy: #{proxy}" unless proxy.empty? || valid_uri?(proxy)
 
       @endpoint = URI endpoint
       @proxy = URI proxy
@@ -120,6 +118,11 @@ module Savon
     # Returns a Hash containing the header for an HTTP request.
     def http_header
       { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
+    end
+
+    # Returns whether a given URI seems to be valid.
+    def valid_uri?(uri)
+      /^(http|https):\/\// === uri
     end
 
     # Logs a given +message+.
