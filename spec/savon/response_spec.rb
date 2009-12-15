@@ -61,6 +61,11 @@ describe Savon::Response do
         should == "(soap:Server) Fault occurred while processing."
     end
 
+    it "returns the SOAP fault message in case of a SOAP 1.2 fault" do
+      savon_response_with(:soap_fault12).soap_fault.
+        should == "(soap:Sender) Sender Timeout"
+    end
+
     after { Savon::Response.raise_errors = true }
   end
 
@@ -100,6 +105,7 @@ describe Savon::Response do
   def savon_response_with(error_type)
     mock = case error_type
       when :soap_fault then http_response_mock(200, UserFixture.soap_fault)
+      when :soap_fault12 then http_response_mock(200, UserFixture.soap_fault12)
       when :http_error then http_response_mock(404, "", "Not found")
     end
     Savon::Response.new mock

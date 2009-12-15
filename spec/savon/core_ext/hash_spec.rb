@@ -81,9 +81,8 @@ describe Hash do
 
     it "calls to_s on Strings even if they respond to to_datetime" do
       singleton = "gorilla"
-      def singleton.to_datetime
-        UserFixture.datetime_object
-      end
+      singleton.expects( :to_s ).returns singleton
+      singleton.expects( :to_datetime ).never
 
       { :name => singleton }.to_soap_xml.should == "<name>gorilla</name>"
     end

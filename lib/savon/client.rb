@@ -20,8 +20,8 @@ module Savon
     end
 
     # Expects a SOAP +endpoint+ String.
-    def initialize(endpoint)
-      @request = Request.new endpoint
+    def initialize(endpoint, proxy = '')
+      @request = Request.new endpoint, proxy
       @wsdl = WSDL.new @request
     end
 

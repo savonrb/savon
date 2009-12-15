@@ -47,8 +47,20 @@ describe Savon::Request do
     lambda { Savon::Request.new "invalid" }.should raise_error ArgumentError
   end
 
+  it "should be optionally initialized with a proxy string" do
+    Savon::Request.new EndpointHelper.wsdl_endpoint, 'http://localhost:8080'
+  end
+
+  it "raises an ArgumentError when initialized with an invalid proxy" do
+    lambda { Savon::Request.new EndpointHelper.wsdl_endpoint, "invalid" }.should raise_error ArgumentError
+  end
+
   it "has a getter for the SOAP endpoint URI" do
     @request.endpoint.should == URI(EndpointHelper.wsdl_endpoint)
+  end
+
+  it "should have a getter for the Proxy URI" do
+    @request.proxy.should == URI('')
   end
 
   it "has a setter for specifying an open_timeout" do
