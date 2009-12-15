@@ -35,15 +35,22 @@ module Savon
 
     # Expects an endpoint String. Raises an exception in case the given
     # +endpoint+ does not seem to be valid.
-    def initialize(endpoint)
+    def initialize(endpoint, proxy = '')
       raise ArgumentError, "Invalid endpoint: #{endpoint}" unless
         /^(http|https):\/\// === endpoint
 
+      raise ArgumentError, "Invalid proxy: #{proxy}" unless
+        /^(http|https):\/\// === proxy || proxy.empty?
+
       @endpoint = URI endpoint
+      @proxy = URI proxy
     end
 
     # Returns the endpoint URI.
     attr_reader :endpoint
+
+    # Returns the proxy URI
+    attr_reader :proxy
 
     # Sets the open timeout for HTTP requests.
     def open_timeout=(sec)
@@ -90,7 +97,7 @@ module Savon
     # Returns a Net::HTTP instance.
     def http
       unless @http
-        @http ||= Net::HTTP.new @endpoint.host, @endpoint.port
+        @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
         @http.use_ssl = true if @endpoint.ssl?
       end
       @http
