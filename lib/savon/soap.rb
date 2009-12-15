@@ -14,19 +14,17 @@ module Savon
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
 
-    # The default SOAP version.
-    @version = 1
+    # The global SOAP version.
+    @@version = 1
 
-    class << self
+    # Returns the global SOAP version.
+    def self.version
+      @@version
+    end
 
-      # Returns the default SOAP version.
-      attr_reader :version
-
-      # Sets the default SOAP version.
-      def version=(version)
-        @version = version if Savon::SOAPVersions.include? version
-      end
-
+    # Sets the global SOAP version.
+    def self.version=(version)
+      @@version = version if Savon::SOAPVersions.include? version
     end
 
     # Sets the WSSE options.
