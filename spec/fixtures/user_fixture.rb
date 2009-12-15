@@ -46,6 +46,10 @@ class UserFixture
     def soap_fault
       load_fixture :soap_fault
     end
+    
+    def soap_fault12
+      load_fixture :soap_fault12
+    end
 
   private
 

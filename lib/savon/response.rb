@@ -90,8 +90,9 @@ module Savon
     def soap_fault_message_by_version(soap_fault)
       if soap_fault.keys.include? "faultcode"
         "(#{soap_fault['faultcode']}) #{soap_fault['faultstring']}"
-      elsif soap_fault.keys.include? "code"
-        "(#{soap_fault['code']['value']}) #{soap_fault['reason']['text']}"
+      elsif soap_fault.keys.include? "Code"
+        # SOAP 1.2 error code element is capitalized, see: http://www.w3.org/TR/soap12-part1/#faultcodeelement
+        "(#{soap_fault['Code']['Value']}) #{soap_fault['Reason']['Text']}"
       end
     end
 

@@ -44,6 +44,11 @@ describe Savon::Client do
     @client.find_user.should be_a Savon::Response
   end
 
+  it "dispatches SOAP calls via method_missing without using WSDL" do
+    @client.wsdl = false
+    @client.find_user.should be_a Savon::Response    
+  end
+
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
     lambda { client.find_user }.should raise_error Savon::SOAPFault
