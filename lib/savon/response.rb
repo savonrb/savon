@@ -5,19 +5,17 @@ module Savon
   # Represents the HTTP and SOAP response.
   class Response
 
-    # The default of whether to raise errors.
-    @raise_errors = true
+    # The global setting of whether to raise errors.
+    @@raise_errors = true
 
-    class << self
+    # Sets the global setting of whether to raise errors.
+    def self.raise_errors=(raise_errors)
+      @@raise_errors = raise_errors
+    end
 
-      # Sets the default of whether to raise errors.
-      attr_writer :raise_errors
-
-      # Returns the default of whether to raise errors.
-      def raise_errors?
-        @raise_errors
-      end
-
+    # Returns the global setting of whether to raise errors.
+    def self.raise_errors?
+      @@raise_errors
     end
 
     # Expects a Net::HTTPResponse and handles errors.

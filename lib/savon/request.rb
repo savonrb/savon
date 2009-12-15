@@ -8,29 +8,43 @@ module Savon
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
 
-    # Defines whether to log HTTP requests.
-    @log = true
+    # Whether to log HTTP requests.
+    @@log = true
 
     # The default logger.
-    @logger = Logger.new STDOUT
+    @@logger = Logger.new STDOUT
 
     # The default log level.
-    @log_level = :debug
+    @@log_level = :debug
 
-    class << self
-      # Sets whether to log HTTP requests.
-      attr_writer :log
+    # Sets whether to log HTTP requests.
+    def self.log=(log)
+      @@log = log
+    end
 
-      # Returns whether to log HTTP requests.
-      def log?
-        @log
-      end
+    # Returns whether to log HTTP requests.
+    def self.log?
+      @@log
+    end
 
-      # Accessor for the default logger.
-      attr_accessor :logger
+    # Sets the logger.
+    def self.logger=(logger)
+      @@logger = logger
+    end
 
-      # Accessor for the default log level.
-      attr_accessor :log_level
+    # Returns the logger.
+    def self.logger
+      @@logger
+    end
+
+    # Sets the log level.
+    def self.log_level=(log_level)
+      @@log_level = log_level
+    end
+
+    # Returns the log level.
+    def self.log_level
+      @@log_level
     end
 
     # Expects an endpoint String. Raises an exception in case the given

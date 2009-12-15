@@ -6,12 +6,17 @@ module Savon
   # with SOAP services and XML.
   class Client
 
-    # Defines whether to use Savon::WSDL.
-    @wsdl = true
+    # Global setting of whether to use Savon::WSDL.
+    @@wsdl = true
 
-    class << self
-      # Accessor for whether to use Savon::WSDL.
-      attr_accessor :wsdl
+    # Sets the global setting of whether to use Savon::WSDL.
+    def self.wsdl=(wsdl)
+      @@wsdl = wsdl
+    end
+
+    # Returns the global setting of whether to use Savon::WSDL.
+    def self.wsdl?
+      @@wsdl
     end
 
     # Expects a SOAP +endpoint+ String.
@@ -28,7 +33,7 @@ module Savon
 
     # Returns whether to use Savon::WSDL.
     def wsdl?
-      self.class.wsdl && @wsdl
+      self.class.wsdl? && @wsdl
     end
 
     # Returns +true+ for available methods and SOAP actions.
