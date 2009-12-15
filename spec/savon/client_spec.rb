@@ -7,6 +7,10 @@ describe Savon::Client do
     Savon::Client.new EndpointHelper.wsdl_endpoint
   end
 
+  it "is initialized with a SOAP endpoint String and a Proxy string" do
+    Savon::Client.new EndpointHelper.wsdl_endpoint, 'http://proxy'
+  end
+
   it "raises an ArgumentError when initialized with an invalid endpoint" do
     lambda { Savon::Client.new "invalid" }.should raise_error ArgumentError
   end
