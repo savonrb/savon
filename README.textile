@@ -51,7 +51,7 @@ p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse
 
 h3. SSL Client Authentication
 
-p. Savon::Client can accept SSL client certificates, as well as verify the validity of a server certificate.  Syntax inspired by Adam Wiggin's Rest-Client (http://github.com/adamwiggins/rest-client)
+p. Savon::Client can accept SSL client certificates, as well as verify the validity of a server certificate.  Syntax inspired by Adam Wiggin's "Rest-Client":http://github.com/adamwiggins/rest-client
 
 bc. client = Savon::Client.new(
   'https://example.org/wsdl',
