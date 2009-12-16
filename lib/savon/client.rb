@@ -25,9 +25,6 @@ module Savon
 
     # Returns the Savon::Request.
     attr_reader :request
-    
-    # Accessors for SSL settings
-    attr_reader :ssl_client_cert, :ssl_client_key, :ssl_ca_cert
 
     # Returns whether to use Savon::WSDL.
     def wsdl?
