@@ -49,6 +49,18 @@ end
 
 p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse
 
+h3. SSL Client Authentication
+
+p. Savon::Client can accept SSL client certificates, as well as verify the validity of a server certificate.  Syntax inspired by Adam Wiggin's Rest-Client (http://github.com/adamwiggins/rest-client)
+
+bc. client = Savon::Client.new(
+  'https://example.org/wsdl',
+  :ssl_client_cert  =>  OpenSSL::X509::Certificate.new(File.read("client_cert.pem")),
+  :ssl_client_key   =>  OpenSSL::PKey::RSA.new(File.read("client_key.pem"), "password if one exists"),
+  :ssl_ca_file      =>  "cacert.pem",
+  :ssl_verify       =>  OpenSSL::SSL::VERIFY_PEER
+)
+
 h3. The Response object
 
 p. Savon::Response represents the HTTP and SOAP response. It contains and raises errors in case of an HTTP error or SOAP fault (unless disabled). Also you can get the response as XML (for parsing it with an XML library) or translated into a Hash.

@@ -35,10 +35,14 @@ module Savon
 
     # Expects an endpoint String. Raises an exception in case the given
     # +endpoint+ does not seem to be valid.
-    def initialize(endpoint)
+    def initialize(endpoint,options={})
       raise ArgumentError, "Invalid endpoint: #{endpoint}" unless
         /^(http|https):\/\// === endpoint
-
+      @ssl_client_cert = options[:ssl_client_cert] || nil
+      @ssl_client_key = options[:ssl_client_key] || nil
+      @ssl_ca_file = options[:ssl_ca_file] || nil
+      @ssl_verify = options[:ssl_verify] || false
+      
       @endpoint = URI endpoint
     end
 
@@ -92,6 +96,15 @@ module Savon
       unless @http
         @http ||= Net::HTTP.new @endpoint.host, @endpoint.port
         @http.use_ssl = true if @endpoint.ssl?
+        
+        if @ssl_verify == false
+          @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        elsif @ssl_verify.is_a? Integer
+          @http.verify_mode = @ssl_verify
+        end
+  			@http.cert = @ssl_client_cert if @ssl_client_cert
+  			@http.key = @ssl_client_key if @ssl_client_key
+  			@http.ca_file = @ssl_ca_file if @ssl_ca_file
       end
       @http
     end

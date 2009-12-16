@@ -15,8 +15,8 @@ module Savon
     end
 
     # Expects a SOAP +endpoint+ String.
-    def initialize(endpoint)
-      @request = Request.new endpoint
+    def initialize(endpoint,options={})
+      @request = Request.new endpoint, options
       @wsdl = WSDL.new @request
     end
 
@@ -25,6 +25,9 @@ module Savon
 
     # Returns the Savon::Request.
     attr_reader :request
+    
+    # Accessors for SSL settings
+    attr_reader :ssl_client_cert, :ssl_client_key, :ssl_ca_cert
 
     # Returns whether to use Savon::WSDL.
     def wsdl?

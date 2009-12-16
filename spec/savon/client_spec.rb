@@ -64,5 +64,21 @@ describe Savon::Client do
   it "still raises a NoMethodError for undefined methods" do
     lambda { @client.some_undefined_method }.should raise_error NoMethodError
   end
+  
+  it "passes ssl options to request" do
+    @client.request.class.class_eval { attr_reader :ssl_client_cert, :ssl_ca_file, :ssl_client_key, :ssl_verify } 
+    
+    client = Savon::Client.new(
+      EndpointHelper.wsdl_endpoint,
+      :ssl_client_cert  =>  "client cert",
+      :ssl_client_key   =>  "client key",
+      :ssl_ca_file      =>  "ca file",
+      :ssl_verify       =>  OpenSSL::SSL::VERIFY_PEER)
+
+    client.request.ssl_client_cert.should == "client cert"
+    client.request.ssl_client_key.should == "client key"
+    client.request.ssl_ca_file.should == "ca file"
+    client.request.ssl_verify.should == OpenSSL::SSL::VERIFY_PEER
+  end
 
 end
