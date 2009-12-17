@@ -127,11 +127,6 @@ module Savon
       { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
     end
 
-    # Returns whether a given URI seems to be valid.
-    def valid_uri?(uri)
-      /^(http|https):\/\// === uri
-    end
-
     # Logs a given +message+.
     def log(message)
       self.class.logger.send self.class.log_level, message if log?
