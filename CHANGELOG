@@ -1,11 +1,14 @@
-== 0.6.6 (2009-12-14)
-  * Default to use the name of the SOAP action (the method called in a client) in lowerCamelCase for SOAP action
-    and input when Savon::WSDL is disabled. You still need to specify soap.action and maybe soap.input in case
-    your SOAP actions are named any different.
+== 0.6.7 (2009-12-18)
   * Implemented support for a proxy server. The proxy URI can be set through an optional Hash of options passed
     to instantiating Savon::Client (Dave Woodward <dave@futuremint.com>)
   * Implemented support for SSL client authentication. Settings can be set through an optional Hash of arguments
     passed to instantiating Savon::Client (colonhyphenp)
+  * Patch for issue #10 (Problem with operation tags without a namespace).
+
+== 0.6.6 (2009-12-14)
+  * Default to use the name of the SOAP action (the method called in a client) in lowerCamelCase for SOAP action
+    and input when Savon::WSDL is disabled. You still need to specify soap.action and maybe soap.input in case
+    your SOAP actions are named any different.
 
 == 0.6.5 (2009-12-13)
   * Added an open_timeout method to Savon::Request.
