@@ -12,6 +12,8 @@ p. Instantiate Savon::Client, passing in the WSDL of your service.
 
 bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
+p. More information: "WSDL":http://wiki.github.com/rubiii/savon/client
+
 h3. Calling a SOAP action
 
 p. Assuming your service applies to the "Defaults":http://wiki.github.com/rubiii/savon/defaults, you can now call any available SOAP action.
@@ -48,18 +50,6 @@ bc. response = client.get_user_by_id do |soap, wsse|
 end
 
 p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse
-
-h3. SSL Client Authentication
-
-p. Savon::Client can accept SSL client certificates, as well as verify the validity of a server certificate.  Syntax inspired by Adam Wiggin's "Rest-Client":http://github.com/adamwiggins/rest-client
-
-bc. client = Savon::Client.new(
-  'https://example.org/wsdl',
-  :ssl_client_cert  =>  OpenSSL::X509::Certificate.new(File.read("client_cert.pem")),
-  :ssl_client_key   =>  OpenSSL::PKey::RSA.new(File.read("client_key.pem"), "password if one exists"),
-  :ssl_ca_file      =>  "cacert.pem",
-  :ssl_verify       =>  OpenSSL::SSL::VERIFY_PEER
-)
 
 h3. The Response object
 
