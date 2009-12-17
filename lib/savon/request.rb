@@ -47,21 +47,18 @@ module Savon
       @@log_level
     end
 
-    # Expects an +endpoint+ String. Also accepts an optional +proxy+ String.
-    # Raises an exception in case the given +endpoint+ or +proxy+ does not
-    # seem to be valid.
-    def initialize(endpoint, proxy = "")
-      raise ArgumentError, "Invalid endpoint: #{endpoint}" unless valid_uri?(endpoint)
-      raise ArgumentError, "Invalid proxy: #{proxy}" unless proxy.empty? || valid_uri?(proxy)
-
+    # Expects a SOAP +endpoint+ String. Also accepts an optional Hash of
+    # +options+ for specifying a proxy server and SSL client authentication.
+    def initialize(endpoint, options = {})
       @endpoint = URI endpoint
-      @proxy = URI proxy
+      @proxy = options[:proxy] ? URI(options[:proxy]) : URI("") 
+      @ssl = options[:ssl] if options[:ssl]
     end
 
     # Returns the endpoint URI.
     attr_reader :endpoint
 
-    # Returns the proxy URI
+    # Returns the proxy URI.
     attr_reader :proxy
 
     # Sets the open timeout for HTTP requests.
@@ -111,8 +108,18 @@ module Savon
       unless @http
         @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
         @http.use_ssl = true if @endpoint.ssl?
+        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        add_ssl_authentication if @ssl
       end
       @http
+    end
+
+    # Adds SSL client authentication to the +@http+ instance.
+    def add_ssl_authentication
+      @http.verify_mode = @ssl[:verify] if @ssl[:verify].kind_of? Integer
+      @http.cert = @ssl[:client_cert] if @ssl[:client_cert]
+      @http.key = @ssl[:client_key] if @ssl[:client_key]
+      @http.ca_file = @ssl[:ca_file] if @ssl[:ca_file]
     end
 
     # Returns a Hash containing the header for an HTTP request.

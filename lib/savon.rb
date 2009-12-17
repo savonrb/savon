@@ -18,7 +18,7 @@ module Savon
 end
 
 # standard libs
-%w(logger net/http net/https uri base64 digest/sha1 rexml/document).each do |lib|
+%w(logger net/http net/https openssl uri base64 digest/sha1 rexml/document).each do |lib|
   require lib
 end
 

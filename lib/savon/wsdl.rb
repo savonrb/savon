@@ -55,12 +55,11 @@ module Savon
   # Stream listener for parsing the WSDL document.
   class WSDLStream
 
-    # Defines the core sections of a WSDL document.
-    Sections = ["wsdl:definitions", "wsdl:types", "wsdl:message",
-      "wsdl:portType", "wsdl:binding", "wsdl:service"]
+    # Defines the main sections of a WSDL document.
+    Sections = %w(definitions types message portType binding service)
 
     def initialize
-      @operations = {}
+      @depth, @operations = 0, {}
     end
 
     # Returns the namespace URI from the WSDL document.
@@ -69,19 +68,27 @@ module Savon
     # Returns the SOAP operations found in the WSDL document.
     attr_reader :operations
  
-    # Hook method called when the stream parser encounters a tag.
+    # Hook method called when the stream parser encounters a starting tag.
     def tag_start(tag, attrs)
-      @section = tag.strip_namespace.to_sym if Sections.include? tag
+      @depth += 1
+      tag = tag.strip_namespace
 
+      @section = tag.to_sym if @depth <= 2 && Sections.include?(tag)
       @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
-      operation_from tag, attrs if @section == :binding && tag =~ /.+:operation/
+
+      operation_from tag, attrs if @section == :binding && tag == "operation"
+    end
+
+    # Hook method called when the stream parser encounters a closing tag.
+    def tag_end(tag)
+      @depth -= 1
     end
 
     # Stores available operations from a given tag +name+ and +attrs+.
     def operation_from(tag, attrs)
       @action = attrs["name"] if attrs["name"]
 
-      unless tag == "wsdl:operation"
+      if attrs["soapAction"]
         @action = attrs["soapAction"] unless attrs["soapAction"].blank?
         input = @action.split("/").last
         @operations[input.snakecase.to_sym] = { :action => @action, :input => input }

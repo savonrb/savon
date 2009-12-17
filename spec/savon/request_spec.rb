@@ -43,24 +43,16 @@ describe Savon::Request do
     Savon::Request.new EndpointHelper.wsdl_endpoint
   end
 
-  it "raises an ArgumentError when initialized with an invalid endpoint" do
-    lambda { Savon::Request.new "invalid" }.should raise_error ArgumentError
-  end
-
-  it "should be optionally initialized with a proxy string" do
-    Savon::Request.new EndpointHelper.wsdl_endpoint, 'http://localhost:8080'
-  end
-
-  it "raises an ArgumentError when initialized with an invalid proxy" do
-    lambda { Savon::Request.new EndpointHelper.wsdl_endpoint, "invalid" }.should raise_error ArgumentError
+  it "ccepts an optional proxy URI passed in via options" do
+    Savon::Request.new EndpointHelper.wsdl_endpoint, :proxy => "http://localhost:8080"
   end
 
   it "has a getter for the SOAP endpoint URI" do
     @request.endpoint.should == URI(EndpointHelper.wsdl_endpoint)
   end
 
-  it "should have a getter for the Proxy URI" do
-    @request.proxy.should == URI('')
+  it "should have a getter for the proxy URI" do
+    @request.proxy.should == URI("")
   end
 
   it "has a setter for specifying an open_timeout" do
@@ -84,5 +76,47 @@ describe Savon::Request do
     soap_response.should be_a Net::HTTPResponse
     soap_response.body.should == UserFixture.user_response
   end
+  
+  describe "Savon::Request SSL" do
+    before { @request.class.class_eval { public "http" }  }
 
+    it "defaults to not setting ssl parameters" do
+      http = @request.http
+      http.cert.should be_nil
+      http.key.should be_nil
+      http.ca_file.should be_nil
+      http.verify_mode.should == OpenSSL::SSL::VERIFY_NONE
+    end
+
+    it "sets client cert in http object when set in request constructor" do
+      request = Savon::Request.new(EndpointHelper.wsdl_endpoint, :ssl => {
+        :client_cert => "client cert"
+      })
+      request.http.cert.should == "client cert"
+    end
+
+    it "sets ca cert in http object when set in request constructor" do
+      request = Savon::Request.new(EndpointHelper.wsdl_endpoint, :ssl => {
+        :client_key => "client key"
+      })
+      request.http.key.should == "client key"
+    end
+
+    it "sets client cert in http object when set in request constructor" do
+      request = Savon::Request.new(EndpointHelper.wsdl_endpoint, :ssl => {
+        :ca_file => "ca file"
+      })
+      request.http.ca_file.should == "ca file"
+    end
+
+    it "sets client cert in http object when set in request constructor" do
+      request = Savon::Request.new(EndpointHelper.wsdl_endpoint, :ssl => {
+        :verify => OpenSSL::SSL::VERIFY_PEER
+      })
+      request.http.verify_mode.should == OpenSSL::SSL::VERIFY_PEER
+    end
+
+    after { @request.class.class_eval { private "http" } }
+  end
+  
 end
