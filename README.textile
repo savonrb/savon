@@ -12,7 +12,7 @@ p. Instantiate Savon::Client, passing in the WSDL of your service.
 
 bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
-p. More information: "WSDL":http://wiki.github.com/rubiii/savon/client
+p. More information: "Client":http://wiki.github.com/rubiii/savon/client
 
 h3. Calling a SOAP action
 
