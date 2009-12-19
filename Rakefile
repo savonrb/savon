@@ -19,32 +19,3 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include("lib/**/*.rb")
   rdoc.options = ["--line-numbers", "--inline-source"]
 end
-
-begin
-  require "jeweler"
-  Jeweler::Tasks.new do |spec|
-    spec.name = "savon"
-    spec.author = "Daniel Harrington"
-    spec.email = "me@rubiii.com"
-    spec.homepage = "http://github.com/rubiii/savon"
-    spec.summary = "Heavy metal Ruby SOAP client library"
-    spec.description = spec.summary
-
-    spec.files = FileList["[A-Z]*", "{lib,spec}/**/*.{rb,xml}"]
-
-    spec.rdoc_options += [
-      "--title", "Savon",
-      "--line-numbers",
-      "--inline-source"
-    ]
-
-    spec.add_runtime_dependency("builder", ">= 2.1.2")
-    spec.add_runtime_dependency("crack", ">= 0.1.4")
-
-    spec.add_development_dependency("rspec", ">= 1.2.8")
-    spec.add_development_dependency("mocha", ">= 0.9.7")
-    spec.add_development_dependency("fakeweb", ">= 1.2.7")
-  end
-rescue LoadError
-  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
-end
