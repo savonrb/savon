@@ -67,14 +67,14 @@ describe Savon::Request do
     wsdl_response = @request.wsdl
 
     wsdl_response.should be_a Net::HTTPResponse
-    wsdl_response.body.should == UserFixture.user_wsdl
+    wsdl_response.body.should == WSDLFixture.authentication
   end
 
   it "executes a SOAP request and returns the Net::HTTPResponse" do
     soap_response = @request.soap Savon::SOAP.new
 
     soap_response.should be_a Net::HTTPResponse
-    soap_response.body.should == UserFixture.user_response
+    soap_response.body.should == ResponseFixture.authentication
   end
   
   describe "Savon::Request SSL" do

@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://erm.example.com/ws/data/erm" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://erm.example.com/ws/data/erm" xmlns:intf="http://erm.example.com/ws/data/erm" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://erm.example.com/ws/history/erm" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.4
+Built on Apr 22, 2006 (06:55:48 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://erm.example.com/ws/history/erm" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://erm.example.com/ws/data/erm"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ErmHistoryEntry">
+    <sequence>
+     <element name="date" nillable="true" type="xsd:dateTime"/>
+     <element name="location" nillable="true" type="soapenc:string"/>
+     <element name="mailId" nillable="true" type="soapenc:int"/>
+     <element name="referenceId" nillable="true" type="soapenc:int"/>
+     <element name="state" nillable="true" type="soapenc:string"/>
+     <element name="subject" nillable="true" type="soapenc:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+  <schema targetNamespace="http://erm.example.com/ws/data/erm" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://erm.example.com/ws/history/erm"/>
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ArrayOf_tns1_ErmHistoryEntry">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns1:ErmHistoryEntry[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="WSException">
+    <sequence>
+     <element name="message" nillable="true" type="soapenc:string"/>
+    </sequence>
+   </complexType>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="getMessagePDFRequest">
+      <wsdl:part name="mailId" type="soapenc:int">
+      </wsdl:part>
+      <wsdl:part name="principalId" type="soapenc:int">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="getMobileRequest">
+      <wsdl:part name="principalId" type="soapenc:int">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="getMobileResponse">
+      <wsdl:part name="getMobileReturn" type="soapenc:string">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="listRequest">
+      <wsdl:part name="mobile" type="soapenc:string">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="getMessagePDFResponse">
+      <wsdl:part name="getMessagePDFReturn" type="soapenc:base64Binary">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="listResponse">
+      <wsdl:part name="listReturn" type="impl:ArrayOf_tns1_ErmHistoryEntry">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:message name="WSException">
+      <wsdl:part name="fault" type="impl:WSException">
+      </wsdl:part>
+   </wsdl:message>
+
+   <wsdl:portType name="WebserviceVertex">
+      <wsdl:operation name="list" parameterOrder="mobile">
+         <wsdl:input message="impl:listRequest" name="listRequest">
+       </wsdl:input>
+         <wsdl:output message="impl:listResponse" name="listResponse">
+       </wsdl:output>
+         <wsdl:fault message="impl:WSException" name="WSException">
+       </wsdl:fault>
+      </wsdl:operation>
+
+      <wsdl:operation name="getMobile" parameterOrder="principalId">
+         <wsdl:input message="impl:getMobileRequest" name="getMobileRequest">
+       </wsdl:input>
+         <wsdl:output message="impl:getMobileResponse" name="getMobileResponse">
+       </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="getMessagePDF" parameterOrder="mailId principalId">
+         <wsdl:input message="impl:getMessagePDFRequest" name="getMessagePDFRequest">
+       </wsdl:input>
+         <wsdl:output message="impl:getMessagePDFResponse" name="getMessagePDFResponse">
+       </wsdl:output>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="ErmWebserviceSoapBinding" type="impl:WebserviceVertex">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="list">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="listRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ws.erm.plugin.erm.example.com" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="listResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://erm.example.com/ws/data/erm" use="encoded"/>
+         </wsdl:output>
+         <wsdl:fault name="WSException">
+            <wsdlsoap:fault encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" name="WSException" namespace="http://erm.example.com/ws/data/erm" use="encoded"/>
+         </wsdl:fault>
+      </wsdl:operation>
+
+      <wsdl:operation name="getMobile">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="getMobileRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ws.erm.plugin.erm.example.com" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="getMobileResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://erm.example.com/ws/data/erm" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+      <wsdl:operation name="getMessagePDF">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="getMessagePDFRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://ws.erm.plugin.erm.example.com" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="getMessagePDFResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://erm.example.com/ws/data/erm" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="WebserviceVertexService">
+      <wsdl:port binding="impl:ErmWebserviceSoapBinding" name="ErmWebservice">
+         <wsdlsoap:address location="http://erm.example.com/erm/services/ErmWebservice"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>

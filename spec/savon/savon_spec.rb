@@ -11,14 +11,13 @@ describe Savon do
     Savon::SOAPDateTimeFormat.should be_a String
     Savon::SOAPDateTimeFormat.should_not be_empty
 
-    UserFixture.datetime_object.strftime(Savon::SOAPDateTimeFormat).
-      should == UserFixture.datetime_string
+    DateTime.new(2012, 03, 22, 16, 22, 33).strftime(Savon::SOAPDateTimeFormat).
+      should == "2012-03-22T16:22:33"
   end
 
   it "contains a Regexp matching the xs:dateTime format" do
     Savon::SOAPDateTimeRegexp.should be_a Regexp
-    (Savon::SOAPDateTimeRegexp === UserFixture.datetime_string).
-      should be_true
+    (Savon::SOAPDateTimeRegexp === "2012-03-22T16:22:33").should be_true
   end
 
 end

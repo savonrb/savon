@@ -42,8 +42,8 @@ describe String do
 
   describe "map_soap_response" do
     it "returns a DateTime Object for Strings matching the xs:dateTime format" do
-      UserFixture.datetime_string.map_soap_response.should ==
-        UserFixture.datetime_object
+      "2012-03-22T16:22:33".map_soap_response.should ==
+        DateTime.new(2012, 03, 22, 16, 22, 33)
     end
 
     it "returns true for Strings matching 'true'" do

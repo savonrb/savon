@@ -1,0 +1,14 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:authenticateResponse xmlns:ns2="http://v1_0.ws.user.example.com">
+         <return>
+            <authenticationValue>
+              <token>a68d1d6379b62ff339a0e0c69ed4d9cf</token>
+              <tokenHash>AAAJxA;cIedoT;mY10ExZwG6JuKgp2OYKxow==</tokenHash>
+              <client>radclient</client>
+            </authenticationValue>
+            <success>true</success>
+         </return>
+      </ns2:authenticateResponse>
+   </soap:Body>
+</soap:Envelope>

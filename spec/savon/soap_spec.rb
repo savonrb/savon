@@ -3,7 +3,7 @@ require "spec_helper"
 describe Savon::SOAP do
   before do
     @soap = Savon::SOAP.new
-    @soap.action = UserFixture.operations[:find_user][:action]
+    @soap.action = WSDLFixture.authentication(:operations)[:authenticate][:action]
   end
 
   it "contains the SOAP namespace for each supported SOAP version" do
@@ -36,7 +36,7 @@ describe Savon::SOAP do
   end
 
   it "is has both getter and setter for the SOAP action" do
-    @soap.action.should == UserFixture.operations[:find_user][:action]
+    @soap.action.should == WSDLFixture.authentication(:operations)[:authenticate][:action]
 
     @soap.action = "someAction"
     @soap.action.should == "someAction"
@@ -89,12 +89,12 @@ describe Savon::SOAP do
     after { Savon::SOAP.version = 1 }
 
     it "returns the XML for a SOAP request" do
-      @soap.namespaces["xmlns:wsdl"] = "http://v1_0.ws.user.example.com"
+      @soap.namespaces["xmlns:wsdl"] = "http://v1_0.ws.auth.order.example.com/"
       @soap.body = { :id => 666 }
 
-      @soap.to_xml.should include 'xmlns:wsdl="http://v1_0.ws.user.example.com"'
+      @soap.to_xml.should include 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
       @soap.to_xml.should include 'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"'
-      @soap.to_xml.should include '<wsdl:findUser><id>666</id></wsdl:findUser>'
+      @soap.to_xml.should include '<wsdl:authenticate><id>666</id></wsdl:authenticate>'
     end
 
     it "caches the XML, returning the same Object every time" do

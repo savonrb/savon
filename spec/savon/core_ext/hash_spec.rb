@@ -65,18 +65,18 @@ describe Hash do
     end
 
     it "converts DateTime objects to xs:dateTime compliant Strings" do
-      { :before => UserFixture.datetime_object }.to_soap_xml.
-        should == "<before>" << UserFixture.datetime_string << "</before>"
+      { :before => DateTime.new(2012, 03, 22, 16, 22, 33) }.to_soap_xml.
+        should == "<before>" << "2012-03-22T16:22:33" << "</before>"
     end
 
     it "converts Objects responding to to_datetime to xs:dateTime compliant Strings" do
       singleton = Object.new
       def singleton.to_datetime
-        UserFixture.datetime_object
+        DateTime.new(2012, 03, 22, 16, 22, 33)
       end
 
       { :before => singleton }.to_soap_xml.
-        should == "<before>" << UserFixture.datetime_string << "</before>"
+        should == "<before>" << "2012-03-22T16:22:33" << "</before>"
     end
 
     it "calls to_s on Strings even if they respond to to_datetime" do
@@ -116,8 +116,8 @@ describe Hash do
     end
 
     it "converts Hash values matching the xs:dateTime format into DateTime Objects" do
-      { "response" => { "at" => UserFixture.datetime_string } }.map_soap_response.
-        should == { :response => { :at => UserFixture.datetime_object } }
+      { "response" => { "at" => "2012-03-22T16:22:33" } }.map_soap_response.
+        should == { :response => { :at => DateTime.new(2012, 03, 22, 16, 22, 33) } }
     end
 
     it "converts Hash values matching 'true' to TrueClass" do

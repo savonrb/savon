@@ -31,36 +31,36 @@ describe Savon::Client do
   end
 
   it "responds to SOAP actions while still behaving as usual otherwise" do
-    @client.respond_to?(UserFixture.soap_actions.first).should be_true
+    @client.respond_to?(WSDLFixture.authentication(:soap_actions).first).should be_true
     @client.respond_to?(:object_id).should be_true
     @client.respond_to?(:some_undefined_method).should be_false
   end
 
   it "dispatches SOAP calls via method_missing and returns the Savon::Response" do
-    @client.find_user.should be_a Savon::Response
+    @client.authenticate.should be_a Savon::Response
   end
 
   it "dispatches SOAP calls via method_missing without using WSDL" do
     @client.wsdl = false
-    @client.find_user.should be_a Savon::Response    
+    @client.authenticate.should be_a Savon::Response    
   end
 
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
-    lambda { client.find_user }.should raise_error Savon::SOAPFault
+    lambda { client.authenticate }.should raise_error Savon::SOAPFault
   end
 
   it "raises a Savon::HTTPError in case of an HTTP error" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
-    lambda { client.find_user }.should raise_error Savon::HTTPError
+    lambda { client.authenticate }.should raise_error Savon::HTTPError
   end
 
   it "yields the SOAP object to a block when it expects one argument" do
-    @client.find_user { |soap| soap.should be_a Savon::SOAP }
+    @client.authenticate { |soap| soap.should be_a Savon::SOAP }
   end
 
   it "yields the SOAP and WSSE object to a block when it expects two argument" do
-    @client.find_user do |soap, wsse|
+    @client.authenticate do |soap, wsse|
       soap.should be_a Savon::SOAP
       wsse.should be_a Savon::WSSE
     end

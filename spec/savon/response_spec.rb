@@ -94,25 +94,25 @@ describe Savon::Response do
   end
 
   it "can return the SOAP response body as a Hash" do
-    @response.to_hash.should == UserFixture.response_hash
+    @response.to_hash[:return].should == ResponseFixture.authentication(:to_hash)
   end
 
   it "can return the raw SOAP response body" do
-    @response.to_xml.should == UserFixture.user_response
-    @response.to_s.should == UserFixture.user_response
+    @response.to_xml.should == ResponseFixture.authentication
+    @response.to_s.should == ResponseFixture.authentication
   end
 
   def savon_response_with(error_type)
     mock = case error_type
-      when :soap_fault then http_response_mock(200, UserFixture.soap_fault)
-      when :soap_fault12 then http_response_mock(200, UserFixture.soap_fault12)
-      when :http_error then http_response_mock(404, "", "Not found")
+      when :soap_fault   then http_response_mock 200, ResponseFixture.soap_fault
+      when :soap_fault12 then http_response_mock 200, ResponseFixture.soap_fault12
+      when :http_error   then http_response_mock 404, "", "Not found"
     end
     Savon::Response.new mock
   end
 
   def http_response_mock(code = 200, body = nil, message = "OK")
-    body ||= UserFixture.user_response
+    body ||= ResponseFixture.authentication
     mock = mock "Net::HTTPResponse"
     mock.stubs :code => code.to_s, :message => message,
                :content_type => "text/html", :body => body
