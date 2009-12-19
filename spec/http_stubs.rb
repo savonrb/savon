@@ -15,3 +15,6 @@ FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:http_error), :body => 
 # WSDL and SOAP request with an invalid endpoint.
 FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:invalid), :body => ""
 FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:invalid), :body => "", :status => ["404", "Not Found"]
+
+# WSDL request returning a WSDL document where the main sections are not namespaced.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:no_namespace), :body => WSDLFixture.no_namespace

@@ -10,10 +10,8 @@ class ResponseFixture
             :client => "radclient"
           }
         }
-      #when :token      then "a68d1d6379b62ff339a0e0c69ed4d9cf"
-      #when :token_hash then "AAAJxA;cIedoT;mY10ExZwG6JuKgp2OYKxow=="
-      #when :client     then "radclient"
-      else                  @@authentication ||= load_fixture :authentication
+      else
+        @@authentication ||= load_fixture :authentication
     end
   end
 
