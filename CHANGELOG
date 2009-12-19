@@ -1,3 +1,6 @@
+== UPCOMING
+  * Improved specifications for various kinds of WSDL documents.
+
 == 0.6.7 (2009-12-18)
   * Implemented support for a proxy server. The proxy URI can be set through an optional Hash of options passed
     to instantiating Savon::Client (Dave Woodward <dave@futuremint.com>)
