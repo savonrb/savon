@@ -34,12 +34,9 @@ class Hash
       key = key.strip_namespace.snakecase.to_sym
 
       value = case value
-        when Hash
-          value["xsi:nil"] ? nil : value.map_soap_response
-        when Array
-          value.map { |a_value| a_value.map_soap_response rescue a_value }
-        when String
-          value.map_soap_response
+        when Hash   then value["xsi:nil"] ? nil : value.map_soap_response
+        when Array  then value.map { |a_value| a_value.map_soap_response rescue a_value }
+        when String then value.map_soap_response
       end
       hash.merge key => value
     end

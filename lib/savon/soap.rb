@@ -27,6 +27,10 @@ module Savon
       @@version = version if Savon::SOAPVersions.include? version
     end
 
+    def initialize
+      @builder = Builder::XmlMarkup.new
+    end
+
     # Sets the WSSE options.
     attr_writer :wsse
 
@@ -80,17 +84,9 @@ module Savon
     # Returns the SOAP envelope XML.
     def to_xml
       unless @xml_body
-        builder = Builder::XmlMarkup.new
-
-        @xml_body = builder.env :Envelope, namespaces do |xml|
-          xml.env(:Header) do
-            xml << (header.to_soap_xml rescue header.to_s) + wsse_header
-          end
-          xml.env(:Body) do
-            xml.tag!(:wsdl, *input_array) do
-              xml << (@body.to_soap_xml rescue @body.to_s)
-            end
-          end
+        @xml_body = @builder.env :Envelope, namespaces do |xml|
+          xml_header xml
+          xml_body xml
         end
       end
       @xml_body
@@ -98,12 +94,28 @@ module Savon
 
   private
 
+    # Adds a SOAP XML header to a given +xml+ Object.
+    def xml_header(xml)
+      xml.env(:Header) do
+        xml << (header.to_soap_xml rescue header.to_s) + wsse_header
+      end
+    end
+
+    # Adds a SOAP XML body to a given +xml+ Object.
+    def xml_body(xml)
+      xml.env(:Body) do
+        xml.tag!(:wsdl, *input_array) do
+          xml << (@body.to_soap_xml rescue @body.to_s)
+        end
+      end
+    end
+
     # Returns an Array of SOAP input names to append to the :wsdl namespace.
     # Defaults to use the name of the SOAP action and may be an empty Array
     # in case the specified SOAP input seems invalid.
     def input_array
-      return [input.to_sym] if input && !input.empty?
-      return [action.to_sym] if action && !action.empty?
+      return [input.to_sym] unless input.blank?
+      return [action.to_sym] unless action.blank?
       []
     end
 
