@@ -50,7 +50,7 @@ module Savon
       super if wsdl? && !@wsdl.respond_to?(method)
 
       setup operation_from(method), &block
-      dispatch method
+      Response.new @request.soap(@soap)
     end
 
     # Returns a SOAP operation Hash containing the SOAP action and input
@@ -79,12 +79,6 @@ module Savon
         when 1 then yield @soap
         when 2 then yield @soap, @wsse
       end
-    end
-
-    # Dispatches a given +soap_action+ and returns a Savon::Response instance.
-    def dispatch(soap_action)
-      response = @request.soap @soap
-      Response.new response
     end
 
   end
