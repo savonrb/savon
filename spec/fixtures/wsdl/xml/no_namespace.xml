@@ -2,22 +2,22 @@
 <definitions name="Api" xmlns:typens="urn:ActionWebService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:ActionWebService" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
   <types>
     <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
-      <xsd:complexType name="MedpassUser">
+      <xsd:complexType name="MpUser">
         <xsd:all>
           <xsd:element name="avatar_thumb_url" type="xsd:string"/>
           <xsd:element name="speciality" type="xsd:string"/>
           <xsd:element name="avatar_icon_url" type="xsd:string"/>
           <xsd:element name="firstname" type="xsd:string"/>
           <xsd:element name="city" type="xsd:string"/>
-          <xsd:element name="medpass_id" type="xsd:int"/>
+          <xsd:element name="mp_id" type="xsd:int"/>
           <xsd:element name="lastname" type="xsd:string"/>
           <xsd:element name="login" type="xsd:string"/>
         </xsd:all>
       </xsd:complexType>
-      <xsd:complexType name="MedpassUserArray">
+      <xsd:complexType name="MpUserArray">
         <xsd:complexContent>
           <xsd:restriction base="soapenc:Array">
-            <xsd:attribute wsdl:arrayType="typens:MedpassUser[]" ref="soapenc:arrayType"/>
+            <xsd:attribute wsdl:arrayType="typens:MpUser[]" ref="soapenc:arrayType"/>
           </xsd:restriction>
         </xsd:complexContent>
       </xsd:complexType>
@@ -25,7 +25,7 @@
         <xsd:all>
           <xsd:element name="last_name" type="xsd:string"/>
           <xsd:element name="email" type="xsd:string"/>
-          <xsd:element name="medpass_id" type="xsd:int"/>
+          <xsd:element name="mp_id" type="xsd:int"/>
           <xsd:element name="role" type="xsd:int"/>
           <xsd:element name="login" type="xsd:string"/>
           <xsd:element name="first_name" type="xsd:string"/>
@@ -61,7 +61,7 @@
     <part name="per_page" type="xsd:string"/>
   </message>
   <message name="SearchUserResponse">
-    <part name="return" type="typens:MedpassUserArray"/>
+    <part name="return" type="typens:MpUserArray"/>
   </message>
   <portType name="ApiApiPort">
     <operation name="GetUserLoginById">
@@ -109,7 +109,7 @@
   </binding>
   <service name="ApiService">
     <port name="ApiApiPort" binding="typens:ApiApiBinding">
-      <soap:address location="http://medpass.pl/api/api"/>
+      <soap:address location="http://example.com/api/api"/>
     </port>
   </service>
 </definitions>
