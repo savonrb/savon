@@ -31,7 +31,10 @@ describe Savon::Client do
   end
 
   it "responds to SOAP actions while still behaving as usual otherwise" do
-    @client.respond_to?(WSDLFixture.authentication(:soap_actions).first).should be_true
+    WSDLFixture.authentication(:operations).keys.each do |soap_action|
+      @client.respond_to?(soap_action).should be_true
+    end
+
     @client.respond_to?(:object_id).should be_true
     @client.respond_to?(:some_undefined_method).should be_false
   end

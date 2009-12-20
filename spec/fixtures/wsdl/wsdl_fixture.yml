@@ -1,0 +1,19 @@
+:authentication:
+  :namespace_uri: "http://v1_0.ws.auth.order.example.com/"
+  :operations:
+    :authenticate:
+      :action: "authenticate"
+      :input: "authenticate"
+
+:no_namespace:
+  :namespace_uri: "urn:ActionWebService"
+  :operations:
+    :get_all_contacts:
+      :action: "/api/api/GetAllContacts"
+      :input: "GetAllContacts"
+    :search_user:
+      :action: "/api/api/SearchUser"
+      :input: "SearchUser"
+    :get_user_login_by_id:
+      :action: "/api/api/GetUserLoginById"
+      :input: "GetUserLoginById"

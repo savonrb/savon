@@ -13,7 +13,7 @@ describe Savon::WSDL do
     end
 
     it "has a getter for returning an Array of available SOAP actions" do
-      WSDLFixture.authentication(:soap_actions).each do |soap_action|
+      WSDLFixture.authentication(:operations).keys.each do |soap_action|
         @wsdl.soap_actions.should include soap_action
       end
     end
@@ -23,8 +23,9 @@ describe Savon::WSDL do
     end
 
     it "responds to SOAP actions while still behaving as usual otherwise" do
-      valid_soap_action = WSDLFixture.authentication(:soap_actions).first
-      @wsdl.respond_to?(valid_soap_action).should be_true
+      WSDLFixture.authentication(:operations).keys.each do |soap_action|
+        @wsdl.respond_to?(soap_action).should be_true
+      end
 
       @wsdl.respond_to?(:object_id).should be_true
       @wsdl.respond_to?(:some_undefined_method).should be_false
@@ -43,7 +44,13 @@ describe Savon::WSDL do
     end
 
     it "returns an Array of available SOAP actions" do
-      @wsdl.soap_actions.should == WSDLFixture.no_namespace(:soap_actions)
+      WSDLFixture.no_namespace(:operations).keys.each do |soap_action|
+        @wsdl.soap_actions.should include soap_action
+      end
+    end
+
+    it "returns a Hash of SOAP operations" do
+      @wsdl.operations.should == WSDLFixture.no_namespace(:operations)
     end
   end
 
