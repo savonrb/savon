@@ -7,8 +7,17 @@ describe Savon::Client do
     Savon::Client.new EndpointHelper.wsdl_endpoint
   end
 
-  it "accepts an optional proxy URI passed in via options" do
+  it "accepts a proxy URI passed in via options" do
     Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => 'http://proxy'
+  end
+
+  it "accepts settings for SSL client authentication via options" do
+    Savon::Client.new EndpointHelper.wsdl_endpoint, :ssl => {
+      :client_cert => "client cert",
+      :client_key => "client key",
+      :ca_file => "ca file",
+      :verify => OpenSSL::SSL::VERIFY_PEER
+    }
   end
 
   it "has a getter for accessing the Savon::WSDL" do
@@ -71,25 +80,6 @@ describe Savon::Client do
 
   it "still raises a NoMethodError for undefined methods" do
     lambda { @client.some_undefined_method }.should raise_error NoMethodError
-  end
-
-  it "passes ssl options to request" do
-    @client.request.class.class_eval { attr_reader :ssl } 
-
-    client = Savon::Client.new(
-      EndpointHelper.wsdl_endpoint,
-      :ssl => {
-        :client_cert => "client cert",
-        :client_key => "client key",
-        :ca_file => "ca file",
-        :verify => OpenSSL::SSL::VERIFY_PEER
-      }
-    )
-
-    client.request.ssl[:client_cert].should == "client cert"
-    client.request.ssl[:client_key].should == "client key"
-    client.request.ssl[:ca_file].should == "ca file"
-    client.request.ssl[:verify].should == OpenSSL::SSL::VERIFY_PEER
   end
 
 end
