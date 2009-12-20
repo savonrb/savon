@@ -80,11 +80,11 @@ describe Hash do
     end
 
     it "calls to_s on Strings even if they respond to to_datetime" do
-      singleton = "gorilla"
-      singleton.expects( :to_s ).returns singleton
-      singleton.expects( :to_datetime ).never
+      object = "gorilla"
+      object.expects(:to_s).returns object
+      object.expects(:to_datetime).never
 
-      { :name => singleton }.to_soap_xml.should == "<name>gorilla</name>"
+      { :name => object }.to_soap_xml.should == "<name>gorilla</name>"
     end
 
     it "call to_s on any other Object" do

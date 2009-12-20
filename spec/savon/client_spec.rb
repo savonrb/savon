@@ -28,17 +28,6 @@ describe Savon::Client do
     @client.request.should be_a Savon::Request
   end
 
-  it "has a getter for returning whether to use the Savon::WSDL (global setting)" do
-    @client.wsdl?.should be_true
-
-    Savon::Client.wsdl = false
-    @client.wsdl?.should be_false
-    Savon::Client.wsdl = true
-
-    @client.wsdl = false
-    @client.wsdl?.should be_false
-  end
-
   it "responds to SOAP actions while still behaving as usual otherwise" do
     WSDLFixture.authentication(:operations).keys.each do |soap_action|
       @client.respond_to?(soap_action).should be_true
@@ -52,9 +41,30 @@ describe Savon::Client do
     @client.authenticate.should be_a Savon::Response
   end
 
-  it "dispatches SOAP calls via method_missing without using WSDL" do
-    @client.wsdl = false
-    @client.authenticate.should be_a Savon::Response    
+  describe "disabling retrieving and parsing the WSDL document" do
+    it "can be done globally for every instance of Savon::Client" do
+      @client.wsdl?.should be_true
+      Savon::Client.wsdl = false
+
+      expect_the_wsdl_to_be_disabled
+      @client.authenticate.should be_a Savon::Response
+
+      Savon::Client.wsdl = true
+    end
+
+    it "can be done per request" do
+      @client.wsdl = false
+
+      expect_the_wsdl_to_be_disabled
+      @client.authenticate.should be_a Savon::Response
+    end
+
+    def expect_the_wsdl_to_be_disabled
+      @client.wsdl?.should be_false
+      [:respond_to?, :operations, :namespace_uri].each do |method|
+        Savon::WSDL.any_instance.expects(method).never
+      end
+    end
   end
 
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
