@@ -1,5 +1,6 @@
 class EndpointHelper
 
+  # Returns the WSDL endpoint for a given +type+ of request.
   def self.wsdl_endpoint(type = nil)
     case type
       when :no_namespace       then "http://nons.example.com/Service?wsdl"
@@ -8,6 +9,7 @@ class EndpointHelper
     end
   end
 
+  # Returns the SOAP endpoint for a given +type+ of request.
   def self.soap_endpoint(type = nil)
     case type
       when :soap_fault   then "http://soapfault.example.com/Service"

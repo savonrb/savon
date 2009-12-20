@@ -11,12 +11,12 @@ end
 require "savon"
 Savon::Request.log = false
 
-# load fixture helpers
+# Load fixture helpers.
 FileList["spec/fixtures/**/*.rb"].each { |fixture| require fixture }
 
-# load endpoint helper
+# Load endpoint helper.
 require "endpoint_helper"
 
-# set up endpoint stubs
+# Set up endpoint stubs.
 require "fakeweb"
 require "http_stubs"
