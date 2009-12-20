@@ -54,6 +54,24 @@ describe Savon::WSDL do
     end
   end
 
+  describe "a WSDL document with namespaced SOAP actions" do
+    before { @wsdl = new_wsdl :namespaced_actions }
+
+    it "returns the namespace URI" do
+      @wsdl.namespace_uri.should == WSDLFixture.namespaced_actions(:namespace_uri)
+    end
+
+    it "returns an Array of available SOAP actions" do
+      WSDLFixture.namespaced_actions(:operations).keys.each do |soap_action|
+        @wsdl.soap_actions.should include soap_action
+      end
+    end
+
+    it "returns a Hash of SOAP operations" do
+      @wsdl.operations.should == WSDLFixture.namespaced_actions(:operations)
+    end
+  end
+
   def new_wsdl(fixture = nil)
     endpoint = fixture ? EndpointHelper.wsdl_endpoint(fixture) : EndpointHelper.wsdl_endpoint
     Savon::WSDL.new Savon::Request.new(endpoint)

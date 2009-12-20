@@ -17,3 +17,16 @@
     :get_user_login_by_id:
       :action: "/api/api/GetUserLoginById"
       :input: "GetUserLoginById"
+
+:namespaced_actions:
+  :namespace_uri: "http://api.example.com/api/"
+  :operations:
+    :user_get_clients:
+      :action: "http://api.example.com/api/User.GetClients"
+      :input: "User.GetClients"
+    :user_get_api_key:
+      :action: "http://api.example.com/api/User.GetApiKey"
+      :input: "User.GetApiKey"
+    :client_delete:
+      :action: "http://api.example.com/api/Client.Delete"
+      :input: "Client.Delete"

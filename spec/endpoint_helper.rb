@@ -2,8 +2,9 @@ class EndpointHelper
 
   def self.wsdl_endpoint(type = nil)
     case type
-      when :no_namespace then "http://nonamespace.example.com/Service?wsdl"
-      else                    soap_endpoint(type) << "?wsdl"
+      when :no_namespace       then "http://nons.example.com/Service?wsdl"
+      when :namespaced_actions then "http://nsactions.example.com/Service?wsdl"
+      else                          soap_endpoint(type) << "?wsdl"
     end
   end
 

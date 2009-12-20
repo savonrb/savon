@@ -18,3 +18,6 @@ FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:invalid), :body => "",
 
 # WSDL request returning a WSDL document where the main sections are not namespaced.
 FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:no_namespace), :body => WSDLFixture.no_namespace
+
+# WSDL request returning a WSDL document with namespaced SOAP actions.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:namespaced_actions), :body => WSDLFixture.namespaced_actions
