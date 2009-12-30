@@ -66,6 +66,10 @@ h3. Logging
 p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behaviour.
 More information: "Logging":http://wiki.github.com/rubiii/savon/logging
 
+h3. TODO
+
+p. I maintain a public todo list containing new features and patches at: http://rubiii.tadalist.com/lists/1459816/public
+
 h3. Documentation
 
 p. Wiki: "wiki.github.com/rubiii/savon":http://wiki.github.com/rubiii/savon
