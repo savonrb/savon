@@ -68,7 +68,7 @@ More information: "Logging":http://wiki.github.com/rubiii/savon/logging
 
 h3. TODO
 
-p. I maintain a public todo list containing new features and patches at: http://rubiii.tadalist.com/lists/1459816/public
+p. I maintain a "public todo list":http://rubiii.tadalist.com/lists/1459816/public containing new features and patches.
 
 h3. Documentation
 
