@@ -4,7 +4,6 @@ require "spec/rake/spectask"
 require "spec/rake/verify_rcov"
 require "rake/rdoctask"
 
-Rake.application.options.trace = true
 task :default => :spec_verify_rcov
 
 Spec::Rake::SpecTask.new do |spec|

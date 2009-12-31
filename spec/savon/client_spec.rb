@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../spec_helper"
+require "spec_helper"
 
 describe Savon::Client do
   before { @client = Savon::Client.new EndpointHelper.wsdl_endpoint }

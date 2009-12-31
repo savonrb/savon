@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + "/../spec_helper"
+require "spec_helper"
 
 describe Savon::Response do
   before { @response = Savon::Response.new http_response_mock }
