@@ -11,6 +11,8 @@ end
 require File.dirname(__FILE__) + "/../lib/savon" unless defined? Savon
 Savon::Request.log = false
 
-FileList["spec/fixtures/**/*.rb"].each { |fixture| require fixture }
-require "endpoint_helper"
-require "http_stubs"
+FileList[File.dirname(__FILE__) + "/fixtures/**/*.rb"].each do |fixture|
+  require fixture
+end
+require File.dirname(__FILE__) + "/endpoint_helper"
+require File.dirname(__FILE__) + "/http_stubs"
