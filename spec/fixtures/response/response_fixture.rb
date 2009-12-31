@@ -26,7 +26,7 @@ class ResponseFixture
 private
 
   def self.load_fixture(fixture)
-    File.read File.join(File.dirname(__FILE__), "xml", "#{fixture}.xml")
+    File.read(File.dirname(__FILE__) + "/xml/#{fixture}.xml")
   end
 
 end

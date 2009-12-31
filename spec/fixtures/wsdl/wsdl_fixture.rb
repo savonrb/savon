@@ -20,7 +20,7 @@ private
   def self.expectations
     return @@expectations if @@expectations
 
-    file = File.read File.join(File.dirname(__FILE__), "wsdl_fixture.yml")
+    file = File.read(File.dirname(__FILE__) + "/wsdl_fixture.yml")
     @@expectations = YAML.load ERB.new(file).result
   end
 
@@ -30,7 +30,7 @@ private
   def self.wsdl(wsdl)
     return @@wsdl[wsdl] if @@wsdl[wsdl]
 
-    file = File.read File.join(File.dirname(__FILE__), "xml", "#{wsdl}.xml")
+    file = File.read(File.dirname(__FILE__) + "/xml/#{wsdl}.xml")
     @@wsdl[wsdl] = file
   end
 

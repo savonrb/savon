@@ -23,11 +23,12 @@ end
 end
 
 # gems
+require "rubygems"
 %w(builder crack/xml).each do |gem|
   require gem
 end
 
 # core files
 %w(core_ext wsse soap request response wsdl client).each do |file|
-  require "savon/#{file}"
+  require File.dirname(__FILE__) + "/savon/#{file}"
 end
