@@ -2,11 +2,15 @@ h1. Savon
 
 h4. Heavy metal Ruby SOAP client library
 
+p. "RDoc":http://rdoc.info/projects/rubiii/savon | "Wiki":http://wiki.github.com/rubiii/savon | "ToDo":http://rubiii.tadalist.com/lists/1459816/public | "Metrics":http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git
+
+h2. Installation
+
 bc. $ gem install savon
 
 p. Savon expects you to be familiar with SOAP, WSDL and tools like soapUI.
 
-h3. Instantiate a client
+h2. Instantiate a client
 
 p. Instantiate Savon::Client, passing in the WSDL of your service.
 
@@ -14,7 +18,7 @@ bc. client = Savon::Client.new "http://example.com/UserService?wsdl"
 
 p. More information: "Client":http://wiki.github.com/rubiii/savon/client
 
-h3. Calling a SOAP action
+h2. Calling a SOAP action
 
 p. Assuming your service applies to the "Defaults":http://wiki.github.com/rubiii/savon/defaults, you can now call any available SOAP action.
 
@@ -22,7 +26,7 @@ bc. response = client.get_all_users
 
 p. Savon lets you call SOAP actions using snake_case, because even though they will propably be written in lowerCamelCase or CamelCase, it just feels much more natural.
 
-h3. The WSDL object
+h2. The WSDL object
 
 p. Savon::WSDL represents the WSDL of your service, including information like the namespace URI and available SOAP actions.
 
@@ -31,7 +35,7 @@ bc. client.wsdl.soap_actions
 
 p. More information: "WSDL":http://wiki.github.com/rubiii/savon/wsdl
 
-h3. The SOAP object
+h2. The SOAP object
 
 p. Savon::SOAP represents the SOAP request. Pass a block to your SOAP call and the SOAP object is passed to it as the first argument. The object allows setting the SOAP version, header, body and namespaces per request.
 
@@ -39,7 +43,7 @@ bc. response = client.get_user_by_id { |soap| soap.body = { :id => 666 } }
 
 p. More information: "SOAP":http://wiki.github.com/rubiii/savon/soap
 
-h3. The WSSE object
+h2. The WSSE object
 
 p. Savon::WSSE represents WSSE authentication. Pass a block to your SOAP call and the WSSE object is passed to it as the second argument. The object allows setting the WSSE username, password and whether to use digest authentication.
 
@@ -51,26 +55,17 @@ end
 
 p. More information: "WSSE":http://wiki.github.com/rubiii/savon/wsse
 
-h3. The Response object
+h2. The Response object
 
 p. Savon::Response represents the HTTP and SOAP response. It contains and raises errors in case of an HTTP error or SOAP fault (unless disabled). Also you can get the response as XML (for parsing it with an XML library) or translated into a Hash.
 More information: "Response":http://wiki.github.com/rubiii/savon/response
 
-h3. HTTP errors and SOAP faults
+h2. HTTP errors and SOAP faults
 
 p. Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error.
 More information: "Errors":http://wiki.github.com/rubiii/savon/errors
 
-h3. Logging
+h2. Logging
 
 p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behaviour.
 More information: "Logging":http://wiki.github.com/rubiii/savon/logging
-
-h3. ToDo-List
-
-p. I maintain a "public ToDo-List":http://rubiii.tadalist.com/lists/1459816/public containing features and patches.
-
-h3. Documentation
-
-p. Wiki: "wiki.github.com/rubiii/savon":http://wiki.github.com/rubiii/savon
-RDoc: "rdoc.info/projects/rubiii/savon":http://rdoc.info/projects/rubiii/savon
