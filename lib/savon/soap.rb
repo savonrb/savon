@@ -34,19 +34,24 @@ module Savon
     # Sets the WSSE options.
     attr_writer :wsse
 
-    # Accessor for the SOAP action.
+    # Sets the SOAP action.
     attr_writer :action
 
+    # Returns the SOAP action.
     def action
       @action ||= ""
     end
 
-    # Accessor for the SOAP input.
+    # Sets the SOAP input.
     attr_writer :input
 
+    # Returns the SOAP input.
     def input
       @input ||= ""
     end
+
+    # Accessor for the SOAP endpoint.
+    attr_accessor :endpoint
 
     # Sets the SOAP header. Expected to be a Hash that can be translated
     # to XML via Hash.to_soap_xml or any other Object responding to to_s.
@@ -121,8 +126,7 @@ module Savon
 
     # Returns the WSSE header or an empty String in case WSSE was not set.
     def wsse_header
-      return "" unless @wsse.respond_to? :header
-      @wsse.header
+      @wsse.respond_to?(:header) ? @wsse.header : ""
     end
 
   end

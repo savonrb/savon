@@ -76,6 +76,14 @@ describe Savon::SOAP do
     end
   end
 
+  it "has both getter and setter for the SOAP endpoint" do
+    @soap.endpoint.should be_nil
+
+    soap_endpoint = URI EndpointHelper.soap_endpoint
+    @soap.endpoint = soap_endpoint
+    @soap.endpoint.should == soap_endpoint
+  end
+
   it "has a getter for the SOAP version to use which defaults to SOAP 1.1" do
     @soap.version.should == Savon::SOAP.version
   end

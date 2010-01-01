@@ -1,5 +1,12 @@
-== UPCOMING
+== 0.6.8 (2010-01-01)
   * Improved specifications for various kinds of WSDL documents.
+  * Added support for SOAP endpoints which are different than the WSDL endpoint of a service.
+  * Changed how SOAP actions and inputs are retrieved from the WSDL documents. This might break a few existing
+    implementations, but makes Savon work well with even more services. If this change breaks your implementation,
+    please take a look at the +action+ and +input+ methods of the Savon::SOAP object.
+    One specific problem I know of is working with the createsend WSDL and its namespaced actions.
+    To make it work, call the SOAP action without namespace and specify the input manually:
+    client.get_api_key { |soap| soap.input = "User.GetApiKey" }
 
 == 0.6.7 (2009-12-18)
   * Implemented support for a proxy server. The proxy URI can be set through an optional Hash of options passed

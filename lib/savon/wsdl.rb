@@ -26,6 +26,11 @@ module Savon
       @operations ||= stream.operations
     end
 
+    # Returns the SOAP endpoint.
+    def soap_endpoint
+      @soap_endpoint ||= stream.soap_endpoint
+    end
+
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
       return true if soap_actions.include? method
@@ -55,19 +60,22 @@ module Savon
   # Stream listener for parsing the WSDL document.
   class WSDLStream
 
-    # Defines the main sections of a WSDL document.
+    # The main sections of a WSDL document.
     Sections = %w(definitions types message portType binding service)
 
     def initialize
       @depth, @operations = 0, {}
     end
 
-    # Returns the namespace URI from the WSDL document.
+    # Returns the namespace URI.
     attr_reader :namespace_uri
 
-    # Returns the SOAP operations found in the WSDL document.
+    # Returns the SOAP operations.
     attr_reader :operations
- 
+
+    # Returns the SOAP endpoint.
+    attr_reader :soap_endpoint
+
     # Hook method called when the stream parser encounters a starting tag.
     def tag_start(tag, attrs)
       @depth += 1
@@ -75,6 +83,7 @@ module Savon
 
       @section = tag.to_sym if @depth <= 2 && Sections.include?(tag)
       @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
+      @soap_endpoint ||= URI(attrs["location"]) if @section == :service && tag == "address"
 
       operation_from tag, attrs if @section == :binding && tag == "operation"
     end
@@ -86,12 +95,14 @@ module Savon
 
     # Stores available operations from a given tag +name+ and +attrs+.
     def operation_from(tag, attrs)
-      @action = attrs["name"] if attrs["name"]
+      @input = attrs["name"] if attrs["name"]
 
       if attrs["soapAction"]
-        @action = attrs["soapAction"] unless attrs["soapAction"].blank?
-        input = @action.split("/").last
-        @operations[input.snakecase.to_sym] = { :action => @action, :input => input }
+        @action = !attrs["soapAction"].blank? ? attrs["soapAction"] : @input
+        @input = @action.split("/").last if !@input || @input.empty?
+
+        @operations[@input.snakecase.to_sym] = { :action => @action, :input => @input }
+        @input, @action = nil, nil
       end
     end
 

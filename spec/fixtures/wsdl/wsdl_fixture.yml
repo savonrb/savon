@@ -21,12 +21,12 @@
 :namespaced_actions:
   :namespace_uri: "http://api.example.com/api/"
   :operations:
-    :user_get_clients:
-      :action: "http://api.example.com/api/User.GetClients"
-      :input: "User.GetClients"
-    :user_get_api_key:
+    :get_api_key:
+      :input: "GetApiKey"
       :action: "http://api.example.com/api/User.GetApiKey"
-      :input: "User.GetApiKey"
-    :client_delete:
+    :delete_client:
+      :input: "DeleteClient"
       :action: "http://api.example.com/api/Client.Delete"
-      :input: "Client.Delete"
+    :get_clients:
+      :input: "GetClients"
+      :action: "http://api.example.com/api/User.GetClients"

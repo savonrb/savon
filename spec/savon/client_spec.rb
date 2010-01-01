@@ -61,7 +61,7 @@ describe Savon::Client do
 
     def expect_the_wsdl_to_be_disabled
       @client.wsdl?.should be_false
-      [:respond_to?, :operations, :namespace_uri].each do |method|
+      [:respond_to?, :operations, :namespace_uri, :soap_endpoint].each do |method|
         Savon::WSDL.any_instance.expects(method).never
       end
     end
@@ -69,11 +69,13 @@ describe Savon::Client do
 
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
+    client.wsdl = false
     lambda { client.authenticate }.should raise_error Savon::SOAPFault
   end
 
   it "raises a Savon::HTTPError in case of an HTTP error" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
+    client.wsdl = false
     lambda { client.authenticate }.should raise_error Savon::HTTPError
   end
 

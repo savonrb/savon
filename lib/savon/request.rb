@@ -61,15 +61,11 @@ module Savon
     # Returns the proxy URI.
     attr_reader :proxy
 
-    # Sets the open timeout for HTTP requests.
-    def open_timeout=(sec)
-      http.open_timeout = sec
-    end
+    # Accessor for HTTP open timeout.
+    attr_accessor :open_timeout
 
-    # Sets the read timeout for HTTP requests.
-    def read_timeout=(sec)
-      http.read_timeout = sec
-    end
+    # Accessor for HTTP read timeout.
+    attr_accessor :read_timeout
 
     # Retrieves WSDL document and returns the Net::HTTPResponse.
     def wsdl
@@ -83,7 +79,7 @@ module Savon
       @soap = soap
 
       log_request
-      @response = http.request_post @endpoint.path, @soap.to_xml, http_header
+      @response = http(@soap.endpoint).request_post @soap.endpoint.path, @soap.to_xml, http_header
       log_response
       @response
     end
@@ -92,7 +88,7 @@ module Savon
 
     # Logs the SOAP request.
     def log_request
-      log "SOAP request: #{@endpoint}"
+      log "SOAP request: #{@soap.endpoint}"
       log http_header.map { |key, value| "#{key}: #{value}" }.join( ", " )
       log @soap.to_xml
     end
@@ -103,19 +99,29 @@ module Savon
       log @response.body
     end
 
-    # Returns a Net::HTTP instance.
-    def http
-      unless @http
-        @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
-        @http.use_ssl = true if @endpoint.ssl?
-        @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-        add_ssl_authentication if @ssl
-      end
+    # Returns a Net::HTTP instance for a given +endpoint+.
+    def http(endpoint = @endpoint)
+      @http = Net::HTTP::Proxy(@proxy.host, @proxy.port).new endpoint.host, endpoint.port
+      set_http_timeout
+      set_ssl_options endpoint.ssl?
+      set_ssl_authentication if @ssl
       @http
     end
 
-    # Adds SSL client authentication to the +@http+ instance.
-    def add_ssl_authentication
+    # Sets HTTP open and read timeout.
+    def set_http_timeout
+      @http.open_timeout = @open_timeout if @open_timeout
+      @http.read_timeout = @read_timeout if @read_timeout
+    end
+
+    # Sets basic SSL options to the +@http+ instance.
+    def set_ssl_options(use_ssl)
+      @http.use_ssl = use_ssl
+      @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    end
+
+    # Sets SSL client authentication to the +@http+ instance.
+    def set_ssl_authentication
       @http.verify_mode = @ssl[:verify] if @ssl[:verify].kind_of? Integer
       @http.cert = @ssl[:client_cert] if @ssl[:client_cert]
       @http.key = @ssl[:client_key] if @ssl[:client_key]

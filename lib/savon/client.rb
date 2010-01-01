@@ -21,7 +21,7 @@ module Savon
 
     # Expects a SOAP +endpoint+ String. Also accepts an optional Hash of
     # +options+ for specifying a proxy server and SSL client authentication.
-    def initialize(endpoint,options = {})
+    def initialize(endpoint, options = {})
       @request = Request.new endpoint, options
       @wsdl = WSDL.new @request
     end
@@ -60,11 +60,16 @@ module Savon
       { :action => method.to_soap_key, :input => method.to_soap_key }
     end
 
+    # Returns the SOAP endpoint.
+    def soap_endpoint
+      wsdl? ? @wsdl.soap_endpoint : @request.endpoint
+    end
+
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE.
     # Yields them to a given +block+ in case one was given.
     def setup_objects(operation, &block)
       @soap, @wsse = SOAP.new, WSSE.new
-      @soap.action, @soap.input = operation[:action], operation[:input]
+      @soap.action, @soap.input, @soap.endpoint = operation[:action], operation[:input], soap_endpoint
 
       yield_objects &block if block
 
