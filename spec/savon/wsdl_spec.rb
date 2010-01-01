@@ -14,7 +14,7 @@ describe Savon::WSDL do
 
     it "has a getter for returning an Array of available SOAP actions" do
       WSDLFixture.authentication(:operations).keys.each do |soap_action|
-        @wsdl.soap_actions.should include soap_action
+        @wsdl.soap_actions.should include(soap_action)
       end
     end
 
@@ -45,7 +45,7 @@ describe Savon::WSDL do
 
     it "returns an Array of available SOAP actions" do
       WSDLFixture.no_namespace(:operations).keys.each do |soap_action|
-        @wsdl.soap_actions.should include soap_action
+        @wsdl.soap_actions.should include(soap_action)
       end
     end
 
@@ -63,7 +63,7 @@ describe Savon::WSDL do
 
     it "returns an Array of available SOAP actions" do
       WSDLFixture.namespaced_actions(:operations).keys.each do |soap_action|
-        @wsdl.soap_actions.should include soap_action
+        @wsdl.soap_actions.should include(soap_action)
       end
     end
 

@@ -8,14 +8,14 @@ describe Savon::SOAP do
 
   it "contains the SOAP namespace for each supported SOAP version" do
     Savon::SOAPVersions.each do |soap_version|
-      Savon::SOAP::SOAPNamespace[soap_version].should be_a String
+      Savon::SOAP::SOAPNamespace[soap_version].should be_a(String)
       Savon::SOAP::SOAPNamespace[soap_version].should_not be_empty
     end
   end
 
   it "contains the Content-Types for each supported SOAP version" do
     Savon::SOAPVersions.each do |soap_version|
-      Savon::SOAP::ContentType[soap_version].should be_a String
+      Savon::SOAP::ContentType[soap_version].should be_a(String)
       Savon::SOAP::ContentType[soap_version].should_not be_empty
     end
   end
@@ -47,7 +47,7 @@ describe Savon::SOAP do
   end
 
   it "has both getter and setter for the SOAP header" do
-    @soap.header.should be_a Hash
+    @soap.header.should be_a(Hash)
     @soap.header.should be_empty
 
     @soap.header = { "specialAuthKey" => "secret" }
@@ -100,9 +100,9 @@ describe Savon::SOAP do
       @soap.namespaces["xmlns:wsdl"] = "http://v1_0.ws.auth.order.example.com/"
       @soap.body = { :id => 666 }
 
-      @soap.to_xml.should include 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
-      @soap.to_xml.should include 'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"'
-      @soap.to_xml.should include '<wsdl:authenticate><id>666</id></wsdl:authenticate>'
+      @soap.to_xml.should include('xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"')
+      @soap.to_xml.should include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
+      @soap.to_xml.should include('<wsdl:authenticate><id>666</id></wsdl:authenticate>')
     end
 
     it "caches the XML, returning the same Object every time" do
@@ -111,12 +111,12 @@ describe Savon::SOAP do
 
     it "uses the SOAP namespace for the specified SOAP version" do
       @soap.version = 2
-      @soap.to_xml.should include Savon::SOAP::SOAPNamespace[2]
+      @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
     end
 
     it "uses the SOAP namespace for the default SOAP version otherwise" do
       Savon::SOAP.version = 2
-      @soap.to_xml.should include Savon::SOAP::SOAPNamespace[2]
+      @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
     end
   end
 

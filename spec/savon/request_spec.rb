@@ -5,7 +5,7 @@ describe Savon::Request do
 
   it "contains the ContentType for each supported SOAP version" do
     Savon::SOAPVersions.each do |soap_version|
-      Savon::Request::ContentType[soap_version].should be_a String
+      Savon::Request::ContentType[soap_version].should be_a(String)
       Savon::Request::ContentType[soap_version].should_not be_empty
     end
   end
@@ -20,7 +20,7 @@ describe Savon::Request do
   end
 
   it "defaults to use a Logger instance for logging" do
-    Savon::Request.logger.should be_a Logger
+    Savon::Request.logger.should be_a(Logger)
   end
 
   it "has both getter and setter for the logger to use (global setting)" do
@@ -66,7 +66,7 @@ describe Savon::Request do
   it "retrieves the WSDL document and returns the Net::HTTPResponse" do
     wsdl_response = @request.wsdl
 
-    wsdl_response.should be_a Net::HTTPResponse
+    wsdl_response.should be_a(Net::HTTPResponse)
     wsdl_response.body.should == WSDLFixture.authentication
   end
 
@@ -75,7 +75,7 @@ describe Savon::Request do
     soap.endpoint = URI EndpointHelper.wsdl_endpoint
     soap_response = @request.soap soap
 
-    soap_response.should be_a Net::HTTPResponse
+    soap_response.should be_a(Net::HTTPResponse)
     soap_response.body.should == ResponseFixture.authentication
   end
   

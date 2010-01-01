@@ -21,11 +21,11 @@ describe Savon::Client do
   end
 
   it "has a getter for accessing the Savon::WSDL" do
-    @client.wsdl.should be_a Savon::WSDL
+    @client.wsdl.should be_a(Savon::WSDL)
   end
 
   it "has a getter for accessing the Savon::Request" do
-    @client.request.should be_a Savon::Request
+    @client.request.should be_a(Savon::Request)
   end
 
   it "responds to SOAP actions while still behaving as usual otherwise" do
@@ -38,7 +38,7 @@ describe Savon::Client do
   end
 
   it "dispatches SOAP calls via method_missing and returns the Savon::Response" do
-    @client.authenticate.should be_a Savon::Response
+    @client.authenticate.should be_a(Savon::Response)
   end
 
   describe "disabling retrieving and parsing the WSDL document" do
@@ -47,7 +47,7 @@ describe Savon::Client do
       Savon::Client.wsdl = false
 
       expect_the_wsdl_to_be_disabled
-      @client.authenticate.should be_a Savon::Response
+      @client.authenticate.should be_a(Savon::Response)
 
       Savon::Client.wsdl = true
     end
@@ -56,7 +56,7 @@ describe Savon::Client do
       @client.wsdl = false
 
       expect_the_wsdl_to_be_disabled
-      @client.authenticate.should be_a Savon::Response
+      @client.authenticate.should be_a(Savon::Response)
     end
 
     def expect_the_wsdl_to_be_disabled
@@ -70,28 +70,28 @@ describe Savon::Client do
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
     client.wsdl = false
-    lambda { client.authenticate }.should raise_error Savon::SOAPFault
+    lambda { client.authenticate }.should raise_error(Savon::SOAPFault)
   end
 
   it "raises a Savon::HTTPError in case of an HTTP error" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
     client.wsdl = false
-    lambda { client.authenticate }.should raise_error Savon::HTTPError
+    lambda { client.authenticate }.should raise_error(Savon::HTTPError)
   end
 
   it "yields the SOAP object to a block when it expects one argument" do
-    @client.authenticate { |soap| soap.should be_a Savon::SOAP }
+    @client.authenticate { |soap| soap.should be_a(Savon::SOAP) }
   end
 
   it "yields the SOAP and WSSE object to a block when it expects two argument" do
     @client.authenticate do |soap, wsse|
-      soap.should be_a Savon::SOAP
-      wsse.should be_a Savon::WSSE
+      soap.should be_a(Savon::SOAP)
+      wsse.should be_a(Savon::WSSE)
     end
   end
 
   it "still raises a NoMethodError for undefined methods" do
-    lambda { @client.some_undefined_method }.should raise_error NoMethodError
+    lambda { @client.some_undefined_method }.should raise_error(NoMethodError)
   end
 
 end

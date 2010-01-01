@@ -11,12 +11,12 @@ describe Savon::WSSE do
   end
 
   it "contains the namespace for WS Security Secext" do
-    Savon::WSSE::WSENamespace.should be_a String
+    Savon::WSSE::WSENamespace.should be_a(String)
     Savon::WSSE::WSENamespace.should_not be_empty
   end
 
   it "contains the namespace for WS Security Utility" do
-    Savon::WSSE::WSUNamespace.should be_a String
+    Savon::WSSE::WSUNamespace.should be_a(String)
     Savon::WSSE::WSUNamespace.should_not be_empty
   end
 
@@ -82,8 +82,8 @@ describe Savon::WSSE do
         header = @wsse.header
 
         header.should include_security_namespaces
-        header.should include @username
-        header.should include @password
+        header.should include(@username)
+        header.should include(@password)
       end
 
       it "with WSSE credentials specified via defaults" do
@@ -92,8 +92,8 @@ describe Savon::WSSE do
         header = @wsse.header
 
         header.should include_security_namespaces
-        header.should include @username
-        header.should include @password
+        header.should include(@username)
+        header.should include(@password)
       end
     end
 
@@ -105,8 +105,8 @@ describe Savon::WSSE do
         header = @wsse.header
   
         header.should include_security_namespaces
-        header.should include @username
-        header.should_not include @password
+        header.should include(@username)
+        header.should_not include(@password)
       end
 
       it "via defaults" do
@@ -116,15 +116,15 @@ describe Savon::WSSE do
         header = @wsse.header
   
         header.should include_security_namespaces
-        header.should include @username
-        header.should_not include @password
+        header.should include(@username)
+        header.should_not include(@password)
       end
     end
 
     def include_security_namespaces
       simple_matcher("include security namespaces") do |given|
-        given.should include Savon::WSSE::WSENamespace
-        given.should include Savon::WSSE::WSUNamespace
+        given.should include(Savon::WSSE::WSENamespace)
+        given.should include(Savon::WSSE::WSUNamespace)
       end
     end
   end

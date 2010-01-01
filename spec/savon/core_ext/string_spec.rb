@@ -4,12 +4,12 @@ describe String do
 
   describe "self.random" do
     it "returns a random 100-character String" do
-      String.random.should be_a String
+      String.random.should be_a(String)
       String.random.length.should == 100
     end
 
     it "returns a random String of a given length" do
-      String.random(50).should be_a String
+      String.random(50).should be_a(String)
       String.random(50).length.should == 50
     end
   end

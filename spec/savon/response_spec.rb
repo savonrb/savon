@@ -19,7 +19,7 @@ describe Savon::Response do
     end
 
     it "raises a Savon::SOAPFault in case of a SOAP fault" do
-      lambda { savon_response_with :soap_fault }.should raise_error Savon::SOAPFault
+      lambda { savon_response_with :soap_fault }.should raise_error(Savon::SOAPFault)
     end
  
     it "does not raise a Savon::SOAPFault in case the default is turned off" do
@@ -29,7 +29,7 @@ describe Savon::Response do
     end
  
     it "raises a Savon::HTTPError in case of an HTTP error" do
-      lambda { savon_response_with :http_error }.should raise_error Savon::HTTPError
+      lambda { savon_response_with :http_error }.should raise_error(Savon::HTTPError)
     end
 
     it "does not raise a Savon::HTTPError in case the default is turned off" do

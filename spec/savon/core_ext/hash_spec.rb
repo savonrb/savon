@@ -12,7 +12,7 @@ describe Hash do
     it "returns an empty Hash in case it did not find the specified value" do
       result = @soap_fault_hash.find_regexp "soap:Fault"
 
-      result.should be_a Hash
+      result.should be_a(Hash)
       result.should be_empty
     end
 
@@ -39,8 +39,8 @@ describe Hash do
       it "for a Hash with multiple keys" do
         soap_xml = { :all => "users", :before => "whatever" }.to_soap_xml
 
-        soap_xml.should include "<all>users</all>"
-        soap_xml.should include "<before>whatever</before>"
+        soap_xml.should include("<all>users</all>")
+        soap_xml.should include("<before>whatever</before>")
       end
 
       it "for a Hash containing an Array" do
