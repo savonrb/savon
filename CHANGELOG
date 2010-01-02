@@ -3,6 +3,10 @@
     Instead of disabling the WSDL globally/per request via two different methods, you now simply append an
     exclamation mark (!) to your SOAP call. For example: client.get_all_users!
     The Wiki page will be updated to relect this change as soon as it's released.
+  * Setting the "xmlns:wsdl" can be done by using the soap#namespaces method which returns a Hash of namespaces.
+    For example: soap.namespaces["xmlns:wsdl"] = "http://example.com"
+    I added soap#namespace as a convenience method to simplify setting the "xmlns:wsdl" namespace.
+    For example: soap.namespace = "http://example.com"
 
 == 0.6.8 (2010-01-01)
   * Improved specifications for various kinds of WSDL documents.
