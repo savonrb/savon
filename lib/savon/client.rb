@@ -6,19 +6,6 @@ module Savon
   # with SOAP services and XML.
   class Client
 
-    # Global setting of whether to use Savon::WSDL.
-    @@wsdl = true
-
-    # Sets the global setting of whether to use Savon::WSDL.
-    def self.wsdl=(wsdl)
-      @@wsdl = wsdl
-    end
-
-    # Returns the global setting of whether to use Savon::WSDL.
-    def self.wsdl?
-      @@wsdl
-    end
-
     # Expects a SOAP +endpoint+ String. Also accepts an optional Hash of
     # +options+ for specifying a proxy server and SSL client authentication.
     def initialize(endpoint, options = {})
@@ -26,16 +13,11 @@ module Savon
       @wsdl = WSDL.new @request
     end
 
-    # Accessor for Savon::WSDL.
-    attr_accessor :wsdl
+    # Returns the Savon::WSDL.
+    attr_reader :wsdl
 
     # Returns the Savon::Request.
     attr_reader :request
-
-    # Returns whether to use Savon::WSDL.
-    def wsdl?
-      self.class.wsdl? && @wsdl
-    end
 
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
@@ -47,7 +29,8 @@ module Savon
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      super if wsdl? && !@wsdl.respond_to?(method)
+      @wsdl.enabled = (method.to_s[-1,1] == "!") ? false : true
+      super if @wsdl.enabled? && !@wsdl.respond_to?(method)
 
       setup_objects operation_from(method), &block
       Response.new @request.soap(@soap)
@@ -56,13 +39,13 @@ module Savon
     # Returns a SOAP operation Hash containing the SOAP action and input
     # for a given +method+.
     def operation_from(method)
-      return @wsdl.operations[method] if wsdl?
+      return @wsdl.operations[method] if @wsdl.enabled?
       { :action => method.to_soap_key, :input => method.to_soap_key }
     end
 
     # Returns the SOAP endpoint.
     def soap_endpoint
-      wsdl? ? @wsdl.soap_endpoint : @request.endpoint
+      @wsdl.enabled? ? @wsdl.soap_endpoint : @request.endpoint
     end
 
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE.
@@ -73,7 +56,7 @@ module Savon
 
       yield_objects &block if block
 
-      @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if wsdl?
+      @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
       @soap.wsse = @wsse
     end
 

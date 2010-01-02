@@ -10,6 +10,14 @@ module Savon
       @request = request
     end
 
+    # Sets whether to use the WSDL.
+    attr_writer :enabled
+
+    # Returns whether to use the WSDL. Defaults to +true+.
+    def enabled?
+      @enabled.nil? ? true : @enabled
+    end
+
     # Returns the namespace URI of the WSDL.
     def namespace_uri
       @namespace_uri ||= stream.namespace_uri

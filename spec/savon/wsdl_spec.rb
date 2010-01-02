@@ -8,6 +8,10 @@ describe Savon::WSDL do
       Savon::WSDL.new Savon::Request.new(EndpointHelper.wsdl_endpoint)
     end
 
+    it "is enabled by default" do
+      @wsdl.enabled?.should be_true
+    end
+
     it "has a getter for the namespace URI" do
       @wsdl.namespace_uri.should == WSDLFixture.authentication(:namespace_uri)
     end

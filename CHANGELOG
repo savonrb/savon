@@ -1,3 +1,9 @@
+== UPCOMING
+  * Changed the way you can disable Savon::WSDL. More information at: http://wiki.github.com/rubiii/savon/wsdl
+    Instead of disabling the WSDL globally/per request via two different methods, you now simply append an
+    exclamation mark (!) to your SOAP call. For example: client.get_all_users!
+    The Wiki page will be updated to relect this change as soon as it's released.
+
 == 0.6.8 (2010-01-01)
   * Improved specifications for various kinds of WSDL documents.
   * Added support for SOAP endpoints which are different than the WSDL endpoint of a service.

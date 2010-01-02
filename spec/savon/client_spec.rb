@@ -8,7 +8,7 @@ describe Savon::Client do
   end
 
   it "accepts a proxy URI passed in via options" do
-    Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => 'http://proxy'
+    Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
   end
 
   it "accepts settings for SSL client authentication via options" do
@@ -41,42 +41,25 @@ describe Savon::Client do
     @client.authenticate.should be_a(Savon::Response)
   end
 
-  describe "disabling retrieving and parsing the WSDL document" do
-    it "can be done globally for every instance of Savon::Client" do
-      @client.wsdl?.should be_true
-      Savon::Client.wsdl = false
+  it "disables the WSDL when passed a method with an exclamation mark" do
+    @client.wsdl.enabled?.should be_true
 
-      expect_the_wsdl_to_be_disabled
-      @client.authenticate.should be_a(Savon::Response)
-
-      Savon::Client.wsdl = true
+    [:respond_to?, :operations, :namespace_uri, :soap_endpoint].each do |method|
+      Savon::WSDL.any_instance.expects(method).never
     end
+    @client.authenticate!.should be_a(Savon::Response)
 
-    it "can be done per request" do
-      @client.wsdl = false
-
-      expect_the_wsdl_to_be_disabled
-      @client.authenticate.should be_a(Savon::Response)
-    end
-
-    def expect_the_wsdl_to_be_disabled
-      @client.wsdl?.should be_false
-      [:respond_to?, :operations, :namespace_uri, :soap_endpoint].each do |method|
-        Savon::WSDL.any_instance.expects(method).never
-      end
-    end
+    @client.wsdl.enabled?.should be_false
   end
 
   it "raises a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
-    client.wsdl = false
-    lambda { client.authenticate }.should raise_error(Savon::SOAPFault)
+    lambda { client.authenticate! }.should raise_error(Savon::SOAPFault)
   end
 
   it "raises a Savon::HTTPError in case of an HTTP error" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
-    client.wsdl = false
-    lambda { client.authenticate }.should raise_error(Savon::HTTPError)
+    lambda { client.authenticate! }.should raise_error(Savon::HTTPError)
   end
 
   it "yields the SOAP object to a block when it expects one argument" do
