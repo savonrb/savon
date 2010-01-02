@@ -76,6 +76,14 @@ describe Savon::SOAP do
     end
   end
 
+  it "has a convenience method for setting the 'xmlns:wsdl' namespace" do
+    @soap.namespaces.should == { "xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/" }
+
+    @soap.namespace = "http://example.com"
+    @soap.namespaces.should include("xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/")
+    @soap.namespaces.should include("xmlns:wsdl" => "http://example.com")
+  end
+
   it "has both getter and setter for the SOAP endpoint" do
     @soap.endpoint.should be_nil
 

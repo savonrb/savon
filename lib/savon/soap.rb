@@ -76,6 +76,11 @@ module Savon
       @namespaces ||= { "xmlns:env" => SOAPNamespace[version] }
     end
 
+    # Convenience method for setting the "xmlns:wsdl" namespace.
+    def namespace=(namespace)
+      namespaces["xmlns:wsdl"] = namespace
+    end
+
     # Sets the SOAP version.
     def version=(version)
       @version = version if Savon::SOAPVersions.include? version
