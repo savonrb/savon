@@ -43,12 +43,15 @@ describe Savon::Client do
 
   it "disables the WSDL when passed a method with an exclamation mark" do
     @client.wsdl.enabled?.should be_true
-
     [:respond_to?, :operations, :namespace_uri, :soap_endpoint].each do |method|
       Savon::WSDL.any_instance.expects(method).never
     end
-    @client.authenticate!.should be_a(Savon::Response)
 
+    response = @client.authenticate! do |soap|
+      soap.input.should == "authenticate"
+      soap.input.should == "authenticate"
+    end
+    response.should be_a(Savon::Response)
     @client.wsdl.enabled?.should be_false
   end
 

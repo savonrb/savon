@@ -29,18 +29,30 @@ module Savon
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      @wsdl.enabled = (method.to_s[-1,1] == "!") ? false : true
-      super if @wsdl.enabled? && !@wsdl.respond_to?(method)
+      soap_call = soap_call_from method.to_s
+      super if @wsdl.enabled? && !@wsdl.respond_to?(soap_call)
 
-      setup_objects operation_from(method), &block
+      setup_objects operation_from(soap_call), &block
       Response.new @request.soap(@soap)
     end
 
+    # Sets whether to use Savon::WSDL by a given +method+ name and
+    # removes exclamation marks from the given +method+ name.
+    def soap_call_from(method)
+      if method[-1, 1] == "!"
+        @wsdl.enabled = false
+        method[0, method.length-1].to_sym
+      else
+        @wsdl.enabled = true
+        method.to_sym
+      end
+    end
+
     # Returns a SOAP operation Hash containing the SOAP action and input
-    # for a given +method+.
-    def operation_from(method)
-      return @wsdl.operations[method] if @wsdl.enabled?
-      { :action => method.to_soap_key, :input => method.to_soap_key }
+    # for a given +soap_call+.
+    def operation_from(soap_call)
+      return @wsdl.operations[soap_call] if @wsdl.enabled?
+      { :action => soap_call.to_soap_key, :input => soap_call.to_soap_key }
     end
 
     # Returns the SOAP endpoint.
