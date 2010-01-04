@@ -17,13 +17,24 @@ class Hash
 
   # Returns the Hash translated into SOAP request compatible XML.
   #
+  # To control the order of output, add a key of :@inorder with
+  # the value being an array listing the other keys in order.
+  #
   # === Example
   #
   #   { :find_user => { :id => 666 } }.to_soap_xml
   #   => "<findUser><id>666</id></findUser>"
+  #
+  #   { :find_user => { :name => 'Lucy', :id => 666, :@inorder => [:id,:name] } }.to_soap_xml
+  #   => "<findUser><id>666</id><name>Lucy</name></findUser>"
   def to_soap_xml
     @soap_xml = Builder::XmlMarkup.new
-    each { |key, value| nested_data_to_soap_xml key, value }
+    i = self.delete :@inorder # retrieve the hash element keyed by :@inorder if it exists
+    k = self.keys
+    i = k unless (i and i.class == Array)
+    raise "missing elements in :@inorder #{(k - i).inspect}" unless (k - i).empty?
+    raise "spurious elements in :@inorder #{(i - k).inspect}" unless (i - k).empty?
+    i.each {|key| nested_data_to_soap_xml key, self[key] }
     @soap_xml.target!
   end
 
@@ -52,7 +63,12 @@ private
         value.map { |sitem| nested_data_to_soap_xml key, sitem }
       when Hash
         @soap_xml.tag!(key.to_soap_key) do
-          value.each { |subkey, subvalue| nested_data_to_soap_xml subkey, subvalue }
+          i = value.delete :@inorder
+          k = value.keys
+          i = k unless (i and i.class == Array)
+          raise "missing elements in :@inorder #{(k - i).inspect}" unless (k - i).empty?
+          raise "spurious elements in :@inorder #{(i - k).inspect}" unless (i - k).empty?
+          i.each { |subkey| nested_data_to_soap_xml subkey, value[subkey] }
         end
       else
         @soap_xml.tag!(key.to_soap_key) { @soap_xml << value.to_soap_value }
