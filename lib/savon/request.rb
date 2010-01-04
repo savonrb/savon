@@ -67,6 +67,11 @@ module Savon
     # Accessor for HTTP read timeout.
     attr_accessor :read_timeout
 
+    # Sets the +username+ and +password+ for HTTP basic authentication.
+    def basic_auth(username, password)
+      @http_basic_auth = [username, password]
+    end
+
     # Retrieves WSDL document and returns the Net::HTTPResponse.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"
