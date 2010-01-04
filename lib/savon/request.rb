@@ -70,16 +70,28 @@ module Savon
     # Retrieves WSDL document and returns the Net::HTTPResponse.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"
-      http.get @endpoint.to_s
+      
+      query = @endpoint.path
+      query += ('?' + @endpoint.query) if @endpoint.query
+      req = Net::HTTP::Get.new query
+      req.basic_auth(@endpoint.user, @endpoint.password) if @endpoint.user
+      
+      http.start {|h| h.request(req) }
     end
 
     # Executes a SOAP request using a given Savon::SOAP instance and
     # returns the Net::HTTPResponse.
     def soap(soap)
       @soap = soap
-
+      
       log_request
-      @response = http(@soap.endpoint).request_post @soap.endpoint.path, @soap.to_xml, http_header
+
+      req = Net::HTTP::Post.new @soap.endpoint.path, http_header
+      req.body = @soap.to_xml
+      req.basic_auth(@soap.endpoint.user, @soap.endpoint.password) if @soap.endpoint.user
+      
+      @response = http(@soap.endpoint).start {|h| h.request(req) }
+      
       log_response
       @response
     end
