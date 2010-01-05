@@ -47,12 +47,11 @@ module Savon
       @@log_level
     end
 
-    # Expects a SOAP +endpoint+ String. Also accepts an optional Hash of
-    # +options+ for specifying a proxy server and SSL client authentication.
+    # Expects a SOAP +endpoint+ String. Also accepts an optional Hash
+    # of +options+ for specifying a proxy server.
     def initialize(endpoint, options = {})
       @endpoint = URI endpoint
-      @proxy = options[:proxy] ? URI(options[:proxy]) : URI("") 
-      @ssl = options[:ssl] if options[:ssl]
+      @proxy = options[:proxy] ? URI(options[:proxy]) : URI("")
     end
 
     # Returns the endpoint URI.
@@ -61,44 +60,35 @@ module Savon
     # Returns the proxy URI.
     attr_reader :proxy
 
-    # Accessor for HTTP open timeout.
-    attr_accessor :open_timeout
-
-    # Accessor for HTTP read timeout.
-    attr_accessor :read_timeout
-
     # Sets the +username+ and +password+ for HTTP basic authentication.
     def basic_auth(username, password)
-      @http_basic_auth = [username, password]
+      @basic_auth = [username, password]
     end
 
-    # Retrieves WSDL document and returns the Net::HTTPResponse.
+    # Retrieves WSDL document and returns the Net::HTTP response.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"
-      
-      query = @endpoint.path
-      query += ('?' + @endpoint.query) if @endpoint.query
-      req = Net::HTTP::Get.new query
-      req.basic_auth(@endpoint.user, @endpoint.password) if @endpoint.user
-      
-      http.start {|h| h.request(req) }
+      http.endpoint @endpoint.host, @endpoint.port
+      http.use_ssl = @endpoint.ssl?
+      http.start { |h| h.request request(:wsdl) }
     end
 
     # Executes a SOAP request using a given Savon::SOAP instance and
-    # returns the Net::HTTPResponse.
+    # returns the Net::HTTP response.
     def soap(soap)
       @soap = soap
-      
-      log_request
+      http.endpoint @soap.endpoint.host, @soap.endpoint.port
+      http.use_ssl = @soap.endpoint.ssl?
 
-      req = Net::HTTP::Post.new @soap.endpoint.path, http_header
-      req.body = @soap.to_xml
-      req.basic_auth(@soap.endpoint.user, @soap.endpoint.password) if @soap.endpoint.user
-      
-      @response = http(@soap.endpoint).start {|h| h.request(req) }
-      
+      log_request
+      @response = http.start { |h| h.request soap_request }
       log_response
       @response
+    end
+
+    # Returns the Net::HTTP instance.
+    def http
+      @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
     end
 
   private
@@ -106,7 +96,7 @@ module Savon
     # Logs the SOAP request.
     def log_request
       log "SOAP request: #{@soap.endpoint}"
-      log http_header.map { |key, value| "#{key}: #{value}" }.join( ", " )
+      log http_header.map { |key, value| "#{key}: #{value}" }.join(", ")
       log @soap.to_xml
     end
 
@@ -116,33 +106,27 @@ module Savon
       log @response.body
     end
 
-    # Returns a Net::HTTP instance for a given +endpoint+.
-    def http(endpoint = @endpoint)
-      @http = Net::HTTP::Proxy(@proxy.host, @proxy.port).new endpoint.host, endpoint.port
-      set_http_timeout
-      set_ssl_options endpoint.ssl?
-      set_ssl_authentication if @ssl
-      @http
+    # Returns a Net::HTTP SOAP request.
+    def soap_request
+      request(:soap) { |request| request.body = @soap.to_xml }
     end
 
-    # Sets HTTP open and read timeout.
-    def set_http_timeout
-      @http.open_timeout = @open_timeout if @open_timeout
-      @http.read_timeout = @read_timeout if @read_timeout
+    # Returns a Net::HTTP request for a given +type+. Yields the request
+    # to an optional block.
+    def request(type)
+      request = case type
+        when :wsdl then Net::HTTP::Get.new wsdl_endpoint
+        when :soap then Net::HTTP::Post.new @soap.endpoint.path, http_header
+      end
+      request.basic_auth *@basic_auth if @basic_auth
+      yield request if block_given?
+      request
     end
 
-    # Sets basic SSL options to the +@http+ instance.
-    def set_ssl_options(use_ssl)
-      @http.use_ssl = use_ssl
-      @http.verify_mode = OpenSSL::SSL::VERIFY_NONE
-    end
-
-    # Sets SSL client authentication to the +@http+ instance.
-    def set_ssl_authentication
-      @http.verify_mode = @ssl[:verify] if @ssl[:verify].kind_of? Integer
-      @http.cert = @ssl[:client_cert] if @ssl[:client_cert]
-      @http.key = @ssl[:client_key] if @ssl[:client_key]
-      @http.ca_file = @ssl[:ca_file] if @ssl[:ca_file]
+    # Returns the WSDL endpoint.
+    def wsdl_endpoint
+      return @endpoint.path unless @endpoint.query
+      "#{@endpoint.path}?#{@endpoint.query}"
     end
 
     # Returns a Hash containing the header for an HTTP request.
@@ -155,7 +139,7 @@ module Savon
       self.class.logger.send self.class.log_level, message if log?
     end
 
-    # Returns whether logging is possible.
+    # Returns whether to log.
     def log?
       self.class.log? && self.class.logger.respond_to?(self.class.log_level)
     end

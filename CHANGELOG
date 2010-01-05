@@ -1,12 +1,26 @@
-== UPCOMING
-  * Changed the way you can disable Savon::WSDL. More information at: http://wiki.github.com/rubiii/savon/wsdl
-    Instead of disabling the WSDL globally/per request via two different methods, you now simply append an
-    exclamation mark (!) to your SOAP call. For example: client.get_all_users!
-    The Wiki page will be updated to relect this change as soon as it's released.
-  * Setting the "xmlns:wsdl" can be done by using the soap#namespaces method which returns a Hash of namespaces.
-    For example: soap.namespaces["xmlns:wsdl"] = "http://example.com"
-    I added soap#namespace as a convenience method to simplify setting the "xmlns:wsdl" namespace.
-    For example: soap.namespace = "http://example.com"
+== 0.7.0 (2010-01-06)
+  This version comes with several changes to the public API!
+  Pay attention to the following list and read the updated Wiki: http://wiki.github.com/rubiii/savon
+
+  * Changed how Savon::WSDL can be disabled. Instead of disabling the WSDL globally/per request via two
+    different methods, you now simply append an exclamation mark (!) to your SOAP call: client.get_all_users!
+    Make sure you know what you're doing because when the WSDL is disabled, Savon does not know about which
+    SOAP actions are valid and just dispatches everything.
+  * The Net::HTTP object used by Savon::Request to retrieve WSDL documents and execute SOAP calls is now public.
+    While this makes the library even more flexible, it also comes with two major changes:
+    * SSL client authentication needs to be defined directly on the Net::HTTP object:
+      client.request.http.client_cert = ...
+      I added a shortcut method for setting all options through a Hash similar to the previous implementation:
+      client.request.http.ssl_client_auth :client_cert => ...
+    * Open and read timeouts also need to be set on the Net::HTTP object:
+      client.request.http.open_timeout = 30
+      client.request.http.read_timeout = 30
+    * Please refer to the Net::HTTP documentation for more details:
+      http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html
+  * Thanks to JulianMorrison, Savon now supports HTTP basic authentication:
+    client.request.http.basic_auth "username", "password"
+  * Added Savon::SOAP#namespace as a shortcut for setting the "xmlns:wsdl" namespace.
+    Usage example: soap.namespace = "http://example.com"
 
 == 0.6.8 (2010-01-01)
   * Improved specifications for various kinds of WSDL documents.

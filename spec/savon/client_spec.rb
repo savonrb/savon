@@ -3,32 +3,26 @@ require "spec_helper"
 describe Savon::Client do
   before { @client = Savon::Client.new EndpointHelper.wsdl_endpoint }
 
-  it "is initialized with a SOAP endpoint String" do
-    Savon::Client.new EndpointHelper.wsdl_endpoint
+  it "should be initialized with an endpoint String" do
+    client = Savon::Client.new EndpointHelper.wsdl_endpoint
+    client.request.http.proxy?.should be_false
   end
 
-  it "accepts a proxy URI passed in via options" do
-    Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
+  it "should accept a proxy URI via an optional Hash of options" do
+    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
+    client.request.http.proxy?.should be_true
+    client.request.http.proxy_address == "http://proxy"
   end
 
-  it "accepts settings for SSL client authentication via options" do
-    Savon::Client.new EndpointHelper.wsdl_endpoint, :ssl => {
-      :client_cert => "client cert",
-      :client_key => "client key",
-      :ca_file => "ca file",
-      :verify => OpenSSL::SSL::VERIFY_PEER
-    }
-  end
-
-  it "has a getter for accessing the Savon::WSDL" do
+  it "should have a method that returns the Savon::WSDL" do
     @client.wsdl.should be_a(Savon::WSDL)
   end
 
-  it "has a getter for accessing the Savon::Request" do
+  it "should have a method that returns the Savon::Request" do
     @client.request.should be_a(Savon::Request)
   end
 
-  it "responds to SOAP actions while still behaving as usual otherwise" do
+  it "should respond to available SOAP actions while behaving as expected otherwise" do
     WSDLFixture.authentication(:operations).keys.each do |soap_action|
       @client.respond_to?(soap_action).should be_true
     end
@@ -37,11 +31,11 @@ describe Savon::Client do
     @client.respond_to?(:some_undefined_method).should be_false
   end
 
-  it "dispatches SOAP calls via method_missing and returns the Savon::Response" do
+  it "should dispatch available SOAP calls via method_missing and return the Savon::Response" do
     @client.authenticate.should be_a(Savon::Response)
   end
 
-  it "disables the WSDL when passed a method with an exclamation mark" do
+  it "should disable the Savon::WSDL when passed a method with an exclamation mark" do
     @client.wsdl.enabled?.should be_true
     [:respond_to?, :operations, :namespace_uri, :soap_endpoint].each do |method|
       Savon::WSDL.any_instance.expects(method).never
@@ -55,28 +49,28 @@ describe Savon::Client do
     @client.wsdl.enabled?.should be_false
   end
 
-  it "raises a Savon::SOAPFault in case of a SOAP fault" do
+  it "should raise a Savon::SOAPFault in case of a SOAP fault" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
     lambda { client.authenticate! }.should raise_error(Savon::SOAPFault)
   end
 
-  it "raises a Savon::HTTPError in case of an HTTP error" do
+  it "should raise a Savon::HTTPError in case of an HTTP error" do
     client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
     lambda { client.authenticate! }.should raise_error(Savon::HTTPError)
   end
 
-  it "yields the SOAP object to a block when it expects one argument" do
+  it "should yield an instance of Savon::SOAP to a given block expecting one argument" do
     @client.authenticate { |soap| soap.should be_a(Savon::SOAP) }
   end
 
-  it "yields the SOAP and WSSE object to a block when it expects two argument" do
+  it "should yield an instance of Savon::SOAP and Savon::WSSE to a gven block expecting two arguments" do
     @client.authenticate do |soap, wsse|
       soap.should be_a(Savon::SOAP)
       wsse.should be_a(Savon::WSSE)
     end
   end
 
-  it "still raises a NoMethodError for undefined methods" do
+  it "should raise a NoMethodError when the method does not match an available SOAP action or method" do
     lambda { @client.some_undefined_method }.should raise_error(NoMethodError)
   end
 
