@@ -81,12 +81,14 @@ module Savon
       http.use_ssl = @soap.endpoint.ssl?
 
       log_request
-      @response = http.start { |h| h.request soap_request }
+      @response = http.start do |h|
+        h.request request(:soap) { |request| request.body = @soap.to_xml }
+      end
       log_response
       @response
     end
 
-    # Returns the Net::HTTP instance.
+    # Returns the Net::HTTP object.
     def http
       @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
     end
@@ -104,11 +106,6 @@ module Savon
     def log_response
       log "SOAP response (status #{@response.code}):"
       log @response.body
-    end
-
-    # Returns a Net::HTTP SOAP request.
-    def soap_request
-      request(:soap) { |request| request.body = @soap.to_xml }
     end
 
     # Returns a Net::HTTP request for a given +type+. Yields the request
