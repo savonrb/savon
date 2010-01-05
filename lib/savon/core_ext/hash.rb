@@ -1,5 +1,11 @@
 class Hash
 
+  # Error message for missing :@inorder elements.
+  InOrderMissing = "Missing elements in :@inorder %s"
+
+  # Error message for spurious :@inorder elements.
+  InOrderSpurious = "Spurious elements in :@inorder %s"
+
   # Expects an Array of Regexp Objects of which every Regexp recursively
   # matches a key to be accessed. Returns the value of the last Regexp filter
   # found in the Hash or an empty Hash in case the path of Regexp filters
@@ -18,23 +24,18 @@ class Hash
   # Returns the Hash translated into SOAP request compatible XML.
   #
   # To control the order of output, add a key of :@inorder with
-  # the value being an array listing the other keys in order.
+  # the value being an Array listing keys in order.
   #
-  # === Example
+  # === Examples
   #
   #   { :find_user => { :id => 666 } }.to_soap_xml
   #   => "<findUser><id>666</id></findUser>"
   #
-  #   { :find_user => { :name => 'Lucy', :id => 666, :@inorder => [:id,:name] } }.to_soap_xml
+  #   { :find_user => { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }.to_soap_xml
   #   => "<findUser><id>666</id><name>Lucy</name></findUser>"
   def to_soap_xml
     @soap_xml = Builder::XmlMarkup.new
-    i = self.delete :@inorder # retrieve the hash element keyed by :@inorder if it exists
-    k = self.keys
-    i = k unless (i and i.class == Array)
-    raise "missing elements in :@inorder #{(k - i).inspect}" unless (k - i).empty?
-    raise "spurious elements in :@inorder #{(i - k).inspect}" unless (i - k).empty?
-    i.each {|key| nested_data_to_soap_xml key, self[key] }
+    inorder(self).each { |key| nested_data_to_soap_xml key, self[key] }
     @soap_xml.target!
   end
 
@@ -60,19 +61,25 @@ private
   def nested_data_to_soap_xml(key, value)
     case value
       when Array
-        value.map { |sitem| nested_data_to_soap_xml key, sitem }
+        value.map { |subitem| nested_data_to_soap_xml key, subitem }
       when Hash
         @soap_xml.tag!(key.to_soap_key) do
-          i = value.delete :@inorder
-          k = value.keys
-          i = k unless (i and i.class == Array)
-          raise "missing elements in :@inorder #{(k - i).inspect}" unless (k - i).empty?
-          raise "spurious elements in :@inorder #{(i - k).inspect}" unless (i - k).empty?
-          i.each { |subkey| nested_data_to_soap_xml subkey, value[subkey] }
+          inorder(value).each { |subkey| nested_data_to_soap_xml subkey, value[subkey] }
         end
       else
         @soap_xml.tag!(key.to_soap_key) { @soap_xml << value.to_soap_value }
     end
+  end
+
+  # Takes a +hash+, removes the :@inorder marker and returns its keys.
+  # Raises an error in case an :@inorder Array does not match the Hash keys.
+  def inorder(hash)
+    inorder = hash.delete :@inorder
+    hash_keys = hash.keys
+    inorder = hash_keys unless inorder.kind_of? Array
+    raise InOrderMissing % (hash_keys - inorder).inspect unless (hash_keys - inorder).empty?
+    raise InOrderSpurious % (inorder - hash_keys).inspect unless (inorder - hash_keys).empty?
+    inorder
   end
 
 end

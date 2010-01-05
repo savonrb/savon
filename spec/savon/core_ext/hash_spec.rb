@@ -92,6 +92,23 @@ describe Hash do
         { :some => object }.to_soap_xml.should == "<some>#{object}</some>"
       end
     end
+
+    it "preserves the order of Hash keys and values specified through :@inorder" do
+      { :find_user => { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }.to_soap_xml.
+        should == "<findUser><id>666</id><name>Lucy</name></findUser>"
+
+      { :find_user => { :by_name => { :mname => "in the", :lname => "Sky", :fname => "Lucy",
+        :@inorder => [:fname, :mname, :lname] } } }.to_soap_xml. should ==
+        "<findUser><byName><fname>Lucy</fname><mname>in the</mname><lname>Sky</lname></byName></findUser>"
+    end
+
+    it "raises an error if the :@inorder Array does not match the Hash keys" do
+      lambda { { :name => "Lucy", :id => 666, :@inorder => [:name] }.to_soap_xml }.
+        should raise_error(RuntimeError)
+
+      lambda { { :by_name => { :name => "Lucy", :lname => "Sky", :@inorder => [:mname, :name] } }.to_soap_xml }.
+        should raise_error(RuntimeError)
+    end
   end
 
   describe "map_soap_response" do
