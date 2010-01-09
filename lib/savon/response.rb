@@ -28,7 +28,7 @@ module Savon
 
     # Returns whether there was a SOAP fault.
     def soap_fault?
-      @soap_fault
+      @soap_fault ? true : false
     end
 
     # Returns the SOAP fault message.
@@ -36,15 +36,15 @@ module Savon
 
     # Returns whether there was an HTTP error.
     def http_error?
-      @http_error
+      @http_error ? true : false
     end
 
     # Returns the HTTP error message.
     attr_reader :http_error
 
-    # Returns the SOAP response as a Hash.
+    # Returns the SOAP response body as a Hash.
     def to_hash
-      @body.find_regexp(/.+/).map_soap_response
+      @body ||= Crack::XML.parse(@response.body).find_soap_body
     end
 
     # Returns the SOAP response XML.
@@ -52,45 +52,33 @@ module Savon
       @response.body
     end
 
-    alias :to_s  :to_xml
+    alias :to_s :to_xml
 
   private
-
-    # Returns the SOAP response body as a Hash.
-    def body
-      unless @body
-        body = Crack::XML.parse @response.body
-        @body = body.find_regexp [/.+:Envelope/, /.+:Body/]
-      end
-      @body
-    end
 
     # Handles SOAP faults. Raises a Savon::SOAPFault unless the default
     # behavior of raising errors was turned off.
     def handle_soap_fault
       if soap_fault_message
         @soap_fault = soap_fault_message
-        raise Savon::SOAPFault, soap_fault_message if self.class.raise_errors?
+        raise Savon::SOAPFault, @soap_fault if self.class.raise_errors?
       end
     end
 
     # Returns a SOAP fault message in case a SOAP fault was found.
     def soap_fault_message
-      unless @soap_fault_message
-        soap_fault = body.find_regexp [/.+:Fault/]
-        @soap_fault_message = soap_fault_message_by_version(soap_fault)
-      end
-      @soap_fault_message
+      @soap_fault_message ||= soap_fault_message_by_version to_hash[:fault]
     end
 
     # Expects a Hash that might contain information about a SOAP fault.
     # Returns the SOAP fault message in case one was found.
     def soap_fault_message_by_version(soap_fault)
-      if soap_fault.keys.include? "faultcode"
-        "(#{soap_fault['faultcode']}) #{soap_fault['faultstring']}"
-      elsif soap_fault.keys.include? "Code"
-        # SOAP 1.2 error code element is capitalized, see: http://www.w3.org/TR/soap12-part1/#faultcodeelement
-        "(#{soap_fault['Code']['Value']}) #{soap_fault['Reason']['Text']}"
+      return unless soap_fault
+
+      if soap_fault.keys.include? :faultcode
+        "(#{soap_fault[:faultcode]}) #{soap_fault[:faultstring]}"
+      elsif soap_fault.keys.include? :code
+        "(#{soap_fault[:code][:value]}) #{soap_fault[:reason][:text]}"
       end
     end
 

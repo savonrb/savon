@@ -7,6 +7,6 @@ describe Savon do
     client = Savon::Client.new @endpoint
     client.request.basic_auth "user", "password"
     response = client.do_something!
-    response.to_hash[:return][:success].should == true
+    response.to_hash[:authenticate_response][:return][:success].should == true
   end
 end

@@ -22,6 +22,9 @@
   * Julian also added a way to explicitly specify the order of Hash keys and values, so you should now be able
     to work with services requiring a specific order of input parameters while still using Hash input.
     For example: client.find_user { |soap| soap.body = { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+  * Savon::Response#to_hash now returns the content inside of "soap:Body" instead of trying to go one level
+    deeper and return it's content. The previous implementation only worked when the "soap:Body" element
+    contained a single child. See: http://github.com/rubiii/savon/issues#issue/17
   * Added Savon::SOAP#namespace as a shortcut for setting the "xmlns:wsdl" namespace.
     Usage example: soap.namespace = "http://example.com"
 

@@ -6,19 +6,12 @@ class Hash
   # Error message for spurious :@inorder elements.
   InOrderSpurious = "Spurious elements in :@inorder %s"
 
-  # Expects an Array of Regexp Objects of which every Regexp recursively
-  # matches a key to be accessed. Returns the value of the last Regexp filter
-  # found in the Hash or an empty Hash in case the path of Regexp filters
-  # did not match the Hash structure.
-  def find_regexp(regexp)
-    regexp = [regexp] unless regexp.kind_of? Array
-    result = dup
-
-    regexp.each do |pattern|
-      result_key = result.keys.find { |key| key.to_s.match pattern }
-      result = result[result_key] ? result[result_key] : {}
-    end
-    result
+  # Returns the values from the 'soap:Body' element or an empty Hash
+  # in case the node could not be found.
+  def find_soap_body
+    envelope = self[self.keys.first] || {}
+    body_key = envelope.keys.find { |key| /.+:Body/ =~ key } rescue nil
+    body_key ? envelope[body_key].map_soap_response : {}
   end
 
   # Returns the Hash translated into SOAP request compatible XML.

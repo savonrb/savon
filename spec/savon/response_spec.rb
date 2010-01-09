@@ -93,11 +93,19 @@ describe Savon::Response do
     after { Savon::Response.raise_errors = true }
   end
 
-  it "can return the SOAP response body as a Hash" do
-    @response.to_hash[:return].should == ResponseFixture.authentication(:to_hash)
+  it "should return the SOAP response body as a Hash" do
+    @response.to_hash[:authenticate_response][:return].should ==
+      ResponseFixture.authentication(:to_hash)
   end
 
-  it "can return the raw SOAP response body" do
+  it "should return a Hash for a SOAP multiRef response" do
+    @response = Savon::Response.new http_response_mock(200, ResponseFixture.multi_ref, "OK")
+
+    @response.to_hash[:list_response].should be_a(Hash)
+    @response.to_hash[:multi_ref].should be_an(Array) 
+  end
+
+  it "should return the raw SOAP response body" do
     @response.to_xml.should == ResponseFixture.authentication
     @response.to_s.should == ResponseFixture.authentication
   end

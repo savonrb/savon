@@ -1,0 +1,39 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <soapenv:Body>
+      <ns1:listResponse soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ns1="http://ws.example.com">
+         <listReturn soapenc:arrayType="ns2:HistoryEntry[3]" xsi:type="soapenc:Array" xmlns:ns2="http://ws.example.com/ws/history" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+            <listReturn href="#id0"/>
+            <listReturn href="#id1"/>
+            <listReturn href="#id2"/>
+         </listReturn>
+      </ns1:listResponse>
+      <multiRef id="id1" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns5:HistoryEntry" xmlns:ns5="http://ws.example.com/ws/history" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+         <date xsi:type="xsd:dateTime">2009-09-22T13:47:23.000Z</date>
+         <location xsi:type="soapenc:string">Archive</location>
+         <mailId href="#id9"/>
+         <referenceId href="#id8"/>
+         <state xsi:type="soapenc:string">Original</state>
+         <subject xsi:type="soapenc:string">Mail from 09-22-2009: Misc</subject>
+      </multiRef>
+      <multiRef id="id0" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns6:HistoryEntry" xmlns:ns6="http://ws.example.com/ws/history" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+         <date xsi:type="xsd:dateTime">2009-04-30T06:38:34.000Z</date>
+         <location xsi:type="soapenc:string">Archive</location>
+         <mailId href="#id10"/>
+         <referenceId href="#id8"/>
+         <state xsi:type="soapenc:string">Original</state>
+         <subject xsi:type="soapenc:string">Mail from 04-29-2009: Technical support</subject>
+      </multiRef>
+      <multiRef id="id2" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="ns7:HistoryEntry" xmlns:ns7="http://ws.example.com/ws/history" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+         <date xsi:type="xsd:dateTime">2009-12-18T15:43:21.000Z</date>
+         <location xsi:type="soapenc:string">Archive</location>
+         <mailId href="#id11"/>
+         <referenceId href="#id8"/>
+         <state xsi:type="soapenc:string">Original</state>
+         <subject xsi:type="soapenc:string">Mail from 12-17-2009: Misc</subject>
+      </multiRef>
+      <multiRef id="id11" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="soapenc:int" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">972219</multiRef>
+      <multiRef id="id10" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="soapenc:int" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">708021</multiRef>
+      <multiRef id="id8" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="soapenc:int" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">0</multiRef>
+      <multiRef id="id9" soapenc:root="0" soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xsi:type="soapenc:int" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">855763</multiRef>
+   </soapenv:Body>
+</soapenv:Envelope>

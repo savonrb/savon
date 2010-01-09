@@ -23,6 +23,10 @@ class ResponseFixture
     @@soap_fault12 ||= load_fixture :soap_fault12
   end
 
+  def self.multi_ref
+    @@multi_ref ||= load_fixture :multi_ref
+  end
+
 private
 
   def self.load_fixture(fixture)

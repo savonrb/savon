@@ -2,26 +2,13 @@ require "spec_helper"
 
 describe Hash do
 
-  describe "find_regexp" do
-    before do
-      @soap_fault_hash = { "soap:Envelope" => { "soap:Body" => { "soap:Fault" => {
-        "faultcode" => "soap:Server", "faultstring" => "Fault occurred while processing."
-      } } } }
+  describe "find_soap_body" do
+    it "returns the content from the 'soap:Body' element" do
+      { "soap:Envelope" => { "soap:Body" => "content" } }.find_soap_body.should == "content"
     end
 
-    it "returns an empty Hash in case it did not find the specified value" do
-      result = @soap_fault_hash.find_regexp "soap:Fault"
-
-      result.should be_a(Hash)
-      result.should be_empty
-    end
-
-    it "returns the value of the last Regexp filter found in the Hash" do
-      @soap_fault_hash.find_regexp([".+:Envelope", ".+:Body"]).
-        should == @soap_fault_hash["soap:Envelope"]["soap:Body"]
-
-      @soap_fault_hash.find_regexp([/.+:Envelope/, /.+:Body/, /.+Fault/]).
-        should == @soap_fault_hash["soap:Envelope"]["soap:Body"]["soap:Fault"]
+    it "returns an empty Hash in case the 'soap:Body' element could not be found" do
+      { "some_hash" => "content" }.find_soap_body.should == {}
     end
   end
 
