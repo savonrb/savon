@@ -60,6 +60,16 @@ module Savon
     # Returns the proxy URI.
     attr_reader :proxy
 
+    # Returns the HTTP headers for a SOAP request.
+    def headers
+      @headers ||= {}
+    end
+
+    # Sets the HTTP headers for a SOAP request.
+    def headers=(headers)
+      @headers = headers if headers.kind_of? Hash
+    end
+
     # Sets the +username+ and +password+ for HTTP basic authentication.
     def basic_auth(username, password)
       @basic_auth = [username, password]
@@ -98,7 +108,7 @@ module Savon
     # Logs the SOAP request.
     def log_request
       log "SOAP request: #{@soap.endpoint}"
-      log http_header.map { |key, value| "#{key}: #{value}" }.join(", ")
+      log headers.merge(soap_headers).map { |key, value| "#{key}: #{value}" }.join(", ")
       log @soap.to_xml
     end
 
@@ -113,7 +123,7 @@ module Savon
     def request(type)
       request = case type
         when :wsdl then Net::HTTP::Get.new wsdl_endpoint
-        when :soap then Net::HTTP::Post.new @soap.endpoint.path, http_header
+        when :soap then Net::HTTP::Post.new @soap.endpoint.path, headers.merge(soap_headers)
       end
       request.basic_auth *@basic_auth if @basic_auth
       yield request if block_given?
@@ -126,8 +136,8 @@ module Savon
       "#{@endpoint.path}?#{@endpoint.query}"
     end
 
-    # Returns a Hash containing the header for an HTTP request.
-    def http_header
+    # Returns a Hash containing the SOAP headers for an HTTP request.
+    def soap_headers
       { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
     end
 

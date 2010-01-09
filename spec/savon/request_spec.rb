@@ -51,6 +51,17 @@ describe Savon::Request do
     @request.proxy.should == URI("")
   end
 
+  it "should have a getter for the HTTP headers which defaults to an empty Hash" do
+    @request.headers.should == {}
+  end
+
+  it "should have a setter for the HTTP headers" do
+    headers = { "some" => "thing" }
+
+    @request.headers = headers
+    @request.headers.should == headers
+  end
+
   it "should return the Net::HTTP object" do
     @request.http.should be_kind_of(Net::HTTP)
   end
