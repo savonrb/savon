@@ -1,3 +1,7 @@
+== 0.7.1 (2010-01-10)
+  * The Hash of HTTP headers for SOAP calls is now public via Savon::Request#headers.
+    Patch for: http://github.com/rubiii/savon/issues/#issue/8
+
 == 0.7.0 (2010-01-09)
   This version comes with several changes to the public API!
   Pay attention to the following list and read the updated Wiki: http://wiki.github.com/rubiii/savon
