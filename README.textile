@@ -24,7 +24,7 @@ p. More information: "Client":http://wiki.github.com/rubiii/savon/client
 
 h2. Calling a SOAP action
 
-p. Assuming your service applies to the "Defaults":http://wiki.github.com/rubiii/savon/defaults, you can now call any available SOAP action.
+p. Assuming your service applies to the defaults, you can now call any available SOAP action.
 
 bc. response = client.get_all_users
 
@@ -71,5 +71,5 @@ More information: "Errors":http://wiki.github.com/rubiii/savon/errors
 
 h2. Logging
 
-p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behaviour.
+p. Savon logs each request and response to STDOUT. But there are a couple of options to change the default behavior.
 More information: "Logging":http://wiki.github.com/rubiii/savon/logging
