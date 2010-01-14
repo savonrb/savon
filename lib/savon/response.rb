@@ -52,6 +52,9 @@ module Savon
       @response.body
     end
 
+    # Returns the HTTP response object
+    attr_reader :response
+	
     alias :to_s :to_xml
 
   private
