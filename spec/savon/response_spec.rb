@@ -110,6 +110,13 @@ describe Savon::Response do
     @response.to_s.should == ResponseFixture.authentication
   end
 
+  it "should return the Net::HTTP response object" do
+    @response.http.should be_a(Mocha::Mock)
+    @response.http.should respond_to(:code)
+    @response.http.should respond_to(:message)
+    @response.http.should respond_to(:body)
+  end
+
   def savon_response_with(error_type)
     mock = case error_type
       when :soap_fault   then http_response_mock 200, ResponseFixture.soap_fault

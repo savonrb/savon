@@ -19,8 +19,8 @@ module Savon
     end
 
     # Expects a Net::HTTPResponse and handles errors.
-    def initialize(response)
-      @response = response
+    def initialize(http)
+      @http = http
 
       handle_soap_fault
       handle_http_error
@@ -44,16 +44,16 @@ module Savon
 
     # Returns the SOAP response body as a Hash.
     def to_hash
-      @body ||= Crack::XML.parse(@response.body).find_soap_body
+      @body ||= Crack::XML.parse(@http.body).find_soap_body
     end
 
     # Returns the SOAP response XML.
     def to_xml
-      @response.body
+      @http.body
     end
 
-    # Returns the HTTP response object
-    attr_reader :response
+    # Returns the HTTP response object.
+    attr_reader :http
 	
     alias :to_s :to_xml
 
@@ -88,9 +88,9 @@ module Savon
     # Handles HTTP errors. Raises a Savon::HTTPError unless the default
     # behavior of raising errors was turned off.
     def handle_http_error
-      if @response.code.to_i >= 300
-        @http_error = "#{@response.message} (#{@response.code})"
-        @http_error << ": #{@response.body}" unless @response.body.empty?
+      if @http.code.to_i >= 300
+        @http_error = "#{@http.message} (#{@http.code})"
+        @http_error << ": #{@http.body}" unless @http.body.empty?
         raise Savon::HTTPError, http_error if self.class.raise_errors?
       end
     end
