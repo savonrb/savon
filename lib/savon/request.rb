@@ -122,18 +122,12 @@ module Savon
     # to an optional block.
     def request(type)
       request = case type
-        when :wsdl then Net::HTTP::Get.new wsdl_endpoint
-        when :soap then Net::HTTP::Post.new @soap.endpoint.path, headers.merge(soap_headers)
+        when :wsdl then Net::HTTP::Get.new @endpoint.to_s
+        when :soap then Net::HTTP::Post.new @soap.endpoint.to_s, headers.merge(soap_headers)
       end
       request.basic_auth *@basic_auth if @basic_auth
       yield request if block_given?
       request
-    end
-
-    # Returns the WSDL endpoint.
-    def wsdl_endpoint
-      return @endpoint.path unless @endpoint.query
-      "#{@endpoint.path}?#{@endpoint.query}"
     end
 
     # Returns a Hash containing the SOAP headers for an HTTP request.
