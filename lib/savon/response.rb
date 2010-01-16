@@ -44,7 +44,7 @@ module Savon
 
     # Returns the SOAP response body as a Hash.
     def to_hash
-      @body ||= Crack::XML.parse(@http.body).find_soap_body
+      @body ||= (Crack::XML.parse(@http.body) rescue {}).find_soap_body
     end
 
     # Returns the SOAP response XML.
