@@ -5,11 +5,20 @@ module Savon
   # Represents parameters for WSSE authentication.
   class WSSE
 
+    # Base address for WSSE docs.
+    BaseAddress = "http://docs.oasis-open.org/wss/2004/01"
+
     # Namespace for WS Security Secext.
-    WSENamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    WSENamespace = BaseAddress + "/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 
     # Namespace for WS Security Utility.
-    WSUNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    WSUNamespace = BaseAddress + "/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+
+    # URI for "wsse:Password/@Type" #PasswordText.
+    PasswordTextURI = BaseAddress + "/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+
+    # URI for "wsse:Password/@Type" #PasswordDigest.
+    PasswordDigestURI = BaseAddress + "/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
     # Global WSSE username.
     @@username = nil
@@ -93,7 +102,7 @@ module Savon
           xml.wsse :Username, username
           xml.wsse :Nonce, nonce
           xml.wsu :Created, timestamp
-          xml.wsse :Password, password_node
+          xml.wsse :Password, password_node, :Type => password_type
         end
       end
     end
@@ -106,6 +115,11 @@ module Savon
 
       token = nonce + timestamp + password
       Base64.encode64(Digest::SHA1.hexdigest(token)).chomp!
+    end
+
+    # Returns the URI for the "wsse:Password/@Type" attribute.
+    def password_type
+      digest? ? PasswordDigestURI : PasswordTextURI
     end
 
     # Returns a WSSE nonce.

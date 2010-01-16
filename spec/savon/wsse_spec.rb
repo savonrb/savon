@@ -2,12 +2,8 @@ require "spec_helper"
 
 describe Savon::WSSE do
   before do
-    Savon::WSSE.username = nil
-    Savon::WSSE.password = nil
-    Savon::WSSE.digest = false
-
-    @wsse = Savon::WSSE.new
-    @username, @password = "gorilla", "secret"
+    Savon::WSSE.username, Savon::WSSE.password, Savon::WSSE.digest = nil, nil, false
+    @wsse, @username, @password = Savon::WSSE.new, "gorilla", "secret"
   end
 
   it "contains the namespace for WS Security Secext" do
@@ -84,6 +80,7 @@ describe Savon::WSSE do
         header.should include_security_namespaces
         header.should include(@username)
         header.should include(@password)
+        header.should include(Savon::WSSE::PasswordTextURI)
       end
 
       it "with WSSE credentials specified via defaults" do
@@ -94,6 +91,7 @@ describe Savon::WSSE do
         header.should include_security_namespaces
         header.should include(@username)
         header.should include(@password)
+        header.should include(Savon::WSSE::PasswordTextURI)
       end
     end
 
@@ -107,6 +105,7 @@ describe Savon::WSSE do
         header.should include_security_namespaces
         header.should include(@username)
         header.should_not include(@password)
+        header.should include(Savon::WSSE::PasswordDigestURI)
       end
 
       it "via defaults" do
@@ -118,6 +117,7 @@ describe Savon::WSSE do
         header.should include_security_namespaces
         header.should include(@username)
         header.should_not include(@password)
+        header.should include(Savon::WSSE::PasswordDigestURI)
       end
     end
 
