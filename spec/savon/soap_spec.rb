@@ -46,6 +46,14 @@ describe Savon::SOAP do
     @soap.input = "FindUserRequest"
   end
 
+  it "has both getter and setter for global SOAP headers" do
+    header = { "some" => "header" }
+    Savon::SOAP.header = header
+    Savon::SOAP.header.should == header
+
+    Savon::SOAP.header = {}
+  end
+
   it "has both getter and setter for the SOAP header" do
     @soap.header.should be_a(Hash)
     @soap.header.should be_empty
@@ -74,6 +82,14 @@ describe Savon::SOAP do
       @soap.version = 2
       @soap.namespaces.should == { "xmlns:env" => Savon::SOAP::SOAPNamespace[2] }
     end
+  end
+
+  it "has both getter and setter for global namespaces" do
+    namespaces = { "some" => "namespace" }
+    Savon::SOAP.namespaces = namespaces
+    Savon::SOAP.namespaces.should == namespaces
+
+    Savon::SOAP.namespaces = {}
   end
 
   it "has a convenience method for setting the 'xmlns:wsdl' namespace" do
@@ -125,6 +141,22 @@ describe Savon::SOAP do
     it "uses the SOAP namespace for the default SOAP version otherwise" do
       Savon::SOAP.version = 2
       @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
+    end
+
+    it "merges the global and per request headers" do
+      Savon::SOAP.header = { "API-KEY" => "secret", "SOME-KEY" => "something" }
+      @soap.header["SOME-KEY"] = "somethingelse"
+
+      @soap.to_xml.should include("<API-KEY>secret</API-KEY>")
+      @soap.to_xml.should include("<SOME-KEY>somethingelse</SOME-KEY>")
+    end
+
+    it "merges the global and per request namespaces" do
+      Savon::SOAP.namespaces = { "xmlns:wsdl" => "namespace", "xmlns:v1" => "v1namespace" }
+      @soap.namespaces["xmlns:v1"] = "newV1namespace"
+
+      @soap.to_xml.should include('xmlns:wsdl="namespace"')
+      @soap.to_xml.should include('xmlns:v1="newV1namespace"')
     end
   end
 

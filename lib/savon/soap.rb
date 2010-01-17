@@ -27,6 +27,30 @@ module Savon
       @@version = version if Savon::SOAPVersions.include? version
     end
 
+    # Sets the global SOAP header. Expected to be a Hash that can be translated
+    # to XML via Hash.to_soap_xml or any other Object responding to to_s.
+    def self.header=(header)
+      @@header = header
+    end
+
+    # Returns the global SOAP header. Defaults to an empty Hash.
+    def self.header
+      @@header ||= {}
+    end
+
+    # Sets the global namespaces. Expected to be a Hash containing the
+    # namespaces (keys) and the corresponding URI's (values).
+    def self.namespaces=(namespaces)
+      @@namespaces = namespaces if namespaces.kind_of? Hash
+    end
+
+    # Returns the global namespaces. A Hash containing the namespaces (keys)
+    # and the corresponding URI's (values).
+    def self.namespaces
+      @@namespaces ||= {}
+    end
+
+    # Initialzes the SOAP object.
     def initialize
       @builder = Builder::XmlMarkup.new
     end
@@ -70,8 +94,8 @@ module Savon
     # (keys) and the corresponding URI's (values).
     attr_writer :namespaces
 
-    # Returns the namespaces. A Hash containing the namespaces (keys) and
-    # the corresponding URI's (values).
+    # Returns the namespaces. A Hash containing the namespaces (keys)
+    # and the corresponding URI's (values).
     def namespaces
       @namespaces ||= { "xmlns:env" => SOAPNamespace[version] }
     end
@@ -94,7 +118,7 @@ module Savon
     # Returns the SOAP envelope XML.
     def to_xml
       unless @xml_body
-        @xml_body = @builder.env :Envelope, namespaces do |xml|
+        @xml_body = @builder.env :Envelope, all_namespaces do |xml|
           xml_header xml
           xml_body xml
         end
@@ -107,7 +131,16 @@ module Savon
     # Adds a SOAP XML header to a given +xml+ Object.
     def xml_header(xml)
       xml.env(:Header) do
-        xml << (header.to_soap_xml rescue header.to_s) + wsse_header
+        xml << all_header + wsse_header
+      end
+    end
+
+    # Returns a String containing the global and per request header.
+    def all_header
+      if self.class.header.kind_of?(Hash) && header.kind_of?(Hash)
+        self.class.header.merge(header).to_soap_xml
+      else
+        self.class.header.to_s + header.to_s
       end
     end
 
@@ -118,6 +151,11 @@ module Savon
           xml << (@body.to_soap_xml rescue @body.to_s)
         end
       end
+    end
+
+    # Returns a Hash containing the global and per request namespaces.
+    def all_namespaces
+      self.class.namespaces.merge namespaces
     end
 
     # Returns an Array of SOAP input names to append to the :wsdl namespace.
