@@ -3,8 +3,8 @@ require "rake"
 
 Gem::Specification.new do |s|
   s.name = "savon"
-  s.version = "0.7.1"
-  s.date = "2010-01-10"
+  s.version = "0.7.2"
+  s.date = "2010-01-17"
 
   s.authors = "Daniel Harrington"
   s.email = "me@rubiii.com"
