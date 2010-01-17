@@ -143,9 +143,17 @@ describe Savon::SOAP do
       @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
     end
 
-    it "merges the global and per request headers" do
+    it "merges global and per request headers defined as Hashes" do
       Savon::SOAP.header = { "API-KEY" => "secret", "SOME-KEY" => "something" }
       @soap.header["SOME-KEY"] = "somethingelse"
+
+      @soap.to_xml.should include("<API-KEY>secret</API-KEY>")
+      @soap.to_xml.should include("<SOME-KEY>somethingelse</SOME-KEY>")
+    end
+
+    it "joins global and per request headers defined as Strings" do
+      Savon::SOAP.header = "<API-KEY>secret</API-KEY>"
+      @soap.header = "<SOME-KEY>somethingelse</SOME-KEY>"
 
       @soap.to_xml.should include("<API-KEY>secret</API-KEY>")
       @soap.to_xml.should include("<SOME-KEY>somethingelse</SOME-KEY>")
