@@ -72,7 +72,8 @@ module Savon
     Sections = %w(definitions types message portType binding service)
 
     def initialize
-      @depth, @operations = 0, {}
+      @path, @operations = [], {}
+      @namespaces = {}
     end
 
     # Returns the namespace URI.
@@ -86,19 +87,49 @@ module Savon
 
     # Hook method called when the stream parser encounters a starting tag.
     def tag_start(tag, attrs)
-      @depth += 1
-      tag = tag.strip_namespace
-
-      @section = tag.to_sym if @depth <= 2 && Sections.include?(tag)
+      
+      # read xml namespaces if root element
+      read_namespaces(attrs) if @path.empty?
+      
+      tag,namespace = tag.split(":").reverse
+      
+      @path << tag
+      
+      if @section == :binding && tag=="binding"
+        # ensure that we are in an wsdl/soap namespace
+        @section = nil unless @namespaces[namespace] == "http://schemas.xmlsoap.org/wsdl/soap/"
+      end
+      
+      @section = tag.to_sym if Sections.include?(tag) if depth <= 2
+      
       @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
       @soap_endpoint ||= URI(attrs["location"]) if @section == :service && tag == "address"
-
+      
       operation_from tag, attrs if @section == :binding && tag == "operation"
+    end
+    
+    def depth
+      @path.size
+    end
+    
+    # read namespace definitions from given hash
+    def read_namespaces(attrs)
+      for key, value in attrs
+          if key.start_with?("xmlns:")
+            @namespaces[key.split(':').last] = value
+          end
+        end
     end
 
     # Hook method called when the stream parser encounters a closing tag.
     def tag_end(tag)
-      @depth -= 1
+      @path.pop
+      
+      if @section == :binding && @input && tag.strip_namespace == "operation"
+        # no soapAction attribute found till now
+        operation_from tag, "soapAction" => @input
+      end
+      
     end
 
     # Stores available operations from a given tag +name+ and +attrs+.
@@ -111,6 +142,7 @@ module Savon
 
         @operations[@input.snakecase.to_sym] = { :action => @action, :input => @input }
         @input, @action = nil, nil
+        @input = nil
       end
     end
 
