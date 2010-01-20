@@ -86,4 +86,9 @@ describe Savon::Request do
     soap_response.body.should == ResponseFixture.authentication
   end
 
+  it "should not include host when creating HTTP requests" do
+    request = @request.send(:request, :wsdl)
+    request.path.should_not include("example.com")
+  end
+
 end
