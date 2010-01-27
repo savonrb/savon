@@ -29,7 +29,7 @@ describe Object do
         DateTime.new(2012, 03, 22, 16, 22, 33)
       end
 
-      singleton.to_soap_value.should == "2012-03-22T16:22:33"
+      singleton.to_soap_value.should == "2012-03-22T16:22:33Z"
     end
 
     it "calls to_s unless the Object responds to to_datetime" do

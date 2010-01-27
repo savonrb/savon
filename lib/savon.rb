@@ -4,7 +4,7 @@ module Savon
   SOAPVersions = [1, 2]
 
   # SOAP xs:dateTime format.
-  SOAPDateTimeFormat = "%Y-%m-%dT%H:%M:%S"
+  SOAPDateTimeFormat = "%Y-%m-%dT%H:%M:%SZ"
 
   # SOAP xs:dateTime Regexp.
   SOAPDateTimeRegexp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/

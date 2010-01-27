@@ -53,7 +53,7 @@ describe Hash do
 
     it "converts DateTime objects to xs:dateTime compliant Strings" do
       { :before => DateTime.new(2012, 03, 22, 16, 22, 33) }.to_soap_xml.
-        should == "<before>" << "2012-03-22T16:22:33" << "</before>"
+        should == "<before>" << "2012-03-22T16:22:33Z" << "</before>"
     end
 
     it "converts Objects responding to to_datetime to xs:dateTime compliant Strings" do
@@ -63,7 +63,7 @@ describe Hash do
       end
 
       { :before => singleton }.to_soap_xml.
-        should == "<before>" << "2012-03-22T16:22:33" << "</before>"
+        should == "<before>" << "2012-03-22T16:22:33Z" << "</before>"
     end
 
     it "calls to_s on Strings even if they respond to to_datetime" do
