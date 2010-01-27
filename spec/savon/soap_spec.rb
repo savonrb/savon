@@ -43,7 +43,7 @@ describe Savon::SOAP do
   end
 
   it "has a setter for the SOAP input" do
-    @soap.input = "FindUserRequest"
+    @soap.input = "FindUserRequest", { "username" => "auser", "anotherAttr" => "someVal" }
   end
 
   it "has both getter and setter for global SOAP headers" do
@@ -127,6 +127,13 @@ describe Savon::SOAP do
       @soap.to_xml.should include('xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"')
       @soap.to_xml.should include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
       @soap.to_xml.should include('<wsdl:authenticate><id>666</id></wsdl:authenticate>')
+    end
+    
+    it "returns the appropriate XML for a SOAP Body's root node when parameters are present" do
+      @soap.input = "authenticate", { "protocol" => "tls", "version" => "1.2" }
+      @soap.body = { :id => 666 }
+      
+      @soap.to_xml.should include('<wsdl:authenticate protocol="tls" version="1.2"><id>666</id></wsdl:authenticate>')
     end
 
     it "caches the XML, returning the same Object every time" do
