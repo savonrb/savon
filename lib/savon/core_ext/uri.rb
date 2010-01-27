@@ -1,5 +1,5 @@
 module URI
-  class HTTP
+  class Generic
 
     # Returns whether the URI hints to SSL.
     def ssl?
