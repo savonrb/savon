@@ -6,7 +6,7 @@ module Savon
   class Request
 
     # Content-Types by SOAP version.
-    ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
+    ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
 
     # Whether to log HTTP requests.
     @@log = true
@@ -108,7 +108,7 @@ module Savon
     # Logs the SOAP request.
     def log_request
       log "SOAP request: #{@soap.endpoint}"
-      log headers.merge(soap_headers).map { |key, value| "#{key}: #{value}" }.join(", ")
+      log soap_headers.merge(headers).map { |key, value| "#{key}: #{value}" }.join(", ")
       log @soap.to_xml
     end
 
@@ -123,7 +123,7 @@ module Savon
     def request(type)
       request = case type
         when :wsdl then Net::HTTP::Get.new @endpoint.to_s
-        when :soap then Net::HTTP::Post.new @soap.endpoint.to_s, headers.merge(soap_headers)
+        when :soap then Net::HTTP::Post.new @soap.endpoint.to_s, soap_headers.merge(headers)
       end
       request.basic_auth *@basic_auth if @basic_auth
       yield request if block_given?

@@ -4,10 +4,8 @@ describe Savon::Request do
   before { @request = Savon::Request.new EndpointHelper.wsdl_endpoint }
 
   it "contains the ContentType for each supported SOAP version" do
-    Savon::SOAPVersions.each do |soap_version|
-      Savon::Request::ContentType[soap_version].should be_a(String)
-      Savon::Request::ContentType[soap_version].should_not be_empty
-    end
+    content_type = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
+    content_type.each { |version, type| Savon::Request::ContentType[version].should == type }
   end
 
   # defaults to log request and response. disabled for spec execution
