@@ -5,6 +5,7 @@ class EndpointHelper
     case type
       when :no_namespace       then "http://nons.example.com/Service?wsdl"
       when :namespaced_actions then "http://nsactions.example.com/Service?wsdl"
+      when :geotrust           then "https://test-api.geotrust.com/webtrust/query.jws?WSDL"
       else                          soap_endpoint(type)
     end
   end

@@ -30,3 +30,13 @@
     :get_clients:
       :input: "GetClients"
       :action: "http://api.example.com/api/User.GetClients"
+
+:geotrust:
+  :namespace_uri: "http://api.geotrust.com/webtrust/query"
+  :operations:
+    :get_quick_approver_list:
+      :action: "GetQuickApproverList"
+      :input: "GetQuickApproverList"
+    :hello:
+      :input: "hello"
+      :action: "hello"

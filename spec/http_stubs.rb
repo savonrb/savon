@@ -21,3 +21,6 @@ FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:no_namespace), :body =>
 
 # WSDL request returning a WSDL document with namespaced SOAP actions.
 FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:namespaced_actions), :body => WSDLFixture.namespaced_actions
+
+# WSDL request returning a WSDL document with geotrust SOAP actions.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:geotrust), :body => WSDLFixture.geotrust
