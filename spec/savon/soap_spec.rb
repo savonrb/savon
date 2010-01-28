@@ -137,7 +137,7 @@ describe Savon::SOAP do
     it "returns the appropriate XML for a SOAP Body's root node when parameters are present" do
       @soap.input = "authenticate", { "protocol" => "tls", "version" => "1.2" }
       @soap.body = { :id => 666 }
-      
+
       @soap.to_xml.should include('<wsdl:authenticate protocol="tls" version="1.2"><id>666</id></wsdl:authenticate>')
     end
 
