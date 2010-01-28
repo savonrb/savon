@@ -29,6 +29,6 @@ require "rubygems"
 end
 
 # core files
-%w(core_ext wsse soap request response wsdl client).each do |file|
+%w(core_ext wsse soap request response wsdl_stream wsdl client).each do |file|
   require File.dirname(__FILE__) + "/savon/#{file}"
 end
