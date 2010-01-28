@@ -124,9 +124,14 @@ describe Savon::SOAP do
       @soap.namespaces["xmlns:wsdl"] = "http://v1_0.ws.auth.order.example.com/"
       @soap.body = { :id => 666 }
 
-      @soap.to_xml.should include('xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"')
-      @soap.to_xml.should include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
-      @soap.to_xml.should include('<wsdl:authenticate><id>666</id></wsdl:authenticate>')
+      xml = @soap.to_xml
+      xml.should include('xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"')
+      xml.should include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
+      xml.should include('<wsdl:authenticate><id>666</id></wsdl:authenticate>')
+    end
+
+    it "does not include an empty header tag" do
+      @soap.to_xml.should_not include('env:Header')
     end
 
     it "caches the XML, returning the same Object every time" do

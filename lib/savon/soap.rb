@@ -119,7 +119,7 @@ module Savon
     def to_xml
       unless @xml_body
         @xml_body = @builder.env :Envelope, all_namespaces do |xml|
-          xml_header xml
+          xml.env(:Header) { xml << all_header } unless all_header.empty?
           xml_body xml
         end
       end
@@ -128,20 +128,19 @@ module Savon
 
   private
 
-    # Adds a SOAP XML header to a given +xml+ Object.
-    def xml_header(xml)
-      xml.env(:Header) do
-        xml << all_header + wsse_header
-      end
-    end
-
     # Returns a String containing the global and per request header.
     def all_header
       if self.class.header.kind_of?(Hash) && header.kind_of?(Hash)
-        self.class.header.merge(header).to_soap_xml
+        custom_header = self.class.header.merge(header).to_soap_xml
       else
-        self.class.header.to_s + header.to_s
+        custom_header = self.class.header.to_s + header.to_s
       end
+      custom_header + wsse_header
+    end
+
+    # Returns the WSSE header or an empty String in case WSSE was not set.
+    def wsse_header
+      @wsse.respond_to?(:header) ? @wsse.header : ""
     end
 
     # Adds a SOAP XML body to a given +xml+ Object.
@@ -165,11 +164,6 @@ module Savon
       return [input.to_sym] unless input.blank?
       return [action.to_sym] unless action.blank?
       []
-    end
-
-    # Returns the WSSE header or an empty String in case WSSE was not set.
-    def wsse_header
-      @wsse.respond_to?(:header) ? @wsse.header : ""
     end
 
   end
