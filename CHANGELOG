@@ -1,10 +1,22 @@
+== 0.7.3 (UPCOMING)
+  * Added support for Geotrust-style WSDL documents (Julian Kornberger <github.corny@digineo.de>).
+  * Make HTTP requests include path and query only. This was breaking requests via proxy as scheme and host
+    were repeated (Adrian Mugnolo <adrian@mugnolo.com>)
+  * Avoid warning on 1.8.7 and 1.9.1 (Adrian Mugnolo <adrian@mugnolo.com>).
+  * Fix for issue #29 (WSSE Created Bug?). Default to UTC to xs:dateTime value for WSSE authentication.
+  * Fix for issue #28 (Undefined Method ssl? on URI::Generic).
+  * Fix for issue #27 (http content-type defaults to utf-8). The Content-Type now defaults to UTF-8.
+  * Modification to allow assignment of an Array with an input name and an optional Hash of values to soap.input.
+    Patches issue #30 (stanleydrew <andrewmbenton@gmail.com>).
+  * Fix for issue #25 (header-tag should not be sent if not set).
+
 == 0.7.2 (2010-01-17)
   * Exposed the Net::HTTP response (added by Kevin Ingolfsland). Use the "http" accessor (response.http) on your
     Savon::Response to access the Net::HTTP response object.
-  * Fix for Github issue #21 (savon is stripping ?SOAP off the end of WSDL locations).
-  * Fix for Github issue #22 (REXML::ParseException parsing 401 Unauthorized response body).
-  * Fix for Github issue #19 (Unable to set attribute in name-spaced WSSE password element).
-  * Added support for global header and namespaces. See Github issue #9 (Setting headers and namespaces).
+  * Fix for issue #21 (savon is stripping ?SOAP off the end of WSDL locations).
+  * Fix for issue #22 (REXML::ParseException parsing 401 Unauthorized response body).
+  * Fix for issue #19 (Unable to set attribute in name-spaced WSSE password element).
+  * Added support for global header and namespaces. See issue #9 (Setting headers and namespaces).
 
 == 0.7.1 (2010-01-10)
   * The Hash of HTTP headers for SOAP calls is now public via Savon::Request#headers.
