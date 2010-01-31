@@ -1,4 +1,4 @@
-== 0.7.3 (UPCOMING)
+== 0.7.3 (2010-01-31)
   * Added support for Geotrust-style WSDL documents (Julian Kornberger <github.corny@digineo.de>).
   * Make HTTP requests include path and query only. This was breaking requests via proxy as scheme and host
     were repeated (Adrian Mugnolo <adrian@mugnolo.com>)
