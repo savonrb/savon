@@ -18,17 +18,13 @@ module Savon
 end
 
 # standard libs
-%w(logger net/https openssl base64 digest/sha1 rexml/document).each do |lib|
-  require lib
-end
+stdlibs = %w(logger net/https openssl base64 digest/sha1 rexml/document)
+stdlibs.each { |stdlib| require stdlib }
 
 # gems
-require "rubygems"
-%w(builder crack/xml).each do |gem|
-  require gem
-end
+gems = %w(builder crack/xml)
+gems.each { |gem| require gem }
 
 # core files
-%w(core_ext wsse soap request response wsdl_stream wsdl client).each do |file|
-  require File.dirname(__FILE__) + "/savon/#{file}"
-end
+files = %w(core_ext wsse soap request response wsdl_stream wsdl client)
+files.each { |file| require "savon/#{file}" }
