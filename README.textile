@@ -2,11 +2,7 @@ h1. Savon
 
 h4. Heavy metal Ruby SOAP client library
 
-p. "RDoc":http://rdoc.info/projects/rubiii/savon | "Wiki":http://wiki.github.com/rubiii/savon | "ToDo":http://rubiii.tadalist.com/lists/1459816/public | "Metrics":http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git
-
-h2. Warning
-
-p. Savon 0.7.0 comes with several changes to the public API. Pay attention to the CHANGELOG and the updated Wiki.
+p. "RDoc":http://rdoc.info/projects/rubiii/savon | "Wiki":http://wiki.github.com/rubiii/savon | "Metrics":http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git
 
 h2. Installation
 
