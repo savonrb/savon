@@ -51,7 +51,7 @@ module Savon
     # Reads namespace definitions from a given +attrs+ Hash.
     def read_namespaces(attrs)
       attrs.each do |key, value|
-        @namespaces[key.split(":").last] = value if key.start_with? "xmlns:"
+        @namespaces[key.split(":").last] = value if key =~ /^xmlns:/
       end
     end
 
