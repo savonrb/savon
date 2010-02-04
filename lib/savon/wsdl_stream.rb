@@ -32,7 +32,7 @@ module Savon
 
       if @section == :binding && tag == "binding"
         # ensure that we are in an wsdl/soap namespace
-        @section = nil unless @namespaces[namespace] == "http://schemas.xmlsoap.org/wsdl/soap/"
+        @section = nil unless @namespaces[namespace] =~ /^http:\/\/schemas.xmlsoap.org\/wsdl\/soap/
       end
 
       @section = tag.to_sym if Sections.include?(tag) && depth <= 2
