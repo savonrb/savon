@@ -6,13 +6,22 @@ module Savon
   class SOAP
 
     # SOAP namespaces by SOAP version.
-    SOAPNamespace = {
+    Namespace = {
       1 => "http://schemas.xmlsoap.org/soap/envelope/",
       2 => "http://www.w3.org/2003/05/soap-envelope"
     }
 
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml", 2 => "application/soap+xml" }
+
+    # Supported SOAP versions.
+    Versions = [1, 2]
+
+    # SOAP xs:dateTime format.
+    DateTimeFormat = "%Y-%m-%dT%H:%M:%SZ"
+
+    # SOAP xs:dateTime Regexp.
+    DateTimeRegexp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
 
     # The global SOAP version.
     @@version = 1
@@ -24,7 +33,7 @@ module Savon
 
     # Sets the global SOAP version.
     def self.version=(version)
-      @@version = version if Savon::SOAPVersions.include? version
+      @@version = version if Versions.include? version
     end
 
     # Sets the global SOAP header. Expected to be a Hash that can be translated
@@ -51,7 +60,9 @@ module Savon
     end
 
     # Initialzes the SOAP object.
-    def initialize
+    def initialize(operation, endpoint)
+      @action, @input = operation[:action], operation[:input]
+      @endpoint = endpoint.kind_of?(URI) ? endpoint : URI(endpoint)
       @builder = Builder::XmlMarkup.new
     end
 
@@ -97,7 +108,7 @@ module Savon
     # Returns the namespaces. A Hash containing the namespaces (keys)
     # and the corresponding URI's (values).
     def namespaces
-      @namespaces ||= { "xmlns:env" => SOAPNamespace[version] }
+      @namespaces ||= { "xmlns:env" => Namespace[version] }
     end
 
     # Convenience method for setting the "xmlns:wsdl" namespace.
@@ -107,7 +118,7 @@ module Savon
 
     # Sets the SOAP version.
     def version=(version)
-      @version = version if Savon::SOAPVersions.include? version
+      @version = version if Versions.include? version
     end
 
     # Returns the SOAP version. Defaults to the global default.

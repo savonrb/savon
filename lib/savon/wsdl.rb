@@ -7,7 +7,7 @@ module Savon
 
     # Initializer, expects a Savon::Request.
     def initialize(request)
-      @request = request
+      @request, @enabled = request, true
     end
 
     # Sets whether to use the WSDL.
@@ -15,7 +15,7 @@ module Savon
 
     # Returns whether to use the WSDL. Defaults to +true+.
     def enabled?
-      @enabled.nil? ? true : @enabled
+      @enabled
     end
 
     # Returns the namespace URI of the WSDL.
@@ -41,8 +41,15 @@ module Savon
 
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
-      return true if soap_actions.include? method
+      return true if !enabled? || soap_actions.include?(method)
       super
+    end
+
+    # Returns a SOAP operation Hash containing the SOAP action and input
+    # for a given +soap_call+.
+    def operation_from(soap_action)
+      return operations[soap_action] if enabled?
+      { :action => soap_action.to_soap_key, :input => soap_action.to_soap_key }
     end
 
     # Returns the raw WSDL document.

@@ -125,6 +125,7 @@ module Savon
         when :wsdl then Net::HTTP::Get.new @endpoint.request_uri
         when :soap then Net::HTTP::Post.new @soap.endpoint.request_uri, soap_headers.merge(headers)
       end
+
       request.basic_auth(*@basic_auth) if @basic_auth
       yield request if block_given?
       request
@@ -137,12 +138,7 @@ module Savon
 
     # Logs a given +message+.
     def log(message)
-      self.class.logger.send self.class.log_level, message if log?
-    end
-
-    # Returns whether to log.
-    def log?
-      self.class.log? && self.class.logger.respond_to?(self.class.log_level)
+      self.class.logger.send self.class.log_level, message if self.class.log?
     end
 
   end

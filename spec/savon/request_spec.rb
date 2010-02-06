@@ -76,8 +76,8 @@ describe Savon::Request do
   end
 
   it "executes a SOAP request and returns the Net::HTTP response" do
-    soap = Savon::SOAP.new
-    soap.endpoint = URI EndpointHelper.wsdl_endpoint
+    some_operation = WSDLFixture.authentication(:operations)[:authenticate]
+    soap = Savon::SOAP.new some_operation, EndpointHelper.soap_endpoint
     soap_response = @request.soap soap
 
     soap_response.should be_a(Net::HTTPResponse)

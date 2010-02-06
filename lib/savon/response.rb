@@ -5,6 +5,9 @@ module Savon
   # Represents the HTTP and SOAP response.
   class Response
 
+    # The maximum HTTP response code considered to be OK.
+    MaxNonErrorResponseCode = 299
+
     # The global setting of whether to raise errors.
     @@raise_errors = true
 
@@ -28,7 +31,7 @@ module Savon
 
     # Returns whether there was a SOAP fault.
     def soap_fault?
-      @soap_fault ? true : false
+      !@soap_fault.blank?
     end
 
     # Returns the SOAP fault message.
@@ -36,7 +39,7 @@ module Savon
 
     # Returns whether there was an HTTP error.
     def http_error?
-      @http_error ? true : false
+      !@http_error.blank?
     end
 
     # Returns the HTTP error message.
@@ -88,7 +91,7 @@ module Savon
     # Handles HTTP errors. Raises a Savon::HTTPError unless the default
     # behavior of raising errors was turned off.
     def handle_http_error
-      if @http.code.to_i >= 300
+      if @http.code.to_i > MaxNonErrorResponseCode
         @http_error = "#{@http.message} (#{@http.code})"
         @http_error << ": #{@http.body}" unless @http.body.empty?
         raise Savon::HTTPError, http_error if self.class.raise_errors?

@@ -2,22 +2,40 @@ require "spec_helper"
 
 describe Savon::SOAP do
   before do
-    @soap = Savon::SOAP.new
-    @soap.action = WSDLFixture.authentication(:operations)[:authenticate][:action]
+    @authenticate_operation = WSDLFixture.authentication(:operations)[:authenticate]
+    @soap = Savon::SOAP.new @authenticate_operation, EndpointHelper.soap_endpoint
   end
 
   it "contains the SOAP namespace for each supported SOAP version" do
-    Savon::SOAPVersions.each do |soap_version|
-      Savon::SOAP::SOAPNamespace[soap_version].should be_a(String)
-      Savon::SOAP::SOAPNamespace[soap_version].should_not be_empty
+    Savon::SOAP::Versions.each do |soap_version|
+      Savon::SOAP::Namespace[soap_version].should be_a(String)
+      Savon::SOAP::Namespace[soap_version].should_not be_empty
     end
   end
 
   it "contains the Content-Types for each supported SOAP version" do
-    Savon::SOAPVersions.each do |soap_version|
+    Savon::SOAP::Versions.each do |soap_version|
       Savon::SOAP::ContentType[soap_version].should be_a(String)
       Savon::SOAP::ContentType[soap_version].should_not be_empty
     end
+  end
+
+  it "contains an Array of supported SOAP versions" do
+    Savon::SOAP::Versions.should be_an(Array)
+    Savon::SOAP::Versions.should_not be_empty
+  end
+
+  it "contains the xs:dateTime format" do
+    Savon::SOAP::DateTimeFormat.should be_a(String)
+    Savon::SOAP::DateTimeFormat.should_not be_empty
+
+    DateTime.new(2012, 03, 22, 16, 22, 33).strftime(Savon::SOAP::DateTimeFormat).
+      should == "2012-03-22T16:22:33Z"
+  end
+
+  it "contains a Regexp matching the xs:dateTime format" do
+    Savon::SOAP::DateTimeRegexp.should be_a(Regexp)
+    (Savon::SOAP::DateTimeRegexp === "2012-03-22T16:22:33").should be_true
   end
 
   it "defaults to SOAP 1.1" do
@@ -36,7 +54,7 @@ describe Savon::SOAP do
   end
 
   it "is has both getter and setter for the SOAP action" do
-    @soap.action.should == WSDLFixture.authentication(:operations)[:authenticate][:action]
+    @soap.action.should == @authenticate_operation[:action]
 
     @soap.action = "someAction"
     @soap.action.should == "someAction"
@@ -75,12 +93,12 @@ describe Savon::SOAP do
 
   describe "has a getter for namespaces" do
     it "which defaults to include the SOAP 1.1 namespace" do
-      @soap.namespaces.should == { "xmlns:env" => Savon::SOAP::SOAPNamespace[1] }
+      @soap.namespaces.should == { "xmlns:env" => Savon::SOAP::Namespace[1] }
     end
 
     it "which contains the SOAP 1.2 namespace if specified" do
       @soap.version = 2
-      @soap.namespaces.should == { "xmlns:env" => Savon::SOAP::SOAPNamespace[2] }
+      @soap.namespaces.should == { "xmlns:env" => Savon::SOAP::Namespace[2] }
     end
   end
 
@@ -101,9 +119,8 @@ describe Savon::SOAP do
   end
 
   it "has both getter and setter for the SOAP endpoint" do
-    @soap.endpoint.should be_nil
-
     soap_endpoint = URI EndpointHelper.soap_endpoint
+
     @soap.endpoint = soap_endpoint
     @soap.endpoint.should == soap_endpoint
   end
@@ -147,12 +164,12 @@ describe Savon::SOAP do
 
     it "uses the SOAP namespace for the specified SOAP version" do
       @soap.version = 2
-      @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
+      @soap.to_xml.should include(Savon::SOAP::Namespace[2])
     end
 
     it "uses the SOAP namespace for the default SOAP version otherwise" do
       Savon::SOAP.version = 2
-      @soap.to_xml.should include(Savon::SOAP::SOAPNamespace[2])
+      @soap.to_xml.should include(Savon::SOAP::Namespace[2])
     end
 
     it "merges global and per request headers defined as Hashes" do

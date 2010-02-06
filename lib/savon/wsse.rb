@@ -9,16 +9,16 @@ module Savon
     BaseAddress = "http://docs.oasis-open.org/wss/2004/01"
 
     # Namespace for WS Security Secext.
-    WSENamespace = BaseAddress + "/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    WSENamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 
     # Namespace for WS Security Utility.
-    WSUNamespace = BaseAddress + "/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    WSUNamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
     # URI for "wsse:Password/@Type" #PasswordText.
-    PasswordTextURI = BaseAddress + "/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+    PasswordTextURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordText"
 
     # URI for "wsse:Password/@Type" #PasswordDigest.
-    PasswordDigestURI = BaseAddress + "/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+    PasswordDigestURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
     # Global WSSE username.
     @@username = nil
@@ -30,8 +30,7 @@ module Savon
 
     # Sets the global WSSE username.
     def self.username=(username)
-      @@username = username.to_s if username.respond_to? :to_s
-      @@username = nil if username.nil?
+      @@username = username.nil? ? nil : username.to_s
     end
 
     # Global WSSE password.
@@ -44,8 +43,7 @@ module Savon
 
     # Sets the global WSSE password.
     def self.password=(password)
-      @@password = password.to_s if password.respond_to? :to_s
-      @@password = nil if password.nil?
+      @@password = password.nil? ? nil : password.to_s
     end
 
     # Global setting of whether to use WSSE digest.
@@ -63,8 +61,7 @@ module Savon
 
     # Sets the WSSE username per request.
     def username=(username)
-      @username = username.to_s if username.respond_to? :to_s
-      @username = nil if username.nil?
+      @username = username.nil? ? nil : username.to_s
     end
 
     # Returns the WSSE username. Defaults to the global setting.
@@ -74,8 +71,7 @@ module Savon
 
     # Sets the WSSE password per request.
     def password=(password)
-      @password = password.to_s if password.respond_to? :to_s
-      @password = nil if password.nil?
+      @password = password.nil? ? nil : password.to_s
     end
 
     # Returns the WSSE password. Defaults to the global setting.
@@ -129,7 +125,7 @@ module Savon
 
     # Returns a WSSE timestamp.
     def timestamp
-      @timestamp ||= Time.now.strftime Savon::SOAPDateTimeFormat
+      @timestamp ||= Time.now.strftime Savon::SOAP::DateTimeFormat
     end
 
   end

@@ -26,14 +26,26 @@ class String
     str
   end
 
+  # Returns whether the String starts with a given +prefix+.
+  def starts_with?(prefix)
+    prefix = prefix.to_s
+    self[0, prefix.length] == prefix
+  end unless defined? starts_with?
+
+  # Returns whether the String ends with a given +suffix+.
+  def ends_with?(suffix)
+    suffix = suffix.to_s
+    self[-suffix.length, suffix.length] == suffix      
+  end unless defined? ends_with?
+
   # Returns the String without namespace.
   def strip_namespace
-    gsub /(.+:)(.+)/, '\2'
+    split(":").last
   end
 
   # Translates SOAP response values to more convenient Ruby Objects.
   def map_soap_response
-    return DateTime.parse( self ) if Savon::SOAPDateTimeRegexp === self
+    return DateTime.parse( self ) if Savon::SOAP::DateTimeRegexp === self
     return true if self.strip.downcase == "true"
     return false if self.strip.downcase == "false"
     self

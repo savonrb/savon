@@ -29,30 +29,20 @@ module Savon
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      soap_call = soap_call_from method.to_s
-      super if @wsdl.enabled? && !@wsdl.respond_to?(soap_call)
+      soap_action = soap_action_from method.to_s
+      super unless @wsdl.respond_to? soap_action
 
-      setup_objects operation_from(soap_call), &block
+      setup_objects @wsdl.operation_from(soap_action), &block
       Response.new @request.soap(@soap)
     end
 
     # Sets whether to use Savon::WSDL by a given +method+ name and
     # removes exclamation marks from the given +method+ name.
-    def soap_call_from(method)
-      if method[-1, 1] == "!"
-        @wsdl.enabled = false
-        method[0, method.length-1].to_sym
-      else
-        @wsdl.enabled = true
-        method.to_sym
-      end
-    end
+    def soap_action_from(method)
+      @wsdl.enabled = !method.ends_with?("!")
 
-    # Returns a SOAP operation Hash containing the SOAP action and input
-    # for a given +soap_call+.
-    def operation_from(soap_call)
-      return @wsdl.operations[soap_call] if @wsdl.enabled?
-      { :action => soap_call.to_soap_key, :input => soap_call.to_soap_key }
+      method.chop! if method.ends_with?("!")
+      method.to_sym
     end
 
     # Returns the SOAP endpoint.
@@ -63,11 +53,8 @@ module Savon
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE.
     # Yields them to a given +block+ in case one was given.
     def setup_objects(operation, &block)
-      @soap, @wsse = SOAP.new, WSSE.new
-      @soap.action, @soap.input, @soap.endpoint = operation[:action], operation[:input], soap_endpoint
-
+      @soap, @wsse = SOAP.new(operation, soap_endpoint), WSSE.new
       yield_objects &block if block
-
       @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
       @soap.wsse = @wsse
     end
