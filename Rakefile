@@ -10,7 +10,6 @@ Spec::Rake::SpecTask.new do |spec|
   spec.spec_opts << "--color"
   spec.libs += ["lib", "spec"]
   spec.rcov = true
-  spec.rcov_dir = "rcov"
 end
 
 RCov::VerifyTask.new(:spec_verify => :spec) do |verify|

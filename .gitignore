@@ -2,6 +2,6 @@
 nbproject
 pkg
 rdoc
-rcov
+coverage
 .loadpath
 .project
