@@ -53,15 +53,22 @@ describe Savon::SOAP do
     @soap.wsse = Savon::WSSE.new
   end
 
-  it "is has both getter and setter for the SOAP action" do
+  it "has both getter and setter for the SOAP action" do
     @soap.action.should == @authenticate_operation[:action]
 
     @soap.action = "someAction"
     @soap.action.should == "someAction"
   end
 
-  it "has a setter for the SOAP input" do
-    @soap.input = "FindUserRequest", { "username" => "auser", "anotherAttr" => "someVal" }
+  it "has both getter and setter for the SOAP input" do
+    @soap.input.should == @authenticate_operation[:input]
+
+    @soap.input = "whatever"
+    @soap.input.should == "whatever"
+
+    args = "FindUserRequest", { "username" => "auser", "anotherAttr" => "someVal" }
+    @soap.input = *args
+    @soap.input.should == [*args]
   end
 
   it "has both getter and setter for global SOAP headers" do

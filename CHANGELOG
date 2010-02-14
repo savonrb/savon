@@ -1,5 +1,6 @@
 == 0.7.5 (UPCOMING)
   * Fix for issue #34 (soap_actions returns empty for wsdl12).
+  * Fix for issue #36 (Custom WSDL actions broken).
 
 == 0.7.4 (2010-02-02)
   * Fix for issue #33 (undefined method 'start_with?').

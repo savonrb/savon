@@ -172,9 +172,15 @@ module Savon
     # Defaults to use the name of the SOAP action and may be an empty Array
     # in case the specified SOAP input seems invalid.
     def input_array
-      return input.map { |i| i.is_a?(Hash) ? i : i.to_sym } unless input.blank?
-      return [action.to_sym] unless action.blank?
-      []
+      if input.kind_of? Array
+        [input[0].to_sym, input[1]]
+      elsif !input.blank?
+        [input.to_sym]
+      elsif !action.blank?
+        [action.to_sym]
+      else
+        []
+      end
     end
 
   end
