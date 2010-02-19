@@ -1,4 +1,4 @@
-== 0.7.5 (UPCOMING)
+== 0.7.5 (2010-02-19)
   * Fix for issue #34 (soap_actions returns empty for wsdl12).
   * Fix for issue #36 (Custom WSDL actions broken).
   * Added feature requested in issue #35 (Setting an attribute on an element?).

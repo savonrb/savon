@@ -3,18 +3,18 @@ require "rake"
 
 Gem::Specification.new do |s|
   s.name = "savon"
-  s.version = "0.7.4"
-  s.date = "2010-02-02"
+  s.version = "0.7.5"
+  s.date = "2010-02-19"
 
   s.authors = "Daniel Harrington"
   s.email = "me@rubiii.com"
   s.homepage = "http://github.com/rubiii/savon"
   s.summary = "Heavy metal Ruby SOAP client library"
 
-  s.files = FileList["[A-Z]*", "{lib,spec}/**/*.{rb,xml}"]
+  s.files = FileList["[A-Z]*", "{lib,spec}/**/*.{rb,xml}", "readme/**/*.rdoc"]
   s.test_files = FileList["spec/**/*.rb"]
 
-  s.extra_rdoc_files = ["README.textile"]
+  s.extra_rdoc_files = ["README.rdoc"]
   s.rdoc_options = ["--charset=UTF-8", "--title", "Savon", "--line-numbers", "--inline-source"]
 
   s.add_dependency "builder", ">= 2.1.2"
