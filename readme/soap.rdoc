@@ -12,10 +12,10 @@ The body method lets you specify parameters to be received by the SOAP action. T
     soap.body = "<id>666</id>"
   end
 
-In case your service requires the elements to be in a specific order (and not working with Ruby 1.9), you have two options. The first is to specify your body as an XML String. The second is to add an "@inorder" key containing an Array of elements in the specific order to your Hash. Here's an example:
+In case your service requires the elements to be in a specific order, you have two options. The first is to specify your body as an XML String. The second is to add an ":order!" key containing an Array of elements in the specific order to your Hash. Here's an example:
 
   response = client.add_user do |soap|
-    soap.body = { :user => { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+    soap.body = { :user => { :name => "Lucy", :id => 666, :order! => [:id, :name] } }
   end
 
 == Version
@@ -68,3 +68,4 @@ The request is going to look something like this:
   =>     <wsdl:GetAllUsersRequest></wsdl:GetAllUsersRequest>
   =>   </env:Body>
   => </env:Envelope>
+
