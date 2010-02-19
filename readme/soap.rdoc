@@ -1,0 +1,70 @@
+Savon::SOAP represents the SOAP request. Pass a block to your SOAP call and the SOAP object is passed to it as the first argument. The object allows setting the SOAP version, header, body and namespaces per request.
+
+== Body
+
+The body method lets you specify parameters to be received by the SOAP action. The value is expected to be a Hash (which will be translated to XML via Hash.to_soap_xml) or an XML String.
+
+  response = client.get_user_by_id do |soap|
+    soap.body = { :id => 666 }
+  end
+
+  response = client.get_user_by_id do |soap|
+    soap.body = "<id>666</id>"
+  end
+
+In case your service requires the elements to be in a specific order (and not working with Ruby 1.9), you have two options. The first is to specify your body as an XML String. The second is to add an "@inorder" key containing an Array of elements in the specific order to your Hash. Here's an example:
+
+  response = client.add_user do |soap|
+    soap.body = { :user => { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+  end
+
+== Version
+
+Savon defaults to SOAP 1.1. In case your service uses SOAP 1.2, you can use the version method to change the default.
+
+  response = client.get_all_users do |soap|
+    soap.version = 2
+  end
+
+You can also change the default to SOAP 1.2 for all request:
+
+  Savon::SOAP.version = 2
+
+== Header
+
+If you need to add custom XML into the SOAP header, you can use the header method. The value is expected to be a Hash (which will be translated to XML via Hash.to_soap_xml) or an XML String.
+
+  response = client.get_all_users do |soap|
+    soap.header["specialApiKey"] = "secret"
+  end
+
+  response = client.get_all_users do |soap|
+    soap.header = "<specialApiKey>secret</specialApiKey>"
+  end
+
+== Namespaces
+
+The namespaces method contains a Hash of namespaces for the SOAP envelope.
+
+  response = client.get_all_users do |soap|
+    soap.namespaces["xmlns:whatever"] = "http://example.com"
+  end
+
+== Input
+
+You can change the name of the SOAP input node in case you need to.
+
+  response = client.get_all_users do |soap|
+    soap.input = "GetAllUsersRequest"
+  end
+
+The request is going to look something like this:
+
+  => <env:Envelope
+  =>     xmlns:wsdl="http://example.com/user/1.0/UserService"
+  =>     xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  =>   <env:Header></env:Header>
+  =>   <env:Body>
+  =>     <wsdl:GetAllUsersRequest></wsdl:GetAllUsersRequest>
+  =>   </env:Body>
+  => </env:Envelope>

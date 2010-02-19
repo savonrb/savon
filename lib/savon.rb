@@ -9,10 +9,22 @@ module Savon
 end
 
 # standard libs
-%w(logger net/https base64 digest/sha1 rexml/document).each { |stdlib| require stdlib }
+require "logger"
+require "net/https"
+require "base64"
+require "digest/sha1"
+require "rexml/document"
 
-# gems
-%w(builder crack/xml).each { |gem| require gem }
+# gem dependencies
+require "builder"
+require "crack/xml"
 
 # core files
-%w(core_ext wsse soap request response wsdl_stream wsdl client).each { |file| require "savon/#{file}" }
+require "savon/core_ext"
+require "savon/wsse"
+require "savon/soap"
+require "savon/request"
+require "savon/response"
+require "savon/wsdl_stream"
+require "savon/wsdl"
+require "savon/client"

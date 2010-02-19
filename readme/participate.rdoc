@@ -1,0 +1,21 @@
+== Provide feedback
+
+Let me know about your experiences using Savon. What's good, what's not? {Open an issue}[http://github.com/rubiii/savon/issues] if you encounter a bug. Feedback is always appreciated.
+
+== Spread the word
+
+Let others know about Savon by talking, tweeting or blogging about it. The more people use Savon, the more stable it becomes.
+
+== Fix bugs or implement features
+
+You're welcome to fork the project to fix bugs, implement features, etc. But please make sure to follow "the rules":
+
+* Follow the coding and naming conventions of the code
+* Do not edit the CHANGELOG and .gemspec files
+* Test all the fucking time!
+
+Also, if you're thinking about adding some big new feature or if you're not sure about how to implement it, please just get in touch.
+
+Please note that Savon {does not require Rubygems}[http://gist.github.com/54177]. So make sure your environment is set up to load the package manager of your choice. In order to run autospec, you could use the following alias:
+
+  alias autospec='RUBYLIB=./lib RUBYOPT=-rubygems AUTOFEATURE=true autospec'

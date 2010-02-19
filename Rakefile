@@ -1,9 +1,8 @@
 require "rake"
 require "spec/rake/spectask"
 require "spec/rake/verify_rcov"
-require "rake/rdoctask"
 
-task :default => :spec_verify
+task :default => :spec
 
 Spec::Rake::SpecTask.new do |spec|
   spec.spec_files = FileList["spec/{savon}/**/*_spec.rb"]
@@ -29,16 +28,22 @@ task :spec_integration do
   end
 end
 
-desc "" # make this task invisible for "rake -T"
+desc "" # make this task invisible
 Spec::Rake::SpecTask.new(:run_integration_spec) do |spec|
   spec.spec_files = FileList["spec/{integration}/**/*_spec.rb"]
   spec.spec_opts << "--color"
   spec.libs += ["lib", "spec"]
 end
 
-Rake::RDocTask.new do |rdoc|
-  rdoc.title = "Savon"
-  rdoc.rdoc_dir = "rdoc"
-  rdoc.rdoc_files.include("lib/**/*.rb")
-  rdoc.options = ["--line-numbers", "--inline-source"]
+begin
+  require "hanna/rdoctask"
+
+  Rake::RDocTask.new do |rdoc|
+    rdoc.title = "Savon - Heavy metal Ruby SOAP client library"
+    rdoc.rdoc_dir = "doc"
+    rdoc.rdoc_files.include("**/*.rdoc").include("lib/**/*.rb")
+    rdoc.options << "--line-numbers"
+  end
+rescue LoadError
+  puts "'gem install hanna' for documentation"
 end

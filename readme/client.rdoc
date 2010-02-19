@@ -1,0 +1,18 @@
+Savon::Client is the main object to connect to a SOAP service. It includes methods to access both Savon::WSDL and Savon::Request objects.
+
+== Instantiate Savon::Client
+
+Depending on whether you aim to use Savon with or without Savon::WSDL, you need to instantiate Savon::Client by passing in the WSDL or SOAP endpoint.
+
+  # Client instance with a WSDL endpoint
+  client = Savon::Client.new "http://example.com/UserService?wsdl"
+
+  # Client instance with a SOAP endpoint (for using Savon without a WSDL)
+  client = Savon::Client.new "http://example.com/UserService"
+
+== Using a proxy server
+
+You can specify the URI to a proxy server via optional Hash arguments.
+
+  client = Savon::Client.new "http://example.com/UserService?wsdl",
+  :proxy => "http://proxy.example.com"

@@ -1,0 +1,39 @@
+Savon::WSDL represents the WSDL of your service, including information like the namespace URI and available SOAP actions.
+
+== Raw WSDL document
+
+  client.wsdl.to_s
+
+== Available SOAP actions
+
+  client.wsdl.soap_actions
+  => [:get_all_users, :get_user_by_id]
+
+== Namespace URI
+
+  client.wsdl.namespace_uri
+  => "http://ws.userservice.example.com"
+
+== Disable Savon::WSDL
+
+Especially with large services (i.e. Ebay), getting and parsing the WSDL document can really slow down your request. So in order to gain performance, you can disable the use of Savon::WSDL by simply appending an exclamation mark (!) to your SOAP call.
+
+  client.get_all_users!
+
+Disabling Savon::WSDL comes with some disadvantages though. First of all, you need to know and specify the namespace URI of your service per request.
+
+  client.get_user_by_id! do |soap|
+    soap.namespace = "http://example.com/UserService"
+    soap.body = { :id => 666 }
+  end
+
+Without a WSDL, Savon also has to guess the name of the SOAP action and input. It takes the name of the method called on its client instance, converts it to lowerCamelCase and uses the result. The SOAP call above expects a SOAP action with an original name of "getUserById".
+
+If that doesn't fit the naming conventions of your service, you need to specify the names yourself. Here is an example request for a SOAP action called "GetUserById", requiring an input tag named "GetUserByIdRequest".
+
+  client.get_user_by_id! do |soap|
+    soap.action = "GetUserById"
+    soap.input = "GetUserByIdRequest"
+    soap.namespace = "http://example.com/UserService"
+    soap.body = { :id => 666 }
+  end

@@ -1,0 +1,46 @@
+The response is wrapped in an object to give you various options of handling it.
+
+== SOAP fault
+
+Assuming the default behavior of raising errors is disabled, you can ask the response object if there was a SOAP fault or an HTTP error and get the SOAP fault or HTTP error message.
+
+  response.soap_fault?
+  => true
+
+  response.soap_fault
+  => "(soap:Server) Fault occurred while processing."
+
+  response.http_error?
+  => true
+
+  response.http_error
+  => "Not found (404)"
+
+== Response as XML
+
+To get the raw SOAP response XML, you can call to_xml or to_s on the response object.
+
+  response.to_xml
+  => "<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  => "..."
+  => "</soap:Envelope>"
+
+== Response as a Hash 
+
+You can also let Savon translate the SOAP response body to a Hash.
+
+  response.to_hash
+  => { :findUserByIdResponse => {
+  =>   :id => "666",
+  =>   :username => "thedude"
+  =>   :firstname => "The",
+  =>   :lastname => "Dude",
+  =>   :active => true
+  => }
+
+== Net::HTTP response
+
+If for reason you need to access the Net::HTTP response object ... you can.
+
+  bc. response.http
+  => #<Net::HTTPOK:0x7f749a1aa4a8>

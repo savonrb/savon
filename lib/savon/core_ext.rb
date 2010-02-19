@@ -1,2 +1,8 @@
 # core ext files
-%w(object string symbol datetime hash uri net_http).each { |file| require "savon/core_ext/#{file}" }
+require "savon/core_ext/object"
+require "savon/core_ext/string"
+require "savon/core_ext/symbol"
+require "savon/core_ext/datetime"
+require "savon/core_ext/hash"
+require "savon/core_ext/uri"
+require "savon/core_ext/net_http"
