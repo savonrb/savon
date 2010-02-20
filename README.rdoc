@@ -60,3 +60,4 @@ More information: {Errors}[http://wiki.github.com/rubiii/savon/errors]
 
 Savon logs each request and response to STDOUT. But there are a couple of options to change the default behavior.
 More information: {Logging}[http://wiki.github.com/rubiii/savon/logging]
+
