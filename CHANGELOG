@@ -2,6 +2,7 @@
   * Fix for issue #34 (soap_actions returns empty for wsdl12).
   * Fix for issue #36 (Custom WSDL actions broken).
   * Added feature requested in issue #35 (Setting an attribute on an element?).
+  * Changed the key for specifying the order of tags from :@inorder to :order!
 
 == 0.7.4 (2010-02-02)
   * Fix for issue #33 (undefined method 'start_with?').
