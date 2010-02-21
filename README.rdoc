@@ -16,7 +16,7 @@ Instantiate Savon::Client, passing in the WSDL of your service.
 
   client = Savon::Client.new "http://example.com/UserService?wsdl"
 
-For production, it is highly recommended to not use Savon::WSDL. Information about {how to disable the WSDL}[link:files/readme/wsdl_rdoc.html].
+For production, it is highly recommended to not use Savon::WSDL. Information on {how to disable the WSDL}[http://savon.rubiii.com/docs/latest/classes/Savon/WSDL.html].
 
 == Calling a SOAP action
 
@@ -56,10 +56,10 @@ Savon::Response represents the HTTP and SOAP response. It contains and raises er
 == HTTP errors and SOAP faults
 
 Savon raises a Savon::SOAPFault in case of a SOAP fault and a Savon::HTTPError in case of an HTTP error.
-More information: {Errors}[http://wiki.github.com/rubiii/savon/errors]
+More information: {Errors}[http://savon.rubiii.com/docs/latest/classes/Savon/Response.html]
 
 == Logging
 
 Savon logs each request and response to STDOUT. But there are a couple of options to change the default behavior.
-More information: {Logging}[http://wiki.github.com/rubiii/savon/logging]
+More information: {Logging}[http://savon.rubiii.com/docs/latest/classes/Savon/Request.html]
 
