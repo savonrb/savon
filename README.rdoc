@@ -2,7 +2,7 @@
 
 ==== Heavy metal Ruby SOAP client library
 
-{Documentation}[http://savon.rubiii.com/docs] | {Metrics}[http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git]
+{Documentation}[http://savon.rubiii.com] | {Metrics}[http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git]
 
 == Installation
 
