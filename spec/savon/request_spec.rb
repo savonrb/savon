@@ -22,8 +22,8 @@ describe Savon::Request do
   end
 
   it "has both getter and setter for the logger to use (global setting)" do
-    Savon::Request.logger = nil
-    Savon::Request.logger.should be_nil
+    Savon::Request.logger = {}
+    Savon::Request.logger.should be_a(Hash)
     Savon::Request.logger = Logger.new STDOUT
   end
 

@@ -2,7 +2,7 @@
 
 ==== Heavy metal Ruby SOAP client library
 
-{RDoc}[http://rdoc.info/projects/rubiii/savon] | {Wiki}[http://wiki.github.com/rubiii/savon] | {Metrics}[http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git]
+{Documentation}[http://savon.rubiii.com/docs] | {Metrics}[http://getcaliper.com/caliper/project?repo=git://github.com/rubiii/savon.git]
 
 == Installation
 
@@ -15,6 +15,8 @@ Savon expects you to be familiar with SOAP, WSDL and tools like soapUI.
 Instantiate Savon::Client, passing in the WSDL of your service.
 
   client = Savon::Client.new "http://example.com/UserService?wsdl"
+
+For production, it is highly recommended to not use Savon::WSDL. Information about {how to disable the WSDL}[link:files/readme/wsdl_rdoc.html].
 
 == Calling a SOAP action
 
@@ -60,3 +62,4 @@ More information: {Errors}[http://wiki.github.com/rubiii/savon/errors]
 
 Savon logs each request and response to STDOUT. But there are a couple of options to change the default behavior.
 More information: {Logging}[http://wiki.github.com/rubiii/savon/logging]
+

@@ -2,50 +2,49 @@ module Savon
 
   # == Savon::Request
   #
-  # Handles both WSDL and SOAP HTTP requests.
+  # Savon::Request handles both WSDL and SOAP requests.
+  #
+  # == The Net::HTTP object
+  #
+  # You can access the Net::HTTP object used for both WSDL and SOAP requests via:
+  #
+  #   client.request.http
+  #
+  # Here's an example of how to set open and read timeouts on the Net::HTTP object.
+  #
+  #   client.request.http.open_timeout = 30
+  #   client.request.http.read_timeout = 30
+  #
+  # Please refer to the {Net::HTTP documentation}[http://ruby-doc.org/stdlib/libdoc/net/http/rdoc/]
+  # for more information.
+  #
+  # == HTTP basic authentication
+  #
+  # Setting credentials for HTTP basic authentication:
+  #
+  #   client.request.basic_auth "username", "password"
+  #
+  # == SSL client authentication
+  #
+  # You can use the methods provided by Net::HTTP to set SSL client authentication or use a shortcut:
+  #
+  #   client.request.http.ssl_client_auth(
+  #     :cert => OpenSSL::X509::Certificate.new(File.read("client_cert.pem")),
+  #     :key => OpenSSL::PKey::RSA.new(File.read("client_key.pem"), "password if one exists"),
+  #     :ca_file => "cacert.pem",
+  #     :verify_mode => OpenSSL::SSL::VERIFY_PEER
+  #   )
+  #
+  # == HTTP headers
+  #
+  # There's an accessor for the Hash of HTTP headers sent with any SOAP call:
+  #
+  #   client.request.headers["custom"] = "header"
   class Request
+    include Logger
 
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
-
-    # Whether to log HTTP requests.
-    @@log = true
-
-    # The default logger.
-    @@logger = Logger.new STDOUT
-
-    # The default log level.
-    @@log_level = :debug
-
-    # Sets whether to log HTTP requests.
-    def self.log=(log)
-      @@log = log
-    end
-
-    # Returns whether to log HTTP requests.
-    def self.log?
-      @@log
-    end
-
-    # Sets the logger.
-    def self.logger=(logger)
-      @@logger = logger
-    end
-
-    # Returns the logger.
-    def self.logger
-      @@logger
-    end
-
-    # Sets the log level.
-    def self.log_level=(log_level)
-      @@log_level = log_level
-    end
-
-    # Returns the log level.
-    def self.log_level
-      @@log_level
-    end
 
     # Expects a SOAP +endpoint+ String. Also accepts an optional Hash
     # of +options+ for specifying a proxy server.
@@ -83,8 +82,7 @@ module Savon
       http.start { |h| h.request request(:wsdl) }
     end
 
-    # Executes a SOAP request using a given Savon::SOAP instance and
-    # returns the Net::HTTP response.
+    # Executes a SOAP request using a given Savon::SOAP instance and returns the Net::HTTP response.
     def soap(soap)
       @soap = soap
       http.endpoint @soap.endpoint.host, @soap.endpoint.port
@@ -118,8 +116,7 @@ module Savon
       log @response.body
     end
 
-    # Returns a Net::HTTP request for a given +type+. Yields the request
-    # to an optional block.
+    # Returns a Net::HTTP request for a given +type+. Yields the request to an optional block.
     def request(type)
       request = case type
         when :wsdl then Net::HTTP::Get.new @endpoint.request_uri
@@ -134,11 +131,6 @@ module Savon
     # Returns a Hash containing the SOAP headers for an HTTP request.
     def soap_headers
       { "Content-Type" => ContentType[@soap.version], "SOAPAction" => @soap.action }
-    end
-
-    # Logs a given +message+.
-    def log(message)
-      self.class.logger.send self.class.log_level, message if self.class.log?
     end
 
   end

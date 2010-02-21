@@ -2,7 +2,73 @@ module Savon
 
   # Savon::WSDL
   #
-  # Represents the WSDL document.
+  # Savon::WSDL represents the WSDL of your service, including information like the namespace URI,
+  # the SOAP endpoint and available SOAP actions.
+  #
+  # == The WSDL document
+  #
+  # Retrieve the raw WSDL document:
+  #
+  #   client.wsdl.to_s
+  #
+  # == Available SOAP actions
+  #
+  # Get an array of available SOAP actions:
+  #
+  #   client.wsdl.soap_actions
+  #   # => [:get_all_users, :get_user_by_id]
+  #
+  # == Namespace URI
+  #
+  # Get the namespace URI:
+  #
+  #   client.wsdl.namespace_uri
+  #   # => "http://ws.userservice.example.com"
+  #
+  # == SOAP endpoint
+  #
+  # Get the SOAP endpoint:
+  #
+  #   client.wsdl.soap_endpoint
+  #   # => "http://example.com"
+  #
+  # == Disable Savon::WSDL
+  #
+  # Especially with large services (i.e. Ebay), getting and parsing the WSDL document can really
+  # slow down your request. The WSDL is great for exploring a service, but it's recommended to
+  # disable it for production.
+  #
+  # When disabling the WSDL, you need to pay attention to certain differences:
+  #
+  # 1. You instantiate Savon::Client with the actual SOAP endpoint instead of pointing it to the
+  #    WSDL of your service.
+  # 2. You also need to manually specify the SOAP.namespace.
+  # 3. Append an exclamation mark (!) to your SOAP call:
+  #
+  #   client = Savon::Client.new "http://example.com"
+  #
+  #   client.get_user_by_id! do |soap|
+  #     soap.namespace = "http://example.com/UserService"
+  #     soap.body = { :id => 666 }
+  #   end
+  #
+  # Without the WSDL, Savon also has to guess the name of the SOAP action and input tag. It takes
+  # the name of the method called on its client instance, converts it from snake_case to lowerCamelCase
+  # and uses the result.
+  #
+  # The example above expects a SOAP action with an original name of "getUserById". If you service
+  # uses UpperCamelCase method names, you can just use the original name:
+  #
+  #   client.GetAllUsers!
+  #
+  # For special cases, you could also specify the SOAP.action and SOAP.input inside the block:
+  #
+  #   client.get_user_by_id! do |soap|
+  #     soap.namespace = "http://example.com/UserService"
+  #     soap.action = "GetUserById"
+  #     soap.input = "GetUserByIdRequest"
+  #     soap.body = { :id => 123 }
+  #   end
   class WSDL
 
     # Initializer, expects a Savon::Request.

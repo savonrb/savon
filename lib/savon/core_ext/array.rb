@@ -1,6 +1,6 @@
 class Array
 
-  # Translates the Array into SOAP request compatible XML. See: Hash#to_soap_xml.
+  # Translates the Array into SOAP compatible XML. See: Hash.to_soap_xml.
   def to_soap_xml(key)
     xml = Builder::XmlMarkup.new
 

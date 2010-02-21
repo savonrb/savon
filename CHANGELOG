@@ -1,3 +1,7 @@
+== 0.7.6 (UPCOMING)
+  * Moved documentation from the Github Wiki to the actual class files and established a much nicer
+    documentation combining examples and implementation (using Hanna) at: http://savon.rubiii.com
+
 == 0.7.5 (2010-02-19)
   * Fix for issue #34 (soap_actions returns empty for wsdl12).
   * Fix for issue #36 (Custom WSDL actions broken).

@@ -2,7 +2,7 @@ module Savon
 
   # Savon::WSDLStream
   #
-  # Stream listener for parsing the WSDL document.
+  # Savon::WSDLStream serves as a stream listener for parsing the WSDL document.
   class WSDLStream
 
     # The main sections of a WSDL document.

@@ -10,26 +10,47 @@ class Hash
 
   # Translates the Hash into SOAP request compatible XML.
   #
-  # === Example:
-  #
   #   { :find_user => { :id => 123, "wsdl:Key" => "api" } }.to_soap_xml
   #   # => "<findUser><id>123</id><wsdl:Key>api</wsdl:Key></findUser>"
   #
-  # Comes with a way to control the order of XML tags in case you're foced to do so (parameterOrder).
-  # Specify an optional Array under the :order! key reflecting the order of your keys.
-  # An ArgumentError is raised unless the Array contains the exact same/all keys of your Hash.
+  # ==== Mapping
   #
-  # === Example:
+  # * Hash keys specified as Symbols are converted to lowerCamelCase Strings
+  # * Hash keys specified as Strings are not converted and may contain namespaces
+  # * DateTime values are converted to xs:dateTime Strings
+  # * Objects responding to to_datetime (except Strings) are converted to xs:dateTime Strings
+  # * TrueClass and FalseClass objects are converted to "true" and "false" Strings
+  # * All other objects are expected to be converted to Strings using to_s
   #
-  #   { :find_user => { :name => "Eve", :id => 123, :order! => [:id, :name] } }.to_soap_xml
-  #   # => "<findUser><id>123</id><name>Eve</name></findUser>"
+  # An example:
   #
-  # You can also specify attributes for XML tags by via an optional Hash under the :attributes! key.
+  #   { :magic_request => {
+  #       :perform_move => true,
+  #       "perform_at" => DateTime.new(2010, 11, 22, 11, 22, 33)
+  #     }
+  #   }.to_soap_xml
   #
-  # === Example:
+  #   <magicRequest>
+  #     <performMove>true</performMove>
+  #     <perform_at>2012-06-11T10:42:21</perform_at>
+  #   </magicRequest>
   #
-  #   { :find_user => { :person => "Eve", :attributes! => { :person => { :id => 123 } } } }
-  #   # => "<findUser><person id="123">Eve</person></findUser>"
+  # ==== :order!
+  #
+  # In case your service requires the tags to be in a specific order (parameterOrder), you have two
+  # options. The first is to specify your body as an XML string. The second is to specify the order
+  # through an additional array stored under the +:order!+ key.
+  #
+  #   { :name => "Eve", :id => 123, :order! => [:id, :name] }.to_soap_xml
+  #   # => "<id>123</id><name>Eve</name>"
+  #
+  # ==== :attributes!
+  #
+  # If you need attributes, you could either go with an XML string or add another hash under the
+  # +:attributes!+ key.
+  #
+  #   { :person => "Eve", :attributes! => { :person => { :id => 666 } } }.to_soap_xml
+  #   # => '<person id="666">Eve</person>'
   def to_soap_xml
     xml = Builder::XmlMarkup.new
     attributes = delete(:attributes!) || {}

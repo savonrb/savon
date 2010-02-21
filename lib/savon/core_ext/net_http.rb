@@ -6,8 +6,7 @@ module Net
       @address, @port = address, port
     end
 
-    # Convenience method for setting SSL client authentication
-    # through a Hash of +options+.
+    # Convenience method for setting SSL client authentication through a Hash of +options+.
     def ssl_client_auth(options)
       self.use_ssl = true
       self.cert = options[:cert] if options[:cert]
