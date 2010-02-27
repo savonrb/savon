@@ -1,6 +1,6 @@
 module Savon
 
-  # == Savon::Client
+  # = Savon::Client
   #
   # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
   # both the Savon::WSDL and Savon::Request object.

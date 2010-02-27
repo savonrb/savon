@@ -1,6 +1,6 @@
 module Savon
 
-  # == Savon::SOAP
+  # = Savon::SOAP
   #
   # Savon::SOAP represents the SOAP request. Pass a block to your SOAP call and the SOAP object is
   # passed to it as the first argument. The object allows setting the SOAP version, header, body

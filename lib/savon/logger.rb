@@ -1,6 +1,6 @@
 module Savon
 
-  # Savon::Logger
+  # = Savon::Logger
   #
   # Savon::Logger can be mixed into classes to provide logging behavior.
   #

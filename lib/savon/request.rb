@@ -1,6 +1,6 @@
 module Savon
 
-  # == Savon::Request
+  # = Savon::Request
   #
   # Savon::Request handles both WSDL and SOAP requests.
   #

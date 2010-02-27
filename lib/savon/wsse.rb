@@ -1,6 +1,6 @@
 module Savon
 
-  # Savon::WSSE
+  # = Savon::WSSE
   #
   # Savon::WSSE represents WSSE authentication. Pass a block to your SOAP call and the WSSE object
   # is passed to it as the second argument. The object allows setting the WSSE username, password

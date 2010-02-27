@@ -1,6 +1,6 @@
 module Savon
 
-  # == Savon::Response
+  # = Savon::Response
   #
   # Savon::Response represents both HTTP and SOAP response.
   #

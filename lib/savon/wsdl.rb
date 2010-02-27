@@ -1,6 +1,6 @@
 module Savon
 
-  # Savon::WSDL
+  # = Savon::WSDL
   #
   # Savon::WSDL represents the WSDL of your service, including information like the namespace URI,
   # the SOAP endpoint and available SOAP actions.
