@@ -36,6 +36,7 @@ Spec::Rake::SpecTask.new(:run_integration_spec) do |spec|
 end
 
 begin
+  $:.unshift File.join(File.dirname(__FILE__), "..", "hanna", "lib")
   require "hanna/rdoctask"
 
   Rake::RDocTask.new do |rdoc|
@@ -43,6 +44,7 @@ begin
     rdoc.rdoc_dir = "doc"
     rdoc.rdoc_files.include("**/*.rdoc").include("lib/**/*.rb")
     rdoc.options << "--line-numbers"
+    rdoc.options << "--webcvs=http://github.com/rubiii/savon/tree/master/"
   end
 rescue LoadError
   puts "'gem install hanna' for documentation"
