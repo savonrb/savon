@@ -75,9 +75,15 @@ describe String do
   end
 
   describe "to_soap_value" do
-    it "calls to_s, bypassing Rails to_datetime extension for Strings" do
-      "string".to_soap_value.should == "string".to_s
+    it "should return the string value and escape special characters" do
+      "string".to_soap_value.should == "string"
+      "<tag>".to_soap_value.should == "&lt;tag&gt;"
+      "at&t".to_soap_value.should == "at&amp;t"
+      '"quotes"'.to_soap_value.should == "&quot;quotes&quot;"
+      "'apos'".to_soap_value.should == "&apos;apos&apos;"
     end
   end
+
+
 
 end

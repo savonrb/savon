@@ -35,7 +35,7 @@ class String
   # Returns whether the String ends with a given +suffix+.
   def ends_with?(suffix)
     suffix = suffix.to_s
-    self[-suffix.length, suffix.length] == suffix      
+    self[-suffix.length, suffix.length] == suffix
   end unless defined? ends_with?
 
   # Returns the String without namespace.
@@ -52,8 +52,15 @@ class String
   end
 
   # Returns the String as a SOAP request compliant value.
+  # Escapes special characters for XML.
   def to_soap_value
-    to_s
+    str = dup
+    str.gsub! "&", "&amp;"
+    str.gsub! '"', "&quot;"
+    str.gsub! "'", "&apos;"
+    str.gsub! "<", "&lt;"
+    str.gsub! ">", "&gt;"
+    str
   end
 
 end

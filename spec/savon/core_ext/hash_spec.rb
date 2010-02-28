@@ -73,7 +73,6 @@ describe Hash do
 
     it "should call to_s on Strings even if they respond to to_datetime" do
       object = "gorilla"
-      object.expects(:to_s).returns object
       object.expects(:to_datetime).never
 
       hash, result = { :name => object }, "<name>gorilla</name>"
