@@ -17,6 +17,8 @@ class Array
 
 private
 
+  # Takes a Hash of +attributes+ and the +index+ for which to return attributes
+  # for duplicate tags.
   def tag_attributes(attributes, index)
     return {} if attributes.empty?
 
