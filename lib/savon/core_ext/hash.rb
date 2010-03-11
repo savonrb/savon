@@ -61,7 +61,7 @@ class Hash
       key = key.to_soap_key
 
       case value
-        when Array then xml << value.to_soap_xml(key)
+        when Array then xml << value.to_soap_xml(key, attrs)
         when Hash  then xml.tag!(key, attrs) { xml << value.to_soap_xml }
         else            xml.tag!(key, attrs) { xml << value.to_soap_value }
       end
@@ -75,7 +75,7 @@ class Hash
     inject({}) do |hash, (key, value)|
       value = case value
         when Hash   then value["xsi:nil"] ? nil : value.map_soap_response
-        when Array  then value.map { |a_value| a_value.map_soap_response rescue a_value }
+        when Array  then value.map { |val| val.map_soap_response rescue val }
         when String then value.map_soap_response
       end
 
