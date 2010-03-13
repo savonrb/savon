@@ -70,6 +70,10 @@ describe Savon::Client do
     end
   end
 
+  it "should have a call method that forwards to method_missing for SOAP actions named after existing methods" do
+    @client.call(:authenticate) { |soap| soap.should be_a(Savon::SOAP) }
+  end
+
   it "should raise a NoMethodError when the method does not match an available SOAP action or method" do
     lambda { @client.some_undefined_method }.should raise_error(NoMethodError)
   end

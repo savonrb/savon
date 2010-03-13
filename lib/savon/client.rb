@@ -59,6 +59,12 @@ module Savon
       super
     end
 
+    # Same as method_missing. Workaround for SOAP actions that method_missing does not catch
+    # because the method does exist.
+    def call(method, *args, &block)
+      method_missing method, *args, &block
+    end
+
   private
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
