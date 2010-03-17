@@ -3,7 +3,7 @@ module URI
 
     # Returns whether the URI hints to SSL.
     def ssl?
-      @scheme.starts_with? "https"
+      !@scheme ? nil : @scheme.starts_with?("https")
     end
 
   end
