@@ -243,6 +243,7 @@ module Savon
     # Returns the SOAP envelope XML.
     def to_xml
       unless @xml_body
+        @builder.instruct!
         @xml_body = @builder.env :Envelope, all_namespaces do |xml|
           xml.env(:Header) { xml << all_header } unless all_header.empty?
           xml_body xml
