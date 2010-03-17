@@ -268,9 +268,7 @@ module Savon
     # Adds a SOAP XML body to a given +xml+ Object.
     def xml_body(xml)
       xml.env(:Body) do
-        xml.tag!(:wsdl, *input_array) do
-          xml << (@body.to_soap_xml rescue @body.to_s)
-        end
+        xml.tag!(:wsdl, *input_array) { xml << (@body.to_soap_xml rescue @body.to_s) }
       end
     end
 
@@ -287,7 +285,7 @@ module Savon
         [input[0].to_sym, input[1]]
       elsif !input.blank?
         [input.to_sym]
-      elsif action.blank?
+      elsif !action.blank?
         [action.to_sym]
       else
         []
