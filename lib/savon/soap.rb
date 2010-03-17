@@ -211,6 +211,9 @@ module Savon
     # or any other Object responding to to_s.
     attr_writer :body
 
+    # Accessor for overwriting the default SOAP envelope. This let's you specify the complete
+    attr_accessor :xml_body
+
     # Sets the namespaces. Expected to be a Hash containing the namespaces (keys) and the
     # corresponding URI's (values).
     attr_writer :namespaces
