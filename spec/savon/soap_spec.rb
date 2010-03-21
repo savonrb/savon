@@ -76,6 +76,11 @@ describe Savon::SOAP do
       @soap.to_xml.should include('xmlns:env="' + Savon::SOAP::Namespace[2] + '"')
     end
 
+    it "should containg a xmlns:wsdl namespace defined via the :namespace shortcut method" do
+      @soap.namespace = "http://wsdl.example.com"
+      @soap.to_xml.should include('xmlns:wsdl="http://wsdl.example.com"')
+    end
+
     it "should accept custom namespaces when defined globally" do
       Savon::SOAP.namespaces = @namespace
       @soap.to_xml.should include("<env:Envelope " + @namespace_string)
