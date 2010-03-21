@@ -73,7 +73,6 @@ describe Hash do
 
     it "should call to_s on Strings even if they respond to to_datetime" do
       object = "gorilla"
-      object.expects(:to_s).returns object
       object.expects(:to_datetime).never
 
       hash, result = { :name => object }, "<name>gorilla</name>"
@@ -112,6 +111,16 @@ describe Hash do
       hash = { :find_user => { :person => "Lucy", :attributes! => { :person => { :id => 666, :city => "Hamburg" } } } }
       soap_xml = hash.to_soap_xml
       soap_xml.should include('id="666"', 'city="Hamburg"')
+    end
+
+    it "should add attributes to duplicate Hash keys specified through :attributes!" do
+      hash = { :find_user => { :person => ["Lucy", "Anna"], :attributes! => { :person => { :id => [1, 3] } } } }
+      result = '<findUser><person id="1">Lucy</person><person id="3">Anna</person></findUser>'
+      hash.to_soap_xml.should == result
+      
+      hash = { :find_user => { :person => ["Lucy", "Anna"], :attributes! => { :person => { :active => "true" } } } }
+      result = '<findUser><person active="true">Lucy</person><person active="true">Anna</person></findUser>'
+      hash.to_soap_xml.should == result
     end
   end
 

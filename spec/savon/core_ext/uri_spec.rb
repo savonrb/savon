@@ -10,6 +10,10 @@ describe URI::HTTP do
     it "returns false for non-https URI's" do
       URI("http://example.com").ssl?.should be_false
     end
+
+    it "returns nil for invalid URI's without a scheme" do
+      URI("example").ssl?.should be_nil
+    end
   end
 
 end

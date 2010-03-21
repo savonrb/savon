@@ -1,3 +1,13 @@
+== 0.7.6 (2010-03-21)
+  * Renamed 
+  * Moved documentation from the Github Wiki to the actual class files and established a much nicer
+    documentation combining examples and implementation (using Hanna) at: http://savon.rubiii.com
+  * Added Savon::Client#call as a workaround for dispatching calls to SOAP actions  named after
+	  existing methods. Fix for issue #48.
+  * Add support for specifying attributes for duplicate tags (via Hash values as Arrays). Fix for issue #45.
+  * Fix for issue #41 (Escape special characters (e.g. &) for XML requests).
+  * Fix for issue #39 and #49. Added Savon::SOAP#xml which let's you specify completely custom SOAP request XML.
+
 == 0.7.5 (2010-02-19)
   * Fix for issue #34 (soap_actions returns empty for wsdl12).
   * Fix for issue #36 (Custom WSDL actions broken).

@@ -1,8 +1,6 @@
 class Object
 
-  # Returns +true+ if the Object is false, empty, or a whitespace string.
-  # For example, "", false, nil, [], and {} are blank.
-  # Implementation from ActiveSupport.
+  # Returns +true+ if the Object is nil, false or empty. Implementation from ActiveSupport.
   def blank?
     respond_to?(:empty?) ? empty? : !self
   end unless defined? blank?

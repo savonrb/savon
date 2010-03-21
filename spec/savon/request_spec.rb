@@ -22,8 +22,8 @@ describe Savon::Request do
   end
 
   it "has both getter and setter for the logger to use (global setting)" do
-    Savon::Request.logger = nil
-    Savon::Request.logger.should be_nil
+    Savon::Request.logger = {}
+    Savon::Request.logger.should be_a(Hash)
     Savon::Request.logger = Logger.new STDOUT
   end
 
@@ -76,8 +76,9 @@ describe Savon::Request do
   end
 
   it "executes a SOAP request and returns the Net::HTTP response" do
-    some_operation = WSDLFixture.authentication(:operations)[:authenticate]
-    soap = Savon::SOAP.new some_operation, EndpointHelper.soap_endpoint
+    operation = WSDLFixture.authentication(:operations)[:authenticate]
+    action, input = operation[:action], operation[:input]
+    soap = Savon::SOAP.new action, input, EndpointHelper.soap_endpoint
     soap_response = @request.soap soap
 
     soap_response.should be_a(Net::HTTPResponse)

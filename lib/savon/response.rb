@@ -1,8 +1,61 @@
 module Savon
 
-  # == Savon::Response
+  # = Savon::Response
   #
-  # Represents the HTTP and SOAP response.
+  # Savon::Response represents both HTTP and SOAP response.
+  #
+  # == SOAP fault
+  #
+  # Assuming the default behavior of raising errors is disabled, you can ask the response object
+  # if there was a SOAP fault or an HTTP error and get the SOAP fault or HTTP error message.
+  #
+  #   response.soap_fault?
+  #   # => true
+  #
+  #   response.soap_fault
+  #   # => "(soap:Server) Fault occurred while processing."
+  #
+  #   response.http_error?
+  #   # => true
+  #
+  #   response.http_error
+  #   # => "Not found (404)"
+  #
+  # == Response as XML
+  #
+  # To get the raw SOAP response XML, you can call to_xml or to_s on the response object.
+  #
+  #   response.to_xml
+  #   => "<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  #   => "..."
+  #   => "</soap:Envelope>"
+  #
+  # == Response as a Hash
+  #
+  # You can also let Savon translate the SOAP response body to a Hash.
+  #
+  #   response.to_hash
+  #   => { :findUserByIdResponse => {
+  #   =>   :id => "123",
+  #   =>   :username => "eve"
+  #   =>   :active => true
+  #   => }
+  #
+  # When translating the SOAP response to a Hash, some XML tags and values are converted to more
+  # convenient Ruby objects. Translation is done through John Nunemaker's {Crack}[http://github.com/jnunemaker/crack]
+  # library along with some custom mapping.
+  #
+  # * XML tags (Hash keys) are converted to snake_case Symbols and namespaces are stripped off
+  # * SOAP xs:nil values are converted to nil objects
+  # * XML values specified in xs:DateTime format are converted to DateTime objects
+  # * XML values of "true" and "false" are converted to TrueClass and FalseClass
+  #
+  # == Net::HTTP response
+  #
+  # If for some reason you need to access the Net::HTTP response object ... you can.
+  #
+  #   bc. response.http
+  #   => #<Net::HTTPOK:0x7f749a1aa4a8>
   class Response
 
     # The maximum HTTP response code considered to be OK.
@@ -57,13 +110,13 @@ module Savon
 
     # Returns the HTTP response object.
     attr_reader :http
-	
+
     alias :to_s :to_xml
 
   private
 
-    # Handles SOAP faults. Raises a Savon::SOAPFault unless the default
-    # behavior of raising errors was turned off.
+    # Handles SOAP faults. Raises a Savon::SOAPFault unless the default behavior of raising errors
+    # was turned off.
     def handle_soap_fault
       if soap_fault_message
         @soap_fault = soap_fault_message
@@ -76,8 +129,8 @@ module Savon
       @soap_fault_message ||= soap_fault_message_by_version to_hash[:fault]
     end
 
-    # Expects a Hash that might contain information about a SOAP fault.
-    # Returns the SOAP fault message in case one was found.
+    # Expects a Hash that might contain information about a SOAP fault. Returns the SOAP fault
+    # message in case one was found.
     def soap_fault_message_by_version(soap_fault)
       return unless soap_fault
 
@@ -88,8 +141,8 @@ module Savon
       end
     end
 
-    # Handles HTTP errors. Raises a Savon::HTTPError unless the default
-    # behavior of raising errors was turned off.
+    # Handles HTTP errors. Raises a Savon::HTTPError unless the default behavior of raising errors
+    # was turned off.
     def handle_http_error
       if @http.code.to_i > MaxNonErrorResponseCode
         @http_error = "#{@http.message} (#{@http.code})"
