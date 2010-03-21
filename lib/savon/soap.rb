@@ -170,8 +170,8 @@ module Savon
     end
 
     # Initialzes the SOAP object. Expects a SOAP +operation+ Hash along with an +endpoint+.
-    def initialize(operation, endpoint)
-      @action, @input = operation[:action], operation[:input]
+    def initialize(action, input, endpoint)
+      @action, @input = action, input
       @endpoint = endpoint.kind_of?(URI) ? endpoint : URI(endpoint)
       @builder = Builder::XmlMarkup.new
     end
@@ -207,12 +207,12 @@ module Savon
       @header ||= {}
     end
 
-    # Sets the SOAP body. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
+    # Accessor for the SOAP body. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
     # or any other Object responding to to_s.
-    attr_writer :body
+    attr_accessor :body
 
-    # Accessor for overwriting the default SOAP envelope. This let's you specify the complete
-    attr_accessor :xml_body
+    # Accessor for overwriting the default SOAP request. Let's you specify completely custom XML.
+    attr_accessor :xml
 
     # Sets the namespaces. Expected to be a Hash containing the namespaces (keys) and the
     # corresponding URI's (values).
@@ -242,26 +242,26 @@ module Savon
 
     # Returns the SOAP envelope XML.
     def to_xml
-      unless @xml_body
+      unless @xml
         @builder.instruct!
-        @xml_body = @builder.env :Envelope, all_namespaces do |xml|
-          xml.env(:Header) { xml << all_header } unless all_header.empty?
+        @xml = @builder.env :Envelope, merged_namespaces do |xml|
+          xml.env(:Header) { xml << merged_header } unless merged_header.empty?
           xml_body xml
         end
       end
-      @xml_body
+      @xml
     end
 
   private
 
     # Returns a String containing the global and per request header.
-    def all_header
+    def merged_header
       if self.class.header.kind_of?(Hash) && header.kind_of?(Hash)
-        custom_header = self.class.header.merge(header).to_soap_xml
+        merged_header = self.class.header.merge(header).to_soap_xml
       else
-        custom_header = self.class.header.to_s + header.to_s
+        merged_header = self.class.header.to_s + header.to_s
       end
-      custom_header + wsse_header
+      merged_header + wsse_header
     end
 
     # Returns the WSSE header or an empty String in case WSSE was not set.
@@ -277,7 +277,7 @@ module Savon
     end
 
     # Returns a Hash containing the global and per request namespaces.
-    def all_namespaces
+    def merged_namespaces
       self.class.namespaces.merge namespaces
     end
 
@@ -285,7 +285,7 @@ module Savon
     # name of the SOAP action. May return an empty Array in case the specified SOAP input seems
     # to be invalid.
     def input_array
-      if !input.blank? && input.kind_of?(Array)
+      if input.kind_of?(Array) && !input.blank?
         [input[0].to_sym, input[1]]
       elsif !input.blank?
         [input.to_sym]

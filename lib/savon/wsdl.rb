@@ -111,11 +111,10 @@ module Savon
       super
     end
 
-    # Returns a SOAP operation Hash containing the SOAP action and input
-    # for a given +soap_call+.
+    # Returns an Array containg the SOAP action and input for a given +soap_call+.
     def operation_from(soap_action)
-      return operations[soap_action] if enabled?
-      { :action => soap_action.to_soap_key, :input => soap_action.to_soap_key }
+      return [soap_action.to_soap_key, soap_action.to_soap_key] unless enabled?
+      [operations[soap_action][:action], operations[soap_action][:input]]
     end
 
     # Returns the raw WSDL document.

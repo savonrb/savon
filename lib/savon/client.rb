@@ -72,7 +72,7 @@ module Savon
       soap_action = soap_action_from method.to_s
       super unless @wsdl.respond_to? soap_action
 
-      setup_objects @wsdl.operation_from(soap_action), &block
+      setup_objects *@wsdl.operation_from(soap_action), &block
       Response.new @request.soap(@soap)
     end
 
@@ -92,8 +92,8 @@ module Savon
 
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE. Yields them to a given
     # +block+ in case one was given.
-    def setup_objects(operation, &block)
-      @soap, @wsse = SOAP.new(operation, soap_endpoint), WSSE.new
+    def setup_objects(action, input, &block)
+      @soap, @wsse = SOAP.new(action, input, soap_endpoint), WSSE.new
       yield_objects &block if block
       @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
       @soap.wsse = @wsse
