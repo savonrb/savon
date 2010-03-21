@@ -52,7 +52,7 @@ describe Savon::SOAP do
       
       # reset to defaults
       Savon::SOAP.version = 1
-      Savon::SOAP.header = {} 
+      Savon::SOAP.header = {}
       Savon::SOAP.namespaces = {}
     end
 

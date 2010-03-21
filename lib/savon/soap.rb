@@ -259,7 +259,9 @@ module Savon
       if self.class.header.kind_of?(Hash) && header.kind_of?(Hash)
         merged_header = self.class.header.merge(header).to_soap_xml
       else
-        merged_header = self.class.header.to_s + header.to_s
+        global_header = self.class.header.to_soap_xml rescue self.class.header.to_s
+        request_header = header.to_soap_xml rescue header.to_s
+        merged_header = global_header + request_header
       end
       merged_header + wsse_header
     end
