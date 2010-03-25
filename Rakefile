@@ -36,7 +36,6 @@ Spec::Rake::SpecTask.new(:run_integration_spec) do |spec|
 end
 
 begin
-  $:.unshift File.join(File.dirname(__FILE__), "..", "hanna", "lib")
   require "hanna/rdoctask"
 
   Rake::RDocTask.new do |rdoc|
