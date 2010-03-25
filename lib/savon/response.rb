@@ -1,3 +1,6 @@
+require 'stringio'
+require 'zlib'
+
 module Savon
 
   # = Savon::Response
@@ -100,12 +103,12 @@ module Savon
 
     # Returns the SOAP response body as a Hash.
     def to_hash
-      @body ||= (Crack::XML.parse(@http.body) rescue {}).find_soap_body
+      @hash ||= (Crack::XML.parse(body) rescue {}).find_soap_body
     end
 
     # Returns the SOAP response XML.
     def to_xml
-      @http.body
+      body
     end
 
     # Returns the HTTP response object.
@@ -114,6 +117,21 @@ module Savon
     alias :to_s :to_xml
 
   private
+
+    def body
+      @body || body_is_gzipped? ? decoded_body : @http.body
+    end
+
+    def body_is_gzipped?
+      @http['content-encoding'] == 'gzip'
+    end
+
+    def decoded_body
+      gz = Zlib::GzipReader.new(StringIO.new(@http.body))
+      gz.read
+    ensure
+      gz.close
+    end
 
     # Handles SOAP faults. Raises a Savon::SOAPFault unless the default behavior of raising errors
     # was turned off.
@@ -146,10 +164,11 @@ module Savon
     def handle_http_error
       if @http.code.to_i > MaxNonErrorResponseCode
         @http_error = "#{@http.message} (#{@http.code})"
-        @http_error << ": #{@http.body}" unless @http.body.empty?
+        @http_error << ": #{body}" unless body.empty?
         raise Savon::HTTPError, http_error if self.class.raise_errors?
       end
     end
 
   end
 end
+

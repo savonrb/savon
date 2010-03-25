@@ -1,5 +1,8 @@
 require "spec_helper"
 
+require 'zlib'
+require 'stringio'
+
 describe Savon::Response do
   before { @response = Savon::Response.new http_response_mock }
 
@@ -21,13 +24,13 @@ describe Savon::Response do
     it "raises a Savon::SOAPFault in case of a SOAP fault" do
       lambda { savon_response_with :soap_fault }.should raise_error(Savon::SOAPFault)
     end
- 
+
     it "does not raise a Savon::SOAPFault in case the default is turned off" do
       Savon::Response.raise_errors = false
       savon_response_with :soap_fault
       Savon::Response.raise_errors = true
     end
- 
+
     it "raises a Savon::HTTPError in case of an HTTP error" do
       lambda { savon_response_with :http_error }.should raise_error(Savon::HTTPError)
     end
@@ -102,7 +105,7 @@ describe Savon::Response do
     @response = Savon::Response.new http_response_mock(200, ResponseFixture.multi_ref, "OK")
 
     @response.to_hash[:list_response].should be_a(Hash)
-    @response.to_hash[:multi_ref].should be_an(Array) 
+    @response.to_hash[:multi_ref].should be_an(Array)
   end
 
   it "should return the raw SOAP response body" do
@@ -117,6 +120,23 @@ describe Savon::Response do
     @response.http.should respond_to(:body)
   end
 
+  it "should decode gzip request if Content-encoding header is gzip" do
+    @response = Savon::Response.new http_response_mock(200, body = "Encoded", "OK", 'content-encoding' => 'gzip')
+
+    should_decode_body body
+
+    @response.to_xml
+  end
+
+  def should_decode_body body
+    StringIO.expects(:new).with(body).returns(stream = mock('StringIO'))
+
+    Zlib::GzipReader.expects(:new).with(stream).returns(mock('Zlib::GzipReader') do
+      expects(:read)
+      expects(:close)
+    end)
+  end
+
   def savon_response_with(error_type)
     mock = case error_type
       when :soap_fault   then http_response_mock 200, ResponseFixture.soap_fault
@@ -126,12 +146,19 @@ describe Savon::Response do
     Savon::Response.new mock
   end
 
-  def http_response_mock(code = 200, body = nil, message = "OK")
+  def http_response_mock(code = 200, body = nil, message = "OK", headers = {})
     body ||= ResponseFixture.authentication
     mock = mock "Net::HTTPResponse"
     mock.stubs :code => code.to_s, :message => message,
                :content_type => "text/html", :body => body
+
+    mock.stubs('[]').with(anything).returns(nil)
+    headers.each do |k, v|
+      mock.stubs('[]').with(k).returns(v)
+    end
+
     mock
   end
 
 end
+
