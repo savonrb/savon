@@ -1,8 +1,5 @@
 require "spec_helper"
 
-require 'zlib'
-require 'stringio'
-
 describe Savon::Response do
   before { @response = Savon::Response.new http_response_mock }
 
@@ -128,10 +125,19 @@ describe Savon::Response do
     @response.to_xml
   end
 
-  def should_decode_body body
-    StringIO.expects(:new).with(body).returns(stream = mock('StringIO'))
+  # header extracted from http://dev.ctor.org/svn/soap4r/trunk/lib/soap/streamHandler.rb
+  it "should decode gzip request if body starts with gzip header" do
+    @response = Savon::Response.new http_response_mock(200, body = "\x1f\x8bEncoded", "OK")
 
-    Zlib::GzipReader.expects(:new).with(stream).returns(mock('Zlib::GzipReader') do
+    should_decode_body body
+
+    @response.to_xml
+  end
+
+  def should_decode_body(body)
+    StringIO.expects(:new).with(body).returns(stream = mock("StringIO"))
+
+    Zlib::GzipReader.expects(:new).with(stream).returns(mock("Zlib::GzipReader") do
       expects(:read)
       expects(:close)
     end)
@@ -149,13 +155,10 @@ describe Savon::Response do
   def http_response_mock(code = 200, body = nil, message = "OK", headers = {})
     body ||= ResponseFixture.authentication
     mock = mock "Net::HTTPResponse"
-    mock.stubs :code => code.to_s, :message => message,
-               :content_type => "text/html", :body => body
+    mock.stubs :code => code.to_s, :message => message, :content_type => "text/html", :body => body
 
-    mock.stubs('[]').with(anything).returns(nil)
-    headers.each do |k, v|
-      mock.stubs('[]').with(k).returns(v)
-    end
+    mock.stubs("[]").with(anything).returns(nil)
+    headers.each { |key, value| mock.stubs("[]").with(key).returns(value) }
 
     mock
   end

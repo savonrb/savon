@@ -122,7 +122,7 @@ module Savon
 
     # Returns whether the body is gzipped.
     def gzipped_body?
-      @http["content-encoding"] == "gzip"
+      @http["content-encoding"] == "gzip" || @http.body[0..1] == "\x1f\x8b"
     end
 
     # Returns the gzip decoded body.
