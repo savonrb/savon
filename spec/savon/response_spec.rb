@@ -118,7 +118,6 @@ describe Savon::Response do
   end
 
   describe "GZipped responses" do
-
     it "should be decoded if Content-encoding header is gzip" do
       @response = Savon::Response.new http_response_mock(200, body = "Encoded", "OK", 'content-encoding' => 'gzip')
 
@@ -138,12 +137,11 @@ describe Savon::Response do
 
     it "should be decoded when header is set" do
       @response = Savon::Response.new http_response_mock(200, GzipResponseFixture.message, "OK", 'content-encoding' => 'gzip')
-
       @response.to_xml.should == "A short gzip encoded message\n"
     end
+
     it "should be decoded when header is not set" do
       @response = Savon::Response.new http_response_mock(200, GzipResponseFixture.message, "OK")
-
       @response.to_xml.should == "A short gzip encoded message\n"
     end
   end
