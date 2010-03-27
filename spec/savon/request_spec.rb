@@ -75,14 +75,38 @@ describe Savon::Request do
     wsdl_response.body.should == WSDLFixture.authentication
   end
 
-  it "executes a SOAP request and returns the Net::HTTP response" do
-    operation = WSDLFixture.authentication(:operations)[:authenticate]
-    action, input = operation[:action], operation[:input]
-    soap = Savon::SOAP.new action, input, EndpointHelper.soap_endpoint
-    soap_response = @request.soap soap
 
-    soap_response.should be_a(Net::HTTPResponse)
-    soap_response.body.should == ResponseFixture.authentication
+  describe "when executing a SOAP request" do
+    before :each do
+      operation = WSDLFixture.authentication(:operations)[:authenticate]
+      action, input = operation[:action], operation[:input]
+      @soap = Savon::SOAP.new action, input, EndpointHelper.soap_endpoint
+    end
+
+    it "should return the Net::HTTP response" do
+      soap_response = @request.soap @soap
+
+      soap_response.should be_a(Net::HTTPResponse)
+      soap_response.body.should == ResponseFixture.authentication
+    end
+
+    it "should include Accept-Encoding gzip if it is enabled" do
+      @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => true
+      a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
+
+      Net::HTTP::Post.expects(:new).with(anything, has_entry("Accept-encoding" => "gzip,deflate")).returns(a_post)
+
+      @request.soap @soap
+    end
+
+    it "should not include Accept-Encoding gzip if it is not enabled" do
+      @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => false
+      a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
+
+      Net::HTTP::Post.expects(:new).with(anything, Not(has_entry("Accept-encoding" => "gzip,deflate"))).returns(a_post)
+
+      @request.soap @soap
+    end
   end
 
   it "should not include host when creating HTTP requests" do

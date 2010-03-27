@@ -47,9 +47,10 @@ module Savon
     ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
 
     # Expects a WSDL or SOAP +endpoint+ and accepts a custom +proxy+ address.
-    def initialize(endpoint, proxy = nil)
+    def initialize(endpoint, options = {})
       @endpoint = URI endpoint
-      @proxy = proxy ? URI(proxy) : URI("")
+      @proxy = URI options[:proxy] || ""
+      headers["Accept-encoding"] = "gzip,deflate" if options[:gzip]
     end
 
     # Returns the endpoint URI.
@@ -134,3 +135,4 @@ module Savon
 
   end
 end
+
