@@ -117,21 +117,35 @@ describe Savon::Response do
     @response.http.should respond_to(:body)
   end
 
-  it "should decode gzip request if Content-encoding header is gzip" do
-    @response = Savon::Response.new http_response_mock(200, body = "Encoded", "OK", 'content-encoding' => 'gzip')
+  describe "GZipped responses" do
 
-    should_decode_body body
+    it "should be decoded if Content-encoding header is gzip" do
+      @response = Savon::Response.new http_response_mock(200, body = "Encoded", "OK", 'content-encoding' => 'gzip')
 
-    @response.to_xml
-  end
+      should_decode_body body
 
-  # header extracted from http://dev.ctor.org/svn/soap4r/trunk/lib/soap/streamHandler.rb
-  it "should decode gzip request if body starts with gzip header" do
-    @response = Savon::Response.new http_response_mock(200, body = "\x1f\x8bEncoded", "OK")
+      @response.to_xml
+    end
 
-    should_decode_body body
+    # header logic extracted from http://dev.ctor.org/svn/soap4r/trunk/lib/soap/streamHandler.rb
+    it "should be decoded if body starts with gzip header" do
+      @response = Savon::Response.new http_response_mock(200, body = "\x1f\x8bEncoded", "OK")
 
-    @response.to_xml
+      should_decode_body body
+
+      @response.to_xml
+    end
+
+    it "should be decoded when header is set" do
+      @response = Savon::Response.new http_response_mock(200, GzipResponseFixture.message, "OK", 'content-encoding' => 'gzip')
+
+      @response.to_xml.should == "A short gzip encoded message\n"
+    end
+    it "should be decoded when header is not set" do
+      @response = Savon::Response.new http_response_mock(200, GzipResponseFixture.message, "OK")
+
+      @response.to_xml.should == "A short gzip encoded message\n"
+    end
   end
 
   def should_decode_body(body)
