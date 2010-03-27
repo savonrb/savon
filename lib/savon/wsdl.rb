@@ -71,9 +71,9 @@ module Savon
   #   end
   class WSDL
 
-    # Initializer, expects a Savon::Request.
-    def initialize(request)
-      @request, @enabled = request, true
+    # Expects a Savon::Request and accepts a custom +soap_endpoint+.
+    def initialize(request, soap_endpoint = nil)
+      @request, @enabled, @soap_endpoint = request, true, soap_endpoint
     end
 
     # Sets whether to use the WSDL.

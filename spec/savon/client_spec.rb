@@ -14,6 +14,11 @@ describe Savon::Client do
     client.request.http.proxy_address == "http://proxy"
   end
 
+  it "should accept a SOAP endpoint via an optional Hash of options" do
+    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :soap_endpoint => "http://localhost"
+    client.wsdl.soap_endpoint.should == "http://localhost"
+  end
+
   it "should have a method that returns the Savon::WSDL" do
     @client.wsdl.should be_a(Savon::WSDL)
   end

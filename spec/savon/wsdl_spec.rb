@@ -8,6 +8,11 @@ describe Savon::WSDL do
       Savon::WSDL.new Savon::Request.new(EndpointHelper.wsdl_endpoint)
     end
 
+    it "it accepts a custom SOAP endpoint" do
+      wsdl = Savon::WSDL.new Savon::Request.new(EndpointHelper.wsdl_endpoint), "http://localhost"
+      wsdl.soap_endpoint.should == "http://localhost"
+    end
+
     it "is enabled by default" do
       @wsdl.enabled?.should be_true
     end

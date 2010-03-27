@@ -46,11 +46,10 @@ module Savon
     # Content-Types by SOAP version.
     ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
 
-    # Expects a SOAP +endpoint+ String. Also accepts an optional Hash
-    # of +options+ for specifying a proxy server.
-    def initialize(endpoint, options = {})
+    # Expects a WSDL or SOAP +endpoint+ and accepts a custom +proxy+ address.
+    def initialize(endpoint, proxy = nil)
       @endpoint = URI endpoint
-      @proxy = options[:proxy] ? URI(options[:proxy]) : URI("")
+      @proxy = proxy ? URI(proxy) : URI("")
     end
 
     # Returns the endpoint URI.
