@@ -14,6 +14,8 @@ require "net/https"
 require "base64"
 require "digest/sha1"
 require "rexml/document"
+require "stringio"
+require "zlib"
 
 # gem dependencies
 require "builder"

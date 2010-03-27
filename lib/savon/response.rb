@@ -1,6 +1,3 @@
-require 'stringio'
-require 'zlib'
-
 module Savon
 
   # = Savon::Response
@@ -118,16 +115,19 @@ module Savon
 
   private
 
+    # Returns the response body.
     def body
-      @body || body_is_gzipped? ? decoded_body : @http.body
+      @body || gzipped_body? ? decoded_body : @http.body
     end
 
-    def body_is_gzipped?
-      @http['content-encoding'] == 'gzip'
+    # Returns whether the body is gzipped.
+    def gzipped_body?
+      @http["content-encoding"] == "gzip"
     end
 
+    # Returns the gzip decoded body.
     def decoded_body
-      gz = Zlib::GzipReader.new(StringIO.new(@http.body))
+      gz = Zlib::GzipReader.new StringIO.new(@http.body)
       gz.read
     ensure
       gz.close
