@@ -52,10 +52,12 @@ module Savon
     # ==== Options:
     #
     # [proxy]  the proxy server to use
+    # [gzip]  whether to gzip SOAP requests
     # [soap_endpoint]  force to use this SOAP endpoint
     def initialize(endpoint, options = {})
-      @request = Request.new endpoint, options.delete(:proxy)
-      @wsdl = WSDL.new @request, options.delete(:soap_endpoint)
+      soap_endpoint = options.delete(:soap_endpoint)
+      @request = Request.new endpoint, options
+      @wsdl = WSDL.new @request, soap_endpoint
     end
 
     # Returns the Savon::WSDL.
