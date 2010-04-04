@@ -6,3 +6,4 @@ coverage
 .loadpath
 .project
 *~
+*.gem
