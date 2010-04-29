@@ -18,6 +18,7 @@ require "rexml/document"
 # gem dependencies
 require "builder"
 require "crack/xml"
+require 'net/ntlm_http'
 
 # core files
 require "savon/core_ext"

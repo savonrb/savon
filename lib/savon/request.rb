@@ -74,6 +74,12 @@ module Savon
       @basic_auth = [username, password]
     end
 
+    # Sets the +username+ and +password+ for NTLM authentication
+    # if +username+ does not work try 'domain\username'
+    def ntlm_auth(username, password)
+      @ntlm_auth = [username, password]
+    end
+
     # Retrieves WSDL document and returns the Net::HTTP response.
     def wsdl
       log "Retrieving WSDL from: #{@endpoint}"
@@ -119,10 +125,17 @@ module Savon
     # Returns a Net::HTTP request for a given +type+. Yields the request to an optional block.
     def request(type)
       request = case type
-        when :wsdl then Net::HTTP::Get.new @endpoint.request_uri
+        when :wsdl then Net::HTTP::Get.new @endpoint.request_uri, headers
         when :soap then Net::HTTP::Post.new @soap.endpoint.request_uri, soap_headers.merge(headers)
       end
 
+      case
+        when @basic_auth
+          request.basic_auth(*@basic_auth)
+        when @ntlm_auth
+          log "Attempting NTLM Authentication"
+          request.ntlm_auth(*@ntlm_auth)
+      end
       request.basic_auth(*@basic_auth) if @basic_auth
       yield request if block_given?
       request
