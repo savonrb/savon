@@ -34,6 +34,12 @@ module Savon
   #
   #   client = Savon::Client.new "http://example.com/UserService?wsdl", :soap_endpoint => "http://localhost/UserService"
   #
+  # == Gzipped SOAP requests
+  #
+  # Sending gzipped SOAP requests can be specified per client instance.
+  #
+  #   client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
+  #
   # == Savon::WSDL
   #
   # You can access Savon::WSDL via:
