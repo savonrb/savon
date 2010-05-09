@@ -13,7 +13,8 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/rubiii/savon"
   s.summary = "Heavy metal Ruby SOAP client library"
 
-  s.files = Dir["[A-Z]*", "{lib,spec}/**/*.{rb,xml,gz}"]
+  s.files = Dir["[A-Z]*", "{lib,spec}/**/*.{rb,xml,yml,gz}"]
+  s.files += [".autotest", "spec/spec.opts"]
   s.test_files = Dir["spec/**/*.rb"]
 
   s.extra_rdoc_files = ["README.rdoc"]
