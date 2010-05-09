@@ -1,12 +1,18 @@
-== UPCOMING
+== 0.7.7 (2010-05-09)
   * SOAP requests now start with a proper XML declaration.
   * Added support for gzipped requests and responses (http://github.com/lucascs). While gzipped SOAP
     responses are decoded automatically, you have to manually instruct Savon to gzip SOAP requests:
 
       client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
 
-  * Fix for issue #51: added the :soap_endpoint option to Savon::Client.new which let's you specify a SOAP
-    endpoint per client instance.
+  * Fix for issue #51. Added the :soap_endpoint option to Savon::Client.new which let's you specify a SOAP
+    endpoint per client instance:
+
+    client = Savon::Client.new "http://example.com/UserService?wsdl",
+      :soap_endpoint => "http://localhost/UserService"
+
+  * Fix for issue #50. Savon still escapes special characters in SOAP request Hash values, but you can now
+    append an exclamation mark to Hash keys specifying that it's value should not be escaped.
 
 == 0.7.6 (2010-03-21)
   * Moved documentation from the Github Wiki to the actual class files and established a much nicer
