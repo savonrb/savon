@@ -1,3 +1,9 @@
+== UPCOMING
+  * Added support for NTLM HTTP authentication (http://github.com/elcuervo). You can set you NTML
+    username and password through the Savon::Request#ntlm_auth method:
+
+    client.request.ntlm_auth "username", "password"
+
 == 0.7.8 (2010-05-09)
   * Fixed gemspec to include missing files (*.yml, *.gz, .autotest and spec/spec.opts) in the gem.
 

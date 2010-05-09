@@ -18,6 +18,20 @@ Instantiate Savon::Client, passing in the WSDL of your service.
 
 For production, it is highly recommended to not use Savon::WSDL. Information on {how to disable the WSDL}[http://savon.rubiii.com/docs/latest/classes/Savon/WSDL.html].
 
+== Choose authentication methods
+
+After instantiating a client, you can choose an authentication method to the requests.
+
+For HTTP basic authentication:
+
+  client.request.basic_auth "username", "password"
+
+For NTLM HTTP authentication:
+
+  client.request.ntlm_auth "username", "password"
+
+Choose {Basic}[http://en.wikipedia.org/wiki/Basic_access_authentication] or {NTLM}[http://en.wikipedia.org/wiki/NTLM] according to your needs.
+
 == Calling a SOAP action
 
 Assuming your service applies to the defaults, you can now call any available SOAP action.
