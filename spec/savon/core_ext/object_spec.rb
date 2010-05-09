@@ -16,12 +16,6 @@ describe Object do
     end
   end
 
-  describe "to_soap_key" do
-    it "calls to_s for every Object" do
-      Object.to_soap_key.should == Object.to_s
-    end
-  end
-
   describe "to_soap_value" do
     it "returns an xs:dateTime compliant String for Objects responding to to_datetime" do
       singleton = Object.new

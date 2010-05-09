@@ -74,13 +74,25 @@ describe String do
     end
   end
 
+  describe "to_soap_key" do
+    it "removes exclamation marks from the end of the String" do
+      "value".to_soap_key.should == "value"
+      "value!".to_soap_key.should == "value"
+    end
+  end
+
   describe "to_soap_value" do
-    it "should return the string value and escape special characters" do
+    it "should return the String value and escape special characters" do
       "string".to_soap_value.should == "string"
       "<tag>".to_soap_value.should == "&lt;tag&gt;"
       "at&t".to_soap_value.should == "at&amp;t"
       '"quotes"'.to_soap_value.should == "&quot;quotes&quot;"
-      "'apos'".to_soap_value.should == "&apos;apos&apos;"
+    end
+  end
+
+  describe "to_soap_value!" do
+    it "should just return the String value without escaping special characters" do
+      "<tag>".to_soap_value!.should == "<tag>"
     end
   end
 

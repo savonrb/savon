@@ -85,6 +85,18 @@ describe Hash do
       end
     end
 
+    it "should default to escape special characters" do
+      result = { :some => { :nested => "<tag />" }, :tag => "<tag />" }.to_soap_xml
+      result.should include("<tag>&lt;tag /&gt;</tag>")
+      result.should include("<some><nested>&lt;tag /&gt;</nested></some>")
+    end
+
+    it "should not escape special characters for keys marked with an exclamation mark" do
+      result = { :some => { :nested! => "<tag />" }, :tag! => "<tag />" }.to_soap_xml
+      result.should include("<tag><tag /></tag>")
+      result.should include("<some><nested><tag /></nested></some>")
+    end
+
     it "should preserve the order of Hash keys and values specified through :order!" do
       hash = { :find_user => { :name => "Lucy", :id => 666, :order! => [:id, :name] } }
       result = "<findUser><id>666</id><name>Lucy</name></findUser>"

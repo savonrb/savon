@@ -35,7 +35,11 @@ class Hash
   #     <perform_at>2012-06-11T10:42:21</perform_at>
   #   </magicRequest>
   #
-  # ==== :order!
+  # ==== Escaped XML values
+  #
+  # By default, special characters in XML String values are escaped.
+  #
+  # ==== Fixed order of XML tags
   #
   # In case your service requires the tags to be in a specific order (parameterOrder), you have two
   # options. The first is to specify your body as an XML string. The second is to specify the order
@@ -44,7 +48,7 @@ class Hash
   #   { :name => "Eve", :id => 123, :order! => [:id, :name] }.to_soap_xml
   #   # => "<id>123</id><name>Eve</name>"
   #
-  # ==== :attributes!
+  # ==== XML attributes
   #
   # If you need attributes, you could either go with an XML string or add another hash under the
   # +:attributes!+ key.
@@ -58,12 +62,13 @@ class Hash
     order.each do |key|
       attrs = attributes[key] || {}
       value = self[key]
+      escape_xml = key.to_s[-1, 1] != "!"
       key = key.to_soap_key
 
       case value
-        when Array then xml << value.to_soap_xml(key, attrs)
+        when Array then xml << value.to_soap_xml(key, escape_xml, attrs)
         when Hash  then xml.tag!(key, attrs) { xml << value.to_soap_xml }
-        else            xml.tag!(key, attrs) { xml << value.to_soap_value }
+        else            xml.tag!(key, attrs) { xml << (escape_xml ? value.to_soap_value : value.to_soap_value!) }
       end
     end
 

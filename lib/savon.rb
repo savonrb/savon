@@ -16,6 +16,7 @@ require "digest/sha1"
 require "rexml/document"
 require "stringio"
 require "zlib"
+require "cgi"
 
 # gem dependencies
 require "builder"

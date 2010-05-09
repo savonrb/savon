@@ -1,14 +1,14 @@
 class Array
 
   # Translates the Array into SOAP compatible XML. See: Hash.to_soap_xml.
-  def to_soap_xml(key, attributes = {})
+  def to_soap_xml(key, escape_xml = true, attributes = {})
     xml = Builder::XmlMarkup.new
 
     each_with_index do |item, index|
       attrs = tag_attributes attributes, index
       case item
         when Hash then xml.tag!(key, attrs) { xml << item.to_soap_xml }
-        else           xml.tag!(key, attrs) { xml << item.to_soap_value }
+        else           xml.tag!(key, attrs) { xml << (escape_xml ? item.to_soap_value : item.to_soap_value!) }
       end
     end
 

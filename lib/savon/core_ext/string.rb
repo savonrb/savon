@@ -51,16 +51,19 @@ class String
     self
   end
 
-  # Returns the String as a SOAP request compliant value.
-  # Escapes special characters for XML.
+  # Returns the Object as a SOAP request compliant key.
+  def to_soap_key
+    self[-1, 1] == "!" ? chop : self
+  end
+
+  # Returns the String as a SOAP value. Escapes special characters for XML.
   def to_soap_value
-    str = dup
-    str.gsub! "&", "&amp;"
-    str.gsub! '"', "&quot;"
-    str.gsub! "'", "&apos;"
-    str.gsub! "<", "&lt;"
-    str.gsub! ">", "&gt;"
-    str
+    CGI.escapeHTML self
+  end
+
+  # Convert the String into a SOAP value without escaping special characters.
+  def to_soap_value!
+    self
   end
 
 end

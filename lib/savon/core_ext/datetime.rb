@@ -5,4 +5,6 @@ class DateTime
     strftime Savon::SOAP::DateTimeFormat
   end
 
+  alias_method :to_soap_value!, :to_soap_value
+
 end
