@@ -8,37 +8,37 @@ module Savon
   # == Instantiation
   #
   # Depending on whether you aim to use Savon with or without Savon::WSDL, you need to instantiate
-  # Savon::Client by passing in the WSDL or SOAP endpoint.
+  # Savon::Client by passing in the WSDL and/or SOAP endpoint.
   #
   # Client instance with a WSDL endpoint:
   #
-  #   client = Savon::Client.new "http://example.com/UserService?wsdl"
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl"
   #
   # Client instance with a SOAP endpoint (for using Savon without a WSDL):
   #
-  #   client = Savon::Client.new "http://example.com/UserService"
+  #   client = Savon::Client.new :soap_endpoint => "http://example.com/UserService"
   #
-  # It is recommended to not use Savon::WSDL for production. Please take a look at the Documentation
+  # It is recommended to not use Savon::WSDL for production. Please take a look at the documentation
   # for Savon::WSDL for more information about how to disable it.
   #
   # == Using a proxy server
   #
   # You can specify the URI to a proxy server via optional hash arguments.
   #
-  #   client = Savon::Client.new "http://example.com/UserService?wsdl", :proxy => "http://proxy.example.com"
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :proxy => "http://proxy.example.com"
   #
   # == Forcing a particular SOAP endpoint
   #
   # In case you don't want to use the SOAP endpoint specified in the WSDL, you can tell Savon to use
   # another SOAP endpoint.
   #
-  #   client = Savon::Client.new "http://example.com/UserService?wsdl", :soap_endpoint => "http://localhost/UserService"
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :soap_endpoint => "http://localhost/UserService"
   #
   # == Gzipped SOAP requests
   #
   # Sending gzipped SOAP requests can be specified per client instance.
   #
-  #   client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :gzip => true
   #
   # == Savon::WSDL
   #

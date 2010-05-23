@@ -14,7 +14,7 @@ Savon expects you to be familiar with SOAP, WSDL and tools like soapUI.
 
 Instantiate Savon::Client, passing in the WSDL of your service.
 
-  client = Savon::Client.new "http://example.com/UserService?wsdl"
+  client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl"
 
 For production, it is highly recommended to not use Savon::WSDL. Information on {how to disable the WSDL}[http://savon.rubiii.com/docs/latest/classes/Savon/WSDL.html].
 

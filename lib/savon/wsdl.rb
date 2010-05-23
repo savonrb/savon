@@ -43,11 +43,10 @@ module Savon
   # 1. You instantiate Savon::Client with the actual SOAP endpoint instead of pointing it to the
   #    WSDL of your service.
   # 2. You also need to manually specify the SOAP.namespace.
-  # 3. Append an exclamation mark (!) to your SOAP call:
   #
-  #   client = Savon::Client.new "http://example.com"
+  #   client = Savon::Client.new :soap_endpoint => "http://example.com"
   #
-  #   client.get_user_by_id! do |soap|
+  #   client.get_user_by_id do |soap|
   #     soap.namespace = "http://example.com/UserService"
   #     soap.body = { :id => 666 }
   #   end
@@ -59,13 +58,13 @@ module Savon
   # The example above expects a SOAP action with an original name of "getUserById". If you service
   # uses UpperCamelCase method names, you can just use the original name:
   #
-  #   client.GetAllUsers!
+  #   client.GetAllUsers
   #
   # For special cases, you could also specify the SOAP.action and SOAP.input inside the block:
   #
-  #   client.get_user_by_id! do |soap|
+  #   client.get_user_by_id do |soap|
   #     soap.namespace = "http://example.com/UserService"
-  #     soap.action = "GetUserById"
+  #     soap.action = "GetUser_ById"
   #     soap.input = "GetUserByIdRequest"
   #     soap.body = { :id => 123 }
   #   end
