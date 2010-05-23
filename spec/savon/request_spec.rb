@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Savon::Request do
-  before { @request = Savon::Request.new EndpointHelper.wsdl_endpoint }
+  before { @request = Savon::Request.new :wsdl => EndpointHelper.wsdl_endpoint }
 
   it "contains the ContentType for each supported SOAP version" do
     content_type = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
@@ -38,7 +38,7 @@ describe Savon::Request do
   end
 
   it "is initialized with a SOAP endpoint String" do
-    Savon::Request.new EndpointHelper.wsdl_endpoint
+    Savon::Request.new :wsdl => EndpointHelper.wsdl_endpoint
   end
 
   it "has a getter for the SOAP endpoint URI" do
@@ -91,7 +91,7 @@ describe Savon::Request do
     end
 
     it "should include Accept-Encoding gzip if it is enabled" do
-      @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => true
+      @request = Savon::Request.new :wsdl => EndpointHelper.wsdl_endpoint, :gzip => true
       a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
 
       Net::HTTP::Post.expects(:new).with(anything, has_entry("Accept-encoding" => "gzip,deflate")).returns(a_post)
@@ -100,7 +100,7 @@ describe Savon::Request do
     end
 
     it "should not include Accept-Encoding gzip if it is not enabled" do
-      @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => false
+      @request = Savon::Request.new :wsdl => EndpointHelper.wsdl_endpoint, :gzip => false
       a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
 
       Net::HTTP::Post.expects(:new).with(anything, Not(has_entry("Accept-encoding" => "gzip,deflate"))).returns(a_post)

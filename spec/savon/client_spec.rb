@@ -1,22 +1,32 @@
 require "spec_helper"
 
 describe Savon::Client do
-  before { @client = Savon::Client.new EndpointHelper.wsdl_endpoint }
+  before { @client = Savon::Client.new :wsdl => EndpointHelper.wsdl_endpoint }
 
-  it "should be initialized with an endpoint String" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint
-    client.request.http.proxy?.should be_false
+  it "should use Savon::WSDL when a remote WSDL document was specified" do
+    client = Savon::Client.new :wsdl => EndpointHelper.wsdl_endpoint
+    client.wsdl.should be_enabled
   end
 
-  it "should accept a proxy URI via an optional Hash of options" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
+  it "should not use Savon::WSDL when only a SOAP endpoint was specified" do
+    client = Savon::Client.new :soap_endpoint => "http://localhost"
+    client.wsdl.should_not be_enabled
+  end
+
+  it "should be able to use Savon::WSDL with a custom SOAP endpoint" do
+    client = Savon::Client.new :wsdl => EndpointHelper.wsdl_endpoint, :soap_endpoint => "http://localhost"
+    client.wsdl.should be_enabled
+    client.wsdl.soap_endpoint.should == "http://localhost"
+  end
+
+  it "should raise an ArgumentError when no WSDL or SOAP endpoint was specified" do
+    lambda { Savon::Client.new }.should raise_error(ArgumentError)
+  end
+
+  it "should be able to send requests through a proxy server" do
+    client = Savon::Client.new :wsdl => EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
     client.request.http.proxy?.should be_true
     client.request.http.proxy_address == "http://proxy"
-  end
-
-  it "should accept a SOAP endpoint via an optional Hash of options" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :soap_endpoint => "http://localhost"
-    client.wsdl.soap_endpoint.should == "http://localhost"
   end
 
   it "should have a method that returns the Savon::WSDL" do
@@ -40,28 +50,14 @@ describe Savon::Client do
     @client.authenticate.should be_a(Savon::Response)
   end
 
-  it "should disable the Savon::WSDL when passed a method with an exclamation mark" do
-    @client.wsdl.enabled?.should be_true
-    [:operations, :namespace_uri, :soap_endpoint].each do |method|
-      Savon::WSDL.any_instance.expects(method).never
-    end
-
-    response = @client.authenticate! do |soap|
-      soap.input.should == "authenticate"
-      soap.input.should == "authenticate"
-    end
-    response.should be_a(Savon::Response)
-    @client.wsdl.enabled?.should be_false
-  end
-
   it "should raise a Savon::SOAPFault in case of a SOAP fault" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
-    lambda { client.authenticate! }.should raise_error(Savon::SOAPFault)
+    client = Savon::Client.new :soap_endpoint => EndpointHelper.soap_endpoint(:soap_fault)
+    lambda { client.authenticate }.should raise_error(Savon::SOAPFault)
   end
 
   it "should raise a Savon::HTTPError in case of an HTTP error" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
-    lambda { client.authenticate! }.should raise_error(Savon::HTTPError)
+    client = Savon::Client.new :soap_endpoint => EndpointHelper.soap_endpoint(:http_error)
+    lambda { client.authenticate }.should raise_error(Savon::HTTPError)
   end
 
   it "should yield an instance of Savon::SOAP to a given block expecting one argument" do

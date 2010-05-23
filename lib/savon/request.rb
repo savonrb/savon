@@ -47,8 +47,8 @@ module Savon
     ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
 
     # Expects a WSDL or SOAP +endpoint+ and accepts a custom +proxy+ address.
-    def initialize(endpoint, options = {})
-      @endpoint = URI endpoint
+    def initialize(options = {})
+      @endpoint = URI(options[:wsdl]) rescue nil
       @proxy = URI options[:proxy] || ""
       headers["Accept-encoding"] = "gzip,deflate" if options[:gzip]
     end
@@ -104,7 +104,7 @@ module Savon
 
     # Returns the Net::HTTP object.
     def http
-      @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new @endpoint.host, @endpoint.port
+      @http ||= Net::HTTP::Proxy(@proxy.host, @proxy.port).new "", ""
     end
 
   private

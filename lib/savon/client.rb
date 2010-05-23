@@ -57,12 +57,15 @@ module Savon
     #
     # ==== Options:
     #
-    # [proxy]  the proxy server to use
-    # [gzip]  whether to gzip SOAP requests
-    # [soap_endpoint]  force to use this SOAP endpoint
-    def initialize(endpoint, options = {})
-      soap_endpoint = options.delete(:soap_endpoint)
-      @request = Request.new endpoint, options
+    # [soap_endpoint]  the SOAP endpoint to use
+    # [wsdl]           the wsdl to use
+    # [proxy]          the proxy server to use
+    # [gzip]           whether to gzip SOAP requests
+    def initialize(options = {})
+      raise ArgumentError, "Please specify a :wsdl and/or :soap_endpoint" unless options[:wsdl] || options[:soap_endpoint]
+      
+      soap_endpoint = options.delete :soap_endpoint
+      @request = Request.new options
       @wsdl = WSDL.new @request, soap_endpoint
     end
 
@@ -88,31 +91,17 @@ module Savon
 
     # Dispatches requests to SOAP actions matching a given +method+ name.
     def method_missing(method, *args, &block) #:doc:
-      soap_action = soap_action_from method.to_s
+      soap_action = method
       super unless @wsdl.respond_to? soap_action
 
       setup_objects *@wsdl.operation_from(soap_action), &block
       Response.new @request.soap(@soap)
     end
 
-    # Sets whether to use Savon::WSDL by a given +method+ name and returns the original method name
-    # without exclamation marks.
-    def soap_action_from(method)
-      @wsdl.enabled = !method.ends_with?("!")
-
-      method.chop! if method.ends_with?("!")
-      method.to_sym
-    end
-
-    # Returns the SOAP endpoint.
-    def soap_endpoint
-      @wsdl.enabled? ? @wsdl.soap_endpoint : @request.endpoint
-    end
-
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE. Yields them to a given
     # +block+ in case one was given.
     def setup_objects(action, input, &block)
-      @soap, @wsse = SOAP.new(action, input, soap_endpoint), WSSE.new
+      @soap, @wsse = SOAP.new(action, input, @wsdl.soap_endpoint), WSSE.new
       yield_objects &block if block
       @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
       @soap.wsse = @wsse

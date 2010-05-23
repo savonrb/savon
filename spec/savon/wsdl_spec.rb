@@ -101,7 +101,7 @@ describe Savon::WSDL do
 
   def new_wsdl(fixture = nil)
     endpoint = fixture ? EndpointHelper.wsdl_endpoint(fixture) : EndpointHelper.wsdl_endpoint
-    Savon::WSDL.new Savon::Request.new(endpoint)
+    Savon::WSDL.new Savon::Request.new(:wsdl => endpoint)
   end
 
 end
