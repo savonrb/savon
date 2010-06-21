@@ -4,24 +4,8 @@
 
     client.request.ntlm_auth "username", "password"
 
-  * Changed how to work with or without a WSDL document. First, when initializing a Savon::Client,
-    instead of accepting a WSDL or SOAP endpoint plus optional parameters, you now have to set one
-    or both endpoints explicitly through a Hash.
-
-    # To work with a remote WSDL document:
-    client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl"
-
-    # To work with a remote WSDL document but define a different SOAP endpoint:
-    client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl",
-      :soap_endpoint => "http://localhost/UserService"
-
-    # To disable the WSDL and directly work with the service:
-    client = Savon::Client.new :soap_endpoint => "http://example.com/UserService?wsdl"
-
-    This also means you don't have to add an exclamation mark to your SOAP calls (to disable the WSDL).
-    The WSDL is used when it's specified. Otherwise all methods called on your Savon::Client will just
-    hit the service. Exclamation marks are not removed from SOAP calls automatically, so please remove
-    them from your code!
+== 0.7.9 (2010-06-14)
+  * Fix for issue #53 (DateTime.to_soap_value assumes UTC).
 
 == 0.7.8 (2010-05-09)
   * Fixed gemspec to include missing files (*.yml, *.gz, .autotest and spec/spec.opts) in the gem.
