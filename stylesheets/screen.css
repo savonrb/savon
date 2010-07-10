@@ -1,4 +1,4 @@
-body { background:#fff; color:#222; font:13px/21px helvetica,arial,freesans,clean,sans-serif; }
+body { background:#fff; color:#222; font:13px/21px helvetica,arial,freesans,clean,sans-serif; margin:30px 0; }
 
 h1 { font-size:22px; }
 h2 { border-top:4px solid #eee; font-size:18px; margin-top:2em; padding-top:0.5em; }
@@ -9,13 +9,16 @@ a:hover, a:active { color:#4183C4; text-decoration:underline; }
 
 p { margin:1em 0; }
 
+ul, ol { margin:0; padding:0 0 0 1.25em; }
+  li p { margin:0; }
+
 pre, code { font:12px Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace; }
   pre, code { background:#f8f8ff; border:1px solid #ddd; color:#444; font-size:12px; }
   pre { margin:1em 0; overflow:auto; padding:0.5em 1em; }
-  code { margin:0 0.2em; padding:0.1em 0.3em; }
-    pre code { border:0; margin:0; padding:0; }
-
+  code { padding:0.1em 0.3em; }
+    pre code { border:0; padding:0; }
 
 #content { margin:0 auto; width:60em; }
 
+div.warn { border:1px dashed #a00; padding:0.5em 1em; }
 .warn { color:#a00; }

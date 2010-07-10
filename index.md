@@ -1,112 +1,259 @@
 ---
-title: Home
+title: Heavy metal Ruby SOAP client
 layout: default
 ---
 
-Introduction to Pages
+Introduction to Savon
 =====================
 
-The GitHub Pages feature allows you to publish content to the web by simply pushing content to one of your GitHub hosted repositories. There are two different kinds of Pages that you can create: User Pages and Project Pages.
+Savon is a SOAP client library for Ruby. It aims to make simple tasks easy and hard tasks possible. Before using it, you should read the documentation and make yourself familiar with [SOAP](http://www.w3.org/TR/soap/) itself, [WSDL documents](http://www.w3.org/TR/wsdl) and tools like [soapUI](http://www.eviware.com).
 
-User Pages
-----------
+Table of contents
+-----------------
 
-Let's say your GitHub username is "alice". If you create a GitHub repository named `alice.github.com`, commit a file named `index.html` into the `master` branch, and push it to GitHub, then this file will be automatically published to [http://alice.github.com/](http://alice.github.com/).
+* [Installation](#installation)
+* [Getting started](#getting_started)
+* [Working with a WSDL](#working_with_a_wsdl)
+* [Executing a SOAP request](#executing_a_soap_request)
+* [SOAP request customization](#soap_request_customization)
+  * [SOAP version](#soap_version)
+  * [SOAP envelope](#soap_envelope)
+  * [SOAP header](#soap_header)
+  * [SOAP body](#soap_body)
 
-On the first push, it can take up to ten minutes before the content is available.
+Installation
+------------
 
-Real World Example: [github.com/defunkt/defunkt.github.com](http://github.com/defunkt/defunkt.github.com/) &rarr; [http://defunkt.github.com/](http://defunkt.github.com/).
+Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
-Project Pages
--------------
+    $ gem install savon
 
-Let's say your GitHub username is "bob" and you have an existing repository named `fancypants`. If you create a new root branch named `gh-pages` in your repository, any content pushed there will be published to [http://bob.github.com/fancypants/](http://bob.github.com/fancypants/).
+Getting started
+---------------
 
-In order to create a new root branch, first ensure that your working directory is clean by committing or stashing any changes. <span style="color: #a00;">The following operation will lose any uncommitted changes!</span>
+The primary interface for Savon is the `Savon::Client` object. It contains the `#request` method for executing SOAP requests while also serving as a wrapper for accessing the SOAP, WSDL and Request objects.
 
-After running this you'll have an empty working directory (don't worry, your main repo is still on the `master` branch). Now you can create some content in this branch and push it to GitHub. For example:
+Assuming you have access to a WSDL, you need to instantiate a `Savon::Client` passing in the location of the WSDL:
 
 {% highlight ruby %}
-client = Savon::Client.new :wsdl => "http://example.com?wsdl"
+client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl" # remote
+client = Savon::Client.new :wsdl => "../wsdl/user_service.xml" # local
 {% endhighlight %}
 
+Even though using a WSDL comes with some advantages, loading and parsing the WSDL might take quite some time. So if you don't have or don't want to use a WSDL, you can directly access the SOAP endpoint instead. In this case, you need to pass in the URI of the SOAP endpoint and the target namespace of the service:
+
 {% highlight ruby %}
-client.call(:get_user) do
-  soap.body = { :id => 123 }
+client = Savon::Client.new(
+  :endpoint => "http://example.com/UserService",
+  :namespace => "http://users.example.com"
+)
+{% endhighlight %}
+
+You can also use the WSDL and overwrite its SOAP endpoint:
+
+{% highlight ruby %}
+client = Savon::Client.new(
+  :wsdl => "http://example.com/UserService?wsdl",
+  :endpoint => "http://localhost:8080/UserService"
+)
+{% endhighlight %}
+
+And in case you're using a proxy server to access the service, you can specify that as well:
+
+{% highlight ruby %}
+client = Savon::Client.new(
+  :wsdl => "http://example.com/UserService?wsdl",
+  :proxy => "http://proxy.example.com"
+)
+{% endhighlight %}
+
+Working with a WSDL
+-------------------
+
+If you decided to use a WSDL, you can now check to see what it knows about your service:
+
+{% highlight ruby %}
+client.wsdl.soap_actions  # => [:add_user, :get_user, :get_all_users]
+client.wsdl.endpoint      # => "http://example.com/UserService"
+client.wsdl.namespace     # => "http://users.example.com"
+{% endhighlight %}
+
+Currently, the WSDL parser is still pretty basic and in some cases it might not be able to get the correct information. So it's recommended that you check the state of the `Savon::WSDL` object.
+
+### SOAP actions
+
+Savon maps the SOAP actions of your service to snake_case Symbols, because that just feels more natural. You can inspect the mapping via:
+
+{% highlight ruby %}
+client.wsdl.operations
+# => { :add_user => { :action => "addUser", :input => "addUserRequest" }, ... }
+{% endhighlight %}
+
+As you can see from this example, the Hash contains the value for the `SOAPAction` HTTP header and the name of the input tag (the first tag inside the soap:Body element). So if the mapping worked out as it should, you can forget about these details and just remember that the SOAP action you're going to call is a snake_case Symbol.
+
+If the mapping does not contain the values you expected, you can either overwrite them when executing a SOAP request or simply not use the WSDL.
+
+Executing a SOAP request
+------------------------
+
+To execute a SOAP request, you use the `#request` method of your `Savon::Client`, passing in name of the SOAP action you want to call:
+
+{% highlight ruby %}
+client.request :get_all_users
+# => <getAllUsers></getAllUsers>
+{% endhighlight %}
+
+Notice that if you're working with a WSDL, Savon will register the `xmlns:wsdl` namespace for you. In order to namespace the SOAP input tag, you pass in both the namespace and action:
+
+{% highlight ruby %}
+client.request :wsdl, :get_all_users
+# => <wsdl:getAllUsers></wsdl:getAllUsers>
+{% endhighlight %}
+
+You can also add a Hash of attributes for the input tag as the last argument:
+
+{% highlight ruby %}
+client.request :get_all_users, "xmlns:doc" => "http://doc.example.com"
+# => <getAllUsers xmlns:doc="http://doc.example.com"></getAllUsers>
+{% endhighlight %}
+
+When you're not working with a WSDL, Savon does not know anything about the SOAP actions of your service. So by convention, if you pass in the action as a snake_case Symbol, it gets converted to lowerCamelCase. But don't worry. If you pass in a String instead of a Symbol, Savon will use it without converting:
+
+{% highlight ruby %}
+client.request "GetAllUsers"
+# => <GetAllUsers></GetAllUsers>
+{% endhighlight %}
+
+SOAP request customization
+--------------------------
+
+When executing a SOAP request, `Savon::Client#request` also accepts a block in which you have access to the SOAP, WSDL and Request objects. This block is the place for you to set the payload, change HTTP headers, specify authentication credentials, etc.
+
+<div class="warn">Due to the evaluation of the block, you can use local variables and methods, but you can not use instance variables inside it!</div>
+
+Before going into the details, let's take a look at an example request. The comments should help you understand what the documentation is talking about.
+
+    POST http://example.com/UserService HTTP/1.1
+    Accept-Encoding: gzip,deflate                                         # HTTP header
+    Content-Type: text/xml;charset=UTF-8
+    SOAPAction: "getUser"                                                 # SOAP action
+    
+    <soap:Envelope                                                        # SOAP envelope
+        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"            # Namespaces
+        xmlns:wsdl="http://users.example.com">
+      <soap:Header/>                                                      # SOAP header
+      <soap:Body>                                                         # SOAP body
+        <wsdl:getUser>                                                    # Input tag
+          <id>123</id>                                                    # Payload
+        </wsdl:getUser>
+      </soap:Body>
+    </soap:Envelope>
+
+### SOAP version
+
+Savon by default expects your service to be based on SOAP 1.1. You can use `Savon::SOAP#version` to set the version to SOAP 1.2:
+
+{% highlight ruby %}
+client.request(:get_user) { soap.version = 2 }
+{% endhighlight %}
+
+Changing the SOAP version affects the `xmlns:soap` namespace as well as error handling details.
+
+### SOAP envelope
+
+#### Namespaces
+
+Savon defines the `xmlns:soap` namespace for the current SOAP version. It also defines the `xmlns:wsdl` namespace if you're using a WSDL. You can define additional namespaces using the `Savon::SOAP#namespaces` method which returns a Hash:
+
+{% highlight ruby %}
+client.request :get_user do
+  soap.namespaces["xmlns:custom"] = "http://custom.example.com"
 end
+# => <soap:Envelope
+# =>   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+# =>   xmlns:custom="http://custom.example.com">
 {% endhighlight %}
 
-On the first push, it can take up to ten minutes before the content is available.
+#### XML (or: I don't need your help)
 
-Real World Example: [github.com/defunkt/ambition@gh-pages](http://github.com/defunkt/ambition/tree/gh-pages) &rarr; [http://defunkt.github.com/ambition](http://defunkt.github.com/ambition).
+If you don't want Savon to create any XML and just handle the requests, you can pass an object responding to `to_s` to the `Savon::SOAP#xml` method:
 
-### Project Page Generator
+{% highlight ruby %}
+client.request(:get_user) { soap.xml = "<my:Envelope>empty</my:Envelope>" }
+# => <my:Envelope>empty</my:Envelope>
+{% endhighlight %}
 
-If you don't want to go through the steps above to generate your branch, or you simply would like a generic page, you can use our page generator to create your gh-pages branch for you and fill it with a default page.
+### SOAP header
 
-![Page generator](page_generator.jpg)
+...
 
-After your page is generated, you can check out the new branch:
+### SOAP body
 
-    $ cd Repos/ampere
-    $ git fetch origin
-    remote: Counting objects: 92, done.
-    remote: Compressing objects: 100% (63/63), done.
-    remote: Total 68 (delta 41), reused 0 (delta 0)
-    Unpacking objects: 100% (68/68), done.
-    From git@github.com:tekkub/ampere
-     * [new branch]      gh-pages     -> origin/gh-pages
-    $ git checkout -b gh-pages origin/gh-pages
-    Branch gh-pages set up to track remote branch refs/remotes/origin/gh-pages.
-    Switched to a new branch "gh-pages"
+XML is verbose and boring. And since basic XML can be represented as a Hash ... well, just take a look at the following example:
 
-Using Jekyll For Complex Layouts
-================================
+{% highlight ruby %}
+client.request(:get_user) { soap.body = { :user_id => 123 } }
+# => <getUser><userId>123</userId></getUser>
+{% endhighlight %}
 
-In addition to supporting regular HTML content, GitHub Pages support [Jekyll](http://github.com/mojombo/jekyll/), a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.
+You can pass a Hash to `Savon::SOAP#body` and it will be converted to XML via `Hash#to_soap_xml`. Notice that by convention, Hash key Symbols are converted to lowerCamelCase. But again, you can use Hash key Strings which will not be converted.
 
-Every GitHub Page is run through Jekyll when you push content to your repo. Because a normal HTML site is also a valid Jekyll site, you don't have to do anything special to keep your standard HTML files unchanged. Jekyll has a thorough [README](http://github.com/mojombo/jekyll/blob/master/README.textile) that covers its features and usage.
+{% highlight ruby %}
+client.request(:get_user) { soap.body = { "UserID" => 123 } }
+# => <getUser><UserID>123</UserID></getUser>
+{% endhighlight %}
 
-As of April 7, 2009, you can configure most Jekyll settings via your `_config.yml` file. Most notably, you can select your permalink style and choose to have your Markdown rendered with RDiscount instead of the default Maruku. The only options we override are as follows:
+This works great for simple data, but can also be used to generate more complex XML.
 
-    safe: true
-    source: <your pages repo>
-    destination: <the build dir>
-    lsi: false
-    pygments: true
+#### Element order
 
-If your Jekyll site is not transforming properly after you push it to GitHub, it's useful to run the converter locally so you can see any parsing errors. In order to do this, you'll want to use the same version that we use.
+Some services require XML elements to be in a specific order. If you're not working with Ruby 1.9 by now, that might be a problem. One solution is to specify the exact order of elements in an Array under the `:order!` key:
 
-We currently use <span style="font-weight: bold; color: #0a0;">Jekyll 0.6.0</span> and run it with the equivalent command:
+{% highlight ruby %}
+client.request :add_user do
+  soap.body = {
+    :user => {
+      :name => "Eve",
+      :email => "eve@example.com",
+      :order! => [:name, :email]
+    }
+  }
+end
+# => <addUser>
+# =>   <user>
+# =>     <name>Eve</name>
+# =>     <email>eve@example.com</email>
+# =>   </user>
+# => </addUser>
+{% endhighlight %}
 
-    jekyll --pygments --safe
+#### Attributes
 
-As of December 27, 2009, you can completely opt-out of Jekyll processing by creating a file named `.nojekyll` in the root of your pages repo and pushing that to GitHub. This should only be necessary if your site uses directories that begin with an underscore, as Jekyll sees these as special dirs and does not copy them to the final destination.
+Savon also lets you attach attributes through a Hash under the `:attributes!` key:
 
-If there's a feature you wish that Jekyll had, feel free to fork it and send a pull request. We're happy to accept user contributions.
+{% highlight ruby %}
+client.request :add_user do
+  soap.body = {
+    :user => {
+      :name => "Eve",
+      :contact => "eve@example.com",
+      :attributes! => { :contact => { "type" => "email" } }
+    }
+  }
+end
+# => <addUser>
+# =>   <user>
+# =>     <name>Eve</name>
+# =>     <contact type="email">eve@example.com</contact>
+# =>   </user>
+# => </addUser>
+{% endhighlight %}
 
-Real World Example: [github.com/pages/pages.github.com](http://github.com/pages/pages.github.com/) &rarr; [http://pages.github.com/](http://pages.github.com/).
+#### XML (aka the hard way)
 
-Custom Domains
-==============
+`Savon::SOAP#body` also accepts any object that is not a Hash and responds to `to_s`. So you can use anything from a simple String to any kind of object returning a String of XML:
 
-If you or one of the collaborators on your repository have a paid account, GitHub Pages allows you to direct a domain name of your choice at your Page.
-
-Let's say you own the domain name [example.com](http://example.com). Furthermore, your GitHub username is "charlie" and you have published a User Page at [http://charlie.github.com/](http://charlie.github.com/). Now you'd like to load up [http://example.com/](http://example.com) in your browser and have it show the content from [http://charlie.github.com/](http://charlie.github.com/).
-
-Start by creating a file named `CNAME` in the root of your repository. It should contain your domain name like so:
-
-    example.com
-
-Push this new file up to GitHub.  The server will set your pages to be hosted at [example.com](http://example.com), and create redirects from [www.example.com](http://www.example.com) and [charlie.github.com](http://charlie.github.com/) to [example.com](http://example.com).
-
-Next, you'll need to visit your domain registrar or DNS host and add a record for your domain name. For a sub-domain like `www.example.com` you would simply create a CNAME record pointing at `charlie.github.com`.  If you are using a top-level domain like `example.com`, you must use an A record pointing to `207.97.227.245`.  *Do not use a CNAME record with a top-level domain,* it can have adverse side effects on other services like email.  Many DNS services will let you set a CNAME on a TLD, even though you shouldn't.  Remember that it may take up to a full day for DNS changes to propagate, so be patient.
-
-Real World Example: [github.com/mojombo/mojombo.github.com](http://github.com/mojombo/mojombo.github.com/) &rarr; [http://tom.preston-werner.com/](http://tom.preston-werner.com/).
-
-Custom 404 Pages
-================
-
-If you provide a `404.html` file in the root of your repo, it will be served instead of the default 404 page.  Note that Jekyll-generated pages will not work, it <i>must</i> be an html file.
-
-Real World Example: [http://github.com/tekkub/tekkub.github.com/blob/master/404.html](http://github.com/tekkub/tekkub.github.com/blob/master/404.html) &rarr; [http://tekkub.net/404.html](http://tekkub.net/404.html).
+{% highlight ruby %}
+client.request(:get_user) { soap.body = "<id>123</id>" }
+# => <getUser><id>123</id></getUser>
+{% endhighlight %}
