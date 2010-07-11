@@ -20,6 +20,21 @@ Table of contents
   * [SOAP envelope](#soap_envelope)
   * [SOAP header](#soap_header)
   * [SOAP body](#soap_body)
+* [HTTP](#http)
+* [Handling the SOAP response](#handling_the_soap_response)
+* [Authentication](#authentication)
+  * [WSSE](#wsse)
+  * [HTTP basic](#http_basic)
+  * [HTTP digest](#http_digest)
+  * [SSL](#ssl)
+* [Logging](#logging)
+* [Participate](#participate)
+* [Alternative libraries](#alternative_libraries)
+
+Warning
+-------
+
+<div class="warn">Work in progress! This documentation will be available for Savon version >= 0.8 soon.</div>
 
 Installation
 ------------
@@ -76,6 +91,7 @@ If you decided to use a WSDL, you can now check to see what it knows about your 
 client.wsdl.soap_actions  # => [:add_user, :get_user, :get_all_users]
 client.wsdl.endpoint      # => "http://example.com/UserService"
 client.wsdl.namespace     # => "http://users.example.com"
+client.wsdl.to_s          # => "<wsdl:definitions>...</wsdl:definitions>"
 {% endhighlight %}
 
 Currently, the WSDL parser is still pretty basic and in some cases it might not be able to get the correct information. So it's recommended that you check the state of the `Savon::WSDL` object.
@@ -185,7 +201,14 @@ client.request(:get_user) { soap.xml = "<my:Envelope>empty</my:Envelope>" }
 
 ### SOAP header
 
-...
+Savon adds elements to the SOAP header when you're using [WSSE authentication](#wsse). As usual, the header is just another Hash that you can manipulate:
+
+{% highlight ruby %}
+client.request(:get_user) { soap.header["specialApiKey"] = "secret" }
+# => <soap:Header>
+# =>   <specialApiKey>secret</specialApiKey>
+# => </soap:Header>
+{% endhighlight %}
 
 ### SOAP body
 
@@ -257,3 +280,47 @@ end
 client.request(:get_user) { soap.body = "<id>123</id>" }
 # => <getUser><id>123</id></getUser>
 {% endhighlight %}
+
+HTTP
+----
+
+...
+
+Handling the SOAP response
+--------------------------
+
+...
+
+Authentication
+--------------
+
+### WSSE
+
+...
+
+### HTTP basic
+
+...
+
+### HTTP digest
+
+...
+
+### SSL
+
+...
+
+Logging
+-------
+
+...
+
+Participate
+-----------
+
+...
+
+Alternative libraries
+---------------------
+
+If you find that Savon does not work for you, you might want to take a look at your alternatives at [The Ruby Toolbox](http://www.ruby-toolbox.com/categories/soap.html).
