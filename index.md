@@ -12,6 +12,7 @@ Table of contents
 -----------------
 
 * [Installation](#installation)
+* [Runtime dependencies](#runtime_dependencies)
 * [Getting started](#getting_started)
 * [Working with a WSDL](#working_with_a_wsdl)
 * [Executing a SOAP request](#executing_a_soap_request)
@@ -21,11 +22,12 @@ Table of contents
   * [SOAP header](#soap_header)
   * [SOAP body](#soap_body)
 * [HTTP](#http)
+  * [SOAPAction](#soapaction)
 * [Handling the SOAP response](#handling_the_soap_response)
 * [Authentication](#authentication)
-  * [WSSE](#wsse)
   * [HTTP basic](#http_basic)
   * [HTTP digest](#http_digest)
+  * [WSSE](#wsse)
   * [SSL](#ssl)
 * [Logging](#logging)
 * [Participate](#participate)
@@ -42,6 +44,13 @@ Installation
 Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
     $ gem install savon
+
+Runtime dependencies
+------------
+
+* [httpclient](http://rubygems.org/gems/httpclient) >= 2.1.5
+* [crack](http://rubygems.org/gems/crack) >= 0.1.8
+* [builder](http://rubygems.org/gems/builder) >= 2.1.2
 
 Getting started
 ---------------
@@ -286,6 +295,15 @@ HTTP
 
 ...
 
+### SOAPAction
+
+When you're working with a WSDL, the `SOAPAction` HTTP header will be set automatically. If you're not, Savon by convention uses the name of the SOAP input tag. To change this behavior, you can set the attribute on the HTTP header yourself:
+
+{% highlight ruby %}
+client.request(:get_all_users) { http.header["SOAPAction"] = "urn:GetAllUsers" }
+# => SOAPAction = "urn:GetAllUsers"
+{% endhighlight %}
+
 Handling the SOAP response
 --------------------------
 
@@ -294,15 +312,15 @@ Handling the SOAP response
 Authentication
 --------------
 
-### WSSE
-
-...
-
 ### HTTP basic
 
 ...
 
 ### HTTP digest
+
+...
+
+### WSSE
 
 ...
 
