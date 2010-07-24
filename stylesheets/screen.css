@@ -1,8 +1,12 @@
-body { background:#fff; color:#222; font:13px/21px helvetica,arial,freesans,clean,sans-serif; margin:30px 0; }
+@font-face { font-family:Inconsolata; src:url("../fonts/inconsolata.otf"); }
+@font-face { font-family:Aller; src:url("../fonts/aller_lt.ttf"); }
 
-h1 { font-size:22px; }
-h2 { border-top:4px solid #eee; font-size:18px; margin-top:2em; padding-top:0.5em; }
-h3 { margin-top:2em; }
+body { background:#fff; color:#222; font:13px/21px helvetica,arial,sans-serif; margin:30px 0; }
+
+h1, h2, h3 { font-family:Aller,helvetica,arial,sans-serif; }
+  h1 { font-size:26px; }
+  h2 { border-top:4px solid #eee; font-size:20px; margin-top:2em; padding-top:0.5em; }
+  h3 { margin-top:2em; }
 
 a:link, a:visited { color:#4183C4; text-decoration:none; }
 a:hover, a:active { color:#4183C4; text-decoration:underline; }
@@ -12,8 +16,7 @@ p { margin:1em 0; }
 ul, ol { margin:0; padding:0 0 0 1.25em; }
   li p { margin:0; }
 
-pre, code { font:12px Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace; }
-  pre, code { background:#f8f8ff; border:1px solid #ddd; color:#444; font-size:12px; }
+pre, code { background:#f8f8ff; border:1px solid #ddd; color:#444; font:14px Inconsolata,Monaco,"Courier New","DejaVu Sans Mono","Bitstream Vera Sans Mono",monospace; }
   pre { margin:1em 0; overflow:auto; padding:0.5em 1em; }
   code { padding:0.1em 0.3em; }
     pre code { border:0; padding:0; }
