@@ -1,8 +1,5 @@
 .DS_Store
 nbproject
-pkg
-doc
-coverage
 .yardoc
 .loadpath
 .project
