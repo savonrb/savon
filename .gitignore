@@ -3,6 +3,7 @@ nbproject
 pkg
 doc
 coverage
+.yardoc
 .loadpath
 .project
 *~
