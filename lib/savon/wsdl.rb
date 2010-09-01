@@ -1,3 +1,7 @@
+require "rexml/document"
+
+require "savon/wsdl_stream"
+
 module Savon
 
   # = Savon::WSDL

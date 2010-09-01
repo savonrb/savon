@@ -1,3 +1,5 @@
+require "savon/core_ext/datetime"
+
 module Savon
   module CoreExt
     module Object

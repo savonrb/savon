@@ -1,3 +1,9 @@
+require "savon/soap"
+require "savon/wsdl"
+require "savon/request"
+require "savon/wsse"
+require "savon/response"
+
 module Savon
 
   # = Savon::Client

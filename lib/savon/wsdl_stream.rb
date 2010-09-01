@@ -1,3 +1,6 @@
+require "savon/core_ext/object"
+require "savon/core_ext/string"
+
 module Savon
 
   # = Savon::WSDLStream

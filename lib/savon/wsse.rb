@@ -1,3 +1,10 @@
+require "base64"
+require "digest/sha1"
+require "builder"
+
+require "savon/core_ext/string"
+require "savon/soap"
+
 module Savon
 
   # = Savon::WSSE

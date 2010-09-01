@@ -1,3 +1,7 @@
+require "builder"
+
+require "savon/core_ext/hash"
+
 module Savon
 
   # = Savon::SOAP

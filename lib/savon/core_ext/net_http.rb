@@ -1,3 +1,5 @@
+require "net/https"
+
 module Savon
   module CoreExt
     module Net

@@ -1,3 +1,5 @@
+require "savon/core_ext/string"
+
 module Savon
   module CoreExt
     module Symbol

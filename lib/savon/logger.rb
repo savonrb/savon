@@ -1,3 +1,5 @@
+require "logger"
+
 module Savon
 
   # = Savon::Logger

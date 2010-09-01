@@ -1,3 +1,10 @@
+require "builder"
+
+require "savon/core_ext/object"
+require "savon/core_ext/string"
+require "savon/core_ext/hash"
+require "savon/core_ext/datetime"
+
 module Savon
   module CoreExt
     module Array
@@ -9,8 +16,8 @@ module Savon
         each_with_index do |item, index|
           attrs = tag_attributes attributes, index
           case item
-            when Hash then xml.tag!(key, attrs) { xml << item.to_soap_xml }
-            else           xml.tag!(key, attrs) { xml << (escape_xml ? item.to_soap_value : item.to_soap_value!) }
+            when ::Hash then xml.tag!(key, attrs) { xml << item.to_soap_xml }
+            else             xml.tag!(key, attrs) { xml << (escape_xml ? item.to_soap_value : item.to_soap_value!) }
           end
         end
         
@@ -25,7 +32,7 @@ module Savon
         return {} if attributes.empty?
         
         attributes.inject({}) do |hash, (key, value)|
-          value = value[index] if value.kind_of? Array
+          value = value[index] if value.kind_of? ::Array
           hash.merge key => value
         end
       end

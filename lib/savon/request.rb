@@ -1,3 +1,11 @@
+require "uri"
+require "net/https"
+require "net/ntlm_http"
+
+require "savon/logger"
+require "savon/core_ext/uri"
+require "savon/core_ext/net_http"
+
 module Savon
 
   # = Savon::Request

@@ -1,3 +1,9 @@
+require "stringio"
+require "zlib"
+require "crack/xml"
+
+require "savon/core_ext/hash"
+
 module Savon
 
   # = Savon::Response

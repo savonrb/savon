@@ -1,3 +1,5 @@
+require "uri"
+
 module Savon
   module CoreExt
     module URI

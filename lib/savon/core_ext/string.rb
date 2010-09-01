@@ -1,3 +1,7 @@
+require "cgi"
+
+require "savon/soap"
+
 module Savon
   module CoreExt
     module String

@@ -1,3 +1,11 @@
+require "builder"
+
+require "savon/core_ext/object"
+require "savon/core_ext/string"
+require "savon/core_ext/symbol"
+require "savon/core_ext/array"
+require "savon/core_ext/datetime"
+
 module Savon
   module CoreExt
     module Hash
@@ -68,9 +76,9 @@ module Savon
           key = key.to_soap_key
           
           case value
-            when Array then xml << value.to_soap_xml(key, escape_xml, attrs)
-            when Hash  then xml.tag!(key, attrs) { xml << value.to_soap_xml }
-            else            xml.tag!(key, attrs) { xml << (escape_xml ? value.to_soap_value : value.to_soap_value!) }
+            when ::Array then xml << value.to_soap_xml(key, escape_xml, attrs)
+            when ::Hash  then xml.tag!(key, attrs) { xml << value.to_soap_xml }
+            else              xml.tag!(key, attrs) { xml << (escape_xml ? value.to_soap_value : value.to_soap_value!) }
           end
         end
 
@@ -81,9 +89,9 @@ module Savon
       def map_soap_response
         inject({}) do |hash, (key, value)|
           value = case value
-            when Hash   then value["xsi:nil"] ? nil : value.map_soap_response
-            when Array  then value.map { |val| val.map_soap_response rescue val }
-            when String then value.map_soap_response
+            when ::Hash   then value["xsi:nil"] ? nil : value.map_soap_response
+            when ::Array  then value.map { |val| val.map_soap_response rescue val }
+            when ::String then value.map_soap_response
           end
           
           hash.merge key.strip_namespace.snakecase.to_sym => value
@@ -97,7 +105,7 @@ module Savon
       # Array does not match the Hash keys.
       def order
         order = delete :order!
-        order = keys unless order.kind_of? Array
+        order = keys unless order.kind_of? ::Array
         
         missing, spurious = keys - order, order - keys
         raise ArgumentError, "Missing elements in :order! #{missing.inspect}" unless missing.empty?
