@@ -1,3 +1,5 @@
+require "rake"
+
 begin
   require "rspec/core/rake_task"
 
@@ -5,9 +7,8 @@ begin
     t.spec_opts = %w(-fd -c)
   end
 rescue LoadError
-  task :spec do
-    abort "Run 'gem install rspec --pre' to be able to run specs"
-  end
+  desc message = %{"gem install rspec --pre" to run the specs}
+  task(:spec) { abort message }
 end
 
 task :default => :spec
