@@ -56,7 +56,7 @@ describe Hash do
 
     it "should convert DateTime objects to xs:dateTime compliant Strings" do
       hash = { :before => DateTime.new(2012, 03, 22, 16, 22, 33) }
-      result = "<before>2012-03-22T16:22:33Z</before>"
+      result = "<before>2012-03-22T16:22:33+00:00</before>"
 
       hash.to_soap_xml.should == result
     end
@@ -67,7 +67,7 @@ describe Hash do
         DateTime.new(2012, 03, 22, 16, 22, 33)
       end
 
-      hash, result = { :before => singleton }, "<before>2012-03-22T16:22:33Z</before>"
+      hash, result = { :before => singleton }, "<before>2012-03-22T16:22:33+00:00</before>"
       hash.to_soap_xml.should == result
     end
 
@@ -166,7 +166,7 @@ describe Hash do
     end
 
     it "should convert Hash values matching the xs:dateTime format into DateTime Objects" do
-      soap_response = { "response" => { "at" => "2012-03-22T16:22:33" } }
+      soap_response = { "response" => { "at" => "2012-03-22T16:22:33+00:00" } }
       result = { :response => { :at => DateTime.new(2012, 03, 22, 16, 22, 33) } }
 
       soap_response.map_soap_response.should == result

@@ -31,7 +31,7 @@ describe Savon::SOAP do
     Savon::SOAP::DateTimeFormat.should_not be_empty
 
     DateTime.new(2012, 03, 22, 16, 22, 33).strftime(Savon::SOAP::DateTimeFormat).
-      should == "2012-03-22T16:22:33Z"
+      should == "2012-03-22T16:22:33+00:00"
   end
 
   it "should contain a Regexp matching the xs:dateTime format" do

@@ -3,7 +3,7 @@ require "spec_helper"
 describe DateTime do
   before do
     @datetime = DateTime.new 2012, 03, 22, 16, 22, 33
-    @datetime_string = "2012-03-22T16:22:33Z"
+    @datetime_string = "2012-03-22T16:22:33+00:00"
   end
 
   describe "to_soap_value" do

@@ -77,7 +77,8 @@ describe Savon::WSSE do
         @wsse.password = @password
         header = @wsse.header
 
-        header.should include_security_namespaces
+        header.should include(Savon::WSSE::WSENamespace)
+        header.should include(Savon::WSSE::WSUNamespace)
         header.should include(@username)
         header.should include(@password)
         header.should include(Savon::WSSE::PasswordTextURI)
@@ -88,7 +89,8 @@ describe Savon::WSSE do
         Savon::WSSE.password = @password
         header = @wsse.header
 
-        header.should include_security_namespaces
+        header.should include(Savon::WSSE::WSENamespace)
+        header.should include(Savon::WSSE::WSUNamespace)
         header.should include(@username)
         header.should include(@password)
         header.should include(Savon::WSSE::PasswordTextURI)
@@ -102,7 +104,8 @@ describe Savon::WSSE do
         @wsse.digest = true
         header = @wsse.header
   
-        header.should include_security_namespaces
+        header.should include(Savon::WSSE::WSENamespace)
+        header.should include(Savon::WSSE::WSUNamespace)
         header.should include(@username)
         header.should_not include(@password)
         header.should include(Savon::WSSE::PasswordDigestURI)
@@ -114,17 +117,11 @@ describe Savon::WSSE do
         Savon::WSSE.digest = true
         header = @wsse.header
   
-        header.should include_security_namespaces
+        header.should include(Savon::WSSE::WSENamespace)
+        header.should include(Savon::WSSE::WSUNamespace)
         header.should include(@username)
         header.should_not include(@password)
         header.should include(Savon::WSSE::PasswordDigestURI)
-      end
-    end
-
-    def include_security_namespaces
-      simple_matcher("include security namespaces") do |given|
-        given.should include(Savon::WSSE::WSENamespace)
-        given.should include(Savon::WSSE::WSUNamespace)
       end
     end
   end
