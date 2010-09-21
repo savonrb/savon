@@ -142,8 +142,8 @@ describe Hash do
       result = { :user_response => { :account_status => "active" } }
 
       soap_response.map_soap_response.should == result
-    end
-
+    end    
+  
     it "should strip namespaces from Hash keys" do
       soap_response = { "ns:userResponse" => { "ns2:id" => "666" } }
       result = { :user_response => { :id => "666" } }
@@ -185,6 +185,23 @@ describe Hash do
 
       soap_response.map_soap_response.should == result
     end
+    
+    it "should convert namespaced entries to array elements" do
+      soap_response = { "history" => { 
+                          "ns10:case" => { "ns10:name" => "a_name" }, 
+                          "ns11:case" => { "ns11:name" => "another_name" }
+                      }}
+
+      result = { :history => { 
+                    :case => [ 
+                                { :name => "a_name" }, 
+                                { :name => "another_name" }
+                              ]
+                }}
+
+      soap_response.map_soap_response.should == result
+    end
+    
   end
 
 end

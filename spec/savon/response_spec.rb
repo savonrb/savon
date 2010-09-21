@@ -116,6 +116,13 @@ describe Savon::Response do
     @response.http.should respond_to(:message)
     @response.http.should respond_to(:body)
   end
+  
+  it "should add existing namespaced elements as an array" do
+    @response = Savon::Response.new http_response_mock(200, ResponseFixture.list_xml, "OK")
+
+    @response.to_hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
+    @response.to_hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+  end
 
   describe "GZipped responses" do
     it "should be decoded if Content-encoding header is gzip" do

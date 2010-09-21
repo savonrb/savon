@@ -83,8 +83,15 @@ class Hash
         when Array  then value.map { |val| val.map_soap_response rescue val }
         when String then value.map_soap_response
       end
-
-      hash.merge key.strip_namespace.snakecase.to_sym => value
+      
+      no_ns_key = key.strip_namespace.snakecase.to_sym
+      if hash[no_ns_key] #existing key exists, value should be added as an Array
+        hash[no_ns_key] = [hash[no_ns_key], value].flatten
+        result = hash
+      else
+        result = hash.merge no_ns_key => value
+      end
+      result      
     end
   end
 

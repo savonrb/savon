@@ -24,7 +24,11 @@ class ResponseFixture
   end
 
   def self.multi_ref
-    @@multi_ref ||= load_fixture :multi_ref
+      @@multi_ref ||= load_fixture :multi_ref
+    end
+    
+  def self.list_xml
+    @@list_xml ||= load_fixture :list
   end
 
 private

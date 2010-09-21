@@ -1,0 +1,18 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <soapenv:Body>
+      <MultiNamespacedEntryResponse xmlns="http://www.example.com/BusinessRulesEngine/xsd">
+         <history>
+                <ns10:case xmlns:ns10="http://www.example.com/Common/xsd">
+                    <ns10:logTime>2010-09-21T18:22:01.558+10:00</ns10:logTime>
+                    <ns10:logType>Notes Log</ns10:logType>
+                    <ns10:logText>test</ns10:logText>
+                </ns10:case>
+                <ns11:case xmlns:ns11="http://www.example.com/Common/xsd">
+                    <ns11:logTime>2010-09-21T18:22:07.038+10:00</ns11:logTime>
+                    <ns11:logType>Notes Log</ns11:logType>
+                    <ns11:logText>another test</ns11:logText>
+                </ns11:case>
+         </history>
+      </MultiNamespacedEntryResponse>
+   </soapenv:Body>
+</soapenv:Envelope>
