@@ -1,7 +1,6 @@
 .DS_Store
-nbproject
 .yardoc
-.loadpath
-.project
+coverage
+tmp
 *~
 *.gem
