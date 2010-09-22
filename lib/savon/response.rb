@@ -67,17 +67,18 @@ module Savon
     # The maximum HTTP response code considered to be OK.
     MaxNonErrorResponseCode = 299
 
-    # The global setting of whether to raise errors.
-    @@raise_errors = true
+    class << self
 
-    # Sets the global setting of whether to raise errors.
-    def self.raise_errors=(raise_errors)
-      @@raise_errors = raise_errors
-    end
+      # Sets the global setting of whether to raise errors.
+      def raise_errors=(raise_errors)
+        @raise_errors = raise_errors
+      end
 
-    # Returns the global setting of whether to raise errors.
-    def self.raise_errors?
-      @@raise_errors
+      # Returns the global setting of whether to raise errors. Defaults to +true+.
+      def raise_errors?
+        @raise_errors != false
+      end
+
     end
 
     # Expects a Net::HTTPResponse and handles errors.

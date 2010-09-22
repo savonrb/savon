@@ -119,6 +119,9 @@ module Savon
   #   </env:Envelope>
   class SOAP
 
+    # Default SOAP version.
+    DefaultVersion = 1
+
     # Supported SOAP versions.
     Versions = [1, 2]
 
@@ -137,40 +140,41 @@ module Savon
     # SOAP xs:dateTime Regexp.
     DateTimeRegexp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
 
-    # The global SOAP version.
-    @@version = 1
+    class << self
 
-    # Returns the global SOAP version.
-    def self.version
-      @@version
-    end
+      # Returns the global SOAP version.
+      def version
+        @version ||= DefaultVersion
+      end
 
-    # Sets the global SOAP version.
-    def self.version=(version)
-      @@version = version if Versions.include? version
-    end
+      # Sets the global SOAP version.
+      def version=(version)
+        @version = version if Versions.include? version
+      end
 
-    # Sets the global SOAP header. Expected to be a Hash that can be translated to XML via
-    # Hash.to_soap_xml or any other Object responding to to_s.
-    def self.header=(header)
-      @@header = header
-    end
+      # Sets the global SOAP header. Expected to be a Hash that can be translated to XML via
+      # Hash.to_soap_xml or any other Object responding to to_s.
+      def header=(header)
+        @header = header
+      end
 
-    # Returns the global SOAP header. Defaults to an empty Hash.
-    def self.header
-      @@header ||= {}
-    end
+      # Returns the global SOAP header. Defaults to an empty Hash.
+      def header
+        @header ||= {}
+      end
 
-    # Sets the global namespaces. Expected to be a Hash containing the namespaces (keys) and the
-    # corresponding URI's (values).
-    def self.namespaces=(namespaces)
-      @@namespaces = namespaces if namespaces.kind_of? Hash
-    end
+      # Sets the global namespaces. Expected to be a Hash containing the namespaces (keys) and the
+      # corresponding URI's (values).
+      def namespaces=(namespaces)
+        @namespaces = namespaces if namespaces.kind_of? Hash
+      end
 
-    # Returns the global namespaces. A Hash containing the namespaces (keys) and the corresponding
-    # URI's (values).
-    def self.namespaces
-      @@namespaces ||= {}
+      # Returns the global namespaces. A Hash containing the namespaces (keys) and the corresponding
+      # URI's (values).
+      def namespaces
+        @namespaces ||= {}
+      end
+
     end
 
     # Initialzes the SOAP object. Expects a SOAP +operation+ Hash along with an +endpoint+.

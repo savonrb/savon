@@ -58,43 +58,38 @@ module Savon
     # URI for "wsse:Password/@Type" #PasswordDigest.
     PasswordDigestURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
-    # Global WSSE username.
-    @@username = nil
+    class << self
 
-    # Returns the global WSSE username.
-    def self.username
-      @@username
-    end
+      # Returns the global WSSE username.
+      def username
+        @username
+      end
 
-    # Sets the global WSSE username.
-    def self.username=(username)
-      @@username = username.nil? ? nil : username.to_s
-    end
+      # Sets the global WSSE username.
+      def username=(username)
+        @username = username.nil? ? nil : username.to_s
+      end
 
-    # Global WSSE password.
-    @@password = nil
+      # Returns the global WSSE password.
+      def password
+        @password
+      end
 
-    # Returns the global WSSE password.
-    def self.password
-      @@password
-    end
+      # Sets the global WSSE password.
+      def password=(password)
+        @password = password.nil? ? nil : password.to_s
+      end
 
-    # Sets the global WSSE password.
-    def self.password=(password)
-      @@password = password.nil? ? nil : password.to_s
-    end
+      # Returns the global setting of whether to use WSSE digest.
+      def digest?
+        !!@digest
+      end
 
-    # Global setting of whether to use WSSE digest.
-    @@digest = false
+      # Global setting of whether to use WSSE digest.
+      def digest=(digest)
+        @digest = digest
+      end
 
-    # Returns the global setting of whether to use WSSE digest.
-    def self.digest?
-      @@digest
-    end
-
-    # Global setting of whether to use WSSE digest.
-    def self.digest=(digest)
-      @@digest = digest
     end
 
     # Sets the WSSE username per request.
