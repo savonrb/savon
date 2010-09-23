@@ -4,6 +4,10 @@ FakeWeb.allow_net_connect = false
 FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint, :body => WSDLFixture.authentication
 FakeWeb.register_uri :post, EndpointHelper.soap_endpoint, :body => ResponseFixture.authentication
 
+# Some WSDL and SOAP request.
+FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:gzip), :body => WSDLFixture.authentication
+FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:gzip), :body => GzipResponseFixture.message
+
 # WSDL and SOAP request with a Savon::SOAPFault.
 FakeWeb.register_uri :get, EndpointHelper.wsdl_endpoint(:soap_fault), :body => WSDLFixture.authentication
 FakeWeb.register_uri :post, EndpointHelper.soap_endpoint(:soap_fault), :body => ResponseFixture.soap_fault

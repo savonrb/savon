@@ -16,6 +16,7 @@ class EndpointHelper
       when :soap_fault then "http://soapfault.example.com/Service?wsdl"
       when :http_error then "http://httperror.example.com/Service?wsdl"
       when :invalid    then "http://invalid.example.com/Service?wsdl"
+      when :gzip       then "http://gzip.example.com/Service?wsdl"
       else                  "http://example.com/validation/1.0/AuthenticationService"
     end
   end

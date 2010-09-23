@@ -77,17 +77,18 @@ describe Savon::Request do
 
 
   describe "when executing a SOAP request" do
+    let(:fixture) { nil }
     before :each do
       operation = WSDLFixture.authentication(:operations)[:authenticate]
       action, input = operation[:action], operation[:input]
-      @soap = Savon::SOAP.new action, input, EndpointHelper.soap_endpoint
+      @soap = Savon::SOAP.new action, input, EndpointHelper.soap_endpoint(fixture)
     end
 
-    it "should return the Net::HTTP response" do
+    it "should return the Savon response" do
       soap_response = @request.soap @soap
 
-      soap_response.should be_a(Net::HTTPResponse)
-      soap_response.body.should == ResponseFixture.authentication
+      soap_response.should be_a(Savon::Response)
+      soap_response.http.body.should == ResponseFixture.authentication
     end
 
     it "should include Accept-Encoding gzip if it is enabled" do
@@ -106,6 +107,23 @@ describe Savon::Request do
       Net::HTTP::Post.expects(:new).with(anything, Not(has_entry("Accept-encoding" => "gzip,deflate"))).returns(a_post)
 
       @request.soap @soap
+    end
+
+    describe "the logger" do
+      before { Savon::Request.log = true }
+      after { Savon::Request.log = false }
+      let(:fixture) { :gzip }
+
+      it "logs the response XML when gzip is enabled" do
+        @request = Savon::Request.new :wsdl => EndpointHelper.wsdl_endpoint(fixture), :gzip => true
+        a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
+
+        @request.expects(:log).with(anything).at_least(4)
+        @request.expects(:log).with(GzipResponseFixture.message).never
+        @request.expects(:log).with("A short gzip encoded message\n").once
+
+        @request.soap @soap
+      end
     end
   end
 

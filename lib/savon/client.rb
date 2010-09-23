@@ -101,7 +101,7 @@ module Savon
       super unless @wsdl.respond_to? soap_action
 
       setup_objects *@wsdl.operation_from(soap_action), &block
-      Response.new @request.soap(@soap)
+      @request.soap(@soap)
     end
 
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE. Yields them to a given

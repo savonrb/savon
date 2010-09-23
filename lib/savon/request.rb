@@ -103,9 +103,9 @@ module Savon
       http.use_ssl = @soap.endpoint.ssl?
 
       log_request
-      @response = http.start do |h|
+      @response = Response.new(http.start do |h|
         h.request request(:soap) { |request| request.body = @soap.to_xml }
-      end
+      end)
       log_response
       @response
     end
@@ -126,8 +126,8 @@ module Savon
 
     # Logs the SOAP response.
     def log_response
-      log "SOAP response (status #{@response.code}):"
-      log @response.body
+      log "SOAP response (status #{@response.http.code}):"
+      log @response.to_s
     end
 
     # Returns a Net::HTTP request for a given +type+. Yields the request to an optional block.
