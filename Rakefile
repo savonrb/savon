@@ -17,6 +17,7 @@ begin
   MetricFu::Configuration.run do |c|
     c.metrics = [:churn, :flog, :flay, :reek, :roodi, :saikuro] # :rcov seems to be broken
     c.graphs = [:flog, :flay, :reek, :roodi]
+    c.flay = { :dirs_to_flay => ["lib"], :minimum_score => 20 }
     c.rcov[:rcov_opts] << "-Ilib -Ispec"
   end
 rescue LoadError
