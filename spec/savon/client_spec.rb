@@ -29,8 +29,8 @@ describe Savon::Client do
     client.request.http.proxy_address == "http://proxy"
   end
 
-  it "should have a method that returns the Savon::WSDL" do
-    @client.wsdl.should be_a(Savon::WSDL)
+  it "should have a method that returns the Savon::WSDL::Document" do
+    @client.wsdl.should be_a(Savon::WSDL::Document)
   end
 
   it "should have a method that returns the Savon::Request" do

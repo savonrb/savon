@@ -1,5 +1,5 @@
 require "savon/soap"
-require "savon/wsdl"
+require "savon/wsdl/document"
 require "savon/request"
 require "savon/wsse"
 require "savon/response"
@@ -9,7 +9,7 @@ module Savon
   # = Savon::Client
   #
   # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
-  # both the Savon::WSDL and Savon::Request object.
+  # both the Savon::WSDL::Document and Savon::Request object.
   #
   # == Instantiation
   #
@@ -24,21 +24,23 @@ module Savon
   #
   #   client = Savon::Client.new :soap_endpoint => "http://example.com/UserService"
   #
-  # It is recommended to not use Savon::WSDL for production. Please take a look at the documentation
-  # for Savon::WSDL for more information about how to disable it.
+  # It is recommended to not use Savon::WSDL::Document for production. Please take a look at the
+  # documentation for Savon::WSDL for more information about how to disable it.
   #
   # == Using a proxy server
   #
   # You can specify the URI to a proxy server via optional hash arguments.
   #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :proxy => "http://proxy.example.com"
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl",
+  #     :proxy => "http://proxy.example.com"
   #
   # == Forcing a particular SOAP endpoint
   #
   # In case you don't want to use the SOAP endpoint specified in the WSDL, you can tell Savon to use
   # another SOAP endpoint.
   #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :soap_endpoint => "http://localhost/UserService"
+  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl",
+  #     :soap_endpoint => "http://localhost/UserService"
   #
   # == Gzipped SOAP requests
   #
@@ -46,9 +48,9 @@ module Savon
   #
   #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :gzip => true
   #
-  # == Savon::WSDL
+  # == Savon::WSDL::Document
   #
-  # You can access Savon::WSDL via:
+  # You can access the Savon::WSDL::Document via:
   #
   #   client.wsdl
   #
@@ -72,10 +74,10 @@ module Savon
       
       soap_endpoint = options.delete :soap_endpoint
       @request = Request.new options
-      @wsdl = WSDL.new @request, soap_endpoint
+      @wsdl = WSDL::Document.new @request, soap_endpoint
     end
 
-    # Returns the Savon::WSDL.
+    # Returns the Savon::WSDL::Document.
     attr_reader :wsdl
 
     # Returns the Savon::Request.

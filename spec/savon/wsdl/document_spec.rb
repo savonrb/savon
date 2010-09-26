@@ -1,15 +1,15 @@
 require "spec_helper"
 
-describe Savon::WSDL do
+describe Savon::WSDL::Document do
   describe "a common WSDL document" do
     before { @wsdl = new_wsdl }
 
     it "is initialized with a Savon::Request object" do
-      Savon::WSDL.new Savon::Request.new(EndpointHelper.wsdl_endpoint)
+      Savon::WSDL::Document.new Savon::Request.new(EndpointHelper.wsdl_endpoint)
     end
 
     it "it accepts a custom SOAP endpoint" do
-      wsdl = Savon::WSDL.new Savon::Request.new(EndpointHelper.wsdl_endpoint), "http://localhost"
+      wsdl = Savon::WSDL::Document.new Savon::Request.new(EndpointHelper.wsdl_endpoint), "http://localhost"
       wsdl.soap_endpoint.should == "http://localhost"
     end
 
@@ -101,7 +101,7 @@ describe Savon::WSDL do
 
   def new_wsdl(fixture = nil)
     endpoint = fixture ? EndpointHelper.wsdl_endpoint(fixture) : EndpointHelper.wsdl_endpoint
-    Savon::WSDL.new Savon::Request.new(:wsdl => endpoint)
+    Savon::WSDL::Document.new Savon::Request.new(:wsdl => endpoint)
   end
 
 end
