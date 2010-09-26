@@ -3,6 +3,12 @@ require "erb"
 
 class WSDLFixture
 
+  # Returns a given +fixture+. Defaults to :authentication.
+  def self.load(fixture = nil)
+    fixture ||= :authentication
+    method_missing fixture
+  end
+
   # Returns a WSDL document matching a given +method+ name when called without
   # arguments. Otherwise returns the expected value for a given +method+ name
   # matching a fixture.

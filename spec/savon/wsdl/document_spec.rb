@@ -5,11 +5,11 @@ describe Savon::WSDL::Document do
     before { @wsdl = new_wsdl }
 
     it "is initialized with a Savon::Request object" do
-      Savon::WSDL::Document.new Savon::Request.new(EndpointHelper.wsdl_endpoint)
+      Savon::WSDL::Document.new HTTPI::Request.new(:url => Endpoint.wsdl)
     end
 
     it "it accepts a custom SOAP endpoint" do
-      wsdl = Savon::WSDL::Document.new Savon::Request.new(EndpointHelper.wsdl_endpoint), "http://localhost"
+      wsdl = Savon::WSDL::Document.new HTTPI::Request.new(:url => Endpoint.wsdl), "http://localhost"
       wsdl.soap_endpoint.should == "http://localhost"
     end
 
@@ -40,8 +40,8 @@ describe Savon::WSDL::Document do
       @wsdl.respond_to?(:some_undefined_method).should be_false
     end
 
-    it "returns the raw WSDL document for to_s" do
-      @wsdl.to_s.should == WSDLFixture.authentication
+    it "returns the raw WSDL document for to_xml" do
+      @wsdl.to_xml.should == WSDLFixture.authentication
     end
   end
 
@@ -100,8 +100,11 @@ describe Savon::WSDL::Document do
   end
 
   def new_wsdl(fixture = nil)
-    endpoint = fixture ? EndpointHelper.wsdl_endpoint(fixture) : EndpointHelper.wsdl_endpoint
-    Savon::WSDL::Document.new Savon::Request.new(:wsdl => endpoint)
+    endpoint = fixture ? Endpoint.wsdl(fixture) : Endpoint.wsdl
+
+    request = HTTPI::Request.new(:url => endpoint)
+    HTTPI.stubs(:get).with(request).returns(HTTPI::Response.new 200, {}, WSDLFixture.load(fixture))
+    Savon::WSDL::Document.new request
   end
 
 end

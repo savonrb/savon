@@ -1,5 +1,6 @@
 require "rexml/document"
 
+require "savon/wsdl/request"
 require "savon/wsdl/parser"
 
 module Savon
@@ -75,9 +76,9 @@ module Savon
     #   end
     class Document
 
-      # Expects a Savon::Request and accepts a custom +soap_endpoint+.
+      # Expects an HTTPI::Request and accepts a custom +soap_endpoint+.
       def initialize(request, soap_endpoint = nil)
-        @request, @enabled, @soap_endpoint = request, !!request.endpoint, soap_endpoint
+        @request, @enabled, @soap_endpoint = request, !!request.url, soap_endpoint
       end
 
       # Sets whether to use the WSDL.
@@ -122,8 +123,8 @@ module Savon
       end
 
       # Returns the raw WSDL document.
-      def to_s
-        @document ||= @request.wsdl.body
+      def to_xml
+        @document ||= Request.new(@request).response.body
       end
 
       private
@@ -132,7 +133,7 @@ module Savon
       def parser
         unless @parser
           @parser = Parser.new
-          REXML::Document.parse_stream to_s, @parser
+          REXML::Document.parse_stream to_xml, @parser
         end
         @parser
       end

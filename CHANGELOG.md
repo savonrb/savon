@@ -1,37 +1,57 @@
-== UPCOMING
+## 0.8.0.beta.1
 
-* Added support for NTLM HTTP authentication (http://github.com/elcuervo). You can set you NTML
-  username and password through the <tt>Savon::Request#ntlm_auth</tt> method:
+* Fix for issue #76 (Config setting for WSDL-free operation).
+  Instead of append an exclamation mark to SOAP method calls for disabling the
+	WSDL to be used, you now have to explicitly specify whether you want to use
+	a WSDL document or directly access the SOAP endpoint.
 
-    client.request.ntlm_auth "username", "password"
+			# Instantiating a client to work with a WSDL document
+      client = Savon::Client.new :wsdl => "http://example.com?wsdl"
 
-== 0.7.9 (2010-06-14)
+			# Directly accessing the SOAP endpoint
+			client = Savon::Client.new :soap_endpoint => "http://example.com"
+
+* Fix for issue #81 (irb on Ruby 1.9.2 doesn't disable wsdl).
+  Replaced Savon::WSDL::Document#to_s with a #to_xml method.
+
+* Refactored Savon to use the new HTTPI (http://rubygems.org/gems/httpi) gem.
+  HTTPI::Request replaces the Savon::Request, so please make sure to have a look
+  at the HTTPI library and let me know about any problems. Using HTTPI actually
+  fixes the following two issues.
+
+* Fix for issue #24 (HTTP Digest Authentication).
+  Instead of Net/HTTP, Savon now uses HTTPI to execute HTTP requests.
+  HTTPI defaults to use HTTPClient which supports HTTP digest authentication.
+
+* Fix for issues #85 and #88 (When gzip is enabled, binary data is logged).
+
+## 0.7.9 (2010-06-14)
 
 * Fix for issue #53 (<tt>DateTime#to_soap_value</tt> assumes UTC).
 
-== 0.7.8 (2010-05-09)
+## 0.7.8 (2010-05-09)
 
-* Fixed gemspec to include missing files (*.yml, *.gz, .autotest and spec/spec.opts) in the gem.
+* Fixed gemspec to include missing files in the gem.
 
-== 0.7.7 (2010-05-09)
+## 0.7.7 (2010-05-09)
 
 * SOAP requests now start with a proper XML declaration.
 
 * Added support for gzipped requests and responses (http://github.com/lucascs). While gzipped SOAP
   responses are decoded automatically, you have to manually instruct Savon to gzip SOAP requests:
 
-    client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
+      client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
 
-* Fix for issue #51. Added the :soap_endpoint option to <tt>Savon::Client.new</tt> which let's you
+* Fix for issue #51. Added the :soap_endpoint option to <tt>Savon::Client.new</tt> which lets you
   specify a SOAP endpoint per client instance:
 
-    client = Savon::Client.new "http://example.com/UserService?wsdl",
-      :soap_endpoint => "http://localhost/UserService"
+      client = Savon::Client.new "http://example.com/UserService?wsdl",
+        :soap_endpoint => "http://localhost/UserService"
 
 * Fix for issue #50. Savon still escapes special characters in SOAP request Hash values, but you can now
   append an exclamation mark to Hash keys specifying that it's value should not be escaped.
 
-== 0.7.6 (2010-03-21)
+## 0.7.6 (2010-03-21)
 
 * Moved documentation from the Github Wiki to the actual class files and established a much nicer
   documentation combining examples and implementation (using Hanna) at: http://savon.rubiii.com
@@ -46,7 +66,7 @@
 * Fix for issue #39 and #49. Added <tt>Savon::SOAP#xml</tt> which let's you specify completely custom
   SOAP request XML.
 
-== 0.7.5 (2010-02-19)
+## 0.7.5 (2010-02-19)
 
 * Fix for issue #34 (soap_actions returns empty for wsdl12).
 
@@ -56,11 +76,11 @@
 
 * Changed the key for specifying the order of tags from :@inorder to :order!
 
-== 0.7.4 (2010-02-02)
+## 0.7.4 (2010-02-02)
 
 * Fix for issue #33 (undefined method <tt>start_with?</tt>).
 
-== 0.7.3 (2010-01-31)
+## 0.7.3 (2010-01-31)
 
 * Added support for Geotrust-style WSDL documents (Julian Kornberger <github.corny@digineo.de>).
 
@@ -80,7 +100,7 @@
 
 * Fix for issue #25 (header-tag should not be sent if not set).
 
-== 0.7.2 (2010-01-17)
+## 0.7.2 (2010-01-17)
 
 * Exposed the Net::HTTP response (added by Kevin Ingolfsland). Use the "http" accessor (response.http) on your
   Savon::Response to access the <tt>Net::HTTP</tt> response object.
@@ -93,12 +113,12 @@
 
 * Added support for global header and namespaces. See issue #9 (Setting headers and namespaces).
 
-== 0.7.1 (2010-01-10)
+## 0.7.1 (2010-01-10)
 
 * The Hash of HTTP headers for SOAP calls is now public via <tt>Savon::Request#headers</tt>.
   Patch for: http://github.com/rubiii/savon/issues/#issue/8
 
-== 0.7.0 (2010-01-09)
+## 0.7.0 (2010-01-09)
 
 This version comes with several changes to the public API!
 Pay attention to the following list and read the updated Wiki: http://wiki.github.com/rubiii/savon
@@ -134,7 +154,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 * Julian also added a way to explicitly specify the order of Hash keys and values, so you should now be able
   to work with services requiring a specific order of input parameters while still using Hash input.
 
-    client.find_user { |soap| soap.body = { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+      client.find_user { |soap| soap.body = { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
 
 * <tt>Savon::Response#to_hash</tt> now returns the content inside of "soap:Body" instead of trying to go one
   level deeper and return it's content. The previous implementation only worked when the "soap:Body" element
@@ -144,7 +164,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     soap.namespace = "http://example.com"
 
-== 0.6.8 (2010-01-01)
+## 0.6.8 (2010-01-01)
 
 * Improved specifications for various kinds of WSDL documents.
 
@@ -157,9 +177,9 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
   To make it work, call the SOAP action without namespace and specify the input manually:
 
-    client.get_api_key { |soap| soap.input = "User.GetApiKey" }
+      client.get_api_key { |soap| soap.input = "User.GetApiKey" }
 
-== 0.6.7 (2009-12-18)
+## 0.6.7 (2009-12-18)
 
 * Implemented support for a proxy server. The proxy URI can be set through an optional Hash of options passed
   to instantiating <tt>Savon::Client</tt> (Dave Woodward <dave@futuremint.com>)
@@ -169,17 +189,17 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Patch for issue #10 (Problem with operation tags without a namespace).
 
-== 0.6.6 (2009-12-14)
+## 0.6.6 (2009-12-14)
 
 * Default to use the name of the SOAP action (the method called in a client) in lowerCamelCase for SOAP action
   and input when Savon::WSDL is disabled. You still need to specify soap.action and maybe soap.input in case
   your SOAP actions are named any different.
 
-== 0.6.5 (2009-12-13)
+## 0.6.5 (2009-12-13)
 
 * Added an <tt>open_timeout</tt> method to <tt>Savon::Request</tt>.
 
-== 0.6.4 (2009-12-13)
+## 0.6.4 (2009-12-13)
 
 * Refactored specs to be less unit-like.
 
@@ -195,7 +215,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
     0.6.4  72.180000   8.280000   80.460000   (750.799011)
     0.6.3  192.900000  19.630000  212.530000  (914.031865)
 
-== 0.6.3 (2009-12-11)
+## 0.6.3 (2009-12-11)
 
 * Removing 2 ruby deprecation warnings for parenthesized arguments. (Dave Woodward <dave@futuremint.com>)
 
@@ -215,17 +235,17 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
     0.6.3  192.900000  19.630000  212.530000  (914.031865)
     0.6.2  574.720000  78.380000  653.100000  (1387.778539)
 
-== 0.6.2 (2009-12-06)
+## 0.6.2 (2009-12-06)
 
 * Added support for changing the name of the SOAP input node.
 
 * Added a CHANGELOG.
 
-== 0.6.1 (2009-12-06)
+## 0.6.1 (2009-12-06)
 
 * Fixed a problem with WSSE credentials, where every request contained a WSSE authentication header.
 
-== 0.6.0 (2009-12-06)
+## 0.6.0 (2009-12-06)
 
 * method_missing now yields the SOAP and WSSE objects to a given block.
 
@@ -233,15 +253,15 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Improved SOAP action handling (another problem that came up with issue #1).
 
-== 0.5.3 (2009-11-30)
+## 0.5.3 (2009-11-30)
 
 * Patch for issue #2 (NoMethodError: undefined method <tt>invalid!</tt> for <tt>Savon::WSDL</tt>)
 
-== 0.5.2 (2009-11-30)
+## 0.5.2 (2009-11-30)
 
 * Patch for issue #1 (Calls fail if api methods have periods in them)
 
-== 0.5.1 (2009-11-29)
+## 0.5.1 (2009-11-29)
 
 * Optimized default response process.
 
@@ -253,6 +273,6 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Added specs
 
-== 0.5.0 (2009-11-29)
+## 0.5.0 (2009-11-29)
 
 * Complete rewrite and public release.

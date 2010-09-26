@@ -1,19 +1,20 @@
-require "savon/soap"
+require "httpi/request"
+require "savon/soap/xml"
+require "savon/soap/request"
+require "savon/soap/response"
 require "savon/wsdl/document"
-require "savon/request"
 require "savon/wsse"
-require "savon/response"
 
 module Savon
 
   # = Savon::Client
   #
   # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
-  # both the Savon::WSDL::Document and Savon::Request object.
+  # both the Savon::WSDL::Document and HTTPI::Request object.
   #
   # == Instantiation
   #
-  # Depending on whether you aim to use Savon with or without Savon::WSDL, you need to instantiate
+  # Depending on whether you aim to use Savon with or without Savon::WSDL::Document, you need to instantiate
   # Savon::Client by passing in the WSDL and/or SOAP endpoint.
   #
   # Client instance with a WSDL endpoint:
@@ -54,9 +55,9 @@ module Savon
   #
   #   client.wsdl
   #
-  # == Savon::Request
+  # == HTTPI::Request
   #
-  # You can also access Savon::Request via:
+  # You can also access the HTTPI::Request via:
   #
   #   client.request
   class Client
@@ -72,16 +73,20 @@ module Savon
     def initialize(options = {})
       raise ArgumentError, "Please specify a :wsdl and/or :soap_endpoint" unless options[:wsdl] || options[:soap_endpoint]
       
-      soap_endpoint = options.delete :soap_endpoint
-      @request = Request.new options
-      @wsdl = WSDL::Document.new @request, soap_endpoint
+      request.url = options[:wsdl] if options[:wsdl]
+      request.proxy = options[:proxy] if options[:proxy]
+      request.gzip if options[:gzip]
+      
+      @wsdl = WSDL::Document.new request, options[:soap_endpoint]
     end
 
     # Returns the Savon::WSDL::Document.
     attr_reader :wsdl
 
-    # Returns the Savon::Request.
-    attr_reader :request
+    # Returns the HTTPI::Request.
+    def request
+      @request ||= HTTPI::Request.new
+    end
 
     # Returns +true+ for available methods and SOAP actions.
     def respond_to?(method)
@@ -103,13 +108,13 @@ module Savon
       super unless @wsdl.respond_to? soap_action
 
       setup_objects *@wsdl.operation_from(soap_action), &block
-      Response.new @request.soap(@soap)
+      SOAP::Request.new(@request, @soap).response
     end
 
     # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE. Yields them to a given
     # +block+ in case one was given.
     def setup_objects(action, input, &block)
-      @soap, @wsse = SOAP.new(action, input, @wsdl.soap_endpoint), WSSE.new
+      @soap, @wsse = SOAP::XML.new(action, input, @wsdl.soap_endpoint), WSSE.new
       yield_objects &block if block
       @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
       @soap.wsse = @wsse
