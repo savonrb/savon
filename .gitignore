@@ -5,3 +5,5 @@ coverage
 tmp
 *~
 *.gem
+.bundle
+Gemfile.lock
