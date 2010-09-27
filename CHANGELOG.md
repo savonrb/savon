@@ -1,18 +1,42 @@
 ## 0.8.0.beta.1
 
-* Fix for issue #76 (Config setting for WSDL-free operation).
-  Instead of append an exclamation mark to SOAP method calls for disabling the
-	WSDL to be used, you now have to explicitly specify whether you want to use
-	a WSDL document or directly access the SOAP endpoint.
+* Changed Savon::Client.new to accept a block instead of multiple Hash arguments. You can access the
+  wsdl, http and wsse objects inside the block to configure your client for a particular service.
 
 			# Instantiating a client to work with a WSDL document
-      client = Savon::Client.new :wsdl => "http://example.com?wsdl"
+      client = Savon::Client.new do
+        wsdl.document = "http://example.com?wsdl"
+      end
 
 			# Directly accessing the SOAP endpoint
-			client = Savon::Client.new :soap_endpoint => "http://example.com"
+			client = Savon::Client.new do
+        wsdl.endpoint = "http://example.com"
+        wsdl.namespace = "http://v1.example.com"
+      end
 
-* Fix for issue #81 (irb on Ruby 1.9.2 doesn't disable wsdl).
-  Replaced Savon::WSDL::Document#to_s with a #to_xml method.
+* Fix for issue #77 (Cache parsed WSDLs locally).
+  You can now use local WSDL documents:
+
+      client = Savon::Client.new do
+        wsdl.document = "../wsdl/service.xml"
+      end
+
+* Changed the way SOAP requests are being dispatched. Instead of using method_missing, you now use
+  the new #request method, which also accepts a block for you to access the wsdl, http, wsse and
+  soap object. Please notice, that a new soap object is created for every request. So you can only
+  access it inside this block.
+
+      # A simple request to an :authenticate method
+      client.request :authenticate do
+        soap.body = { :id => 1 }
+      end
+
+* The new Savon::Client#request method fixes issues #37, #61 and #64, which report problems with
+  namespacing the SOAP input tag and attaching attributes to it. Some usage examples:
+
+      client.request :get_user                  # Input tag: <getUser>
+      client.request :wsdl, "GetUser"           # Input tag: <wsdl:GetUser>
+      client.request :get_user :active => true  # Input tag: <getUser active="true">
 
 * Refactored Savon to use the new HTTPI (http://rubygems.org/gems/httpi) gem.
   HTTPI::Request replaces the Savon::Request, so please make sure to have a look
@@ -22,6 +46,12 @@
 * Fix for issue #24 (HTTP Digest Authentication).
   Instead of Net/HTTP, Savon now uses HTTPI to execute HTTP requests.
   HTTPI defaults to use HTTPClient which supports HTTP digest authentication.
+
+* Fix for issue #76 (Config setting for WSDL-free operation).
+  You now have to explicitly specify whether to use a WSDL document, when instantiating a client.
+
+* Fix for issue #81 (irb on Ruby 1.9.2 doesn't disable wsdl).
+  Replaced Savon::WSDL::Document#to_s with a #to_xml method.
 
 * Fix for issues #85 and #88 (When gzip is enabled, binary data is logged).
 
