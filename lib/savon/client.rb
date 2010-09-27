@@ -11,122 +11,137 @@ module Savon
   #
   # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
   # both the Savon::WSDL::Document and HTTPI::Request object.
-  #
-  # == Instantiation
-  #
-  # Depending on whether you aim to use Savon with or without Savon::WSDL::Document, you need to instantiate
-  # Savon::Client by passing in the WSDL and/or SOAP endpoint.
-  #
-  # Client instance with a WSDL endpoint:
-  #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl"
-  #
-  # Client instance with a SOAP endpoint (for using Savon without a WSDL):
-  #
-  #   client = Savon::Client.new :soap_endpoint => "http://example.com/UserService"
-  #
-  # It is recommended to not use Savon::WSDL::Document for production. Please take a look at the
-  # documentation for Savon::WSDL for more information about how to disable it.
-  #
-  # == Using a proxy server
-  #
-  # You can specify the URI to a proxy server via optional hash arguments.
-  #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl",
-  #     :proxy => "http://proxy.example.com"
-  #
-  # == Forcing a particular SOAP endpoint
-  #
-  # In case you don't want to use the SOAP endpoint specified in the WSDL, you can tell Savon to use
-  # another SOAP endpoint.
-  #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl",
-  #     :soap_endpoint => "http://localhost/UserService"
-  #
-  # == Gzipped SOAP requests
-  #
-  # Sending gzipped SOAP requests can be specified per client instance.
-  #
-  #   client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl", :gzip => true
-  #
-  # == Savon::WSDL::Document
-  #
-  # You can access the Savon::WSDL::Document via:
-  #
-  #   client.wsdl
-  #
-  # == HTTPI::Request
-  #
-  # You can also access the HTTPI::Request via:
-  #
-  #   client.request
   class Client
 
-    # Expects a SOAP +endpoint+ string. Also accepts a Hash of +options+.
+    # Initializes the Savon::Client for a SOAP service. Accepts a +block+ which is evaluated in the
+    # context of this object to let you access the +wsdl+, +http+, and +wsse+ methods.
     #
-    # ==== Options:
+    # == Examples
     #
-    # [soap_endpoint]  the SOAP endpoint to use
-    # [wsdl]           the wsdl to use
-    # [proxy]          the proxy server to use
-    # [gzip]           whether to gzip SOAP requests
-    def initialize(options = {})
-      raise ArgumentError, "Please specify a :wsdl and/or :soap_endpoint" unless options[:wsdl] || options[:soap_endpoint]
+    #   # Using a remote WSDL
+    #   client = Savon::Client.new { wsdl.document = "http://example.com/UserService?wsdl" }
+    #
+    #   # Using a local WSDL
+    #   client = Savon::Client.new { wsdl.document = "../wsdl/user_service.xml" }
+    #
+    #   # Directly accessing a SOAP endpoint
+    #   client = Savon::Client.new do
+    #     wsdl.endpoint = "http://example.com/UserService"
+    #     wsdl.namespace = "http://users.example.com"
+    #   end
+    def initialize(&block)
+      process &block if block
+      wsdl.request = http
+    end
+
+    # Returns the <tt>Savon::WSDL::Document</tt>.
+    def wsdl
+      @wsdl ||= WSDL::Document.new
+    end
+
+    # Returns the <tt>HTTPI::Request</tt>.
+    def http
+      @http ||= HTTPI::Request.new
+    end
+
+    # Returns the <tt>Savon::WSSE</tt> object.
+    def wsse
+      @wsse ||= WSSE.new
+    end
+
+    # Returns the <tt>Savon::SOAP::XML</tt> object. Please notice, that this object is only available
+    # in a block given to <tt>Savon::Client#request</tt>. A new instance of this object is created
+    # per SOAP request.
+    attr_reader :soap
+
+    # Executes a SOAP request for a given SOAP action. Accepts a +block+ which is evaluated in the
+    # context of this object to let you access the +soap+, +wsdl+, +http+ and +wsse+ methods.
+    #
+    # == Examples
+    #
+    #   # Calls a "getUser" SOAP action with the payload of "<userId>123</userId>"
+    #   client.request(:get_user) { soap.body = { :user_id => 123 } }
+    #
+    #   # Prefixes the SOAP input tag with a given namespace: "<wsdl:GetUser>...</wsdl:GetUser>"
+    #   client.request(:wsdl, "GetUser") { soap.body = { :user_id => 123 } }
+    #
+    #   # SOAP input tag with attributes: <getUser xmlns:wsdl="http://example.com">...</getUser>"
+    #   client.request(:get_user, "xmlns:wsdl" => "http://example.com")
+    def request(*args, &block)
+      raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
       
-      request.url = options[:wsdl] if options[:wsdl]
-      request.proxy = options[:proxy] if options[:proxy]
-      request.gzip if options[:gzip]
+      self.soap = SOAP::XML.new
+      preconfigure extract_options(args)
+      process &block if block
+      soap.wsse = wsse
       
-      @wsdl = WSDL::Document.new request, options[:soap_endpoint]
-    end
-
-    # Returns the Savon::WSDL::Document.
-    attr_reader :wsdl
-
-    # Returns the HTTPI::Request.
-    def request
-      @request ||= HTTPI::Request.new
-    end
-
-    # Returns +true+ for available methods and SOAP actions.
-    def respond_to?(method)
-      return true if @wsdl.respond_to? method
-      super
-    end
-
-    # Same as method_missing. Workaround for SOAP actions that method_missing does not catch
-    # because the method does exist.
-    def call(method, *args, &block)
-      method_missing method, *args, &block
+      SOAP::Request.new(http, soap).response
     end
 
   private
 
-    # Dispatches requests to SOAP actions matching a given +method+ name.
-    def method_missing(method, *args, &block) #:doc:
-      soap_action = method
-      super unless @wsdl.respond_to? soap_action
+    # Writer for the <tt>Savon::SOAP::XML</tt> object.
+    attr_writer :soap
 
-      setup_objects *@wsdl.operation_from(soap_action), &block
-      SOAP::Request.new(@request, @soap).response
+    # Accessor for the original self of a given block.
+    attr_accessor :original_self
+
+    # Expects an Array of +args+ and returns an Array containing the namespace (might be +nil+),
+    # the SOAP input and a Hash of attributes for the input tag (which might be empty).
+    def extract_options(args)
+      attributes = Hash === args.last ? args.pop : {}
+      namespace = args.size > 1 ? args.shift.to_sym : nil
+      input = args.first
+      
+      [namespace, input, attributes]
     end
 
-    # Expects a SOAP operation Hash and sets up Savon::SOAP and Savon::WSSE. Yields them to a given
-    # +block+ in case one was given.
-    def setup_objects(action, input, &block)
-      @soap, @wsse = SOAP::XML.new(action, input, @wsdl.soap_endpoint), WSSE.new
-      yield_objects &block if block
-      @soap.namespaces["xmlns:wsdl"] ||= @wsdl.namespace_uri if @wsdl.enabled?
-      @soap.wsse = @wsse
+    # Expects and Array of +options+ and preconfigures the system.
+    def preconfigure(options)
+      soap.endpoint = wsdl.endpoint
+      soap.namespace = wsdl.namespace
+      soap.body = options[2].delete :body
+      
+      set_soap_action options[1]
+      set_soap_input *options
     end
 
-    # Yields either Savon::SOAP or Savon::SOAP and Savon::WSSE to a given +block+, depending on
-    # the number of arguments expected by the block.
+    # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
+    def set_soap_action(input)
+      soap_action = wsdl.soap_action input.to_sym
+      soap_action ||= input.kind_of?(String) ? input : input.to_s.lower_camelcase
+      http.headers["SOAPAction"] = soap_action
+    end
+
+    # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
+    def set_soap_input(namespace, input, attributes)
+      new_input = wsdl.soap_input input.to_sym
+      new_input ||= input.kind_of?(String) ? input.to_sym : input.to_s.lower_camelcase.to_sym
+      soap.input = [namespace, new_input, attributes].compact
+    end
+
+    # Processes a given +block+. Yields objects if the block expects any arguments.
+    # Otherwise evaluates the block in the context of this object.
+    def process(&block)
+      block.arity > 0 ? yield_objects(&block) : evaluate(&block)
+    end
+
+    # Yields a number of objects to a given +block+ depending on how many arguments
+    # the block is expecting.
     def yield_objects(&block)
-      case block.arity
-        when 1 then yield @soap
-        when 2 then yield @soap, @wsse
-      end
+      yield *[soap, http, wsse, wsdl][0, block.arity]
+    end
+
+    # Evaluates a given +block+ inside this object. Stores the original block binding.
+    def evaluate(&block)
+      self.original_self = eval "self", block.binding
+      instance_eval &block
+    end
+
+    # Handles calls to undefined methods by delegating to the original block binding.
+    def method_missing(method, *args, &block)
+      super unless original_self
+      original_self.send method, *args, &block
     end
 
   end

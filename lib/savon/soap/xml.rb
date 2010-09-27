@@ -1,4 +1,3 @@
-require "uri"
 require "builder"
 require "savon/soap"
 require "savon/core_ext/hash"
@@ -8,283 +7,125 @@ module Savon
 
     # = Savon::SOAP::XML
     #
-    # Savon::SOAP::XML represents the SOAP request XML. Pass a block to your SOAP call and the SOAP object
-    # is passed to it as the first argument. The object allows setting the SOAP version, header, body
-    # and namespaces per request.
-    #
-    # == Body
-    #
-    # The body method lets you specify parameters to be received by the SOAP action.
-    #
-    # You can either pass in a hash (which will be translated to XML via Hash.to_soap_xml):
-    #
-    #   response = client.get_user_by_id do |soap|
-    #     soap.body = { :id => 123 }
-    #   end
-    #
-    # Or a string containing the raw XML:
-    #
-    #   response = client.get_user_by_id do |soap|
-    #     soap.body = "<id>123</id>"
-    #   end
-    #
-    # Request output:
-    #
-    #   <env:Envelope
-    #       xmlns:wsdl="http://example.com/user/1.0/UserService"
-    #       xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
-    #     <env:Body>
-    #       <wsdl:getUserById><id>123</id></wsdl:getUserById>
-    #     </env:Body>
-    #   </env:Envelope>
-    #
-    # Please look at the documentation of Hash.to_soap_xml for some more information.
-    #
-    # == Version
-    #
-    # Savon defaults to SOAP 1.1. In case your service uses SOAP 1.2, you can use the version method
-    # to change the default per request.
-    #
-    #   response = client.get_all_users do |soap|
-    #     soap.version = 2
-    #   end
-    #
-    # You can also change the default to SOAP 1.2 for all request:
-    #
-    #   Savon::SOAP.version = 2
-    #
-    # == Header
-    #
-    # If you need to add custom XML into the SOAP header, you can use the header method.
-    #
-    # The value is expected to be a hash (which will be translated to XML via Hash.to_soap_xml):
-    #
-    #   response = client.get_all_users do |soap|
-    #     soap.header["specialApiKey"] = "secret"
-    #   end
-    #
-    # Or a string containing the raw XML:
-    #
-    #   response = client.get_all_users do |soap|
-    #     soap.header = "<specialApiKey>secret</specialApiKey>"
-    #   end
-    #
-    # Request output:
-    #
-    #   <env:Envelope
-    #       xmlns:wsdl="http://example.com/user/1.0/UserService"
-    #       xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
-    #     <env:Header>
-    #       <specialApiKey>secret</specialApiKey>
-    #     </env:Header>
-    #     <env:Body>
-    #       <wsdl:getAllUsers></wsdl:getAllUsers>
-    #     </env:Body>
-    #   </env:Envelope>
-    #
-    # == Namespaces
-    #
-    # The namespaces method contains a hash of attributes for the SOAP envelope. You can overwrite it
-    # or add additional attributes.
-    #
-    #   response = client.get_all_users do |soap|
-    #     soap.namespaces["xmlns:domains"] = "http://domains.example.com"
-    #   end
-    #
-    # Request output:
-    #
-    #   <env:Envelope
-    #       xmlns:wsdl="http://example.com/user/1.0/UserService"
-    #       xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"
-    #       xmlns:domains="http://domains.example.com">
-    #     <env:Body>
-    #       <wsdl:getAllUsers></wsdl:getAllUsers>
-    #     </env:Body>
-    #   </env:Envelope>
-    #
-    # == Input
-    #
-    # You can change the name of the SOAP input tag in case you need to.
-    #
-    #   response = client.get_all_users do |soap|
-    #     soap.input = "GetAllUsersRequest"
-    #   end
-    #
-    # Request output:
-    #
-    #   <env:Envelope
-    #       xmlns:wsdl="http://example.com/user/1.0/UserService"
-    #       xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
-    #     <env:Body>
-    #       <wsdl:GetAllUsersRequest></wsdl:GetAllUsersRequest>
-    #     </env:Body>
-    #   </env:Envelope>
+    # Represents the SOAP request XML. Contains various global and per request/instance settings
+    # like the SOAP version, header, body and namespaces.
     class XML
 
       class << self
 
-        # Returns the global SOAP version.
-        def version
-          @version ||= SOAP::DefaultVersion
-        end
-
-        # Sets the global SOAP version.
-        def version=(version)
-          @version = version if SOAP::Versions.include? version
-        end
-
-        # Sets the global SOAP header. Expected to be a Hash that can be translated to XML via
-        # Hash.to_soap_xml or any other Object responding to to_s.
-        def header=(header)
-          @header = header
-        end
+        # Sets the global SOAP +header+ Hash.
+        attr_writer :header
 
         # Returns the global SOAP header. Defaults to an empty Hash.
         def header
           @header ||= {}
         end
 
-        # Sets the global namespaces. Expected to be a Hash containing the namespaces (keys) and the
-        # corresponding URI's (values).
-        def namespaces=(namespaces)
-          @namespaces = namespaces if namespaces.kind_of? Hash
-        end
+        # Sets the global +namespaces+ Hash.
+        attr_writer :namespaces
 
-        # Returns the global namespaces. A Hash containing the namespaces (keys) and the corresponding
-        # URI's (values).
+        # Returns the global +namespaces+. Defaultsto an empty Hash.
         def namespaces
           @namespaces ||= {}
         end
 
       end
 
-      # Initialzes the SOAP object. Expects a SOAP +operation+ Hash along with an +endpoint+.
-      def initialize(action, input, endpoint)
-        @action, @input = action, input
-        @endpoint = endpoint.kind_of?(URI) ? endpoint : URI(endpoint)
-        @builder = Builder::XmlMarkup.new
+      # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.
+      def initialize(endpoint = nil, input = nil, body = nil)
+        self.endpoint = endpoint if endpoint
+        self.input = input if input
+        self.body = body if body
       end
 
-      # Sets the WSSE options.
-      attr_writer :wsse
+      # Accessor for the SOAP +input+ tag.
+      attr_accessor :input
 
-      # Sets the SOAP action.
-      attr_writer :action
-
-      # Returns the SOAP action.
-      def action
-        @action ||= ""
-      end
-
-      # Sets the SOAP input.
-      attr_writer :input
-
-      # Returns the SOAP input.
-      def input
-        @input ||= ""
-      end
-
-      # Accessor for the SOAP endpoint.
+      # Accessor for the SOAP +endpoint+.
       attr_accessor :endpoint
 
-      # Sets the SOAP header. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
-      # or any other Object responding to to_s.
+      # Sets the SOAP +version+.
+      def version=(version)
+        raise ArgumentError, "Invalid SOAP version: #{version}" unless SOAP::Versions.include? version
+        @version = version
+      end
+
+      # Returns the SOAP +version+. Defaults to the global default.
+      def version
+        @version ||= SOAP.version
+      end
+
+      # Sets the SOAP +header+ Hash.
       attr_writer :header
 
-      # Returns the SOAP header. Defaults to an empty Hash.
+      # Returns the SOAP +header+. Defaults to an empty Hash.
       def header
         @header ||= {}
       end
 
-      # Accessor for the SOAP body. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
-      # or any other Object responding to to_s.
-      attr_accessor :body
-
-      # Accessor for overwriting the default SOAP request. Let's you specify completely custom XML.
-      attr_accessor :xml
-
-      # Sets the namespaces. Expected to be a Hash containing the namespaces (keys) and the
-      # corresponding URI's (values).
+      # Sets the +namespaces+ Hash.
       attr_writer :namespaces
 
-      # Returns the namespaces. A Hash containing the namespaces (keys) and the corresponding URI's
-      # (values). Defaults to a Hash containing an +xmlns:env+ key and the namespace for the current
-      # SOAP version.
+      # Returns the +namespaces+. Defaults to a Hash containing the <tt>xmlns:env</tt> namespace.
       def namespaces
         @namespaces ||= { "xmlns:env" => SOAP::Namespace[version] }
       end
 
-      # Convenience method for setting the +xmlns:wsdl+ namespace.
+      # Convenience method for setting the <tt>xmlns:wsdl</tt> namespace.
       def namespace=(namespace)
         namespaces["xmlns:wsdl"] = namespace
       end
 
-      # Sets the SOAP version.
-      def version=(version)
-        @version = version if SOAP::Versions.include? version
+      # Accessor for the <tt>Savon::WSSE</tt> object.
+      attr_accessor :wsse
+
+      # Accessor for the SOAP +body+. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
+      # or any other Object responding to to_s.
+      attr_accessor :body
+
+      # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create custom XML.
+      def xml
+        @xml = yield builder if block_given?
       end
 
-      # Returns the SOAP version. Defaults to the global default.
-      def version
-        @version ||= self.class.version
-      end
+      # Accepts an XML String and lets you specify a completely custom request body.
+      attr_writer :xml
 
-      # Returns the SOAP envelope XML.
+      # Returns the XML for a SOAP request.
       def to_xml
-        unless @xml
-          @builder.instruct!
-          @xml = @builder.env :Envelope, merged_namespaces do |xml|
-            xml.env(:Header) { xml << merged_header } unless merged_header.empty?
-            xml_body xml
-          end
+        @xml ||= builder.env :Envelope, namespaces_for_xml do |xml|
+          xml.env(:Header) { xml << header_for_xml } unless header_for_xml.empty?
+          xml.env(:Body) { xml.tag!(*input) { xml << body_to_xml } }
         end
-        @xml
       end
 
     private
 
-      # Returns a String containing the global and per request header.
-      def merged_header
-        if self.class.header.kind_of?(Hash) && header.kind_of?(Hash)
-          merged_header = self.class.header.merge(header).to_soap_xml
-        else
-          global_header = self.class.header.to_soap_xml rescue self.class.header.to_s
-          request_header = header.to_soap_xml rescue header.to_s
-          merged_header = global_header + request_header
-        end
-        merged_header + wsse_header
+      # Returns a new <tt>Builder::XmlMarkup</tt> object.
+      def builder
+        builder = Builder::XmlMarkup.new
+        builder.instruct!
+        builder
+      end
+
+      # Returns the SOAP header as an XML String.
+      def header_for_xml
+        @xml_header ||= (self.class.header.merge(header)).to_soap_xml + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
       def wsse_header
-        @wsse.respond_to?(:header) ? @wsse.header : ""
+        wsse.respond_to?(:header) ? wsse.header : ""
       end
 
-      # Adds a SOAP XML body to a given +xml+ Object.
-      def xml_body(xml)
-        xml.env(:Body) do
-          xml.tag!(:wsdl, *input_array) { xml << (@body.to_soap_xml rescue @body.to_s) }
-        end
+      # Returns the SOAP body as an XML String.
+      def body_to_xml
+        body.respond_to?(:to_soap_xml) ? body.to_soap_xml : body.to_s
       end
 
-      # Returns a Hash containing the global and per request namespaces.
-      def merged_namespaces
+      # Returns the Hash of namespaces for the SOAP envelope.
+      def namespaces_for_xml
         self.class.namespaces.merge namespaces
-      end
-
-      # Returns an Array of SOAP input names to append to the wsdl namespace. Defaults to use the
-      # name of the SOAP action. May return an empty Array in case the specified SOAP input seems
-      # to be invalid.
-      def input_array
-        if input.kind_of?(Array) && !input.blank?
-          [input[0].to_sym, input[1]]
-        elsif !input.blank?
-          [input.to_sym]
-        elsif !action.blank?
-          [action.to_sym]
-        else
-          []
-        end
       end
 
     end

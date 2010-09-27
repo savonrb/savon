@@ -17,7 +17,7 @@ module Savon
 
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object.
       def initialize(request, soap)
-        self.request = setup request, soap
+        self.request = setup(request, soap)
       end
 
       # Accessor for the <tt>HTTPI::Request</tt>.
@@ -34,7 +34,6 @@ module Savon
       def setup(request, soap)
         request.url = soap.endpoint
         request.headers["Content-Type"] ||= ContentType[soap.version]
-        request.headers["SOAPAction"] ||= soap.action
         request.body = soap.to_xml
         request
       end

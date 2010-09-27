@@ -6,7 +6,7 @@ module Savon
 
     # = Savon::WSDL::Parser
     #
-    # Savon::WSDL::Parser serves as a stream listener for parsing the WSDL document.
+    # Serves as a stream listener for parsing WSDL documents.
     class Parser
 
       # The main sections of a WSDL document.
@@ -17,13 +17,13 @@ module Savon
       end
 
       # Returns the namespace URI.
-      attr_reader :namespace_uri
+      attr_reader :namespace
 
       # Returns the SOAP operations.
       attr_reader :operations
 
       # Returns the SOAP endpoint.
-      attr_reader :soap_endpoint
+      attr_reader :endpoint
 
       # Hook method called when the stream parser encounters a starting tag.
       def tag_start(tag, attrs)
@@ -40,8 +40,8 @@ module Savon
 
         @section = tag.to_sym if Sections.include?(tag) && depth <= 2
 
-        @namespace_uri ||= attrs["targetNamespace"] if @section == :definitions
-        @soap_endpoint ||= URI(attrs["location"]) if @section == :service && tag == "address"
+        @namespace ||= attrs["targetNamespace"] if @section == :definitions
+        @endpoint ||= URI(attrs["location"]) if @section == :service && tag == "address"
 
         operation_from tag, attrs if @section == :binding && tag == "operation"
       end

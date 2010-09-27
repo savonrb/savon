@@ -12,35 +12,6 @@ module Savon
   # Savon::WSSE represents WSSE authentication. Pass a block to your SOAP call and the WSSE object
   # is passed to it as the second argument. The object allows setting the WSSE username, password
   # and whether to use digest authentication.
-  #
-  # == Credentials
-  #
-  # By default, Savon does not use WSSE authentication. Simply specify a username and password to
-  # change this.
-  #
-  #   response = client.get_all_users do |soap, wsse|
-  #     wsse.username = "eve"
-  #     wsse.password = "secret"
-  #   end
-  #
-  # == Digest
-  #
-  # To use WSSE digest authentication, just use the digest method and set it to +true+.
-  #
-  #   response = client.get_all_users do |soap, wsse|
-  #     wsse.username = "eve"
-  #     wsse.password = "secret"
-  #     wsse.digest = true
-  #   end
-  #
-  # == Default to WSSE
-  #
-  # In case all you're services require WSSE authentication, you can set your credentials and whether
-  # to use WSSE digest for every request:
-  #
-  #   Savon::WSSE.username = "eve"
-  #   Savon::WSSE.password = "secret"
-  #   Savon::WSSE.digest = true
   class WSSE
 
     # Base address for WSSE docs.

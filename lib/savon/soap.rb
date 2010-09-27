@@ -1,4 +1,8 @@
 module Savon
+
+  # = Savon::SOAP
+  #
+  # Contains various SOAP details.
   module SOAP
 
     # Default SOAP version.
@@ -18,6 +22,21 @@ module Savon
 
     # SOAP xs:dateTime Regexp.
     DateTimeRegexp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+
+    class << self
+
+      # Returns the global SOAP +version+. Defaults to +DefaultVersion+.
+      def version
+        @version || DefaultVersion
+      end
+
+      # Sets the global SOAP +version+.
+      def version=(version)
+        raise ArgumentError, "Invalid SOAP version: #{version}" unless Versions.include? version
+        @version = version
+      end
+
+    end
 
   end
 end

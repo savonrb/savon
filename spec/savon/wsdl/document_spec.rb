@@ -1,24 +1,65 @@
 require "spec_helper"
 
 describe Savon::WSDL::Document do
-  describe "a common WSDL document" do
-    before { @wsdl = new_wsdl }
 
-    it "is initialized with a Savon::Request object" do
-      Savon::WSDL::Document.new HTTPI::Request.new(:url => Endpoint.wsdl)
+  context "with a remote document" do
+    let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new, Endpoint.wsdl }
+    before { HTTPI.stubs(:get).returns(new_response) }
+
+    it "should be present" do
+      wsdl.should be_present
     end
 
-    it "it accepts a custom SOAP endpoint" do
-      wsdl = Savon::WSDL::Document.new HTTPI::Request.new(:url => Endpoint.wsdl), "http://localhost"
-      wsdl.soap_endpoint.should == "http://localhost"
+    describe "#namespace" do
+      it "should return the namespace URI" do
+        wsdl.namespace.should == WSDLFixture.authentication(:namespace)
+      end
     end
 
-    it "is enabled by default" do
-      @wsdl.enabled?.should be_true
+    describe "#soap_actions" do
+      it "should return an Array of available SOAP actions" do
+        wsdl.soap_actions.should include(*WSDLFixture.authentication(:operations).keys)
+      end
     end
+  end
+
+  context "with a local document" do
+    let(:wsdl) do
+      wsdl = "spec/fixtures/wsdl/xml/authentication.xml"
+      Savon::WSDL::Document.new HTTPI::Request.new, wsdl
+    end
+
+    before { HTTPI.expects(:get).never }
+
+    it "should be present" do
+      wsdl.should be_present
+    end
+
+    describe "#namespace" do
+      it "should return the namespace URI" do
+        wsdl.namespace.should == WSDLFixture.authentication(:namespace)
+      end
+    end
+
+    describe "#soap_actions" do
+      it "should return an Array of available SOAP actions" do
+        wsdl.soap_actions.should include(*WSDLFixture.authentication(:operations).keys)
+      end
+    end
+  end
+
+  def new_response(options = {})
+    defaults = { :code => 200, :headers => {}, :body => WSDLFixture.load }
+    response = defaults.merge options
+    
+    HTTPI::Response.new(response[:code], response[:headers], response[:body])
+  end
+
+end
+__END__
 
     it "has a getter for the namespace URI" do
-      @wsdl.namespace_uri.should == WSDLFixture.authentication(:namespace_uri)
+      @wsdl.namespace.should == WSDLFixture.authentication(:namespace_uri)
     end
 
     it "has a getter for returning an Array of available SOAP actions" do
@@ -99,12 +140,5 @@ describe Savon::WSDL::Document do
     end
   end
 
-  def new_wsdl(fixture = nil)
-    endpoint = fixture ? Endpoint.wsdl(fixture) : Endpoint.wsdl
-
-    request = HTTPI::Request.new(:url => endpoint)
-    HTTPI.stubs(:get).with(request).returns(HTTPI::Response.new 200, {}, WSDLFixture.load(fixture))
-    Savon::WSDL::Document.new request
-  end
 
 end

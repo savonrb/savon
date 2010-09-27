@@ -6,59 +6,7 @@ module Savon
 
     # = Savon::SOAP::Response
     #
-    # Savon::SOAP::Response represents both HTTP and SOAP response.
-    #
-    # == SOAP fault
-    #
-    # Assuming the default behavior of raising errors is disabled, you can ask the response object
-    # if there was a SOAP fault or an HTTP error and get the SOAP fault or HTTP error message.
-    #
-    #   response.soap_fault?
-    #   # => true
-    #
-    #   response.soap_fault
-    #   # => "(soap:Server) Fault occurred while processing."
-    #
-    #   response.http_error?
-    #   # => true
-    #
-    #   response.http_error
-    #   # => "Not found (404)"
-    #
-    # == Response as XML
-    #
-    # To get the raw SOAP response XML, you can call to_xml or to_s on the response object.
-    #
-    #   response.to_xml
-    #   => "<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-    #   => "..."
-    #   => "</soap:Envelope>"
-    #
-    # == Response as a Hash
-    #
-    # You can also let Savon translate the SOAP response body to a Hash.
-    #
-    #   response.to_hash
-    #   => { :findUserByIdResponse => {
-    #   =>   :id => "123",
-    #   =>   :username => "eve"
-    #   =>   :active => true
-    #   => }
-    #
-    # When translating the SOAP response to a Hash, some XML tags and values are converted to more
-    # convenient Ruby objects. Translation is done through John Nunemaker's {Crack}[http://github.com/jnunemaker/crack]
-    # library along with some custom mapping.
-    #
-    # * XML tags (Hash keys) are converted to snake_case Symbols and namespaces are stripped off
-    # * SOAP xs:nil values are converted to nil objects
-    # * XML values specified in xs:DateTime format are converted to DateTime objects
-    # * XML values of "true" and "false" are converted to TrueClass and FalseClass
-    #
-    # == HTTPI::Response
-    #
-    # If for some reason you need to access the HTTPI::Response object ... you can.
-    #
-    #   response.http
+    # Represents the SOAP response and contains the HTTP response.
     class Response
 
       class << self

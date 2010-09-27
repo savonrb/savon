@@ -1,170 +1,300 @@
 require "spec_helper"
 
 describe Savon::SOAP::XML do
-  before do
-    @operation = WSDLFixture.authentication(:operations)[:authenticate]
-    @action, @input = @operation[:action], @operation[:input]
-    @soap = Savon::SOAP::XML.new @action, @input, Endpoint.soap
-  end
+  let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
 
-  it "should default to SOAP 1.1" do
-    Savon::SOAP::XML.version.should == 1
-  end
-
-  describe "xml returned via to_xml" do
-    before do
-      @xml_declaration = '<?xml version="1.0" encoding="UTF-8"?>'
-      @namespace = { "xmlns:ns" => "http://example.com" }
-      @namespace_string = 'xmlns:ns="http://example.com"'
-      @namespaces = { "xmlns:ns" => "http://ns.example.com", "xmlns:ns2" => "http://ns2.example.com" }
-
-      # reset to defaults
-      Savon::SOAP::XML.version = 1
-      Savon::SOAP::XML.header = {}
-      Savon::SOAP::XML.namespaces = {}
+  describe ".header" do
+    it "should default to an empty Hash" do
+      Savon::SOAP::XML.header.should == {}
     end
 
-    it "should contain an xml declaration" do
-      @soap.to_xml.should include(@xml_declaration)
-    end
-
-    # namespaces
-
-    it "should contain the namespace for SOAP 1.1" do
-      @soap.to_xml.should include('xmlns:env="' + Savon::SOAP::Namespace[1] + '"')
-    end
-
-    it "should contain the namespace for SOAP 1.2 when defined globally" do
-      Savon::SOAP::XML.version = 2
-      @soap.to_xml.should include('xmlns:env="' + Savon::SOAP::Namespace[2] + '"')
-    end
-
-    it "should contain the namespace for SOAP 1.2 when defined per request" do
-      @soap.version = 2
-      @soap.to_xml.should include('xmlns:env="' + Savon::SOAP::Namespace[2] + '"')
-    end
-
-    it "should containg a xmlns:wsdl namespace defined via the :namespace shortcut method" do
-      @soap.namespace = "http://wsdl.example.com"
-      @soap.to_xml.should include('xmlns:wsdl="http://wsdl.example.com"')
-    end
-
-    it "should accept custom namespaces when defined globally" do
-      Savon::SOAP::XML.namespaces = @namespace
-      @soap.to_xml.should include("<env:Envelope " + @namespace_string)
-    end
-
-    it "should accept custom namespaces when defined per request" do
-      @soap.namespaces = @namespace
-      @soap.to_xml.should include("<env:Envelope " + @namespace_string)
-    end
-
-    it "should merge global and per request namespaces" do
-      Savon::SOAP::XML.namespaces = @namespaces
-      @soap.namespaces = @namespace
-      @soap.to_xml.should include(
-        'xmlns:ns="http://example.com"',
-        'xmlns:ns2="http://ns2.example.com"'
-      )
-    end
-
-    # header
-
-    it "should not contain a header tag unless specified" do
-      @soap.to_xml.should_not include("<env:Header>")
-    end
-
-    it "should accept a custom (String) header defined globally" do
-      Savon::SOAP::XML.header = "<key>value</key>"
-      @soap.to_xml.should include("<env:Header><key>value</key></env:Header>")
-    end
-
-    it "should accept a custom (Hash) header defined globally" do
-      Savon::SOAP::XML.header[:key] = "value"
-      @soap.to_xml.should include("<env:Header><key>value</key></env:Header>")
-    end
-
-    it "should accept a custom (String) header defined per request" do
-      @soap.header = "<key>value</key>"
-      @soap.to_xml.should include("<env:Header><key>value</key></env:Header>")
-    end
-
-    it "should accept a custom (Hash) header defined per request" do
-      @soap.header[:key] = "value"
-      @soap.to_xml.should include("<env:Header><key>value</key></env:Header>")
-    end
-
-    it "should merge global and per request headers defined as Strings" do
-      Savon::SOAP::XML.header = "<key2>other value</key2>"
-      @soap.header = "<key>value</key>"
-      @soap.to_xml.should include(
-        "<env:Header><key2>other value</key2><key>value</key></env:Header>"
-      )
-    end
-
-    it "should merge global and per request headers defined as Hashes" do
-      Savon::SOAP::XML.header = { :key => "value", :key2 => "global value" }
-      @soap.header[:key2] = "request value"
-      @soap.to_xml.should match(
-        /<env:Header>(<key>value<\/key><key2>request value<\/key2>|<key2>request value<\/key2><key>value<\/key>)<\/env:Header>/
-      )
-    end
-
-    it "should use the :header method from a given WSSE object to include a WSSE header" do
-      wsse = "some compliant object"
-      wsse.stubs(:header).returns("<wsse>authentication</wsse>")
-
-      @soap.wsse = wsse
-      @soap.to_xml.should include("<env:Header><wsse>authentication</wsse></env:Header>")
-    end
-
-    # input tag
-
-    it "should contain a :wsdl namespaced input tag matching the :input property on instantiation" do
-      @soap = Savon::SOAP::XML.new "someAction", "someInput", Endpoint.soap
-      @soap.to_xml.should include('<wsdl:someInput>')
-    end
-
-    it "should fall back to using the :action property whem :input is blank" do
-      @soap = Savon::SOAP::XML.new "someAction", "", Endpoint.soap
-      @soap.to_xml.should include('<wsdl:someAction>')
-    end
-
-    it "should containg namespaces defined via an input tag Array containing the tag name and a Hash of namespaces" do
-      input = ["someInput", { "otherNs" => "http://otherns.example.com" }]
-      @soap = Savon::SOAP::XML.new "someAction", input, Endpoint.soap
-      @soap.to_xml.should include('<wsdl:someInput otherNs="http://otherns.example.com">')
-    end
-
-    # xml body
-
-    it "should contain the SOAP body defined as a Hash" do
-      @soap.body = { :someTag => "some value" }
-      @soap.to_xml.should include("<someTag>some value</someTag>")
-    end
-
-    it "should contain the SOAP body defined as an Object responding to :to_s" do
-      @soap.body = "<someTag>some value</someTag>"
-      @soap.to_xml.should include(@soap.body)
-    end
-
-    # xml
-
-    it "should be a completely custom XML when specified" do
-      @soap.xml = "custom SOAP body"
-      @soap.to_xml.should == @soap.xml
-    end
-
-    # safety check
-
-    it "should be a valid SOAP request" do
-      @soap.to_xml.should include(
-        @xml_declaration +
-        '<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">' <<
-          '<env:Body><wsdl:authenticate></wsdl:authenticate></env:Body>' <<
-        '</env:Envelope>'
-      )
+    it "should set the global SOAP header" do
+      Savon::SOAP::XML.header = { "MySecret" => "abc" }
+      Savon::SOAP::XML.header.should == { "MySecret" => "abc" }
+      
+      reset_globals
     end
   end
+
+  describe ".namespaces" do
+    it "should default to an empty Hash" do
+      Savon::SOAP::XML.namespaces.should == {}
+    end
+
+    it "should set the global SOAP namespaces" do
+      Savon::SOAP::XML.namespaces = { "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance" }
+      Savon::SOAP::XML.namespaces.should == { "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance" }
+      
+      reset_globals
+    end
+  end
+
+  describe ".new" do
+    it "should accept an endpoint, an input tag and a SOAP body" do
+      xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
+      
+      xml.endpoint.should == Endpoint.soap
+      xml.input.should == :authentication
+      xml.body.should == { :id => 1 }
+    end
+  end
+
+  describe "#input" do
+    it "should set the input tag" do
+      xml.input = :test
+      xml.input.should == :test
+    end
+  end
+
+  describe "#endpoint" do
+    it "should set the endpoint to use" do
+      xml.endpoint = "http://test.com"
+      xml.endpoint.should == "http://test.com"
+    end
+  end
+
+  describe "#version" do
+    it "should default to SOAP 1.1" do
+      xml.version.should == 1
+    end
+
+    it "should default to the global default" do
+      Savon::SOAP.version = 2
+      xml.version.should == 2
+      
+      reset_globals
+    end
+
+    it "should set the SOAP version to use" do
+      xml.version = 2
+      xml.version.should == 2
+    end
+
+    it "should raise an ArgumentError in case of an invalid version" do
+      lambda { xml.version = 3 }.should raise_error(ArgumentError)
+    end
+  end
+
+  describe "#header" do
+    it "should default to an empty Hash" do
+      xml.header.should == {}
+    end
+
+    it "should set the SOAP header" do
+      xml.header = { "MySecret" => "abc" }
+      xml.header.should == { "MySecret" => "abc" }
+    end
+  end
+
+  describe "#namespaces" do
+    it "should default to a Hash containing the namespace for SOAP 1.1" do
+      xml.namespaces.should == { "xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/" }
+    end
+
+    it "should default to a Hash containing the namespace for SOAP 1.2 if that's the current version" do
+      xml.version = 2
+      xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
+    end
+
+    it "should set the SOAP header" do
+      xml.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
+      xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
+    end
+  end
+
+  describe "#namespace" do
+    it "should set the 'xmlns:wsdl' namespace" do
+      xml.namespace = "http://example.com"
+      xml.namespaces["xmlns:wsdl"].should == "http://example.com"
+    end
+  end
+
+  describe "#wsse" do
+    it "should set the Savon::WSSE object" do
+      xml.wsse = Savon::WSSE.new
+      xml.wsse.should be_a(Savon::WSSE)
+    end
+  end
+
+  describe "#body" do
+    it "should set the SOAP body Hash" do
+      xml.body = { :id => 1 }
+      xml.to_xml.should include("<id>1</id>")
+    end
+
+    it "should also accepts an XML String" do
+      xml.body = "<id>1</id>"
+      xml.to_xml.should include("<id>1</id>")
+    end
+  end
+
+  describe "#xml" do
+    it "lets you specify a completely custom XML String" do
+      xml.xml = "<custom>xml</custom>"
+      xml.to_xml.should == "<custom>xml</custom>"
+    end
+
+    it "yields a Builder::XmlMarkup object to a given block" do
+      xml.xml { |xml| xml.using("Builder") }
+      xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8"?><using>Builder</using>'
+    end
+  end
+
+  describe "#to_xml" do
+    after { reset_globals }
+
+    context "by default" do
+      it "should start with an XML declaration" do
+        xml.to_xml.should match(/^<\?xml version="1.0" encoding="UTF-8"\?>/)
+      end
+
+      it "should have a SOAP envelope tag with a SOAP 1.1 namespace" do
+        xml.to_xml.should include('<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">')
+      end
+
+      it "should have a SOAP body containing the SOAP input tag and body Hash" do
+        xml.to_xml.should include('<env:Body><authenticate><id>1</id></authenticate></env:Body>')
+      end
+
+      it "should accept a SOAP body as an XML String" do
+        xml.body = "<someId>1</someId>"
+        xml.to_xml.should include('<env:Body><authenticate><someId>1</someId></authenticate></env:Body>')
+      end
+
+      it "should not contain a SOAP header" do
+        xml.to_xml.should_not include('<env:Header')
+      end
+    end
+
+    context "with the global SOAP version set to 1.2" do
+      it "should contain the namespace for SOAP 1.2" do
+        Savon::SOAP.version = 2
+        
+        xml.to_xml.should include('<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">')
+        reset_globals
+      end
+    end
+
+    context "with a global and request SOAP version" do
+      it "should contain the namespace for the request SOAP version" do
+        Savon::SOAP.version = 2
+        xml.version = 1
+        
+        xml.to_xml.should include('<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">')
+        reset_globals
+      end
+    end
+
+    context "with a global header and namespaces" do
+      before do
+        Savon::SOAP::XML.header = { "SpecialAuth" => { :user_name => "me", :pass_word => "secret" } }
+        Savon::SOAP::XML.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
+      end
+
+      it "should contain the default SOAP namespace and the global one" do
+        xml.to_xml.should include(
+          'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"',
+          'xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
+        )
+      end
+
+      it "should contain the global SOAP header" do
+        xml.to_xml.should include(
+          '<env:Header><SpecialAuth>',
+          '<userName>me</userName>',
+          '<passWord>secret</passWord>'
+        )
+      end
+    end
+
+    context "with a global and request header and namespaces" do
+      before do
+        Savon::SOAP::XML.header = { :some_auth => "secret", "MoreAuth" => "GlobalSecret" }
+        Savon::SOAP::XML.namespaces = {
+          "xmlns:xsi" => "http://example.com",
+          "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema"
+        }
+
+        xml.header["MoreAuth"] = "prettySecret"
+        xml.namespaces["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+      end
+
+      it "should contain the default SOAP namespace as well as the global and request ones" do
+        xml.to_xml.should include(
+          'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"',
+          'xmlns:xsd="http://www.w3.org/2001/XMLSchema"',
+          'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
+        )
+        xml.to_xml.should_not include('http://example.com')
+      end
+
+      it "should contain the global and request header" do
+        xml.to_xml.should include(
+          '<env:Header>',
+          '<someAuth>secret</someAuth>',
+          '<MoreAuth>prettySecret</MoreAuth>'
+        )
+        xml.to_xml.should_not include('GlobalSecret')
+      end
+    end
+
+    context "using the #namespace shortcut" do
+      it "should contain the 'xmlns:wsdl' namespace" do
+        xml.namespace = "http://example.com"
+        xml.to_xml.should include('xmlns:wsdl="http://example.com"')
+      end
+    end
+
+    context "with WSSE authentication" do
+      it "should have a SOAP header containing XML returned by WSSE#header" do
+        wsse = "a WSSE stub"
+        wsse.expects(:header).returns("<wsse>authentication</wsse>")
+        
+        xml.wsse = wsse
+        xml.to_xml.should include("<env:Header><wsse>authentication</wsse></env:Header>")
+      end
+    end
+
+    context "with a simple input tag (Symbol)" do
+      it "should just add the input tag" do
+        xml.input = :simple
+        xml.to_xml.should include('<simple><id>1</id></simple>')
+      end
+    end
+
+    context "with a simple input tag (Array)" do
+      it "should just add the input tag" do
+        xml.input = :simple
+        xml.to_xml.should include('<simple><id>1</id></simple>')
+      end
+    end
+
+    context "with an input tag and a namespace Hash (Array)" do
+      it "should contain the input tag with namespaces" do
+        xml.input = [:getUser, { "active" => true }]
+        xml.to_xml.should include('<getUser active="true"><id>1</id></getUser>')
+      end
+    end
+
+    context "with a prefixed input tag (Array)" do
+      it "should contain a prefixed input tag" do
+        xml.input = [:wsdl, :getUser]
+        xml.to_xml.should include('<wsdl:getUser><id>1</id></wsdl:getUser>')
+      end
+    end
+
+    context "with a prefixed input tag and a namespace Hash (Array)" do
+      it "should contain a prefixed input tag with namespaces" do
+        xml.input = [:wsdl, :getUser, { :only_active => false }]
+        xml.to_xml.should include('<wsdl:getUser only_active="false"><id>1</id></wsdl:getUser>')
+      end
+    end
+  end
+
+  def reset_globals
+    Savon::SOAP.version = Savon::SOAP::DefaultVersion
+    Savon::SOAP::XML.header = {}
+    Savon::SOAP::XML.namespaces = {}
+  end
+
 end
-

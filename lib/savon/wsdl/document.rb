@@ -8,134 +8,98 @@ module Savon
 
     # = Savon::WSDL::Document
     #
-    # Savon::WSDL represents the WSDL of your service, including information like the namespace URI,
+    # Represents the WSDL of your service, including information like the namespace URI,
     # the SOAP endpoint and available SOAP actions.
-    #
-    # == The WSDL document
-    #
-    # Retrieve the raw WSDL document:
-    #
-    #   client.wsdl.to_s
-    #
-    # == Available SOAP actions
-    #
-    # Get an array of available SOAP actions:
-    #
-    #   client.wsdl.soap_actions
-    #   # => [:get_all_users, :get_user_by_id]
-    #
-    # == Namespace URI
-    #
-    # Get the namespace URI:
-    #
-    #   client.wsdl.namespace_uri
-    #   # => "http://ws.userservice.example.com"
-    #
-    # == SOAP endpoint
-    #
-    # Get the SOAP endpoint:
-    #
-    #   client.wsdl.soap_endpoint
-    #   # => "http://example.com"
-    #
-    # == Disable Savon::WSDL
-    #
-    # Especially with large services (i.e. Ebay), getting and parsing the WSDL document can really
-    # slow down your request. The WSDL is great for exploring a service, but it's recommended to
-    # disable it for production.
-    #
-    # When disabling the WSDL, you need to pay attention to certain differences:
-    #
-    # 1. You instantiate Savon::Client with the actual SOAP endpoint instead of pointing it to the
-    #    WSDL of your service.
-    # 2. You also need to manually specify the SOAP.namespace.
-    #
-    #   client = Savon::Client.new :soap_endpoint => "http://example.com"
-    #
-    #   client.get_user_by_id do |soap|
-    #     soap.namespace = "http://example.com/UserService"
-    #     soap.body = { :id => 666 }
-    #   end
-    #
-    # Without the WSDL, Savon also has to guess the name of the SOAP action and input tag. It takes
-    # the name of the method called on its client instance, converts it from snake_case to lowerCamelCase
-    # and uses the result.
-    #
-    # The example above expects a SOAP action with an original name of "getUserById". If you service
-    # uses UpperCamelCase method names, you can just use the original name:
-    #
-    #   client.GetAllUsers
-    #
-    # For special cases, you could also specify the SOAP.action and SOAP.input inside the block:
-    #
-    #   client.get_user_by_id do |soap|
-    #     soap.namespace = "http://example.com/UserService"
-    #     soap.action = "GetUser_ById"
-    #     soap.input = "GetUserByIdRequest"
-    #     soap.body = { :id => 123 }
-    #   end
     class Document
 
-      # Expects an HTTPI::Request and accepts a custom +soap_endpoint+.
-      def initialize(request, soap_endpoint = nil)
-        @request, @enabled, @soap_endpoint = request, !!request.url, soap_endpoint
+      # Accepts an <tt>HTTPI::Request</tt> and a +document+.
+      def initialize(request = nil, document = nil)
+        self.request = request
+        self.document = document
       end
 
-      # Sets whether to use the WSDL.
-      attr_writer :enabled
+      # Accessor for the <tt>HTTPI::Request</tt> to use.
+      attr_accessor :request
 
-      # Returns whether to use the WSDL. Defaults to +true+.
-      def enabled?
-        @enabled
+      def present?
+        !!@document
       end
 
       # Returns the namespace URI of the WSDL.
-      def namespace_uri
-        @namespace_uri ||= parser.namespace_uri
+      def namespace
+        @namespace ||= parser.namespace
       end
+
+      # Sets the SOAP namespace.
+      attr_writer :namespace
+
+      # Returns the SOAP endpoint.
+      def endpoint
+        @endpoint ||= parser.endpoint
+      end
+
+      # Sets the SOAP endpoint.
+      attr_writer :endpoint
 
       # Returns an Array of available SOAP actions.
       def soap_actions
         @soap_actions ||= parser.operations.keys
       end
 
-      # Returns a Hash of SOAP operations including their corresponding
-      # SOAP actions and inputs.
+      # Returns the SOAP action for a given +key+.
+      def soap_action(key)
+        operations[key][:action] if present? && operations[key]
+      end
+
+      # Returns the SOAP input for a given +key+.
+      def soap_input(key)
+        operations[key][:input].to_sym if present? && operations[key]
+      end
+
+      # Returns a Hash of SOAP operations.
       def operations
         @operations ||= parser.operations
       end
 
-      # Returns the SOAP endpoint.
-      def soap_endpoint
-        @soap_endpoint ||= parser.soap_endpoint
-      end
-
-      # Returns +true+ for available methods and SOAP actions.
-      def respond_to?(method)
-        return true if !enabled? || soap_actions.include?(method)
-        super
-      end
-
-      # Returns an Array containg the SOAP action and input for a given +soap_call+.
-      def operation_from(soap_action)
-        return [soap_action.to_soap_key, soap_action.to_soap_key] unless enabled?
-        [operations[soap_action][:action], operations[soap_action][:input]]
-      end
+      # Sets the location of the WSDL document to use. This can either be a URL
+      # or a path to a local file.
+      attr_writer :document
 
       # Returns the raw WSDL document.
-      def to_xml
-        @document ||= Request.new(@request).response.body
+      def document
+        @wsdl_document ||= begin
+          raise ArgumentError, "No WSDL document given" if @document.blank?
+          remote? ? http_request : read_file
+        end
       end
 
-      private
+      alias :to_xml :document
 
-      # Returns the Savon::WSDL::Parser.
+    private
+
+      # Returns whether the WSDL document is located on the Web.
+      def remote?
+        @document =~ /^http/
+      end
+
+      # Executes an HTTP GET request to retrieve a remote WSDL document.
+      def http_request
+        request.url = @document
+        Request.new(request).response.body
+      end
+
+      # Reads the WSDL document from a local file.
+      def read_file
+        File.read @document
+      end
+
+      # Parses the WSDL document and returns the <tt>Savon::WSDL::Parser</tt>.
       def parser
-        unless @parser
-          @parser = Parser.new
-          REXML::Document.parse_stream to_xml, @parser
+        @parser ||= begin
+          parser = Parser.new
+          REXML::Document.parse_stream document, parser
+          parser
         end
-        @parser
       end
 
     end
