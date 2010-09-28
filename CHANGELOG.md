@@ -55,6 +55,8 @@
 
 * Fix for issues #85 and #88 (When gzip is enabled, binary data is logged).
 
+* Started to removed quite a couple of core extensions.
+
 ## 0.7.9 (2010-06-14)
 
 * Fix for issue #53 (<tt>DateTime#to_soap_value</tt> assumes UTC).
