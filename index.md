@@ -3,10 +3,10 @@ title: Heavy metal Ruby SOAP client
 layout: default
 ---
 
-Introduction to Savon
-=====================
+Savon Guide
+===========
 
-Savon is a SOAP client library for Ruby. It aims to make simple tasks easy and hard tasks possible. Before using it, you should read the documentation and make yourself familiar with [SOAP](http://www.w3.org/TR/soap/) itself, [WSDL documents](http://www.w3.org/TR/wsdl) and tools like [soapUI](http://www.eviware.com).
+Savon is a SOAP client library for Ruby. It's goal is to provide a lightweight and easy to use alternative to soap4r. If you're starting to use Savon, please make sure to read this guide and make yourself familiar with [SOAP](http://www.w3.org/TR/soap/) itself, [WSDL documents](http://www.w3.org/TR/wsdl) and tools like [soapUI](http://www.eviware.com).
 
 Table of contents
 -----------------
@@ -14,331 +14,325 @@ Table of contents
 * [Installation](#installation)
 * [Runtime dependencies](#runtime_dependencies)
 * [Getting started](#getting_started)
-* [Working with a WSDL](#working_with_a_wsdl)
-* [Executing a SOAP request](#executing_a_soap_request)
-* [SOAP request customization](#soap_request_customization)
-  * [SOAP version](#soap_version)
-  * [SOAP envelope](#soap_envelope)
-  * [SOAP header](#soap_header)
-  * [SOAP body](#soap_body)
-* [HTTP](#http)
-  * [SOAPAction](#soapaction)
-* [Handling the SOAP response](#handling_the_soap_response)
-* [Authentication](#authentication)
-  * [HTTP basic](#http_basic)
-  * [HTTP digest](#http_digest)
-  * [WSSE](#wsse)
-  * [SSL](#ssl)
-* [Logging](#logging)
-* [Participate](#participate)
+* [The WSDL object](#the_wsdl_object)
+* [The HTTP object](#the_http_object)
+* [The WSSE object](#the_wsse_object)
+* [Executing SOAP requests](#executing_soap_requests)
+* [The SOAP object](#the_soap_object)
+* [The Response object](#the_response_object)
+* [Error handling](#error_handling)
+* [Global configuration](#global_configuration)
 * [Alternative libraries](#alternative_libraries)
-
-Warning
--------
-
-<div class="warn">Work in progress! This documentation will be available for Savon version >= 0.8 soon.</div>
 
 Installation
 ------------
 
 Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
-    $ gem install savon
+{% highlight bash %}
+$ gem install savon
+{% endhighlight %}
 
 Runtime dependencies
-------------
+--------------------
 
-* [httpclient](http://rubygems.org/gems/httpclient) >= 2.1.5
-* [crack](http://rubygems.org/gems/crack) >= 0.1.8
-* [builder](http://rubygems.org/gems/builder) >= 2.1.2
+* [Builder](http://rubygems.org/gems/builder) ~> 2.1.2
+* [Crack](http://rubygems.org/gems/crack) ~> 0.1.8
+* [HTTPI](http://rubygems.org/gems/httpi) >= 0.4.0
+
+HTTPI is an interface supporting multiple HTTP libraries. It defaults to use [HTTPClient](http://rubygems.org/gems/httpclient). Make sure to set up your $LOADPATH to include the HTTP library of your choice.
 
 Getting started
 ---------------
 
-The primary interface for Savon is the `Savon::Client` object. It contains the `#request` method for executing SOAP requests while also serving as a wrapper for accessing the SOAP, WSDL and Request objects.
-
-Assuming you have access to a WSDL, you need to instantiate a `Savon::Client` passing in the location of the WSDL:
+Savon is based around the [Savon::Client](http://github.com/rubiii/savon/blob/dev/lib/savon/client.rb) object. It represents a particular SOAP service and lets you set up and execute SOAP requests. So lets create a client using a remote WSDL document:
 
 {% highlight ruby %}
-client = Savon::Client.new :wsdl => "http://example.com/UserService?wsdl" # remote
-client = Savon::Client.new :wsdl => "../wsdl/user_service.xml" # local
+client = Savon::Client.new do
+  wsdl.document = "http://service.example.com?wsdl"
+end
 {% endhighlight %}
 
-Even though using a WSDL comes with some advantages, loading and parsing the WSDL might take quite some time. So if you don't have or don't want to use a WSDL, you can directly access the SOAP endpoint instead. In this case, you need to pass in the URI of the SOAP endpoint and the target namespace of the service:
+`Savon::Client.new` method accepts a block to be evaluated in the context of the client object. So you can use method calls inside the block, but local variables won't work. For more information on this, I recommend you read about [instance_eval with delegation](http://www.dcmanges.com/blog/ruby-dsls-instance-eval-with-delegation).
+
+If you don't like this or if it's actually a problem for you, you can use block arguments to specify which objects you would like to receive and Savon will yield those instead of instance evaluating the block. The `.new` method accepts 1-3 arguments and yields these objects:
+
+    [wsdl, http, wsse]
+
+For example, to work with the wsdl and http object, you could specify only two of the three possible arguments:
 
 {% highlight ruby %}
-client = Savon::Client.new(
-  :endpoint => "http://example.com/UserService",
-  :namespace => "http://users.example.com"
-)
+client = Savon::Client.new do |wsdl, http|
+  wsdl.document = "http://service.example.com?wsdl"
+  http.proxy = "http://proxy.example.com"
+end
 {% endhighlight %}
 
-You can also use the WSDL and overwrite its SOAP endpoint:
+The objects mentioned above can also be used after instantiating the client (outside of the block) and the following sections provide details about what they can be used for.
+
+The WSDL object
+---------------
+
+The WSDL object is actually called [Savon::WSDL::Document](http://github.com/rubiii/savon/blob/dev/lib/savon/wsdl/document.rb), but I'll refer to all objects via shortnames. You can think of the wsdl as a representation of a WSDL document.
+
+### Inspecting a Service
+
+Specifying the location of a WSDL document gives you access to a couple of methods for inspecting your service.
 
 {% highlight ruby %}
-client = Savon::Client.new(
-  :wsdl => "http://example.com/UserService?wsdl",
-  :endpoint => "http://localhost:8080/UserService"
-)
+# specifies a remote location
+wsdl.document = "http://service.example.com?wsdl"
+
+# uses a local document
+wsdl.document = "../wsdl/authentication.xml"
 {% endhighlight %}
 
-And in case you're using a proxy server to access the service, you can specify that as well:
+The following examples assume you specified a WSDL location.
 
 {% highlight ruby %}
-client = Savon::Client.new(
-  :wsdl => "http://example.com/UserService?wsdl",
-  :proxy => "http://proxy.example.com"
-)
+# returns the target namespace
+wsdl.namespace  # => "http://v1.example.com"
+
+# returns the SOAP endpoint
+wsdl.endpoint  # => "http://service.example.com"
+
+# returns an Array of available SOAP actions
+wsdl.soap_actions  # => [:create_user, :get_user, :get_all_users]
+
+# returns the WSDL document as a String
+wsdl.to_xml  # => "<wsdl:definitions name=\"AuthenticationService\" ..."
 {% endhighlight %}
 
-Working with a WSDL
--------------------
+Note: your service will probably use (lower)CamelCase method names, but Savon maps those to snake_case Symbols for you.
 
-If you decided to use a WSDL, you can now check to see what it knows about your service:
+### Working without a WSDL
+
+Retrieving and parsing WSDL documents is a quite expensive operation. And even though Savon only does this once for every client, my recommendation is to not use a WSDL (at least in production) and directly access the SOAP endpoint instead. This requires you to specify the SOAP endpoint and target namespace instead of a WSDL location.
 
 {% highlight ruby %}
-client.wsdl.soap_actions  # => [:add_user, :get_user, :get_all_users]
-client.wsdl.endpoint      # => "http://example.com/UserService"
-client.wsdl.namespace     # => "http://users.example.com"
-client.wsdl.to_s          # => "<wsdl:definitions>...</wsdl:definitions>"
+client = Savon::Client.new do
+  wsdl.endpoint = "http://service.example.com"
+  wsdl.namespace = "http://v1.example.com"
+end
 {% endhighlight %}
 
-Currently, the WSDL parser is still pretty basic and in some cases it might not be able to get the correct information. So it's recommended that you check the state of the `Savon::WSDL` object.
+Whether you're using a WSDL or specifying the target namespaces manually, Savon will register the `xmlns:wsdl` namespace (pointing to the target namespace) for you.
 
-### SOAP actions
+The HTTP object
+---------------
 
-Savon maps the SOAP actions of your service to snake_case Symbols, because that just feels more natural. You can inspect the mapping via:
+[HTTPI::Request](http://github.com/rubiii/httpi/blob/master/lib/httpi/request.rb) is provided by the [HTTPI](http://rubygems.org/gems/httpi) gem and provides various settings for customizing HTTP requests. Savon executes GET requests for retrieving remote WSDL documents and POST requests for each SOAP request.
+
+So because it's a dependency, I'm only going to document one SOAP-specific detail and point you to the [HTTPI documentation](http://github.com/rubiii/httpi) for additional information.
+
+Note: HTTPI is still a very young project and might not support everything you need. Please don't hesitate to [file bugs](http://github.com/rubiii/httpi/issues) or [make wishes](http://httpi.uservoice.com) for the library to support additional features.
+
+### SOAPAction
+
+...
+
+The WSSE object
+---------------
+
+[Savon::WSSE](http://github.com/rubiii/savon/blob/dev/lib/savon/wsse.rb) allows you to use [WSSE authentication](http://www.oasis-open.org/committees/wss/documents/WSS-Username-02-0223-merged.pdf) (PDF).
 
 {% highlight ruby %}
-client.wsdl.operations
-# => { :add_user => { :action => "addUser", :input => "addUserRequest" }, ... }
+# sets the WSSE credentials
+wsse.credentials "username", "password"
+
+# enables WSSE digest authentication
+wsse.credentials "username", "password", :digest
 {% endhighlight %}
 
-As you can see from this example, the Hash contains the value for the `SOAPAction` HTTP header and the name of the input tag (the first tag inside the soap:Body element). So if the mapping worked out as it should, you can forget about these details and just remember that the SOAP action you're going to call is a snake_case Symbol.
+Executing SOAP requests
+-----------------------
 
-If the mapping does not contain the values you expected, you can either overwrite them when executing a SOAP request or simply not use the WSDL.
-
-Executing a SOAP request
-------------------------
-
-To execute a SOAP request, you use the `#request` method of your `Savon::Client`, passing in name of the SOAP action you want to call:
+Now for the fun part. To execute SOAP request, you will now learn about the `Savon::Client#request` method. Lets look at a very basic example for executing a SOAP request to a `get_all_users` action.
 
 {% highlight ruby %}
-client.request :get_all_users
-# => <getAllUsers></getAllUsers>
+response = client.request :get_all_users
 {% endhighlight %}
 
-Notice that if you're working with a WSDL, Savon will register the `xmlns:wsdl` namespace for you. In order to namespace the SOAP input tag, you pass in both the namespace and action:
+This single argument (the name of the SOAP action to call) works in different ways depending on whether you use a WSDL document. If you do, Savon will parse the WSDL for SOAP actions and convert their names to snake_case Symbols for you. When you're [not using a WSDL](working_without_a_wsdl), the argument will (by convention) be converted to lowerCamelCase.
 
 {% highlight ruby %}
-client.request :wsdl, :get_all_users
-# => <wsdl:getAllUsers></wsdl:getAllUsers>
+:get_all_users.to_s.lower_camelcase  # => "getAllUsers"
+:get_pdf.to_s.lower_camelcase        # => "getPdf"
 {% endhighlight %}
 
-You can also add a Hash of attributes for the input tag as the last argument:
+This convention might not work for you if your service requires CamelCase method names or contains methods with UPPERCASE acronyms. But don't worry. If you pass in a String instead of a Symbol, Savon will not convert the argument.
 
 {% highlight ruby %}
-client.request :get_all_users, "xmlns:doc" => "http://doc.example.com"
-# => <getAllUsers xmlns:doc="http://doc.example.com"></getAllUsers>
+response = client.request "GetPDF"
 {% endhighlight %}
 
-When you're not working with a WSDL, Savon does not know anything about the SOAP actions of your service. So by convention, if you pass in the action as a snake_case Symbol, it gets converted to lowerCamelCase. But don't worry. If you pass in a String instead of a Symbol, Savon will use it without converting:
+The argument(s) passed to the `#request` method will affect the SOAP input tag inside the XML request. To make sure you know what this means, here's an example of a simple request:
+
+{% highlight xml %}
+<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+  <env:Body>
+    <getAllUsers />  <!-- the SOAP input tag -->
+  </env:Body>
+</env:Envelope>
+{% endhighlight %}
+
+Now you know what happens when you pass a single argument. But fairly often you need to prefix the input tag with the target namespace of your service like this:
+
+{% highlight xml %}
+<env:Envelope
+    xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:wsdl="http://v1.example.com">
+  <env:Body>
+    <wsdl:getAllUsers />
+  </env:Body>
+</env:Envelope>
+{% endhighlight %}
+
+So if you pass two arguments to the `#request` method, the first (a Symbol) will be used for the namespace and the second (a Symbol or String) will be the SOAP action to call:
 
 {% highlight ruby %}
-client.request "GetAllUsers"
-# => <GetAllUsers></GetAllUsers>
+response = client.request :wsdl, :get_all_users
 {% endhighlight %}
 
-SOAP request customization
---------------------------
+On rare occasions, you may actually need to attach XML attributes to the input tag. In that case, you can pass a Hash of attributes to the name of your SOAP action and the optional namespace:
 
-When executing a SOAP request, `Savon::Client#request` also accepts a block in which you have access to the SOAP, WSDL and Request objects. This block is the place for you to set the payload, change HTTP headers, specify authentication credentials, etc.
+{% highlight ruby %}
+response = client.request :wsdl, "GetPDF", :id => 1
+{% endhighlight %}
 
-<div class="warn">Due to the evaluation of the block, you can use local variables and methods, but you can not use instance variables inside it!</div>
+These three arguments will generate the following input tag:
 
-Before going into the details, let's take a look at an example request. The comments should help you understand what the documentation is talking about.
+{% highlight xml %}
+<wsdl:GetPDF id="1" />
+{% endhighlight %}
 
-    POST http://example.com/UserService HTTP/1.1
-    Accept-Encoding: gzip,deflate                                         # HTTP header
-    Content-Type: text/xml;charset=UTF-8
-    SOAPAction: "getUser"                                                 # SOAP action
-    
-    <soap:Envelope                                                        # SOAP envelope
-        xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"            # Namespaces
-        xmlns:wsdl="http://users.example.com">
-      <soap:Header/>                                                      # SOAP header
-      <soap:Body>                                                         # SOAP body
-        <wsdl:getUser>                                                    # Input tag
-          <id>123</id>                                                    # Payload
-        </wsdl:getUser>
-      </soap:Body>
-    </soap:Envelope>
+Since most SOAP actions require you to pass arguments for e.g. the user to return, you need additional settings. Luckily you're already familiar with [passing a block to a method](#getting_started), right? `Savon::Client#request` also accepts a block for you to access these object:
+
+    [soap, wsdl, http, wsse]
+
+Notice, that the list is almost the same as the one for `Savon::Client.new`. Except now, there is an additional object called soap. In contrast to the other three objects which you should already know, a new soap object is created for every request.
+
+The SOAP object
+---------------
+
+[Savon::SOAP::XML](http://github.com/rubiii/savon/blob/dev/lib/savon/soap/xml.rb) is tied to a single SOAP request and lets you set up the XML to send.
 
 ### SOAP version
 
-Savon by default expects your service to be based on SOAP 1.1. You can use `Savon::SOAP#version` to set the version to SOAP 1.2:
+Savon by default expects your services to be based on SOAP 1.1. For SOAP 1.2 services, you can set the SOAP version per request:
 
 {% highlight ruby %}
-client.request(:get_user) { soap.version = 2 }
-{% endhighlight %}
-
-Changing the SOAP version affects the `xmlns:soap` namespace as well as error handling details.
-
-### SOAP envelope
-
-#### Namespaces
-
-Savon defines the `xmlns:soap` namespace for the current SOAP version. It also defines the `xmlns:wsdl` namespace if you're using a WSDL. You can define additional namespaces using the `Savon::SOAP#namespaces` method which returns a Hash:
-
-{% highlight ruby %}
-client.request :get_user do
-  soap.namespaces["xmlns:custom"] = "http://custom.example.com"
+response = client.request :get_user do
+  soap.version = 2
 end
-# => <soap:Envelope
-# =>   xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
-# =>   xmlns:custom="http://custom.example.com">
 {% endhighlight %}
 
-#### XML (or: I don't need your help)
+Changing the SOAP version affects the `xmlns:soap` namespace and [error handling](#error_handling).
 
-If you don't want Savon to create any XML and just handle the requests, you can pass an object responding to `to_s` to the `Savon::SOAP#xml` method:
+### Namespaces
+
+...
+
+### SOAP body
+
+In most cases you need to at least specify the arguments required by the SOAP action you're going to call. If, for example, you call a `get_user` action and it expects the ID of the user to return, you can simply use a Hash:
 
 {% highlight ruby %}
-client.request(:get_user) { soap.xml = "<my:Envelope>empty</my:Envelope>" }
-# => <my:Envelope>empty</my:Envelope>
+response = client.request :get_user do
+  soap.body = { :id => 1 }
+end
+{% endhighlight %}
+
+As you already saw before, Savon is based on a few conventions to make the experience of having to work with SOAP and XML as pleasant as possible. The Hash passed to `Savon::SOAP::XML#body=` is not an exception. It is translated to XML using the `Hash#to_soap_xml` method provided by Savon.
+
+Here's a more complex example:
+
+{% highlight ruby %}
+response = client.request :wsdl, "CreateUser" do
+  soap.body = {
+    :first_name => "The",
+    :last_name  => "Hoff",
+    "TV"        => ["Knight Rider", "Baywatch"]
+  }
+end
+{% endhighlight %}
+
+As with the SOAP action, Symbol keys will be converted to lowerCamelCase and String keys won't be touched. The previous examples generates the following XML:
+
+{% highlight xml %}
+<env:Envelope
+    xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"
+    xmlns:wsdl="http://v1.example.com">
+  <env:Body>
+    <wsdl:GetUser>
+      <firstName>The</firstName>
+      <lastName>Hoff</lastName>
+      <TV>Knight Rider</TV>
+      <TV>Baywatch</TV>
+    </wsdl:GetUser>
+  </env:Body>
+</env:Envelope>
+{% endhighlight %}
+
+Some services actually require the XML elements to be in a specific order. If you don't use Ruby 1.9 (and you should), you can not be sure about the order of Hash elements and have to specify it using an Array under a special `:order!` key:
+
+{% highlight ruby %}
+{ :last_name => "Hoff", :first_name => "The", :order! => [:first_name, :last_name] }
+{% endhighlight %}
+
+This will make sure, that the lastName tag follows the firstName.
+
+Assigning arguments to XML tags using a Hash is even more difficult. It requires another Hash under an `attributes!` key containing a key matching the XML tag and the Hash of attributes to add:
+
+{% highlight ruby %}
+{ :first_name => "TheHoff", :last_name => nil, :attributes! => { :last_name => { "xsi:nil" => true } } }
+{% endhighlight %}
+
+This example will be translated to the following XML:
+
+{% highlight xml %}
+<firstName>TheHoff</firstName><lastName xsi:nil="true"></lastName>
+{% endhighlight %}
+
+I would not recommend using a Hash for the SOAP body if you need to create a complex XML structure, because there are better alternatives. One of them is to pass a block to the `Savon::SOAP::XML#body` method. Savon will then yield a `Builder::XmlMarkup` instance for you to use.
+
+{% highlight ruby %}
+soap.body do |xml|
+  xml.firstName("The")
+  xml.lastName("Hoff")
+end
+{% endhighlight %}
+
+Last but not least, you can also create and use a simple String (created with Builder or any another tool):
+
+{% highlight ruby %}
+soap.body = "<firstName>The</firstName><lastName>Hoff</lastName>"
 {% endhighlight %}
 
 ### SOAP header
 
-Savon adds elements to the SOAP header when you're using [WSSE authentication](#wsse). As usual, the header is just another Hash that you can manipulate:
+...
 
-{% highlight ruby %}
-client.request(:get_user) { soap.header["specialApiKey"] = "secret" }
-# => <soap:Header>
-# =>   <specialApiKey>secret</specialApiKey>
-# => </soap:Header>
-{% endhighlight %}
-
-### SOAP body
-
-XML is verbose and boring. And since basic XML can be represented as a Hash ... well, just take a look at the following example:
-
-{% highlight ruby %}
-client.request(:get_user) { soap.body = { :user_id => 123 } }
-# => <getUser><userId>123</userId></getUser>
-{% endhighlight %}
-
-You can pass a Hash to `Savon::SOAP#body` and it will be converted to XML via `Hash#to_soap_xml`. Notice that by convention, Hash key Symbols are converted to lowerCamelCase. But again, you can use Hash key Strings which will not be converted.
-
-{% highlight ruby %}
-client.request(:get_user) { soap.body = { "UserID" => 123 } }
-# => <getUser><UserID>123</UserID></getUser>
-{% endhighlight %}
-
-This works great for simple data, but can also be used to generate more complex XML.
-
-#### Element order
-
-Some services require XML elements to be in a specific order. If you're not working with Ruby 1.9 by now, that might be a problem. One solution is to specify the exact order of elements in an Array under the `:order!` key:
-
-{% highlight ruby %}
-client.request :add_user do
-  soap.body = {
-    :user => {
-      :name => "Eve",
-      :email => "eve@example.com",
-      :order! => [:name, :email]
-    }
-  }
-end
-# => <addUser>
-# =>   <user>
-# =>     <name>Eve</name>
-# =>     <email>eve@example.com</email>
-# =>   </user>
-# => </addUser>
-{% endhighlight %}
-
-#### Attributes
-
-Savon also lets you attach attributes through a Hash under the `:attributes!` key:
-
-{% highlight ruby %}
-client.request :add_user do
-  soap.body = {
-    :user => {
-      :name => "Eve",
-      :contact => "eve@example.com",
-      :attributes! => { :contact => { "type" => "email" } }
-    }
-  }
-end
-# => <addUser>
-# =>   <user>
-# =>     <name>Eve</name>
-# =>     <contact type="email">eve@example.com</contact>
-# =>   </user>
-# => </addUser>
-{% endhighlight %}
-
-#### XML (aka the hard way)
-
-`Savon::SOAP#body` also accepts any object that is not a Hash and responds to `to_s`. So you can use anything from a simple String to any kind of object returning a String of XML:
-
-{% highlight ruby %}
-client.request(:get_user) { soap.body = "<id>123</id>" }
-# => <getUser><id>123</id></getUser>
-{% endhighlight %}
-
-HTTP
-----
+### Custom XML
 
 ...
 
-### SOAPAction
-
-When you're working with a WSDL, the `SOAPAction` HTTP header will be set automatically. If you're not, Savon by convention uses the name of the SOAP input tag. To change this behavior, you can set the attribute on the HTTP header yourself:
-
-{% highlight ruby %}
-client.request(:get_all_users) { http.header["SOAPAction"] = "urn:GetAllUsers" }
-# => SOAPAction = "urn:GetAllUsers"
-{% endhighlight %}
-
-Handling the SOAP response
---------------------------
+The Response object
+-------------------
 
 ...
 
-Authentication
+Error handling
 --------------
 
-### HTTP basic
-
 ...
 
-### HTTP digest
-
-...
-
-### WSSE
-
-...
-
-### SSL
-
-...
-
-Logging
--------
-
-...
-
-Participate
------------
+Global configuration
+--------------------
 
 ...
 
 Alternative libraries
 ---------------------
 
-If you find that Savon does not work for you, you might want to take a look at your alternatives at [The Ruby Toolbox](http://www.ruby-toolbox.com/categories/soap.html).
+...
