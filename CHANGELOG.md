@@ -55,7 +55,9 @@
 
 * Fix for issues #85 and #88 (When gzip is enabled, binary data is logged).
 
-* Started to removed quite a couple of core extensions.
+* Removed global WSSE credentials. Authentication needs to be set up for each client instance.
+
+* Started to remove quite a few core extensions.
 
 ## 0.7.9 (2010-06-14)
 
