@@ -246,12 +246,13 @@ describe Savon::SOAP::XML do
     end
 
     context "with WSSE authentication" do
-      it "should have a SOAP header containing XML returned by WSSE#header" do
-        wsse = "a WSSE stub"
-        wsse.expects(:header).returns("<wsse>authentication</wsse>")
-        
-        xml.wsse = wsse
-        xml.to_xml.should include("<env:Header><wsse>authentication</wsse></env:Header>")
+      it "should containg a SOAP header with WSSE authentication details" do
+        xml.wsse = Savon::WSSE.new
+        xml.wsse.credentials "username", "password"
+
+        xml.to_xml.should include("<env:Header><wsse:Security")
+        xml.to_xml.should include("<wsse:Username>username</wsse:Username>")
+        xml.to_xml.should include("password</wsse:Password>")
       end
     end
 

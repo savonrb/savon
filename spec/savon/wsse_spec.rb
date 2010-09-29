@@ -1,127 +1,152 @@
 require "spec_helper"
 
 describe Savon::WSSE do
-  before do
-    Savon::WSSE.username, Savon::WSSE.password, Savon::WSSE.digest = nil, nil, false
-    @wsse, @username, @password = Savon::WSSE.new, "gorilla", "secret"
+  let(:wsse) { Savon::WSSE.new }
+
+  it "should contain the namespace for WS Security Secext" do
+    Savon::WSSE::WSENamespace.should ==
+      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
   end
 
-  it "contains the namespace for WS Security Secext" do
-    Savon::WSSE::WSENamespace.should be_a(String)
-    Savon::WSSE::WSENamespace.should_not be_empty
+  it "should contain the namespace for WS Security Utility" do
+    Savon::WSSE::WSUNamespace.should ==
+      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
   end
 
-  it "contains the namespace for WS Security Utility" do
-    Savon::WSSE::WSUNamespace.should be_a(String)
-    Savon::WSSE::WSUNamespace.should_not be_empty
+  it "should contain the namespace for the PasswordText type" do
+    Savon::WSSE::PasswordTextURI.should ==
+      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
   end
 
-  it "defaults to nil for the WSSE username (global setting)" do
-    Savon::WSSE.username.should be_nil
+  it "should contain the namespace for the PasswordDigest type" do
+    Savon::WSSE::PasswordDigestURI.should ==
+      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
   end
 
-  it "has both getter and setter for the WSSE username (global setting)" do
-    Savon::WSSE.username = "gorilla"
-    Savon::WSSE.username.should == "gorilla"
+  describe "#credentials" do
+    it "should set the username" do
+      wsse.credentials "username", "password"
+      wsse.username.should == "username"
+    end
+
+    it "should set the password" do
+      wsse.credentials "username", "password"
+      wsse.password.should == "password"
+    end
+
+    it "should default to set digest to false" do
+      wsse.credentials "username", "password"
+      wsse.should_not be_digest
+    end
+
+    it "should set digest to true if specified" do
+      wsse.credentials "username", "password", :digest
+      wsse.should be_digest
+    end
   end
 
-  it "defaults to nil for the WSSE password (global setting)" do
-    Savon::WSSE.password.should be_nil
+  describe "#username" do
+    it "should set the username" do
+      wsse.username = "username"
+      wsse.username.should == "username"
+    end
   end
 
-  it "has both getter and setter for the WSSE password (global setting)" do
-    Savon::WSSE.password = "secret"
-    Savon::WSSE.password.should == "secret"
+  describe "#password" do
+    it "should set the password" do
+      wsse.password = "password"
+      wsse.password.should == "password"
+    end
   end
 
-  it "defaults to nil for whether to use WSSE digest (global setting)" do
-    Savon::WSSE.digest?.should be_false
+  describe "#digest" do
+    it "should default to false" do
+      wsse.should_not be_digest
+    end
+
+    it "should specify whether to use digest auth" do
+      wsse.digest = true
+      wsse.should be_digest
+    end
   end
 
-  it "has both getter and setter for whether to use WSSE digest (global setting)" do
-    Savon::WSSE.digest = true
-    Savon::WSSE.digest?.should == true
-  end
-
-  it "defaults to nil for the WSSE username" do
-    @wsse.username.should be_nil
-  end
-
-  it "has both getter and setter for the WSSE username" do
-    @wsse.username = "gorilla"
-    @wsse.username.should == "gorilla"
-  end
-
-  it "defaults to nil for the WSSE password" do
-    @wsse.password.should be_nil
-  end
-
-  it "has both getter and setter for the WSSE password" do
-    @wsse.password = "secret"
-    @wsse.password.should == "secret"
-  end
-
-  it "defaults to nil for whether to use WSSE digest" do
-    @wsse.digest?.should be_false
-  end
-
-  it "has both getter and setter for whether to use WSSE digest" do
-    @wsse.digest = true
-    @wsse.digest?.should == true
-  end
-
-  describe "header" do
-    describe "returns the XML for a WSSE authentication header" do
-      it "with WSSE credentials specified" do
-        @wsse.username = @username
-        @wsse.password = @password
-        header = @wsse.header
-
-        header.should include(Savon::WSSE::WSENamespace)
-        header.should include(Savon::WSSE::WSUNamespace)
-        header.should include(@username)
-        header.should include(@password)
-        header.should include(Savon::WSSE::PasswordTextURI)
-      end
-
-      it "with WSSE credentials specified via defaults" do
-        Savon::WSSE.username = @username
-        Savon::WSSE.password = @password
-        header = @wsse.header
-
-        header.should include(Savon::WSSE::WSENamespace)
-        header.should include(Savon::WSSE::WSUNamespace)
-        header.should include(@username)
-        header.should include(@password)
-        header.should include(Savon::WSSE::PasswordTextURI)
+  describe "#to_xml" do
+    context "with no credentials" do
+      it "should return an empty String" do
+        wsse.to_xml.should == ""
       end
     end
 
-    describe "returns the XML for a WSSE digest header if specified" do
-      it "via accessors" do
-        @wsse.username = @username
-        @wsse.password = @password
-        @wsse.digest = true
-        header = @wsse.header
-  
-        header.should include(Savon::WSSE::WSENamespace)
-        header.should include(Savon::WSSE::WSUNamespace)
-        header.should include(@username)
-        header.should_not include(@password)
-        header.should include(Savon::WSSE::PasswordDigestURI)
+    context "with only a username" do
+      before { wsse.username = "username" }
+
+      it "should return an empty String" do
+        wsse.to_xml.should == ""
+      end
+    end
+
+    context "with only a password" do
+      before { wsse.password = "password" }
+
+      it "should return an empty String" do
+        wsse.to_xml.should == ""
+      end
+    end
+
+    context "with credentials" do
+      before { wsse.credentials "username", "password" }
+
+      it "should contain a wsse:Security tag" do
+        namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        wsse.to_xml.should include("<wsse:Security xmlns:wsse=\"#{namespace}\">")
       end
 
-      it "via defaults" do
-        @wsse.username = @username
-        @wsse.password = @password
-        Savon::WSSE.digest = true
-        header = @wsse.header
-  
-        header.should include(Savon::WSSE::WSENamespace)
-        header.should include(Savon::WSSE::WSUNamespace)
-        header.should include(@username)
-        header.should_not include(@password)
-        header.should include(Savon::WSSE::PasswordDigestURI)
+      it "should contain the WSE and WSU namespaces" do
+        wsse.to_xml.should include(Savon::WSSE::WSENamespace, Savon::WSSE::WSUNamespace)
+      end
+
+      it "should contain the username and password" do
+        wsse.to_xml.should include("username", "password")
+      end
+
+      it "should contain a wsse:Nonce tag" do
+        wsse.to_xml.should match(/<wsse:Nonce>\w+<\/wsse:Nonce>/)
+      end
+
+      it "should contain a wsu:Created tag" do
+        wsse.to_xml.should match(/<wsu:Created>#{Savon::SOAP::DateTimeRegexp}.+<\/wsu:Created>/)
+      end
+
+      it "should contain the PasswordText type attribute" do
+        wsse.to_xml.should include(Savon::WSSE::PasswordTextURI)
+      end
+    end
+
+    context "with credentials and digest auth" do
+      before { wsse.credentials "username", "password", :digest }
+
+      it "should contain the WSE and WSU namespaces" do
+        wsse.to_xml.should include(Savon::WSSE::WSENamespace, Savon::WSSE::WSUNamespace)
+      end
+
+      it "should contain the username" do
+        wsse.to_xml.should include("username")
+      end
+
+      it "should not contain the (original) password" do
+        wsse.to_xml.should_not include("password")
+      end
+
+      it "should contain a wsse:Nonce tag" do
+        wsse.to_xml.should match(/<wsse:Nonce>\w+<\/wsse:Nonce>/)
+      end
+
+      it "should contain a wsu:Created tag" do
+        wsse.to_xml.should match(/<wsu:Created>#{Savon::SOAP::DateTimeRegexp}.+<\/wsu:Created>/)
+      end
+
+      it "should contain the PasswordDigest type attribute" do
+        wsse.to_xml.should include(Savon::WSSE::PasswordDigestURI)
       end
     end
   end

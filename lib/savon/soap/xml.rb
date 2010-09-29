@@ -115,7 +115,7 @@ module Savon
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
       def wsse_header
-        wsse.respond_to?(:header) ? wsse.header : ""
+        wsse.respond_to?(:to_xml) ? wsse.to_xml : ""
       end
 
       # Returns the SOAP body as an XML String.

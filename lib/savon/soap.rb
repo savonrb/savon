@@ -21,7 +21,7 @@ module Savon
     DateTimeFormat = "%Y-%m-%dT%H:%M:%S%Z"
 
     # SOAP xs:dateTime Regexp.
-    DateTimeRegexp = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+    DateTimeRegexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
 
     class << self
 

@@ -6,15 +6,6 @@ module Savon
   module CoreExt
     module String
 
-      module ClassMethods
-
-        # Returns a random String of a given +length+.
-        def random(length = 100)
-          (0...length).map { ("a".."z").to_a[rand(26)] }.join
-        end
-
-      end
-
       # Returns the String in snake_case.
       def snakecase
         str = dup
@@ -80,5 +71,4 @@ module Savon
   end
 end
 
-String.extend Savon::CoreExt::String::ClassMethods
 String.send :include, Savon::CoreExt::String

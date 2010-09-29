@@ -9,91 +9,40 @@ module Savon
 
   # = Savon::WSSE
   #
-  # Savon::WSSE represents WSSE authentication. Pass a block to your SOAP call and the WSSE object
-  # is passed to it as the second argument. The object allows setting the WSSE username, password
-  # and whether to use digest authentication.
+  # Provides WSSE authentication.
   class WSSE
 
-    # Base address for WSSE docs.
-    BaseAddress = "http://docs.oasis-open.org/wss/2004/01"
-
     # Namespace for WS Security Secext.
-    WSENamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    WSENamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 
     # Namespace for WS Security Utility.
-    WSUNamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    WSUNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
     # URI for "wsse:Password/@Type" #PasswordText.
-    PasswordTextURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+    PasswordTextURI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
 
     # URI for "wsse:Password/@Type" #PasswordDigest.
-    PasswordDigestURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+    PasswordDigestURI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
-    class << self
-
-      # Returns the global WSSE username.
-      def username
-        @username
-      end
-
-      # Sets the global WSSE username.
-      def username=(username)
-        @username = username.nil? ? nil : username.to_s
-      end
-
-      # Returns the global WSSE password.
-      def password
-        @password
-      end
-
-      # Sets the global WSSE password.
-      def password=(password)
-        @password = password.nil? ? nil : password.to_s
-      end
-
-      # Returns the global setting of whether to use WSSE digest.
-      def digest?
-        !!@digest
-      end
-
-      # Global setting of whether to use WSSE digest.
-      def digest=(digest)
-        @digest = digest
-      end
-
+    # Sets the authentication credentials. Also accepts whether to use WSSE digest.
+    def credentials(username, password, digest = false)
+      self.username = username
+      self.password = password
+      self.digest = digest
     end
 
-    # Sets the WSSE username per request.
-    def username=(username)
-      @username = username.nil? ? nil : username.to_s
+    attr_accessor :username, :password
+
+    # Returns whether to use WSSE digest. Defaults to +false+.
+    def digest?
+      !!@digest
     end
 
-    # Returns the WSSE username. Defaults to the global setting.
-    def username
-      @username || self.class.username
-    end
-
-    # Sets the WSSE password per request.
-    def password=(password)
-      @password = password.nil? ? nil : password.to_s
-    end
-
-    # Returns the WSSE password. Defaults to the global setting.
-    def password
-      @password || self.class.password
-    end
-
-    # Sets whether to use WSSE digest per request.
     attr_writer :digest
 
-    # Returns whether to use WSSE digest. Defaults to the global setting.
-    def digest?
-      @digest || self.class.digest?
-    end
-
-    # Returns the XML for a WSSE header or an empty String unless both username and password
-    # were specified.
-    def header
+    # Returns the XML for a WSSE header or an empty String unless authentication
+    # credentials were specified.
+    def to_xml
       return "" unless username && password
 
       builder = Builder::XmlMarkup.new
@@ -124,7 +73,12 @@ module Savon
 
     # Returns a WSSE nonce.
     def nonce
-      @nonce ||= Digest::SHA1.hexdigest String.random + timestamp
+      @nonce ||= Digest::SHA1.hexdigest random_string + timestamp
+    end
+
+    # Returns a random String of 100 characters.
+    def random_string
+      (0...100).map { ("a".."z").to_a[rand(26)] }.join
     end
 
     # Returns a WSSE timestamp.
