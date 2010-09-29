@@ -12,8 +12,8 @@ Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be
 
     $ gem install savon
 
-Usage example
--------------
+Basic workflow
+--------------
 
     # Setting up a Savon::Client representing a SOAP service.
     client = Savon::Client.new do
