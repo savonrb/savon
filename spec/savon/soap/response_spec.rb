@@ -2,29 +2,15 @@ require "spec_helper"
 
 describe Savon::SOAP::Response do
 
-  describe ".raise_errors?" do
-    it "defaults to raise Savon::SOAPFault and Savon::HTTPError errors" do
-      Savon::SOAP::Response.raise_errors?.should be_true
-    end
-  end
-
-  describe ".raise_errors" do
-    it "lets you specify whether errors should be raised" do
-      Savon::SOAP::Response.raise_errors = false
-      Savon::SOAP::Response.raise_errors?.should == false
-      Savon::SOAP::Response.raise_errors = true # reset to default
-    end
-  end
-
   describe ".new" do
     it "raises a Savon::SOAPFault in case of a SOAP fault" do
       lambda { new_response :body => ResponseFixture.soap_fault }.should raise_error(Savon::SOAPFault)
     end
 
     it "does not raise a Savon::SOAPFault in case the default is turned off" do
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       new_response :body => ResponseFixture.soap_fault
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
 
     it "raises a Savon::HTTPError in case of an HTTP error" do
@@ -32,17 +18,17 @@ describe Savon::SOAP::Response do
     end
 
     it "does not raise a Savon::HTTPError in case the default is turned off" do
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       new_response :code => 500
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
   end
 
   describe "#soap_fault?" do
     around do |example|
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       example.run
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
 
     it "does not return true in case the response seems to be ok" do
@@ -56,9 +42,9 @@ describe Savon::SOAP::Response do
 
   describe "#soap_fault" do
     around do |example|
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       example.run
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
 
     it "returns the SOAP fault message in case of a SOAP fault" do
@@ -74,9 +60,9 @@ describe Savon::SOAP::Response do
 
   describe "#http_error?" do
     around do |example|
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       example.run
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
 
     it "does not return true in case the response seems to be ok" do
@@ -90,9 +76,9 @@ describe Savon::SOAP::Response do
 
   describe "#http_error" do
     around do |example|
-      Savon::SOAP::Response.raise_errors = false
+      Savon.raise_errors = false
       example.run
-      Savon::SOAP::Response.raise_errors = true
+      Savon.raise_errors = true
     end
 
     it "returns the HTTP error in case of an HTTP error" do

@@ -1,15 +1,12 @@
 require "httpi"
-require "savon/logger"
 
 module Savon
   module WSDL
 
     # = Savon::WSDL::Request
     #
-    # Executes WSDL requests. Includes the <tt>Savon::Logger</tt> which allows you to specify
-    # if and how WSDL requests should be logged.
+    # Executes WSDL requests.
     class Request
-      include Logger
 
       # Expects an <tt>HTTPI::Request</tt>.
       def initialize(request)
@@ -28,8 +25,8 @@ module Savon
 
       # Logs the HTTP request and yields to a given +block+.
       def with_logging
-        log "Retrieving WSDL from: #{request.url}"
-        log "Using :#{request.auth_type} authentication" if request.auth?
+        Savon.log "Retrieving WSDL from: #{request.url}"
+        Savon.log "Using :#{request.auth_type} authentication" if request.auth?
         yield
       end
 

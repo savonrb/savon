@@ -1,5 +1,4 @@
 require "httpi"
-require "savon/logger"
 require "savon/soap/response"
 
 module Savon
@@ -7,10 +6,8 @@ module Savon
 
     # = Savon::SOAP::Request
     #
-    # Executes SOAP requests. Includes the <tt>Savon::Logger</tt> which allows you to specify
-    # if and how SOAP requests should be logged.
+    # Executes SOAP requests.
     class Request
-      include Logger
 
       # Content-Types by SOAP version.
       ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
@@ -48,15 +45,15 @@ module Savon
 
       # Logs the SOAP request +url+, +headers+ and +body+.
       def log_request(url, headers, body)
-        log "SOAP request: #{url}"
-        log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        log body
+        Savon.log "SOAP request: #{url}"
+        Savon.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+        Savon.log body
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
-        log "SOAP response (status #{code}):"
-        log body
+        Savon.log "SOAP response (status #{code}):"
+        Savon.log body
       end
 
     end

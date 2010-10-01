@@ -3,32 +3,6 @@ require "spec_helper"
 describe Savon::SOAP::XML do
   let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
 
-  describe ".header" do
-    it "should default to an empty Hash" do
-      Savon::SOAP::XML.header.should == {}
-    end
-
-    it "should set the global SOAP header" do
-      Savon::SOAP::XML.header = { "MySecret" => "abc" }
-      Savon::SOAP::XML.header.should == { "MySecret" => "abc" }
-      
-      reset_globals
-    end
-  end
-
-  describe ".namespaces" do
-    it "should default to an empty Hash" do
-      Savon::SOAP::XML.namespaces.should == {}
-    end
-
-    it "should set the global SOAP namespaces" do
-      Savon::SOAP::XML.namespaces = { "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance" }
-      Savon::SOAP::XML.namespaces.should == { "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance" }
-      
-      reset_globals
-    end
-  end
-
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
       xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
@@ -59,10 +33,10 @@ describe Savon::SOAP::XML do
     end
 
     it "should default to the global default" do
-      Savon::SOAP.version = 2
+      Savon.soap_version = 2
       xml.version.should == 2
       
-      reset_globals
+      reset_soap_version
     end
 
     it "should set the SOAP version to use" do
@@ -141,7 +115,7 @@ describe Savon::SOAP::XML do
   end
 
   describe "#to_xml" do
-    after { reset_globals }
+    after { reset_soap_version }
 
     context "by default" do
       it "should start with an XML declaration" do
@@ -168,73 +142,20 @@ describe Savon::SOAP::XML do
 
     context "with the global SOAP version set to 1.2" do
       it "should contain the namespace for SOAP 1.2" do
-        Savon::SOAP.version = 2
+        Savon.soap_version = 2
         
         xml.to_xml.should include('<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">')
-        reset_globals
+        reset_soap_version
       end
     end
 
     context "with a global and request SOAP version" do
       it "should contain the namespace for the request SOAP version" do
-        Savon::SOAP.version = 2
+        Savon.soap_version = 2
         xml.version = 1
         
         xml.to_xml.should include('<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">')
-        reset_globals
-      end
-    end
-
-    context "with a global header and namespaces" do
-      before do
-        Savon::SOAP::XML.header = { "SpecialAuth" => { :user_name => "me", :pass_word => "secret" } }
-        Savon::SOAP::XML.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
-      end
-
-      it "should contain the default SOAP namespace and the global one" do
-        xml.to_xml.should include(
-          'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"',
-          'xmlns:xsd="http://www.w3.org/2001/XMLSchema"'
-        )
-      end
-
-      it "should contain the global SOAP header" do
-        xml.to_xml.should include(
-          '<env:Header><SpecialAuth>',
-          '<userName>me</userName>',
-          '<passWord>secret</passWord>'
-        )
-      end
-    end
-
-    context "with a global and request header and namespaces" do
-      before do
-        Savon::SOAP::XML.header = { :some_auth => "secret", "MoreAuth" => "GlobalSecret" }
-        Savon::SOAP::XML.namespaces = {
-          "xmlns:xsi" => "http://example.com",
-          "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema"
-        }
-
-        xml.header["MoreAuth"] = "prettySecret"
-        xml.namespaces["xmlns:xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
-      end
-
-      it "should contain the default SOAP namespace as well as the global and request ones" do
-        xml.to_xml.should include(
-          'xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"',
-          'xmlns:xsd="http://www.w3.org/2001/XMLSchema"',
-          'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'
-        )
-        xml.to_xml.should_not include('http://example.com')
-      end
-
-      it "should contain the global and request header" do
-        xml.to_xml.should include(
-          '<env:Header>',
-          '<someAuth>secret</someAuth>',
-          '<MoreAuth>prettySecret</MoreAuth>'
-        )
-        xml.to_xml.should_not include('GlobalSecret')
+        reset_soap_version
       end
     end
 
@@ -292,10 +213,8 @@ describe Savon::SOAP::XML do
     end
   end
 
-  def reset_globals
-    Savon::SOAP.version = Savon::SOAP::DefaultVersion
-    Savon::SOAP::XML.header = {}
-    Savon::SOAP::XML.namespaces = {}
+  def reset_soap_version
+    Savon.soap_version = Savon::SOAP::DefaultVersion
   end
 
 end

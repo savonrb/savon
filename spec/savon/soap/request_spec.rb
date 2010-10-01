@@ -10,10 +10,6 @@ describe Savon::SOAP::Request do
     content_type[2].should == "application/soap+xml;charset=UTF-8"
   end
 
-  it "should include the Savon::Logger module" do
-    Savon::SOAP::Request.ancestors.should include(Savon::Logger)
-  end
-
   describe ".new" do
     it "should use the SOAP endpoint for the request" do
       request.request.url.should == URI(soap.endpoint)
@@ -37,7 +33,6 @@ describe Savon::SOAP::Request do
       request = Savon::SOAP::Request.new HTTPI::Request.new(:headers => headers), soap
       request.request.headers["Content-Type"].should == headers["Content-Type"]
     end
-
   end
 
   describe "#response" do

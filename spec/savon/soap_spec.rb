@@ -25,22 +25,5 @@ describe Savon::SOAP do
     Savon::SOAP::DateTimeRegexp.should be_a(Regexp)
     (Savon::SOAP::DateTimeRegexp === "2012-03-22T16:22:33").should be_true
   end
-
-  describe ".version" do
-    it "should default to SOAP 1.1" do
-      Savon::SOAP.version.should == 1
-    end
-
-    it "should set the global SOAP version to use" do
-      Savon::SOAP.version = 2
-      Savon::SOAP.version.should == 2
-      
-      Savon::SOAP.version = Savon::SOAP::DefaultVersion  # reset to default
-    end
-
-    it "should raise an ArgumentError in case of an invalid version" do
-      lambda { Savon::SOAP.version = 3 }.should raise_error(ArgumentError)
-    end
-  end
   
 end

@@ -9,20 +9,6 @@ module Savon
     # Represents the SOAP response and contains the HTTP response.
     class Response
 
-      class << self
-
-        # Sets the global setting of whether to raise errors.
-        def raise_errors=(raise_errors)
-          @raise_errors = raise_errors
-        end
-
-        # Returns the global setting of whether to raise errors. Defaults to +true+.
-        def raise_errors?
-          @raise_errors != false
-        end
-
-      end
-
       # Expects an <tt>HTTPI::Response</tt> and handles errors.
       def initialize(response)
         self.http = response
@@ -66,7 +52,7 @@ module Savon
       def handle_soap_fault
         if soap_fault_message
           @soap_fault = soap_fault_message
-          raise Savon::SOAPFault, @soap_fault if self.class.raise_errors?
+          raise Savon::SOAPFault, @soap_fault if Savon.raise_errors?
         end
       end
 
@@ -93,7 +79,7 @@ module Savon
         if http.error?
           @http_error = "HTTP error (#{http.code})"
           @http_error << ": #{http.body}" unless http.body.empty?
-          raise Savon::HTTPError, http_error if self.class.raise_errors?
+          raise Savon::HTTPError, http_error if Savon.raise_errors?
         end
       end
 

@@ -6,8 +6,9 @@ RSpec.configure do |config|
 end
 
 require "savon"
-Savon::WSDL::Request.log = false
-Savon::SOAP::Request.log = false
+
+# Disable logging for specs.
+Savon.log = false
 
 # Requires fixtures.
 Dir["spec/fixtures/**/*.rb"].each {|file| require file }

@@ -11,26 +11,6 @@ module Savon
     # like the SOAP version, header, body and namespaces.
     class XML
 
-      class << self
-
-        # Sets the global SOAP +header+ Hash.
-        attr_writer :header
-
-        # Returns the global SOAP header. Defaults to an empty Hash.
-        def header
-          @header ||= {}
-        end
-
-        # Sets the global +namespaces+ Hash.
-        attr_writer :namespaces
-
-        # Returns the global +namespaces+. Defaultsto an empty Hash.
-        def namespaces
-          @namespaces ||= {}
-        end
-
-      end
-
       # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.
       def initialize(endpoint = nil, input = nil, body = nil)
         self.endpoint = endpoint if endpoint
@@ -50,9 +30,9 @@ module Savon
         @version = version
       end
 
-      # Returns the SOAP +version+. Defaults to the global default.
+      # Returns the SOAP +version+. Defaults to <tt>Savon.soap_version</tt>.
       def version
-        @version ||= SOAP.version
+        @version ||= Savon.soap_version
       end
 
       # Sets the SOAP +header+ Hash.
@@ -93,7 +73,7 @@ module Savon
 
       # Returns the XML for a SOAP request.
       def to_xml
-        @xml ||= builder.env :Envelope, namespaces_for_xml do |xml|
+        @xml ||= builder.env :Envelope, namespaces do |xml|
           xml.env(:Header) { xml << header_for_xml } unless header_for_xml.empty?
           xml.env(:Body) { xml.tag!(*input) { xml << body_to_xml } }
         end
@@ -110,7 +90,7 @@ module Savon
 
       # Returns the SOAP header as an XML String.
       def header_for_xml
-        @xml_header ||= (self.class.header.merge(header)).to_soap_xml + wsse_header
+        header.to_soap_xml + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
@@ -121,11 +101,6 @@ module Savon
       # Returns the SOAP body as an XML String.
       def body_to_xml
         body.respond_to?(:to_soap_xml) ? body.to_soap_xml : body.to_s
-      end
-
-      # Returns the Hash of namespaces for the SOAP envelope.
-      def namespaces_for_xml
-        self.class.namespaces.merge namespaces
       end
 
     end
