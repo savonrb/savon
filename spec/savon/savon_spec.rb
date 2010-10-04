@@ -2,6 +2,18 @@ require "spec_helper"
 
 describe Savon do
 
+  describe Savon::SOAPFault do
+    it "should be a Savon::Error" do
+      Savon::SOAPFault.should < Savon::Error
+    end
+  end
+
+  describe Savon::HTTPError do
+    it "should be a Savon::Error" do
+      Savon::HTTPError.should < Savon::Error
+    end
+  end
+
   describe ".configure" do
     around do |example|
       Savon.reset_config!
