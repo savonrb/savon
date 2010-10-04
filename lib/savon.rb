@@ -13,7 +13,8 @@ module Savon
   # Raised in case of a SOAP fault.
   class SOAPFault < Savon::Error; end
 
-  # Yields the <tt>Savon::Config</tt> class to a given +block+.
+  # Yields this module to a given +block+. Please refer to the
+  # <tt>Savon::Global</tt> module for configuration options.
   def self.configure
     yield self if block_given?
   end
