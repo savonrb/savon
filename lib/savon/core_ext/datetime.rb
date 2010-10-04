@@ -1,3 +1,4 @@
+require "date"
 require "savon/soap"
 
 module Savon
