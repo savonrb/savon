@@ -23,8 +23,8 @@ Basic workflow
     client.wsdl.soap_actions
     # => [:create_user, :get_user, :get_all_users]
 
-    # Executing a SOAP request to call a "findUser" action.
-    response = client.request :find_user do
+    # Executing a SOAP request to call a "getUser" action.
+    response = client.request :get_user do
       soap.body = { :id => 1 }
     end
 
