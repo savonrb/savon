@@ -94,7 +94,7 @@ describe Savon::Request do
       @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => true
       a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
 
-      Net::HTTP::Post.expects(:new).with(anything, has_entry("Accept-encoding" => "gzip,deflate")).returns(a_post)
+      Net::HTTP::Post.expects(:new).with(anything, has_entry("Accept-Encoding" => "gzip,deflate")).returns(a_post)
 
       @request.soap @soap
     end
@@ -103,7 +103,7 @@ describe Savon::Request do
       @request = Savon::Request.new EndpointHelper.wsdl_endpoint, :gzip => false
       a_post = Net::HTTP::Post.new(@soap.endpoint.request_uri, {})
 
-      Net::HTTP::Post.expects(:new).with(anything, Not(has_entry("Accept-encoding" => "gzip,deflate"))).returns(a_post)
+      Net::HTTP::Post.expects(:new).with(anything, Not(has_entry("Accept-Encoding" => "gzip,deflate"))).returns(a_post)
 
       @request.soap @soap
     end
