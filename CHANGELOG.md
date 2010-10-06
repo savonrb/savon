@@ -55,6 +55,8 @@
 
 * Fix for issues #85 and #88 (When gzip is enabled, binary data is logged).
 
+* Fix for issue #80 (URI-reference is not quoted in Soapaction HTTP header).
+
 * Removed global WSSE credentials. Authentication needs to be set up for each client instance.
 
 * Started to remove quite a few core extensions.

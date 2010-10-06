@@ -128,6 +128,14 @@ describe Savon::Client do
       client.wsdl.soap_actions.should == [:authenticate]
     end
 
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
+    end
+
     it "should execute SOAP requests and return the response" do
       HTTPI.expects(:post).returns(new_response)
       response = client.request(:authenticate)
@@ -144,6 +152,14 @@ describe Savon::Client do
 
     it "should return a list of available SOAP actions" do
       client.wsdl.soap_actions.should == [:authenticate]
+    end
+
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
     end
 
     it "should execute SOAP requests and return the response" do
@@ -167,6 +183,14 @@ describe Savon::Client do
 
     it "raise an ArgumentError when trying to access the WSDL" do
       lambda { client.wsdl.soap_actions }.should raise_error(ArgumentError)
+    end
+
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
     end
 
     it "should execute SOAP requests and return the response" do
