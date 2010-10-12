@@ -57,6 +57,8 @@
 
 * Fix for issue #80 (URI-reference is not quoted in Soapaction HTTP header).
 
+* Fix for issue 96 (Savon doesn't guess upper_camelcased action).
+
 * Removed global WSSE credentials. Authentication needs to be set up for each client instance.
 
 * Started to remove quite a few core extensions.
