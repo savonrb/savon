@@ -14,12 +14,12 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = s.name
 
-  s.add_dependency "builder", ">= 2.1.2"
-  s.add_dependency "crack", ">= 0.1.4"
-  s.add_dependency "httpi", ">= 0.4.0"
+  s.add_dependency "builder", "~> 2.1.2"
+  s.add_dependency "crack", "~> 0.1.8"
+  s.add_dependency "httpi", ">= 0.5.0"
 
-  s.add_development_dependency "rspec", "2.0.0.beta.22"
-  s.add_development_dependency "mocha", ">= 0.9.7"
+  s.add_development_dependency "rspec", "~> 2.0.0"
+  s.add_development_dependency "mocha", "~> 0.9.7"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
