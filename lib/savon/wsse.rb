@@ -47,7 +47,7 @@ module Savon
 
       builder = Builder::XmlMarkup.new
       builder.wsse :Security, "xmlns:wsse" => WSENamespace do |xml|
-        xml.wsse :UsernameToken, "xmlns:wsu" => WSUNamespace do
+        xml.wsse :UsernameToken, "wsu:Id" => wsu_id, "xmlns:wsu" => WSUNamespace do
           xml.wsse :Username, username
           xml.wsse :Nonce, nonce
           xml.wsu :Created, timestamp
@@ -84,6 +84,17 @@ module Savon
     # Returns a WSSE timestamp.
     def timestamp
       @timestamp ||= Time.now.strftime Savon::SOAP::DateTimeFormat
+    end
+
+    # Returns the "wsu:Id" attribute.
+    def wsu_id
+      "UsernameToken-#{count}"
+    end
+
+    # Simple counter.
+    def count
+      @count ||= 0
+      @count += 1
     end
 
   end

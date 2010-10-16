@@ -101,6 +101,15 @@ describe Savon::WSSE do
         wsse.to_xml.should include("<wsse:Security xmlns:wsse=\"#{namespace}\">")
       end
 
+      it "should contain a wsu:Id attribute" do
+        wsse.to_xml.should include('<wsse:UsernameToken wsu:Id="UsernameToken-1"')
+      end
+
+      it "should increment the wsu:Id attribute count" do
+        wsse.to_xml.should include('<wsse:UsernameToken wsu:Id="UsernameToken-1"')
+        wsse.to_xml.should include('<wsse:UsernameToken wsu:Id="UsernameToken-2"')
+      end
+
       it "should contain the WSE and WSU namespaces" do
         wsse.to_xml.should include(Savon::WSSE::WSENamespace, Savon::WSSE::WSUNamespace)
       end

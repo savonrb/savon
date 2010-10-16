@@ -64,6 +64,8 @@
 
 * Fix for issue #80 (URI-reference is not quoted in Soapaction HTTP header).
 
+* Fix for issue #60 (Savon::WSSE does not set wsu:Id attribute in wsse:UsernameToken tag).
+
 * Fix for issue 96 (Savon doesn't guess upper_camelcased action).
 
 * Removed global WSSE credentials. Authentication needs to be set up for each client instance.
