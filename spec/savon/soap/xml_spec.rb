@@ -3,6 +3,21 @@ require "spec_helper"
 describe Savon::SOAP::XML do
   let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
 
+  describe ".to_hash" do
+    it "should return a given SOAP response body as a Hash" do
+      hash = Savon::SOAP::XML.to_hash ResponseFixture.authentication
+      hash[:authenticate_response][:return].should ==
+        ResponseFixture.authentication(:to_hash)
+    end
+
+    it "should return a Hash for a SOAP multiRef response" do
+      hash = Savon::SOAP::XML.to_hash ResponseFixture.multi_ref
+      
+      hash[:list_response].should be_a(Hash)
+      hash[:multi_ref].should be_an(Array)
+    end
+  end
+
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
       xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1

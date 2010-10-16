@@ -1,4 +1,5 @@
 require "builder"
+require "crack/xml"
 require "savon/soap"
 require "savon/core_ext/hash"
 
@@ -10,6 +11,10 @@ module Savon
     # Represents the SOAP request XML. Contains various global and per request/instance settings
     # like the SOAP version, header, body and namespaces.
     class XML
+
+      def self.to_hash(xml)
+        (Crack::XML.parse(xml) rescue {}).find_soap_body
+      end
 
       # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.
       def initialize(endpoint = nil, input = nil, body = nil)

@@ -212,8 +212,8 @@ describe Savon::Client do
 
     before { HTTPI::expects(:post).returns(new_response(:code => 500, :body => ResponseFixture.soap_fault)) }
 
-    it "should raise a Savon::SOAPFault" do
-      lambda { client.request :authenticate }.should raise_error(Savon::SOAPFault)
+    it "should raise a Savon::SOAP::Fault" do
+      lambda { client.request :authenticate }.should raise_error(Savon::SOAP::Fault)
     end
   end
 
@@ -227,8 +227,8 @@ describe Savon::Client do
 
     before { HTTPI::expects(:post).returns(new_response(:code => 500)) }
 
-    it "should raise a Savon::HTTPError" do
-      lambda { client.request :authenticate }.should raise_error(Savon::HTTPError)
+    it "should raise a Savon::HTTP::Error" do
+      lambda { client.request :authenticate }.should raise_error(Savon::HTTP::Error)
     end
   end
 

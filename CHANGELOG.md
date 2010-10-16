@@ -50,6 +50,10 @@
 * Fix for issue #76 (Config setting for WSDL-free operation).
   You now have to explicitly specify whether to use a WSDL document, when instantiating a client.
 
+* Fix for issue #75 (Add response to SoapFault).
+  Both Savon::SOAP::Fault and Savon::HTTP::Error now contain the HTTPI::Response.
+  They also inherit from Savon::Error, making it easier to rescue both at the same time.
+
 * Fix for issue #81 (irb on Ruby 1.9.2 doesn't disable wsdl).
   Replaced Savon::WSDL::Document#to_s with a #to_xml method.
 
