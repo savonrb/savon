@@ -144,8 +144,19 @@ describe Savon::SOAP::XML do
         xml.to_xml.should match(/^<\?xml version="1.0" encoding="UTF-8"\?>/)
       end
 
+      it "should add the xsd namespace" do
+        uri = "http://www.w3.org/2001/XMLSchema"
+        xml.to_xml.should match(/<env:Envelope (.*)xmlns:xsd="#{uri}"(.*)>/)
+      end
+
+      it "should add the xsi namespace" do
+        uri = "http://www.w3.org/2001/XMLSchema-instance"
+        xml.to_xml.should match(/<env:Envelope (.*)xmlns:xsi="#{uri}"(.*)>/)
+      end
+
       it "should have a SOAP envelope tag with a SOAP 1.1 namespace" do
-        xml.to_xml.should include('<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">')
+        uri = "http://schemas.xmlsoap.org/soap/envelope/"
+        xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
       end
 
       it "should have a SOAP body containing the SOAP input tag and body Hash" do
@@ -166,7 +177,8 @@ describe Savon::SOAP::XML do
       it "should contain the namespace for SOAP 1.2" do
         Savon.soap_version = 2
         
-        xml.to_xml.should include('<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">')
+        uri = "http://www.w3.org/2003/05/soap-envelope"
+        xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
         reset_soap_version
       end
     end
@@ -176,7 +188,8 @@ describe Savon::SOAP::XML do
         Savon.soap_version = 2
         xml.version = 1
         
-        xml.to_xml.should include('<env:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">')
+        uri = "http://schemas.xmlsoap.org/soap/envelope/"
+        xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
         reset_soap_version
       end
     end

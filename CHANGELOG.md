@@ -43,6 +43,9 @@
   at the HTTPI library and let me know about any problems. Using HTTPI actually
   fixes the following two issues.
 
+* Savon now adds both "xmlns:xsd" and "xmlns:xsi" namespaces for you. Thanks Averell.
+  It also properly serializes nil values as xsi:nil = "true".
+
 * Fix for issue #24 (HTTP Digest Authentication).
   Instead of Net/HTTP, Savon now uses HTTPI to execute HTTP requests.
   HTTPI defaults to use HTTPClient which supports HTTP digest authentication.

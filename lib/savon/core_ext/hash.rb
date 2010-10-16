@@ -76,9 +76,10 @@ module Savon
           key = key.to_soap_key
           
           case value
-            when ::Array then xml << value.to_soap_xml(key, escape_xml, attrs)
-            when ::Hash  then xml.tag!(key, attrs) { xml << value.to_soap_xml }
-            else              xml.tag!(key, attrs) { xml << (escape_xml ? value.to_soap_value : value.to_soap_value!) }
+            when ::Array  then xml << value.to_soap_xml(key, escape_xml, attrs)
+            when ::Hash   then xml.tag!(key, attrs) { xml << value.to_soap_xml }
+            when NilClass then xml.tag!(key, "xsi:nil" => "true")
+            else               xml.tag!(key, attrs) { xml << (escape_xml ? value.to_soap_value : value.to_soap_value!) }
           end
         end
 

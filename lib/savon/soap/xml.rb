@@ -12,6 +12,12 @@ module Savon
     # like the SOAP version, header, body and namespaces.
     class XML
 
+      # XML Schema Type namespaces.
+      SchemaTypes = {
+        "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
+        "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
+      }
+
       def self.to_hash(xml)
         (Crack::XML.parse(xml) rescue {}).find_soap_body
       end
@@ -78,7 +84,7 @@ module Savon
 
       # Returns the XML for a SOAP request.
       def to_xml
-        @xml ||= builder.env :Envelope, namespaces do |xml|
+        @xml ||= builder.env :Envelope, SchemaTypes.merge(namespaces) do |xml|
           xml.env(:Header) { xml << header_for_xml } unless header_for_xml.empty?
           xml.env(:Body) { xml.tag!(*input) { xml << body_to_xml } }
         end

@@ -79,8 +79,12 @@ describe Hash do
       hash.to_soap_xml.should == result
     end
 
+    it "should properly serialize nil values" do
+      { :some => nil }.to_soap_xml.should == '<some xsi:nil="true"/>'
+    end
+
     it "should call to_s on any other Object" do
-      [666, true, false, nil].each do |object|
+      [666, true, false].each do |object|
         { :some => object }.to_soap_xml.should == "<some>#{object}</some>"
       end
     end
