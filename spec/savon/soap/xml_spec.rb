@@ -16,6 +16,13 @@ describe Savon::SOAP::XML do
       hash[:list_response].should be_a(Hash)
       hash[:multi_ref].should be_an(Array)
     end
+
+    it "should add existing namespaced elements as an array" do
+      hash = Savon::SOAP::XML.to_hash ResponseFixture.list
+      
+      hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
+      hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+    end
   end
 
   describe ".new" do

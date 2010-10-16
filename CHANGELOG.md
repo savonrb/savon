@@ -54,6 +54,9 @@
   Both Savon::SOAP::Fault and Savon::HTTP::Error now contain the HTTPI::Response.
   They also inherit from Savon::Error, making it easier to rescue both at the same time.
 
+* Fix for issue #87 (Namespaced entries in the xml).
+  Thanks to Leonardo Borges.
+
 * Fix for issue #81 (irb on Ruby 1.9.2 doesn't disable wsdl).
   Replaced Savon::WSDL::Document#to_s with a #to_xml method.
 
