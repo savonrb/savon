@@ -3,6 +3,47 @@ require "spec_helper"
 describe Savon::Client do
   let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
 
+  describe ".new" do
+    context "with a block expecting one argument" do
+      it "should yield the WSDL object" do
+        Savon::Client.new { |wsdl| wsdl.should be_a(Savon::WSDL::Document) }
+      end
+    end
+
+    context "with a block expecting two arguments" do
+      it "should yield the WSDL and HTTP objects" do
+        Savon::Client.new do |wsdl, http|
+          wsdl.should be_an(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+        end
+      end
+    end
+
+    context "with a block expecting three arguments" do
+      it "should yield the WSDL, HTTP and WSSE objects" do
+        Savon::Client.new do |wsdl, http, wsse|
+          wsdl.should be_an(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+          wsse.should be_an(Savon::WSSE)
+        end
+      end
+    end
+
+    context "with a block expecting no arguments" do
+      it "should let you access the WSDL object" do
+        Savon::Client.new { wsdl.should be_a(Savon::WSDL::Document) }
+      end
+
+      it "should let you access the HTTP object" do
+        Savon::Client.new { http.should be_an(HTTPI::Request) }
+      end
+
+      it "should let you access the WSSE object" do
+        Savon::Client.new { wsse.should be_a(Savon::WSSE) }
+      end
+    end
+  end
+
   describe "#wsdl" do
     it "should return the Savon::WSDL::Document" do
       client.wsdl.should be_a(Savon::WSDL::Document)
@@ -22,8 +63,6 @@ describe Savon::Client do
   end
 
   describe "#request" do
-    let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
-
     before do
       HTTPI.stubs(:get).returns(new_response(:body => WSDLFixture.load))
       HTTPI.stubs(:post).returns(new_response)
@@ -38,6 +77,20 @@ describe Savon::Client do
     context "with a single argument (Symbol)" do
       it "should set the input tag to result in <getUser>" do
         client.request(:get_user) { soap.input.should == [:getUser, {}] }
+      end
+
+      it "should set the target namespace with the default identifier" do
+        namespace = 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
+        
+        client.request :get_user
+      end
+
+      it "should not set the target namespace if soap.namespace was set to nil" do
+        namespace = "http://v1_0.ws.auth.order.example.com/"
+        HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
+        
+        client.request(:get_user) { soap.namespace = nil }
       end
     end
 
@@ -55,7 +108,21 @@ describe Savon::Client do
 
     context "with two Symbols" do
       it "should set the input tag to result in <wsdl:getUser>" do
-        client.request(:wsdl, :get_user) { soap.input.should == [:wsdl, :getUser, {}] }
+        client.request(:v1, :get_user) { soap.input.should == [:v1, :getUser, {}] }
+      end
+
+      it "should set the target namespace with the given identifier" do
+        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
+        
+        client.request :v1, :get_user
+      end
+
+      it "should not set the target namespace if soap.namespace was set to nil" do
+        namespace = "http://v1_0.ws.auth.order.example.com/"
+        HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
+        
+        client.request(:v1, :get_user) { soap.namespace = nil }
       end
     end
 
@@ -72,31 +139,31 @@ describe Savon::Client do
     end
 
     context "with a block expecting two arguments" do
-      it "should yield the SOAP and HTTP objects" do
-        client.request(:authenticate) do |soap, http|
+      it "should yield the SOAP and WSDL objects" do
+        client.request(:authenticate) do |soap, wsdl|
           soap.should be_a(Savon::SOAP::XML)
-          http.should be_an(HTTPI::Request)
+          wsdl.should be_an(Savon::WSDL::Document)
         end
       end
     end
 
     context "with a block expecting three arguments" do
-      it "should yield the SOAP, HTTP and WSSE objects" do
-        client.request(:authenticate) do |soap, http, wsse|
+      it "should yield the SOAP, WSDL and HTTP objects" do
+        client.request(:authenticate) do |soap, wsdl, http|
           soap.should be_a(Savon::SOAP::XML)
+          wsdl.should be_an(Savon::WSDL::Document)
           http.should be_an(HTTPI::Request)
-          wsse.should be_a(Savon::WSSE)
         end
       end
     end
 
     context "with a block expecting four arguments" do
-      it "should yield the SOAP, HTTP, WSSE and WSDL objects" do
-        client.request(:authenticate) do |soap, http, wsse, wsdl|
+      it "should yield the SOAP, WSDL, HTTP and WSSE objects" do
+        client.request(:authenticate) do |soap, wsdl, http, wsse|
           soap.should be_a(Savon::SOAP::XML)
+          wsdl.should be_a(Savon::WSDL::Document)
           http.should be_an(HTTPI::Request)
           wsse.should be_a(Savon::WSSE)
-          wsdl.should be_a(Savon::WSDL::Document)
         end
       end
     end

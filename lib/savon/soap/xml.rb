@@ -62,10 +62,16 @@ module Savon
         @namespaces ||= { "xmlns:env" => SOAP::Namespace[version] }
       end
 
-      # Convenience method for setting the <tt>xmlns:wsdl</tt> namespace.
-      def namespace=(namespace)
-        namespaces["xmlns:wsdl"] = namespace
+      # Sets the default namespace identifier.
+      attr_writer :namespace_identifier
+
+      # Returns the default namespace identifier.
+      def namespace_identifier
+        @namespace_identifier ||= :wsdl
       end
+
+      # Accessor for the default namespace URI.
+      attr_accessor :namespace
 
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
@@ -84,7 +90,7 @@ module Savon
 
       # Returns the XML for a SOAP request.
       def to_xml
-        @xml ||= builder.env :Envelope, SchemaTypes.merge(namespaces) do |xml|
+        @xml ||= builder.env :Envelope, complete_namespaces do |xml|
           xml.env(:Header) { xml << header_for_xml } unless header_for_xml.empty?
           xml.env(:Body) { xml.tag!(*input) { xml << body_to_xml } }
         end
@@ -97,6 +103,13 @@ module Savon
         builder = Builder::XmlMarkup.new
         builder.instruct!
         builder
+      end
+
+      # Returns the complete Hash of namespaces.
+      def complete_namespaces
+        defaults = SchemaTypes.dup
+        defaults["xmlns:#{namespace_identifier}"] = namespace if namespace
+        defaults.merge namespaces
       end
 
       # Returns the SOAP header as an XML String.

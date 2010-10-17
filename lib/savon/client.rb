@@ -30,7 +30,7 @@ module Savon
     #     wsdl.namespace = "http://users.example.com"
     #   end
     def initialize(&block)
-      process &block if block
+      process 1, &block if block
       wsdl.request = http
     end
 
@@ -99,6 +99,7 @@ module Savon
     # Expects and Array of +options+ and preconfigures the system.
     def preconfigure(options)
       soap.endpoint = wsdl.endpoint
+      soap.namespace_identifier = options[0]
       soap.namespace = wsdl.namespace
       soap.body = options[2].delete :body
       
@@ -122,14 +123,14 @@ module Savon
 
     # Processes a given +block+. Yields objects if the block expects any arguments.
     # Otherwise evaluates the block in the context of this object.
-    def process(&block)
-      block.arity > 0 ? yield_objects(&block) : evaluate(&block)
+    def process(offset = 0, &block)
+      block.arity > 0 ? yield_objects(offset, &block) : evaluate(&block)
     end
 
     # Yields a number of objects to a given +block+ depending on how many arguments
     # the block is expecting.
-    def yield_objects(&block)
-      yield *[soap, http, wsse, wsdl][0, block.arity]
+    def yield_objects(offset, &block)
+      yield *[soap, wsdl, http, wsse][offset, block.arity]
     end
 
     # Evaluates a given +block+ inside this object. Stores the original block binding.

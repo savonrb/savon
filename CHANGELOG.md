@@ -38,6 +38,10 @@
       client.request :wsdl, "GetUser"           # Input tag: <wsdl:GetUser>
       client.request :get_user :active => true  # Input tag: <getUser active="true">
 
+* Savon's new #request method respects the given namespace. If you don't give it a namespace,
+  Savon will set the target namespace to "xmlns:wsdl". But if you do specify a namespace, it will
+  be set to the given Symbol.
+
 * Refactored Savon to use the new HTTPI (http://rubygems.org/gems/httpi) gem.
   HTTPI::Request replaces the Savon::Request, so please make sure to have a look
   at the HTTPI library and let me know about any problems. Using HTTPI actually

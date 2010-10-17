@@ -98,13 +98,6 @@ describe Savon::SOAP::XML do
     end
   end
 
-  describe "#namespace" do
-    it "should set the 'xmlns:wsdl' namespace" do
-      xml.namespace = "http://example.com"
-      xml.namespaces["xmlns:wsdl"].should == "http://example.com"
-    end
-  end
-
   describe "#wsse" do
     it "should set the Savon::WSSE object" do
       xml.wsse = Savon::WSSE.new
@@ -194,8 +187,9 @@ describe Savon::SOAP::XML do
       end
     end
 
-    context "using the #namespace shortcut" do
-      it "should contain the 'xmlns:wsdl' namespace" do
+    context "using the #namespace and #namespace_identifier" do
+      it "should contain the specified namespace" do
+        xml.namespace_identifier = :wsdl
         xml.namespace = "http://example.com"
         xml.to_xml.should include('xmlns:wsdl="http://example.com"')
       end
