@@ -1,3 +1,4 @@
+require "savon/version"
 require "savon/global"
 require "savon/client"
 
