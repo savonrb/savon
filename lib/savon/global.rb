@@ -52,6 +52,15 @@ module Savon
       @version ||= SOAP::DefaultVersion
     end
 
+    # Returns whether to strip namespaces in a SOAP response Hash.
+    # Defaults to +true+.
+    def strip_namespaces?
+      @strip_namespaces != false
+    end
+
+    # Sets whether to strip namespaces in a SOAP response Hash.
+    attr_writer :strip_namespaces
+
     # Reset to default configuration.
     def reset_config!
       self.log = true
@@ -59,6 +68,7 @@ module Savon
       self.log_level = :debug
       self.raise_errors = true
       self.soap_version = SOAP::DefaultVersion
+      self.strip_namespaces = true
     end
 
   end

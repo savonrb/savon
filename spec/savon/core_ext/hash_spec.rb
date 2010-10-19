@@ -155,6 +155,21 @@ describe Hash do
       soap_response.map_soap_response.should == result
     end
 
+    context "with Savon.strip_namespaces set to false" do
+      around do |example|
+        Savon.strip_namespaces = false
+        example.run
+        Savon.strip_namespaces = true
+      end
+
+      it "should not strip namespaces from Hash keys" do
+        soap_response = { "ns:userResponse" => { "ns2:id" => "666" } }
+        result = { "ns:user_response" => { "ns2:id" => "666" } }
+
+        soap_response.map_soap_response.should == result
+      end
+    end
+
     it "should convert Hash keys and values in Arrays" do
       soap_response = { "response" => [{ "name" => "dude" }, { "name" => "gorilla" }] }
       result = { :response=> [{ :name => "dude" }, { :name => "gorilla" }] }

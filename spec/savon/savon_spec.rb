@@ -73,5 +73,18 @@ describe Savon do
       end
     end
 
+    describe "strip_namespaces" do
+      it "should default to true" do
+        Savon.strip_namespaces?.should == true
+      end
+
+      it "should not strip namespaces when set to false" do
+        Savon.strip_namespaces = false
+        Savon.strip_namespaces?.should == false
+        
+        Savon.strip_namespaces = true  # reset to default
+      end
+    end
+
   end
 end

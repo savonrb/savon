@@ -1,5 +1,6 @@
 require "builder"
 
+require "savon"
 require "savon/core_ext/object"
 require "savon/core_ext/string"
 require "savon/core_ext/symbol"
@@ -95,12 +96,17 @@ module Savon
             when ::String then value.map_soap_response
           end
           
-          no_ns_key = key.strip_namespace.snakecase.to_sym
-          if hash[no_ns_key] # key already exists, value should be added as an Array
-            hash[no_ns_key] = [hash[no_ns_key], value].flatten
+          new_key = if Savon.strip_namespaces?
+            key.strip_namespace.snakecase.to_sym
+          else
+            key.snakecase
+          end
+          
+          if hash[new_key] # key already exists, value should be added as an Array
+            hash[new_key] = [hash[new_key], value].flatten
             result = hash
           else
-            result = hash.merge no_ns_key => value
+            result = hash.merge new_key => value
           end
           result
         end
