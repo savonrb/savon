@@ -45,7 +45,7 @@ HTTPI is an interface supporting multiple HTTP libraries. It's a crucial part of
 Getting started
 ---------------
 
-Savon is based around the [Savon::Client](http://github.com/rubiii/savon/blob/eight/lib/savon/client.rb) object. It represents a particular SOAP service and let's you configure execute SOAP requests. Let's create a client using a remote WSDL document:
+Savon is based around the [Savon::Client](http://github.com/rubiii/savon/blob/eight/lib/savon/client.rb) object. It represents a particular SOAP service and let's you configure and execute SOAP requests. Let's create a client using a remote WSDL document:
 
 {% highlight ruby %}
 client = Savon::Client.new do
@@ -55,7 +55,7 @@ end
 
 `Savon::Client.new` accepts a block to be evaluated in the context of the client object. Inside this block, you can access all methods from your own class, but local variables won't work. For more information on this, I recommend you read about [instance_eval with delegation](http://www.dcmanges.com/blog/ruby-dsls-instance-eval-with-delegation).
 
-If you don't like this or if it's actually a problem for you, you can use block arguments to specify which objects you would like to receive and Savon will yield those instead of instance evaluating the block. The `.new` method accepts 1-3 arguments and yields the following objects:
+If you don't like this or if it's creating a problem for you, you can use block arguments to specify which objects you would like to receive and Savon will yield those instead of instance evaluating the block. The `.new` method accepts 1-3 arguments and yields the following objects:
 
     [wsdl, http, wsse]
 
@@ -227,11 +227,11 @@ These three arguments will generate the following input tag:
 <wsdl:GetPDF id="1" />
 {% endhighlight %}
 
-Since most SOAP actions require you to pass arguments for e.g. the user to return, you need to send a "payload". Luckily you're already familiar with [passing a block to a method](#getting_started), right? `Savon::Client#request` also accepts a block for you to access these objects:
+Since most SOAP actions require you to pass arguments for e.g. the user to return, you need to send a "payload". Luckily you're already familiar with [passing a block to a method](#getting_started), right? `Savon::Client#request` also accepts a block for you to access the following objects:
 
     [soap, wsdl, http, wsse]
 
-Notice, that the list is almost the same as the one for `Savon::Client.new`. Except now, there is an additional object called soap. In contrast to the other three objects, a new object called soap is created for every request.
+Notice, that the list is almost the same as the one for `Savon::Client.new`. Except now, there is an additional object called soap. In contrast to the other three objects, the soap object is tied to single requests. Savon creates a new soap object for every request.
 
 The SOAP object
 ---------------
@@ -373,19 +373,105 @@ soap.xml = "<custom><soap>request</soap></custom>"
 The Response object
 -------------------
 
-`Savon::Client#request` returns a [Savon::SOAP::Response](http://github.com/rubiii/savon/blob/eight/lib/savon/soap/response.rb).
+`Savon::Client#request` returns a [Savon::SOAP::Response](http://github.com/rubiii/savon/blob/eight/lib/savon/soap/response.rb) for you to work with. While `Savon::SOAP::Response#to_hash` converts the SOAP response XML to a Ruby Hash:
+
+{% highlight ruby %}
+response.to_hash  # => { :response => { :success => true, :name => "John" } }
+{% endhighlight %}
+
+`Savon::SOAP::Response#to_xml` simply returns the original SOAP response XML:
+
+{% highlight ruby %}
+response.to_xml  # => "<response><success>true</success><name>John</name></response>"
+{% endhighlight %}
+
+The response also contains the [HTTPI::Response](http://github.com/rubiii/httpi/blob/master/lib/httpi/response.rb):
+
+{% highlight ruby %}
+response.http  # => #<HTTPI::Response:0x1017b4268 ...
+{% endhighlight %}
 
 Error handling
 --------------
 
-By default, Savon raises errors for SOAP faults and HTTP errors. This 
+By default, Savon raises both `Savon::SOAP::Fault` and `Savon::HTTP::Error` when encountering these kind of errors. 
+
+{% highlight ruby %}
+begin
+  client.request :get_all_users
+rescue Savon::SOAP::Fault => fault
+  log fault.to_s
+end
+{% endhighlight %}
+
+Both errors inherit from `Savon::Error`, so you don't need to explicitly rescue both:
+
+{% highlight ruby %}
+begin
+  client.request :get_all_users
+rescue Savon::Error => error
+  log error.to_s
+end
+{% endhighlight %}
+
+If you [changed the default](#global_configuration) to not raise these errors, you can ask the response whether the request was successful:
+
+{% highlight ruby %}
+response.success?     # => false
+response.soap_fault?  # => true
+response.http_error?  # => false
+{% endhighlight %}
+
+You can then access the error objects mentioned above:
+
+{% highlight ruby %}
+response.soap_fault  # => Savon::SOAP::Fault
+response.http_error  # => Savon::HTTP::Error
+{% endhighlight %}
+
+Please notice, that these methods always return an error object. To check if an error is actually present, you can either ask the response or directly ask the error object:
+
+{% highlight ruby %}
+response.soap_fault.present?  # => true
+response.http_error.present?  # => false
+{% endhighlight %}
 
 Global configuration
 --------------------
 
-...
+### Logging
+
+By default, Savon logs each SOAP request and response to STDOUT using a log level of :debug.
+
+{% highlight ruby %}
+Savon.configure |config|
+  config.log = false            # disable logging
+  config.log_level = :info      # changing the log level
+  config.logger = Rails.logger  # using the Rails logger
+end
+{% endhighlight %}
+
+### Error handling
+
+If you don't like to rescue errors, here's how you can tell Savon to not raise them:
+
+{% highlight ruby %}
+Savon.configure |config|
+  config.raise_errors = false  # do not raise SOAP faults and HTTP errors
+end
+{% endhighlight %}
+
+### SOAP version
+
+Also changing the default SOAP version of 1.1 to 1.2 is fairly easy:
+
+{% highlight ruby %}
+Savon.configure |config|
+  config.soap_version = 2  # use SOAP 1.2
+end
+{% endhighlight %}
 
 Alternative libraries
 ---------------------
 
-...
+And if you feel like there's no way Savon will fit your needs, you should take a look at [The Ruby Toolbox](http://ruby-toolbox.com/categories/soap.html) to find some alternatives.
