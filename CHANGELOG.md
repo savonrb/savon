@@ -1,4 +1,4 @@
-## 0.8.0.beta.1
+## 0.8.0.beta.1 (2010-10-29)
 
 * Changed Savon::Client.new to accept a block instead of multiple Hash arguments. You can access the
   wsdl, http and wsse objects inside the block to configure your client for a particular service.
