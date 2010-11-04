@@ -156,7 +156,7 @@ module Savon
 
     # Returns a WSSE timestamp.
     def timestamp
-      @timestamp ||= Time.now.strftime Savon::SOAP::DateTimeFormat
+      @timestamp ||= Time.now.utc.strftime Savon::SOAP::DateTimeFormat
     end
 
   end
