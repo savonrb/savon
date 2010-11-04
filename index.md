@@ -444,7 +444,7 @@ Global configuration
 By default, Savon logs each SOAP request and response to STDOUT using a log level of :debug.
 
 {% highlight ruby %}
-Savon.configure |config|
+Savon.configure do |config|
   config.log = false            # disable logging
   config.log_level = :info      # changing the log level
   config.logger = Rails.logger  # using the Rails logger
@@ -456,7 +456,7 @@ end
 If you don't like to rescue errors, here's how you can tell Savon to not raise them:
 
 {% highlight ruby %}
-Savon.configure |config|
+Savon.configure do |config|
   config.raise_errors = false  # do not raise SOAP faults and HTTP errors
 end
 {% endhighlight %}
@@ -466,7 +466,7 @@ end
 Also changing the default SOAP version of 1.1 to 1.2 is fairly easy:
 
 {% highlight ruby %}
-Savon.configure |config|
+Savon.configure do |config|
   config.soap_version = 2  # use SOAP 1.2
 end
 {% endhighlight %}
