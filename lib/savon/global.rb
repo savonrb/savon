@@ -61,6 +61,14 @@ module Savon
     # Sets whether to strip namespaces in a SOAP response Hash.
     attr_writer :strip_namespaces
 
+    # Returns the response pattern to apply.
+    def response_pattern
+      @response_pattern ||= []
+    end
+
+    # Sets the response pattern (an Array of Regexps or Symbols).
+    attr_writer :response_pattern
+
     # Reset to default configuration.
     def reset_config!
       self.log = true
@@ -69,6 +77,7 @@ module Savon
       self.raise_errors = true
       self.soap_version = SOAP::DefaultVersion
       self.strip_namespaces = true
+      self.response_pattern = []
     end
 
   end

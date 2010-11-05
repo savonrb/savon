@@ -81,5 +81,18 @@ describe Savon do
       end
     end
 
+    describe "response_pattern" do
+      it "should default to an empty Array" do
+        Savon.response_pattern.should == []
+      end
+
+      it "should return the response pattern to apply" do
+        pattern = [/.+_response/, :return]
+        Savon.configure { |config| config.response_pattern = pattern }
+        
+        Savon.response_pattern.should == pattern
+      end
+    end
   end
+
 end
