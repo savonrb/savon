@@ -7,6 +7,7 @@ describe Savon do
       Savon.reset_config!
       example.run
       Savon.reset_config!
+      Savon.log = false  # disable logging
     end
 
     describe "log" do
@@ -51,8 +52,6 @@ describe Savon do
       it "should not raise errors when disabled" do
         Savon.raise_errors = false
         Savon.raise_errors?.should be_false
-
-        Savon.raise_errors = true  # reset to default
       end
     end
 
@@ -64,8 +63,6 @@ describe Savon do
       it "should return 2 if set to SOAP 1.2" do
         Savon.soap_version = 2
         Savon.soap_version.should == 2
-
-        Savon.soap_version = 1  # reset to default
       end
 
       it "should raise an ArgumentError in case of an invalid version" do
@@ -81,8 +78,6 @@ describe Savon do
       it "should not strip namespaces when set to false" do
         Savon.strip_namespaces = false
         Savon.strip_namespaces?.should == false
-        
-        Savon.strip_namespaces = true  # reset to default
       end
     end
 
