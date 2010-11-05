@@ -1,3 +1,38 @@
+## 0.8.0.beta.2 (2010-11-05)
+
+* Added Savon.response_pattern to automatically walk deeper into the SOAP response Hash when a
+  pattern (specified as an Array of Regexps and Symbols) matches the response. If for example
+  your response always looks like ".+Response/return" as in:
+
+      <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+        <soap:Body>
+          <ns2:authenticateResponse xmlns:ns2="http://v1_0.ws.user.example.com">
+            <return>
+              <some>thing</some>
+            </return>
+          </ns2:authenticateResponse>
+        </soap:Body>
+      </soap:Envelope>
+
+  you could set the response pattern to:
+
+      Savon.configure do |config|
+        config.response_pattern = [/.+_response/, :return]
+      end
+
+  then instead of calling:
+
+      response.to_hash[:authenticate_response][:return]  # :some => "thing"
+
+  to get the actual content, Savon::SOAP::Response#to_hash will try to apply given the pattern:
+
+      response.to_hash  # :some => "thing"
+
+  Please notice, that if you don't specify a response pattern or if the pattern doesn't match the
+  response, Savon will behave like it always did.
+
+* Added Savon::SOAP::Response#to_array (which also uses the response pattern).
+
 ## 0.8.0.beta.1 (2010-10-29)
 
 * Changed Savon::Client.new to accept a block instead of multiple Hash arguments. You can access the
