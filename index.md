@@ -22,6 +22,7 @@ Table of contents
 * [The Response object](#the_response_object)
 * [Error handling](#error_handling)
 * [Global configuration](#global_configuration)
+* [Ecosystem](#ecosystem)
 * [Alternative libraries](#alternative_libraries)
 
 Installation
@@ -470,6 +471,17 @@ Savon.configure do |config|
   config.soap_version = 2  # use SOAP 1.2
 end
 {% endhighlight %}
+
+Ecosystem
+---------
+
+### Savon::Model
+
+[Savon::Model](http://rubygems.org/gems/savon_model) creates SOAP service oriented models.
+
+### Savon::Spec
+
+[Savon::Spec](http://rubygems.org/gems/savon_spec) helps you test your SOAP requests.
 
 Alternative libraries
 ---------------------
