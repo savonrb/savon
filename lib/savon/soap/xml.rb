@@ -114,7 +114,7 @@ module Savon
 
       # Returns the SOAP header as an XML String.
       def header_for_xml
-        header.to_soap_xml + wsse_header
+        @header_for_xml ||= header.to_soap_xml + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
