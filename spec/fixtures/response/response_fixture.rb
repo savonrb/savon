@@ -18,6 +18,10 @@ class ResponseFixture
       @soap_fault12 ||= load_fixture :soap_fault12
     end
 
+    def another_soap_fault
+      @another_soap_fault ||= load_fixture :another_soap_fault
+    end
+
     def multi_ref
       @multi_ref ||= load_fixture :multi_ref
     end

@@ -3,6 +3,7 @@ require "spec_helper"
 describe Savon::SOAP::Fault do
   let(:soap_fault) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.soap_fault) }
   let(:soap_fault2) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.soap_fault12) }
+  let(:another_soap_fault) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.another_soap_fault) }
   let(:no_fault) { Savon::SOAP::Fault.new new_response }
 
   it "should be a Savon::Error" do
@@ -24,6 +25,10 @@ describe Savon::SOAP::Fault do
       soap_fault2.should be_present
     end
 
+    it "should return true if the HTTP response contains a SOAP fault with different namespaces" do
+      another_soap_fault.should be_present
+    end
+
     it "should return false unless the HTTP response contains a SOAP fault" do
       no_fault.should_not be_present
     end
@@ -41,6 +46,10 @@ describe Savon::SOAP::Fault do
 
       it "should return a SOAP 1.2 fault message" do
         soap_fault2.send(method).should == "(soap:Sender) Sender Timeout"
+      end
+
+      it "should return a SOAP fault message (with different namespaces)" do
+        another_soap_fault.send(method).should == "(ERR_NO_SESSION) Wrong session message"
       end
     end
   end
