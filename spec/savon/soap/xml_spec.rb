@@ -166,6 +166,17 @@ describe Savon::SOAP::XML do
       end
     end
 
+    context "with a SOAP header" do
+      it "should contain the given header" do
+        xml.header = {
+          :token => "secret",
+          :attributes! => { :token => { :xmlns => "http://example.com" } }
+        }
+        
+        xml.to_xml.should include('<env:Header><token xmlns="http://example.com">secret</token></env:Header>')
+      end
+    end
+
     context "with the global SOAP version set to 1.2" do
       it "should contain the namespace for SOAP 1.2" do
         Savon.soap_version = 2
