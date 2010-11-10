@@ -132,6 +132,24 @@ I'm only going to document a few interesting details and point you to the [HTTPI
 
 Note: HTTPI is still a very young project and might not support everything you need. Please don't hesitate to [file bugs](http://github.com/rubiii/httpi/issues) or [make wishes](http://httpi.uservoice.com) for the library to support additional features.
 
+### SSL and HTTP headers
+
+You can easily set the SSL certificate and custom HTTP headers for your requests:
+
+{% highlight ruby %}
+client = Savon::Client.new do
+  http.auth.ssl.cert_key_file = 'cert.key'
+  http.auth.ssl.cert_key_password = 'C3rtP@ssw0rd'
+  http.auth.ssl.cert_file = 'cert.crt'
+  http.auth.ssl.verify_mode = :none
+  http.read_timeout = 90
+  http.open_timeout = 90
+  http.headers = { "Accept-Encoding" => "gzip, deflate", "Connection" => "Keep-Alive" }
+end
+{% endhighlight %}
+
+Headers can also be changed on subsequent calls of the client.request using the same approach.
+
 ### SOAPAction
 
 SOAPAction is an HTTP header information required by legacy services. If present, the header value must have double quotes surrounding the URI-reference (SOAP 1.1. spec, section 6.1.1). Here's how you would set/overwrite the SOAPAction header:
