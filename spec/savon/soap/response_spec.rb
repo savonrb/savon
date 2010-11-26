@@ -116,69 +116,32 @@ describe Savon::SOAP::Response do
     end
   end
 
-  describe "#original_hash" do
-    it "should return the SOAP response body as a Hash" do
-      soap_response.original_hash[:authenticate_response][:return].should ==
-        ResponseFixture.authentication(:to_hash)
-    end
-  end
-
   describe "#to_hash" do
-    let(:response) { soap_response }
-
-    it "should memoize the result" do
-      response.to_hash.should equal(response.to_hash)
-    end
-
-    context "without response pattern" do
-      it "should return the original Hash" do
-        response.to_hash[:authenticate_response].should be_a(Hash)
-      end
-    end
-
-    context "with response pattern" do
-      it "should apply the response pattern" do
-        Savon.response_pattern = [/.+_response/, :return]
-        response.to_hash[:success].should be_true
-        
-        Savon.response_pattern = nil  # reset to default
-      end
-    end
-
-    context "with unmatched response pattern" do
-      it "should return the original Hash" do
-        Savon.response_pattern = [:unmatched, :pattern]
-        response.to_hash.should == response.original_hash
-        
-        Savon.response_pattern = nil  # reset to default
-      end
+    it "should return the SOAP response body as a Hash" do
+      soap_response.to_hash[:authenticate_response][:return].should ==
+        ResponseFixture.authentication(:to_hash)
     end
   end
 
   describe "#to_array" do
     let(:response) { soap_response }
 
-    around do |example|
-      Savon.response_pattern = [/.+_response/, :return]
-      example.run
-      Savon.response_pattern = nil  # reset to default
+    context "when the given path exists" do
+      it "should return an Array containing the path value" do
+        response.to_array(:authenticate_response, :return).should == [ResponseFixture.authentication(:to_hash)]
+      end
     end
 
-    it "should memoize the result" do
-      response.to_array.should equal(response.to_array)
+    context "when the given path returns nil" do
+      it "should return an empty Array" do
+        response.to_array(:authenticate_response, :undefined).should == []
+      end
     end
 
-    it "should return an Array for a single response element" do
-      response.to_array.should be_an(Array)
-      response.to_array.first[:success].should be_true
-    end
-
-    it "should return an Array for multiple response element" do
-      Savon.response_pattern = [/.+_response/, :history, :case]
-      list_response = soap_response :body => ResponseFixture.list
-      
-      list_response.to_array.should be_an(Array)
-      list_response.to_array.should have(2).items
+    context "when the given path does not exist at all" do
+      it "should return an empty Array" do
+        response.to_array(:authenticate_response, :some, :wrong, :path).should == []
+      end
     end
   end
 

@@ -44,22 +44,20 @@ module Savon
       end
 
       # Returns the SOAP response body as a Hash.
-      def original_hash
-        @original_hash ||= Savon::SOAP::XML.to_hash to_xml
-      end
-
-      # Returns the SOAP response body as a Hash and applies
-      # the <tt>Savon.response_pattern</tt> if defined.
       def to_hash
-        @hash ||= apply_response_pattern original_hash
+        @hash ||= Savon::SOAP::XML.to_hash to_xml
       end
 
-      # Returns the SOAP response Hash as an Array.
-      def to_array
-        @array ||= begin
-          array = to_hash.kind_of?(Array) ? to_hash : [to_hash]
-          array.compact
+      # Traverses the SOAP response Hash for a given +path+ of Hash keys
+      # and returns the value as an Array. Defaults to return an empty Array
+      # in case the path does not exist or returns nil.
+      def to_array(*path)
+        value = path.inject to_hash do |memo, key|
+          return [] unless memo[key]
+          memo[key]
         end
+        
+        value.kind_of?(Array) ? value.compact : [value].compact
       end
 
       # Returns the SOAP response XML.
@@ -72,20 +70,6 @@ module Savon
       def raise_errors
         raise soap_fault if soap_fault?
         raise http_error if http_error?
-      end
-
-      def apply_response_pattern(hash)
-        return hash if Savon.response_pattern.blank?
-        
-        Savon.response_pattern.inject(hash) do |memo, pattern|
-          key = case pattern
-            when Regexp then memo.keys.find { |key| key.to_s =~ pattern }
-            else             memo.keys.find { |key| key.to_s == pattern.to_s }
-          end
-          
-          return hash unless key
-          memo[key]
-        end
       end
 
     end
