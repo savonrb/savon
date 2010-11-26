@@ -1,3 +1,21 @@
+## 0.8.0.beta.4 (2010-11-20)
+
+* Fix for issue #107 (Soap Fault regex not working for API I connect).
+
+* Fix for issue #108 (Fixing an issue with :attributes! getting overriden by a double call).
+
+* Replaced Savon.response_pattern with a slightly different implementation of the
+  Savon::SOAP::Response#to_array method. The method now accepts multiple arguments
+  representing the response Hash keys to traverse and returns the result as an Array
+  or an empty Array in case the key is nil or does not exist.
+
+      response.to_array :get_user_response, :return
+      # => [{ :id => 1, :name => "foo"}, { :id => 2, :name => "bar"}]
+
+## 0.8.0.beta.3 (2010-11-06)
+
+* Fix for [savon_spec](http://rubygems.org/gems/savon_spec) to not send nil to Savon::SOAP::XML#body.
+
 ## 0.8.0.beta.2 (2010-11-05)
 
 * Added Savon.response_pattern to automatically walk deeper into the SOAP response Hash when a
