@@ -1,3 +1,8 @@
+## 0.8.0.beta.5 (UPCOMING)
+
+* Added Savon::SOAP::XML#env_namespace to configure the SOAP envelope namespace. It defaults to :env
+  but can also be set to an empty String for SOAP envelope tags without a namespace.
+
 ## 0.8.0.beta.4 (2010-11-20)
 
 * Fix for issue #107 (Soap Fault regex not working for API I connect).
