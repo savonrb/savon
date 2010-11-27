@@ -6,7 +6,7 @@ describe Savon::WSDL::Request do
 
   describe "#response" do
     it "execute an HTTP GET request and return the HTTPI::Response" do
-      response = HTTPI::Response.new 200, {}, ResponseFixture.authentication
+      response = HTTPI::Response.new 200, {}, Fixture.response(:authentication)
       HTTPI.expects(:get).with(http_request).returns(response)
       request.response.should == response
     end

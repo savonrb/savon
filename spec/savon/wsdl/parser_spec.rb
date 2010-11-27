@@ -71,7 +71,7 @@ describe Savon::WSDL::Parser do
 
   def new_parser(fixture)
     parser = Savon::WSDL::Parser.new
-    REXML::Document.parse_stream WSDLFixture.load(fixture), parser
+    REXML::Document.parse_stream Fixture[:wsdl, fixture], parser
     parser
   end
 

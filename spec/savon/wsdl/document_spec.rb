@@ -51,7 +51,7 @@ describe Savon::WSDL::Document do
 
     describe "#document" do
       it "should return the raw WSDL document" do
-        wsdl.document.should == WSDLFixture.load
+        wsdl.document.should == Fixture.wsdl(:authentication)
       end
 
       it "should be memoized" do
@@ -64,7 +64,7 @@ describe Savon::WSDL::Document do
     let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new, Endpoint.wsdl }
 
     before do
-      response = HTTPI::Response.new(200, {}, WSDLFixture.load)
+      response = HTTPI::Response.new(200, {}, Fixture.wsdl(:authentication))
       HTTPI.stubs(:get).returns(response)
     end
 
@@ -73,7 +73,7 @@ describe Savon::WSDL::Document do
 
   context "with a local document" do
     let(:wsdl) do
-      wsdl = "spec/fixtures/wsdl/xml/authentication.xml"
+      wsdl = "spec/fixtures/wsdl/authentication.xml"
       Savon::WSDL::Document.new HTTPI::Request.new, wsdl
     end
 

@@ -1,9 +1,9 @@
 require "spec_helper"
 
 describe Savon::SOAP::Fault do
-  let(:soap_fault) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.soap_fault) }
-  let(:soap_fault2) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.soap_fault12) }
-  let(:another_soap_fault) { Savon::SOAP::Fault.new new_response(:body => ResponseFixture.another_soap_fault) }
+  let(:soap_fault) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:soap_fault)) }
+  let(:soap_fault2) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:soap_fault12)) }
+  let(:another_soap_fault) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:another_soap_fault)) }
   let(:no_fault) { Savon::SOAP::Fault.new new_response }
 
   it "should be a Savon::Error" do
@@ -80,7 +80,7 @@ describe Savon::SOAP::Fault do
   end
 
   def new_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => ResponseFixture.authentication }
+    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
     
     HTTPI::Response.new response[:code], response[:headers], response[:body]

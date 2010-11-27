@@ -119,7 +119,7 @@ describe Savon::SOAP::Response do
   describe "#to_hash" do
     it "should return the SOAP response body as a Hash" do
       soap_response.to_hash[:authenticate_response][:return].should ==
-        ResponseFixture.authentication(:to_hash)
+        Fixture.response_hash(:authentication)[:authenticate_response][:return]
     end
   end
 
@@ -128,7 +128,8 @@ describe Savon::SOAP::Response do
 
     context "when the given path exists" do
       it "should return an Array containing the path value" do
-        response.to_array(:authenticate_response, :return).should == [ResponseFixture.authentication(:to_hash)]
+        response.to_array(:authenticate_response, :return).should ==
+          [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
       end
     end
 
@@ -147,7 +148,7 @@ describe Savon::SOAP::Response do
 
   describe "#to_xml" do
     it "should return the raw SOAP response body" do
-      soap_response.to_xml.should == ResponseFixture.authentication
+      soap_response.to_xml.should == Fixture.response(:authentication)
     end
   end
 
@@ -158,14 +159,14 @@ describe Savon::SOAP::Response do
   end
 
   def soap_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => ResponseFixture.authentication }
+    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
     
     Savon::SOAP::Response.new HTTPI::Response.new(response[:code], response[:headers], response[:body])
   end
 
   def soap_fault_response
-    soap_response :body => ResponseFixture.soap_fault
+    soap_response :body => Fixture.response(:soap_fault)
   end
 
   def http_error_response

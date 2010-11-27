@@ -37,7 +37,7 @@ describe Savon::SOAP::Request do
 
   describe "#response" do
     it "should execute an HTTP POST request and return a Savon::SOAP::Response" do
-      HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, ResponseFixture.authentication)
+      HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, Fixture.response(:authentication))
       request.response.should be_a(Savon::SOAP::Response)
     end
   end

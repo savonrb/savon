@@ -5,20 +5,26 @@ describe Savon::SOAP::XML do
 
   describe ".to_hash" do
     it "should return a given SOAP response body as a Hash" do
-      hash = Savon::SOAP::XML.to_hash ResponseFixture.authentication
-      hash[:authenticate_response][:return].should ==
-        ResponseFixture.authentication(:to_hash)
+      hash = Savon::SOAP::XML.to_hash Fixture.response(:authentication)
+      hash[:authenticate_response][:return].should == {
+        :success => true,
+        :authentication_value => {
+          :token_hash => "AAAJxA;cIedoT;mY10ExZwG6JuKgp2OYKxow==",
+          :token => "a68d1d6379b62ff339a0e0c69ed4d9cf",
+          :client => "radclient"
+        }
+      }
     end
 
     it "should return a Hash for a SOAP multiRef response" do
-      hash = Savon::SOAP::XML.to_hash ResponseFixture.multi_ref
+      hash = Savon::SOAP::XML.to_hash Fixture.response(:multi_ref)
       
       hash[:list_response].should be_a(Hash)
       hash[:multi_ref].should be_an(Array)
     end
 
     it "should add existing namespaced elements as an array" do
-      hash = Savon::SOAP::XML.to_hash ResponseFixture.list
+      hash = Savon::SOAP::XML.to_hash Fixture.response(:list)
       
       hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
       hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)

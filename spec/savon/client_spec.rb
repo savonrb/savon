@@ -64,7 +64,7 @@ describe Savon::Client do
 
   describe "#request" do
     before do
-      HTTPI.stubs(:get).returns(new_response(:body => WSDLFixture.load))
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
       HTTPI.stubs(:post).returns(new_response)
     end
 
@@ -189,7 +189,7 @@ describe Savon::Client do
 
   context "with a remote WSDL document" do
     let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
-    before { HTTPI.expects(:get).returns(new_response(:body => WSDLFixture.load)) }
+    before { HTTPI.expects(:get).returns(new_response(:body => Fixture.wsdl(:authentication))) }
 
     it "should return a list of available SOAP actions" do
       client.wsdl.soap_actions.should == [:authenticate]
@@ -208,12 +208,12 @@ describe Savon::Client do
       response = client.request(:authenticate)
       
       response.should be_a(Savon::SOAP::Response)
-      response.to_xml.should == ResponseFixture.authentication
+      response.to_xml.should == Fixture.response(:authentication)
     end
   end
 
   context "with a local WSDL document" do
-    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/xml/authentication.xml" } } 
+    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } } 
 
     before { HTTPI.expects(:get).never }
 
@@ -234,7 +234,7 @@ describe Savon::Client do
       response = client.request(:authenticate)
       
       response.should be_a(Savon::SOAP::Response)
-      response.to_xml.should == ResponseFixture.authentication
+      response.to_xml.should == Fixture.response(:authentication)
     end
   end
 
@@ -265,7 +265,7 @@ describe Savon::Client do
       response = client.request(:authenticate)
       
       response.should be_a(Savon::SOAP::Response)
-      response.to_xml.should == ResponseFixture.authentication
+      response.to_xml.should == Fixture.response(:authentication)
     end
   end
 
@@ -277,7 +277,7 @@ describe Savon::Client do
       end
     end
 
-    before { HTTPI::expects(:post).returns(new_response(:code => 500, :body => ResponseFixture.soap_fault)) }
+    before { HTTPI::expects(:post).returns(new_response(:code => 500, :body => Fixture.response(:soap_fault))) }
 
     it "should raise a Savon::SOAP::Fault" do
       lambda { client.request :authenticate }.should raise_error(Savon::SOAP::Fault)
@@ -300,7 +300,7 @@ describe Savon::Client do
   end
 
   def new_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => ResponseFixture.authentication }
+    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
     
     HTTPI::Response.new response[:code], response[:headers], response[:body]

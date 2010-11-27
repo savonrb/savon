@@ -43,7 +43,7 @@ describe Savon::HTTP::Error do
   end
 
   def new_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => ResponseFixture.authentication }
+    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
     
     HTTPI::Response.new response[:code], response[:headers], response[:body]
