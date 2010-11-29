@@ -1,5 +1,7 @@
 require "builder"
 require "crack/xml"
+require "gyoku"
+
 require "savon/soap"
 require "savon/core_ext/hash"
 
