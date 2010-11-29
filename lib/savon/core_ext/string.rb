@@ -1,5 +1,3 @@
-require "cgi"
-
 require "savon/soap"
 
 module Savon
@@ -49,21 +47,6 @@ module Savon
         return ::DateTime.parse(self) if Savon::SOAP::DateTimeRegexp === self
         return true if self.strip.downcase == "true"
         return false if self.strip.downcase == "false"
-        self
-      end
-
-      # Returns the Object as a SOAP request compliant key.
-      def to_soap_key
-        self[-1, 1] == "!" ? chop : self
-      end
-
-      # Returns the String as a SOAP value. Escapes special characters for XML.
-      def to_soap_value
-        CGI.escapeHTML self
-      end
-
-      # Convert the String into a SOAP value without escaping special characters.
-      def to_soap_value!
         self
       end
 

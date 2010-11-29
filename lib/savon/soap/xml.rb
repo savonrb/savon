@@ -87,7 +87,7 @@ module Savon
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
 
-      # Accessor for the SOAP +body+. Expected to be a Hash that can be translated to XML via Hash.to_soap_xml
+      # Accessor for the SOAP +body+. Expected to be a Hash that can be translated to XML via Gyoku.xml
       # or any other Object responding to to_s.
       attr_accessor :body
 
@@ -132,7 +132,7 @@ module Savon
 
       # Returns the SOAP header as an XML String.
       def header_for_xml
-        @header_for_xml ||= header.to_soap_xml + wsse_header
+        @header_for_xml ||= Gyoku.xml(header) + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
@@ -142,7 +142,7 @@ module Savon
 
       # Returns the SOAP body as an XML String.
       def body_to_xml
-        body.respond_to?(:to_soap_xml) ? body.to_soap_xml : body.to_s
+        body.kind_of?(Hash) ? Gyoku.xml(body) : body.to_s
       end
 
     end
