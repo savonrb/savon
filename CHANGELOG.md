@@ -1,6 +1,6 @@
 ## 0.8.0.beta.5 (UPCOMING)
 
-* Added Savon::SOAP::XML#env_namespace to configure the SOAP envelope namespace. It defaults to :env
+* Added `Savon::SOAP::XML#env_namespace` to configure the SOAP envelope namespace. It defaults to :env
   but can also be set to an empty String for SOAP envelope tags without a namespace.
 
 * Replaced quite a lot of core extensions by moving the Hash to XML translation into a new gem called
