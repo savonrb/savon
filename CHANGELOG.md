@@ -1,21 +1,21 @@
 ## 0.8.0.beta.5 (UPCOMING)
 
-* Added `Savon::SOAP::XML#env_namespace` [bac4b4](https://github.com/rubiii/savon/commit/bac4b4) to configure
+* Added `Savon::SOAP::XML#env_namespace` ([bac4b4](https://github.com/rubiii/savon/commit/bac4b4)) to configure
   the SOAP envelope namespace. It defaults to :env but can also be set to an empty String for SOAP envelope
   tags without a namespace.
 
 * Replaced quite a lot of core extensions by moving the Hash to XML translation into a new gem called
-  [Gyoku](http://rubygems.org/gems/gyoku) [51fa0e](https://github.com/rubiii/savon/commit/51fa0e).
+  [Gyoku](http://rubygems.org/gems/gyoku) ([51fa0e](https://github.com/rubiii/savon/commit/51fa0e)).
 
 ## 0.8.0.beta.4 (2010-11-20)
 
-* Fix for [issue #107](https://github.com/rubiii/savon/issues/107) [1d6eda](https://github.com/rubiii/savon/commit/1d6eda).
+* Fix for [issue #107](https://github.com/rubiii/savon/issues/107) ([1d6eda](https://github.com/rubiii/savon/commit/1d6eda)).
 
 * Fix for [issue #108](https://github.com/rubiii/savon/issues/108)
-  [f64400...0aaca2](https://github.com/rubiii/savon/compare/f64400...0aaca2) Thanks [fagiani](https://github.com/fagiani).
+  ([f64400...0aaca2](https://github.com/rubiii/savon/compare/f64400...0aaca2)) Thanks [fagiani](https://github.com/fagiani).
 
 * Replaced `Savon.response_pattern` with a slightly different implementation of the `Savon::SOAP::Response#to_array` method
-  [6df6a6](https://github.com/rubiii/savon/commit/6df6a6). The method now accepts multiple arguments representing the response
+  ([6df6a6](https://github.com/rubiii/savon/commit/6df6a6)). The method now accepts multiple arguments representing the response
   Hash keys to traverse and returns the result as an Array or an empty Array in case the key is nil or does not exist.
 
       response.to_array :get_user_response, :return
@@ -24,11 +24,11 @@
 ## 0.8.0.beta.3 (2010-11-06)
 
 * Fix for [savon_spec](http://rubygems.org/gems/savon_spec) to not send nil to `Savon::SOAP::XML#body`
-  [c34b42](https://github.com/rubiii/savon/commit/c34b42).
+  ([c34b42](https://github.com/rubiii/savon/commit/c34b42)).
 
 ## 0.8.0.beta.2 (2010-11-05)
 
-* Added `Savon.response_pattern` [0a12fb](https://github.com/rubiii/savon/commit/0a12fb) to automatically walk deeper into
+* Added `Savon.response_pattern` ([0a12fb](https://github.com/rubiii/savon/commit/0a12fb)) to automatically walk deeper into
   the SOAP response Hash when a pattern (specified as an Array of Regexps and Symbols) matches the response. If for example
   your response always looks like ".+Response/return" as in:
 
