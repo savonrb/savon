@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gyoku", ">= 0.1.0"
 
   s.add_development_dependency "rspec", "~> 2.0.0"
+  s.add_development_dependency "autotest"
   s.add_development_dependency "mocha", "~> 0.9.7"
 
   s.files = `git ls-files`.split("\n")
