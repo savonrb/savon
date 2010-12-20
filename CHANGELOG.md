@@ -5,7 +5,7 @@
   tags without a namespace.
 
 * Replaced quite a lot of core extensions by moving the Hash to XML translation into a new gem called
-  [Gyoku](http://rubygems.org/gems/gyoku) ([51fa0e](https://github.com/rubiii/savon/commit/51fa0e)).
+  [Gyoku](http://rubygems.org/gems/gyoku) ([51fa0e](https://github.com/rubiii/savon/commit/bac4b4)).
 
 ## 0.8.0.beta.4 (2010-11-20)
 
