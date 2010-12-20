@@ -1,5 +1,14 @@
-require "basic_spec_helper"
+require "bundler"
+Bundler.require :default, :development
 
-FileList["spec/fixtures/**/*.rb"].each { |fixture| require fixture }
-require "endpoint_helper"
-require "http_stubs"
+RSpec.configure do |config|
+  config.mock_with :mocha
+end
+
+require "savon"
+
+# Disable logging for specs.
+Savon.log = false
+
+require "support/endpoint"
+require "support/fixture"

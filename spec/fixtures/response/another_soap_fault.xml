@@ -1,0 +1,14 @@
+<SOAP-ENV:Envelope SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SOAP-ENV:Body>
+    <SOAP-ENV:Fault>
+      <faultcode>ERR_NO_SESSION</faultcode>
+      <faultfactor>doGetItemsInfo - Wrong session</faultfactor>
+      <faultstring>Wrong session message</faultstring>
+      <detail><soapVal><ERRNO xsi:type="xsd:string">80:1289245853:55</ERRNO></soapVal></detail>
+    </SOAP-ENV:Fault>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -2,18 +2,6 @@ require "spec_helper"
 
 describe String do
 
-  describe "self.random" do
-    it "returns a random 100-character String" do
-      String.random.should be_a(String)
-      String.random.length.should == 100
-    end
-
-    it "returns a random String of a given length" do
-      String.random(50).should be_a(String)
-      String.random(50).length.should == 50
-    end
-  end
-
   describe "snakecase" do
     it "converts a lowerCamelCase String to snakecase" do
       "lowerCamelCase".snakecase.should == "lower_camel_case"
@@ -71,28 +59,6 @@ describe String do
 
     it "defaults to return the original value" do
       "whatever".map_soap_response.should == "whatever"
-    end
-  end
-
-  describe "to_soap_key" do
-    it "removes exclamation marks from the end of the String" do
-      "value".to_soap_key.should == "value"
-      "value!".to_soap_key.should == "value"
-    end
-  end
-
-  describe "to_soap_value" do
-    it "should return the String value and escape special characters" do
-      "string".to_soap_value.should == "string"
-      "<tag>".to_soap_value.should == "&lt;tag&gt;"
-      "at&t".to_soap_value.should == "at&amp;t"
-      '"quotes"'.to_soap_value.should == "&quot;quotes&quot;"
-    end
-  end
-
-  describe "to_soap_value!" do
-    it "should just return the String value without escaping special characters" do
-      "<tag>".to_soap_value!.should == "<tag>"
     end
   end
 

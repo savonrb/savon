@@ -1,86 +1,309 @@
 require "spec_helper"
 
 describe Savon::Client do
-  before { @client = Savon::Client.new EndpointHelper.wsdl_endpoint }
+  let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
 
-  it "should be initialized with an endpoint String" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint
-    client.request.http.proxy?.should be_false
-  end
-
-  it "should accept a proxy URI via an optional Hash of options" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :proxy => "http://proxy"
-    client.request.http.proxy?.should be_true
-    client.request.http.proxy_address == "http://proxy"
-  end
-
-  it "should accept a SOAP endpoint via an optional Hash of options" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint, :soap_endpoint => "http://localhost"
-    client.wsdl.soap_endpoint.should == "http://localhost"
-  end
-
-  it "should have a method that returns the Savon::WSDL" do
-    @client.wsdl.should be_a(Savon::WSDL)
-  end
-
-  it "should have a method that returns the Savon::Request" do
-    @client.request.should be_a(Savon::Request)
-  end
-
-  it "should respond to available SOAP actions while behaving as expected otherwise" do
-    WSDLFixture.authentication(:operations).keys.each do |soap_action|
-      @client.respond_to?(soap_action).should be_true
+  describe ".new" do
+    context "with a block expecting one argument" do
+      it "should yield the WSDL object" do
+        Savon::Client.new { |wsdl| wsdl.should be_a(Savon::WSDL::Document) }
+      end
     end
 
-    @client.respond_to?(:object_id).should be_true
-    @client.respond_to?(:some_undefined_method).should be_false
-  end
-
-  it "should dispatch available SOAP calls via method_missing and return the Savon::Response" do
-    @client.authenticate.should be_a(Savon::Response)
-  end
-
-  it "should disable the Savon::WSDL when passed a method with an exclamation mark" do
-    @client.wsdl.enabled?.should be_true
-    [:operations, :namespace_uri, :soap_endpoint].each do |method|
-      Savon::WSDL.any_instance.expects(method).never
+    context "with a block expecting two arguments" do
+      it "should yield the WSDL and HTTP objects" do
+        Savon::Client.new do |wsdl, http|
+          wsdl.should be_an(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+        end
+      end
     end
 
-    response = @client.authenticate! do |soap|
-      soap.input.should == "authenticate"
-      soap.input.should == "authenticate"
+    context "with a block expecting three arguments" do
+      it "should yield the WSDL, HTTP and WSSE objects" do
+        Savon::Client.new do |wsdl, http, wsse|
+          wsdl.should be_an(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+          wsse.should be_an(Savon::WSSE)
+        end
+      end
     end
-    response.should be_a(Savon::Response)
-    @client.wsdl.enabled?.should be_false
-  end
 
-  it "should raise a Savon::SOAPFault in case of a SOAP fault" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint(:soap_fault)
-    lambda { client.authenticate! }.should raise_error(Savon::SOAPFault)
-  end
+    context "with a block expecting no arguments" do
+      it "should let you access the WSDL object" do
+        Savon::Client.new { wsdl.should be_a(Savon::WSDL::Document) }
+      end
 
-  it "should raise a Savon::HTTPError in case of an HTTP error" do
-    client = Savon::Client.new EndpointHelper.wsdl_endpoint(:http_error)
-    lambda { client.authenticate! }.should raise_error(Savon::HTTPError)
-  end
+      it "should let you access the HTTP object" do
+        Savon::Client.new { http.should be_an(HTTPI::Request) }
+      end
 
-  it "should yield an instance of Savon::SOAP to a given block expecting one argument" do
-    @client.authenticate { |soap| soap.should be_a(Savon::SOAP) }
-  end
-
-  it "should yield an instance of Savon::SOAP and Savon::WSSE to a gven block expecting two arguments" do
-    @client.authenticate do |soap, wsse|
-      soap.should be_a(Savon::SOAP)
-      wsse.should be_a(Savon::WSSE)
+      it "should let you access the WSSE object" do
+        Savon::Client.new { wsse.should be_a(Savon::WSSE) }
+      end
     end
   end
 
-  it "should have a call method that forwards to method_missing for SOAP actions named after existing methods" do
-    @client.call(:authenticate) { |soap| soap.should be_a(Savon::SOAP) }
+  describe "#wsdl" do
+    it "should return the Savon::WSDL::Document" do
+      client.wsdl.should be_a(Savon::WSDL::Document)
+    end
   end
 
-  it "should raise a NoMethodError when the method does not match an available SOAP action or method" do
-    lambda { @client.some_undefined_method }.should raise_error(NoMethodError)
+  describe "#http" do
+    it "should return the HTTPI::Request" do
+      client.http.should be_an(HTTPI::Request)
+    end
+  end
+
+  describe "#wsse" do
+    it "should return the Savon::WSSE object" do
+      client.wsse.should be_a(Savon::WSSE)
+    end
+  end
+
+  describe "#request" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    context "without any arguments" do
+      it "should raise an ArgumentError" do
+        lambda { client.request }.should raise_error(ArgumentError)
+      end
+    end
+
+    context "with a single argument (Symbol)" do
+      it "should set the input tag to result in <getUser>" do
+        client.request(:get_user) { soap.input.should == [:getUser, {}] }
+      end
+
+      it "should set the target namespace with the default identifier" do
+        namespace = 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
+        
+        client.request :get_user
+      end
+
+      it "should not set the target namespace if soap.namespace was set to nil" do
+        namespace = "http://v1_0.ws.auth.order.example.com/"
+        HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
+        
+        client.request(:get_user) { soap.namespace = nil }
+      end
+    end
+
+    context "with a single argument (String)" do
+      it "should set the input tag to result in <get_user>" do
+        client.request("get_user") { soap.input.should == [:get_user, {}] }
+      end
+    end
+
+    context "with a Symbol and a Hash" do
+      it "should set the input tag to result in <getUser active='true'>" do
+        client.request(:get_user, :active => true) { soap.input.should == [:getUser, { :active => true }] }
+      end
+    end
+
+    context "with two Symbols" do
+      it "should set the input tag to result in <wsdl:getUser>" do
+        client.request(:v1, :get_user) { soap.input.should == [:v1, :getUser, {}] }
+      end
+
+      it "should set the target namespace with the given identifier" do
+        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
+        
+        client.request :v1, :get_user
+      end
+
+      it "should not set the target namespace if soap.namespace was set to nil" do
+        namespace = "http://v1_0.ws.auth.order.example.com/"
+        HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
+        
+        client.request(:v1, :get_user) { soap.namespace = nil }
+      end
+    end
+
+    context "with two Symbols and a Hash" do
+      it "should set the input tag to result in <wsdl:getUser active='true'>" do
+        client.request(:wsdl, :get_user, :active => true) { soap.input.should == [:wsdl, :getUser, { :active => true }] }
+      end
+    end
+
+    context "with a block expecting one argument" do
+      it "should yield the SOAP object" do
+        client.request(:authenticate) { |soap| soap.should be_a(Savon::SOAP::XML) }
+      end
+    end
+
+    context "with a block expecting two arguments" do
+      it "should yield the SOAP and WSDL objects" do
+        client.request(:authenticate) do |soap, wsdl|
+          soap.should be_a(Savon::SOAP::XML)
+          wsdl.should be_an(Savon::WSDL::Document)
+        end
+      end
+    end
+
+    context "with a block expecting three arguments" do
+      it "should yield the SOAP, WSDL and HTTP objects" do
+        client.request(:authenticate) do |soap, wsdl, http|
+          soap.should be_a(Savon::SOAP::XML)
+          wsdl.should be_an(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+        end
+      end
+    end
+
+    context "with a block expecting four arguments" do
+      it "should yield the SOAP, WSDL, HTTP and WSSE objects" do
+        client.request(:authenticate) do |soap, wsdl, http, wsse|
+          soap.should be_a(Savon::SOAP::XML)
+          wsdl.should be_a(Savon::WSDL::Document)
+          http.should be_an(HTTPI::Request)
+          wsse.should be_a(Savon::WSSE)
+        end
+      end
+    end
+
+    context "with a block expecting no arguments" do
+      it "should let you access the SOAP object" do
+        client.request(:authenticate) { soap.should be_a(Savon::SOAP::XML) }
+      end
+
+      it "should let you access the HTTP object" do
+        client.request(:authenticate) { http.should be_an(HTTPI::Request) }
+      end
+
+      it "should let you access the WSSE object" do
+        client.request(:authenticate) { wsse.should be_a(Savon::WSSE) }
+      end
+
+      it "should let you access the WSDL object" do
+        client.request(:authenticate) { wsdl.should be_a(Savon::WSDL::Document) }
+      end
+    end
+  end
+
+  context "with a remote WSDL document" do
+    let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
+    before { HTTPI.expects(:get).returns(new_response(:body => Fixture.wsdl(:authentication))) }
+
+    it "should return a list of available SOAP actions" do
+      client.wsdl.soap_actions.should == [:authenticate]
+    end
+
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
+    end
+
+    it "should execute SOAP requests and return the response" do
+      HTTPI.expects(:post).returns(new_response)
+      response = client.request(:authenticate)
+      
+      response.should be_a(Savon::SOAP::Response)
+      response.to_xml.should == Fixture.response(:authentication)
+    end
+  end
+
+  context "with a local WSDL document" do
+    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } } 
+
+    before { HTTPI.expects(:get).never }
+
+    it "should return a list of available SOAP actions" do
+      client.wsdl.soap_actions.should == [:authenticate]
+    end
+
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
+    end
+
+    it "should execute SOAP requests and return the response" do
+      HTTPI.expects(:post).returns(new_response)
+      response = client.request(:authenticate)
+      
+      response.should be_a(Savon::SOAP::Response)
+      response.to_xml.should == Fixture.response(:authentication)
+    end
+  end
+
+  context "without a WSDL document" do
+    let(:client) do
+      Savon::Client.new do
+        wsdl.endpoint = Endpoint.soap
+        wsdl.namespace = "http://v1_0.ws.auth.order.example.com/"
+      end
+    end
+
+    before { HTTPI.expects(:get).never }
+
+    it "raise an ArgumentError when trying to access the WSDL" do
+      lambda { client.wsdl.soap_actions }.should raise_error(ArgumentError)
+    end
+
+    it "adds a SOAPAction header containing the SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+      
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"authenticate"}
+      end
+    end
+
+    it "should execute SOAP requests and return the response" do
+      HTTPI.expects(:post).returns(new_response)
+      response = client.request(:authenticate)
+      
+      response.should be_a(Savon::SOAP::Response)
+      response.to_xml.should == Fixture.response(:authentication)
+    end
+  end
+
+  context "when encountering a SOAP fault" do
+    let(:client) do
+      Savon::Client.new do
+        wsdl.endpoint = Endpoint.soap
+        wsdl.namespace = "http://v1_0.ws.auth.order.example.com/"
+      end
+    end
+
+    before { HTTPI::expects(:post).returns(new_response(:code => 500, :body => Fixture.response(:soap_fault))) }
+
+    it "should raise a Savon::SOAP::Fault" do
+      lambda { client.request :authenticate }.should raise_error(Savon::SOAP::Fault)
+    end
+  end
+
+  context "when encountering an HTTP error" do
+    let(:client) do
+      Savon::Client.new do
+        wsdl.endpoint = Endpoint.soap
+        wsdl.namespace = "http://v1_0.ws.auth.order.example.com/"
+      end
+    end
+
+    before { HTTPI::expects(:post).returns(new_response(:code => 500)) }
+
+    it "should raise a Savon::HTTP::Error" do
+      lambda { client.request :authenticate }.should raise_error(Savon::HTTP::Error)
+    end
+  end
+
+  def new_response(options = {})
+    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
+    response = defaults.merge options
+    
+    HTTPI::Response.new response[:code], response[:headers], response[:body]
   end
 
 end

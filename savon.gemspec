@@ -1,4 +1,4 @@
-lib = File.expand_path "../lib", __FILE__
+lib = File.expand_path("../lib", __FILE__)
 $:.unshift lib unless $:.include? lib
 
 require "savon/version"
@@ -6,25 +6,23 @@ require "savon/version"
 Gem::Specification.new do |s|
   s.name = "savon"
   s.version = Savon::Version
-  s.date = Date.today.to_s
-
   s.authors = "Daniel Harrington"
   s.email = "me@rubiii.com"
-  s.homepage = "http://github.com/rubiii/savon"
-  s.summary = "Heavy metal Ruby SOAP client library"
+  s.homepage = "http://github.com/rubiii/#{s.name}"
+  s.summary = "Heavy metal Ruby SOAP client"
+  s.description = "Savon is the heavy metal Ruby SOAP client."
 
-  s.files = Dir["[A-Z]*", "{lib,spec}/**/*.{rb,xml,yml,gz}"]
-  s.files += [".autotest", "spec/spec.opts"]
-  s.test_files = Dir["spec/**/*.rb"]
+  s.rubyforge_project = s.name
 
-  s.extra_rdoc_files = ["README.rdoc"]
-  s.rdoc_options  = ["--charset=UTF-8", "--line-numbers", "--inline-source"]
-  s.rdoc_options += ["--title", "Savon - Heavy metal Ruby SOAP client library"]
+  s.add_dependency "builder", "~> 2.1.2"
+  s.add_dependency "crack", "~> 0.1.8"
+  s.add_dependency "httpi", ">= 0.7.4"
+  s.add_dependency "gyoku", ">= 0.1.0"
 
-  s.add_dependency "builder", ">= 2.1.2"
-  s.add_dependency "crack", ">= 0.1.4"
+  s.add_development_dependency "rspec", "~> 2.0.0"
+  s.add_development_dependency "autotest"
+  s.add_development_dependency "mocha", "~> 0.9.7"
 
-  s.add_development_dependency "rspec", ">= 1.2.8"
-  s.add_development_dependency "mocha", ">= 0.9.7"
-  s.add_development_dependency "fakeweb", ">= 1.2.7"
+  s.files = `git ls-files`.split("\n")
+  s.require_path = "lib"
 end

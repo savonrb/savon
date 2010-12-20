@@ -1,9 +1,9 @@
 .DS_Store
-nbproject
-pkg
+.yardoc
 doc
 coverage
-.loadpath
-.project
+tmp
 *~
 *.gem
+.bundle
+Gemfile.lock
