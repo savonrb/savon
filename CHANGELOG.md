@@ -1,6 +1,6 @@
 ## 0.8.0
 
-* Added `Savon::SOAP::XML#env_namespace` ([bac4b4](https://github.com/rubiii/savon/commit/bac4b4)) to configure
+* Added `Savon::SOAP::XML#env_namespace` ([bac4b4](https://github.com/rubiii/savon/commit/51fa0e)) to configure
   the SOAP envelope namespace. It defaults to :env but can also be set to an empty String for SOAP envelope
   tags without a namespace.
 
