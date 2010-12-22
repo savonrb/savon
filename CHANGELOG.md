@@ -1,8 +1,10 @@
-## 0.8.1 (UPCOMING)
+## 0.8.1
 
 * Update to depend on HTTPI v0.7.5 which comes with a fallback to use Net::HTTP when no other adapter could be required.
 
 * Fix for [issue #72](https://github.com/rubiii/savon/issues/72) ([22074a8](https://github.com/rubiii/savon/commit/22074a8)).
+
+* Loosen dependency on builder. Should be quite stable.
 
 ## 0.8.0 (2010-12-20)
 
