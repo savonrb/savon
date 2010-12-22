@@ -185,6 +185,29 @@ describe Savon::Client do
         client.request(:authenticate) { wsdl.should be_a(Savon::WSDL::Document) }
       end
     end
+
+    it "should not set the Cookie header for the next request" do
+      client.http.headers.expects(:[]=).with("Cookie", anything).never
+      client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
+      client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
+      
+      client.request :authenticate
+    end
+  end
+
+  context "#request with a Set-Cookie response header" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
+      HTTPI.stubs(:post).returns(new_response(:headers => { "Set-Cookie" => "some-cookie" }))
+    end
+
+    it "should set the Cookie header for the next request" do
+      client.http.headers.expects(:[]=).with("Cookie", "some-cookie")
+      client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
+      client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
+      
+      client.request :authenticate
+    end
   end
 
   context "with a remote WSDL document" do

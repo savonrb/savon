@@ -75,7 +75,9 @@ module Savon
       process &block if block
       soap.wsse = wsse
       
-      SOAP::Request.new(http, soap).response
+      response = SOAP::Request.new(http, soap).response
+      set_cookie response.http.headers
+      response
     end
 
   private
@@ -85,6 +87,11 @@ module Savon
 
     # Accessor for the original self of a given block.
     attr_accessor :original_self
+
+    # Passes a cookie from the last request +headers+ to the next one.
+    def set_cookie(headers)
+      http.headers["Cookie"] = headers["Set-Cookie"] if headers["Set-Cookie"]
+    end
 
     # Expects an Array of +args+ and returns an Array containing the namespace (might be +nil+),
     # the SOAP input and a Hash of attributes for the input tag (which might be empty).
