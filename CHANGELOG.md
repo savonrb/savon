@@ -1,4 +1,10 @@
-## 0.8.0
+## 0.8.1 (UPCOMING)
+
+* Update to depend on HTTPI v0.7.5 which comes with a fallback to use Net::HTTP when no other adapter could be required.
+
+* Fix for [issue #72](https://github.com/rubiii/savon/issues/72) ([22074a8](https://github.com/rubiii/savon/commit/22074a8)).
+
+## 0.8.0 (2010-12-20)
 
 * Added `Savon::SOAP::XML#env_namespace` ([51fa0e](https://github.com/rubiii/savon/commit/51fa0e)) to configure
   the SOAP envelope namespace. It defaults to :env but can also be set to an empty String for SOAP envelope
