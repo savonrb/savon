@@ -147,6 +147,51 @@ module Savon
         body.kind_of?(Hash) ? Gyoku.xml(body) : body.to_s
       end
 
+
+      # BEGIN multipart methods
+    public
+      # Use sort functionality in  Mail::Body.sort!() to order parts
+      # An array of mime types is expected 
+      # E.g. this makes the xml appear before an attached image: ["text/xml", "image/jpeg"]
+      attr_accessor :parts_sort_order
+      
+      # adds a Part object to the current SOAP "message"
+      # Parts are really attachments
+      def add_part(part)
+        @parts ||= Array.new
+        @parts << part
+      end
+      # check if any parts have been added
+      def has_parts?
+        @parts ||= Array.new
+        !@parts.empty?
+      end
+
+      # returns the mime message for a multipart request
+      def request_message
+        if @parts.empty?
+          return nil
+        end
+
+        @request_message = Part.new do
+          content_type 'multipart/related; type="text/xml"'
+        end
+
+        soap_body = self.to_xml
+        soap_message = Part.new do
+          content_type 'text/xml; charset=utf-8'
+          add_content_transfer_encoding
+          body soap_body
+        end
+        @request_message.add_part(soap_message)
+        @parts.each do |part|
+          @request_message.add_part(part)
+        end
+        #puts @request_message
+        @request_message
+      end
+      # END multipart methods
+      
     end
   end
 end

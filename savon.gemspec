@@ -18,10 +18,12 @@ Gem::Specification.new do |s|
   s.add_dependency "crack", "~> 0.1.8"
   s.add_dependency "httpi", ">= 0.7.5"
   s.add_dependency "gyoku", ">= 0.1.1"
+  s.add_dependency "mail"
 
   s.add_development_dependency "rspec", "~> 2.0.0"
   s.add_development_dependency "autotest"
   s.add_development_dependency "mocha", "~> 0.9.7"
+  s.add_development_dependency "mail"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"

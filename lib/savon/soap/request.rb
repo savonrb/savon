@@ -30,8 +30,20 @@ module Savon
       # Sets up the +request+ using a given +soap+ object.
       def setup(request, soap)
         request.url = soap.endpoint
-        request.headers["Content-Type"] ||= ContentType[soap.version]
-        request.body = soap.to_xml
+        if soap.has_parts? # do multipart stuff if soap has parts
+          request_message = soap.request_message
+          # takes relevant http headers from the "Mail" message and makes them Net::HTTP compatible
+          request.headers["Content-Type"] ||= ContentType[soap.version]
+          request.headers.delete "SOAPAction"
+          request_message.header.fields.each do |field|
+            request.headers[field.name] = field.to_s
+          end
+          request_message.body.set_sort_order soap.parts_sort_order if soap.parts_sort_order && soap.parts_sort_order.any?
+          request.body = request_message.body.encoded
+        else
+          request.headers["Content-Type"] ||= ContentType[soap.version]
+          request.body = soap.to_xml
+        end
         request
       end
 
