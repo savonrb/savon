@@ -1,8 +1,12 @@
-## 0.8.1
+## 0.8.2 (UPCOMING)
+
+* Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4))
+
+## 0.8.1 (2010-12-22)
 
 * Update to depend on HTTPI v0.7.5 which comes with a fallback to use Net::HTTP when no other adapter could be required.
 
-* Fix for [issue #72](https://github.com/rubiii/savon/issues/72) ([22074a8](https://github.com/rubiii/savon/commit/22074a8)).
+* Fix for [issue #72](https://github.com/rubiii/savon/issues/72) ([22074a](https://github.com/rubiii/savon/commit/22074a8)).
 
 * Loosen dependency on builder. Should be quite stable.
 
