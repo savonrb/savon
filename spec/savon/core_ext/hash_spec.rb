@@ -2,6 +2,15 @@ require "spec_helper"
 
 describe Hash do
 
+  describe "#deep_merge!" do
+    it "should recursively merge two Hashes" do
+      hash = { :one => 1, "two" => { "three" => 3 } }
+      other_hash = { :four => 4, "two" => { "three" => "merge", :five => 5 } }
+      
+      hash.merge!(other_hash).should == { :one => 1, :four => 4, "two" => { "three" => "merge", :five => 5 } }
+    end
+  end
+
   describe "find_soap_body" do
     it "should return the content from the 'soap:Body' element" do
       soap_body = { "soap:Envelope" => { "soap:Body" => "content" } }

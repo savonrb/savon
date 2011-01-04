@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec", "~> 2.0.0"
   s.add_development_dependency "autotest"
   s.add_development_dependency "mocha", "~> 0.9.7"
+  s.add_development_dependency "timecop", "~> 0.3.5"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"

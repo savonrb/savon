@@ -1,9 +1,9 @@
 require "base64"
 require "digest/sha1"
-require "builder"
 
 require "savon/core_ext/string"
-require "savon/soap"
+require "savon/core_ext/hash"
+require "savon/core_ext/time"
 
 module Savon
 
@@ -24,14 +24,25 @@ module Savon
     # URI for "wsse:Password/@Type" #PasswordDigest.
     PasswordDigestURI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
-    # Sets the authentication credentials. Also accepts whether to use WSSE digest.
+    # Returns a value from the WSSE Hash.
+    def [](key)
+      hash[key]
+    end
+
+    # Sets a value on the WSSE Hash.
+    def []=(key, value)
+      hash[key] = value
+    end
+
+    # Sets authentication credentials for a wsse:UsernameToken header.
+    # Also accepts whether to use WSSE digest authentication.
     def credentials(username, password, digest = false)
       self.username = username
       self.password = password
       self.digest = digest
     end
 
-    attr_accessor :username, :password
+    attr_accessor :username, :password, :created_at, :expires_at
 
     # Returns whether to use WSSE digest. Defaults to +false+.
     def digest?
@@ -40,26 +51,64 @@ module Savon
 
     attr_writer :digest
 
-    # Returns the XML for a WSSE header or an empty String unless authentication
-    # credentials were specified.
-    def to_xml
-      return "" unless username && password
+    # Returns whether to generate a wsse:UsernameToken header.
+    def username_token?
+      username && password
+    end
 
-      builder = Builder::XmlMarkup.new
-      builder.wsse :Security, "xmlns:wsse" => WSENamespace do |xml|
-        xml.wsse :UsernameToken, "wsu:Id" => wsu_id, "xmlns:wsu" => WSUNamespace do
-          xml.wsse :Username, username
-          xml.wsse :Nonce, nonce
-          xml.wsu :Created, timestamp
-          xml.wsse :Password, password_node, :Type => password_type
-        end
+    # Returns whether to generate a wsse:Timestamp header.
+    def timestamp?
+      created_at || expires_at || @wsse_timestamp
+    end
+
+    # Sets whether to generate a wsse:Timestamp header.
+    def timestamp=(timestamp)
+      @wsse_timestamp = timestamp
+    end
+
+    # Returns the XML for a WSSE header.
+    def to_xml
+      if username_token?
+        Gyoku.xml wsse_username_token.merge!(hash)
+      elsif timestamp?
+        Gyoku.xml wsse_timestamp.merge!(hash)
+      else
+        ""
       end
     end
 
   private
 
+    # Returns a Hash containing wsse:UsernameToken details.
+    def wsse_username_token
+      wsse_security "UsernameToken",
+        "wsse:Username" => username,
+        "wsse:Nonce" => nonce,
+        "wsu:Created" => timestamp,
+        "wsse:Password" => password_value,
+        :attributes! => { "wsse:Password" => { "Type" => password_type } }
+    end
+
+    # Returns a Hash containing wsse:Timestamp details.
+    def wsse_timestamp
+      wsse_security "Timestamp",
+        "wsu:Created" => (created_at || Time.now).xs_datetime,
+        "wsu:Expires" => (expires_at || (created_at || Time.now) + 60).xs_datetime
+    end
+
+    # Returns a Hash containing wsse:Security details for a given +tag+ and +hash+.
+    def wsse_security(tag, hash)
+      {
+        "wsse:Security" => {
+          "wsse:#{tag}" => hash,
+          :attributes! => { "wsse:#{tag}" => { "wsu:Id" => "#{tag}-#{count}", "xmlns:wsu" => WSUNamespace } }
+        },
+        :attributes! => { "wsse:Security" => { "xmlns:wsse" => WSENamespace } }
+      }
+    end
+
     # Returns the WSSE password. Encrypts the password for digest authentication.
-    def password_node
+    def password_value
       return password unless digest?
 
       token = nonce + timestamp + password
@@ -83,18 +132,18 @@ module Savon
 
     # Returns a WSSE timestamp.
     def timestamp
-      @timestamp ||= Time.now.strftime Savon::SOAP::DateTimeFormat
+      @timestamp ||= Time.now.xs_datetime
     end
 
-    # Returns the "wsu:Id" attribute.
-    def wsu_id
-      "UsernameToken-#{count}"
-    end
-
-    # Simple counter.
+    # Returns a new number with every call.
     def count
       @count ||= 0
       @count += 1
+    end
+
+    # Returns a memoized and autovivificating Hash.
+    def hash
+      @hash ||= Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
     end
 
   end

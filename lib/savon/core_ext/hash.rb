@@ -8,6 +8,16 @@ module Savon
   module CoreExt
     module Hash
 
+      # Returns a new Hash with +self+ and +other_hash+ merged recursively.
+      # Modifies the receiver in place.
+      def deep_merge!(other_hash)
+        other_hash.each_pair do |k,v|
+          tv = self[k]
+          self[k] = tv.is_a?(Hash) && v.is_a?(Hash) ? tv.deep_merge(v) : v
+        end
+        self
+      end unless defined? deep_merge!
+
       # Returns the values from the soap:Body element or an empty Hash in case the soap:Body tag could
       # not be found.
       def find_soap_body

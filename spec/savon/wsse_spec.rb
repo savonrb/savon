@@ -158,6 +158,56 @@ describe Savon::WSSE do
         wsse.to_xml.should include(Savon::WSSE::PasswordDigestURI)
       end
     end
+
+    context "with #timestamp set to true" do
+      before { wsse.timestamp = true }
+
+      it "should contain a wsse:Timestamp node" do
+        wsse.to_xml.should include('<wsse:Timestamp wsu:Id="Timestamp-1" ' +
+          'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">')
+      end
+
+      it "should contain a wsu:Created node defaulting to Time.now" do
+        created_at = Time.now
+        Timecop.freeze created_at do
+          wsse.to_xml.should include("<wsu:Created>#{created_at.xs_datetime}</wsu:Created>")
+        end
+      end
+
+      it "should contain a wsu:Expires node defaulting to Time.now + 60 seconds" do
+        created_at = Time.now
+        Timecop.freeze created_at do
+          wsse.to_xml.should include("<wsu:Expires>#{(created_at + 60).xs_datetime}</wsu:Expires>")
+        end
+      end
+    end
+
+    context "with #created_at" do
+      before { wsse.created_at = Time.now + 86400 }
+
+      it "should contain a wsu:Created node with the given time" do
+        wsse.to_xml.should include("<wsu:Created>#{wsse.created_at.xs_datetime}</wsu:Created>")
+      end
+
+      it "should contain a wsu:Expires node set to #created_at + 60 seconds" do
+        wsse.to_xml.should include("<wsu:Expires>#{(wsse.created_at + 60).xs_datetime}</wsu:Expires>")
+      end
+    end
+
+    context "with #expires_at" do
+      before { wsse.expires_at = Time.now + 86400 }
+
+      it "should contain a wsu:Created node defaulting to Time.now" do
+        created_at = Time.now
+        Timecop.freeze created_at do
+          wsse.to_xml.should include("<wsu:Created>#{created_at.xs_datetime}</wsu:Created>")
+        end
+      end
+
+      it "should contain a wsu:Expires node set to the given time" do
+        wsse.to_xml.should include("<wsu:Expires>#{wsse.expires_at.xs_datetime}</wsu:Expires>")
+      end
+    end
   end
 
 end
