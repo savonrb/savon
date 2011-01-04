@@ -1,6 +1,28 @@
-## 0.8.2 (UPCOMING)
+## 0.8.2 (2010-01-04)
 
 * Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4))
+
+* Changed `Savon::WSSE` to be based on a Hash instead of relying on builder ([4cebc3](https://github.com/rubiii/savon/commit/4cebc3)).
+
+  `Savon::WSSE` now supports wsse:Timestamp headers ([issue #122](https://github.com/rubiii/savon/issues/122)) by setting
+  `Savon::WSSE#timestamp` to `true`:
+
+      client.request :some_method do
+        wsse.timestamp = true
+      end
+
+   or by setting `Savon::WSSE#created_at` or `Savon::WSSE#expires_at`:
+
+      client.request :some_method do
+        wsse.created_at = Time.now
+        wsse.expires_at = Time.now + 60
+      end
+
+  You can also add custom tags to the WSSE header ([issue #69](https://github.com/rubiii/savon/issues/69)):
+
+      client.request :some_method do
+        wsse["wsse:Security"]["wsse:UsernameToken"] = { "Organization" => "ACME", "Domain" => "acme.com" }
+      end
 
 ## 0.8.1 (2010-12-22)
 
