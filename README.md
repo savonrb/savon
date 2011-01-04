@@ -3,7 +3,7 @@ Savon
 
 Heavy metal Ruby SOAP client
 
-[Guide](http://rubiii.github.com/savon) | [Rubydoc](http://rubydoc.info/gems/savon) | [Wishlist](http://savon.uservoice.com) | [Bugs](http://github.com/rubiii/savon/issues)
+[Guide](http://rubiii.github.com/savon) | [Rubydoc](http://rubydoc.info/gems/savon) | [Google Group](http://groups.google.com/group/savon-soap) | [Wishlist](http://savon.uservoice.com) | [Bugs](http://github.com/rubiii/savon/issues)
 
 Installation
 ------------
