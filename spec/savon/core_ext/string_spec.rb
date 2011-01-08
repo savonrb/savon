@@ -25,14 +25,6 @@ describe String do
     end
   end
 
-  describe "ends_with?" do
-    it "should return whether it ends with a given suffix" do
-      "authenticate!".ends_with?("!").should be_true
-      "authenticate".ends_with?("cate").should be_true
-      "authenticate".ends_with?("?").should be_false
-    end
-  end
-
   describe "strip_namespace" do
     it "strips the namespace from a namespaced String" do
       "ns:customer".strip_namespace.should == "customer"
