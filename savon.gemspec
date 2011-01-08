@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
 
   s.add_dependency "builder", ">= 2.1.2"
   s.add_dependency "crack", "~> 0.1.8"
-  s.add_dependency "httpi", ">= 0.7.5"
-  s.add_dependency "gyoku", ">= 0.1.1"
+  s.add_dependency "httpi", ">= 0.7.8"
+  s.add_dependency "gyoku", ">= 0.2.0"
 
   s.add_development_dependency "rspec", "~> 2.4.0"
   s.add_development_dependency "autotest"
