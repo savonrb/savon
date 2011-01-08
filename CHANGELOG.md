@@ -1,3 +1,8 @@
+## 0.8.3 (UPCOMING)
+
+* Moved implementation of `Savon::SOAP::Response#to_array` to a class method at `Savon::SOAP::XML.to_array`
+  ([05a7d3](https://github.com/rubiii/savon/commit/05a7d3)).
+
 ## 0.8.2 (2010-01-04)
 
 * Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4))
