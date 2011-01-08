@@ -124,25 +124,9 @@ describe Savon::SOAP::Response do
   end
 
   describe "#to_array" do
-    let(:response) { soap_response }
-
-    context "when the given path exists" do
-      it "should return an Array containing the path value" do
-        response.to_array(:authenticate_response, :return).should ==
-          [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
-      end
-    end
-
-    context "when the given path returns nil" do
-      it "should return an empty Array" do
-        response.to_array(:authenticate_response, :undefined).should == []
-      end
-    end
-
-    context "when the given path does not exist at all" do
-      it "should return an empty Array" do
-        response.to_array(:authenticate_response, :some, :wrong, :path).should == []
-      end
+    it "should delegate to Savon::SOAP::XML.to_array" do
+      Savon::SOAP::XML.expects(:to_array).with(soap_response.to_hash, :authenticate_response, :return)
+      soap_response.to_array :authenticate_response, :return
     end
   end
 

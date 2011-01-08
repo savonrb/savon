@@ -31,6 +31,29 @@ describe Savon::SOAP::XML do
     end
   end
 
+  describe ".to_array" do
+    let(:response_hash) { Fixture.response_hash :authentication }
+
+    context "when the given path exists" do
+      it "should return an Array containing the path value" do
+        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :return).should ==
+          [response_hash[:authenticate_response][:return]]
+      end
+    end
+
+    context "when the given path returns nil" do
+      it "should return an empty Array" do
+        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :undefined).should == []
+      end
+    end
+
+    context "when the given path does not exist at all" do
+      it "should return an empty Array" do
+        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :some, :wrong, :path).should == []
+      end
+    end
+  end
+
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
       xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1

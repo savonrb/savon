@@ -20,8 +20,23 @@ module Savon
         "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
       }
 
+      # Converts the given SOAP response +xml+ into a Hash.
       def self.to_hash(xml)
         (Crack::XML.parse(xml) rescue {}).find_soap_body
+      end
+
+      # Expects a SOAP response XML or Hash, traverses it for a given +path+ of Hash keys
+      # and returns the value as an Array. Defaults to return an empty Array in case the
+      # path does not exist or returns nil.
+      def self.to_array(object, *path)
+        hash = object.kind_of?(Hash) ? object : to_hash(object)
+        
+        result = path.inject hash do |memo, key|
+          return [] unless memo[key]
+          memo[key]
+        end
+        
+        result.kind_of?(Array) ? result.compact : [result].compact
       end
 
       # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.

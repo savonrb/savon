@@ -45,19 +45,12 @@ module Savon
 
       # Returns the SOAP response body as a Hash.
       def to_hash
-        @hash ||= Savon::SOAP::XML.to_hash to_xml
+        @hash ||= Savon::SOAP::XML.to_hash http.body
       end
 
-      # Traverses the SOAP response Hash for a given +path+ of Hash keys
-      # and returns the value as an Array. Defaults to return an empty Array
-      # in case the path does not exist or returns nil.
+      # Returns the SOAP response body as an Array.
       def to_array(*path)
-        value = path.inject to_hash do |memo, key|
-          return [] unless memo[key]
-          memo[key]
-        end
-        
-        value.kind_of?(Array) ? value.compact : [value].compact
+        Savon::SOAP::XML.to_array to_hash, *path
       end
 
       # Returns the SOAP response XML.
