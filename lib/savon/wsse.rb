@@ -86,7 +86,7 @@ module Savon
           "wsse:Username" => username,
           "wsse:Nonce" => nonce,
           "wsu:Created" => timestamp,
-          "wsse:Password" => password_value,
+          "wsse:Password" => digest_password,
           :attributes! => { "wsse:Password" => { "Type" => PasswordDigestURI } }
       else
         wsse_security "UsernameToken",
@@ -115,9 +115,7 @@ module Savon
     end
 
     # Returns the WSSE password, encrypted for digest authentication.
-    def password_value
-      raise "internal error: digest only" unless digest?
-
+    def digest_password
       token = nonce + timestamp + password
       Base64.encode64(Digest::SHA1.hexdigest(token)).chomp!
     end
