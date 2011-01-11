@@ -1,11 +1,13 @@
-## 0.8.3 (UPCOMING)
+## 0.8.3 (2010-01-11)
 
 * Moved implementation of `Savon::SOAP::Response#to_array` to a class method at `Savon::SOAP::XML.to_array`
   ([05a7d3](https://github.com/rubiii/savon/commit/05a7d3)).
 
+* Fix for [issue #131](https://github.com/rubiii/savon/issues/131) ([4e57b3](https://github.com/rubiii/savon/commit/4e57b3)).
+
 ## 0.8.2 (2010-01-04)
 
-* Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4))
+* Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4)).
 
 * Changed `Savon::WSSE` to be based on a Hash instead of relying on builder ([4cebc3](https://github.com/rubiii/savon/commit/4cebc3)).
 
