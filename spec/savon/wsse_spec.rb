@@ -118,12 +118,12 @@ describe Savon::WSSE do
         wsse.to_xml.should include("username", "password")
       end
 
-      it "should contain a wsse:Nonce tag" do
-        wsse.to_xml.should match(/<wsse:Nonce>\w+<\/wsse:Nonce>/)
+      it "should not contain a wsse:Nonce tag" do
+        wsse.to_xml.should_not match(/<wsse:Nonce>.*<\/wsse:Nonce>/)
       end
 
-      it "should contain a wsu:Created tag" do
-        wsse.to_xml.should match(/<wsu:Created>#{Savon::SOAP::DateTimeRegexp}.+<\/wsu:Created>/)
+      it "should not contain a wsu:Created tag" do
+        wsse.to_xml.should_not match(/<wsu:Created>.*<\/wsu:Created>/)
       end
 
       it "should contain the PasswordText type attribute" do

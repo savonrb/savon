@@ -81,12 +81,19 @@ module Savon
 
     # Returns a Hash containing wsse:UsernameToken details.
     def wsse_username_token
-      wsse_security "UsernameToken",
-        "wsse:Username" => username,
-        "wsse:Nonce" => nonce,
-        "wsu:Created" => timestamp,
-        "wsse:Password" => password_value,
-        :attributes! => { "wsse:Password" => { "Type" => password_type } }
+      if digest?
+        wsse_security "UsernameToken",
+          "wsse:Username" => username,
+          "wsse:Nonce" => nonce,
+          "wsu:Created" => timestamp,
+          "wsse:Password" => password_value,
+          :attributes! => { "wsse:Password" => { "Type" => PasswordDigestURI } }
+      else
+        wsse_security "UsernameToken",
+          "wsse:Username" => username,
+          "wsse:Password" => password,
+          :attributes! => { "wsse:Password" => { "Type" => PasswordTextURI } }
+      end
     end
 
     # Returns a Hash containing wsse:Timestamp details.
@@ -107,17 +114,12 @@ module Savon
       }
     end
 
-    # Returns the WSSE password. Encrypts the password for digest authentication.
+    # Returns the WSSE password, encrypted for digest authentication.
     def password_value
-      return password unless digest?
+      raise "internal error: digest only" unless digest?
 
       token = nonce + timestamp + password
       Base64.encode64(Digest::SHA1.hexdigest(token)).chomp!
-    end
-
-    # Returns the URI for the "wsse:Password/@Type" attribute.
-    def password_type
-      digest? ? PasswordDigestURI : PasswordTextURI
     end
 
     # Returns a WSSE nonce.
