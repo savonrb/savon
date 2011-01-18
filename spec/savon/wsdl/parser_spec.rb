@@ -61,6 +61,15 @@ describe Savon::WSDL::Parser do
     end
   end
 
+  context "with two_bindings.xml" do
+    let(:parser) { new_parser :two_bindings }
+
+    it "should merge operations from all binding sections (until we have an example where it makes sense to do otherwise)" do
+      parser.operations.keys.map(&:to_s).sort.should ==
+        %w{post post11only post12only}
+    end
+  end
+
   RSpec::Matchers.define :match_operations do |expected|
     match do |actual|
       actual.should have(expected.keys.size).items

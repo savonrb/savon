@@ -66,6 +66,8 @@ module Savon
           # no soapAction attribute found till now
           operation_from tag, "soapAction" => @input
         end
+
+        @section = :definitions if Sections.include?(tag) && depth <= 1
       end
 
       # Stores available operations from a given tag +name+ and +attrs+.
