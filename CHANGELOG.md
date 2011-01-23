@@ -1,6 +1,7 @@
 ## 0.8.4 (UPCOMING)
 
-* Fix for [issue #134](https://github.com/rubiii/savon/issues/134) ([4f9847](https://github.com/rubiii/savon/commit/4f9847)).
+* Fix for issues [issue #130](https://github.com/rubiii/savon/issues/130) and [#134](https://github.com/rubiii/savon/issues/134)
+  ([4f9847](https://github.com/rubiii/savon/commit/4f9847)).
 
 ## 0.8.3 (2010-01-11)
 
