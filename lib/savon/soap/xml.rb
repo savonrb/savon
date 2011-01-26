@@ -135,7 +135,7 @@ module Savon
       def to_xml
         @xml ||= tag(builder, :Envelope, complete_namespaces) do |xml|
           tag(xml, :Header) { xml << header_for_xml } unless header_for_xml.empty?
-          tag(xml, :Body) { xml.tag!(*input) { xml << body_to_xml } }
+          input.nil? ? tag(xml, :Body) : tag(xml, :Body) { xml.tag!(*input) { xml << body_to_xml } }
         end
       end
 
