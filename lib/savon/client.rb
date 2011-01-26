@@ -69,12 +69,12 @@ module Savon
     #   client.request(:get_user, "xmlns:wsdl" => "http://example.com")
     def request(*args, &block)
       raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
-      
+
       self.soap = SOAP::XML.new
       preconfigure extract_options(args)
       process &block if block
       soap.wsse = wsse
-      
+
       response = SOAP::Request.new(http, soap).response
       set_cookie response.http.headers
       response
@@ -99,7 +99,7 @@ module Savon
       attributes = Hash === args.last ? args.pop : {}
       namespace = args.size > 1 ? args.shift.to_sym : nil
       input = args.first
-      
+
       [namespace, input, attributes]
     end
 
@@ -108,8 +108,9 @@ module Savon
       soap.endpoint = wsdl.endpoint
       soap.namespace_identifier = options[0]
       soap.namespace = wsdl.namespace
+      soap.element_form_default = wsdl.element_form_default if wsdl.present?
       soap.body = options[2].delete(:body) if options[2][:body]
-      
+
       set_soap_action options[1]
       set_soap_input *options
     end

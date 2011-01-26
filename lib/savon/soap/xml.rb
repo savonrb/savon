@@ -98,6 +98,15 @@ module Savon
         @namespace_identifier ||= :wsdl
       end
 
+      # Returns whether all local elements should be namespaced. Might be set to :qualified,
+      # but defaults to :unqualified.
+      def element_form_default
+        @element_form_default ||= :unqualified
+      end
+
+      # Sets whether all local elements should be namespaced.
+      attr_writer :element_form_default
+
       # Accessor for the default namespace URI.
       attr_accessor :namespace
 
@@ -159,7 +168,8 @@ module Savon
 
       # Returns the SOAP body as an XML String.
       def body_to_xml
-        body.kind_of?(Hash) ? Gyoku.xml(body) : body.to_s
+        return body.to_s unless body.kind_of? Hash
+        Gyoku.xml body, :element_form_default => element_form_default, :namespace => namespace_identifier
       end
 
     end

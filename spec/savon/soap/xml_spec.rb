@@ -257,6 +257,23 @@ describe Savon::SOAP::XML do
       end
     end
 
+    context "with :element_form_default set to :qualified and a :namespace" do
+      let :xml do
+        Savon::SOAP::XML.new Endpoint.soap, :authenticate, :user => { :id => 1, ":noNamespace" => true }
+      end
+
+      it "should namespace the default elements" do
+        xml.element_form_default = :qualified
+        xml.namespace_identifier = :wsdl
+
+        xml.to_xml.should include(
+          "<wsdl:user>",
+          "<wsdl:id>1</wsdl:id>",
+          "<noNamespace>true</noNamespace>"
+        )
+      end
+    end
+
     context "with WSSE authentication" do
       it "should containg a SOAP header with WSSE authentication details" do
         xml.wsse = Savon::WSSE.new

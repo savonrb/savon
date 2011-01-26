@@ -64,11 +64,17 @@ describe Savon::WSDL::Document do
     let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new, Endpoint.wsdl }
 
     before do
-      response = HTTPI::Response.new(200, {}, Fixture.wsdl(:authentication))
+      response = HTTPI::Response.new 200, {}, Fixture.wsdl(:authentication)
       HTTPI.stubs(:get).returns(response)
     end
 
     it_should_behave_like "a WSDL document"
+
+    describe "#element_form_default" do
+      it "should return :unqualified" do
+        wsdl.element_form_default.should == :unqualified
+      end
+    end
   end
 
   context "with a local document" do
@@ -104,6 +110,21 @@ describe Savon::WSDL::Document do
     describe "#document" do
       it "should raise an ArgumentError" do
         lambda { wsdl.document }.should raise_error(ArgumentError)
+      end
+    end
+  end
+
+  context "with a WSDL document containing elementFormDefault='qualified'" do
+    let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new, Endpoint.wsdl }
+
+    before do
+      response = HTTPI::Response.new 200, {}, Fixture.wsdl(:geotrust)
+      HTTPI.stubs(:get).returns(response)
+    end
+
+    describe "#element_form_default" do
+      it "should return :qualified" do
+        wsdl.element_form_default.should == :qualified
       end
     end
   end

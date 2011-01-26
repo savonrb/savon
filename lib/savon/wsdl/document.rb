@@ -61,6 +61,11 @@ module Savon
         @operations ||= parser.operations
       end
 
+      # Returns the elementFormDefault value.
+      def element_form_default
+        @element_form_default ||= parser.element_form_default
+      end
+
       # Sets the location of the WSDL document to use. This can either be a URL
       # or a path to a local file.
       attr_writer :document

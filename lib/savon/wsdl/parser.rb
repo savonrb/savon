@@ -13,7 +13,10 @@ module Savon
       Sections = %w(definitions types message portType binding service)
 
       def initialize
-        @path, @operations, @namespaces = [], {}, {}
+        @path = []
+        @operations = {}
+        @namespaces = {}
+        @element_form_default = :unqualified
       end
 
       # Returns the namespace URI.
@@ -25,6 +28,9 @@ module Savon
       # Returns the SOAP endpoint.
       attr_reader :endpoint
 
+      # Returns the elementFormDefault value.
+      attr_reader :element_form_default
+
       # Hook method called when the stream parser encounters a starting tag.
       def tag_start(tag, attrs)
         # read xml namespaces if root element
@@ -32,6 +38,10 @@ module Savon
 
         tag, namespace = tag.split(":").reverse
         @path << tag
+
+        if @section == :types && tag == "schema"
+          @element_form_default = attrs["elementFormDefault"].to_sym if attrs["elementFormDefault"]
+        end
 
         if @section == :binding && tag == "binding"
           # ensure that we are in an wsdl/soap namespace

@@ -82,14 +82,14 @@ describe Savon::Client do
       it "should set the target namespace with the default identifier" do
         namespace = 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
-        
+
         client.request :get_user
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
         namespace = "http://v1_0.ws.auth.order.example.com/"
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
-        
+
         client.request(:get_user) { soap.namespace = nil }
       end
     end
@@ -114,14 +114,14 @@ describe Savon::Client do
       it "should set the target namespace with the given identifier" do
         namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
-        
+
         client.request :v1, :get_user
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
         namespace = "http://v1_0.ws.auth.order.example.com/"
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
-        
+
         client.request(:v1, :get_user) { soap.namespace = nil }
       end
     end
@@ -190,7 +190,7 @@ describe Savon::Client do
       client.http.headers.expects(:[]=).with("Cookie", anything).never
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
       client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
-      
+
       client.request :authenticate
     end
   end
@@ -205,7 +205,7 @@ describe Savon::Client do
       client.http.headers.expects(:[]=).with("Cookie", "some-cookie")
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
       client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
-      
+
       client.request :authenticate
     end
   end
@@ -220,7 +220,7 @@ describe Savon::Client do
 
     it "adds a SOAPAction header containing the SOAP action name" do
       HTTPI.stubs(:post).returns(new_response)
-      
+
       client.request :authenticate do
         http.headers["SOAPAction"].should == %{"authenticate"}
       end
@@ -229,7 +229,7 @@ describe Savon::Client do
     it "should execute SOAP requests and return the response" do
       HTTPI.expects(:post).returns(new_response)
       response = client.request(:authenticate)
-      
+
       response.should be_a(Savon::SOAP::Response)
       response.to_xml.should == Fixture.response(:authentication)
     end
@@ -246,16 +246,23 @@ describe Savon::Client do
 
     it "adds a SOAPAction header containing the SOAP action name" do
       HTTPI.stubs(:post).returns(new_response)
-      
+
       client.request :authenticate do
         http.headers["SOAPAction"].should == %{"authenticate"}
       end
     end
 
+    it "should get #element_form_default from the WSDL" do
+      HTTPI.stubs(:post).returns(new_response)
+      Savon::WSDL::Document.any_instance.expects(:element_form_default).returns(:qualified)
+
+      client.request :authenticate
+    end
+
     it "should execute SOAP requests and return the response" do
       HTTPI.expects(:post).returns(new_response)
       response = client.request(:authenticate)
-      
+
       response.should be_a(Savon::SOAP::Response)
       response.to_xml.should == Fixture.response(:authentication)
     end
@@ -277,16 +284,23 @@ describe Savon::Client do
 
     it "adds a SOAPAction header containing the SOAP action name" do
       HTTPI.stubs(:post).returns(new_response)
-      
+
       client.request :authenticate do
         http.headers["SOAPAction"].should == %{"authenticate"}
       end
     end
 
+    it "should not get #element_form_default from the WSDL" do
+      HTTPI.stubs(:post).returns(new_response)
+      Savon::WSDL::Document.any_instance.expects(:element_form_default).never
+
+      client.request :authenticate
+    end
+
     it "should execute SOAP requests and return the response" do
       HTTPI.expects(:post).returns(new_response)
       response = client.request(:authenticate)
-      
+
       response.should be_a(Savon::SOAP::Response)
       response.to_xml.should == Fixture.response(:authentication)
     end
@@ -325,7 +339,7 @@ describe Savon::Client do
   def new_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-    
+
     HTTPI::Response.new response[:code], response[:headers], response[:body]
   end
 
