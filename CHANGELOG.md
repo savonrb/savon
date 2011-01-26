@@ -1,16 +1,20 @@
-## 0.8.4 (UPCOMING)
+## 0.8.4 (2011-01-26)
 
 * Fix for issues [issue #130](https://github.com/rubiii/savon/issues/130) and [#134](https://github.com/rubiii/savon/issues/134)
   ([4f9847](https://github.com/rubiii/savon/commit/4f9847)).
 
-## 0.8.3 (2010-01-11)
+* Fix for [issue #91](https://github.com/rubiii/savon/issues/91) ([5c8ec1](https://github.com/rubiii/savon/commit/5c8ec1)).
+
+* Fix for [issue #135](https://github.com/rubiii/savon/issues/135) ([c9261d](https://github.com/rubiii/savon/commit/c9261d)).
+
+## 0.8.3 (2011-01-11)
 
 * Moved implementation of `Savon::SOAP::Response#to_array` to a class method at `Savon::SOAP::XML.to_array`
   ([05a7d3](https://github.com/rubiii/savon/commit/05a7d3)).
 
 * Fix for [issue #131](https://github.com/rubiii/savon/issues/131) ([4e57b3](https://github.com/rubiii/savon/commit/4e57b3)).
 
-## 0.8.2 (2010-01-04)
+## 0.8.2 (2011-01-04)
 
 * Fix for [issue #127](https://github.com/rubiii/savon/issues/127) ([0eb3da](https://github.com/rubiii/savon/commit/0eb3da4)).
 
