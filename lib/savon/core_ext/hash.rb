@@ -18,12 +18,16 @@ module Savon
         self
       end unless defined? deep_merge!
 
-      # Returns the values from the soap:Body element or an empty Hash in case the soap:Body tag could
+      # Returns the values from the soap:Header element or an empty Hash in case the element could
+      # not be found.
+      def find_soap_header
+        find_soap_element /.+:Header/
+      end
+
+      # Returns the values from the soap:Body element or an empty Hash in case the element could
       # not be found.
       def find_soap_body
-        envelope = self[keys.first] || {}
-        body_key = envelope.keys.find { |key| /.+:Body/ =~ key } rescue nil
-        body_key ? envelope[body_key].map_soap_response : {}
+        find_soap_element /.+:Body/
       end
 
       # Maps keys and values of a Hash created from SOAP response XML to more convenient Ruby Objects.
@@ -34,13 +38,13 @@ module Savon
             when ::Array  then value.map { |val| val.map_soap_response rescue val }
             when ::String then value.map_soap_response
           end
-          
+
           new_key = if Savon.strip_namespaces?
             key.strip_namespace.snakecase.to_sym
           else
             key.snakecase
           end
-          
+
           if hash[new_key] # key already exists, value should be added as an Array
             hash[new_key] = [hash[new_key], value].flatten
             result = hash
@@ -49,6 +53,14 @@ module Savon
           end
           result
         end
+      end
+
+    private
+
+      def find_soap_element(element)
+        envelope = self[keys.first] || {}
+        element_key = envelope.keys.find { |key| element =~ key } rescue nil
+        element_key ? envelope[element_key].map_soap_response : {}
       end
 
     end

@@ -116,6 +116,13 @@ describe Savon::SOAP::Response do
     end
   end
 
+  describe "#header" do
+    it "should return the SOAP response header as a Hash" do
+      response = soap_response :body => Fixture.response(:header)
+      response.header.should include(:session_number => "ABCD1234")
+    end
+  end
+
   describe "#to_hash" do
     it "should return the SOAP response body as a Hash" do
       soap_response.to_hash[:authenticate_response][:return].should ==
@@ -127,6 +134,13 @@ describe Savon::SOAP::Response do
     it "should delegate to Savon::SOAP::XML.to_array" do
       Savon::SOAP::XML.expects(:to_array).with(soap_response.to_hash, :authenticate_response, :return)
       soap_response.to_array :authenticate_response, :return
+    end
+  end
+
+  describe "#basic_hash" do
+    it "should return the complete SOAP response XML as a Hash" do
+      response = soap_response :body => Fixture.response(:header)
+      response.basic_hash["soap:Envelope"]["soap:Header"]["SessionNumber"].should == "ABCD1234"
     end
   end
 

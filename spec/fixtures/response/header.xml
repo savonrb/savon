@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+  <soap:Header xmlns="http://webservices.somewhere.com/definitions">
+    <SessionNumber>ABCD1234</SessionNumber>
+  </soap:Header>
+  <soap:Body>
+    <AuthenticateReply xmlns="http://xml.somewhere.com/ABCD">
+      <processStatus>
+        <statusCode>P</statusCode>
+      </processStatus>
+    </AuthenticateReply>
+  </soap:Body>
+</soap:Envelope>

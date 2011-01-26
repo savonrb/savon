@@ -6,12 +6,24 @@ describe Hash do
     it "should recursively merge two Hashes" do
       hash = { :one => 1, "two" => { "three" => 3 } }
       other_hash = { :four => 4, "two" => { "three" => "merge", :five => 5 } }
-      
+
       hash.merge!(other_hash).should == { :one => 1, :four => 4, "two" => { "three" => "merge", :five => 5 } }
     end
   end
 
-  describe "find_soap_body" do
+  describe "#find_soap_header" do
+    it "should return the content from the 'soap:Header' element" do
+      soap_header = { "soap:Envelope" => { "soap:Header" => "content" } }
+      soap_header.find_soap_header.should == "content"
+    end
+
+    it "should return an empty Hash in case the 'soap:Header' element could not be found" do
+      soap_header = { "some_hash" => "content" }
+      soap_header.find_soap_header.should == {}
+    end
+  end
+
+  describe "#find_soap_body" do
     it "should return the content from the 'soap:Body' element" do
       soap_body = { "soap:Envelope" => { "soap:Body" => "content" } }
       soap_body.find_soap_body.should == "content"
@@ -23,7 +35,7 @@ describe Hash do
     end
   end
 
-  describe "map_soap_response" do
+  describe "#map_soap_response" do
     it "should convert Hash key Strings to snake_case Symbols" do
       soap_response = { "userResponse" => { "accountStatus" => "active" } }
       result = { :user_response => { :account_status => "active" } }
@@ -95,13 +107,13 @@ describe Hash do
           "ns11:case" => { "ns11:name" => "another_name" }
         }
       }
-      
+
       result = {
         :history => {
           :case => [{ :name => "a_name" }, { :name => "another_name" }]
         }
       }
-      
+
       soap_response.map_soap_response.should == result
     end
   end

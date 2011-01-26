@@ -18,16 +18,23 @@ describe Savon::SOAP::XML do
 
     it "should return a Hash for a SOAP multiRef response" do
       hash = Savon::SOAP::XML.to_hash Fixture.response(:multi_ref)
-      
+
       hash[:list_response].should be_a(Hash)
       hash[:multi_ref].should be_an(Array)
     end
 
     it "should add existing namespaced elements as an array" do
       hash = Savon::SOAP::XML.to_hash Fixture.response(:list)
-      
+
       hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
       hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+    end
+  end
+
+  describe ".parse" do
+    it "should convert the given XML into a Hash" do
+      hash = Savon::SOAP::XML.parse Fixture.response(:list)
+      hash["soapenv:Envelope"]["soapenv:Body"].should be_a(Hash)
     end
   end
 
@@ -57,7 +64,7 @@ describe Savon::SOAP::XML do
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
       xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
-      
+
       xml.endpoint.should == Endpoint.soap
       xml.input.should == :authentication
       xml.body.should == { :id => 1 }
@@ -86,7 +93,7 @@ describe Savon::SOAP::XML do
     it "should default to the global default" do
       Savon.soap_version = 2
       xml.version.should == 2
-      
+
       reset_soap_version
     end
 
@@ -224,7 +231,7 @@ describe Savon::SOAP::XML do
     context "with the global SOAP version set to 1.2" do
       it "should contain the namespace for SOAP 1.2" do
         Savon.soap_version = 2
-        
+
         uri = "http://www.w3.org/2003/05/soap-envelope"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
         reset_soap_version
@@ -235,7 +242,7 @@ describe Savon::SOAP::XML do
       it "should contain the namespace for the request SOAP version" do
         Savon.soap_version = 2
         xml.version = 1
-        
+
         uri = "http://schemas.xmlsoap.org/soap/envelope/"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
         reset_soap_version
