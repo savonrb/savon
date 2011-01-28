@@ -32,6 +32,11 @@ describe Savon::SOAP::Fault do
     it "should return false unless the HTTP response contains a SOAP fault" do
       no_fault.should_not be_present
     end
+
+    it "should return false if the HTTP response code is not 500" do
+      fault = Savon::SOAP::Fault.new new_response(:code => 200, :body => Fixture.response(:soap_fault))
+      fault.should_not be_present
+    end
   end
 
   [:message, :to_s].each do |method|
@@ -80,7 +85,7 @@ describe Savon::SOAP::Fault do
   end
 
   def new_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
+    defaults = { :code => 500, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
     
     HTTPI::Response.new response[:code], response[:headers], response[:body]
