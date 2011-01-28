@@ -182,10 +182,10 @@ module Savon
       # BEGIN multipart methods
     public
       # Use sort functionality in  Mail::Body.sort!() to order parts
-      # An array of mime types is expected 
+      # An array of mime types is expected
       # E.g. this makes the xml appear before an attached image: ["text/xml", "image/jpeg"]
       attr_accessor :parts_sort_order
-      
+
       # adds a Part object to the current SOAP "message"
       # Parts are really attachments
       def add_part(part)
@@ -214,6 +214,7 @@ module Savon
           add_content_transfer_encoding
           body soap_body
         end
+        soap_message.add_content_id "<savon_soap_xml_part>"
         @request_message.add_part(soap_message)
         @parts.each do |part|
           @request_message.add_part(part)
@@ -222,7 +223,7 @@ module Savon
         @request_message
       end
       # END multipart methods
-      
+
     end
   end
 end
