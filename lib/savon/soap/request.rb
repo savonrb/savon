@@ -34,7 +34,6 @@ module Savon
           request_message = soap.request_message
           # takes relevant http headers from the "Mail" message and makes them Net::HTTP compatible
           request.headers["Content-Type"] ||= ContentType[soap.version]
-          request.headers.delete "SOAPAction"
           request_message.header.fields.each do |field|
             request.headers[field.name] = field.to_s
           end
