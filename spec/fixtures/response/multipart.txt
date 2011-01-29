@@ -1,0 +1,104 @@
+
+----==_mimepart_4d416ae62fd32_201a8043814c4724
+Date: Thu, 27 Jan 2011 13:53:58 +0100
+Message-ID: <4d416ae631391_201a8043814c482c@Martin-iMac.local.mail>
+Mime-Version: 1.0
+Content-Type: text/xml;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
+content-id: soap_xml_part
+
+<?xml version="1.0" encoding="UTF-8"?><soapenv:Envelope xmlns:wsdl="http://www.3gpp.org/ftp/Specs/archive/23_series/23.140/schema/REL-5-MM7-1-2" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"><soapenv:Header><ns1:TransactionID soapenv:actor="" soapenv:mustUnderstand="1" xsi:type="xsd:string" xmlns:ns1="http://www.3gpp.org/ftp/Specs/archive/23_series/23.140/schema/REL-5-MM7-1-2">2011012713535811111111111</ns1:TransactionID></soapenv:Header><soapenv:Body><SubmitReq xmlns="http://www.3gpp.org/ftp/Specs/archive/23_series/23.140/schema/REL-5-MM7-1-2"><MM7Version>5.3.0</MM7Version><SenderIdentification><VASPID>messaging</VASPID><VASID>ADM</VASID><SenderAddress><ShortCode>1111</ShortCode></SenderAddress></SenderIdentification><Recipients><To><Number>11111111111</Number></To></Recipients><ServiceCode>1</ServiceCode><MessageClass>Personal</MessageClass><ExpiryDate>2011-01-28T13:53:58Z</ExpiryDate><DeliveryReport>false</DeliveryReport><ReadReply>false</ReadReply><Priority>Normal</Priority><Subject>Test MMS via Savon</Subject><ChargedParty>Sender</ChargedParty><Content href="cid:attachment_1" allowAdaptations="true"/></SubmitReq></soapenv:Body></soapenv:Envelope>
+
+----==_mimepart_4d416ae62fd32_201a8043814c4724
+Date: Thu, 27 Jan 2011 13:53:58 +0100
+Message-ID: <4d416ae63586d_201a8043814c518@Martin-iMac.local.mail>
+Mime-Version: 1.0
+Content-Type: multipart/mixed;
+ boundary="--==_mimepart_4d416ae628621_201a8043814c46ea";
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+content-id: <attachment_1>
+
+
+
+----==_mimepart_4d416ae628621_201a8043814c46ea
+Date: Thu, 27 Jan 2011 13:53:58 +0100
+Message-ID: <4d416ae635039_201a8043814c507d@Martin-iMac.local.mail>
+Mime-Version: 1.0
+Content-Type: application/smil;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+content-id: smil_1.smil
+
+<smil>
+<head>
+<layout>
+<root-layout width="240" height="320"/>
+<region id="Image" top="0%" left="0%" height="70%" width="100%" fit="meet"/>
+<region id="Text" top="70%" left="0%" height="30%" width="100%" fit="scroll"/>
+</layout>
+</head>
+<body>
+<par dur="5s"><img src="cid:github_logo.gif" region="Image"></img><text src="cid:text_0.txt" region="Text"><param name="hAlign" value="right"/><param name="textsize" value="small"/></text></par>
+</body>
+</smil>
+
+----==_mimepart_4d416ae628621_201a8043814c46ea
+Date: Thu, 27 Jan 2011 13:53:58 +0100
+Mime-Version: 1.0
+Content-Type: image/gif;
+ charset=UTF-8;
+ filename=mobile_baby_logo.gif
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment;
+ filename=github_logo.gif
+content-id: github_logo.gif
+
+R0lGODlhZQAtALMAAPz8/MTExFBQUPn5+ZaWlgAAAPf393x8fNTU1LKysqKi
+ouXl5YuLiyUlJTg4OGNjYyH5BAAAAAAALAAAAABlAC0AAAT/EMhJq7046827
+/xLSFIUDAgKpnl+gkgf7GW8JHrXcLXWid4xaAfHBvX6cWgC5Mb6WHieJqVFS
+M8EaMZq7XqxeC+9lKnbDFDCaglA5BhPDYT5XWKSFdfqpFxssNTEVeH0SaoUZ
+gXdneoeIXy+CFISFjh4JBw4ODwwLFAkCEnRzBAALB1ludFCECwx0WxQBowdQ
+E7SlAFaYdXAZCUIkDw8OK7ovDwAuwSqCeA9CDp4TCop7boYvKUIMGNXMQhIj
+zcrgMKLmL7HLKnYUxdjH6QWhFd/zUwDw5+zMzvgFGkzoV8CWhH025M3zMWEA
+QGMIYxAU8g+gIIIG9ZHJBtAXAAI1/5KZGqeigciIAAwEIPhgZYBpeEgI2PZC
+YDk+7zYqLPmAZLsJNANSGKOCoUZyE6xNCumrTY+bKjIiLCPEFjSdR4VV8CkJ
+ZdJIi45QuMfP0VSOJDL6zHMQWQWvWQtI2jkXndhrJExgfKvT0VUVWxDa/Fp0
+Aly6YY3lxLZ3cV60BQeBwePuY40/bZFCrguAkmMbjQ33xTkBGE6iJR2srZf5
+HGHXS++KZmx2dNQKqdJO+GtuWmu5eIFLlv1bb+14jvAYXCuk8u+5Sm8xKg6V
+hPO4VEn/LuARwICYhflqRjxc8ezHO0WeT3gIdT4KQfMywCwe9k7W0oljh1zA
+t2nkNU0zAP9CBYg0wIHuPXDgggweGBGDaxEwQAACBPBdDQ0OSMaB8cmlAG95
+HRjMAwcwZyGDBGWY4YMLEvjEhS+suOEAZKXzhkMA3YhiDQqoyCCLB+amBIwq
+yOjGgg/d+NCJDLon1wI+athMk+BYiIeRRR44ETNK4tOjiiCqIMB8DTLFYI1R
+EUlChkKcGUwDPr2RYDBfqigkRT9qoomCDVJIBgEGDECMnjou2AChhQ6wADFw
+CtDjoHtOiOiEAujZiY//pSNAlJx26umnoIbqFEAShmrqqaiaSqACCGgJ4qYD
+IKCaAwkoWuKhpdKoWgMEgNLqdw3UOoCvGRKwa60I9HSohQgIMMz/Aa02mwAB
+DZzY7AEDyAEnrQz2kKEUN6qWCQMDHqosttSatAm1J6rGJ7sNMgAnMQQssK0A
+cCYggiZwIiACAdQ6EGgAJg2ArwO3CotjlvHO2ACsA1AL6wKqidAAlBPCSzCc
+UMK7oL3SZJtsA9gOe+i/Jjvwb7oKivBAAgXHWiGSL+S6YFCwziphT78OIG+J
+JR9Ibas9Udujxwcq0AC5hjbAIL4wlwo1rxLz6jLPPgox5koMEMj0yCb1xGC6
+vI7dQKsPG3BoxNWabfPaC/akdKlyU302vkoP47TBcO6t5jyBfgxniQr3VCLE
+bCOg9CYcD80gzEGXi3G5UTtYrd0IUDwvoeHDyquj2gB9KYKF+S67QMDlYjvL
+0O4+gO8BRr90oAGq9RiAAocvsKhJIkBr+MpnTzgvzCEDzaABHTa3oMVwkntr
+38juapLRDxvqANlMC9+3hPj2rTLz1RMMcNs+F/z8oZMv31M0ZDKIwAEP1IkJ
+J5OfTiLX0zI57bQAM6koAyRqlQE+FL9Ana5/CGIA1yZHogPND1CeWkDgUkXB
+ClowQxEAADs=
+
+
+----==_mimepart_4d416ae628621_201a8043814c46ea
+Date: Thu, 27 Jan 2011 13:53:58 +0100
+Message-ID: <4d416ae633ce8_201a8043814c49c7@Martin-iMac.local.mail>
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 7bit
+content-id: text_0.txt
+
+This is a test message from Github
+
+----==_mimepart_4d416ae628621_201a8043814c46ea--
+
+
+----==_mimepart_4d416ae62fd32_201a8043814c4724--
+

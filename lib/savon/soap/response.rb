@@ -1,4 +1,5 @@
 require "savon/soap/xml"
+require "savon/soap/part"
 require "savon/soap/fault"
 require "savon/http/error"
 
@@ -13,10 +14,13 @@ module Savon
       # Expects an <tt>HTTPI::Response</tt> and handles errors.
       def initialize(response)
         self.http = response
+        @parts = []
+        decode_multipart
         raise_errors if Savon.raise_errors?
       end
 
       attr_accessor :http
+      attr_accessor :parts
 
       # Returns whether the request was successful.
       def success?
@@ -74,6 +78,27 @@ module Savon
         raise soap_fault if soap_fault?
         raise http_error if http_error?
       end
+
+
+
+      # Decoding multipart responses
+      #
+      # response.to_xml will point to the first part, hopefully the SOAP part of the multipart
+      # All attachments are available in the response.parts array. Each is a Part from the mail gem. See the docs there for details but:
+      # response.parts[0].body is the contents
+      # response.parts[0].headers are the mime headers
+      # And you can do nesting:
+      # response.parts[0].parts[2].body
+      def decode_multipart
+        return unless self.http.headers["Content-Type"] =~
+            %r|\Amultipart/.*boundary=\"?([^\";,]+)\"?|n
+        boundry = "--#{$1}"
+        multipart = Savon::SOAP::Part.new(:headers => self.http.headers, :body => http.body)
+        multipart.body.split! $1
+        @parts = multipart.parts
+        http.body = parts.shift.body # I am not supporting the start header. SOAP should be the first part.
+      end
+
 
     end
   end
