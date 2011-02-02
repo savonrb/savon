@@ -82,6 +82,62 @@ describe Savon::WSDL::Parser do
     end
   end
 
+  context "with multiple_namespaces.xml" do
+    let(:parser) { new_parser :multiple_namespaces }
+
+    it "can list the messages" do
+      parser.messages.keys.sort.should == ["SaveSoapIn", "SaveSoapOut"]
+    end
+
+    it "can go from message to element" do
+      parser.messages["SaveSoapIn"].should == "Save"
+    end
+
+    it "have an entry in input_message for everything listed" do
+      parser.input_message.keys.should == ["Save"]
+    end
+
+    it "can go from an action to a message" do
+      parser.input_message["Save"].should == "SaveSoapIn"
+    end
+
+    it "can list the types" do
+      pending("not yet implemented")
+      parser.types.keys.sort.should == ["Article", "Save"]
+    end
+#<s:element name="Save">
+#                <s:complexType>
+#                    <s:sequence>
+#                        <s:element name="article" type="article:Article"/>
+#                    </s:sequence>
+#                </s:complexType>
+#            </s:element>
+#{"Save" => {:namespace => "http://example.com/actions", :article => {:namespace => "http://example.com/actions", :type => "article:Article"}}, 
+
+#        <s:schema elementFormDefault="qualified" targetNamespace="http://example.com/article">
+#            <s:complexType name="Article">
+#                <s:sequence>
+#                    <s:element minOccurs="0" name="Author" type="s:string"/>
+#                    <s:element minOccurs="0" name="Title" type="s:string"/>
+ #               </s:sequence>
+ #           </s:complexType>
+#        </s:schema>
+#{"Article" => {:namespace => "http://example.com/article", :author => {:namespace => same}, :title => {:namespace => same}}
+
+
+
+
+
+# Eventually might build up something like this (or might just use the
+# types hash above)
+#{"Save" => {"article" => {:namespace => "ns0", "title" => {:namespace => "ns1"}, "author" => {:namespace => "ns1"}}}
+
+  end
+
+  context "with something other than complexType/Sequence" do
+    it "should not mess with namespaces or try to parse types"
+  end
+
   RSpec::Matchers.define :match_operations do |expected|
     match do |actual|
       actual.should have(expected.keys.size).items

@@ -16,6 +16,9 @@ module Savon
         @path = []
         @operations = {}
         @namespaces = {}
+        @messages = {}
+        @input_message = {}
+        @types = {}
         @element_form_default = :unqualified
       end
 
@@ -24,6 +27,15 @@ module Savon
 
       # Returns the SOAP operations.
       attr_reader :operations
+
+      # Returns a map from the message name to its element
+      attr_reader :messages
+
+      # Returns a map from the action to its input message name
+      attr_reader :input_message
+
+      # Returns a map from a type name to a hash with type information
+      attr_reader :types
 
       # Returns the SOAP endpoint.
       attr_reader :endpoint
@@ -46,6 +58,22 @@ module Savon
         if @section == :binding && tag == "binding"
           # ensure that we are in an wsdl/soap namespace
           @section = nil unless @namespaces[namespace].starts_with? "http://schemas.xmlsoap.org/wsdl/soap"
+        end
+
+        if @section == :definitions && tag == "message"
+          @current_message = attrs["name"]
+        end
+
+        if @section == :message && tag == "part" && attrs["name"] == "parameters"
+          @messages[@current_message] = attrs["element"].strip_namespace
+        end
+
+        if @section == :portType && tag == "operation"
+          @current_action = attrs["name"]
+        end
+
+        if @section == :portType && tag == "input"
+          @input_message[@current_action] = attrs["message"].strip_namespace
         end
 
         @section = tag.to_sym if Sections.include?(tag) && depth <= 2

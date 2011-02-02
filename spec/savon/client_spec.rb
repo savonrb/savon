@@ -268,6 +268,26 @@ describe Savon::Client do
     end
   end
 
+  context "when the WSDL specifies multiple namespaces" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_namespaces)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "should qualify each element with the appropriate namespace" do
+      pending("lots of work over in parser_spec before we get to this point")
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ns0:Save><ns0:article><ns1:title>Hamlet</ns1:title><ns1:author>Shakespeare</ns1:author></ns0:article></ns0:Save>") &&
+        value.include?('xmlns:ns0="http://example.com/actions"') &&
+        value.include?('xmlns:ns1="http://example.com/article"')
+      }
+
+      client.request :save do |soap|
+        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+  end
+
   context "without a WSDL document" do
     let(:client) do
       Savon::Client.new do
