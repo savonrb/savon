@@ -49,10 +49,19 @@ module Savon
         read_namespaces(attrs) if @path.empty?
 
         tag, namespace = tag.split(":").reverse
-        @path << tag
+        @path << [tag, attrs]
 
         if @section == :types && tag == "schema"
           @element_form_default = attrs["elementFormDefault"].to_sym if attrs["elementFormDefault"]
+          @type_context = []
+        end
+
+        if @section == :types && !@type_context.nil? && type_defining_tag(tag, attrs)
+          if @type_context == []
+            @types[attrs["name"]] = {:todo => "to be determined"}
+          end
+
+          @type_context.push(attrs["name"])
         end
 
         if @section == :binding && tag == "binding"
@@ -98,7 +107,7 @@ module Savon
 
       # Hook method called when the stream parser encounters a closing tag.
       def tag_end(tag)
-        @path.pop
+        start_tag, attrs = @path.pop
 
         if @section == :binding && @input && tag.strip_namespace == "operation"
           # no soapAction attribute found till now
@@ -106,6 +115,11 @@ module Savon
         end
 
         @section = :definitions if Sections.include?(tag) && depth <= 1
+
+        tag_only, namespace = tag.split(":").reverse
+        if @section == :types && type_defining_tag(tag_only, attrs)
+          @type_context.pop
+        end
       end
 
       # Stores available operations from a given tag +name+ and +attrs+.
@@ -119,6 +133,10 @@ module Savon
           @operations[@input.snakecase.to_sym] = { :action => @action, :input => @input }
           @input, @action = nil, nil
         end
+      end
+
+      def type_defining_tag(tag, attrs)
+        tag == "element" || (tag == "complexType" && attrs["name"])
       end
 
       # Catches calls to unimplemented hook methods.

@@ -48,6 +48,11 @@ describe Savon::WSDL::Parser do
     it "should return that :element_form_default is set to :unqualified" do
       parser.element_form_default.should == :unqualified
     end
+
+    it "can list the types" do
+      parser.types.keys.sort.should ==
+        ["McContact", "McContactArray", "MpUser", "MpUserArray"]
+    end
   end
 
   context "with geotrust.xml" do
@@ -102,7 +107,6 @@ describe Savon::WSDL::Parser do
     end
 
     it "can list the types" do
-      pending("not yet implemented")
       parser.types.keys.sort.should == ["Article", "Save"]
     end
 #<s:element name="Save">
