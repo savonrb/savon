@@ -226,6 +226,16 @@ describe Savon::Client do
       end
     end
 
+    it "allows custom SOAPAction header to be set to override the default SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+
+      client.http.headers["SOAPAction"] = %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+      end
+    end
+    
     it "should execute SOAP requests and return the response" do
       HTTPI.expects(:post).returns(new_response)
       response = client.request(:authenticate)
@@ -252,6 +262,16 @@ describe Savon::Client do
       end
     end
 
+    it "allows custom SOAPAction header to be set to override the default SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+
+      client.http.headers["SOAPAction"] = %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+      end
+    end
+    
     it "should get #element_form_default from the WSDL" do
       HTTPI.stubs(:post).returns(new_response)
       Savon::WSDL::Document.any_instance.expects(:element_form_default).returns(:qualified)
@@ -290,6 +310,16 @@ describe Savon::Client do
       end
     end
 
+    it "allows custom SOAPAction header to be set to override the default SOAP action name" do
+      HTTPI.stubs(:post).returns(new_response)
+
+      client.http.headers["SOAPAction"] = %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+
+      client.request :authenticate do
+        http.headers["SOAPAction"].should == %{"http://v1_0.ws.auth.order.example.com#authenticate"}
+      end
+    end
+    
     it "should not get #element_form_default from the WSDL" do
       HTTPI.stubs(:post).returns(new_response)
       Savon::WSDL::Document.any_instance.expects(:element_form_default).never
