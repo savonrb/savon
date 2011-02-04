@@ -20,6 +20,8 @@ module Savon
         @input_message = {}
         @types = {}
         @element_form_default = :unqualified
+
+        @type_parsing_state = :awaiting_type_start
       end
 
       # Returns the namespace URI.
@@ -53,15 +55,41 @@ module Savon
 
         if @section == :types && tag == "schema"
           @element_form_default = attrs["elementFormDefault"].to_sym if attrs["elementFormDefault"]
-          @type_context = []
+          @current_target_namespace = attrs["targetNamespace"] || @namespace
+          @type_parsing_state = :got_schema_tag
         end
 
-        if @section == :types && !@type_context.nil? && type_defining_tag(tag, attrs)
-          if @type_context == []
-            @types[attrs["name"]] = {:todo => "to be determined"}
+        if @type_parsing_state == :got_schema_tag
+          if tag == "element" && attrs["name"]
+            @types[attrs["name"]] = {:namespace => @current_target_namespace}
+            @type_parsing_state = :look_for_complex_type
+            @type_parsing_name = attrs["name"]
+          elsif tag == "complexType" && attrs["name"]
+            @types[attrs["name"]] = {:namespace => @current_target_namespace}
+            @type_parsing_state = :look_for_sequence
+            @type_parsing_name = attrs["name"]
           end
-
-          @type_context.push(attrs["name"])
+        elsif @type_parsing_state == :look_for_complex_type
+          if tag == "complexType"
+            @type_parsing_state = :look_for_sequence
+          else
+            @type_parsing_state = :look_for_type_defining_end_tag
+          end
+        elsif @type_parsing_state == :look_for_sequence
+          if tag == "sequence"
+            @type_parsing_state = :look_for_inner_element
+          else
+            @type_parsing_state = :look_for_type_defining_end_tag
+          end
+        elsif @type_parsing_state == :look_for_inner_element
+          if tag == "element" && attrs["name"]
+            @types[@type_parsing_name][attrs["name"]] = {:todo => 'later'}
+          end
+          @type_parsing_state = :look_for_inner_element_end_tag
+        elsif @type_parsing_state == :look_for_type_defining_end_tag
+          if tag == "element"
+            @type_parsing_state = :look_for_inner_element_end_tag
+          end
         end
 
         if @section == :binding && tag == "binding"
@@ -117,8 +145,13 @@ module Savon
         @section = :definitions if Sections.include?(tag) && depth <= 1
 
         tag_only, namespace = tag.split(":").reverse
-        if @section == :types && type_defining_tag(tag_only, attrs)
-          @type_context.pop
+        if @type_parsing_state == :look_for_inner_element_end_tag &&
+            type_defining_tag(tag_only, attrs)
+          @type_parsing_state = :look_for_type_defining_end_tag
+        elsif @type_parsing_state == :look_for_type_defining_end_tag &&
+            type_defining_tag(tag_only, attrs)
+          @type_parsing_state = :got_schema_tag
+          @type_parsing_name = nil
         end
       end
 

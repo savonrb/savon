@@ -53,6 +53,11 @@ describe Savon::WSDL::Parser do
       parser.types.keys.sort.should ==
         ["McContact", "McContactArray", "MpUser", "MpUserArray"]
     end
+
+    it "ignores xsd:all" do
+      parser.types["MpUser"].keys.should == [:namespace]
+    end
+
   end
 
   context "with geotrust.xml" do
@@ -109,6 +114,15 @@ describe Savon::WSDL::Parser do
     it "can list the types" do
       parser.types.keys.sort.should == ["Article", "Save"]
     end
+
+    it "records the namespace for each type" do
+      parser.types["Save"][:namespace].should == "http://example.com/actions"
+    end
+
+    it "records the fields under a type" do
+      parser.types["Save"].keys.should =~ ["article", :namespace]
+    end
+
 #<s:element name="Save">
 #                <s:complexType>
 #                    <s:sequence>
@@ -140,6 +154,22 @@ describe Savon::WSDL::Parser do
 
   context "with something other than complexType/Sequence" do
     it "should not mess with namespaces or try to parse types"
+  end
+
+  context "if the WSDL defines xs:schema without targetNamespace" do
+    # Don't know if real WSDL files omit targetNamespace from xs:schema,
+    # but I suppose we should do something reasonable if they do.
+
+    it "defaults to the target namespace from xs:definitions" do
+      parser = Savon::WSDL::Parser.new
+      parser.tag_start("definitions",
+        "targetNamespace" => "http://def.example.com")
+      parser.tag_start("types", {})
+      parser.tag_start("xs:schema", "elementFormDefault" => "qualified")
+      parser.tag_start("xs:element", "name" => "Save")
+
+      parser.types["Save"][:namespace].should == "http://def.example.com"
+    end
   end
 
   RSpec::Matchers.define :match_operations do |expected|
