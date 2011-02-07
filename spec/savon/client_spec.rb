@@ -87,7 +87,7 @@ describe Savon::Client do
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'wsdl="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:get_user) { soap.namespace = nil }
@@ -119,7 +119,7 @@ describe Savon::Client do
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:v1, :get_user) { soap.namespace = nil }
@@ -275,14 +275,47 @@ describe Savon::Client do
     end
 
     it "should qualify each element with the appropriate namespace" do
-      pending("lots of work over in parser_spec before we get to this point")
+      pending("still broken for author, title")
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ns0:Save><ns0:article><ns1:title>Hamlet</ns1:title><ns1:author>Shakespeare</ns1:author></ns0:article></ns0:Save>") &&
-        value.include?('xmlns:ns0="http://example.com/actions"') &&
-        value.include?('xmlns:ns1="http://example.com/article"')
+        value.include?("<ins0:Save><ins0:article><ins1:title>Hamlet</ins1:title><ins1:author>Shakespeare</ins1:author></ins0:article></ins0:Save>") &&
+        value.include?('xmlns:ins0="http://example.com/actions"') &&
+        value.include?('xmlns:ins1="http://example.com/article"')
       }
 
       client.request :save do |soap|
+        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+
+    it "should translate between symbol :save and string 'Save'" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins3:Save>") &&
+        value.include?('xmlns:ins3="http://example.com/actions"')
+      }
+
+      client.request :save do |soap|
+        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+
+    it "will qualify article with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins4:article>") &&
+        value.include?('xmlns:ins4="http://example.com/actions"')
+      }
+
+      client.request :save do |soap|
+        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+
+    it "will qualify Save with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins3:Save>") &&
+        value.include?('xmlns:ins3="http://example.com/actions"')
+      }
+
+      client.request "Save" do |soap|
         soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
       end
     end

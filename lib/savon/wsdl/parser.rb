@@ -69,26 +69,36 @@ module Savon
             @type_parsing_state = :look_for_sequence
             @type_parsing_name = attrs["name"]
           end
+
         elsif @type_parsing_state == :look_for_complex_type
           if tag == "complexType"
             @type_parsing_state = :look_for_sequence
           else
-            @type_parsing_state = :look_for_type_defining_end_tag
+            @type_parsing_state = :skip_to_type_defining_end_tag
           end
+
         elsif @type_parsing_state == :look_for_sequence
           if tag == "sequence"
             @type_parsing_state = :look_for_inner_element
           else
-            @type_parsing_state = :look_for_type_defining_end_tag
+            @type_parsing_state = :skip_to_type_defining_end_tag
           end
+
         elsif @type_parsing_state == :look_for_inner_element
           if tag == "element" && attrs["name"]
-            @types[@type_parsing_name][attrs["name"]] = {:todo => 'later'}
+            @types[@type_parsing_name][attrs["name"]] =
+              {:type => attrs["type"]}
           end
           @type_parsing_state = :look_for_inner_element_end_tag
+
         elsif @type_parsing_state == :look_for_type_defining_end_tag
           if tag == "element"
             @type_parsing_state = :look_for_inner_element_end_tag
+          end
+
+        elsif @type_parsing_state == :skip_to_type_defining_end_tag
+          if tag == "element"
+            @type_parsing_state = :skip_to_inner_element_end_tag
           end
         end
 
@@ -147,8 +157,18 @@ module Savon
         tag_only, namespace = tag.split(":").reverse
         if @type_parsing_state == :look_for_inner_element_end_tag &&
             type_defining_tag(tag_only, attrs)
-          @type_parsing_state = :look_for_type_defining_end_tag
+          @type_parsing_state = :look_for_inner_element
+
+        elsif @type_parsing_state == :skip_to_inner_element_end_tag &&
+            type_defining_tag(tag_only, attrs)
+          @type_parsing_state = :skip_to_type_defining_end_tag
+
         elsif @type_parsing_state == :look_for_type_defining_end_tag &&
+            type_defining_tag(tag_only, attrs)
+          @type_parsing_state = :got_schema_tag
+          @type_parsing_name = nil
+
+        elsif @type_parsing_state == :skip_to_type_defining_end_tag &&
             type_defining_tag(tag_only, attrs)
           @type_parsing_state = :got_schema_tag
           @type_parsing_name = nil

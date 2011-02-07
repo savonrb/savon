@@ -129,4 +129,25 @@ describe Savon::WSDL::Document do
     end
   end
 
+  context "with a WSDL document specifying multiple namespaces" do
+    let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new, Endpoint.wsdl }
+
+    before do
+      response = HTTPI::Response.new 200, {}, Fixture.wsdl(:multiple_namespaces)
+      HTTPI.stubs(:get).returns(response)
+    end
+
+    describe "#type_namespaces" do
+      it "should return a list of namespaces defined in types section" do
+        wsdl.type_namespaces.should =~ [
+          [["Save"], "http://example.com/actions"],
+          [["Save", "article"], "http://example.com/actions"],
+          [["Article"], "http://example.com/article"],
+          [["Article", "Author"], "http://example.com/article"],
+          [["Article", "Title"], "http://example.com/article"]
+        ]
+      end
+    end
+  end
+
 end

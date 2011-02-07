@@ -30,6 +30,17 @@ module Savon
         @namespace ||= parser.namespace
       end
 
+      def type_namespaces
+        namespaces = []
+        parser.types.each do |type, info|
+          namespaces << [[type], info[:namespace]]
+          (info.keys - [:namespace]).each do |field|
+            namespaces << [[type, field], info[:namespace]]
+          end
+        end if present?
+        namespaces
+      end
+
       # Sets the SOAP namespace.
       attr_writer :namespace
 

@@ -123,37 +123,15 @@ describe Savon::WSDL::Parser do
       parser.types["Save"].keys.should =~ ["article", :namespace]
     end
 
-#<s:element name="Save">
-#                <s:complexType>
-#                    <s:sequence>
-#                        <s:element name="article" type="article:Article"/>
-#                    </s:sequence>
-#                </s:complexType>
-#            </s:element>
-#{"Save" => {:namespace => "http://example.com/actions", :article => {:namespace => "http://example.com/actions", :type => "article:Article"}}, 
+    it "records multiple fields when there are more than one" do
+      parser.types["Article"].keys.should =~ ["Title", "Author", :namespace]
+    end
 
-#        <s:schema elementFormDefault="qualified" targetNamespace="http://example.com/article">
-#            <s:complexType name="Article">
-#                <s:sequence>
-#                    <s:element minOccurs="0" name="Author" type="s:string"/>
-#                    <s:element minOccurs="0" name="Title" type="s:string"/>
- #               </s:sequence>
- #           </s:complexType>
-#        </s:schema>
-#{"Article" => {:namespace => "http://example.com/article", :author => {:namespace => same}, :title => {:namespace => same}}
+    it "records the type of a field" do
+      parser.types["Save"]["article"][:type].should == "article:Article"
+      #parser.namespaces["article"].should == "http://example.com/article"
+    end
 
-
-
-
-
-# Eventually might build up something like this (or might just use the
-# types hash above)
-#{"Save" => {"article" => {:namespace => "ns0", "title" => {:namespace => "ns1"}, "author" => {:namespace => "ns1"}}}
-
-  end
-
-  context "with something other than complexType/Sequence" do
-    it "should not mess with namespaces or try to parse types"
   end
 
   context "if the WSDL defines xs:schema without targetNamespace" do
