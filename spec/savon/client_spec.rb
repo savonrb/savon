@@ -275,33 +275,21 @@ describe Savon::Client do
     end
 
     it "should qualify each element with the appropriate namespace" do
-      pending("still broken for author, title")
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins0:Save><ins0:article><ins1:title>Hamlet</ins1:title><ins1:author>Shakespeare</ins1:author></ins0:article></ins0:Save>") &&
-        value.include?('xmlns:ins0="http://example.com/actions"') &&
-        value.include?('xmlns:ins1="http://example.com/article"')
+        value.include?("<ins1:Save><ins1:article><ins0:Title>Hamlet</ins0:Title><ins0:Author>Shakespeare</ins0:Author></ins1:article></ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"') &&
+        value.include?('xmlns:ins0="http://example.com/article"')
       }
 
       client.request :save do |soap|
-        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+        soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
       end
     end
 
     it "should translate between symbol :save and string 'Save'" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins3:Save>") &&
-        value.include?('xmlns:ins3="http://example.com/actions"')
-      }
-
-      client.request :save do |soap|
-        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
-      end
-    end
-
-    it "will qualify article with the appropriate namespace" do
-      HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins4:article>") &&
-        value.include?('xmlns:ins4="http://example.com/actions"')
+        value.include?("<ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"')
       }
 
       client.request :save do |soap|
@@ -311,8 +299,8 @@ describe Savon::Client do
 
     it "will qualify Save with the appropriate namespace" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins3:Save>") &&
-        value.include?('xmlns:ins3="http://example.com/actions"')
+        value.include?("<ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"')
       }
 
       client.request "Save" do |soap|

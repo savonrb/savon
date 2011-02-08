@@ -153,6 +153,18 @@ describe Savon::SOAP::XML do
       xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
     end
   end
+  
+  describe "#namespace_by_uri" do
+    it "should return the identifier if found" do
+      xml.namespace_by_uri("http://schemas.xmlsoap.org/soap/envelope/").
+        should == "env"
+    end
+    
+    it "should return nil if not found" do
+      xml.namespace_by_uri("http://example.com/unregistered").
+        should be_nil
+    end
+  end
 
   describe "#wsse" do
     it "should set the Savon::WSSE object" do
@@ -183,6 +195,14 @@ describe Savon::SOAP::XML do
         '<ins0:foo>' +
           '<ins1:bar>5</ins1:bar>' +
         '</ins0:foo>')
+    end
+
+    it "does not add the same namespace uri twice" do
+      xml.body = {}
+      xml.use_namespace(["authenticate", "one"], "http://example.com/foo")
+      xml.use_namespace(["authenticate", "two"], "http://example.com/foo")
+      xml.to_xml.should include('xmlns:ins0="http://example.com/foo"')
+      xml.to_xml.should_not include('xmlns:ins1')
     end
 
     it "can deal with two fields side by side" do

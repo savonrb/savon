@@ -95,6 +95,13 @@ module Savon
           { key => SOAP::Namespace[version] }
         end
       end
+      
+      def namespace_by_uri(uri)
+        namespaces.each do |candidate_identifier, candidate_uri|
+          return candidate_identifier.gsub(/^xmlns:/, '') if candidate_uri == uri
+        end
+        return nil
+      end
 
       def used_namespaces
         @used_namespaces ||= {}
@@ -102,12 +109,15 @@ module Savon
 
       def use_namespace(path, uri)
         @internal_namespace_count ||= 0
+        
+        identifier = namespace_by_uri(uri)
+        if !identifier
+          identifier = "ins#{@internal_namespace_count}"
+          namespaces["xmlns:#{identifier}"] = uri
+          @internal_namespace_count += 1
+        end
 
-        identifier = "ins#{@internal_namespace_count}"
-        namespaces["xmlns:#{identifier}"] = uri
         used_namespaces[path] = identifier
-
-        @internal_namespace_count += 1
       end
       
       def types
