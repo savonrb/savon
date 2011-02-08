@@ -114,6 +114,10 @@ module Savon
       wsdl.type_namespaces.each do |path, uri|
         soap.use_namespace(path, uri)
       end
+      
+      wsdl.type_definitions.each do |path, type|
+        soap.define_type(path, type)
+      end
 
       set_soap_action options[1]
       set_soap_input *options

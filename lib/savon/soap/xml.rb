@@ -109,6 +109,14 @@ module Savon
 
         @internal_namespace_count += 1
       end
+      
+      def types
+        @types ||= {}
+      end
+      
+      def define_type(path, type)
+        types[path] = type
+      end
 
       # Sets the default namespace identifier.
       attr_writer :namespace_identifier
@@ -202,11 +210,12 @@ module Savon
         return hash.to_s unless hash.kind_of? Hash
         hash.inject({}) do |newhash, (key, value)|
           newpath = path + [key.to_s]
-
+          
           if used_namespaces[newpath]
             newhash.merge(
               "#{used_namespaces[newpath]}:#{key.to_s}" =>
-                add_namespaces(value, newpath))
+                add_namespaces(value,
+                  types[newpath] ? [types[newpath]] : newpath))
           else
             newhash.merge(key => value)
           end

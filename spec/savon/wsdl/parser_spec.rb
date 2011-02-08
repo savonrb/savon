@@ -129,7 +129,7 @@ describe Savon::WSDL::Parser do
 
     it "records the type of a field" do
       parser.types["Save"]["article"][:type].should == "article:Article"
-      #parser.namespaces["article"].should == "http://example.com/article"
+      parser.namespaces["article"].should == "http://example.com/article"
     end
 
   end

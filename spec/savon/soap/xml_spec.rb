@@ -201,6 +201,19 @@ describe Savon::SOAP::XML do
       xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
       xml.to_xml.should include("<food><fruit>orange</fruit></food>")
     end
+    
+    it "deals with types" do
+      xml.body = {:food => {:fruit => "orange"}}
+      xml.use_namespace(["authenticate", "food"],
+        "http://example.com/auth")
+      xml.use_namespace(["Food", "fruit"], "http://example.com/food")
+      xml.define_type(["authenticate", "food"], "Food")
+      xml.to_xml.should include('xmlns:ins0="http://example.com/auth"')
+      xml.to_xml.should include('xmlns:ins1="http://example.com/food"')
+      xml.to_xml.should include('<ins0:food>' +
+        '<ins1:fruit>orange</ins1:fruit>' +
+      '</ins0:food>')
+    end
   end
 
   describe "#xml" do

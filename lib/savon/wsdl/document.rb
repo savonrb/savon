@@ -40,6 +40,26 @@ module Savon
         end if present?
         namespaces
       end
+      
+      def type_definitions
+        return [] if !present?
+
+        result = []
+        parser.types.each do |type, info|
+          (info.keys - [:namespace]).each do |field|
+            field_type = info[field][:type]
+            tag, namespace = field_type.split(":").reverse
+            result << [[type, field], tag] if user_defined(namespace)
+          end
+        end
+        result
+      end
+      
+      def user_defined(namespace_identifier)
+        uri = parser.namespaces[namespace_identifier]
+        !(uri =~ %r{^http://schemas.xmlsoap.org} ||
+          uri =~ %r{^http://www.w3.org})
+      end
 
       # Sets the SOAP namespace.
       attr_writer :namespace

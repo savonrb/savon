@@ -26,6 +26,9 @@ module Savon
 
       # Returns the namespace URI.
       attr_reader :namespace
+      
+      # Returns a map from namespace identifier to namespace URI
+      attr_reader :namespaces
 
       # Returns the SOAP operations.
       attr_reader :operations

@@ -148,6 +148,14 @@ describe Savon::WSDL::Document do
         ]
       end
     end
+    
+    describe "#type_definitions" do
+      it "should return the types of fields defined in this WSDL" do
+        wsdl.type_definitions.should =~ [
+          [["Save", "article"], "Article"]
+        ]
+      end
+    end
   end
 
 end
