@@ -33,9 +33,15 @@ describe Savon::SOAP::Fault do
       no_fault.should_not be_present
     end
 
-    it "should return false if the HTTP response code is not 500" do
+    it "by default requires a SOAP fault to have HTTP response code 500" do
       fault = Savon::SOAP::Fault.new new_response(:code => 200, :body => Fixture.response(:soap_fault))
       fault.should_not be_present
+    end
+
+    it "can also optionally accept a SOAP fault with HTTP response code which is not 500" do
+      Savon.stubs(:accept_faults_with_200?).returns(true)
+      fault = Savon::SOAP::Fault.new new_response(:code => 200, :body => Fixture.response(:soap_fault))
+      fault.should be_present
     end
   end
 

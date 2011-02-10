@@ -41,6 +41,14 @@ module Savon
       @raise_errors != false
     end
 
+    # Sets whether to recognize a SOAP fault with an HTTP 
+    # response code of 200. Defaults to +false+.
+    attr_writer :accept_faults_with_200
+
+    def accept_faults_with_200?
+      !!@accept_faults_with_200
+    end
+
     # Sets the global SOAP version.
     def soap_version=(version)
       raise ArgumentError, "Invalid SOAP version: #{version}" unless SOAP::Versions.include? version
