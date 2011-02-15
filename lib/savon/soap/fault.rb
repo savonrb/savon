@@ -19,7 +19,7 @@ module Savon
 
       # Returns whether a SOAP fault is present.
       def present?
-        @present ||= http.code == 500 && http.body.include?("Fault>") && (soap1_fault? || soap2_fault?)
+        @present ||= http.body.include?("Fault>") && (soap1_fault? || soap2_fault?)
       end
 
       # Returns the SOAP fault message.
