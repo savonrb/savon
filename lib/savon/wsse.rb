@@ -5,6 +5,9 @@ require "savon/core_ext/string"
 require "savon/core_ext/hash"
 require "savon/core_ext/time"
 
+require "savon/wsse/verify_signature"
+require "savon/wsse/signature"
+
 module Savon
 
   # = Savon::WSSE
@@ -42,7 +45,15 @@ module Savon
       self.digest = digest
     end
 
-    attr_accessor :username, :password, :created_at, :expires_at
+    attr_accessor :username, :password, :created_at, :expires_at, :signature, :verify_response
+    
+    def sign_with=(klass)
+      @signature = klass
+    end
+    
+    def signature?
+      !!@signature
+    end
 
     # Returns whether to use WSSE digest. Defaults to +false+.
     def digest?
@@ -66,15 +77,30 @@ module Savon
       @wsse_timestamp = timestamp
     end
 
+    # Hook for Soap::XML that allows us to add attributes to the env:Body tag
+    def body_attributes
+      if signature?
+        signature.body_attributes
+      else
+        {}
+      end
+    end
+
     # Returns the XML for a WSSE header.
     def to_xml
-      if username_token?
+      @other_xml ||= Gyoku.xml(hash)
+      
+      xml = if signature?
+        signature.to_xml
+      elsif username_token?
         Gyoku.xml wsse_username_token.merge!(hash)
       elsif timestamp?
         Gyoku.xml wsse_timestamp.merge!(hash)
       else
         ""
       end
+      
+      xml + @other_xml
     end
 
   private

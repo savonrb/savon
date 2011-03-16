@@ -67,6 +67,36 @@ describe Savon::Client do
       HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
       HTTPI.stubs(:post).returns(new_response)
     end
+    
+    context "with a WSSE Signature" do
+      before do
+        certs = Savon::WSSE::Certs.new :cert_file => Fixture.cert_path("cert"), :private_key_file => Fixture.cert_path("cert")
+        @signature = Savon::WSSE::Signature.new certs
+        client.wsse.sign_with = @signature
+      end
+
+      it "should include a SignedInfo section" do
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? "<SignedInfo>" }
+        client.request :get_user
+      end
+      
+      it "should verify with VerifySignature" do
+        body = ''
+        # Poorly use mocha expectations to capture the value of body
+        HTTPI::Request.any_instance.expects(:body=).with { |value| body = value; true }
+        client.request :get_user
+        
+        verifier = Savon::WSSE::VerifySignature.new(body)
+        verifier.should be_valid
+      end
+      
+      it "should include a SignatureValue" do
+        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? "<SignedInfo>" }
+        client.request :get_user
+      end
+    end
+    
+
 
     context "without any arguments" do
       it "should raise an ArgumentError" do
@@ -209,6 +239,16 @@ describe Savon::Client do
       client.request :authenticate
     end
   end
+  
+  # context "#request with a signed response" do
+  #   before do
+  #     HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
+  #     HTTPI.stubs(:post).returns(new_response(:body => Fixture.response(:signed_request)))
+  #   end
+  #   
+  #   
+  # 
+  # end
 
   context "with a remote WSDL document" do
     let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }

@@ -8,6 +8,11 @@ module Savon
   module CoreExt
     module Hash
 
+      # Returns a new hash with +self+ and +other_hash+ merged recursively.
+      def deep_merge(other_hash)
+        dup.deep_merge!(other_hash)
+      end
+
       # Returns a new Hash with +self+ and +other_hash+ merged recursively.
       # Modifies the receiver in place.
       def deep_merge!(other_hash)

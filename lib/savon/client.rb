@@ -77,6 +77,11 @@ module Savon
 
       response = SOAP::Request.new(http, soap).response
       set_cookie response.http.headers
+      
+      if wsse.verify_response
+        WSSE::VerifySignature.new(response.http.body).verify!
+      end
+      
       response
     end
 

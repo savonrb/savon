@@ -31,7 +31,18 @@ module Savon
       def setup(request, soap)
         request.url = soap.endpoint
         request.headers["Content-Type"] ||= ContentType[soap.version]
-        request.body = soap.to_xml
+        if soap.signature?
+          # First generate the document so that Signature can digest sections
+          soap.wsse.signature.document = soap.to_xml(true)
+          
+          # Then re-generate the document so that Signature can sign the digest
+          soap.wsse.signature.document = soap.to_xml(true)
+          
+          # The third time we generate the document, we should have a signature
+          request.body = soap.to_xml(true)
+        else
+          request.body = soap.to_xml
+        end
         request
       end
 

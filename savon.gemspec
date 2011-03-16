@@ -19,6 +19,17 @@ Gem::Specification.new do |s|
   s.add_dependency "httpi", ">= 0.7.8"
   s.add_dependency "gyoku", ">= 0.3.0"
 
+  # I'd rather use libxml2. Maybe through nokogiri (not yet available) or
+  # libxml-ruby (also not yet available).
+  #
+  # This might be an option:
+  # http://rubygems.org/gems/coupa-libxml-ruby
+  # (see http://stackoverflow.com/questions/3038757/canonicalizing-xml-in-ruby)
+  #
+  # XMLCanonicalizer did not work for me. See notes in
+  # lib/savon/wsse/canonicalizer.rb for more information.
+  # s.add_dependency "XMLCanonicalizer", "~> 1.0.1"
+
   s.add_development_dependency "rspec", "~> 2.4.0"
   s.add_development_dependency "autotest"
   s.add_development_dependency "mocha", "~> 0.9.8"

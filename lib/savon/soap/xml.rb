@@ -1,6 +1,7 @@
 require "builder"
 require "crack/xml"
 require "gyoku"
+require "rexml/document"
 
 require "savon/soap"
 require "savon/core_ext/hash"
@@ -82,7 +83,7 @@ module Savon
 
       # Returns the SOAP envelope namespace. Defaults to :env.
       def env_namespace
-        @env_namespace ||= :env
+        @env_namespace ||= :soapenv
       end
 
       # Sets the +namespaces+ Hash.
@@ -119,6 +120,10 @@ module Savon
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
 
+      def signature?
+        wsse.respond_to?(:signature?) && wsse.signature?
+      end
+
       # Accessor for the SOAP +body+. Expected to be a Hash that can be translated to XML via Gyoku.xml
       # or any other Object responding to to_s.
       attr_accessor :body
@@ -132,10 +137,15 @@ module Savon
       attr_writer :xml
 
       # Returns the XML for a SOAP request.
-      def to_xml
+      def to_xml(clear_cache = false)
+        if clear_cache
+          @xml = nil
+          @header_for_xml = nil
+        end
+        
         @xml ||= tag(builder, :Envelope, complete_namespaces) do |xml|
-          tag(xml, :Header) { xml << header_for_xml } unless header_for_xml.empty?
-          input.nil? ? tag(xml, :Body) : tag(xml, :Body) { xml.tag!(*input) { xml << body_to_xml } }
+          build_header(xml)
+          build_body(xml)
         end
       end
 
@@ -146,6 +156,18 @@ module Savon
         builder = Builder::XmlMarkup.new
         builder.instruct!
         builder
+      end
+
+      def build_header(builder)
+        tag(builder, :Header) { builder << header_for_xml } unless header_for_xml.empty?
+      end
+      
+      def build_body(builder)
+        # FIXME: Maybe there should be some sort of plugin architecture where
+        #        classes like WSSE::Signature can hook into this process.
+        body_attributes = (signature? ? wsse.signature.body_attributes : {})
+        
+        input.nil? ? tag(builder, :Body, body_attributes) : tag(builder, :Body, body_attributes) { builder.tag!(*input) { builder << body_to_xml } }
       end
 
       # Expects a builder +xml+ instance, a tag +name+ and accepts optional +namespaces+

@@ -45,6 +45,19 @@ describe Savon::WSSE do
     end
   end
 
+  describe '#verify_response' do
+    it "defaults to false" do
+      wsse.verify_response.should_not be
+    end
+    
+    context 'when set with true' do
+      before { wsse.verify_response = true }
+      it "returns true" do
+        wsse.verify_response.should be_true
+      end
+    end
+  end
+
   describe "#username" do
     it "should set the username" do
       wsse.username = "username"
@@ -69,8 +82,47 @@ describe Savon::WSSE do
       wsse.should be_digest
     end
   end
+  
+  describe '#signature?' do
+    it "should default to false" do
+      wsse.should_not be_signature
+    end
+    
+    context 'when there is a signature class' do
+      before { wsse.sign_with = Savon::WSSE::Signature.new }
+      it "should be true" do
+        wsse.should be_signature
+      end
+    end
+  end
+  
+  describe '#body_attributes' do
+    context 'by default' do
+      it "should return an empty hash" do
+        wsse.body_attributes.should == {}
+      end
+    end
+    
+    context 'with a signature' do
+      let(:signature) { Savon::WSSE::Signature.new }
+      before { wsse.sign_with = signature }
 
+      it "should return the signatures body_attributes" do
+        wsse.body_attributes.should == signature.body_attributes
+      end
+    end
+  end
+  
   describe "#to_xml" do
+    context 'with a signature' do
+      let(:signature) { Savon::WSSE::Signature.new }
+      before { wsse.sign_with = signature }
+      
+      it "should return signatures #to_xml" do
+        wsse.to_xml.should == signature.to_xml
+      end
+    end
+    
     context "with no credentials" do
       it "should return an empty String" do
         wsse.to_xml.should == ""

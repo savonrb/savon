@@ -19,6 +19,10 @@ class Fixture
       end
     end
 
+    def cert_path(name)
+      File.expand_path "../../fixtures/certs/#{name}.pem", __FILE__
+    end
+
   private
 
     def fixtures(type)
