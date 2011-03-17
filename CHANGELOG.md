@@ -1,3 +1,8 @@
+## 0.8.6 (2011-02-15)
+
+* Fix for issues [issue #147](https://github.com/rubiii/savon/issues/147) and [#151](https://github.com/rubiii/savon/issues/151)
+  ([771194](https://github.com/rubiii/savon/commit/771194)).
+
 ## 0.8.5 (2011-01-28)
 
 * Fix for [issue #146](https://github.com/rubiii/savon/issues/146) ([98655c](https://github.com/rubiii/savon/commit/98655c)).
