@@ -5,22 +5,22 @@ describe Savon::WSSE do
 
   it "should contain the namespace for WS Security Secext" do
     Savon::WSSE::WSENamespace.should ==
-      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
   end
 
   it "should contain the namespace for WS Security Utility" do
     Savon::WSSE::WSUNamespace.should ==
-      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
   end
 
   it "should contain the namespace for the PasswordText type" do
     Savon::WSSE::PasswordTextURI.should ==
-      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+    "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
   end
 
   it "should contain the namespace for the PasswordDigest type" do
     Savon::WSSE::PasswordDigestURI.should ==
-      "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+    "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
   end
 
   describe "#credentials" do
@@ -159,12 +159,28 @@ describe Savon::WSSE do
       end
     end
 
+    context "with credentials and #timestamp" do
+      before do 
+        wsse.credentials "username", "password"
+        wsse.timestamp = true
+      end
+
+      it "should contain a wsu:Id attribute" do
+        wsse.to_xml.should include('<wsse:UsernameToken wsu:Id="UsernameToken-1"')
+      end
+
+      it "should contain a wsse:Timestamp node" do
+        wsse.to_xml.should include('<wsse:Timestamp wsu:Id="Timestamp-2" ' +
+        'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">')
+      end
+    end
+
     context "with #timestamp set to true" do
       before { wsse.timestamp = true }
 
       it "should contain a wsse:Timestamp node" do
         wsse.to_xml.should include('<wsse:Timestamp wsu:Id="Timestamp-1" ' +
-          'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">')
+        'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">')
       end
 
       it "should contain a wsu:Created node defaulting to Time.now" do
