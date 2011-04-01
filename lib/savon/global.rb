@@ -70,6 +70,14 @@ module Savon
       @converter = converter
     end
 
+    # Returns the global env_namespace
+    attr_reader :env_namespace
+
+    # Sets the global env_namespace
+    def env_namespace=(namespace)
+      @env_namespace = namespace
+    end
+
     # Reset to default configuration.
     def reset_config!
       self.log = true

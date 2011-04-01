@@ -80,9 +80,9 @@ module Savon
       # Sets the SOAP envelope namespace.
       attr_writer :env_namespace
 
-      # Returns the SOAP envelope namespace. Defaults to :env.
+      # Returns the SOAP envelope namespace. Uses the global namespace if set Defaults to :env.
       def env_namespace
-        @env_namespace ||= :env
+        @env_namespace ||= Savon.env_namespace.nil? ? :env : Savon.env_namespace
       end
 
       # Sets the +namespaces+ Hash.
@@ -181,3 +181,4 @@ module Savon
     end
   end
 end
+
