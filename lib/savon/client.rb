@@ -118,14 +118,22 @@ module Savon
     # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
     def set_soap_action(input)
       soap_action = wsdl.soap_action input.to_sym
-      soap_action ||= input.kind_of?(String) ? input : input.to_s.lower_camelcase
+      if input.kind_of?(String)
+        soap_action ||= input.to_sym
+      else
+        soap_action ||= Savon.converter.nil? ? input.to_s.lower_camelcase.to_sym : Savon.converter.call(input).to_sym
+      end
       http.headers["SOAPAction"] = %{"#{soap_action}"}
     end
 
     # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
     def set_soap_input(namespace, input, attributes)
       new_input = wsdl.soap_input input.to_sym
-      new_input ||= input.kind_of?(String) ? input.to_sym : input.to_s.lower_camelcase.to_sym
+      if input.kind_of?(String)
+        new_input ||= input.to_sym
+      else
+        new_input ||= Savon.converter.nil? ? input.to_s.lower_camelcase.to_sym : Savon.converter.call(input).to_sym
+      end
       soap.input = [namespace, new_input, attributes].compact
     end
 
@@ -155,3 +163,4 @@ module Savon
 
   end
 end
+

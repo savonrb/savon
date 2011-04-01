@@ -79,6 +79,12 @@ describe Savon::Client do
         client.request(:get_user) { soap.input.should == [:getUser, {}] }
       end
 
+      it "should set the input tag to result in <GetUser> when configured" do
+        # Create a stub that returns the string in camel case
+        Savon.stubs(:converter).returns(proc { |input| input.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase } })
+        client.request(:get_user) { soap.input.should == [:GetUser, {}] }
+      end
+
       it "should set the target namespace with the default identifier" do
         namespace = 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
@@ -236,7 +242,7 @@ describe Savon::Client do
   end
 
   context "with a local WSDL document" do
-    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } } 
+    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } }
 
     before { HTTPI.expects(:get).never }
 
@@ -344,3 +350,4 @@ describe Savon::Client do
   end
 
 end
+

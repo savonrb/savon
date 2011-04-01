@@ -61,6 +61,15 @@ module Savon
     # Sets whether to strip namespaces in a SOAP response Hash.
     attr_writer :strip_namespaces
 
+
+    # Returns the current action_converter
+    attr_reader :converter
+
+    # Sets both action_converter and input_converter, converter should be a proc
+    def converter=(converter)
+      @converter = converter
+    end
+
     # Reset to default configuration.
     def reset_config!
       self.log = true
@@ -69,7 +78,9 @@ module Savon
       self.raise_errors = true
       self.soap_version = SOAP::DefaultVersion
       self.strip_namespaces = true
+      self.converter = nil
     end
 
   end
 end
+
