@@ -28,7 +28,7 @@ module Savon
 
       # Converts a given SOAP response +xml+ to a Hash.
       def self.parse(xml)
-        Crack::XML.parse(xml) rescue {}
+        Crack::XML.parse(xml)
       end
 
       # Expects a SOAP response XML or Hash, traverses it for a given +path+ of Hash keys
