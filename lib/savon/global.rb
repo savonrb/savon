@@ -75,6 +75,7 @@ module Savon
       self.raise_errors = true
       self.soap_version = SOAP::DefaultVersion
       self.strip_namespaces = true
+      self.env_namespace = nil
     end
 
   end
