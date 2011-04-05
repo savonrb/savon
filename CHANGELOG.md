@@ -3,6 +3,13 @@
 * Improvement: if you're only setting the local or remote address of your wsdl document, you can
   now pass an (optional) String to `Savon::Client.new` to set `wsdl.document`.
 
+      Savon::Client.new "http://example.com/UserService?wsdl"
+
+* Improvement: instead of calling the `to_hash` method of your response again and again and again,
+  there is now a ' #[]` shortcut for you.
+
+      response[:authenticate_response][:return]
+
 ## 0.9.0 (2011-04-05)
 
 * Feature: issues [#158](https://github.com/rubiii/savon/issues/158),
