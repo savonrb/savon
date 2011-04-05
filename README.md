@@ -16,9 +16,7 @@ Basic workflow
 --------------
 
     # Setting up a Savon::Client representing a SOAP service.
-    client = Savon::Client.new do
-      wsdl.document = "http://service.example.com?wsdl"
-    end
+    client = Savon::Client.new "http://service.example.com?wsdl"
 
     client.wsdl.soap_actions
     # => [:create_user, :get_user, :get_all_users]
