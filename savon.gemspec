@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.version = Savon::Version
   s.authors = "Daniel Harrington"
   s.email = "me@rubiii.com"
-  s.homepage = "http://github.com/rubiii/#{s.name}"
+  s.homepage = "http://savonrb.com"
   s.summary = "Heavy metal Ruby SOAP client"
   s.description = "Savon is the heavy metal Ruby SOAP client."
 
@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency "builder", ">= 2.1.2"
   s.add_dependency "crack", "~> 0.1.8"
   s.add_dependency "httpi", ">= 0.7.8"
-  s.add_dependency "gyoku", ">= 0.3.0"
+  s.add_dependency "gyoku", ">= 0.4.0"
 
   s.add_development_dependency "rspec", "~> 2.4.0"
   s.add_development_dependency "autotest"
