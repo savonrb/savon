@@ -65,9 +65,7 @@ module Savon
     attr_reader :env_namespace
 
     # Sets the global env_namespace.
-    def env_namespace=(namespace)
-      @env_namespace = namespace
-    end
+    attr_writer :env_namespace
 
     # Reset to default configuration.
     def reset_config!
