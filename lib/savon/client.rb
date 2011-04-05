@@ -24,12 +24,16 @@ module Savon
     #   # Using a local WSDL
     #   client = Savon::Client.new { wsdl.document = "../wsdl/user_service.xml" }
     #
+    #   # Shortcut for setting the WSDL
+    #   client = Savon::Client.new "http://example.com/UserService?wsdl"
+    #
     #   # Directly accessing a SOAP endpoint
     #   client = Savon::Client.new do
     #     wsdl.endpoint = "http://example.com/UserService"
     #     wsdl.namespace = "http://users.example.com"
     #   end
-    def initialize(&block)
+    def initialize(wsdl_document = nil, &block)
+      wsdl.document = wsdl_document if wsdl_document
       process 1, &block if block
       wsdl.request = http
     end

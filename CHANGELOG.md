@@ -1,3 +1,8 @@
+## 0.x.x (UPCOMING)
+
+* Improvement: if you're only setting the local or remote address of your wsdl document, you can
+  now pass an (optional) String to `Savon::Client.new` to set `wsdl.document`.
+
 ## 0.9.0 (2011-04-05)
 
 * Feature: issues [#158](https://github.com/rubiii/savon/issues/158),
