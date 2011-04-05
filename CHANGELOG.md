@@ -40,6 +40,8 @@
 * Fix: [issue #163](https://github.com/rubiii/savon/issues/163) "Savon 0.8.6 not playing nicely
   with Httpi 0.9.0". Updating HTTPI to v0.9.1 should solve this problem.
 
+* And if you haven't already seen the new documentation: [savonrb.com](http://savonrb.com)
+
 ## 0.8.6 (2011-02-15)
 
 * Fix for issues [issue #147](https://github.com/rubiii/savon/issues/147) and [#151](https://github.com/rubiii/savon/issues/151)
