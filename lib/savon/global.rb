@@ -61,6 +61,12 @@ module Savon
     # Sets whether to strip namespaces in a SOAP response Hash.
     attr_writer :strip_namespaces
 
+    # Returns the global env_namespace.
+    attr_reader :env_namespace
+
+    # Sets the global env_namespace.
+    attr_writer :env_namespace
+
     # Reset to default configuration.
     def reset_config!
       self.log = true
@@ -69,7 +75,9 @@ module Savon
       self.raise_errors = true
       self.soap_version = SOAP::DefaultVersion
       self.strip_namespaces = true
+      self.env_namespace = nil
     end
 
   end
 end
+
