@@ -48,6 +48,11 @@ module Savon
         @header_hash ||= basic_hash.find_soap_header
       end
 
+      # Shortcut for the +to_hash+ method.
+      def [](key)
+        to_hash[key]
+      end
+
       # Returns the SOAP response body as a Hash.
       def to_hash
         @hash ||= Savon::SOAP::XML.to_hash basic_hash
