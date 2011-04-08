@@ -1,3 +1,59 @@
+## 0.9.1 (2011-04-06)
+
+* Improvement: if you're only setting the local or remote address of your wsdl document, you can
+  now pass an (optional) String to `Savon::Client.new` to set `wsdl.document`.
+
+      Savon::Client.new "http://example.com/UserService?wsdl"
+
+* Improvement: instead of calling the `to_hash` method of your response again and again and again,
+  there is now a ' #[]` shortcut for you.
+
+      response[:authenticate_response][:return]
+
+## 0.9.0 (2011-04-05)
+
+* Feature: issues [#158](https://github.com/rubiii/savon/issues/158),
+  [#169](https://github.com/rubiii/savon/issues/169) and [#172](https://github.com/rubiii/savon/issues/172)
+  configurable "Hash key Symbol to lowerCamelCase" conversion by using the latest version of
+  [Gyoku](http://rubygems.org/gems/gyoku).
+
+      Gyoku.convert_symbols_to(:camelcase)
+      Gyoku.xml(:first_name => "Mac")  # => "<FirstName></Firstname>"
+
+  You can even define your own conversion formular.
+
+      Gyoku.convert_symbols_to { |key| key.upcase }
+      Gyoku.xml(:first_name => "Mac")  # => "<FIRST_NAME></FIRST_NAME>"
+
+  This should also work for the SOAP input tag and SOAPAction header. So if you had to use a String for
+  the SOAP action to call because your services uses CamelCase instead of lowerCamelCase, you can now
+  change the default and use Symbols instead.
+
+      Gyoku.convert_symbols_to(:camelcase)
+
+      # pre Gyoku 0.4.0
+      client.request(:get_user)  # => "<getUser/>"
+      client.request("GetUser")  # => "<GetUser/>"
+
+      # post Gyoku 0.4.0
+      client.request(:get_user)  # => "<GetUser/>"
+
+* Improvement: issues [#170](https://github.com/rubiii/savon/issues/170) and
+  [#173](https://github.com/rubiii/savon/issues/173) Savon no longer rescues exceptions raised by
+  `Crack::XML.parse`. If Crack complains about your WSDL document, you should take control and
+  solve the problem instead of getting no response.
+
+* Improvement: issue [#172](https://github.com/rubiii/savon/issues/172) support for global env_namespace.
+
+      Savon.configure do |config|
+        config.env_namespace = :soapenv  # changes the default :env namespace
+      end
+
+* Fix: [issue #163](https://github.com/rubiii/savon/issues/163) "Savon 0.8.6 not playing nicely
+  with Httpi 0.9.0". Updating HTTPI to v0.9.1 should solve this problem.
+
+* And if you haven't already seen the new documentation: [savonrb.com](http://savonrb.com)
+
 ## 0.8.6 (2011-02-15)
 
 * Fix for issues [issue #147](https://github.com/rubiii/savon/issues/147) and [#151](https://github.com/rubiii/savon/issues/151)

@@ -4,6 +4,14 @@ describe Savon::Client do
   let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
 
   describe ".new" do
+    context "with a String" do
+      it "should set the WSDL document" do
+        wsdl = "http://example.com/UserService?wsdl"
+        client = Savon::Client.new wsdl
+        client.wsdl.instance_variable_get("@document").should == wsdl
+      end
+    end
+
     context "with a block expecting one argument" do
       it "should yield the WSDL object" do
         Savon::Client.new { |wsdl| wsdl.should be_a(Savon::WSDL::Document) }

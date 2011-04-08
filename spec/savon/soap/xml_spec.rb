@@ -136,6 +136,11 @@ describe Savon::SOAP::XML do
       xml.env_namespace = :soapenv
       xml.env_namespace.should == :soapenv
     end
+
+    it "should use the global env_namespace if set as the SOAP envelope namespace" do
+      Savon.stubs(:env_namespace).returns(:soapenv)
+      xml.env_namespace.should == :soapenv
+    end
   end
 
   describe "#namespaces" do
@@ -295,7 +300,7 @@ describe Savon::SOAP::XML do
           :token => "secret",
           :attributes! => { :token => { :xmlns => "http://example.com" } }
         }
-        
+
         xml.to_xml.should include('<env:Header><token xmlns="http://example.com">secret</token></env:Header>')
       end
     end
@@ -405,3 +410,4 @@ describe Savon::SOAP::XML do
   end
 
 end
+

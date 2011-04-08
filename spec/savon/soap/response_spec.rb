@@ -123,6 +123,13 @@ describe Savon::SOAP::Response do
     end
   end
 
+  describe "#[]" do
+    it "should return the SOAP response body as a Hash" do
+      soap_response[:authenticate_response][:return].should ==
+        Fixture.response_hash(:authentication)[:authenticate_response][:return]
+    end
+  end
+
   describe "#to_hash" do
     it "should return the SOAP response body as a Hash" do
       soap_response.to_hash[:authenticate_response][:return].should ==

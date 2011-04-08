@@ -3,7 +3,7 @@ Savon
 
 Heavy metal Ruby SOAP client
 
-[Guide](http://rubiii.github.com/savon) | [Rubydoc](http://rubydoc.info/gems/savon) | [Google Group](http://groups.google.com/group/savon-soap) | [Wishlist](http://savon.uservoice.com) | [Bugs](http://github.com/rubiii/savon/issues)
+[Official documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) | [Google Group](http://groups.google.com/group/savon-soap)
 
 Installation
 ------------
@@ -16,9 +16,7 @@ Basic workflow
 --------------
 
     # Setting up a Savon::Client representing a SOAP service.
-    client = Savon::Client.new do
-      wsdl.document = "http://service.example.com?wsdl"
-    end
+    client = Savon::Client.new "http://service.example.com?wsdl"
 
     client.wsdl.soap_actions
     # => [:create_user, :get_user, :get_all_users]
@@ -34,4 +32,4 @@ Basic workflow
 Excited to learn more?
 ----------------------
 
-Then you might want to go ahead and read the [Savon Guide](http://rubiii.github.com/savon).
+Then you might want to [go ahead and read the official documentation](http://savonrb.com).
