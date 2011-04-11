@@ -317,6 +317,24 @@ describe Savon::Client do
     end
   end
 
+  context "with multiple types" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_types)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "should not blow up" do
+      pending("When we get an end tag for the inner element article, we start looking for another inner element, find the outer element Get instead, and get confused")
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("Save")
+      }
+
+      client.request :save do |soap|
+        soap.body = {}
+      end
+    end
+  end
+
   context "without a WSDL document" do
     let(:client) do
       Savon::Client.new do
