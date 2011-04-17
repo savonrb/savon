@@ -67,6 +67,12 @@ module Savon
     # Sets the global env_namespace.
     attr_writer :env_namespace
 
+    # Returns the global soap_header.
+    attr_reader :soap_header
+
+    # Sets the global soap_header.
+    attr_writer :soap_header
+
     # Reset to default configuration.
     def reset_config!
       self.log = true
@@ -76,6 +82,7 @@ module Savon
       self.soap_version = SOAP::DefaultVersion
       self.strip_namespaces = true
       self.env_namespace = nil
+      self.soap_header = {}
     end
 
   end

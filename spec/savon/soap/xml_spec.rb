@@ -116,6 +116,11 @@ describe Savon::SOAP::XML do
       xml.header = { "MySecret" => "abc" }
       xml.header.should == { "MySecret" => "abc" }
     end
+
+    it "should use the global soap_header if set" do
+      Savon.stubs(:soap_header).returns({ "MySecret" => "abc" })
+      xml.header.should == { "MySecret" => "abc" }
+    end
   end
 
   describe "#env_namespace" do
