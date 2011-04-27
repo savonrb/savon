@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example of a WSDL with SOAP 1.2 and no SOAP 1.1 endpoint.
+     Don't know whether this is widespread, but we should allow it. -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <service name="Blog">
+        <port name="BlogSoap12">
+            <soap12:address location="http://blogsite.example.com/endpoint12"/>
+        </port>
+    </service>
+</definitions>
+

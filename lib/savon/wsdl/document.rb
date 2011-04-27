@@ -1,4 +1,4 @@
-require "rexml/document"
+require "nokogiri"
 
 require "savon/wsdl/request"
 require "savon/wsdl/parser"
@@ -101,8 +101,8 @@ module Savon
       # Parses the WSDL document and returns the <tt>Savon::WSDL::Parser</tt>.
       def parser
         @parser ||= begin
-          parser = Parser.new
-          REXML::Document.parse_stream document, parser
+          parser = Parser.new(Nokogiri::XML(document))
+          parser.parse
           parser
         end
       end
