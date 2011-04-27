@@ -7,7 +7,7 @@ begin
     t.files = ["README.md", "lib/**/*.rb"]
   end
 rescue LoadError
-  desc message = %{"gem install yard" to generate documentation}
+  desc message = %{run "bundle install" to generate documentation}
   task("yard") { abort message }
 end
 
@@ -21,7 +21,7 @@ begin
     c.rcov[:rcov_opts] << "-Ilib -Ispec"
   end
 rescue LoadError
-  desc message = %{"gem install metric_fu" to generate metrics}
+  desc message = %{run "bundle install" to generate metrics}
   task("metrics:all") { abort message }
 end
 
@@ -29,10 +29,10 @@ begin
   require "rspec/core/rake_task"
 
   RSpec::Core::RakeTask.new do |t|
-    t.rspec_opts = %w(-fd -c)
+    t.rspec_opts = %w(-c)
   end
 rescue LoadError
-  desc message = %{"gem install rspec --pre" to run the specs}
+  desc message = %{run "bundle install" to run the specs}
   task(:spec) { abort message }
 end
 
