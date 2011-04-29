@@ -150,6 +150,14 @@ describe Savon::WSDL::Parser do
     end
   end
 
+  context "with soap12.xml" do
+    let(:parser) { new_parser :soap12 }
+
+    it "should return the endpoint" do
+      parser.endpoint.should == URI("http://blogsite.example.com/endpoint12")
+    end
+  end
+
   RSpec::Matchers.define :match_operations do |expected|
     match do |actual|
       actual.should have(expected.keys.size).items
@@ -159,8 +167,8 @@ describe Savon::WSDL::Parser do
   end
 
   def new_parser(fixture)
-    parser = Savon::WSDL::Parser.new
-    REXML::Document.parse_stream Fixture[:wsdl, fixture], parser
+    parser = Savon::WSDL::Parser.new(Nokogiri::XML(Fixture[:wsdl, fixture]))
+    parser.parse
     parser
   end
 
