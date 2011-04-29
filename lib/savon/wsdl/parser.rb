@@ -17,12 +17,8 @@ module Savon
         @path = []
         @operations = {}
         @namespaces = {}
-        @messages = {}
-        @input_message = {}
         @types = {}
         @element_form_default = :unqualified
-
-        @type_parsing_state = :awaiting_type_start
       end
 
       # Returns the namespace URI.
@@ -34,12 +30,6 @@ module Savon
       # Returns the SOAP operations.
       attr_reader :operations
 
-      # Returns a map from the message name to its element
-      attr_reader :messages
-
-      # Returns a map from the action to its input message name
-      attr_reader :input_message
-
       # Returns a map from a type name to a hash with type information
       attr_reader :types
 
@@ -50,9 +40,13 @@ module Savon
       attr_reader :element_form_default
 
       def parse
+        # @namespaces = @document.collect_namespaces.inject({}) do |result, (key, value)|
+        #   result.merge(key.gsub(/xmlns:/, ''), value)
+        # end
         parse_namespaces
         parse_endpoint
         parse_operations
+        parse_types
       end
 
       def parse_namespaces
@@ -106,6 +100,38 @@ module Savon
               { :action => name, :input => name }
           end
         end
+      end
+
+      def parse_types
+        @document.xpath(
+          "s0:definitions/s0:types/xs:schema/xs:element[@name]",
+          "s0" => "http://schemas.xmlsoap.org/wsdl/",
+          "xs" => "http://www.w3.org/2001/XMLSchema"
+        ).each do |type|
+          process_type(type.at_xpath('./xs:complexType',
+            "xs" => "http://www.w3.org/2001/XMLSchema"
+          ), type.attribute('name').to_s)
+        end
+
+        @document.xpath(
+          "s0:definitions/s0:types/xs:schema/xs:complexType[@name]",
+          "s0" => "http://schemas.xmlsoap.org/wsdl/",
+          "xs" => "http://www.w3.org/2001/XMLSchema"
+        ).each do |type|
+          process_type(type, type.attribute('name').to_s)
+        end
+      end
+
+      def process_type(type, name)
+        return if !type
+        inner_element = type.at_xpath("./xs:sequence/xs:element",
+          "xs" => "http://www.w3.org/2001/XMLSchema"
+        )
+        @types[name] ||= {}
+        return if !inner_element
+        @types[name][inner_element.attribute('name').to_s] = {
+          :type => inner_element.attribute('type').to_s
+        }
       end
 
     end

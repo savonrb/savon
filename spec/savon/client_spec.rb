@@ -324,7 +324,6 @@ describe Savon::Client do
     end
 
     it "should not blow up" do
-      pending("When we get an end tag for the inner element article, we start looking for another inner element, find the outer element Get instead, and get confused")
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         value.include?("Save")
       }
