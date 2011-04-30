@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Improvement: WSSE basic, digest and timestamp authentication are no longer mutually exclusive.
+  Thanks to [mleon](https://github.com/mleon) for solving [issue #142](https://github.com/rubiii/savon/issues/142).
+
 ## 0.9.1 (2011-04-06)
 
 * Improvement: if you're only setting the local or remote address of your wsdl document, you can

@@ -208,6 +208,25 @@ describe Savon::WSSE do
         wsse.to_xml.should include("<wsu:Expires>#{wsse.expires_at.xs_datetime}</wsu:Expires>")
       end
     end
+
+    context "whith credentials and timestamp" do
+      before do
+        wsse.credentials "username", "password"
+        wsse.timestamp = true
+      end
+
+      it "should contain a wsu:Created node" do
+        wsse.to_xml.should include("<wsu:Created>")
+      end
+
+      it "should contain a wsu:Expires node" do
+        wsse.to_xml.should include("<wsu:Expires>")
+      end
+
+      it "should contain the username and password" do
+        wsse.to_xml.should include("username", "password")
+      end
+    end
   end
 
 end
