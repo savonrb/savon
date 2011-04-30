@@ -1,5 +1,5 @@
 require "builder"
-require "crack/xml"
+require "nori"
 require "gyoku"
 
 require "savon/soap"
@@ -28,7 +28,7 @@ module Savon
 
       # Converts a given SOAP response +xml+ to a Hash.
       def self.parse(xml)
-        Crack::XML.parse(xml)
+        Nori.parse(xml)
       end
 
       # Expects a SOAP response XML or Hash, traverses it for a given +path+ of Hash keys
