@@ -1,3 +1,19 @@
+## 0.9.2 (2011-04-30)
+
+* Fix: [issue](https://github.com/rubiii/savon/pull/154) -
+  Timezone format used by Savon now matches the XML schema spec.
+
+* Improvement: WSSE basic, digest and timestamp authentication are no longer mutually exclusive.
+  Thanks to [mleon](https://github.com/mleon) for solving [issue #142](https://github.com/rubiii/savon/issues/142).
+
+* Improvement: Switched from using Crack to translate the SOAP response to a Hash to using
+  [Nori](http://rubygems.org/gems/nori). It's based on Crack and comes with pluggable parsers.
+  It defaults to REXML, but you can switch to Nokogiri via:
+
+      Nori.parser = :nokogiri
+
+* Improvement: WSDL parsing now uses Nokogiri instead of REXML.
+
 ## 0.9.1 (2011-04-06)
 
 * Improvement: if you're only setting the local or remote address of your wsdl document, you can

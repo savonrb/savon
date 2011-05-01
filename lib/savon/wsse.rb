@@ -68,7 +68,13 @@ module Savon
 
     # Returns the XML for a WSSE header.
     def to_xml
-      if username_token?
+      if username_token? && timestamp?
+        Gyoku.xml wsse_username_token.merge!(wsse_timestamp) {
+          |key, v1, v2| v1.merge!(v2) {
+            |key, v1, v2| v1.merge!(v2)
+          }
+        }
+      elsif username_token?
         Gyoku.xml wsse_username_token.merge!(hash)
       elsif timestamp?
         Gyoku.xml wsse_timestamp.merge!(hash)
