@@ -43,29 +43,43 @@ module Savon
         @http_error ||= HTTP::Error.new http
       end
 
-      # Returns the SOAP response header as a Hash.
-      def header
-        @header_hash ||= basic_hash.find_soap_header
+      # Shortcut accessor for the SOAP response body Hash.
+      def [](key)
+        body[key]
       end
 
-      # Shortcut for the +to_hash+ method.
-      def [](key)
-        to_hash[key]
+      # Returns the SOAP response header as a Hash.
+      def header
+        normalized_hash[:envelope][:header]
       end
 
       # Returns the SOAP response body as a Hash.
-      def to_hash
-        @hash ||= Savon::SOAP::XML.to_hash basic_hash
+      def body
+        normalized_hash[:envelope][:body]
       end
 
-      # Returns the SOAP response body as an Array.
+      alias to_hash body
+
+      # Traverses the SOAP response body Hash for a given +path+ of Hash keys and returns
+      # the value as an Array. Defaults to return an empty Array in case the path does not
+      # exist or returns nil.
       def to_array(*path)
-        Savon::SOAP::XML.to_array to_hash, *path
+        result = path.inject body do |memo, key|
+          return [] unless memo[key]
+          memo[key]
+        end
+
+        result.kind_of?(Array) ? result.compact : [result].compact
       end
 
       # Returns the complete SOAP response XML without normalization.
-      def basic_hash
-        @basic_hash ||= Savon::SOAP::XML.parse http.body
+      def hash
+        @hash ||= Nori.parse http.body
+      end
+
+      # Returns the complete normalized SOAP response XML.
+      def normalized_hash
+        @normalized_hash ||= hash.map_soap_response
       end
 
       # Returns the SOAP response XML.
