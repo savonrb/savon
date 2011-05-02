@@ -143,12 +143,21 @@ describe Savon::WSDL::Parser do
     # but I suppose we should do something reasonable if they do.
 
     it "defaults to the target namespace from xs:definitions" do
-      parser = Savon::WSDL::Parser.new
-      parser.tag_start("definitions",
-        "targetNamespace" => "http://def.example.com")
-      parser.tag_start("types", {})
-      parser.tag_start("xs:schema", "elementFormDefault" => "qualified")
-      parser.tag_start("xs:element", "name" => "Save")
+      wsdl = %Q{
+        <definitions xmlns='http://schemas.xmlsoap.org/wsdl/'
+          xmlns:xs='http://www.w3.org/2001/XMLSchema'
+          targetNamespace='http://def.example.com'>
+          <types>
+            <xs:schema elementFormDefault='qualified'>
+              <xs:element name='Save'>
+                <xs:complexType></xs:complexType>
+              </xs:element>
+            </xs:schema>
+          </types>
+        </definitions>
+      }
+      parser = Savon::WSDL::Parser.new(Nokogiri::XML(wsdl))
+      parser.parse
 
       parser.types["Save"][:namespace].should == "http://def.example.com"
     end
