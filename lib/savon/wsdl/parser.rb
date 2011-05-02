@@ -125,14 +125,14 @@ module Savon
 
       def process_type(type, name)
         return if !type
-        inner_element = type.at_xpath("./xs:sequence/xs:element",
-          "xs" => "http://www.w3.org/2001/XMLSchema"
-        )
         @types[name] ||= {:namespace => find_namespace(type)}
-        return if !inner_element
-        @types[name][inner_element.attribute('name').to_s] = {
-          :type => inner_element.attribute('type').to_s
-        }
+        type.xpath("./xs:sequence/xs:element",
+          "xs" => "http://www.w3.org/2001/XMLSchema"
+        ).each do |inner_element|
+          @types[name][inner_element.attribute('name').to_s] = {
+            :type => inner_element.attribute('type').to_s
+          }
+        end
       end
 
       def find_namespace(type)
