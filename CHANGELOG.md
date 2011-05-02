@@ -14,6 +14,16 @@
 
 * Improvement: WSDL parsing now uses Nokogiri instead of REXML.
 
+* Refactoring:
+
+  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
+    also a method to access the entire `#normalized_hash`.
+  * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
+    It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
+    response and translate it to a Savon SOAP response Hash via:
+
+        Nori.parse(xml).map_soap_response[:envelope][:body]
+
 ## 0.9.1 (2011-04-06)
 
 * Improvement: if you're only setting the local or remote address of your wsdl document, you can

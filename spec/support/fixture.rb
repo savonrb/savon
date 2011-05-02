@@ -10,13 +10,11 @@ class Fixture
 
     def response_hash(fixture)
       @response_hash ||= {}
-      @response_hash[fixture] ||= Savon::SOAP::XML.to_hash response(fixture)
+      @response_hash[fixture] ||= Nori.parse(response(fixture)).map_soap_response[:envelope][:body]
     end
 
     TYPES.each do |type, ext|
-      define_method type do |fixture|
-        self[type, fixture]
-      end
+      define_method(type) { |fixture| self[type, fixture] }
     end
 
   private
@@ -29,7 +27,7 @@ class Fixture
     def read_file(type, fixture)
       path = File.expand_path "../../fixtures/#{type}/#{fixture}.#{TYPES[type]}", __FILE__
       raise ArgumentError, "Unable to load: #{path}" unless File.exist? path
-      
+
       File.read path
     end
 
