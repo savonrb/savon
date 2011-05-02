@@ -49,7 +49,7 @@ module Savon
 
       # Returns the SOAP +header+. Defaults to an empty Hash.
       def header
-        @header ||= {}
+        @header ||= Savon.soap_header.nil? ? {} : Savon.soap_header
       end
 
       # Sets the SOAP envelope namespace.
