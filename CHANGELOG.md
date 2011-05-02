@@ -1,7 +1,10 @@
 ## 0.9.2 (2011-04-30)
 
-* Fix: [issue](https://github.com/rubiii/savon/pull/154) -
+* Fix: [issue 154](https://github.com/rubiii/savon/pull/154) -
   Timezone format used by Savon now matches the XML schema spec.
+
+* Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
+  Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 
 * Improvement: WSSE basic, digest and timestamp authentication are no longer mutually exclusive.
   Thanks to [mleon](https://github.com/mleon) for solving [issue #142](https://github.com/rubiii/savon/issues/142).
