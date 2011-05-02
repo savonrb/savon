@@ -22,7 +22,7 @@
     It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
     response and translate it to a Savon SOAP response Hash via:
 
-        Nori.parse(xml).map_soap_response[:envelope][:body]
+    `Nori.parse(xml).map_soap_response[:envelope][:body]`
 
 ## 0.9.1 (2011-04-06)
 
