@@ -1,10 +1,22 @@
+## UPCOMING
+
+* Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
+  Savon now supports setting a global SOAP header via `Savon.soap_header=`.
+
+* Refactoring:
+
+  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
+    also a method to access the entire `#normalized_hash`.
+  * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
+    It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
+    response and translate it to a Savon SOAP response Hash via:
+
+    `Nori.parse(xml).map_soap_response[:envelope][:body]`
+
 ## 0.9.2 (2011-04-30)
 
 * Fix: [issue 154](https://github.com/rubiii/savon/pull/154) -
   Timezone format used by Savon now matches the XML schema spec.
-
-* Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
-  Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 
 * Improvement: WSSE basic, digest and timestamp authentication are no longer mutually exclusive.
   Thanks to [mleon](https://github.com/mleon) for solving [issue #142](https://github.com/rubiii/savon/issues/142).
@@ -16,16 +28,6 @@
       Nori.parser = :nokogiri
 
 * Improvement: WSDL parsing now uses Nokogiri instead of REXML.
-
-* Refactoring:
-
-  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
-    also a method to access the entire `#normalized_hash`.
-  * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
-    It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
-    response and translate it to a Savon SOAP response Hash via:
-
-    `Nori.parse(xml).map_soap_response[:envelope][:body]`
 
 ## 0.9.1 (2011-04-06)
 
