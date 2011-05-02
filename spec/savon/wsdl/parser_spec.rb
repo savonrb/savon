@@ -95,26 +95,6 @@ describe Savon::WSDL::Parser do
   context "with multiple_namespaces.xml" do
     let(:parser) { new_parser :multiple_namespaces }
 
-    it "can list the messages" do
-      pending("we don't need this yet, so not implemented")
-      parser.messages.keys.sort.should == ["SaveSoapIn", "SaveSoapOut"]
-    end
-
-    it "can go from message to element" do
-      pending("we don't need this yet, so not implemented")
-      parser.messages["SaveSoapIn"].should == "Save"
-    end
-
-    it "have an entry in input_message for everything listed" do
-      pending("we don't need this yet, so not implemented")
-      parser.input_message.keys.should == ["Save"]
-    end
-
-    it "can go from an action to a message" do
-      pending("we don't need this yet, so not implemented")
-      parser.input_message["Save"].should == "SaveSoapIn"
-    end
-
     it "can list the types" do
       parser.types.keys.sort.should == ["Article", "Save"]
     end
