@@ -40,9 +40,6 @@ module Savon
       attr_reader :element_form_default
 
       def parse
-        # @namespaces = @document.collect_namespaces.inject({}) do |result, (key, value)|
-        #   result.merge(key.gsub(/xmlns:/, ''), value)
-        # end
         parse_namespaces
         parse_endpoint
         parse_operations
@@ -60,6 +57,10 @@ module Savon
           "s0:definitions/@targetNamespace",
           "s0" => "http://schemas.xmlsoap.org/wsdl/")
         @namespace = namespace.to_s if namespace
+
+        @namespaces = @document.collect_namespaces.inject({}) do |result, (key, value)|
+          result.merge(key.gsub(/xmlns:/, '') => value)
+        end
       end
 
       def parse_endpoint
@@ -127,11 +128,19 @@ module Savon
         inner_element = type.at_xpath("./xs:sequence/xs:element",
           "xs" => "http://www.w3.org/2001/XMLSchema"
         )
-        @types[name] ||= {}
+        @types[name] ||= {:namespace => find_namespace(type)}
         return if !inner_element
         @types[name][inner_element.attribute('name').to_s] = {
           :type => inner_element.attribute('type').to_s
         }
+      end
+
+      def find_namespace(type)
+        schema_namespace = type.at_xpath("ancestor::xs:schema/@targetNamespace",
+          "xs" => "http://www.w3.org/2001/XMLSchema"
+        )
+        return schema_namespace.to_s if schema_namespace
+        return @namespace
       end
 
     end
