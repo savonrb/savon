@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "builder",  ">= 2.1.2"
   s.add_dependency "nori",     ">= 0.2.0"
-  s.add_dependency "httpi",    ">= 0.7.8"
+  s.add_dependency "httpi",    "0.9.2"
   s.add_dependency "gyoku",    ">= 0.4.0"
   s.add_dependency "nokogiri", ">= 1.4.0"
 
