@@ -3,7 +3,8 @@ Savon ![http://travis-ci.org/rubiii/savon](http://travis-ci.org/rubiii/savon.png
 
 Heavy metal Ruby SOAP client
 
-[Official documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) | [Google Group](http://groups.google.com/group/savon-soap)
+[Official documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
+[Google Group](http://groups.google.com/group/savon-soap) | [@savonrb](http://twitter.com/savonrb)
 
 Installation
 ------------
