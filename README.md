@@ -1,4 +1,4 @@
-Savon
+Savon ![http://travis-ci.org/rubiii/savon](http://travis-ci.org/rubiii/savon.png)
 =====
 
 Heavy metal Ruby SOAP client
