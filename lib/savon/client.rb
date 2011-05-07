@@ -4,17 +4,18 @@ require "savon/soap/request"
 require "savon/soap/response"
 require "savon/wsdl/document"
 require "savon/wsse"
+require "savon/delegator"
 
 module Savon
 
   # = Savon::Client
   #
-  # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
-  # both the Savon::WSDL::Document and HTTPI::Request object.
+  # The main interface for interacting with SOAP services.
   class Client
+    include Delegator
 
-    # Initializes the Savon::Client for a SOAP service. Accepts a +block+ which is evaluated in the
-    # context of this object to let you access the +wsdl+, +http+, and +wsse+ methods.
+    # Initializes the Savon::Client for a SOAP service. Accepts a +block+ which is either evaluated
+    # in the context of +self+ or being called with +self+ if the block expects an argument.
     #
     # == Examples
     #
@@ -27,14 +28,15 @@ module Savon
     #   # Shortcut for setting the WSDL
     #   client = Savon::Client.new "http://example.com/UserService?wsdl"
     #
-    #   # Directly accessing a SOAP endpoint
+    #   # You can pass a block to use Savon without a WSDL by defining the
+    #   # SOAP endpoint and the target namespace manually
     #   client = Savon::Client.new do
     #     wsdl.endpoint = "http://example.com/UserService"
     #     wsdl.namespace = "http://users.example.com"
     #   end
     def initialize(wsdl_document = nil, &block)
       wsdl.document = wsdl_document if wsdl_document
-      process 1, &block if block
+      process &block if block
       wsdl.request = http
     end
 
@@ -48,31 +50,36 @@ module Savon
       @http ||= HTTPI::Request.new
     end
 
-    # Returns the <tt>Savon::WSSE</tt> object.
+    # Returns the <tt>Savon::WSSE</tt>.
     def wsse
       @wsse ||= WSSE.new
     end
 
-    # Returns the <tt>Savon::SOAP::XML</tt> object. Please notice, that this object is only available
-    # in a block given to <tt>Savon::Client#request</tt>. A new instance of this object is created
-    # per SOAP request.
-    attr_reader :soap
+    # Returns the <tt>Savon::SOAP::XML</tt>. Notice, that this object is only available
+    # in a block passed to <tt>Savon::Client#request</tt>. A new instance of this object
+    # is created per SOAP request.
+    def soap
+      raise ArgumentError, "Expected to be called in a block passed to #request" unless @soap
+      @soap
+    end
 
-    # Executes a SOAP request for a given SOAP action. Accepts a +block+ which is evaluated in the
-    # context of this object to let you access the +soap+, +wsdl+, +http+ and +wsse+ methods.
+    attr_writer :soap
+
+    # Executes a SOAP request for a given SOAP action. Accepts a +block+ which is either evaluated
+    # in the context of +self+ or being called with +self+ if the block expects an argument.
     #
     # == Examples
     #
-    #   # Calls a "getUser" SOAP action with the payload of "<userId>123</userId>"
+    #   # Calls a "getUser" SOAP action with the SOAP body of "<userId>123</userId>"
     #   client.request(:get_user) { soap.body = { :user_id => 123 } }
     #
-    #   # Prefixes the SOAP input tag with a given namespace: "<wsdl:GetUser>...</wsdl:GetUser>"
+    #   # Namespaces the SOAP input tag with a given namespace: "<wsdl:GetUser>...</wsdl:GetUser>"
     #   client.request(:wsdl, "GetUser") { soap.body = { :user_id => 123 } }
     #
     #   # SOAP input tag with attributes: <getUser xmlns:wsdl="http://example.com">...</getUser>"
     #   client.request(:get_user, "xmlns:wsdl" => "http://example.com")
     def request(*args, &block)
-      raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
+      raise ArgumentError, "Expected to receive at least one argument" if args.empty?
 
       self.soap = SOAP::XML.new
       preconfigure extract_options(args)
@@ -86,19 +93,13 @@ module Savon
 
   private
 
-    # Writer for the <tt>Savon::SOAP::XML</tt> object.
-    attr_writer :soap
-
-    # Accessor for the original self of a given block.
-    attr_accessor :original_self
-
     # Passes a cookie from the last request +headers+ to the next one.
     def set_cookie(headers)
       http.headers["Cookie"] = headers["Set-Cookie"] if headers["Set-Cookie"]
     end
 
     # Expects an Array of +args+ and returns an Array containing the namespace (might be +nil+),
-    # the SOAP input and a Hash of attributes for the input tag (which might be empty).
+    # the SOAP input and a Hash of attributes for the input tag (might be empty).
     def extract_options(args)
       attributes = Hash === args.last ? args.pop : {}
       namespace = args.size > 1 ? args.shift.to_sym : nil
@@ -131,30 +132,6 @@ module Savon
       new_input = wsdl.soap_input input.to_sym
       new_input ||= Gyoku::XMLKey.create(input).to_sym
       soap.input = [namespace, new_input, attributes].compact
-    end
-
-    # Processes a given +block+. Yields objects if the block expects any arguments.
-    # Otherwise evaluates the block in the context of this object.
-    def process(offset = 0, &block)
-      block.arity > 0 ? yield_objects(offset, &block) : evaluate(&block)
-    end
-
-    # Yields a number of objects to a given +block+ depending on how many arguments
-    # the block is expecting.
-    def yield_objects(offset, &block)
-      yield *[soap, wsdl, http, wsse][offset, block.arity]
-    end
-
-    # Evaluates a given +block+ inside this object. Stores the original block binding.
-    def evaluate(&block)
-      self.original_self = eval "self", block.binding
-      instance_eval &block
-    end
-
-    # Handles calls to undefined methods by delegating to the original block binding.
-    def method_missing(method, *args, &block)
-      super unless original_self
-      original_self.send method, *args, &block
     end
 
   end
