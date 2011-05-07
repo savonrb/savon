@@ -81,17 +81,26 @@ module Savon
     def request(*args, &block)
       raise ArgumentError, "Expected to receive at least one argument" if args.empty?
 
-      self.soap = SOAP::XML.new
-      preconfigure extract_options(args)
-      process &block if block
-      soap.wsse = wsse
+      with_soap do
+        preconfigure extract_options(args)
+        process &block if block
+        soap.wsse = wsse
 
-      response = SOAP::Request.new(http, soap).response
-      set_cookie response.http.headers
-      response
+        response = SOAP::Request.execute(http, soap)
+        set_cookie response.http.headers
+        response
+      end
     end
 
   private
+
+    # Handels setup and teardown of the +Savon::SOAP::XML+ instance.
+    def with_soap(&block)
+      self.soap = SOAP::XML.new
+      response = yield
+      self.soap = nil
+      response
+    end
 
     # Passes a cookie from the last request +headers+ to the next one.
     def set_cookie(headers)
