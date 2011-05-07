@@ -12,6 +12,12 @@ module Savon
       # Content-Types by SOAP version.
       ContentType = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
 
+      # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object
+      # to execute a SOAP request and returns the response.
+      def self.execute(request, soap)
+        new(request, soap).response
+      end
+
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object.
       def initialize(request, soap)
         self.request = setup(request, soap)
