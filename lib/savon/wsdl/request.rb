@@ -25,7 +25,8 @@ module Savon
 
       # Logs the HTTP request and yields to a given +block+.
       def with_logging
-        Savon.log "Retrieving WSDL from: #{request.url}"
+        Savon.log "----"
+        Savon.log "WSDL request: #{request.url}"
         Savon.log "Using :#{request.auth.type} authentication" if request.auth?
         yield
       end
