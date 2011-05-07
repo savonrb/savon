@@ -5,6 +5,17 @@
 
 * Refactoring:
 
+  * Instead of yielding various objects to blocks passed to `Savon::Client.new` and `Savon::Client#request`,
+    Savon now either evaluates the block or yields the `Savon::Client` instance to blocks expecting a single
+    argument. This is a major change which has been made to create consistency between the yielded objects
+    and prevents having to remember the order of these objects. Especially with upcoming changes adding more
+    features to the library. Here's an example of how the new API works:
+
+        Savon::Client.new do |client|
+          client.wsdl.endpoint = "http://example.com"
+          client.wsdl.namespace = "http://v1.example.com"
+        end
+
   * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
     also a method to access the entire `#normalized_hash`.
   * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
