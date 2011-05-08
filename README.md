@@ -1,9 +1,10 @@
-Savon
+Savon [![Build Status](http://travis-ci.org/rubiii/savon.png)](http://travis-ci.org/rubiii/savon)
 =====
 
 Heavy metal Ruby SOAP client
 
-[Official documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) | [Google Group](http://groups.google.com/group/savon-soap)
+[Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
+[Mailing list](http://groups.google.com/group/savon-soap) | [Twitter](http://twitter.com/savonrb)
 
 Installation
 ------------
@@ -33,7 +34,7 @@ response.to_hash
 # => { :get_user_response => { :first_name => "The", :last_name => "Hoff" } }
 ```
 
-Excited to learn more?
-----------------------
+Ready for more?
+---------------
 
-Then you might want to [go ahead and read the official documentation](http://savonrb.com).
+[Go ahead and read the official documentation](http://savonrb.com).

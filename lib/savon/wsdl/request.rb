@@ -8,6 +8,12 @@ module Savon
     # Executes WSDL requests.
     class Request
 
+      # Expects an <tt>HTTPI::Request</tt> to execute a WSDL request
+      # and returns the response.
+      def self.execute(request)
+        new(request).response
+      end
+
       # Expects an <tt>HTTPI::Request</tt>.
       def initialize(request)
         self.request = request
@@ -25,7 +31,8 @@ module Savon
 
       # Logs the HTTP request and yields to a given +block+.
       def with_logging
-        Savon.log "Retrieving WSDL from: #{request.url}"
+        Savon.log "----"
+        Savon.log "WSDL request: #{request.url}"
         Savon.log "Using :#{request.auth.type} authentication" if request.auth?
         yield
       end

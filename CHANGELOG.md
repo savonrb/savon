@@ -1,6 +1,33 @@
+## UPCOMING
+
+* Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
+  Savon now supports setting a global SOAP header via `Savon.soap_header=`.
+
+* Refactoring:
+
+  * Instead of yielding various objects to blocks passed to `Savon::Client.new` and `Savon::Client#request`,
+    Savon now either evaluates the block or yields the `Savon::Client` instance to blocks expecting a single
+    argument. This is a major change which has been made to create consistency between the yielded objects
+    and prevents having to remember the order of these objects. Especially with upcoming changes adding more
+    features to the library. Here's an example of how the new API works:
+
+        Savon::Client.new do |client|
+          client.wsdl.endpoint = "http://example.com"
+          client.wsdl.namespace = "http://v1.example.com"
+        end
+
+  * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
+    It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
+    response and translate it to a Savon SOAP response Hash via:
+
+        Nori.parse(xml).map_soap_response[:envelope][:body]
+
+  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
+    also a method to access the entire `#normalized_hash`.
+
 ## 0.9.2 (2011-04-30)
 
-* Fix: [issue](https://github.com/rubiii/savon/pull/154) -
+* Fix: [issue 154](https://github.com/rubiii/savon/pull/154) -
   Timezone format used by Savon now matches the XML schema spec.
 
 * Improvement: WSSE basic, digest and timestamp authentication are no longer mutually exclusive.

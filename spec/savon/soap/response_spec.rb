@@ -116,13 +116,6 @@ describe Savon::SOAP::Response do
     end
   end
 
-  describe "#header" do
-    it "should return the SOAP response header as a Hash" do
-      response = soap_response :body => Fixture.response(:header)
-      response.header.should include(:session_number => "ABCD1234")
-    end
-  end
-
   describe "#[]" do
     it "should return the SOAP response body as a Hash" do
       soap_response[:authenticate_response][:return].should ==
@@ -130,24 +123,61 @@ describe Savon::SOAP::Response do
     end
   end
 
-  describe "#to_hash" do
-    it "should return the SOAP response body as a Hash" do
-      soap_response.to_hash[:authenticate_response][:return].should ==
-        Fixture.response_hash(:authentication)[:authenticate_response][:return]
+  describe "#header" do
+    it "should return the SOAP response header as a Hash" do
+      response = soap_response :body => Fixture.response(:header)
+      response.header.should include(:session_number => "ABCD1234")
+    end
+  end
+
+  %w(body to_hash).each do |method|
+    describe "##{method}" do
+      it "should return the SOAP response body as a Hash" do
+        soap_response.send(method)[:authenticate_response][:return].should ==
+          Fixture.response_hash(:authentication)[:authenticate_response][:return]
+      end
+
+      it "should return a Hash for a SOAP multiRef response" do
+        hash = soap_response(:body => Fixture.response(:multi_ref)).send(method)
+
+        hash[:list_response].should be_a(Hash)
+        hash[:multi_ref].should be_an(Array)
+      end
+
+      it "should add existing namespaced elements as an array" do
+        hash = soap_response(:body => Fixture.response(:list)).send(method)
+
+        hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
+        hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+      end
     end
   end
 
   describe "#to_array" do
-    it "should delegate to Savon::SOAP::XML.to_array" do
-      Savon::SOAP::XML.expects(:to_array).with(soap_response.to_hash, :authenticate_response, :return)
-      soap_response.to_array :authenticate_response, :return
+    context "when the given path exists" do
+      it "should return an Array containing the path value" do
+        soap_response.to_array(:authenticate_response, :return).should ==
+          [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
+      end
+    end
+
+    context "when the given path returns nil" do
+      it "should return an empty Array" do
+        soap_response.to_array(:authenticate_response, :undefined).should == []
+      end
+    end
+
+    context "when the given path does not exist at all" do
+      it "should return an empty Array" do
+        soap_response.to_array(:authenticate_response, :some, :undefined, :path).should == []
+      end
     end
   end
 
-  describe "#basic_hash" do
+  describe "#hash" do
     it "should return the complete SOAP response XML as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      response.basic_hash["soap:Envelope"]["soap:Header"]["SessionNumber"].should == "ABCD1234"
+      response.hash["soap:Envelope"]["soap:Header"]["SessionNumber"].should == "ABCD1234"
     end
   end
 

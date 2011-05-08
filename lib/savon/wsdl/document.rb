@@ -121,7 +121,7 @@ module Savon
       # Executes an HTTP GET request to retrieve a remote WSDL document.
       def http_request
         request.url = @document
-        Request.new(request).response.body
+        Request.execute(request).body
       end
 
       # Reads the WSDL document from a local file.

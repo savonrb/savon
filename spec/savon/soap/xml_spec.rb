@@ -3,64 +3,6 @@ require "spec_helper"
 describe Savon::SOAP::XML do
   let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
 
-  describe ".to_hash" do
-    it "should return a given SOAP response body as a Hash" do
-      hash = Savon::SOAP::XML.to_hash Fixture.response(:authentication)
-      hash[:authenticate_response][:return].should == {
-        :success => true,
-        :authentication_value => {
-          :token_hash => "AAAJxA;cIedoT;mY10ExZwG6JuKgp2OYKxow==",
-          :token => "a68d1d6379b62ff339a0e0c69ed4d9cf",
-          :client => "radclient"
-        }
-      }
-    end
-
-    it "should return a Hash for a SOAP multiRef response" do
-      hash = Savon::SOAP::XML.to_hash Fixture.response(:multi_ref)
-
-      hash[:list_response].should be_a(Hash)
-      hash[:multi_ref].should be_an(Array)
-    end
-
-    it "should add existing namespaced elements as an array" do
-      hash = Savon::SOAP::XML.to_hash Fixture.response(:list)
-
-      hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
-      hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
-    end
-  end
-
-  describe ".parse" do
-    it "should convert the given XML into a Hash" do
-      hash = Savon::SOAP::XML.parse Fixture.response(:list)
-      hash["soapenv:Envelope"]["soapenv:Body"].should be_a(Hash)
-    end
-  end
-
-  describe ".to_array" do
-    let(:response_hash) { Fixture.response_hash :authentication }
-
-    context "when the given path exists" do
-      it "should return an Array containing the path value" do
-        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :return).should ==
-          [response_hash[:authenticate_response][:return]]
-      end
-    end
-
-    context "when the given path returns nil" do
-      it "should return an empty Array" do
-        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :undefined).should == []
-      end
-    end
-
-    context "when the given path does not exist at all" do
-      it "should return an empty Array" do
-        Savon::SOAP::XML.to_array(response_hash, :authenticate_response, :some, :wrong, :path).should == []
-      end
-    end
-  end
-
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
       xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
@@ -123,6 +65,11 @@ describe Savon::SOAP::XML do
 
     it "should set the SOAP header" do
       xml.header = { "MySecret" => "abc" }
+      xml.header.should == { "MySecret" => "abc" }
+    end
+
+    it "should use the global soap_header if set" do
+      Savon.stubs(:soap_header).returns({ "MySecret" => "abc" })
       xml.header.should == { "MySecret" => "abc" }
     end
   end

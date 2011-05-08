@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = "me@rubiii.com"
   s.homepage    = "http://savonrb.com"
   s.summary     = "Heavy metal Ruby SOAP client"
-  s.description = "Savon is the heavy metal Ruby SOAP client"
+  s.description = "Ruby's heavy metal SOAP client"
 
   s.rubyforge_project = s.name
 
@@ -20,8 +20,8 @@ Gem::Specification.new do |s|
   s.add_dependency "gyoku",    ">= 0.4.0"
   s.add_dependency "nokogiri", ">= 1.4.1"
 
-  s.add_development_dependency "rspec",   "~> 2.4.0"
   s.add_development_dependency "autotest"
+  s.add_development_dependency "rspec",   "~> 2.5.0"
   s.add_development_dependency "mocha",   "~> 0.9.8"
   s.add_development_dependency "timecop", "~> 0.3.5"
 
