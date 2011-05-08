@@ -260,8 +260,8 @@ describe Savon::Client do
         value.include?('xmlns:ins0="http://example.com/article"')
       }
 
-      client.request :save do |soap|
-        soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
+      client.request :save do |client|
+        client.soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
       end
     end
 
@@ -271,8 +271,8 @@ describe Savon::Client do
         value.include?('xmlns:ins1="http://example.com/actions"')
       }
 
-      client.request :save do |soap|
-        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      client.request :save do |client|
+        client.soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
       end
     end
 
@@ -282,8 +282,8 @@ describe Savon::Client do
         value.include?('xmlns:ins1="http://example.com/actions"')
       }
 
-      client.request "Save" do |soap|
-        soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      client.request "Save" do |client|
+        client.soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
       end
     end
   end
@@ -299,8 +299,8 @@ describe Savon::Client do
         value.include?("Save")
       }
 
-      client.request :save do |soap|
-        soap.body = {}
+      client.request :save do |client|
+        client.soap.body = {}
       end
     end
   end
