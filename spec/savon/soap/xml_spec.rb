@@ -253,7 +253,7 @@ describe Savon::SOAP::XML do
 
     context "with a simple input tag (Array)" do
       it "should just add the input tag" do
-        xml.input = :simple
+        xml.input = [:simple]
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end
