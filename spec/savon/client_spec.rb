@@ -260,8 +260,20 @@ describe Savon::Client do
         value.include?('xmlns:ins0="http://example.com/article"')
       }
 
-      client.request :save do |client|
-        client.soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
+      client.request :save do |c|
+        c.soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
+      end
+    end
+
+    it "still sends nil as xsi:nil as in the non-namespaced case" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?('<ins1:Save><ins1:article>' +
+          '<ins0:Title xsi:nil="true"/>' +
+          '</ins1:article></ins1:Save>')
+      }
+
+      client.request :save do |c|
+        c.soap.body = {:article => {"Title" => nil}}
       end
     end
 

@@ -192,6 +192,7 @@ module Savon
       end
 
       def add_namespaces(hash, path = [input.to_s])
+        return nil if hash.nil?
         return hash.to_s unless hash.kind_of? Hash
         hash.inject({}) do |newhash, (key, value)|
           newpath = path + [key.to_s]
