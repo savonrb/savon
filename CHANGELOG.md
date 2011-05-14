@@ -14,9 +14,19 @@
     and prevents having to remember the order of these objects. Especially with upcoming changes adding more
     features to the library. Here's an example of how the new API works:
 
-        Savon::Client.new do |client|
-          client.wsdl.endpoint = "http://example.com"
-          client.wsdl.namespace = "http://v1.example.com"
+        client = Savon::Client.new do |c|
+          c.wsdl.endpoint = "http://example.com"
+          c.wsdl.namespace = "http://v1.example.com"
+        end
+
+        client.request :login do |c|
+          c.soap.body => { :username => "me", :password => "secret" }
+        end
+
+    Savon still uses instance_eval with delegation for blocks that don't accept any arguments:
+
+        client.request :login do
+          soap.body => { :username => "me", :password => "secret" }
         end
 
   * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
