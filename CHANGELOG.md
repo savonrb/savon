@@ -3,6 +3,9 @@
 * Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
   Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 
+* Fixed the namespace for wsse message timestamps from `wsse:Timestamp`
+  to `wsu:Timestamp` as required by the specification.
+
 * Refactoring:
 
   * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
