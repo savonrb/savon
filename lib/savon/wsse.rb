@@ -56,20 +56,20 @@ module Savon
       username && password
     end
 
-    # Returns whether to generate a wsse:Timestamp header.
+    # Returns whether to generate a wsu:Timestamp header.
     def timestamp?
-      created_at || expires_at || @wsse_timestamp
+      created_at || expires_at || @wsu_timestamp
     end
 
-    # Sets whether to generate a wsse:Timestamp header.
+    # Sets whether to generate a wsu:Timestamp header.
     def timestamp=(timestamp)
-      @wsse_timestamp = timestamp
+      @wsu_timestamp = timestamp
     end
 
     # Returns the XML for a WSSE header.
     def to_xml
       if username_token? && timestamp?
-        Gyoku.xml wsse_username_token.merge!(wsse_timestamp) {
+        Gyoku.xml wsse_username_token.merge!(wsu_timestamp) {
           |key, v1, v2| v1.merge!(v2) {
             |key, v1, v2| v1.merge!(v2)
           }
@@ -77,7 +77,7 @@ module Savon
       elsif username_token?
         Gyoku.xml wsse_username_token.merge!(hash)
       elsif timestamp?
-        Gyoku.xml wsse_timestamp.merge!(hash)
+        Gyoku.xml wsu_timestamp.merge!(hash)
       else
         ""
       end
@@ -88,33 +88,34 @@ module Savon
     # Returns a Hash containing wsse:UsernameToken details.
     def wsse_username_token
       if digest?
-        wsse_security "UsernameToken",
+        security_hash :wsse, "UsernameToken",
           "wsse:Username" => username,
           "wsse:Nonce" => nonce,
           "wsu:Created" => timestamp,
           "wsse:Password" => digest_password,
           :attributes! => { "wsse:Password" => { "Type" => PasswordDigestURI } }
       else
-        wsse_security "UsernameToken",
+        security_hash :wsse, "UsernameToken",
           "wsse:Username" => username,
           "wsse:Password" => password,
           :attributes! => { "wsse:Password" => { "Type" => PasswordTextURI } }
       end
     end
 
-    # Returns a Hash containing wsse:Timestamp details.
-    def wsse_timestamp
-      wsse_security "Timestamp",
+    # Returns a Hash containing wsu:Timestamp details.
+    def wsu_timestamp
+      security_hash :wsu, "Timestamp",
         "wsu:Created" => (created_at || Time.now).xs_datetime,
         "wsu:Expires" => (expires_at || (created_at || Time.now) + 60).xs_datetime
     end
 
-    # Returns a Hash containing wsse:Security details for a given +tag+ and +hash+.
-    def wsse_security(tag, hash)
+    # Returns a Hash containing wsse/wsu Security details for a given
+    # +namespace+, +tag+ and +hash+.
+    def security_hash(namespace, tag, hash)
       {
         "wsse:Security" => {
-          "wsse:#{tag}" => hash,
-          :attributes! => { "wsse:#{tag}" => { "wsu:Id" => "#{tag}-#{count}", "xmlns:wsu" => WSUNamespace } }
+          "#{namespace}:#{tag}" => hash,
+          :attributes! => { "#{namespace}:#{tag}" => { "wsu:Id" => "#{tag}-#{count}", "xmlns:wsu" => WSUNamespace } }
         },
         :attributes! => { "wsse:Security" => { "xmlns:wsse" => WSENamespace } }
       }

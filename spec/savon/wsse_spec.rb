@@ -163,7 +163,7 @@ describe Savon::WSSE do
       before { wsse.timestamp = true }
 
       it "should contain a wsse:Timestamp node" do
-        wsse.to_xml.should include('<wsse:Timestamp wsu:Id="Timestamp-1" ' +
+        wsse.to_xml.should include('<wsu:Timestamp wsu:Id="Timestamp-1" ' +
           'xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">')
       end
 
