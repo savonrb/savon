@@ -8,6 +8,9 @@
   specified as qualified, Savon will automatically prepend the correct XML namespaces to the
   elements in a SOAP request.
 
+* Fix: [issue 143](https://github.com/rubiii/savon/issues/143) -
+  improved support for namespaces should fix this error.
+
 * Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
   Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 
