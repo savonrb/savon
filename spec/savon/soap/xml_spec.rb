@@ -1,16 +1,12 @@
 require "spec_helper"
 
 describe Savon::SOAP::XML do
-  let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
-
-  describe ".new" do
-    it "should accept an endpoint, an input tag and a SOAP body" do
-      xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
-
-      xml.endpoint.should == Endpoint.soap
-      xml.input.should == :authentication
-      xml.body.should == { :id => 1 }
-    end
+  let :xml do
+    xml = Savon::SOAP::XML.new
+    xml.endpoint = Endpoint.soap
+    xml.input = :authenticate
+    xml.body = { :id => 1 }
+    xml
   end
 
   describe "#input" do
@@ -290,7 +286,11 @@ describe Savon::SOAP::XML do
 
     context "with :element_form_default set to :qualified and a :namespace" do
       let :xml do
-        Savon::SOAP::XML.new Endpoint.soap, :authenticate, :user => { :id => 1, ":noNamespace" => true }
+        xml = Savon::SOAP::XML.new
+        xml.endpoint = Endpoint.soap
+        xml.input = :authenticate
+        xml.body = { :user => { :id => 1, ":noNamespace" => true } }
+        xml
       end
 
       it "should namespace the default elements" do
@@ -325,7 +325,7 @@ describe Savon::SOAP::XML do
 
     context "with a simple input tag (Array)" do
       it "should just add the input tag" do
-        xml.input = :simple
+        xml.input = [:simple]
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end

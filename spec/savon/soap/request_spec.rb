@@ -1,8 +1,17 @@
 require "spec_helper"
 
 describe Savon::SOAP::Request do
-  let(:request) { Savon::SOAP::Request.new HTTPI::Request.new, soap }
-  let(:soap) { Savon::SOAP::XML.new Endpoint.soap, :get_user, :id => 1 }
+  let :request do
+    Savon::SOAP::Request.new HTTPI::Request.new, soap
+  end
+
+  let :soap do
+    soap = Savon::SOAP::XML.new
+    soap.endpoint = Endpoint.soap
+    soap.input = :get_user
+    soap.body = { :id => 1 }
+    soap
+  end
 
   it "contains the content type for each supported SOAP version" do
     content_type = Savon::SOAP::Request::ContentType
