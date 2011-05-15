@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions
+  xmlns="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:SOAP-ENC="http://schemas.xmlsoap.org/soap/encoding/"
+  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+  xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:s="http://www.w3.org/2001/XMLSchema"
+  xmlns:article="http://example.com/article"
+  xmlns:actions="http://example.com/actions"
+  targetNamespace="http://example.com/actions">
+    <types>
+        <s:schema elementFormDefault="qualified" targetNamespace="http://example.com/actions">
+            <s:element name="Save">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element name="article" type="s:string"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+            <s:element name="Get">
+                <s:complexType>
+                    <s:sequence>
+                        <s:element name="articleId" type="s:long"/>
+                    </s:sequence>
+                </s:complexType>
+            </s:element>
+        </s:schema>
+    </types>
+    <message name="SaveSoapIn">
+        <part name="parameters" element="actions:Save"/>
+    </message>
+    <message name="SaveSoapOut">
+        <part name="parameters" element="actions:SaveResponse"/>
+    </message>
+    <portType name="ArticleSoap">
+        <operation name="Save">
+            <input message="actions:SaveSoapIn"/>
+            <output message="actions:SaveSoapOut"/>
+        </operation>
+    </portType>
+    <binding name="ArticleSoap" type="actions:ArticleSoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="Save">
+            <soap:operation soapAction="http://example.com/actions.Save" style="document"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+    <service name="StudyMDL">
+        <port name="StudyMDLSoap" binding="actions:StudyMDLSoap">
+            <soap:address location="http://example.com:1234/soap"/>
+        </port>
+    </service>
+</definitions>

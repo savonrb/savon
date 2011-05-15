@@ -125,6 +125,14 @@ module Savon
       soap.element_form_default = wsdl.element_form_default if wsdl.present?
       soap.body = options[2].delete(:body) if options[2][:body]
 
+      wsdl.type_namespaces.each do |path, uri|
+        soap.use_namespace(path, uri)
+      end
+      
+      wsdl.type_definitions.each do |path, type|
+        soap.define_type(path, type)
+      end
+
       set_soap_action options[1]
       set_soap_input *options
     end

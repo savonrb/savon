@@ -63,6 +63,38 @@ module Savon
           { key => SOAP::Namespace[version] }
         end
       end
+      
+      def namespace_by_uri(uri)
+        namespaces.each do |candidate_identifier, candidate_uri|
+          return candidate_identifier.gsub(/^xmlns:/, '') if candidate_uri == uri
+        end
+        return nil
+      end
+
+      def used_namespaces
+        @used_namespaces ||= {}
+      end
+
+      def use_namespace(path, uri)
+        @internal_namespace_count ||= 0
+        
+        identifier = namespace_by_uri(uri)
+        if !identifier
+          identifier = "ins#{@internal_namespace_count}"
+          namespaces["xmlns:#{identifier}"] = uri
+          @internal_namespace_count += 1
+        end
+
+        used_namespaces[path] = identifier
+      end
+      
+      def types
+        @types ||= {}
+      end
+      
+      def define_type(path, type)
+        types[path] = type
+      end
 
       # Sets the default namespace identifier.
       attr_writer :namespace_identifier
@@ -103,7 +135,13 @@ module Savon
       def to_xml
         @xml ||= tag(builder, :Envelope, complete_namespaces) do |xml|
           tag(xml, :Header) { xml << header_for_xml } unless header_for_xml.empty?
-          input.nil? ? tag(xml, :Body) : tag(xml, :Body) { xml.tag!(*input) { xml << body_to_xml } }
+          if input.nil?
+            tag(xml, :Body)
+          else
+            tag(xml, :Body) {
+              xml.tag!(*add_namespace_to_input) { xml << body_to_xml }
+            }
+          end
         end
       end
 
@@ -143,7 +181,41 @@ module Savon
       # Returns the SOAP body as an XML String.
       def body_to_xml
         return body.to_s unless body.kind_of? Hash
-        Gyoku.xml body, :element_form_default => element_form_default, :namespace => namespace_identifier
+        Gyoku.xml add_namespaces(body), :element_form_default => element_form_default, :namespace => namespace_identifier
+      end
+
+      def add_namespaces(hash, path = [input.to_s])
+        return nil if hash.nil?
+        return hash.to_s unless hash.kind_of? Hash
+        hash.inject({}) do |newhash, (key, value)|
+          newpath = path + [key.to_s]
+          
+          if used_namespaces[newpath]
+            newhash.merge(
+              "#{used_namespaces[newpath]}:#{key.to_s}" =>
+                add_namespaces(value,
+                  types[newpath] ? [types[newpath]] : newpath))
+          else
+            newhash.merge(key => value)
+          end
+        end
+      end
+
+      def add_namespace_to_input
+        namespace, tag, attributes = nil, nil, nil
+        if Array === input && input.length == 3
+          namespace, tag, attributes = input
+        elsif Array === input && input.length == 2
+          tag, attributes = input
+        else
+          tag = input
+        end
+
+        if used_namespaces[[tag.to_s]]
+          [used_namespaces[[tag.to_s]], tag, attributes]
+        else
+          input
+        end
       end
 
     end
