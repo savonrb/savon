@@ -48,6 +48,16 @@ describe Savon::WSDL::Parser do
     it "should return that :element_form_default is set to :unqualified" do
       parser.element_form_default.should == :unqualified
     end
+
+    it "can list the types" do
+      parser.types.keys.sort.should ==
+        ["McContact", "McContactArray", "MpUser", "MpUserArray"]
+    end
+
+    it "ignores xsd:all" do
+      parser.types["MpUser"].keys.should == [:namespace]
+    end
+
   end
 
   context "with geotrust.xml" do
@@ -79,6 +89,57 @@ describe Savon::WSDL::Parser do
     it "should merge operations from all binding sections (until we have an example where it makes sense to do otherwise)" do
       parser.operations.keys.map(&:to_s).sort.should ==
         %w{post post11only post12only}
+    end
+  end
+
+  context "with multiple_namespaces.xml" do
+    let(:parser) { new_parser :multiple_namespaces }
+
+    it "can list the types" do
+      parser.types.keys.sort.should == ["Article", "Save"]
+    end
+
+    it "records the namespace for each type" do
+      parser.types["Save"][:namespace].should == "http://example.com/actions"
+    end
+
+    it "records the fields under a type" do
+      parser.types["Save"].keys.should =~ ["article", :namespace]
+    end
+
+    it "records multiple fields when there are more than one" do
+      parser.types["Article"].keys.should =~ ["Title", "Author", :namespace]
+    end
+
+    it "records the type of a field" do
+      parser.types["Save"]["article"][:type].should == "article:Article"
+      parser.namespaces["article"].should == "http://example.com/article"
+    end
+
+  end
+
+  context "if the WSDL defines xs:schema without targetNamespace" do
+    # Don't know if real WSDL files omit targetNamespace from xs:schema,
+    # but I suppose we should do something reasonable if they do.
+
+    it "defaults to the target namespace from xs:definitions" do
+      wsdl = %Q{
+        <definitions xmlns='http://schemas.xmlsoap.org/wsdl/'
+          xmlns:xs='http://www.w3.org/2001/XMLSchema'
+          targetNamespace='http://def.example.com'>
+          <types>
+            <xs:schema elementFormDefault='qualified'>
+              <xs:element name='Save'>
+                <xs:complexType></xs:complexType>
+              </xs:element>
+            </xs:schema>
+          </types>
+        </definitions>
+      }
+      parser = Savon::WSDL::Parser.new(Nokogiri::XML(wsdl))
+      parser.parse
+
+      parser.types["Save"][:namespace].should == "http://def.example.com"
     end
   end
 

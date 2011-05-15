@@ -89,7 +89,7 @@ describe Savon::Client do
       end
 
       it "does not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'wsdl="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:get_user) { soap.namespace = nil }
@@ -121,7 +121,7 @@ describe Savon::Client do
       end
 
       it "does not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:v1, :get_user) { soap.namespace = nil }
@@ -244,6 +244,76 @@ describe Savon::Client do
 
       response.should be_a(Savon::SOAP::Response)
       response.to_xml.should == Fixture.response(:authentication)
+    end
+  end
+
+  context "when the WSDL specifies multiple namespaces" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_namespaces)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "should qualify each element with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins1:Save><ins1:article><ins0:Title>Hamlet</ins0:Title><ins0:Author>Shakespeare</ins0:Author></ins1:article></ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"') &&
+        value.include?('xmlns:ins0="http://example.com/article"')
+      }
+
+      client.request :save do |c|
+        c.soap.body = {:article => {"Title" => "Hamlet", "Author" => "Shakespeare"}}
+      end
+    end
+
+    it "still sends nil as xsi:nil as in the non-namespaced case" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?('<ins1:Save><ins1:article>' +
+          '<ins0:Title xsi:nil="true"/>' +
+          '</ins1:article></ins1:Save>')
+      }
+
+      client.request :save do |c|
+        c.soap.body = {:article => {"Title" => nil}}
+      end
+    end
+
+    it "should translate between symbol :save and string 'Save'" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"')
+      }
+
+      client.request :save do |client|
+        client.soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+
+    it "will qualify Save with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("<ins1:Save>") &&
+        value.include?('xmlns:ins1="http://example.com/actions"')
+      }
+
+      client.request "Save" do |client|
+        client.soap.body = {:article => {:title => "Hamlet", :author => "Shakespeare"}}
+      end
+    end
+  end
+
+  context "with multiple types" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_types)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "should not blow up" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        value.include?("Save")
+      }
+
+      client.request :save do |client|
+        client.soap.body = {}
+      end
     end
   end
 

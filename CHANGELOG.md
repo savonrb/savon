@@ -1,5 +1,13 @@
 ## UPCOMING
 
+* Improvement/Fix: [issue 155](https://github.com/rubiii/savon/issues/155) -
+  Savon can automatically add namespaces to SOAP requests based on the WSDL.
+  Savon users shouldn't need to do anything differently or even notice whether
+  their WSDL hits this case; the intention is that Savon will Just Work
+  and follow the WSDL. The SOAP details are that if elementFormDefault is
+  specified as qualified, Savon will automatically prepend the correct XML namespaces to the
+  elements in a SOAP request.
+
 * Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
   Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 

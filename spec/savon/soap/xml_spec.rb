@@ -11,9 +11,18 @@ describe Savon::SOAP::XML do
 
   describe "#input" do
     it "should set the input tag" do
-      xml.input = :test
-      xml.input.should == :test
+      xml.input = [:test, {}]
+      xml.input.should == [:test, {}]
     end
+
+    it "should namespace it if use_namespace was called" do
+      xml.input = [:test, {}]
+      xml.use_namespace(["test"], "http://example.com/test")
+      xml.to_xml.should include('ins0="http://example.com/test"')
+      xml.to_xml.should include('<ins0:test>')
+    end
+
+    it "should not namespace input if input was given an explicit namespace"
   end
 
   describe "#endpoint" do
@@ -92,6 +101,18 @@ describe Savon::SOAP::XML do
       xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
     end
   end
+  
+  describe "#namespace_by_uri" do
+    it "should return the identifier if found" do
+      xml.namespace_by_uri("http://schemas.xmlsoap.org/soap/envelope/").
+        should == "env"
+    end
+    
+    it "should return nil if not found" do
+      xml.namespace_by_uri("http://example.com/unregistered").
+        should be_nil
+    end
+  end
 
   describe "#wsse" do
     it "should set the Savon::WSSE object" do
@@ -109,6 +130,57 @@ describe Savon::SOAP::XML do
     it "should also accepts an XML String" do
       xml.body = "<id>1</id>"
       xml.to_xml.should include("<id>1</id>")
+    end
+
+    it "appends namespaces to each element based on use_namespace" do
+      xml.body = { :foo => { :bar => 5 }}
+      xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
+      xml.use_namespace(["authenticate", "foo", "bar"],
+        "http://example.com/bar")
+      xml.to_xml.should include('xmlns:ins0="http://example.com/foo"')
+      xml.to_xml.should include('xmlns:ins1="http://example.com/bar"')
+      xml.to_xml.should include(
+        '<ins0:foo>' +
+          '<ins1:bar>5</ins1:bar>' +
+        '</ins0:foo>')
+    end
+
+    it "does not add the same namespace uri twice" do
+      xml.body = {}
+      xml.use_namespace(["authenticate", "one"], "http://example.com/foo")
+      xml.use_namespace(["authenticate", "two"], "http://example.com/foo")
+      xml.to_xml.should include('xmlns:ins0="http://example.com/foo"')
+      xml.to_xml.should_not include('xmlns:ins1')
+    end
+
+    it "can deal with two fields side by side" do
+      xml.body = { :adam => { :cain => 5, :abel => 7 }}
+      xml.use_namespace(["authenticate", "adam"],
+        "http://example.com/parent")
+      xml.use_namespace(["authenticate", "adam", "cain"],
+        "http://example.com/child1")
+      xml.use_namespace(["authenticate", "adam", "abel"],
+        "http://example.com/child2")
+      xml.to_xml.should include('<ins0:adam><ins1:cain>5</ins1:cain><ins2:abel>7</ins2:abel></ins0:adam>')
+    end
+
+    it "does not add a namespace for things which don't match a use_namespace" do
+      xml.body = {:food => {:fruit => "orange"}}
+      xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
+      xml.to_xml.should include("<food><fruit>orange</fruit></food>")
+    end
+    
+    it "deals with types" do
+      xml.body = {:food => {:fruit => "orange"}}
+      xml.use_namespace(["authenticate", "food"],
+        "http://example.com/auth")
+      xml.use_namespace(["Food", "fruit"], "http://example.com/food")
+      xml.define_type(["authenticate", "food"], "Food")
+      xml.to_xml.should include('xmlns:ins0="http://example.com/auth"')
+      xml.to_xml.should include('xmlns:ins1="http://example.com/food"')
+      xml.to_xml.should include('<ins0:food>' +
+        '<ins1:fruit>orange</ins1:fruit>' +
+      '</ins0:food>')
     end
   end
 
