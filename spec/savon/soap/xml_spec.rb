@@ -22,7 +22,13 @@ describe Savon::SOAP::XML do
       xml.to_xml.should include('<ins0:test>')
     end
 
-    it "should not namespace input if input was given an explicit namespace"
+    it "should base namespace on the WSDL, not an explicit namespace" do
+      xml.input = [:namespace, :test, {}]
+      xml.use_namespace(["test"], "http://example.com/test")
+      xml.to_xml.should include('ins0="http://example.com/test"')
+      xml.to_xml.should_not include('<namespace:test>')
+      xml.to_xml.should include('<ins0:test>')
+    end
   end
 
   describe "#endpoint" do

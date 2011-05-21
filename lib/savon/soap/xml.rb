@@ -184,7 +184,7 @@ module Savon
         Gyoku.xml add_namespaces(body), :element_form_default => element_form_default, :namespace => namespace_identifier
       end
 
-      def add_namespaces(hash, path = [input.to_s])
+      def add_namespaces(hash, path = [input_tag])
         return nil if hash.nil?
         return hash.to_s unless hash.kind_of? Hash
         hash.inject({}) do |newhash, (key, value)|
@@ -202,6 +202,16 @@ module Savon
       end
 
       def add_namespace_to_input
+        namespace, tag, attributes = input_as_triple
+
+        if used_namespaces[[tag.to_s]]
+          [used_namespaces[[tag.to_s]], tag, attributes]
+        else
+          input
+        end
+      end
+
+      def input_as_triple
         namespace, tag, attributes = nil, nil, nil
         if Array === input && input.length == 3
           namespace, tag, attributes = input
@@ -210,12 +220,12 @@ module Savon
         else
           tag = input
         end
+        [namespace, tag, attributes]
+      end
 
-        if used_namespaces[[tag.to_s]]
-          [used_namespaces[[tag.to_s]], tag, attributes]
-        else
-          input
-        end
+      def input_tag
+        namespace, tag, attributes = input_as_triple
+        tag.to_s
       end
 
     end

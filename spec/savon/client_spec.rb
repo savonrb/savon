@@ -255,9 +255,16 @@ describe Savon::Client do
 
     it "should qualify each element with the appropriate namespace" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins1:Save><ins1:article><ins0:Title>Hamlet</ins0:Title><ins0:Author>Shakespeare</ins0:Author></ins1:article></ins1:Save>") &&
-        value.include?('xmlns:ins1="http://example.com/actions"') &&
-        value.include?('xmlns:ins0="http://example.com/article"')
+        xml = Nokogiri::XML(value)
+        title = xml.at_xpath(
+          ".//actions:Save/actions:article/article:Title/text()",
+          "article" => "http://example.com/article",
+          "actions" => "http://example.com/actions").to_s
+        author = xml.at_xpath(
+          ".//actions:Save/actions:article/article:Author/text()",
+          "article" => "http://example.com/article",
+          "actions" => "http://example.com/actions").to_s
+        title == "Hamlet" && author == "Shakespeare"
       }
 
       client.request :save do |c|
@@ -267,9 +274,11 @@ describe Savon::Client do
 
     it "still sends nil as xsi:nil as in the non-namespaced case" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?('<ins1:Save><ins1:article>' +
-          '<ins0:Title xsi:nil="true"/>' +
-          '</ins1:article></ins1:Save>')
+        xml = Nokogiri::XML(value)
+        attribute = xml.at_xpath(".//article:Title/@xsi:nil",
+          "xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+          "article" => "http://example.com/article").to_s
+        attribute == "true"
       }
 
       client.request :save do |c|
@@ -279,8 +288,9 @@ describe Savon::Client do
 
     it "should translate between symbol :save and string 'Save'" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins1:Save>") &&
-        value.include?('xmlns:ins1="http://example.com/actions"')
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save",
+          "actions" => "http://example.com/actions")
       }
 
       client.request :save do |client|
@@ -290,8 +300,9 @@ describe Savon::Client do
 
     it "will qualify Save with the appropriate namespace" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
-        value.include?("<ins1:Save>") &&
-        value.include?('xmlns:ins1="http://example.com/actions"')
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save",
+          "actions" => "http://example.com/actions")
       }
 
       client.request "Save" do |client|
