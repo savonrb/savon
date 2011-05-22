@@ -14,6 +14,8 @@
 
         Nori.parse(xml).map_soap_response[:envelope][:body]
 
+    Where Savon's `#map_soap_response` method will be moved to Nori asap.
+
   * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
     also a method to access the entire `#normalized_hash`.
 
