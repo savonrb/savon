@@ -107,13 +107,13 @@ describe Savon::SOAP::XML do
       xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
     end
   end
-  
+
   describe "#namespace_by_uri" do
     it "should return the identifier if found" do
       xml.namespace_by_uri("http://schemas.xmlsoap.org/soap/envelope/").
         should == "env"
     end
-    
+
     it "should return nil if not found" do
       xml.namespace_by_uri("http://example.com/unregistered").
         should be_nil
@@ -161,13 +161,13 @@ describe Savon::SOAP::XML do
 
     it "can deal with two fields side by side" do
       xml.body = { :adam => { :cain => 5, :abel => 7 }}
-      xml.use_namespace(["authenticate", "adam"],
-        "http://example.com/parent")
-      xml.use_namespace(["authenticate", "adam", "cain"],
-        "http://example.com/child1")
-      xml.use_namespace(["authenticate", "adam", "abel"],
-        "http://example.com/child2")
-      xml.to_xml.should include('<ins0:adam><ins1:cain>5</ins1:cain><ins2:abel>7</ins2:abel></ins0:adam>')
+      xml.use_namespace(["authenticate", "adam"], "http://example.com/parent")
+      xml.use_namespace(["authenticate", "adam", "cain"], "http://example.com/child1")
+      xml.use_namespace(["authenticate", "adam", "abel"], "http://example.com/child2")
+
+      adam = Nokogiri::XML(xml.to_xml).at_xpath(".//ins0:adam")
+      adam.should have(2).children
+      adam.should have_children("ins1:cain" => 5, "ins2:abel" => 7)
     end
 
     it "does not add a namespace for things which don't match a use_namespace" do
@@ -175,7 +175,7 @@ describe Savon::SOAP::XML do
       xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
       xml.to_xml.should include("<food><fruit>orange</fruit></food>")
     end
-    
+
     it "deals with types" do
       xml.body = {:food => {:fruit => "orange"}}
       xml.use_namespace(["authenticate", "food"],

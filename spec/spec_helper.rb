@@ -12,3 +12,4 @@ Savon.log = false
 
 require "support/endpoint"
 require "support/fixture"
+require "support/matchers"
