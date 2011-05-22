@@ -18,16 +18,15 @@ describe Savon::SOAP::XML do
     it "should namespace it if use_namespace was called" do
       xml.input = [:test, {}]
       xml.use_namespace(["test"], "http://example.com/test")
-      xml.to_xml.should include('ins0="http://example.com/test"')
-      xml.to_xml.should include('<ins0:test>')
+      xml.to_xml.should include('ins0="http://example.com/test"', '<ins0:test>')
     end
 
     it "should base namespace on the WSDL, not an explicit namespace" do
       xml.input = [:namespace, :test, {}]
       xml.use_namespace(["test"], "http://example.com/test")
-      xml.to_xml.should include('ins0="http://example.com/test"')
+
       xml.to_xml.should_not include('<namespace:test>')
-      xml.to_xml.should include('<ins0:test>')
+      xml.to_xml.should include('ins0="http://example.com/test"', '<ins0:test>')
     end
   end
 
@@ -143,12 +142,12 @@ describe Savon::SOAP::XML do
       xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
       xml.use_namespace(["authenticate", "foo", "bar"],
         "http://example.com/bar")
-      xml.to_xml.should include('xmlns:ins0="http://example.com/foo"')
-      xml.to_xml.should include('xmlns:ins1="http://example.com/bar"')
+
       xml.to_xml.should include(
-        '<ins0:foo>' +
-          '<ins1:bar>5</ins1:bar>' +
-        '</ins0:foo>')
+        'xmlns:ins0="http://example.com/foo"',
+        'xmlns:ins1="http://example.com/bar"',
+        '<ins0:foo><ins1:bar>5</ins1:bar></ins0:foo>'
+      )
     end
 
     it "does not add the same namespace uri twice" do
@@ -182,11 +181,12 @@ describe Savon::SOAP::XML do
         "http://example.com/auth")
       xml.use_namespace(["Food", "fruit"], "http://example.com/food")
       xml.define_type(["authenticate", "food"], "Food")
-      xml.to_xml.should include('xmlns:ins0="http://example.com/auth"')
-      xml.to_xml.should include('xmlns:ins1="http://example.com/food"')
-      xml.to_xml.should include('<ins0:food>' +
-        '<ins1:fruit>orange</ins1:fruit>' +
-      '</ins0:food>')
+
+      xml.to_xml.should include(
+        'xmlns:ins0="http://example.com/auth"',
+        'xmlns:ins1="http://example.com/food"',
+        '<ins0:food><ins1:fruit>orange</ins1:fruit></ins0:food>'
+      )
     end
   end
 
@@ -316,9 +316,11 @@ describe Savon::SOAP::XML do
         xml.wsse = Savon::WSSE.new
         xml.wsse.credentials "username", "password"
 
-        xml.to_xml.should include("<env:Header><wsse:Security")
-        xml.to_xml.should include("<wsse:Username>username</wsse:Username>")
-        xml.to_xml.should include("password</wsse:Password>")
+        xml.to_xml.should include(
+          "<env:Header><wsse:Security",
+          "<wsse:Username>username</wsse:Username>",
+          "password</wsse:Password>"
+        )
       end
     end
 
@@ -363,4 +365,3 @@ describe Savon::SOAP::XML do
   end
 
 end
-
