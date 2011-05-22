@@ -165,6 +165,13 @@ describe Savon::Client do
       end
     end
 
+    context "called with a Hash containing a :body attribute" do
+      it "uses the value to set the SOAP body" do
+        Savon::SOAP::XML.any_instance.expects(:body=).with(:user => "me", :pass => "secret")
+        client.request(:authenticate, :body => { :user => "me", :pass => "secret" })
+      end
+    end
+
     it "by default does not set the Cookie header for the next request" do
       client.http.headers.expects(:[]=).with("Cookie", anything).never
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')

@@ -123,12 +123,12 @@ module Savon
       soap.namespace_identifier = options[0]
       soap.namespace = wsdl.namespace
       soap.element_form_default = wsdl.element_form_default if wsdl.present?
-      soap.body = options[2].delete(:body) if options[2][:body]
+      soap.body = options[2].delete(:body)
 
       wsdl.type_namespaces.each do |path, uri|
         soap.use_namespace(path, uri)
       end
-      
+
       wsdl.type_definitions.each do |path, type|
         soap.define_type(path, type)
       end
