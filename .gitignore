@@ -3,6 +3,7 @@
 doc
 coverage
 tmp
+*.rbc
 *~
 *.gem
 .bundle
