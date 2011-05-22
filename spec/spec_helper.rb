@@ -10,6 +10,4 @@ require "savon"
 # Disable logging for specs.
 Savon.log = false
 
-require "support/endpoint"
-require "support/fixture"
-require "support/matchers"
+Dir["spec/support/**/*.rb"].each { |file| require file }

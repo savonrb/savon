@@ -1,4 +1,3 @@
-# have_children
 RSpec::Matchers.define :have_children do |tags|
   match do |node|
     results = tags.map do |name, value|
@@ -24,13 +23,4 @@ RSpec::Matchers.define :have_children do |tags|
     tags.map { |name, value| "<#{name}>#{value}</#{name}>" }.join(", ")
   end
 
-end
-
-# match_operations
-RSpec::Matchers.define :match_operations do |expected|
-  match do |actual|
-    actual.should have(expected.keys.size).items
-    actual.keys.should include(*expected.keys)
-    actual.each { |key, value| value.should == expected[key] }
-  end
 end
