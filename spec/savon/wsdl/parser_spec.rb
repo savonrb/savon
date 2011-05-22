@@ -5,15 +5,15 @@ describe Savon::WSDL::Parser do
   context "with namespaced_actions.xml" do
     let(:parser) { new_parser :namespaced_actions }
 
-    it "should return the target namespace" do
+    it "returns the target namespace" do
       parser.namespace.should == "http://api.example.com/api/"
     end
 
-    it "should return the SOAP endpoint" do
+    it "returns the SOAP endpoint" do
       parser.endpoint.should == URI("https://api.example.com/api/api.asmx")
     end
 
-    it "should return the available SOAP operations" do
+    it "returns the available SOAP operations" do
       parser.operations.should match_operations(
         :get_api_key => { :input => "GetApiKey", :action => "http://api.example.com/api/User.GetApiKey" },
         :delete_client => { :input => "DeleteClient", :action => "http://api.example.com/api/Client.Delete" },
@@ -21,7 +21,7 @@ describe Savon::WSDL::Parser do
       )
     end
 
-    it "should return that :element_form_default is set to :qualified" do
+    it "returns whether :element_form_default is set to :qualified" do
       parser.element_form_default.should == :qualified
     end
   end
@@ -29,15 +29,15 @@ describe Savon::WSDL::Parser do
   context "with no_namespace.xml" do
     let(:parser) { new_parser :no_namespace }
 
-    it "should return the target namespace" do
+    it "returns the target namespace" do
       parser.namespace.should == "urn:ActionWebService"
     end
 
-    it "should return the SOAP endpoint" do
+    it "returns the SOAP endpoint" do
       parser.endpoint.should == URI("http://example.com/api/api")
     end
 
-    it "should return the available SOAP operations" do
+    it "returns the available SOAP operations" do
       parser.operations.should match_operations(
         :search_user => { :input => "SearchUser", :action => "/api/api/SearchUser" },
         :get_user_login_by_id => { :input => "GetUserLoginById", :action => "/api/api/GetUserLoginById" },
@@ -45,11 +45,11 @@ describe Savon::WSDL::Parser do
       )
     end
 
-    it "should return that :element_form_default is set to :unqualified" do
+    it "returns whether :element_form_default is set to :unqualified" do
       parser.element_form_default.should == :unqualified
     end
 
-    it "can list the types" do
+    it "lists the types" do
       parser.types.keys.sort.should ==
         ["McContact", "McContactArray", "MpUser", "MpUserArray"]
     end
@@ -63,22 +63,22 @@ describe Savon::WSDL::Parser do
   context "with geotrust.xml" do
     let(:parser) { new_parser :geotrust }
 
-    it "should return the target namespace" do
+    it "returns the target namespace" do
       parser.namespace.should == "http://api.geotrust.com/webtrust/query"
     end
 
-    it "should return the SOAP endpoint" do
+    it "returns the SOAP endpoint" do
       parser.endpoint.should == URI("https://test-api.geotrust.com/webtrust/query.jws")
     end
 
-    it "should return the available SOAP operations" do
+    it "returns the available SOAP operations" do
       parser.operations.should match_operations(
         :get_quick_approver_list => { :input => "GetQuickApproverList", :action => "GetQuickApproverList" },
         :hello => { :input => "hello", :action => "hello" }
       )
     end
 
-    it "should return that :element_form_default is set to :qualified" do
+    it "returns that :element_form_default is set to :qualified" do
       parser.element_form_default.should == :qualified
     end
   end
@@ -86,7 +86,7 @@ describe Savon::WSDL::Parser do
   context "with two_bindings.xml" do
     let(:parser) { new_parser :two_bindings }
 
-    it "should merge operations from all binding sections (until we have an example where it makes sense to do otherwise)" do
+    it "merges operations from all binding sections (until we have an example where it makes sense to do otherwise)" do
       parser.operations.keys.map(&:to_s).sort.should ==
         %w{post post11only post12only}
     end
@@ -95,7 +95,7 @@ describe Savon::WSDL::Parser do
   context "with multiple_namespaces.xml" do
     let(:parser) { new_parser :multiple_namespaces }
 
-    it "can list the types" do
+    it "lists the types" do
       parser.types.keys.sort.should == ["Article", "Save"]
     end
 
@@ -146,16 +146,8 @@ describe Savon::WSDL::Parser do
   context "with soap12.xml" do
     let(:parser) { new_parser :soap12 }
 
-    it "should return the endpoint" do
+    it "returns the endpoint" do
       parser.endpoint.should == URI("http://blogsite.example.com/endpoint12")
-    end
-  end
-
-  RSpec::Matchers.define :match_operations do |expected|
-    match do |actual|
-      actual.should have(expected.keys.size).items
-      actual.keys.should include(*expected.keys)
-      actual.each { |key, value| value.should == expected[key] }
     end
   end
 

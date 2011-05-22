@@ -19,7 +19,7 @@ describe String do
   end
 
   describe "starts_with?" do
-    it "should return whether it starts with a given suffix" do
+    it "returns whether it starts with a given suffix" do
       "authenticate".starts_with?("auth").should be_true
       "authenticate".starts_with?("cate").should be_false
     end

@@ -10,18 +10,18 @@ describe Savon::SOAP::XML do
   end
 
   describe "#input" do
-    it "should set the input tag" do
+    it "sets the input tag" do
       xml.input = [:test, {}]
       xml.input.should == [:test, {}]
     end
 
-    it "should namespace it if use_namespace was called" do
+    it "namespaces it if use_namespace was called" do
       xml.input = [:test, {}]
       xml.use_namespace(["test"], "http://example.com/test")
       xml.to_xml.should include('ins0="http://example.com/test"', '<ins0:test>')
     end
 
-    it "should base namespace on the WSDL, not an explicit namespace" do
+    it "uses the target namespace from the WSDL without an explicit namespace" do
       xml.input = [:namespace, :test, {}]
       xml.use_namespace(["test"], "http://example.com/test")
 
@@ -31,113 +31,113 @@ describe Savon::SOAP::XML do
   end
 
   describe "#endpoint" do
-    it "should set the endpoint to use" do
+    it "sets the endpoint to use" do
       xml.endpoint = "http://test.com"
       xml.endpoint.should == "http://test.com"
     end
   end
 
   describe "#version" do
-    it "should default to SOAP 1.1" do
+    it "defaults to SOAP 1.1" do
       xml.version.should == 1
     end
 
-    it "should default to the global default" do
+    it "defaults to the global default" do
       Savon.soap_version = 2
       xml.version.should == 2
 
       reset_soap_version
     end
 
-    it "should set the SOAP version to use" do
+    it "sets the SOAP version to use" do
       xml.version = 2
       xml.version.should == 2
     end
 
-    it "should raise an ArgumentError in case of an invalid version" do
+    it "raises in case of an invalid version" do
       lambda { xml.version = 3 }.should raise_error(ArgumentError)
     end
   end
 
   describe "#header" do
-    it "should default to an empty Hash" do
+    it "defaults to an empty Hash" do
       xml.header.should == {}
     end
 
-    it "should set the SOAP header" do
+    it "sets the SOAP header" do
       xml.header = { "MySecret" => "abc" }
       xml.header.should == { "MySecret" => "abc" }
     end
 
-    it "should use the global soap_header if set" do
+    it "uses the global soap_header if set" do
       Savon.stubs(:soap_header).returns({ "MySecret" => "abc" })
       xml.header.should == { "MySecret" => "abc" }
     end
   end
 
   describe "#env_namespace" do
-    it "should default to :env" do
+    it "defaults to :env" do
       xml.env_namespace.should == :env
     end
 
-    it "should set the SOAP envelope namespace" do
+    it "sets the SOAP envelope namespace" do
       xml.env_namespace = :soapenv
       xml.env_namespace.should == :soapenv
     end
 
-    it "should use the global env_namespace if set as the SOAP envelope namespace" do
+    it "uses the global env_namespace if set as the SOAP envelope namespace" do
       Savon.stubs(:env_namespace).returns(:soapenv)
       xml.env_namespace.should == :soapenv
     end
   end
 
   describe "#namespaces" do
-    it "should default to a Hash containing the namespace for SOAP 1.1" do
+    it "defaults to a Hash containing the namespace for SOAP 1.1" do
       xml.namespaces.should == { "xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/" }
     end
 
-    it "should default to a Hash containing the namespace for SOAP 1.2 if that's the current version" do
+    it "defaults to a Hash containing the namespace for SOAP 1.2 if that's the current version" do
       xml.version = 2
       xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
     end
 
-    it "should set the SOAP header" do
+    it "sets the SOAP header" do
       xml.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
       xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
     end
   end
 
   describe "#namespace_by_uri" do
-    it "should return the identifier if found" do
+    it "returns the identifier if found" do
       xml.namespace_by_uri("http://schemas.xmlsoap.org/soap/envelope/").
         should == "env"
     end
 
-    it "should return nil if not found" do
+    it "returns nil if not found" do
       xml.namespace_by_uri("http://example.com/unregistered").
         should be_nil
     end
   end
 
   describe "#wsse" do
-    it "should set the Savon::WSSE object" do
+    it "sets the Savon::WSSE object" do
       xml.wsse = Savon::WSSE.new
       xml.wsse.should be_a(Savon::WSSE)
     end
   end
 
   describe "#body" do
-    it "should set the SOAP body Hash" do
+    it "sets the SOAP body Hash" do
       xml.body = { :id => 1 }
       xml.to_xml.should include("<id>1</id>")
     end
 
-    it "should also accepts an XML String" do
+    it "also accepts an XML String" do
       xml.body = "<id>1</id>"
       xml.to_xml.should include("<id>1</id>")
     end
 
-    it "appends namespaces to each element based on use_namespace" do
+    it "appends the namespaces to each element based on use_namespace" do
       xml.body = { :foo => { :bar => 5 }}
       xml.use_namespace(["authenticate", "foo"], "http://example.com/foo")
       xml.use_namespace(["authenticate", "foo", "bar"],
@@ -206,45 +206,45 @@ describe Savon::SOAP::XML do
     after { reset_soap_version }
 
     context "by default" do
-      it "should start with an XML declaration" do
+      it "starts with an XML declaration" do
         xml.to_xml.should match(/^<\?xml version="1.0" encoding="UTF-8"\?>/)
       end
 
-      it "should use default SOAP envelope namespace" do
+      it "uses default SOAP envelope namespace" do
         xml.to_xml.should include("<env:Envelope", "<env:Body")
       end
 
-      it "should add the xsd namespace" do
+      it "adds the xsd namespace" do
         uri = "http://www.w3.org/2001/XMLSchema"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:xsd="#{uri}"(.*)>/)
       end
 
-      it "should add the xsi namespace" do
+      it "adds the xsi namespace" do
         uri = "http://www.w3.org/2001/XMLSchema-instance"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:xsi="#{uri}"(.*)>/)
       end
 
-      it "should have a SOAP envelope tag with a SOAP 1.1 namespace" do
+      it "has a SOAP envelope tag with a SOAP 1.1 namespace" do
         uri = "http://schemas.xmlsoap.org/soap/envelope/"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
       end
 
-      it "should have a SOAP body containing the SOAP input tag and body Hash" do
+      it "has a SOAP body containing the SOAP input tag and body Hash" do
         xml.to_xml.should include('<env:Body><authenticate><id>1</id></authenticate></env:Body>')
       end
 
-      it "should accept a SOAP body as an XML String" do
+      it "accepts a SOAP body as an XML String" do
         xml.body = "<someId>1</someId>"
         xml.to_xml.should include('<env:Body><authenticate><someId>1</someId></authenticate></env:Body>')
       end
 
-      it "should not contain a SOAP header" do
+      it "does not contain a SOAP header" do
         xml.to_xml.should_not include('<env:Header')
       end
     end
 
     context "with a SOAP header" do
-      it "should contain the given header" do
+      it "contains the given header" do
         xml.header = {
           :token => "secret",
           :attributes! => { :token => { :xmlns => "http://example.com" } }
@@ -255,7 +255,7 @@ describe Savon::SOAP::XML do
     end
 
     context "with the global SOAP version set to 1.2" do
-      it "should contain the namespace for SOAP 1.2" do
+      it "contains the namespace for SOAP 1.2" do
         Savon.soap_version = 2
 
         uri = "http://www.w3.org/2003/05/soap-envelope"
@@ -265,7 +265,7 @@ describe Savon::SOAP::XML do
     end
 
     context "with a global and request SOAP version" do
-      it "should contain the namespace for the request SOAP version" do
+      it "contains the namespace for the request SOAP version" do
         Savon.soap_version = 2
         xml.version = 1
 
@@ -276,14 +276,14 @@ describe Savon::SOAP::XML do
     end
 
     context "with the SOAP envelope namespace set to an empty String" do
-      it "should not add a namespace to SOAP envelope tags" do
+      it "does not add a namespace to SOAP envelope tags" do
         xml.env_namespace = ""
         xml.to_xml.should include("<Envelope", "<Body")
       end
     end
 
     context "using the #namespace and #namespace_identifier" do
-      it "should contain the specified namespace" do
+      it "contains the specified namespace" do
         xml.namespace_identifier = :wsdl
         xml.namespace = "http://example.com"
         xml.to_xml.should include('xmlns:wsdl="http://example.com"')
@@ -299,7 +299,7 @@ describe Savon::SOAP::XML do
         xml
       end
 
-      it "should namespace the default elements" do
+      it "namespaces the default elements" do
         xml.element_form_default = :qualified
         xml.namespace_identifier = :wsdl
 
@@ -312,7 +312,7 @@ describe Savon::SOAP::XML do
     end
 
     context "with WSSE authentication" do
-      it "should containg a SOAP header with WSSE authentication details" do
+      it "contains a SOAP header with WSSE authentication details" do
         xml.wsse = Savon::WSSE.new
         xml.wsse.credentials "username", "password"
 
@@ -325,35 +325,35 @@ describe Savon::SOAP::XML do
     end
 
     context "with a simple input tag (Symbol)" do
-      it "should just add the input tag" do
+      it "just adds the input tag" do
         xml.input = :simple
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end
 
     context "with a simple input tag (Array)" do
-      it "should just add the input tag" do
+      it "just adds the input tag" do
         xml.input = [:simple]
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end
 
     context "with an input tag and a namespace Hash (Array)" do
-      it "should contain the input tag with namespaces" do
+      it "contains the input tag with namespaces" do
         xml.input = [:getUser, { "active" => true }]
         xml.to_xml.should include('<getUser active="true"><id>1</id></getUser>')
       end
     end
 
     context "with a prefixed input tag (Array)" do
-      it "should contain a prefixed input tag" do
+      it "contains a prefixed input tag" do
         xml.input = [:wsdl, :getUser]
         xml.to_xml.should include('<wsdl:getUser><id>1</id></wsdl:getUser>')
       end
     end
 
     context "with a prefixed input tag and a namespace Hash (Array)" do
-      it "should contain a prefixed input tag with namespaces" do
+      it "contains a prefixed input tag with namespaces" do
         xml.input = [:wsdl, :getUser, { :only_active => false }]
         xml.to_xml.should include('<wsdl:getUser only_active="false"><id>1</id></wsdl:getUser>')
       end

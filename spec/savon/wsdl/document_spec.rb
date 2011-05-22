@@ -3,44 +3,44 @@ require "spec_helper"
 describe Savon::WSDL::Document do
 
   shared_examples_for "a WSDL document" do
-    it "should be present" do
+    it "is present" do
       wsdl.should be_present
     end
 
     describe "#namespace" do
-      it "should return the namespace URI" do
+      it "returns the namespace URI" do
         wsdl.namespace.should == "http://v1_0.ws.auth.order.example.com/"
       end
     end
 
     describe "#soap_actions" do
-      it "should return an Array of available SOAP actions" do
+      it "returns an Array of available SOAP actions" do
         wsdl.soap_actions.should == [:authenticate]
       end
     end
 
     describe "#soap_action" do
-      it "should return the SOAP action for a given key" do
+      it "returns the SOAP action for a given key" do
         wsdl.soap_action(:authenticate).should == "authenticate"
       end
 
-      it "should return nil if no SOAP action could be found" do
+      it "returns nil if no SOAP action could be found" do
         wsdl.soap_action(:unknown).should be_nil
       end
     end
 
     describe "#soap_input" do
-      it "should return the SOAP input tag for a given key" do
+      it "returns the SOAP input tag for a given key" do
         wsdl.soap_input(:authenticate).should == :authenticate
       end
 
-      it "should return nil if no SOAP input tag could be found" do
+      it "returns nil if no SOAP input tag could be found" do
         wsdl.soap_input(:unknown).should be_nil
       end
     end
 
     describe "#operations" do
-      it "should return a Hash of SOAP operations" do
+      it "returns a Hash of SOAP operations" do
         wsdl.operations.should == {
           :authenticate => {
             :input => "authenticate", :action => "authenticate"
@@ -50,11 +50,11 @@ describe Savon::WSDL::Document do
     end
 
     describe "#document" do
-      it "should return the raw WSDL document" do
+      it "returns the raw WSDL document" do
         wsdl.document.should == Fixture.wsdl(:authentication)
       end
 
-      it "should be memoized" do
+      it "is memoized" do
         wsdl.document.should equal(wsdl.document)
       end
     end
@@ -71,7 +71,7 @@ describe Savon::WSDL::Document do
     it_should_behave_like "a WSDL document"
 
     describe "#element_form_default" do
-      it "should return :unqualified" do
+      it "returns :unqualified" do
         wsdl.element_form_default.should == :unqualified
       end
     end
@@ -91,24 +91,24 @@ describe Savon::WSDL::Document do
   context "without a WSDL document" do
     let(:wsdl) { Savon::WSDL::Document.new HTTPI::Request.new }
 
-    it "should not be present" do
+    it "is not present" do
       wsdl.should_not be_present
     end
 
     describe "#soap_action" do
-      it "should return nil" do
+      it "returns nil" do
         wsdl.soap_action(:authenticate).should be_nil
       end
     end
 
     describe "#soap_input" do
-      it "should return nil" do
+      it "returns nil" do
         wsdl.soap_input(:authenticate).should be_nil
       end
     end
 
     describe "#document" do
-      it "should raise an ArgumentError" do
+      it "raises an ArgumentError" do
         lambda { wsdl.document }.should raise_error(ArgumentError)
       end
     end
@@ -123,7 +123,7 @@ describe Savon::WSDL::Document do
     end
 
     describe "#element_form_default" do
-      it "should return :qualified" do
+      it "returns :qualified" do
         wsdl.element_form_default.should == :qualified
       end
     end
@@ -138,7 +138,7 @@ describe Savon::WSDL::Document do
     end
 
     describe "#type_namespaces" do
-      it "should return a list of namespaces defined in types section" do
+      it "returns a list of namespaces defined in types section" do
         wsdl.type_namespaces.should =~ [
           [["Save"], "http://example.com/actions"],
           [["Save", "article"], "http://example.com/actions"],
@@ -148,9 +148,9 @@ describe Savon::WSDL::Document do
         ]
       end
     end
-    
+
     describe "#type_definitions" do
-      it "should return the types of fields defined in this WSDL" do
+      it "returns the types of fields defined in this WSDL" do
         wsdl.type_definitions.should =~ [
           [["Save", "article"], "Article"]
         ]

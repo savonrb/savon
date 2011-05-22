@@ -253,7 +253,7 @@ describe Savon::Client do
       HTTPI.stubs(:post).returns(new_response)
     end
 
-    it "should qualify each element with the appropriate namespace" do
+    it "qualifies each element with the appropriate namespace" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         xml = Nokogiri::XML(value)
         title = xml.at_xpath(
@@ -286,7 +286,7 @@ describe Savon::Client do
       end
     end
 
-    it "should translate between symbol :save and string 'Save'" do
+    it "translates between symbol :save and string 'Save'" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         xml = Nokogiri::XML(value)
         !!xml.at_xpath(".//actions:Save",
@@ -298,7 +298,7 @@ describe Savon::Client do
       end
     end
 
-    it "will qualify Save with the appropriate namespace" do
+    it "qualifies Save with the appropriate namespace" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         xml = Nokogiri::XML(value)
         !!xml.at_xpath(".//actions:Save",
@@ -317,7 +317,7 @@ describe Savon::Client do
       HTTPI.stubs(:post).returns(new_response)
     end
 
-    it "should not blow up" do
+    it "does not blow up" do
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         value.include?("Save")
       }
