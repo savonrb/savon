@@ -14,6 +14,34 @@ module Savon
       def initialize(response)
         self.http = response
         raise_errors if Savon.raise_errors?
+
+	#if multi-part message then extract the part
+	if self.http.multipart?
+
+  		body_part=""
+	        body_part_delimiter="--"+self.http.multipart_boundary
+	        in_part=false
+	        in_part_header=true
+     
+	        f = StringIO.new(self.http.body)
+	        while (line = f.gets)
+       
+	          line = line.chomp
+       
+	          in_part=false if (line.eql? body_part_delimiter+"--")
+       
+	          body_part+=line+"\r\n" if in_part && !in_part_header
+       
+	          in_part_header=false if line.eql? ""
+       
+	          in_part=true if (line.eql? body_part_delimiter) && !in_part      
+       
+	        end
+
+	  self.http.body = body_part
+
+	end
+
       end
 
       attr_accessor :http
