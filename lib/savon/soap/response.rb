@@ -50,12 +50,12 @@ module Savon
 
       # Returns the SOAP response header as a Hash.
       def header
-        normalized_hash[:envelope][:header]
+        hash[:envelope][:header]
       end
 
       # Returns the SOAP response body as a Hash.
       def body
-        normalized_hash[:envelope][:body]
+        hash[:envelope][:body]
       end
 
       alias to_hash body
@@ -75,11 +75,6 @@ module Savon
       # Returns the complete SOAP response XML without normalization.
       def hash
         @hash ||= Nori.parse http.body
-      end
-
-      # Returns the complete normalized SOAP response XML.
-      def normalized_hash
-        @normalized_hash ||= hash.map_soap_response
       end
 
       # Returns the SOAP response XML.

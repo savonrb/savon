@@ -30,7 +30,7 @@ module Savon
 
       # Returns the SOAP response body as a Hash.
       def to_hash
-        @hash ||= Nori.parse(http.body).map_soap_response[:envelope][:body]
+        @hash ||= Nori.parse(http.body)[:envelope][:body]
       end
 
     private

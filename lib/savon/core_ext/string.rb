@@ -31,19 +31,6 @@ module Savon
         self[0, prefix.length] == prefix
       end unless defined? starts_with?
 
-      # Returns the String without namespace.
-      def strip_namespace
-        split(":").last
-      end
-
-      # Translates SOAP response values to Ruby Objects.
-      def map_soap_response
-        return ::DateTime.parse(self) if Savon::SOAP::DateTimeRegexp === self
-        return true if self.strip.downcase == "true"
-        return false if self.strip.downcase == "false"
-        self
-      end
-
     end
   end
 end

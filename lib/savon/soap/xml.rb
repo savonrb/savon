@@ -1,9 +1,13 @@
 require "builder"
-require "nori"
 require "gyoku"
+require "nori"
 
 require "savon/soap"
-require "savon/core_ext/hash"
+
+Nori.configure do |config|
+  config.strip_namespaces = true
+  config.convert_tags_to { |tag| tag.snakecase.to_sym }
+end
 
 module Savon
   module SOAP
@@ -156,4 +160,3 @@ module Savon
     end
   end
 end
-

@@ -10,7 +10,7 @@ class Fixture
 
     def response_hash(fixture)
       @response_hash ||= {}
-      @response_hash[fixture] ||= Nori.parse(response(fixture)).map_soap_response[:envelope][:body]
+      @response_hash[fixture] ||= Nori.parse(response(fixture))[:envelope][:body]
     end
 
     TYPES.each do |type, ext|

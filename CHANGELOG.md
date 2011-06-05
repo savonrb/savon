@@ -8,16 +8,24 @@
 
 * Refactoring:
 
+  * `Hash#map_soap_response` and some of its helpers are moved to [Nori v1.0.0](http://rubygems.org/gems/nori/versions/1.0.0).
+    Along with replacing core extensions with a proper implementation, Nori now contains a number of methods
+    for configuring its default behavior:
+
+    * The option whether to strip namespaces was moved to Nori.strip_namespaces
+    * You can disable "advanced typecasting" for SOAP response values
+    * And you can configure how SOAP response keys should be converted
+
+    Please take a look at [Nori's CHANGELOG](https://github.com/rubiii/nori/blob/master/CHANGELOG.md)
+    for detailed information.
+
   * `Savon::SOAP::XML.to_hash`, `Savon::SOAP::XML.parse` and `Savon::SOAP::XML.to_array` are gone.
     It wasn't worth keeping them around, because they didn't do much. You can simply parse a SOAP
     response and translate it to a Savon SOAP response Hash via:
 
-        Nori.parse(xml).map_soap_response[:envelope][:body]
+        Nori.parse(xml)[:envelope][:body]
 
-    Where Savon's `#map_soap_response` method will be moved to Nori asap.
-
-  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash` and there's
-    also a method to access the entire `#normalized_hash`.
+  * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash`.
 
 ## 0.9.2 (2011-04-30)
 
