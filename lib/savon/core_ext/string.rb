@@ -14,7 +14,7 @@ module Savon
         str.tr! "-", "_"
         str.downcase!
         str
-      end
+      end unless method_defined?(:snakecase)
 
       # Returns the String in lowerCamelCase.
       def lower_camelcase
