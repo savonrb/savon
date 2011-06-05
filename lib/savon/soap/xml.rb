@@ -1,9 +1,13 @@
 require "builder"
-require "nori"
 require "gyoku"
+require "nori"
 
 require "savon/soap"
-require "savon/core_ext/hash"
+
+Nori.configure do |config|
+  config.strip_namespaces = true
+  config.convert_tags_to { |tag| tag.snakecase.to_sym }
+end
 
 module Savon
   module SOAP
@@ -63,7 +67,7 @@ module Savon
           { key => SOAP::Namespace[version] }
         end
       end
-      
+
       def namespace_by_uri(uri)
         namespaces.each do |candidate_identifier, candidate_uri|
           return candidate_identifier.gsub(/^xmlns:/, '') if candidate_uri == uri
@@ -77,7 +81,7 @@ module Savon
 
       def use_namespace(path, uri)
         @internal_namespace_count ||= 0
-        
+
         identifier = namespace_by_uri(uri)
         if !identifier
           identifier = "ins#{@internal_namespace_count}"
@@ -87,11 +91,11 @@ module Savon
 
         used_namespaces[path] = identifier
       end
-      
+
       def types
         @types ||= {}
       end
-      
+
       def define_type(path, type)
         types[path] = type
       end
@@ -189,7 +193,7 @@ module Savon
         return hash.to_s unless hash.kind_of? Hash
         hash.inject({}) do |newhash, (key, value)|
           newpath = path + [key.to_s]
-          
+
           if used_namespaces[newpath]
             newhash.merge(
               "#{used_namespaces[newpath]}:#{key.to_s}" =>
@@ -231,4 +235,3 @@ module Savon
     end
   end
 end
-

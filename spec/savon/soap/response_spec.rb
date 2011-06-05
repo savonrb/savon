@@ -177,7 +177,7 @@ describe Savon::SOAP::Response do
   describe "#hash" do
     it "returns the complete SOAP response XML as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      response.hash["soap:Envelope"]["soap:Header"]["SessionNumber"].should == "ABCD1234"
+      response.hash[:envelope][:header][:session_number].should == "ABCD1234"
     end
   end
 

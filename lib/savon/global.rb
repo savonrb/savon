@@ -55,11 +55,15 @@ module Savon
     # Returns whether to strip namespaces in a SOAP response Hash.
     # Defaults to +true+.
     def strip_namespaces?
-      @strip_namespaces != false
+      Savon.deprecate("use Nori.strip_namespaces? instead of Savon.strip_namespaces?")
+      Nori.strip_namespaces?
     end
 
     # Sets whether to strip namespaces in a SOAP response Hash.
-    attr_writer :strip_namespaces
+    def strip_namespaces=(strip)
+      Savon.deprecate("use Nori.strip_namespaces= instead of Savon.strip_namespaces=")
+      Nori.strip_namespaces = strip
+    end
 
     # Returns the global env_namespace.
     attr_reader :env_namespace
@@ -72,6 +76,21 @@ module Savon
 
     # Sets the global soap_header.
     attr_writer :soap_header
+
+    # Expects a +message+ and raises a warning if configured.
+    def deprecate(message)
+      warn("Deprecation: #{message}") if deprecate?
+    end
+
+    # Sets whether to warn about deprecations.
+    def deprecate=(deprecate)
+      @deprecate = deprecate
+    end
+
+    # Returns whether to warn about deprecation.
+    def deprecate?
+      @deprecate != false
+    end
 
     # Reset to default configuration.
     def reset_config!

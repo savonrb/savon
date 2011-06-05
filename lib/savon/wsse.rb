@@ -2,7 +2,6 @@ require "base64"
 require "digest/sha1"
 
 require "savon/core_ext/string"
-require "savon/core_ext/hash"
 require "savon/core_ext/time"
 
 module Savon

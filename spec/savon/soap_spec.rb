@@ -13,9 +13,4 @@ describe Savon::SOAP do
     Savon::SOAP::Versions.should == (1..2)
   end
 
-  it "contains a Regexp matching the xs:dateTime format" do
-    Savon::SOAP::DateTimeRegexp.should be_a(Regexp)
-    (Savon::SOAP::DateTimeRegexp === "2012-03-22T16:22:33").should be_true
-  end
-
 end

@@ -151,7 +151,8 @@ describe Savon::WSSE do
       end
 
       it "contains a wsu:Created tag" do
-        wsse.to_xml.should match(/<wsu:Created>#{Savon::SOAP::DateTimeRegexp}.+<\/wsu:Created>/)
+        datetime_regexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+        wsse.to_xml.should match(/<wsu:Created>#{datetime_regexp}.+<\/wsu:Created>/)
       end
 
       it "contains the PasswordDigest type attribute" do
