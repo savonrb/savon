@@ -5,7 +5,7 @@ module Savon
       # Returns +true+ if the Object is nil, false or empty. Implementation from ActiveSupport.
       def blank?
         respond_to?(:empty?) ? empty? : !self
-      end unless defined? blank?
+      end unless method_defined?(:blank?)
 
     end
   end

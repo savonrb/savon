@@ -29,7 +29,7 @@ module Savon
       def starts_with?(prefix)
         prefix = prefix.to_s
         self[0, prefix.length] == prefix
-      end unless defined? starts_with?
+      end unless method_defined?(:starts_with?)
 
     end
   end
