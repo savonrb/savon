@@ -18,7 +18,7 @@ module Savon
     }
 
     # SOAP xs:dateTime Regexp.
-    DateTimeRegexp = /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/
+    DateTimeRegexp = /^\s*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\s*$/
 
   end
 end
