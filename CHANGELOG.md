@@ -40,7 +40,7 @@
           soap.body => { :username => "me", :password => "secret" }
         end
 
-  * `Hash#map_soap_response` and some of its helpers are moved to [Nori v0.3.0](http://rubygems.org/gems/nori/versions/0.3.0).
+  * `Hash#map_soap_response` and some of its helpers are moved to [Nori v1.0.0](http://rubygems.org/gems/nori/versions/1.0.0).
     Along with replacing core extensions with a proper implementation, Nori now contains a number of methods
     for configuring its default behavior:
 
