@@ -5,9 +5,8 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
-require "savon"
-
 # Disable logging for specs.
 Savon.log = false
 
-Dir["spec/support/**/*.rb"].each { |file| require file }
+support_files = File.expand_path("../../spec/support/**/*.rb", __FILE__)
+Dir[support_files].each { |file| require file }
