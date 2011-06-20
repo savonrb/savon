@@ -337,7 +337,6 @@ describe Savon::Client do
     end
 
     it "still appends namespace when converting from symbol" do
-      pending("issue 194, not yet fixed")
       HTTPI::Request.any_instance.expects(:body=).with { |value|
         xml = Nokogiri::XML(value)
         !!xml.at_xpath(".//actions:Save/actions:lowerCamel",
