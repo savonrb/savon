@@ -318,6 +318,37 @@ describe Savon::Client do
     end
   end
 
+  context "when the WSDL has a lowerCamel name" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:lower_camel)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "appends namespace when name is specified explicitly" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save/actions:lowerCamel",
+          "actions" => "http://example.com/actions")
+      }
+
+      client.request "Save" do |client|
+        client.soap.body = {'lowerCamel' => 'theValue'}
+      end
+    end
+
+    it "still appends namespace when converting from symbol" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save/actions:lowerCamel",
+          "actions" => "http://example.com/actions")
+      }
+
+      client.request "Save" do |client|
+        client.soap.body = {:lower_camel => 'theValue'}
+      end
+    end
+  end
+
   context "with multiple types" do
     before do
       HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_types)))
