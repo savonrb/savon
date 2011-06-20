@@ -188,11 +188,12 @@ module Savon
         return nil if hash.nil?
         return hash.to_s unless hash.kind_of? Hash
         hash.inject({}) do |newhash, (key, value)|
-          newpath = path + [key.to_s]
+          camelcased_key = Gyoku::XMLKey.create(key)
+          newpath = path + [camelcased_key]
           
           if used_namespaces[newpath]
             newhash.merge(
-              "#{used_namespaces[newpath]}:#{key.to_s}" =>
+              "#{used_namespaces[newpath]}:#{camelcased_key}" =>
                 add_namespaces(value,
                   types[newpath] ? [types[newpath]] : newpath))
           else
