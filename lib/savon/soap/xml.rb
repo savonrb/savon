@@ -197,13 +197,19 @@ module Savon
 
           if used_namespaces[newpath]
             newhash.merge(
-              "#{used_namespaces[newpath]}:#{camelcased_key}" =>
+              "#{used_namespaces[newpath]}:#{camelcased_key}#{extract_special_characters(key)}" =>
                 add_namespaces(value,
                   types[newpath] ? [types[newpath]] : newpath))
           else
             newhash.merge(key => value)
           end
         end
+      end
+      
+      def extract_special_characters(key)
+        return "!" if key.to_s.end_with?("!")
+        return "/" if key.to_s.end_with?("/")
+        ''
       end
 
       def add_namespace_to_input
