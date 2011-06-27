@@ -174,7 +174,7 @@ module Savon
 
       # Returns the SOAP header as an XML String.
       def header_for_xml
-        @header_for_xml ||= Gyoku.xml(header) + wsse_header
+        @header_for_xml ||= Gyoku.xml(add_namespaces(header), :element_form_default => element_form_default, :namespace => namespace_identifier ) + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
@@ -197,13 +197,19 @@ module Savon
 
           if used_namespaces[newpath]
             newhash.merge(
-              "#{used_namespaces[newpath]}:#{camelcased_key}" =>
+              "#{used_namespaces[newpath]}:#{camelcased_key}#{extract_special_characters(key)}" =>
                 add_namespaces(value,
                   types[newpath] ? [types[newpath]] : newpath))
           else
             newhash.merge(key => value)
           end
         end
+      end
+      
+      def extract_special_characters(key)
+        return "!" if key.to_s.end_with?("!")
+        return "/" if key.to_s.end_with?("/")
+        ''
       end
 
       def add_namespace_to_input
