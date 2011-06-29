@@ -1,10 +1,15 @@
-## UPCOMING
+## 0.9.3 (2011-06-30)
 
 * Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
   Savon now supports setting a global SOAP header via `Savon.soap_header=`.
 
 * Fixed the namespace for wsse message timestamps from `wsse:Timestamp`
   to `wsu:Timestamp` as required by the specification.
+
+* Change: Removed support for NTLM authentication until it's stable. If you need it, you can still
+  add the following line to your Gemfile:
+
+      gem "httpi", "0.9.4"
 
 * Refactoring:
 
