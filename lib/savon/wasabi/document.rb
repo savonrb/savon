@@ -15,17 +15,17 @@ module Savon
         @xml ||= document.kind_of?(String) ? resolve_document : document
       end
 
+      # Sets the <tt>HTTPI::Request</tt> for remote WSDL documents.
+      attr_writer :request
+
+    private
+
       # Sets up and returns the <tt>HTTPI::Request</tt>.
       def request
         @request ||= HTTPI::Request.new
         @request.url = document
         @request
       end
-
-      # Sets the <tt>HTTPI::Request</tt> for remote WSDL documents.
-      attr_writer :request
-
-    private
 
       # Resolves and returns the raw WSDL document.
       def resolve_document
