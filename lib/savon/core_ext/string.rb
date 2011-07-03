@@ -16,21 +16,6 @@ module Savon
         str
       end unless method_defined?(:snakecase)
 
-      # Returns the String in lowerCamelCase.
-      def lower_camelcase
-        str = dup
-        str.gsub!(/\/(.?)/) { "::#{$1.upcase}" }
-        str.gsub!(/(?:_+|-+)([a-z])/) { $1.upcase }
-        str.gsub!(/(\A|\s)([A-Z])/) { $1 + $2.downcase }
-        str
-      end
-
-      # Returns whether the String starts with a given +prefix+.
-      def starts_with?(prefix)
-        prefix = prefix.to_s
-        self[0, prefix.length] == prefix
-      end unless method_defined?(:starts_with?)
-
     end
   end
 end

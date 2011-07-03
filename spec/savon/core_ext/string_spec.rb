@@ -34,17 +34,4 @@ describe String do
     end
   end
 
-  describe "lower_camelcase" do
-    it "converts a snakecase String to lowerCamelCase" do
-      "lower_camel_case".lower_camelcase.should == "lowerCamelCase"
-    end
-  end
-
-  describe "starts_with?" do
-    it "should return whether it starts with a given suffix" do
-      "authenticate".starts_with?("auth").should be_true
-      "authenticate".starts_with?("cate").should be_false
-    end
-  end
-
 end
