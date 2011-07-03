@@ -222,10 +222,6 @@ describe Savon::Client do
     let(:client) { Savon::Client.new { wsdl.document = Endpoint.wsdl } }
     before { HTTPI.expects(:get).returns(new_response(:body => Fixture.wsdl(:authentication))) }
 
-    it "should return a list of available SOAP actions" do
-      client.wsdl.soap_actions.should == [:authenticate]
-    end
-
     it "adds a SOAPAction header containing the SOAP action name" do
       HTTPI.stubs(:post).returns(new_response)
 
@@ -248,23 +244,12 @@ describe Savon::Client do
 
     before { HTTPI.expects(:get).never }
 
-    it "should return a list of available SOAP actions" do
-      client.wsdl.soap_actions.should == [:authenticate]
-    end
-
     it "adds a SOAPAction header containing the SOAP action name" do
       HTTPI.stubs(:post).returns(new_response)
 
       client.request :authenticate do
         http.headers["SOAPAction"].should == %{"authenticate"}
       end
-    end
-
-    it "should get #element_form_default from the WSDL" do
-      HTTPI.stubs(:post).returns(new_response)
-      Savon::Wasabi::Document.any_instance.expects(:element_form_default).returns(:qualified)
-
-      client.request :authenticate
     end
 
     it "should execute SOAP requests and return the response" do
@@ -296,13 +281,6 @@ describe Savon::Client do
       client.request :authenticate do
         http.headers["SOAPAction"].should == %{"authenticate"}
       end
-    end
-
-    it "should not get #element_form_default from the WSDL" do
-      HTTPI.stubs(:post).returns(new_response)
-      Savon::Wasabi::Document.any_instance.expects(:element_form_default).never
-
-      client.request :authenticate
     end
 
     it "should execute SOAP requests and return the response" do
