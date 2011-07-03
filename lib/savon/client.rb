@@ -1,16 +1,15 @@
 require "httpi/request"
+require "savon/wasabi/document"
 require "savon/soap/xml"
 require "savon/soap/request"
 require "savon/soap/response"
-require "savon/wsdl/document"
 require "savon/wsse"
 
 module Savon
 
   # = Savon::Client
   #
-  # Savon::Client is the main object for connecting to a SOAP service. It includes methods to access
-  # both the Savon::WSDL::Document and HTTPI::Request object.
+  # Savon::Client is the main object for connecting to a SOAP service.
   class Client
 
     # Initializes the Savon::Client for a SOAP service. Accepts a +block+ which is evaluated in the
@@ -19,13 +18,10 @@ module Savon
     # == Examples
     #
     #   # Using a remote WSDL
-    #   client = Savon::Client.new { wsdl.document = "http://example.com/UserService?wsdl" }
+    #   client = Savon::Client.new("http://example.com/UserService?wsdl")
     #
     #   # Using a local WSDL
-    #   client = Savon::Client.new { wsdl.document = "../wsdl/user_service.xml" }
-    #
-    #   # Shortcut for setting the WSDL
-    #   client = Savon::Client.new "http://example.com/UserService?wsdl"
+    #   client = Savon::Client.new File.expand_path("../wsdl/service.xml", __FILE__)
     #
     #   # Directly accessing a SOAP endpoint
     #   client = Savon::Client.new do
@@ -38,9 +34,9 @@ module Savon
       wsdl.request = http
     end
 
-    # Returns the <tt>Savon::WSDL::Document</tt>.
+    # Returns the <tt>Savon::Wasabi::Document</tt>.
     def wsdl
-      @wsdl ||= WSDL::Document.new
+      @wsdl ||= Wasabi::Document.new
     end
 
     # Returns the <tt>HTTPI::Request</tt>.
@@ -112,7 +108,7 @@ module Savon
       soap.endpoint = wsdl.endpoint
       soap.namespace_identifier = options[0]
       soap.namespace = wsdl.namespace
-      soap.element_form_default = wsdl.element_form_default if wsdl.present?
+      soap.element_form_default = wsdl.element_form_default if wsdl.document?
       soap.body = options[2].delete(:body)
 
       set_soap_action options[1]
@@ -121,16 +117,16 @@ module Savon
 
     # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
     def set_soap_action(input)
-      soap_action = wsdl.soap_action input.to_sym
+      soap_action = wsdl.soap_action(input.to_sym) if wsdl.document?
       soap_action ||= Gyoku::XMLKey.create(input).to_sym
       http.headers["SOAPAction"] = %{"#{soap_action}"}
     end
 
     # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
     def set_soap_input(namespace, input, attributes)
-      new_input = wsdl.soap_input input.to_sym
-      new_input ||= Gyoku::XMLKey.create(input).to_sym
-      soap.input = [namespace, new_input, attributes].compact
+      new_input = wsdl.soap_input(input.to_sym) if wsdl.document?
+      new_input ||= Gyoku::XMLKey.create(input)
+      soap.input = [namespace, new_input.to_sym, attributes].compact
     end
 
     # Processes a given +block+. Yields objects if the block expects any arguments.
