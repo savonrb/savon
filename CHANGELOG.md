@@ -1,3 +1,8 @@
+## 0.9.4 (2011-07-03)
+
+* Refactoring: Extracted the WSDL parser out into the [wasabi](http://rubygems.org/gems/wasabi) gem.
+  This should isolate upcoming improvements to the parser.
+
 ## 0.9.3 (2011-06-30)
 
 * Fix: [issue 138](https://github.com/rubiii/savon/issues/138) -
