@@ -1,3 +1,7 @@
+## 0.9.5 (2011-07-03)
+
+* Refactoring: Extracted WSSE authentication out into the [akami](http://rubygems.org/gems/akami) gem.
+
 ## 0.9.4 (2011-07-03)
 
 * Refactoring: Extracted the WSDL parser out into the [wasabi](http://rubygems.org/gems/wasabi) gem.
