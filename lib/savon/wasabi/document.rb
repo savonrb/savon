@@ -6,7 +6,7 @@ module Savon
 
     # = Savon::Wasabi::Document
     #
-    # Extends the <tt>Wasabi::Document</tt> to extend its document handling by
+    # Extends the document handling of the <tt>Wasabi::Document</tt> by
     # adding support for remote and local WSDL documents.
     class Document < ::Wasabi::Document
 
