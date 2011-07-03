@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="Api" xmlns:typens="urn:ActionWebService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="urn:ActionWebService" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types>
+    <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
+      <xsd:complexType name="MpUser">
+        <xsd:all>
+          <xsd:element name="avatar_thumb_url" type="xsd:string"/>
+          <xsd:element name="speciality" type="xsd:string"/>
+          <xsd:element name="avatar_icon_url" type="xsd:string"/>
+          <xsd:element name="firstname" type="xsd:string"/>
+          <xsd:element name="city" type="xsd:string"/>
+          <xsd:element name="mp_id" type="xsd:int"/>
+          <xsd:element name="lastname" type="xsd:string"/>
+          <xsd:element name="login" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="MpUserArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:MpUser[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+      <xsd:complexType name="McContact">
+        <xsd:all>
+          <xsd:element name="last_name" type="xsd:string"/>
+          <xsd:element name="email" type="xsd:string"/>
+          <xsd:element name="mp_id" type="xsd:int"/>
+          <xsd:element name="role" type="xsd:int"/>
+          <xsd:element name="login" type="xsd:string"/>
+          <xsd:element name="first_name" type="xsd:string"/>
+        </xsd:all>
+      </xsd:complexType>
+      <xsd:complexType name="McContactArray">
+        <xsd:complexContent>
+          <xsd:restriction base="soapenc:Array">
+            <xsd:attribute wsdl:arrayType="typens:McContact[]" ref="soapenc:arrayType"/>
+          </xsd:restriction>
+        </xsd:complexContent>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="GetUserLoginById">
+    <part name="api_key" type="xsd:string"/>
+    <part name="id" type="xsd:int"/>
+  </message>
+  <message name="GetUserLoginByIdResponse">
+    <part name="return" type="xsd:string"/>
+  </message>
+  <message name="GetAllContacts">
+    <part name="api_key" type="xsd:string"/>
+    <part name="login" type="xsd:string"/>
+  </message>
+  <message name="GetAllContactsResponse">
+    <part name="return" type="typens:McContactArray"/>
+  </message>
+  <message name="SearchUser">
+    <part name="api_key" type="xsd:string"/>
+    <part name="phrase" type="xsd:string"/>
+    <part name="page" type="xsd:string"/>
+    <part name="per_page" type="xsd:string"/>
+  </message>
+  <message name="SearchUserResponse">
+    <part name="return" type="typens:MpUserArray"/>
+  </message>
+  <portType name="ApiApiPort">
+    <operation name="GetUserLoginById">
+      <input message="typens:GetUserLoginById"/>
+      <output message="typens:GetUserLoginByIdResponse"/>
+    </operation>
+    <operation name="GetAllContacts">
+      <input message="typens:GetAllContacts"/>
+      <output message="typens:GetAllContactsResponse"/>
+    </operation>
+    <operation name="SearchUser">
+      <input message="typens:SearchUser"/>
+      <output message="typens:SearchUserResponse"/>
+    </operation>
+  </portType>
+  <binding name="ApiApiBinding" type="typens:ApiApiPort">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc"/>
+    <operation name="GetUserLoginById">
+      <soap:operation soapAction="/api/api/GetUserLoginById"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="GetAllContacts">
+      <soap:operation soapAction="/api/api/GetAllContacts"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+    <operation name="SearchUser">
+      <soap:operation soapAction="/api/api/SearchUser"/>
+      <input>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </input>
+      <output>
+        <soap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="urn:ActionWebService" use="encoded"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="ApiService">
+    <port name="ApiApiPort" binding="typens:ApiApiBinding">
+      <soap:address location="http://example.com/api/api"/>
+    </port>
+  </service>
+</definitions>

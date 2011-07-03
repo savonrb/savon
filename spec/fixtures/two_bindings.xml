@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Example of a WSDL with two <binding> tags.
+
+     This is stripped down from a real example found in the wild, although
+     having different operations for the SOAP 1.1 and SOAP 1.2 bindings
+     is hypothetical (the real-world example I saw had the same operations
+     in each binding section). -->
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <types>
+    </types>
+    <portType name="BlogSoap">
+    </portType>
+    <binding name="BlogSoap">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="Post" />
+        <operation name="Post11only" />
+    </binding>
+    <binding name="BlogSoap12">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="Post" />
+        <operation name="Post12only" />
+    </binding>
+</definitions>
+
