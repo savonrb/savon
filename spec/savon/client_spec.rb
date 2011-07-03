@@ -32,7 +32,7 @@ describe Savon::Client do
         Savon::Client.new do |wsdl, http, wsse|
           wsdl.should be_an(Savon::Wasabi::Document)
           http.should be_an(HTTPI::Request)
-          wsse.should be_an(Savon::WSSE)
+          wsse.should be_an(Akami::WSSE)
         end
       end
     end
@@ -47,7 +47,7 @@ describe Savon::Client do
       end
 
       it "should let you access the WSSE object" do
-        Savon::Client.new { wsse.should be_a(Savon::WSSE) }
+        Savon::Client.new { wsse.should be_a(Akami::WSSE) }
       end
     end
   end
@@ -65,8 +65,8 @@ describe Savon::Client do
   end
 
   describe "#wsse" do
-    it "should return the Savon::WSSE object" do
-      client.wsse.should be_a(Savon::WSSE)
+    it "should return the Akami::WSSE object" do
+      client.wsse.should be_a(Akami::WSSE)
     end
   end
 
@@ -171,7 +171,7 @@ describe Savon::Client do
           soap.should be_a(Savon::SOAP::XML)
           wsdl.should be_a(Savon::Wasabi::Document)
           http.should be_an(HTTPI::Request)
-          wsse.should be_a(Savon::WSSE)
+          wsse.should be_a(Akami::WSSE)
         end
       end
     end
@@ -186,7 +186,7 @@ describe Savon::Client do
       end
 
       it "should let you access the WSSE object" do
-        client.request(:authenticate) { wsse.should be_a(Savon::WSSE) }
+        client.request(:authenticate) { wsse.should be_a(Akami::WSSE) }
       end
 
       it "should let you access the WSDL object" do

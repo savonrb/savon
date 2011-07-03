@@ -98,9 +98,9 @@ describe Savon::SOAP::XML do
   end
 
   describe "#wsse" do
-    it "should set the Savon::WSSE object" do
-      xml.wsse = Savon::WSSE.new
-      xml.wsse.should be_a(Savon::WSSE)
+    it "should set the Akami::WSSE object" do
+      xml.wsse = Akami.wsse
+      xml.wsse.should be_a(Akami::WSSE)
     end
   end
 
@@ -235,7 +235,7 @@ describe Savon::SOAP::XML do
 
     context "with WSSE authentication" do
       it "should containg a SOAP header with WSSE authentication details" do
-        xml.wsse = Savon::WSSE.new
+        xml.wsse = Akami.wsse
         xml.wsse.credentials "username", "password"
 
         xml.to_xml.should include("<env:Header><wsse:Security")

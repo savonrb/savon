@@ -1,9 +1,10 @@
 require "httpi/request"
+require "akami"
+
 require "savon/wasabi/document"
 require "savon/soap/xml"
 require "savon/soap/request"
 require "savon/soap/response"
-require "savon/wsse"
 
 module Savon
 
@@ -44,9 +45,9 @@ module Savon
       @http ||= HTTPI::Request.new
     end
 
-    # Returns the <tt>Savon::WSSE</tt> object.
+    # Returns the <tt>Akami::WSSE</tt> object.
     def wsse
-      @wsse ||= WSSE.new
+      @wsse ||= Akami.wsse
     end
 
     # Returns the <tt>Savon::SOAP::XML</tt> object. Please notice, that this object is only available
