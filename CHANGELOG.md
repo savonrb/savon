@@ -1,3 +1,16 @@
+## 0.9.6 (UPCOMING)
+
+* Improvement/Fix: Updated Savon to use the latest version of [Wasabi](http://rubygems.org/gems/wasabi).
+  This should fix [issue 155](https://github.com/rubiii/savon/issues/155) - Savon can automatically add namespaces
+  to SOAP requests based on the WSDL. Users shouldn't need to do anything differently or even notice whether their WSDL
+  hits this case; the intention is that this will "Just Work" and follow the WSDL. The SOAP details are that if
+  elementFormDefault is specified as qualified, Savon will automatically prepend the correct XML namespaces to the
+  elements in a SOAP request.
+
+  Thanks to [jkingdon](https://github.com/jkingdon) for this.
+
+* Fix: [issue 143](https://github.com/rubiii/savon/issues/143) - Updating Wasabi should solve this issue.
+
 ## 0.9.5 (2011-07-03)
 
 * Refactoring: Extracted WSSE authentication out into the [akami](http://rubygems.org/gems/akami) gem.

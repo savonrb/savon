@@ -1,14 +1,14 @@
 require "spec_helper"
 
 describe Savon::SOAP::XML do
-  let(:xml) { Savon::SOAP::XML.new Endpoint.soap, :authenticate, :id => 1 }
+  let(:xml) { Savon::SOAP::XML.new Endpoint.soap, [nil, :authenticate, {}], :id => 1 }
 
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
-      xml = Savon::SOAP::XML.new Endpoint.soap, :authentication, :id => 1
+      xml = Savon::SOAP::XML.new Endpoint.soap, [nil, :authentication, {}], :id => 1
 
       xml.endpoint.should == Endpoint.soap
-      xml.input.should == :authentication
+      xml.input.should == [nil, :authentication, {}]
       xml.body.should == { :id => 1 }
     end
   end
@@ -218,7 +218,7 @@ describe Savon::SOAP::XML do
 
     context "with :element_form_default set to :qualified and a :namespace" do
       let :xml do
-        Savon::SOAP::XML.new Endpoint.soap, :authenticate, :user => { :id => 1, ":noNamespace" => true }
+        Savon::SOAP::XML.new Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true }
       end
 
       it "should namespace the default elements" do
@@ -246,28 +246,28 @@ describe Savon::SOAP::XML do
 
     context "with a simple input tag (Symbol)" do
       it "should just add the input tag" do
-        xml.input = :simple
+        xml.input = [nil, :simple, {}]
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end
 
     context "with a simple input tag (Array)" do
       it "should just add the input tag" do
-        xml.input = :simple
+        xml.input = [nil, :simple, {}]
         xml.to_xml.should include('<simple><id>1</id></simple>')
       end
     end
 
     context "with an input tag and a namespace Hash (Array)" do
       it "should contain the input tag with namespaces" do
-        xml.input = [:getUser, { "active" => true }]
+        xml.input = [nil, :getUser, { "active" => true }]
         xml.to_xml.should include('<getUser active="true"><id>1</id></getUser>')
       end
     end
 
     context "with a prefixed input tag (Array)" do
       it "should contain a prefixed input tag" do
-        xml.input = [:wsdl, :getUser]
+        xml.input = [:wsdl, :getUser, {}]
         xml.to_xml.should include('<wsdl:getUser><id>1</id></wsdl:getUser>')
       end
     end

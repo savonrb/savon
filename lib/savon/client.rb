@@ -104,30 +104,38 @@ module Savon
       [namespace, input, attributes]
     end
 
-    # Expects and Array of +options+ and preconfigures the system.
-    def preconfigure(options)
+    # Expects an Array of +args+ to preconfigure the system.
+    def preconfigure(args)
       soap.endpoint = wsdl.endpoint
-      soap.namespace_identifier = options[0]
+      soap.namespace_identifier = args[0]
       soap.namespace = wsdl.namespace
       soap.element_form_default = wsdl.element_form_default if wsdl.document?
-      soap.body = options[2].delete(:body)
+      soap.body = args[2].delete(:body)
 
-      set_soap_action options[1]
-      set_soap_input *options
+      wsdl.type_namespaces.each do |path, uri|
+        soap.use_namespace(path, uri)
+      end
+
+      wsdl.type_definitions.each do |path, type|
+        soap.types[path] = type
+      end
+
+      set_soap_action args[1]
+      set_soap_input *args
     end
 
     # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
-    def set_soap_action(input)
-      soap_action = wsdl.soap_action(input.to_sym) if wsdl.document?
-      soap_action ||= Gyoku::XMLKey.create(input).to_sym
+    def set_soap_action(input_tag)
+      soap_action = wsdl.soap_action(input_tag.to_sym) if wsdl.document?
+      soap_action ||= Gyoku::XMLKey.create(input_tag).to_sym
       http.headers["SOAPAction"] = %{"#{soap_action}"}
     end
 
     # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
     def set_soap_input(namespace, input, attributes)
-      new_input = wsdl.soap_input(input.to_sym) if wsdl.document?
-      new_input ||= Gyoku::XMLKey.create(input)
-      soap.input = [namespace, new_input.to_sym, attributes].compact
+      new_input_tag = wsdl.soap_input(input.to_sym) if wsdl.document?
+      new_input_tag ||= Gyoku::XMLKey.create(input)
+      soap.input = [namespace, new_input_tag.to_sym, attributes]
     end
 
     # Processes a given +block+. Yields objects if the block expects any arguments.

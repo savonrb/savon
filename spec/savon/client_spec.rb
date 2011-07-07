@@ -84,7 +84,7 @@ describe Savon::Client do
 
     context "with a single argument (Symbol)" do
       it "should set the input tag to result in <getUser>" do
-        client.request(:get_user) { soap.input.should == [:getUser, {}] }
+        client.request(:get_user) { soap.input.should == [nil, :getUser, {}] }
       end
 
       it "should set the target namespace with the default identifier" do
@@ -95,7 +95,7 @@ describe Savon::Client do
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'wsdl="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:get_user) { soap.namespace = nil }
@@ -104,13 +104,13 @@ describe Savon::Client do
 
     context "with a single argument (String)" do
       it "should set the input tag to result in <get_user>" do
-        client.request("get_user") { soap.input.should == [:get_user, {}] }
+        client.request("get_user") { soap.input.should == [nil, :get_user, {}] }
       end
     end
 
     context "with a Symbol and a Hash" do
       it "should set the input tag to result in <getUser active='true'>" do
-        client.request(:get_user, :active => true) { soap.input.should == [:getUser, { :active => true }] }
+        client.request(:get_user, :active => true) { soap.input.should == [nil, :getUser, { :active => true }] }
       end
     end
 
@@ -127,7 +127,7 @@ describe Savon::Client do
       end
 
       it "should not set the target namespace if soap.namespace was set to nil" do
-        namespace = "http://v1_0.ws.auth.order.example.com/"
+        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
         client.request(:v1, :get_user) { soap.namespace = nil }
@@ -258,6 +258,107 @@ describe Savon::Client do
 
       response.should be_a(Savon::SOAP::Response)
       response.to_xml.should == Fixture.response(:authentication)
+    end
+  end
+
+  context "when the WSDL specifies multiple namespaces" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_namespaces)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "qualifies each element with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+
+        title = xml.at_xpath(
+          ".//actions:Save/actions:article/article:Title/text()",
+          "article" => "http://example.com/article",
+          "actions" => "http://example.com/actions").to_s
+        author = xml.at_xpath(
+          ".//actions:Save/actions:article/article:Author/text()",
+          "article" => "http://example.com/article",
+          "actions" => "http://example.com/actions").to_s
+
+        title == "Hamlet" && author == "Shakespeare"
+      end
+
+      client.request :save do
+        soap.body = { :article => { "Title" => "Hamlet", "Author" => "Shakespeare" } }
+      end
+    end
+
+    it "still sends nil as xsi:nil as in the non-namespaced case" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+
+        attribute = xml.at_xpath(".//article:Title/@xsi:nil",
+          "xsi" => "http://www.w3.org/2001/XMLSchema-instance",
+          "article" => "http://example.com/article").to_s
+
+        attribute == "true"
+      end
+
+      client.request(:save) { soap.body = { :article => { "Title" => nil } } }
+    end
+
+    it "translates between symbol :save and string 'Save'" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save", "actions" => "http://example.com/actions")
+      end
+
+      client.request :save do
+        soap.body = { :article => { :title => "Hamlet", :author => "Shakespeare" } }
+      end
+    end
+
+    it "qualifies Save with the appropriate namespace" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save", "actions" => "http://example.com/actions")
+      end
+
+      client.request "Save" do
+        soap.body = { :article => { :title => "Hamlet", :author => "Shakespeare" } }
+      end
+    end
+  end
+
+  context "when the WSDL has a lowerCamel name" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:lower_camel)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "appends namespace when name is specified explicitly" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save/actions:lowerCamel", "actions" => "http://example.com/actions")
+      end
+
+      client.request("Save") { soap.body = { 'lowerCamel' => 'theValue' } }
+    end
+
+    it "still appends namespace when converting from symbol" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        xml = Nokogiri::XML(value)
+        !!xml.at_xpath(".//actions:Save/actions:lowerCamel", "actions" => "http://example.com/actions")
+      end
+
+      client.request("Save") { soap.body = { :lower_camel => 'theValue' } }
+    end
+  end
+
+  context "with multiple types" do
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_types)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "does not blow up" do
+      HTTPI::Request.any_instance.expects(:body=).with { |value| value.include?("Save") }
+      client.request(:save) { soap.body = {} }
     end
   end
 
