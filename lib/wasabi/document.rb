@@ -61,18 +61,49 @@ module Wasabi
       @operations ||= parser.operations
     end
 
+    def type_namespaces
+      @type_namespaces ||= begin
+        namespaces = []
+        parser.types.each do |type, info|
+          namespaces << [[type], info[:namespace]]
+          (info.keys - [:namespace]).each { |field| namespaces << [[type, field], info[:namespace]] }
+        end if document?
+        namespaces
+      end
+    end
+
+    def type_definitions
+      @type_definitions ||= begin
+        result = []
+        parser.types.each do |type, info|
+          (info.keys - [:namespace]).each do |field|
+            field_type = info[field][:type]
+            tag, namespace = field_type.split(":").reverse
+            result << [[type, field], tag] if user_defined(namespace)
+          end
+        end if document?
+        result
+      end
+    end
+
+    # Returns whether the given +namespace+ was defined manually.
+    def user_defined(namespace)
+      uri = parser.namespaces[namespace]
+      !(uri =~ %r{^http://schemas.xmlsoap.org} || uri =~ %r{^http://www.w3.org})
+    end
+
     # Returns the raw WSDL document.
     # Can be used as a hook to extend the library.
     def xml
       @xml ||= document
     end
 
-  private
-
     # Parses the WSDL document and returns the <tt>Wasabi::Parser</tt>.
     def parser
       @parser ||= guard_parse && parse
     end
+
+  private
 
     # Raises an error if the WSDL document is missing.
     def guard_parse

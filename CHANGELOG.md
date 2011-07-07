@@ -1,3 +1,8 @@
+## 2.0.0 (2011-07-07)
+
+* Feature: Wasabi can now parse type definitions and namespaces.
+  Thanks to [jkingdon](https://github.com/jkingdon) for implementing this.
+
 ## 1.0.0 (2011-07-03)
 
 * Initial version extracted from the [Savon](http://rubygems.org/gems/savon) library.
