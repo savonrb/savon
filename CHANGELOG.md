@@ -1,4 +1,4 @@
-## 0.9.6 (UPCOMING)
+## 0.9.6 (2011-07-07)
 
 * Improvement/Fix: Updated Savon to use the latest version of [Wasabi](http://rubygems.org/gems/wasabi).
   This should fix [issue 155](https://github.com/rubiii/savon/issues/155) - Savon can automatically add namespaces
