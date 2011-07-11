@@ -187,6 +187,13 @@ describe Savon::SOAP::Response do
     end
   end
 
+  describe "#xpath" do
+    it "permits XPath access to elements in the request" do
+      soap_response.xpath("//client").first.inner_text.should == "radclient"
+      soap_response.xpath("//ns2:authenticateResponse/return/success").first.inner_text.should == "true"
+    end
+  end
+
   describe "#http" do
     it "should return the HTTPI::Response" do
       soap_response.http.should be_an(HTTPI::Response)
