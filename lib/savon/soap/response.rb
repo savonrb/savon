@@ -82,12 +82,29 @@ module Savon
         http.body
       end
 
+      # Returns a Nokogiri::XML::Document for the SOAP response XML.
+      def xml
+        @xml ||= Nokogiri::XML(http.body)
+      end
+
+      # Returns an Array of Nokogiri::XML::Node objects retrieved with the given +path+.
+      # Automatically adds all of the document's namespaces unless a +namespaces+ hash
+      # is provided.
+      def xpath(path, namespaces = nil)
+        xml.xpath(path, namespaces || xml_namespaces) 
+      end
+
     private
 
       def raise_errors
         raise soap_fault if soap_fault?
         raise http_error if http_error?
       end
+
+      def xml_namespaces
+        @xml_namespaces ||= xml.collect_namespaces
+      end
+
 
     end
   end
