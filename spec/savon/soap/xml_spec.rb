@@ -200,6 +200,14 @@ describe Savon::SOAP::XML do
       xml.xml { |xml| xml.using("Builder") }
       xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8"?><using>Builder</using>'
     end
+
+    it "accepts options to pass to the Builder::XmlMarkup instruct!" do
+      xml.xml :xml, :aaa => :bbb do |xml|
+        xml.using("Builder")
+      end
+
+      xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8" aaa="bbb"?><using>Builder</using>'
+    end
   end
 
   describe "#to_xml" do
