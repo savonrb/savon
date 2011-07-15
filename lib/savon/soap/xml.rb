@@ -130,8 +130,8 @@ module Savon
       attr_accessor :body
 
       # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create custom XML.
-      def xml
-        @xml = yield builder if block_given?
+      def xml(directive_tag=:xml, attrs={})
+        @xml = yield builder(directive_tag, attrs) if block_given?
       end
 
       # Accepts an XML String and lets you specify a completely custom request body.
@@ -153,9 +153,9 @@ module Savon
     private
 
       # Returns a new <tt>Builder::XmlMarkup</tt> object.
-      def builder
+      def builder(directive_tag=:xml, attrs={})
         builder = Builder::XmlMarkup.new
-        builder.instruct!
+        builder.instruct!(directive_tag, attrs)
         builder
       end
 
