@@ -208,6 +208,11 @@ describe Savon::SOAP::XML do
 
       xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8" aaa="bbb"?><using>Builder</using>'
     end
+
+    it "can change encoding to UTF-16" do
+      xml.xml(:xml, {encoding: "UTF-16"}) { |xml| xml.using("Builder") }
+      xml.to_xml.should == '<?xml version="1.0" encoding="UTF-16"?><using>Builder</using>'
+    end
   end
 
   describe "#to_xml" do
