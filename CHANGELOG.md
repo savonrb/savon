@@ -1,5 +1,9 @@
 ## UPCOMING
 
+* Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by
+  [mboeh](https://github.com/mboeh) to add `Savon::SOAP::Response#doc` and
+  `Savon::SOAP::Response#xpath`.
+
 * Feature: Merged [pull request 211](https://github.com/rubiii/savon/pull/211) by
   [mattkirman](https://github.com/mattkirman) to fix [issue 202](https://github.com/rubiii/savon/issues/202).
 
