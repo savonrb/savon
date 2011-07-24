@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Feature: Merged [pull request 211](https://github.com/rubiii/savon/pull/211) by
+  [mattkirman](https://github.com/mattkirman) to fix [issue 202](https://github.com/rubiii/savon/issues/202).
+
 ## 0.9.6 (2011-07-07)
 
 * Improvement/Fix: Updated Savon to use the latest version of [Wasabi](http://rubygems.org/gems/wasabi).
