@@ -187,6 +187,12 @@ describe Savon::SOAP::Response do
     end
   end
 
+  describe "#doc" do
+    it "returns a Nokogiri::XML::Document for the SOAP response XML" do
+      soap_response.doc.should be_a(Nokogiri::XML::Document)
+    end
+  end
+
   describe "#xpath" do
     it "permits XPath access to elements in the request" do
       soap_response.xpath("//client").first.inner_text.should == "radclient"
