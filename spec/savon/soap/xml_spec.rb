@@ -177,6 +177,13 @@ describe Savon::SOAP::XML do
         xml.to_xml.should include('<env:Body><authenticate><someId>1</someId></authenticate></env:Body>')
       end
 
+      it "should accept a SOAP body with an array" do
+        xml.body = {
+          :items => { :item => [{ :name => 'item one' }, { :name => 'item 2' }] }
+        }
+        xml.to_xml.should include('<env:Body><authenticate><items><item><name>item one</name></item><item><name>item 2</name></item></items></authenticate></env:Body>')
+      end
+
       it "should not contain a SOAP header" do
         xml.to_xml.should_not include('<env:Header')
       end
