@@ -1,3 +1,6 @@
+# https://github.com/travis-ci/travis-ci/wiki/.travis.yml-options
+bundler_args: --without developer_happiness
+script: "bundle exec rake"
 rvm:
   - 1.8.7
   - 1.9.2
