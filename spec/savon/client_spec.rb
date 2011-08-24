@@ -240,7 +240,7 @@ describe Savon::Client do
   end
 
   context "with a local WSDL document" do
-    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } } 
+    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/authentication.xml" } }
 
     before { HTTPI.expects(:get).never }
 
@@ -359,6 +359,32 @@ describe Savon::Client do
     it "does not blow up" do
       HTTPI::Request.any_instance.expects(:body=).with { |value| value.include?("Save") }
       client.request(:save) { soap.body = {} }
+    end
+  end
+
+  context "with an Array of namespaced items" do
+    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/taxcloud.xml" } }
+
+    before do
+      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:taxcloud)))
+      HTTPI.stubs(:post).returns(new_response)
+    end
+
+    it "should namespaces each Array item as expected" do
+      HTTPI::Request.any_instance.expects(:body=).with do |value|
+        value.include?("<ins0:cartItems><ins0:CartItem><wsdl:Index>0</wsdl:Index><wsdl:ItemID>SKU-TEST</wsdl:ItemID><wsdl:TIC>00000</wsdl:TIC><wsdl:Price>50.0</wsdl:Price><wsdl:Qty>1</wsdl:Qty></ins0:CartItem></ins0:cartItems>")
+      end
+
+      address = { "Address1" => "888 6th Ave", "Address2" => nil, "City" => "New York", "State" => "NY", "Zip5" => "10001", "Zip4" => nil }
+      cart_item = { "Index" => 0, "ItemID" => "SKU-TEST", "TIC" => "00000", "Price" => 50.0, "Qty" => 1 }
+
+      client.request :lookup, :body => {
+        "customerID"  => 123,
+        "cartID"      => 456,
+        "cartItems"   => { "CartItem" => [cart_item] },
+        "origin"      => address,
+        "destination" => address
+      }
     end
   end
 
