@@ -39,4 +39,4 @@ response.body
 Documentation
 -------------
 
-Continue reading at [savonrb.com](http://savonrb.com).
+Continue reading at [savonrb.com](http://savonrb.com)
