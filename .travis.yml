@@ -9,3 +9,5 @@ rvm:
   - rbx
   - rbx-2.0
   - jruby
+notifications:
+  irc: "irc.freenode.org#savon"
