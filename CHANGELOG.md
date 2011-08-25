@@ -1,4 +1,4 @@
-## UPCOMING
+## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by
   [mboeh](https://github.com/mboeh) to add `Savon::SOAP::Response#doc` and
