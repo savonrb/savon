@@ -7,6 +7,16 @@
 * Feature: Merged [pull request 211](https://github.com/rubiii/savon/pull/211) by
   [mattkirman](https://github.com/mattkirman) to fix [issue 202](https://github.com/rubiii/savon/issues/202).
 
+* Feature: You can now pass a block to `Savon::SOAP::XML#body` and use Builder to create the XML:
+
+      client.request(:find) do
+        soap.body do |xml|
+          xml.user do
+            xml.id 601173
+          end
+        end
+      end
+
 * Fix: [issue 218](https://github.com/rubiii/savon/pull/218) - Savon now correctly handles namespaced
   Array items in a Hash passed to `Savon::SOAP::XML#body=`.
 

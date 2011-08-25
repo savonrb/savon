@@ -110,9 +110,17 @@ describe Savon::SOAP::XML do
       xml.to_xml.should include("<id>1</id>")
     end
 
-    it "should also accepts an XML String" do
+    it "should accepts an XML String" do
       xml.body = "<id>1</id>"
       xml.to_xml.should include("<id>1</id>")
+    end
+
+    it "should accept a block" do
+      xml.body do |body|
+        body.user { body.id 1 }
+      end
+
+      xml.to_xml.should include("<authenticate><user><id>1</id></user></authenticate>")
     end
   end
 

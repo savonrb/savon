@@ -125,11 +125,19 @@ module Savon
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
 
-      # Accessor for the SOAP +body+. Expected to be a Hash that can be translated to XML via Gyoku.xml
-      # or any other Object responding to to_s.
-      attr_accessor :body
+      # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create
+      # custom body XML.
+      def body
+        @body = yield builder(nil) if block_given?
+        @body
+      end
 
-      # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create custom XML.
+      # Sets the SOAP +body+. Expected to be a Hash that can be translated to XML via `Gyoku.xml`
+      # or any other Object responding to to_s.
+      attr_writer :body
+
+      # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create
+      # a completely custom XML.
       def xml(directive_tag = :xml, attrs = {})
         @xml = yield builder(directive_tag, attrs) if block_given?
       end
@@ -155,7 +163,7 @@ module Savon
       # Returns a new <tt>Builder::XmlMarkup</tt> object.
       def builder(directive_tag = :xml, attrs = {})
         builder = Builder::XmlMarkup.new
-        builder.instruct!(directive_tag, attrs)
+        builder.instruct!(directive_tag, attrs) if directive_tag
         builder
       end
 
