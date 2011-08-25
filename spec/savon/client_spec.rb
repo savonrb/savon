@@ -198,6 +198,7 @@ describe Savon::Client do
       client.http.headers.expects(:[]=).with("Cookie", anything).never
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
       client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
+      client.http.headers.stubs(:[]=).with("Content-Length", "384")
 
       client.request :authenticate
     end
@@ -213,6 +214,7 @@ describe Savon::Client do
       client.http.headers.expects(:[]=).with("Cookie", "some-cookie")
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
       client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
+      client.http.headers.stubs(:[]=).with("Content-Length", "384")
 
       client.request :authenticate
     end

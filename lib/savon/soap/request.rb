@@ -35,9 +35,13 @@ module Savon
 
       # Sets up the +request+ using a given +soap+ object.
       def setup(request, soap)
-        request.url = soap.endpoint
+        url, body = soap.endpoint, soap.to_xml
+
+        request.url = url
+        request.body = body
         request.headers["Content-Type"] ||= ContentType[soap.version]
-        request.body = soap.to_xml
+        request.headers["Content-Length"] ||= body.length.to_s
+
         request
       end
 
