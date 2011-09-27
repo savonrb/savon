@@ -33,6 +33,67 @@ describe Savon do
       end
     end
 
+    describe "log filter" do
+
+      context "without a log filter set" do
+        it "should not filter XML messages" do
+          filtered_message = Savon.filtered(Fixture.response(:authentication))
+          filtered_message.should == Fixture.response(:authentication)
+        end
+
+        it "should not filter non-XML messages" do
+          filtered_message = Savon.filtered('This is an information message.')
+          filtered_message.should == 'This is an information message.'
+        end
+      end
+
+      context "with a log filter set" do
+        before(:each) do
+          Savon.configure { |config| config.log_filter = ['tokenHash'] }
+        end
+
+        it "should set log filter" do
+          Savon.log_filter.should == ['tokenHash']
+        end
+
+        it "should filter element values" do
+          filtered_value = "AAAJxA;cIedoT;mY10ExZwG6JuKgp2OYKxow=="
+          filtered_message = Savon.filtered(Fixture.response(:authentication))
+          filtered_message.should_not include(filtered_value)
+          filtered_message.should include('***FILTERED***')
+        end
+
+        it "should not filter non-XML messages" do
+          filtered_message = Savon.filtered('This is an information message.')
+          filtered_message.should == 'This is an information message.'
+        end
+      end
+
+      context "with multiple log filters set" do
+        before(:each) do
+          Savon.configure { |config| config.log_filter = ['logType','logTime'] }
+        end
+
+        it "should filter element values" do
+          filtered_values = /Notes Log|2010-09-21T18:22:01|2010-09-21T18:22:07/
+          filtered_message = Savon.filtered(Fixture.response(:list))
+
+          filtered_message.should_not =~ filtered_values
+          filtered_message.should include('<ns10:logTime>***FILTERED***</ns10:logTime>')
+          filtered_message.should include('<ns10:logType>***FILTERED***</ns10:logType>')
+          filtered_message.should include('<ns11:logTime>***FILTERED***</ns11:logTime>')
+          filtered_message.should include('<ns11:logType>***FILTERED***</ns11:logType>')
+        end
+
+        it "should not filter non-XML messages" do
+          filtered_message = Savon.filtered('This is an information message.')
+
+          filtered_message.should == 'This is an information message.'
+        end
+      end
+
+    end
+
     describe "log_level" do
       it "should default to :debug" do
         Savon.log_level.should == :debug
