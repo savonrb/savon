@@ -31,7 +31,26 @@ module Savon
 
     # Logs a given +message+.
     def log(message)
-      logger.send log_level, message if log?
+      logger.send log_level, filtered(message) if log?
+    end
+
+    # Sets the log filter.
+    attr_writer :log_filter
+
+    # Returns the log filter. Defaults to blank.
+    def log_filter
+      @log_filter ||= ''
+    end
+
+    # Filters Message based on log filter
+    def filtered(message)
+      xml = Nokogiri::XML(message)
+      return message if @log_filter.empty? || !xml.errors.empty?
+
+      @log_filter.each do |filter|
+        xml.xpath("//*[local-name()='#{filter}']").map { |node| node.content = '***FILTERED***' }
+      end
+      return xml.root.to_s
     end
 
     # Sets whether to raise HTTP errors and SOAP faults.
@@ -108,6 +127,7 @@ module Savon
       self.strip_namespaces = true
       self.env_namespace = nil
       self.soap_header = {}
+      self.log_filter = ''
     end
 
   end
