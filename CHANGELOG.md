@@ -1,3 +1,7 @@
+## 1.0.0 (UPCOMING)
+
+* Feature: Added [hooks](http://savonrb.com/#hook_into_the_system).
+
 ## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by

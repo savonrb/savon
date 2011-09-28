@@ -14,43 +14,43 @@ module Savon
 
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object
       # to execute a SOAP request and returns the response.
-      def self.execute(request, soap)
-        new(request, soap).response
+      def self.execute(http, soap)
+        new(http, soap).response
       end
 
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object.
-      def initialize(request, soap)
-        self.request = setup(request, soap)
+      def initialize(http, soap)
+        self.soap = soap
+        self.http = configure(http)
       end
 
-      # Accessor for the <tt>HTTPI::Request</tt>.
-      attr_accessor :request
+      attr_accessor :soap, :http
 
       # Executes the request and returns the response.
       def response
-        @response ||= with_logging { HTTPI.post request }
+        @response ||= SOAP::Response.new(
+          Savon.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
+        )
       end
 
     private
 
-      # Sets up the +request+ using a given +soap+ object.
-      def setup(request, soap)
-        url, body = soap.endpoint, soap.to_xml
+      # Configures a given +http+ from the +soap+ object.
+      def configure(http)
+        http.url = soap.endpoint
+        http.body = soap.to_xml
+        http.headers["Content-Type"] ||= ContentType[soap.version]
+        http.headers["Content-Length"] ||= soap.to_xml.length.to_s
 
-        request.url = url
-        request.body = body
-        request.headers["Content-Type"] ||= ContentType[soap.version]
-        request.headers["Content-Length"] ||= body.length.to_s
-
-        request
+        http
       end
 
       # Logs the HTTP request, yields to a given +block+ and returns a <tt>Savon::SOAP::Response</tt>.
       def with_logging
-        log_request request.url, request.headers, request.body
+        log_request http.url, http.headers, http.body
         response = yield
         log_response response.code, response.body
-        SOAP::Response.new response
+        response
       end
 
       # Logs the SOAP request +url+, +headers+ and +body+.

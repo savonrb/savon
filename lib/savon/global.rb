@@ -1,5 +1,6 @@
 require "logger"
 require "savon/soap"
+require "savon/hooks/group"
 
 module Savon
   module Global
@@ -90,6 +91,11 @@ module Savon
     # Returns whether to warn about deprecation.
     def deprecate?
       @deprecate != false
+    end
+
+    # Returns the hooks.
+    def hooks
+      @hooks ||= Hooks::Group.new
     end
 
     # Reset to default configuration.
