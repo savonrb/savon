@@ -1,6 +1,7 @@
 require "savon/version"
 require "savon/global"
 require "savon/client"
+require "savon/model"
 
 module Savon
   extend Global
