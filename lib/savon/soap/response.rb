@@ -1,5 +1,6 @@
 require "savon/soap/xml"
 require "savon/soap/fault"
+require "savon/soap/invalid_response_error"
 require "savon/http/error"
 
 module Savon
@@ -50,11 +51,17 @@ module Savon
 
       # Returns the SOAP response header as a Hash.
       def header
+        if !hash.has_key? :envelope
+          raise Savon::SOAP::InvalidResponseError, "Unable to parse response body '#{to_xml}'"
+        end
         hash[:envelope][:header]
       end
 
       # Returns the SOAP response body as a Hash.
       def body
+        if !hash.has_key? :envelope
+          raise Savon::SOAP::InvalidResponseError, "Unable to parse response body '#{to_xml}'"
+        end
         hash[:envelope][:body]
       end
 
