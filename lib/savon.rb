@@ -1,13 +1,13 @@
 require "savon/version"
-require "savon/global"
+require "savon/config"
 require "savon/client"
 require "savon/model"
 
 module Savon
-  extend Global
+  extend Config
 
   # Yields this module to a given +block+. Please refer to the
-  # <tt>Savon::Global</tt> module for configuration options.
+  # <tt>Savon::Config</tt> module for configuration options.
   def self.configure
     yield self if block_given?
   end
