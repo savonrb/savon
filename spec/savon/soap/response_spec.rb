@@ -121,12 +121,20 @@ describe Savon::SOAP::Response do
       soap_response[:authenticate_response][:return].should ==
         Fixture.response_hash(:authentication)[:authenticate_response][:return]
     end
+
+    it "should throw an exception when the response body isn't parsable" do
+      lambda { invalid_soap_response.body }.should raise_error Savon::SOAP::InvalidResponseError
+    end
   end
 
   describe "#header" do
     it "should return the SOAP response header as a Hash" do
       response = soap_response :body => Fixture.response(:header)
       response.header.should include(:session_number => "ABCD1234")
+    end
+
+    it "should throw an exception when the response header isn't parsable" do
+      lambda { invalid_soap_response.header }.should raise_error Savon::SOAP::InvalidResponseError
     end
   end
 
@@ -219,6 +227,13 @@ describe Savon::SOAP::Response do
 
   def http_error_response
     soap_response :code => 404, :body => "Not found"
+  end
+
+  def invalid_soap_response(options={})
+    defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" } 
+    response = defaults.merge options
+
+    Savon::SOAP::Response.new HTTPI::Response.new(response[:code], response[:headers], response[:body])
   end
 
 end
