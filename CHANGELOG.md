@@ -6,6 +6,9 @@
   Savon::Model is a very simple abstraction on top of your domain models to wrap SOAP requests.
   It's been refactored and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
 
+* Improvement: Merged [pull request 231](https://github.com/rubiii/savon/pull/231) to gracefully handle
+  invalid response bodies by throwing a `Savon::SOAP::InvalidResponseError`.
+
 ## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by
