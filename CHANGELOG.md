@@ -6,6 +6,15 @@
   Savon::Model is a very simple abstraction on top of your domain models to wrap SOAP requests.
   It's been refactored and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
 
+* Feature: Merged [pull request 230](https://github.com/rubiii/savon/pull/230) to allow filtering values
+  in logged SOAP request XML messages.
+
+    ``` ruby
+    Savon.configure do |config|
+      config.log_filter = ["password"]
+    end
+    ```
+
 * Improvement: Merged [pull request 231](https://github.com/rubiii/savon/pull/231) to gracefully handle
   invalid response bodies by throwing a `Savon::SOAP::InvalidResponseError`.
 
