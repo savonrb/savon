@@ -124,6 +124,12 @@ describe Savon::SOAP::XML do
     end
   end
 
+  describe "#encoding" do
+    it "defaults to UTF-8" do
+      xml.encoding.should == "UTF-8"
+    end
+  end
+
   describe "#xml" do
     it "lets you specify a completely custom XML String" do
       xml.xml = "<custom>xml</custom>"
@@ -187,6 +193,17 @@ describe Savon::SOAP::XML do
 
       it "should not contain a SOAP header" do
         xml.to_xml.should_not include('<env:Header')
+      end
+    end
+
+    context "with a custom encoding" do
+      after do
+        xml.encoding = nil
+      end
+
+      it "should change the default encoding" do
+        xml.encoding = "US-ASCII"
+        xml.to_xml.should match(/^<\?xml version="1.0" encoding="US-ASCII"\?>/)
       end
     end
 

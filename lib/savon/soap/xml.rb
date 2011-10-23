@@ -125,6 +125,14 @@ module Savon
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
 
+      # Returns the SOAP request encoding. Defaults to "UTF-8".
+      def encoding
+        @encoding ||= "UTF-8"
+      end
+
+      # Sets the SOAP request encoding.
+      attr_writer :encoding
+
       # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create
       # custom body XML.
       def body
@@ -161,7 +169,7 @@ module Savon
     private
 
       # Returns a new <tt>Builder::XmlMarkup</tt> object.
-      def builder(directive_tag = :xml, attrs = {})
+      def builder(directive_tag = :xml, attrs = { :encoding => encoding })
         builder = Builder::XmlMarkup.new
         builder.instruct!(directive_tag, attrs) if directive_tag
         builder

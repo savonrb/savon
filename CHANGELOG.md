@@ -15,6 +15,16 @@
     end
     ```
 
+* Feature: Added an option to change the default encoding of the XML directive tag (defaults to UTF-8)
+  to fix [issue 234](https://github.com/rubiii/savon/issues/234).
+
+    ``` ruby
+    client.request(:find_user) do
+      soap.encoding = "UTF-16"
+      soap.body = { :id => 1 }
+    end
+    ```
+
 * Improvement: Merged [pull request 231](https://github.com/rubiii/savon/pull/231) to gracefully handle
   invalid response bodies by throwing a `Savon::SOAP::InvalidResponseError`.
 
