@@ -1,5 +1,7 @@
 ## 1.0.0 (UPCOMING)
 
+* Notice: Moving to [Semantic Versioning](http://semver.org).
+
 * Feature: Added [hooks](http://savonrb.com/#hook_into_the_system).
 
 * Feature: Savon now ships with [Savon::Model](http://rubygems.org/gems/savon_model).
