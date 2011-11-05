@@ -36,14 +36,18 @@ describe Savon::SOAP::Request do
       soap_request.http.headers["Content-Type"].should == Savon::SOAP::Request::ContentType[2]
     end
 
-    it "does not set the Content-Type header if it's already specified" do
-      headers = { "Content-Type" => "text/plain" }
-      soap_request = Savon::SOAP::Request.new HTTPI::Request.new(:headers => headers), soap
-      soap_request.http.headers["Content-Type"].should == headers["Content-Type"]
-    end
-
     it "sets the Content-Length header" do
       soap_request.http.headers["Content-Length"].should == soap.to_xml.length.to_s
+    end
+
+    it "sets the Content-Length header for every request" do
+      http = HTTPI::Request.new
+      soap_request = Savon::SOAP::Request.new(http, soap)
+      http.headers.should include("Content-Length" => "272")
+
+      soap = Savon::SOAP::XML.new Endpoint.soap, [nil, :create_user, {}], :id => 123
+      soap_request = Savon::SOAP::Request.new(http, soap)
+      http.headers.should include("Content-Length" => "280")
     end
   end
 
