@@ -30,6 +30,9 @@
 * Improvement: Merged [pull request 231](https://github.com/rubiii/savon/pull/231) to gracefully handle
   invalid response bodies by throwing a `Savon::SOAP::InvalidResponseError`.
 
+* Fix: [issue 237](https://github.com/rubiii/savon/issues/237) - Set the Content-Type and Content-Length
+  headers for every request.
+
 ## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by
