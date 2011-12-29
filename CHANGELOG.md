@@ -33,6 +33,9 @@
 * Fix: [issue 237](https://github.com/rubiii/savon/issues/237) - Set the Content-Type and Content-Length
   headers for every request.
 
+* Fix: [pull request 250](https://github.com/rubiii/savon/pull/250) - The Content-Length header should
+  be the size in bytes.
+
 ## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/rubiii/savon/pull/210) by
