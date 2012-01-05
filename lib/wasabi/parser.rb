@@ -108,6 +108,22 @@ module Wasabi
 
       xpath(type, "./xs:sequence/xs:element").
         each { |inner| @types[name][inner.attribute("name").to_s] = { :type => inner.attribute("type").to_s } }
+
+      type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element",
+        "xs" => "http://www.w3.org/2001/XMLSchema"
+      ).each do |inner_element|
+        @types[name][inner_element.attribute('name').to_s] = {
+          :type => inner_element.attribute('type').to_s
+        }
+      end
+
+      type.xpath('./xs:complexContent/xs:extension[@base]',
+        "xs" => "http://www.w3.org/2001/XMLSchema"
+      ).each do |inherits|
+        @types[name].merge!(
+          @types[inherits.attribute('base').value.match(/\w+$/).to_s]
+        )
+      end
     end
 
     def find_namespace(type)
