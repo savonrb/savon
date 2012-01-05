@@ -9,12 +9,6 @@
 	targetNamespace="http://api.example.com/">
 	<types>
 		<schema attributeFormDefault="qualified" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://object.api.example.com/">
-			<complexType name="baseObject">
-				<sequence>
-					<element minOccurs="0" maxOccurs="unbounded" name="fieldsToNull" nillable="true" type="string" />
-					<element minOccurs="0" maxOccurs="1" name="Id" nillable="true" type="ens:ID" />
-				</sequence>
-			</complexType>
 			<complexType name="Account">
 				<complexContent>
 					<extension base="ons:baseObject">
@@ -26,6 +20,12 @@
 					</extension>
 				</complexContent>
       </complexType>
+			<complexType name="baseObject">
+				<sequence>
+					<element minOccurs="0" maxOccurs="unbounded" name="fieldsToNull" nillable="true" type="string" />
+					<element minOccurs="0" maxOccurs="1" name="Id" nillable="true" type="ens:ID" />
+				</sequence>
+			</complexType>
     </schema>
 
 		<schema attributeFormDefault="qualified" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://api.example.com/">

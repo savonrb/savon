@@ -16,6 +16,7 @@ module Wasabi
       self.operations = {}
       self.namespaces = {}
       self.types = {}
+      self.deferred_types = []
       self.element_form_default = :unqualified
     end
 
@@ -34,6 +35,9 @@ module Wasabi
     # Returns a map from a type name to a Hash with type information.
     attr_accessor :types
 
+    # Returns a map of deferred type Proc objects.
+    attr_accessor :deferred_types
+
     # Returns the SOAP endpoint.
     attr_accessor :endpoint
 
@@ -45,6 +49,7 @@ module Wasabi
       parse_endpoint
       parse_operations
       parse_types
+      parse_deferred_types
     end
 
     def parse_namespaces
@@ -120,10 +125,19 @@ module Wasabi
       type.xpath('./xs:complexContent/xs:extension[@base]',
         "xs" => "http://www.w3.org/2001/XMLSchema"
       ).each do |inherits|
-        @types[name].merge!(
-          @types[inherits.attribute('base').value.match(/\w+$/).to_s]
-        )
+        base = inherits.attribute('base').value.match(/\w+$/).to_s
+        if @types[base]
+          @types[name].merge! @types[base]
+        else
+          deferred_types << Proc.new do
+            @types[name].merge! @types[base]
+          end
+        end
       end
+    end
+
+    def parse_deferred_types
+      deferred_types.each(&:call)
     end
 
     def find_namespace(type)
