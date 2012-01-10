@@ -17,6 +17,19 @@ describe Savon::Wasabi::Document do
       wsdl = Savon::Wasabi::Document.new("https://example.com?wsdl")
       wsdl.xml.should == Fixture.wsdl(:authentication)
     end
+
+  end
+
+  context "with an inaccessible remote document" do
+    before do
+      response = HTTPI::Response.new 401, {}, Fixture.wsdl(:authentication)
+      HTTPI.stubs(:get).returns(response)
+    end
+
+    it "should raise an error when authentication fails" do
+      wsdl = Savon::Wasabi::Document.new("http://example.com?wsdl")
+      expect { wsdl.xml }.to raise_error(Savon::HTTP::Error)
+    end
   end
 
   context "with a local document" do
