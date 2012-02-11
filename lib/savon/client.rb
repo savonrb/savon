@@ -122,7 +122,8 @@ module Savon
         soap.types[path] = type
       end
 
-      set_soap_action args[1]
+      soap_action = args[2].delete(:soap_action) || args[1]
+      set_soap_action soap_action
       set_soap_input *args
     end
 

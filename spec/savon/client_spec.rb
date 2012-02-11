@@ -112,6 +112,10 @@ describe Savon::Client do
       it "should set the input tag to result in <getUser active='true'>" do
         client.request(:get_user, :active => true) { soap.input.should == [nil, :getUser, { :active => true }] }
       end
+
+      it "should use the :soap_action key to set the SOAPAction header" do
+        client.request(:get_user, :soap_action => :test_action) { http.headers["SOAPAction"].should == %{"testAction"} }
+      end
     end
 
     context "with two Symbols" do
@@ -137,6 +141,10 @@ describe Savon::Client do
     context "with two Symbols and a Hash" do
       it "should set the input tag to result in <wsdl:getUser active='true'>" do
         client.request(:wsdl, :get_user, :active => true) { soap.input.should == [:wsdl, :getUser, { :active => true }] }
+      end
+
+      it "should use the :soap_action key to set the SOAPAction header" do
+        client.request(:wsdl, :get_user, :soap_action => :test_action) { http.headers["SOAPAction"].should == %{"testAction"} }
       end
     end
 
