@@ -1,12 +1,8 @@
-## 1.0.0 (UPCOMING)
-
-* Notice: Moving to [Semantic Versioning](http://semver.org).
-
-* Feature: Added [hooks](http://savonrb.com/#hook_into_the_system).
+## 0.9.8 (UPCOMING)
 
 * Feature: Savon now ships with [Savon::Model](http://rubygems.org/gems/savon_model).
-  Savon::Model is a very simple abstraction on top of your domain models to wrap SOAP requests.
-  It's been refactored and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
+  Savon::Model is a lightweight DSL to be used inside your domain models. It's been refactored
+  and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
 
 * Feature: Merged [pull request 230](https://github.com/rubiii/savon/pull/230) to allow filtering values
   in logged SOAP request XML messages.
