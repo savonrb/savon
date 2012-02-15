@@ -1,4 +1,4 @@
-## 0.9.8 (UPCOMING)
+## 0.9.8 (2012-02-15)
 
 * Feature: Savon now ships with [Savon::Model](http://rubygems.org/gems/savon_model).
   Savon::Model is a lightweight DSL to be used inside your domain models. It's been refactored
