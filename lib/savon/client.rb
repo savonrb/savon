@@ -42,6 +42,7 @@ module Savon
 
     # Returns the <tt>HTTPI::Request</tt>.
     def http
+      HTTPI.log = Savon.log?
       @http ||= HTTPI::Request.new
     end
 
