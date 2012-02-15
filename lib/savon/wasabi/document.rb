@@ -30,7 +30,13 @@ module Savon
       # Resolves and returns the raw WSDL document.
       def resolve_document
         case document
-          when /^http[s]?:/ then HTTPI.get(request).body
+          when /^http[s]?:/ then 
+            response = HTTPI.get(request)
+            if response.error?
+              raise Savon::HTTP::Error.new(response)
+            else
+              response.body
+            end
           when /^</         then document
           else                   File.read(document)
         end
