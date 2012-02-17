@@ -1,4 +1,4 @@
-## 2.1.0 (UPCOMING)
+## 2.1.0 (2012-02-17)
 
 * Improvement: The value of elementFormDefault can now be manually specified/overwritten.
 
