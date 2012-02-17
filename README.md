@@ -1,4 +1,4 @@
-Wasabi [![Build Status](http://travis-ci.org/rubiii/wasabi.png)](http://travis-ci.org/rubiii/wasabi)
+Wasabi [![Build Status](https://secure.travis-ci.org/rubiii/wasabi.png)](http://travis-ci.org/rubiii/wasabi)
 =====
 
 A simple WSDL parser.
