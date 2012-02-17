@@ -20,7 +20,7 @@
     ```
 
 * Fix: [pull request 265](https://github.com/rubiii/savon/pull/265) - Fixes gemspec problems when bundling
-  under JRuby 1.6.5.
+  under JRuby 1.6.5. Also fixes [issue 267](https://github.com/rubiii/savon/issues/267).
 
 ## 0.9.8 (2012-02-15)
 
