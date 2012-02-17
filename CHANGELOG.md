@@ -2,6 +2,9 @@
 
 * Improvement: The value of elementFormDefault can now be manually specified/overwritten.
 
+* Improvement: [issue 2](https://github.com/rubiii/wasabi/issues/2) - Allow symbolic endpoints
+  like "http://server:port".
+
 ## 2.0.0 (2011-07-07)
 
 * Feature: Wasabi can now parse type definitions and namespaces.

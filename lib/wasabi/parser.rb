@@ -62,7 +62,11 @@ module Wasabi
       endpoint = at_xpath("wsdl:definitions/wsdl:service//soap11:address/@location")
       endpoint ||= at_xpath("wsdl:definitions/wsdl:service//soap12:address/@location")
 
-      @endpoint = URI(URI.escape(endpoint.to_s)) if endpoint
+      begin
+        @endpoint = URI(URI.escape(endpoint.to_s)) if endpoint
+      rescue URI::InvalidURIError
+        @endpoint = nil
+      end
     end
 
     def parse_operations
