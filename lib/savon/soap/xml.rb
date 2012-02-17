@@ -110,14 +110,8 @@ module Savon
         @namespace_identifier ||= :wsdl
       end
 
-      # Returns whether all local elements should be namespaced. Might be set to :qualified,
-      # but defaults to :unqualified.
-      def element_form_default
-        @element_form_default ||= :unqualified
-      end
-
-      # Sets whether all local elements should be namespaced.
-      attr_writer :element_form_default
+      # Accessor for whether all local elements should be namespaced.
+      attr_accessor :element_form_default
 
       # Accessor for the default namespace URI.
       attr_accessor :namespace

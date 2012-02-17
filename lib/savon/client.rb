@@ -109,7 +109,7 @@ module Savon
       soap.endpoint = wsdl.endpoint
       soap.namespace_identifier = args[0]
       soap.namespace = wsdl.namespace
-      soap.element_form_default = wsdl.element_form_default if wsdl.document?
+      soap.element_form_default = wsdl.element_form_default
 
       body = args[2].delete(:body)
       soap.body = body if body

@@ -3,6 +3,15 @@
 * Improvement: [pull request 255](https://github.com/rubiii/savon/pull/255) - Raise an error if fetching
   a remote WSDL fails. Possible fix for [issue 236](https://github.com/rubiii/savon/issues/236).
 
+* Improvement: The value for elementFormDefault (:unqualified, :qualified) can now be specified when creating
+  a `Savon::Client`. For example:
+
+    ``` ruby
+    Savon::Client.new do
+      wsdl.element_form_default = :unqualified
+    end
+    ```
+
 * Fix: [pull request 265](https://github.com/rubiii/savon/pull/265) - Fixes gemspec problems when bundling
   under JRuby 1.6.5.
 
