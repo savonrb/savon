@@ -8,6 +8,17 @@ module Wasabi
   # Represents a WSDL document.
   class Document
 
+    ELEMENT_FORM_DEFAULTS = [:unqualified, :qualified]
+
+    # Validates if a given +value+ is a valid elementFormDefault value.
+    # Raises an +ArgumentError+ if the value is not valid.
+    def self.validate_element_form_default!(value)
+      return if ELEMENT_FORM_DEFAULTS.include?(value)
+
+      raise ArgumentError, "Invalid value for elementFormDefault: #{value}\n" +
+                           "Must be one of: #{ELEMENT_FORM_DEFAULTS.inspect}"
+    end
+
     # Accepts a WSDL +document+ to parse.
     def initialize(document = nil)
       self.document = document
@@ -38,7 +49,13 @@ module Wasabi
 
     # Returns the value of elementFormDefault.
     def element_form_default
-      @element_form_default ||= parser.element_form_default
+      @element_form_default ||= xml? ? parser.element_form_default : :unqualified
+    end
+
+    # Sets the elementFormDefault value.
+    def element_form_default=(value)
+      self.class.validate_element_form_default!(value)
+      @element_form_default = value
     end
 
     # Returns a list of available SOAP actions.
@@ -98,6 +115,11 @@ module Wasabi
       @xml ||= document
     end
 
+    # Returns whether there is a WSDL document to parse.
+    def xml?
+      xml.kind_of?(String)
+    end
+
     # Parses the WSDL document and returns the <tt>Wasabi::Parser</tt>.
     def parser
       @parser ||= guard_parse && parse
@@ -107,7 +129,7 @@ module Wasabi
 
     # Raises an error if the WSDL document is missing.
     def guard_parse
-      return true if xml.kind_of?(String)
+      return true if xml?
       raise ArgumentError, "Wasabi needs a WSDL document"
     end
 

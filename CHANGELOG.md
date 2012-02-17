@@ -1,3 +1,7 @@
+## 2.1.0 (UPCOMING)
+
+* Improvement: The value of elementFormDefault can now be manually specified/overwritten.
+
 ## 2.0.0 (2011-07-07)
 
 * Feature: Wasabi can now parse type definitions and namespaces.
