@@ -1,4 +1,4 @@
-## UPCOMING
+## 0.9.9 (2012-02-17)
 
 * Improvement: [pull request 255](https://github.com/rubiii/savon/pull/255) - Raise an error if fetching
   a remote WSDL fails. Possible fix for [issue 236](https://github.com/rubiii/savon/issues/236).
