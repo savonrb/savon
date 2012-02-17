@@ -12,6 +12,13 @@
     end
     ```
 
+* Improvement: [pull request 263](https://github.com/rubiii/savon/pull/263) - The SOAP action can now be set
+  via a `:soap_action` key passed to the `#request` method.
+
+    ``` ruby
+    client.request(:get_user, :soap_action => :test_action)
+    ```
+
 * Fix: [pull request 265](https://github.com/rubiii/savon/pull/265) - Fixes gemspec problems when bundling
   under JRuby 1.6.5.
 
