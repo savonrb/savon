@@ -96,7 +96,19 @@ module Savon
 
     # Passes a cookie from the last request +headers+ to the next one.
     def set_cookie(headers)
-      http.headers["Cookie"] = headers["Set-Cookie"] if headers["Set-Cookie"]
+      if headers["Set-Cookie"]
+        @cookies ||= {}
+        #handle single or multiple Set-Cookie Headers as returned by Rack::Utils::HeaderHash in HTTPI
+        set_cookies = [headers["Set-Cookie"]].flatten
+        set_cookies.each do |set_cookie|
+          # use the cookie name as the key to the hash to allow for cookie updates and seperation
+          # set the value to name=value (for easy joining), stopping when we hit the Cookie options
+          @cookies[set_cookie.split('=').first] = set_cookie.split(';').first
+        end
+
+        http.headers["Cookie"] = @cookies.values.join(';')
+      end
+
     end
 
     # Expects an Array of +args+ and returns an Array containing the namespace (might be +nil+),
