@@ -320,5 +320,20 @@ describe Savon::SOAP::XML do
     end
   end
 
+  describe "#add_namespaces_to_body" do
+    before :each do
+      xml.used_namespaces.merge!({
+        ["authenticate", "id"] =>"ns0",
+        ["authenticate", "name"] =>"ns1",
+        ["authenticate", "name", "first"] =>"ns2"
+      })
+    end
+
+    it "adds namespaces" do
+      body = {:id => 1, :name => {:first => 'Bob'}}
+      xml.send(:add_namespaces_to_body, body).should == {"ns0:id" => "1", "ns1:name" => {"ns2:first" => "Bob"}}
+    end
+  end
+
 end
 
