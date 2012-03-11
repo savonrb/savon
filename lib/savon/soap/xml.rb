@@ -218,6 +218,7 @@ module Savon
                 add_namespaces_to_body(value, types[newpath] ? [types[newpath]] : newpath)
             )
           else
+            add_namespaces_to_values(value, path) if key == :order!
             newhash.merge(key => value)
           end
         end
@@ -228,6 +229,14 @@ module Savon
         [used_namespaces[[input[1].to_s]], input[1], input[2]]
       end
 
+      def add_namespaces_to_values(values, path)
+        values.collect! { |value|
+          camelcased_value = Gyoku::XMLKey.create(value)
+          namespace_path = path + [camelcased_value.to_s]
+          namespace = used_namespaces[namespace_path]
+          "#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"
+        }
+      end
     end
   end
 end
