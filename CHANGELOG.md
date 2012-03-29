@@ -1,12 +1,32 @@
-## 1.0.0 (UPCOMING)
+## 0.9.9 (2012-02-17)
 
-* Notice: Moving to [Semantic Versioning](http://semver.org).
+* Improvement: [pull request 255](https://github.com/rubiii/savon/pull/255) - Raise an error if fetching
+  a remote WSDL fails. Possible fix for [issue 236](https://github.com/rubiii/savon/issues/236).
 
-* Feature: Added [hooks](http://savonrb.com/#hook_into_the_system).
+* Improvement: The value for elementFormDefault (:unqualified, :qualified) can now be specified when creating
+  a `Savon::Client`. For example:
+
+    ``` ruby
+    Savon::Client.new do
+      wsdl.element_form_default = :unqualified
+    end
+    ```
+
+* Improvement: [pull request 263](https://github.com/rubiii/savon/pull/263) - The SOAP action can now be set
+  via a `:soap_action` key passed to the `#request` method.
+
+    ``` ruby
+    client.request(:get_user, :soap_action => :test_action)
+    ```
+
+* Fix: [pull request 265](https://github.com/rubiii/savon/pull/265) - Fixes gemspec problems when bundling
+  under JRuby 1.6.5. Also fixes [issue 267](https://github.com/rubiii/savon/issues/267).
+
+## 0.9.8 (2012-02-15)
 
 * Feature: Savon now ships with [Savon::Model](http://rubygems.org/gems/savon_model).
-  Savon::Model is a very simple abstraction on top of your domain models to wrap SOAP requests.
-  It's been refactored and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
+  Savon::Model is a lightweight DSL to be used inside your domain models. It's been refactored
+  and is now [even more useful](http://savonrb.com/#how_to_date_a_model) than before.
 
 * Feature: Merged [pull request 230](https://github.com/rubiii/savon/pull/230) to allow filtering values
   in logged SOAP request XML messages.

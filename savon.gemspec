@@ -1,3 +1,4 @@
+# -*- encoding : utf-8 -*-
 lib = File.expand_path("../lib", __FILE__)
 $:.unshift lib unless $:.include? lib
 
@@ -15,9 +16,9 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
 
   s.add_dependency "builder",  ">= 2.1.2"
-  s.add_dependency "nori",     "~> 1.0"
+  s.add_dependency "nori",     "~> 1.1"
   s.add_dependency "httpi",    "~> 0.9"
-  s.add_dependency "wasabi",   "~> 2.0"
+  s.add_dependency "wasabi",   "~> 2.1"
   s.add_dependency "akami",    "~> 1.0"
   s.add_dependency "gyoku",    ">= 0.4.0"
   s.add_dependency "nokogiri", ">= 1.4.0"
@@ -28,7 +29,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "timecop", "~> 0.3.5"
 
   s.add_development_dependency "autotest"
-  s.add_development_dependency "ZenTest", "4.5.0"
+  s.add_development_dependency "ZenTest", "= 4.5.0"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
