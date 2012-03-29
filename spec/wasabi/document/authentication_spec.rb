@@ -15,7 +15,7 @@ describe Wasabi::Document do
 
     its(:operations) do
       should == {
-        :authenticate => { :input => "authenticate", :action => "authenticate" }
+        :authenticate => { :input => "authenticate", :action => "authenticate", :namespace_identifier => "tns" }
       }
     end
 

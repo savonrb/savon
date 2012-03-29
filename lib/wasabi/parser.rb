@@ -80,8 +80,12 @@ module Wasabi
         if soap_action
           soap_action = soap_action.to_s
           action = soap_action.blank? ? name : soap_action
-          input = name.blank? ? action.split("/").last : name
-          @operations[input.snakecase.to_sym] = { :action => action, :input => input }
+
+          # There should be a matching portType for each binding, so we will lookup the input from there.
+          namespace_id, input = input_for(operation)
+
+          # Store namespace identifier so this operation can be mapped to the proper namespace.
+          @operations[name.snakecase.to_sym] = { :action => action, :input => input, :namespace_identifier => namespace_id }
         elsif !@operations[name.snakecase.to_sym]
           @operations[name.snakecase.to_sym] = { :action => name, :input => name }
         end
@@ -107,6 +111,28 @@ module Wasabi
     def find_namespace(type)
       schema_namespace = at_xpath(type, "ancestor::xs:schema/@targetNamespace")
       schema_namespace ? schema_namespace.to_s : @namespace
+    end
+
+    def input_for(operation)
+      operation_name = operation.attribute("name")
+
+      # Look up the input by walking up to portType, then up to the message.
+
+      binding_input = at_xpath(operation, ".//wsdl:input/@name")
+      binding_type = at_xpath(operation, "../@type").to_s.split(':').last
+      port_type_input = at_xpath(operation, "../../wsdl:portType[@name='#{binding_type}']/wsdl:operation[@name='#{operation_name}']/wsdl:input")
+
+      port_message_ns_id, port_message_type = port_type_input.attribute("message").to_s.split(':')
+
+      # Kinda hackey maybe?  This assumes there is ever only one 'part' element in the message.
+      message_ns_id, message_type = at_xpath(port_type_input, "../../../wsdl:message[@name='#{port_message_type}']/wsdl:part[1]").attribute("element").to_s.split(':')
+
+      # Fall back to message name in portType input if no 'element' attribute in wsdl:message
+      if message_type
+        [message_ns_id, message_type]
+      else
+        [port_message_ns_id, port_message_type]
+      end
     end
 
   end

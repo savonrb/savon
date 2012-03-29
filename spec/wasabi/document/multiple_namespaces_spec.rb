@@ -14,7 +14,7 @@ describe Wasabi::Document do
     it { should have(1).operations }
 
     its(:operations) do
-      should == { :save => { :input => "Save", :action => "http://example.com/actions.Save" } }
+      should == { :save => { :input => "Save", :action => "http://example.com/actions.Save", :namespace_identifier => "actions" } }
     end
 
     its(:type_namespaces) do
