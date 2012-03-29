@@ -100,6 +100,24 @@ describe Savon::Client do
 
         client.request(:get_user) { soap.namespace = nil }
       end
+
+      context "when the wsdl's operation namespace identifier matches a document identifier" do
+        before do
+          client.wsdl.operations[:authenticate][:namespace_identifier] = "tns"
+        end
+
+        it "sets the soap's namespace identifier to the matching operation's namespace identifier" do
+          client.request(:authenticate) { soap.namespace_identifier.should == :tns }
+        end
+
+        it "sets the soap's namespace to the namspace matching the identifier" do
+          client.request(:authenticate) { soap.namespace.should == "http://v1_0.ws.auth.order.example.com/" }
+        end
+
+        it "sets the input tag to result in <tns:authenticate>" do
+          client.request(:authenticate) { soap.input.should == [:tns, :authenticate, {}] }
+        end
+      end
     end
 
     context "with a single argument (String)" do

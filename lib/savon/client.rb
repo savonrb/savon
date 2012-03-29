@@ -112,8 +112,6 @@ module Savon
     # Expects an Array of +args+ to preconfigure the system.
     def preconfigure(args)
       soap.endpoint = wsdl.endpoint
-      soap.namespace_identifier = args[0]
-      soap.namespace = wsdl.namespace
       soap.element_form_default = wsdl.element_form_default
 
       body = args[2].delete(:body)
@@ -129,6 +127,18 @@ module Savon
 
       soap_action = args[2].delete(:soap_action) || args[1]
       set_soap_action soap_action
+
+      if wsdl.document? && (operation = wsdl.operations[args[1]]) && operation[:namespace_identifier]
+        soap.namespace_identifier = operation[:namespace_identifier].to_sym
+        soap.namespace = wsdl.parser.namespaces[soap.namespace_identifier.to_s]
+
+        # Override nil namespace with one specified in WSDL
+        args[0] = soap.namespace_identifier unless args[0]
+      else
+        soap.namespace_identifier = args[0]
+        soap.namespace = wsdl.namespace
+      end
+
       set_soap_input *args
     end
 
