@@ -48,7 +48,20 @@ describe Savon do
               msg.include?('<ns11:logType>***FILTERED***</ns11:logType>')
             end
 
-            Savon.log(Fixture.response(:list), :filter)
+            Savon.log(Fixture.response(:list), :xml)
+          end
+        end
+
+        context "pretty_xml_logs is set" do
+          it "returns formatted xml with indentation" do
+            Savon.configure { |config| config.pretty_xml_logs = true }
+            Savon.logger.expects(Savon.log_level).with <<-EOF
+<?xml version="1.0"?>
+<hello>
+  <world>Bob</world>
+</hello>
+EOF
+            Savon.log("<?xml version=\"1.0\"?><hello><world>Bob</world></hello>", :xml)
           end
         end
       end
