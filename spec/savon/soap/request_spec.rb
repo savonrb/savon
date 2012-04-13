@@ -61,7 +61,7 @@ describe Savon::SOAP::Request do
       HTTPI.stubs(:post).returns(HTTPI::Response.new 200, {}, "")
 
       Savon.stubs(:log).times(2)
-      Savon.expects(:log).with(soap.to_xml, :filter)
+      Savon.expects(:log).with(soap.to_xml, :xml)
       Savon.stubs(:log).times(2)
 
       soap_request.response

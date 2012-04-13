@@ -30,9 +30,9 @@ module Savon
     end
 
     # Logs a given +message+. Optionally filtered if +xml+ is truthy.
-    def log(message, xml = false)
+    def log(message, message_type = false)
       return unless log?
-      message = filter_xml(message) if xml && !log_filter.empty?
+      message = process_xml(message) if message_type = :xml
       logger.send log_level, message
     end
 
@@ -44,15 +44,11 @@ module Savon
     # Sets the log filter. Expects an Array.
     attr_writer :log_filter
 
-    # Filters the given +xml+ based on log filter.
+    # TODO - filter_xml should be moved to the Savon class
+    # Accepts a string, parses the string, filters it according to Savon.log_filter, then returns a string
     def filter_xml(xml)
       doc = Nokogiri::XML(xml)
-      return xml unless doc.errors.empty?
-
-      log_filter.each do |filter|
-        doc.xpath("//*[local-name()='#{filter}']").map { |node| node.content = "***FILTERED***" }
-      end
-
+      filter_xml_doc!(doc)
       doc.root.to_s
     end
 
@@ -96,8 +92,39 @@ module Savon
       self.soap_version = nil
       self.env_namespace = nil
       self.soap_header = nil
+      self.pretty_xml_logs = false
     end
 
+    # When true, tidy all Savon xml log output
+    attr_writer :pretty_xml_logs
+
+    def pretty_xml_logs?
+      @pretty_xml_logs ||= false
+    end
+
+    private
+
+    # TODO - process_xml and filter_xml_doc! should be moved to the Savon class
+    def process_xml(message)
+      return message if log_filter.empty? && ! pretty_xml_logs?
+      doc = Nokogiri::XML(message)
+      filter_xml_doc!(doc) unless log_filter.empty?
+      if pretty_xml_logs?
+        doc.to_xml(:indent => 2)
+      else
+        # TODO - is there an option for Nokogiri::XML#to_xml to return the xml all as one line?
+        doc.to_xml(:indent => 0).gsub("\n", "")
+      end
+    end
+
+    def filter_xml_doc!(doc)
+      return unless doc.errors.empty?
+
+      log_filter.each do |filter|
+        doc.xpath("//*[local-name()='#{filter}']").map { |node| node.content = "***FILTERED***" }
+      end
+      true
+    end
   end
 end
 

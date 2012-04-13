@@ -56,13 +56,13 @@ module Savon
       def log_request(url, headers, body)
         Savon.log "SOAP request: #{url}"
         Savon.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        Savon.log body, :filter
+        Savon.log body, :xml
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
         Savon.log "SOAP response (status #{code}):"
-        Savon.log body
+        Savon.log body, :xml
       end
 
     end
