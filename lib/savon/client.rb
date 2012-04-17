@@ -74,6 +74,7 @@ module Savon
       self.soap = SOAP::XML.new
       preconfigure extract_options(args)
       process &block if block
+      soap.body = soap.body.clone if soap.body
       soap.wsse = wsse
 
       response = SOAP::Request.new(http, soap).response
