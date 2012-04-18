@@ -318,6 +318,33 @@ describe Savon::SOAP::XML do
     end
   end
 
+  describe "#add_namespaces_to_body" do
+    before :each do
+      xml.used_namespaces.merge!({
+        ["authenticate", "id"] =>"ns0",
+        ["authenticate", "name"] =>"ns1",
+        ["authenticate", "name", "firstName"] =>"ns2"
+      })
+    end
+
+    it "adds namespaces" do
+      body = {:id => 1, :name => {:first_name => 'Bob'}}
+      xml.send(:add_namespaces_to_body, body).should == {"ns0:id" => "1", "ns1:name" => {"ns2:firstName" => "Bob"}}
+    end
+
+    it "adds namespaces to order! list" do
+      body = {:id => 1, :name => {:first_name => 'Bob', :order! => [:first_name]}, :order! => [:id, :name]}
+      xml.send(:add_namespaces_to_body, body).should == {
+        "ns0:id" => "1",
+        "ns1:name" => {
+          "ns2:firstName" => "Bob",
+          :order! => ["ns2:firstName"]
+        },
+        :order! => ["ns0:id", "ns1:name"]
+      }
+    end
+  end
+
   def reset_soap_version
     Savon.soap_version = Savon::SOAP::DefaultVersion
   end
