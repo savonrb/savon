@@ -70,8 +70,9 @@ module Savon
       # Returns the +namespaces+. Defaults to a Hash containing the SOAP envelope namespace.
       def namespaces
         @namespaces ||= begin
-          key = env_namespace.blank? ? "xmlns" : "xmlns:#{env_namespace}"
-          { key => SOAP::Namespace[version] }
+          key = ["xmlns"]
+          key << env_namespace if env_namespace && !env_namespace.empty?
+          { key.join(":") => SOAP::Namespace[version] }
         end
       end
 
@@ -172,8 +173,11 @@ module Savon
       # Expects a builder +xml+ instance, a tag +name+ and accepts optional +namespaces+
       # and a block to create an XML tag.
       def tag(xml, name, namespaces = {}, &block)
-        return xml.tag! name, namespaces, &block if env_namespace.blank?
-        xml.tag! env_namespace, name, namespaces, &block
+        if env_namespace && !env_namespace.empty?
+          xml.tag! env_namespace, name, namespaces, &block
+        else
+          xml.tag! name, namespaces, &block
+        end
       end
 
       # Returns the complete Hash of namespaces.
