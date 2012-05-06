@@ -29,7 +29,7 @@ module Savon
       # Executes the request and returns the response.
       def response
         @response ||= SOAP::Response.new(
-          Savon.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
+          Savon.config.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
         )
       end
 
@@ -54,15 +54,15 @@ module Savon
 
       # Logs the SOAP request +url+, +headers+ and +body+.
       def log_request(url, headers, body)
-        Savon.log "SOAP request: #{url}"
-        Savon.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        Savon.log body, :filter
+        Savon.config.log "SOAP request: #{url}"
+        Savon.config.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+        Savon.config.log body, :filter
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
-        Savon.log "SOAP response (status #{code}):"
-        Savon.log body
+        Savon.config.log "SOAP response (status #{code}):"
+        Savon.config.log body
       end
 
     end

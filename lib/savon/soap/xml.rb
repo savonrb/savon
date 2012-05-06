@@ -43,9 +43,9 @@ module Savon
         @version = version
       end
 
-      # Returns the SOAP +version+. Defaults to <tt>Savon.soap_version</tt>.
+      # Returns the SOAP +version+. Defaults to <tt>Savon.config.soap_version</tt>.
       def version
-        @version ||= Savon.soap_version
+        @version ||= Savon.config.soap_version
       end
 
       # Sets the SOAP +header+ Hash.
@@ -53,7 +53,7 @@ module Savon
 
       # Returns the SOAP +header+. Defaults to an empty Hash.
       def header
-        @header ||= Savon.soap_header.nil? ? {} : Savon.soap_header
+        @header ||= Savon.config.soap_header.nil? ? {} : Savon.config.soap_header
       end
 
       # Sets the SOAP envelope namespace.
@@ -61,7 +61,7 @@ module Savon
 
       # Returns the SOAP envelope namespace. Uses the global namespace if set Defaults to :env.
       def env_namespace
-        @env_namespace ||= Savon.env_namespace.nil? ? :env : Savon.env_namespace
+        @env_namespace ||= Savon.config.env_namespace.nil? ? :env : Savon.config.env_namespace
       end
 
       # Sets the +namespaces+ Hash.

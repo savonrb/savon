@@ -13,11 +13,11 @@ describe Savon::Model do
     end
 
     after do
-      Savon.hooks.reject! :test_hook
+      Savon.config.hooks.reject! :test_hook
     end
 
     it "can be used for pre-processing SOAP responses" do
-      Savon.hooks.define(:test_hook, :model_soap_response) do |response|
+      Savon.config.hooks.define(:test_hook, :model_soap_response) do |response|
         "hello #{response}"
       end
 

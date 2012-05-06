@@ -14,7 +14,7 @@ module Savon
       # Expects an <tt>HTTPI::Response</tt> and handles errors.
       def initialize(response)
         self.http = response
-        raise_errors if Savon.raise_errors?
+        raise_errors if Savon.config.raise_errors?
       end
 
       attr_accessor :http

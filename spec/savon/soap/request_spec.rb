@@ -60,9 +60,9 @@ describe Savon::SOAP::Request do
     it "logs the filtered SOAP request body" do
       HTTPI.stubs(:post).returns(HTTPI::Response.new 200, {}, "")
 
-      Savon.stubs(:log).times(2)
-      Savon.expects(:log).with(soap.to_xml, :filter)
-      Savon.stubs(:log).times(2)
+      Savon.config.stubs(:log).times(2)
+      Savon.config.expects(:log).with(soap.to_xml, :filter)
+      Savon.config.stubs(:log).times(2)
 
       soap_request.response
     end

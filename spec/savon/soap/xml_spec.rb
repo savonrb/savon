@@ -33,7 +33,7 @@ describe Savon::SOAP::XML do
     end
 
     it "should default to the global default" do
-      Savon.soap_version = 2
+      Savon.config.soap_version = 2
       xml.version.should == 2
 
       reset_soap_version
@@ -60,7 +60,7 @@ describe Savon::SOAP::XML do
     end
 
     it "should use the global soap_header if set" do
-      Savon.stubs(:soap_header).returns({ "MySecret" => "abc" })
+      Savon.config.stubs(:soap_header).returns({ "MySecret" => "abc" })
       xml.header.should == { "MySecret" => "abc" }
     end
   end
@@ -76,7 +76,7 @@ describe Savon::SOAP::XML do
     end
 
     it "should use the global env_namespace if set as the SOAP envelope namespace" do
-      Savon.stubs(:env_namespace).returns(:soapenv)
+      Savon.config.stubs(:env_namespace).returns(:soapenv)
       xml.env_namespace.should == :soapenv
     end
   end
@@ -220,7 +220,7 @@ describe Savon::SOAP::XML do
 
     context "with the global SOAP version set to 1.2" do
       it "should contain the namespace for SOAP 1.2" do
-        Savon.soap_version = 2
+        Savon.config.soap_version = 2
 
         uri = "http://www.w3.org/2003/05/soap-envelope"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
@@ -230,7 +230,7 @@ describe Savon::SOAP::XML do
 
     context "with a global and request SOAP version" do
       it "should contain the namespace for the request SOAP version" do
-        Savon.soap_version = 2
+        Savon.config.soap_version = 2
         xml.version = 1
 
         uri = "http://schemas.xmlsoap.org/soap/envelope/"
@@ -319,7 +319,7 @@ describe Savon::SOAP::XML do
   end
 
   def reset_soap_version
-    Savon.soap_version = Savon::SOAP::DefaultVersion
+    Savon.config.soap_version = Savon::SOAP::DefaultVersion
   end
 
 end
