@@ -1,3 +1,9 @@
+## UPCOMING
+
+* Refactoring:
+  * Changed `Savon::Config` from a module to a class.
+  * Removed the `blank?` extension from `Object`.
+
 ## 0.9.9 (2012-02-17)
 
 * Improvement: [pull request 255](https://github.com/rubiii/savon/pull/255) - Raise an error if fetching
