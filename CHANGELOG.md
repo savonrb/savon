@@ -1,6 +1,7 @@
 ## UPCOMING
 
 * Refactoring:
+  * Added `Savon.client` as a shortcut for creating a new `Savon::Client`
   * Changed `Savon::Config` from a module to a class.
   * Removed the `blank?` extension from `Object`.
 
