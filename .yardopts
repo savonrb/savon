@@ -3,3 +3,4 @@
 -
 CHANGELOG.md
 LICENSE
+lib/**/*.rb
