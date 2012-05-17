@@ -1,5 +1,8 @@
 ## UPCOMING
 
+* Feature: [pull request 289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header
+  to be set as a String.
+
 * Refactoring:
   * Added `Savon.client` as a shortcut for creating a new `Savon::Client`
   * Changed `Savon::Config` from a module to a class.
