@@ -208,13 +208,22 @@ describe Savon::SOAP::XML do
     end
 
     context "with a SOAP header" do
-      it "should contain the given header" do
-        xml.header = {
-          :token => "secret",
-          :attributes! => { :token => { :xmlns => "http://example.com" } }
-        }
+      context "as a hash" do
+        it "should contain the given header" do
+          xml.header = {
+            :token => "secret",
+            :attributes! => { :token => { :xmlns => "http://example.com" } }
+          }
 
-        xml.to_xml.should include('<env:Header><token xmlns="http://example.com">secret</token></env:Header>')
+          xml.to_xml.should include('<env:Header><token xmlns="http://example.com">secret</token></env:Header>')
+        end
+      end
+      context "as a string" do
+        it "should contain the given header" do
+          xml.header = %{<token xmlns="http://example.com">secret</token>}
+
+          xml.to_xml.should include('<env:Header><token xmlns="http://example.com">secret</token></env:Header>')
+        end
       end
     end
 
