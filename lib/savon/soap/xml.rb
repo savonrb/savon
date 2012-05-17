@@ -71,7 +71,7 @@ module Savon
       def namespaces
         @namespaces ||= begin
           key = ["xmlns"]
-          key << env_namespace if env_namespace && !env_namespace.empty?
+          key << env_namespace if env_namespace && env_namespace != ""
           { key.join(":") => SOAP::Namespace[version] }
         end
       end
@@ -173,7 +173,7 @@ module Savon
       # Expects a builder +xml+ instance, a tag +name+ and accepts optional +namespaces+
       # and a block to create an XML tag.
       def tag(xml, name, namespaces = {}, &block)
-        if env_namespace && !env_namespace.empty?
+        if env_namespace && env_namespace != ""
           xml.tag! env_namespace, name, namespaces, &block
         else
           xml.tag! name, namespaces, &block
