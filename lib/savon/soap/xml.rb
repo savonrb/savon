@@ -189,14 +189,7 @@ module Savon
 
       # Returns the SOAP header as an XML String.
       def header_for_xml
-        @header_for_xml ||=
-          begin
-            if Hash === header
-              Gyoku.xml(header)
-            else
-              header
-            end + wsse_header
-          end
+        @header_for_xml ||= (Hash === header ? Gyoku.xml(header) : header) + wsse_header
       end
 
       # Returns the WSSE header or an empty String in case WSSE was not set.
