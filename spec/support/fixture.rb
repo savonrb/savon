@@ -1,13 +1,19 @@
 module Fixture
 
-  def fixture(file)
-    fixtures[file] ||= File.read File.expand_path("spec/fixtures/#{file}.xml")
+  def self.[](file)
+    fixtures[file]
   end
 
-private
+  def self.[]=(file, value)
+    fixtures[file] = value
+  end
 
-  def fixtures
+  def self.fixtures
     @fixtures ||= {}
+  end
+
+  def fixture(file)
+    Fixture[file] ||= File.read File.expand_path("spec/fixtures/#{file}.xml")
   end
 
 end
