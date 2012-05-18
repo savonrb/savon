@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Parser do
-  context "with: symbolic_endpoint.xml" do
+  context "with: symbolic_endpoint.wsdl" do
 
     subject do
       parser = Wasabi::Parser.new Nokogiri::XML(xml)

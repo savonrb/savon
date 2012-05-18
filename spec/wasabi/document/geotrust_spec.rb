@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Document do
-  context "with: geotrust.xml" do
+  context "with: geotrust.wsdl" do
 
     subject { Wasabi::Document.new fixture(:geotrust) }
 

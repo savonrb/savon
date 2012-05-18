@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Document do
-  context "with: multiple_namespaces.xml" do
+  context "with: multiple_namespaces.wsdl" do
 
     subject { Wasabi::Document.new fixture(:multiple_namespaces) }
 

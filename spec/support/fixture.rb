@@ -12,8 +12,8 @@ module Fixture
     @fixtures ||= {}
   end
 
-  def fixture(file)
-    Fixture[file] ||= File.read File.expand_path("spec/fixtures/#{file}.xml")
+  def fixture(file, ext = :wsdl)
+    Fixture[file] ||= File.read File.expand_path("spec/fixtures/#{file}.#{ext}")
   end
 
 end

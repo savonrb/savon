@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Document do
-  context "with: soap12.xml" do
+  context "with: soap12.wsdl" do
 
     subject { Wasabi::Document.new fixture(:soap12) }
 

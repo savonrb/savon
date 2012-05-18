@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Parser do
-  context "with: multiple_namespaces.xml" do
+  context "with: multiple_namespaces.wsdl" do
 
     subject do
       parser = Wasabi::Parser.new Nokogiri::XML(xml)

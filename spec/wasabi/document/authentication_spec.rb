@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Document do
-  context "with: authentication.xml" do
+  context "with: authentication.wsdl" do
 
     subject { Wasabi::Document.new fixture(:authentication) }
 

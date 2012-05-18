@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Wasabi::Document do
-  context "with: two_bindings.xml" do
+  context "with: two_bindings.wsdl" do
 
     subject { Wasabi::Document.new fixture(:two_bindings) }
 
