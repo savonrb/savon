@@ -1,3 +1,7 @@
+## 2.1.1 (2012-05-18)
+
+* Fix: [issue 7](https://github.com/rubiii/wasabi/issues/7) - Performance regression.
+
 ## 2.1.0 (2012-02-17)
 
 * Improvement: The value of elementFormDefault can now be manually specified/overwritten.
