@@ -1,11 +1,11 @@
 module Fixture
 
-  def self.[](file)
-    fixtures[file]
+  def self.[](name)
+    fixtures[name]
   end
 
-  def self.[]=(file, value)
-    fixtures[file] = value
+  def self.[]=(name, value)
+    fixtures[name] = value
   end
 
   def self.fixtures
@@ -13,7 +13,8 @@ module Fixture
   end
 
   def fixture(file, ext = :wsdl)
-    Fixture[file] ||= File.read File.expand_path("spec/fixtures/#{file}.#{ext}")
+    filename = "#{file}.#{ext}"
+    Fixture[filename] ||= File.read File.expand_path("spec/fixtures/#{filename}")
   end
 
 end
