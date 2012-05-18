@@ -54,8 +54,10 @@ module Wasabi
       namespace = at_xpath("wsdl:definitions/@targetNamespace")
       @namespace = namespace.to_s if namespace
 
-      @namespaces = @document.collect_namespaces.
-        inject({}) { |result, (key, value)| result.merge(key.gsub(/xmlns:/, "") => value) }
+      @namespaces = @document.namespaces.inject({}) do |memo, (key, value)|
+        memo[key.sub("xmlns:", "")] = value
+        memo
+      end
     end
 
     def parse_endpoint
