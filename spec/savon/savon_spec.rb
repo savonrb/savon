@@ -16,4 +16,18 @@ describe Savon do
     end
   end
 
+  describe ".config" do
+    it "defaults to a log facade" do
+      Savon.config.logger.should be_a(Savon::Logger)
+    end
+
+    it "defaults to raise errors" do
+      Savon.config.raise_errors.should be_true
+    end
+
+    it "defaults to SOAP 1.1" do
+      Savon.config.soap_version.should == 1
+    end
+  end
+
 end

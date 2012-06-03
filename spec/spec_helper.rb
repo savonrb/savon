@@ -6,7 +6,7 @@ RSpec.configure do |config|
 end
 
 Savon.configure do |config|
-  config.log = false
+  config.logger = Savon::NullLogger.new
 end
 
 HTTPI.log = false

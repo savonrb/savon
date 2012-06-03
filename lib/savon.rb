@@ -1,20 +1,29 @@
 require "savon/version"
 require "savon/config"
+require "savon/logger"
+require "savon/null_logger"
 require "savon/client"
 require "savon/model"
 
 module Savon
+  extend self
 
-  def self.client(*args)
+  def client(*args)
     Client.new(*args)
   end
 
-  def self.configure
+  def configure
     yield config
   end
 
-  def self.config
-    @config ||= Config.new
+  def config
+    @config ||= Config.new.tap { |config|
+      config.logger = Logger.new
+      config.raise_errors = true
+      config.soap_version = SOAP::DefaultVersion
+    }
   end
+
+  attr_writer :config
 
 end

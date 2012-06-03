@@ -54,15 +54,15 @@ module Savon
 
       # Logs the SOAP request +url+, +headers+ and +body+.
       def log_request(url, headers, body)
-        Savon.config.log "SOAP request: #{url}"
-        Savon.config.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        Savon.config.log body, :filter
+        Savon.config.logger.log "SOAP request: #{url}"
+        Savon.config.logger.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+        Savon.config.logger.log_filtered body
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
-        Savon.config.log "SOAP response (status #{code}):"
-        Savon.config.log body
+        Savon.config.logger.log "SOAP response (status #{code}):"
+        Savon.config.logger.log body
       end
 
     end
