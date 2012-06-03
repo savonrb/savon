@@ -4,6 +4,12 @@ require "nokogiri"
 module Savon
   class Logger
 
+    def initialize(device = $stdout)
+      self.device = device
+    end
+
+    attr_accessor :device
+
     def log(message)
       subject.send(level, message)
     end
@@ -19,7 +25,7 @@ module Savon
     attr_writer :subject, :level, :filter
 
     def subject
-      @subject ||= ::Logger.new(STDOUT)
+      @subject ||= ::Logger.new(device)
     end
 
     def level

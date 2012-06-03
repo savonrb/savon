@@ -1,7 +1,6 @@
 require "savon/version"
 require "savon/config"
 require "savon/logger"
-require "savon/null_logger"
 require "savon/client"
 require "savon/model"
 

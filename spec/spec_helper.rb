@@ -5,10 +5,8 @@ RSpec.configure do |config|
   config.mock_with :mocha
 end
 
-Savon.configure do |config|
-  config.logger = Savon::NullLogger.new
-end
-
+# Silence log output
+$stdout = StringIO.new
 HTTPI.log = false
 
 require "support/endpoint"
