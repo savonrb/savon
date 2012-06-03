@@ -6,23 +6,27 @@ require "savon/hooks/group"
 module Savon
   class Config
 
-    # Returns whether to log HTTP requests. Defaults to +true+.
-    def log?
-      @log != false
+    def initialize
+      self.log = true
+      self.logger = ::Logger.new STDOUT
+      self.log_level = :debug
+      self.log_filter = []
+      self.raise_errors = true
+      self.soap_version = SOAP::DefaultVersion
     end
-    attr_writer :log
 
-    # Returns the logger. Defaults to an instance of +Logger+ writing to STDOUT.
-    def logger
-      @logger ||= ::Logger.new STDOUT
-    end
-    attr_writer :logger
+    attr_accessor :log, :logger, :log_level, :log_filter, :raise_errors, :soap_version, :env_namespace, :soap_header
 
-    # Returns the log level. Defaults to :debug.
-    def log_level
-      @log_level ||= :debug
+    alias log? log
+    alias raise_errors? raise_errors
+
+    def soap_version=(version)
+      if version && !SOAP::Versions.include?(version)
+        raise ArgumentError, "Invalid SOAP version: #{version}"
+      end
+
+      @soap_version = version
     end
-    attr_writer :log_level
 
     # Logs a given +message+. Optionally filtered if +xml+ is truthy.
     def log(message, xml = false)
@@ -30,12 +34,6 @@ module Savon
       message = filter_xml(message) if xml && !log_filter.empty?
       logger.send log_level, message
     end
-
-    # Returns the log filter. Defaults to an empty Array.
-    def log_filter
-      @log_filter ||= []
-    end
-    attr_writer :log_filter
 
     # Filters the given +xml+ based on log filter.
     def filter_xml(xml)
@@ -48,29 +46,6 @@ module Savon
 
       doc.root.to_s
     end
-
-    # Returns whether to raise errors. Defaults to +true+.
-    def raise_errors?
-      @raise_errors != false
-    end
-    attr_writer :raise_errors
-
-    # Sets the global SOAP version.
-    def soap_version=(version)
-      raise ArgumentError, "Invalid SOAP version: #{version}" if version && !SOAP::Versions.include?(version)
-      @version = version
-    end
-
-    # Returns SOAP version. Defaults to +DefaultVersion+.
-    def soap_version
-      @version ||= SOAP::DefaultVersion
-    end
-
-    # Accessor for the global env_namespace.
-    attr_accessor :env_namespace
-
-    # Accessor for the global soap_header.
-    attr_accessor :soap_header
 
     # Returns the hooks.
     def hooks
