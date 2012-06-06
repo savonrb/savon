@@ -3,6 +3,30 @@
 * Fix: [#275](https://github.com/rubiii/savon/pull/275) - Add namespaces to keys in both the SOAP body hash as well
   as any keys specified in a :order! Array instead of having to define them manually.
 
+* Improvement: [#277](https://github.com/rubiii/savon/pull/277) automatically namespace the SOAP input tag.
+  Here's an example from the pull request:
+
+    ``` ruby
+    client.request :authenticate
+    ```
+
+    Note the automatic namespace identifier on the authenticate element, as well as the proper namespace inclusion
+    in the document:
+
+    ``` xml
+    <env:Envelope 
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:tns="http://v1_0.ws.auth.order.example.com/" 
+        xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+
+        <tns:authenticate>
+            <tns:user>username</tns:user>
+            <tns:password>password</tns:password>
+        </tns:authenticate>
+    </env:Envelope>
+    ```
+
 ## 0.9.10 (2012-06-06)
 
 * Feature: [#289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
