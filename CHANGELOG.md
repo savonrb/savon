@@ -1,4 +1,7 @@
-## UPCOMING
+## 0.9.11 (2012-06-06)
+
+* Feature: [#264](https://github.com/rubiii/savon/pull/264) - Thanks to @hoverlover, Savon and Akami now support
+  signed messages through WSSE.
 
 * Fix: [#275](https://github.com/rubiii/savon/pull/275) - Add namespaces to keys in both the SOAP body hash as well
   as any keys specified in a :order! Array instead of having to define them manually.
