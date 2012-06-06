@@ -31,7 +31,7 @@ module Savon
       class_action_module.module_eval %{
         def #{action.to_s.snakecase}(body = nil, &block)
           response = client.request :wsdl, #{action.inspect}, :body => body, &block
-          Savon.config.hooks.select(:model_soap_response).call(response) || response
+          config.hooks.select(:model_soap_response).call(response) || response
         end
       }
     end
@@ -48,6 +48,11 @@ module Savon
     # Class methods.
     def class_action_module
       @class_action_module ||= Module.new do
+
+        # Returns the memoized <tt>Savon::Config</tt>.
+        def config
+          @config ||= Savon.config.clone
+        end
 
         # Returns the memoized <tt>Savon::Client</tt>.
         def client(&block)

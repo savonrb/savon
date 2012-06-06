@@ -37,6 +37,15 @@ describe Savon::Model do
 
   end
 
+  describe ".config" do
+
+    it "memoizes a clone of the global config" do
+      model.config.should be_a(Savon::Config)
+      model.config.should_not equal(Savon.config)
+    end
+
+  end
+
   describe ".endpoint" do
 
     it "sets the SOAP endpoint" do
