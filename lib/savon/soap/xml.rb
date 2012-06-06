@@ -1,5 +1,6 @@
 require "builder"
 require "gyoku"
+require "rexml/document"
 require "nori"
 
 require "savon/soap"
@@ -120,6 +121,10 @@ module Savon
       # Accessor for the <tt>Savon::WSSE</tt> object.
       attr_accessor :wsse
 
+      def signature?
+        wsse.respond_to?(:signature?) && wsse.signature?
+      end
+
       # Returns the SOAP request encoding. Defaults to "UTF-8".
       def encoding
         @encoding ||= "UTF-8"
@@ -149,14 +154,23 @@ module Savon
       attr_writer :xml
 
       # Returns the XML for a SOAP request.
-      def to_xml
+      def to_xml(clear_cache = false)
+        if clear_cache
+          @xml = nil
+          @header_for_xml = nil
+        end
+
         @xml ||= tag(builder, :Envelope, complete_namespaces) do |xml|
           tag(xml, :Header) { xml << header_for_xml } unless header_for_xml.empty?
 
+          # TODO: Maybe there should be some sort of plugin architecture where
+          #       classes like WSSE::Signature can hook into this process.
+          body_attributes = (signature? ? wsse.signature.body_attributes : {})
+
           if input.nil?
-            tag(xml, :Body)
+            tag(xml, :Body, body_attributes)
           else
-            tag(xml, :Body) { xml.tag!(*add_namespace_to_input) { xml << body_to_xml } }
+            tag(xml, :Body, body_attributes) { xml.tag!(*add_namespace_to_input) { xml << body_to_xml } }
           end
         end
       end
