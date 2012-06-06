@@ -3,6 +3,8 @@
 * Fix: [#275](https://github.com/rubiii/savon/pull/275) - Add namespaces to keys in both the SOAP body hash as well
   as any keys specified in a :order! Array instead of having to define them manually.
 
+* Fix: [#257](https://github.com/rubiii/savon/issues/257) - Add ability to accept and send multiple cookies.
+
 * Improvement: [#277](https://github.com/rubiii/savon/pull/277) automatically namespace the SOAP input tag.
   Here's an example from the pull request:
 
