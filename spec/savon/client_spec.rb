@@ -246,7 +246,7 @@ describe Savon::Client do
       HTTPI.stubs(:post).returns(new_response(:headers => { "Set-Cookie" => "second-cookie=oatmeal; Path=/; HttpOnly" }))
       client.request :nibble
 
-      client.http.headers["Cookie"].should == "some-cookie=choc-chip;second-cookie=oatmeal"
+      client.http.headers["Cookie"].split(";").should include("some-cookie=choc-chip", "second-cookie=oatmeal")
     end
 
   end
