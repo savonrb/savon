@@ -59,13 +59,13 @@ module Savon
       def log_request(url, headers, body)
         config.logger.log "SOAP request: #{url}"
         config.logger.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        config.logger.log_filtered body
+        config.logger.log body, :pretty => config.pretty_print_xml, :filter => true
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
         config.logger.log "SOAP response (status #{code}):"
-        config.logger.log body
+        config.logger.log body, :pretty => config.pretty_print_xml
       end
 
     end

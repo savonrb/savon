@@ -1,7 +1,14 @@
 ## UPCOMING
 
-* Feature: [pull request 289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header
-  to be set as a String.
+* Feature: [#289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
+
+* Feature: Added an option to pretty print XML in log messages. Closes [#256](https://github.com/rubiii/savon/issues/256)
+  and [#280](https://github.com/rubiii/savon/issues/280).
+
+    ``` ruby
+    Savon.config.pretty_print_xml = true    # global
+    client.config.pretty_print_xml = true   # per client instance
+    ```
 
 * Refactoring:
   * Added `Savon.client` as a shortcut for creating a new `Savon::Client`

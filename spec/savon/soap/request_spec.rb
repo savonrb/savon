@@ -58,16 +58,6 @@ describe Savon::SOAP::Request do
       HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, Fixture.response(:authentication))
       soap_request.response.should be_a(Savon::SOAP::Response)
     end
-
-    it "logs the filtered SOAP request body" do
-      HTTPI.stubs(:post).returns(HTTPI::Response.new 200, {}, "")
-
-      config.logger.stubs(:log).times(2)
-      config.logger.expects(:log_filtered).with(soap.to_xml)
-      config.logger.stubs(:log).times(2)
-
-      soap_request.response
-    end
   end
 
 end

@@ -2,33 +2,31 @@ require "spec_helper"
 
 describe Savon::Logger do
 
-  let(:logger) { subject }
+  let(:logger)                  { subject }
+  let(:message)                 { "<?xml version='1.0'?><hello>world</hello>" }
+  let(:pretty_message)          { Nokogiri::XML(message) }
+  let(:filtered_message)        { Nokogiri::XML("<?xml version='1.0'?><hello>***FILTERED***</hello>") }
 
   it "logs a given message" do
-    logger.subject.expects(logger.level).with(Fixture.response(:authentication))
-    logger.log Fixture.response(:authentication)
+    logger.subject.expects(logger.level).with(message)
+    logger.log(message)
   end
 
-  describe "#log_filtered" do
-    it "does not filter messages when no log filter was set" do
-      logger.subject.expects(logger.level).with(Fixture.response(:authentication))
-      logger.log_filtered Fixture.response(:authentication)
-    end
+  it "logs a given message (pretty)" do
+    logger.subject.expects(logger.level).with(pretty_message.to_xml(:indent => 2))
+    logger.log(message, :pretty => true)
+  end
 
-    it "filters element values" do
-      logger.filter = ["logType", "logTime"]
-      filtered_values = /Notes Log|2010-09-21T18:22:01|2010-09-21T18:22:07/
+  it "logs a given message (filtered)" do
+    logger.subject.expects(logger.level).with(filtered_message.to_s)
+    logger.filter << :hello
+    warn logger.log(message, :filter => true)
+  end
 
-      logger.subject.expects(logger.level).with do |msg|
-        msg !~ filtered_values &&
-        msg.include?('<ns10:logTime>***FILTERED***</ns10:logTime>') &&
-        msg.include?('<ns10:logType>***FILTERED***</ns10:logType>') &&
-        msg.include?('<ns11:logTime>***FILTERED***</ns11:logTime>') &&
-        msg.include?('<ns11:logType>***FILTERED***</ns11:logType>')
-      end
-
-      logger.log_filtered Fixture.response(:list)
-    end
+  it "logs a given message (pretty and filtered)" do
+    logger.subject.expects(logger.level).with(filtered_message.to_xml(:indent => 2))
+    logger.filter << :hello
+    warn logger.log(message, :pretty => true, :filter => true)
   end
 
   it "defaults to wrap the standard Logger" do
