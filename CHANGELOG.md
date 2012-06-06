@@ -1,4 +1,4 @@
-## UPCOMING
+## 0.9.10 (2012-06-06)
 
 * Feature: [#289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
 
