@@ -265,11 +265,17 @@ describe Savon::SOAP::XML do
         xml.element_form_default = :qualified
         xml.namespace_identifier = :wsdl
 
-        xml.to_xml.should include(
-          "<wsdl:user>",
-          "<wsdl:id>1</wsdl:id>",
-          "<noNamespace>true</noNamespace>"
-        )
+        xml.to_xml.should include("<wsdl:user>", "<wsdl:id>1</wsdl:id>", "<noNamespace>true</noNamespace>")
+      end
+    end
+
+    context "with :element_form_default set to :unqualified and a :namespace" do
+      it "should namespace the default elements" do
+        xml = xml(Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true })
+        xml.element_form_default = :unqualified
+        xml.namespace_identifier = :wsdl
+
+        xml.to_xml.should include("<user>", "<id>1</id>", "<noNamespace>true</noNamespace>")
       end
     end
 

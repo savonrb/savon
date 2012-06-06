@@ -200,7 +200,8 @@ module Savon
       # Returns the SOAP body as an XML String.
       def body_to_xml
         return body.to_s unless body.kind_of? Hash
-        Gyoku.xml add_namespaces_to_body(body), :element_form_default => element_form_default, :namespace => namespace_identifier
+        body_to_xml = element_form_default == :qualified ? add_namespaces_to_body(body) : body
+        Gyoku.xml body_to_xml, :element_form_default => element_form_default, :namespace => namespace_identifier
       end
 
       def add_namespaces_to_body(hash, path = [input[1].to_s])
