@@ -30,10 +30,15 @@ module Savon
     #     wsdl.namespace = "http://users.example.com"
     #   end
     def initialize(wsdl_document = nil, &block)
+      self.config = Savon.config.clone
       wsdl.document = wsdl_document if wsdl_document
+
       process 1, &block if block
       wsdl.request = http
     end
+
+    # Accessor for the <tt>Savon::Config</tt>.
+    attr_accessor :config
 
     # Returns the <tt>Savon::Wasabi::Document</tt>.
     def wsdl
@@ -71,12 +76,12 @@ module Savon
     def request(*args, &block)
       raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
 
-      self.soap = SOAP::XML.new
+      self.soap = SOAP::XML.new(config)
       preconfigure extract_options(args)
       process &block if block
       soap.wsse = wsse
 
-      response = SOAP::Request.new(http, soap).response
+      response = SOAP::Request.new(config, http, soap).response
       set_cookie response.http.headers
       response
     end

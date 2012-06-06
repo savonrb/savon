@@ -2,15 +2,16 @@ require "spec_helper"
 
 describe Savon::SOAP::Response do
 
+  let(:config) { Savon::Config.default }
+
   describe ".new" do
     it "should raise a Savon::SOAP::Fault in case of a SOAP fault" do
       lambda { soap_fault_response }.should raise_error(Savon::SOAP::Fault)
     end
 
     it "should not raise a Savon::SOAP::Fault in case the default is turned off" do
-      Savon.config.raise_errors = false
+      config.raise_errors = false
       lambda { soap_fault_response }.should_not raise_error(Savon::SOAP::Fault)
-      Savon.config.raise_errors = true
     end
 
     it "should raise a Savon::HTTP::Error in case of an HTTP error" do
@@ -18,18 +19,13 @@ describe Savon::SOAP::Response do
     end
 
     it "should not raise a Savon::HTTP::Error in case the default is turned off" do
-      Savon.config.raise_errors = false
+      config.raise_errors = false
       soap_response :code => 500
-      Savon.config.raise_errors = true
     end
   end
 
   describe "#success?" do
-    around do |example|
-      Savon.config.raise_errors = false
-      example.run
-      Savon.config.raise_errors = true
-    end
+    before { config.raise_errors = false }
 
     it "should return true if the request was successful" do
       soap_response.should be_a_success
@@ -45,11 +41,7 @@ describe Savon::SOAP::Response do
   end
 
   describe "#soap_fault?" do
-    around do |example|
-      Savon.config.raise_errors = false
-      example.run
-      Savon.config.raise_errors = true
-    end
+    before { config.raise_errors = false }
 
     it "should not return true in case the response seems to be ok" do
       soap_response.soap_fault?.should be_false
@@ -61,11 +53,7 @@ describe Savon::SOAP::Response do
   end
 
   describe "#soap_fault" do
-    around do |example|
-      Savon.config.raise_errors = false
-      example.run
-      Savon.config.raise_errors = true
-    end
+    before { config.raise_errors = false }
 
     it "should return a Savon::SOAP::Fault" do
       soap_fault_response.soap_fault.should be_a(Savon::SOAP::Fault)
@@ -81,11 +69,7 @@ describe Savon::SOAP::Response do
   end
 
   describe "#http_error?" do
-    around do |example|
-      Savon.config.raise_errors = false
-      example.run
-      Savon.config.raise_errors = true
-    end
+    before { config.raise_errors = false }
 
     it "should not return true in case the response seems to be ok" do
       soap_response.http_error?.should_not be_true
@@ -97,11 +81,7 @@ describe Savon::SOAP::Response do
   end
 
   describe "#http_error" do
-    around do |example|
-      Savon.config.raise_errors = false
-      example.run
-      Savon.config.raise_errors = true
-    end
+    before { config.raise_errors = false }
 
     it "should return a Savon::HTTP::Error" do
       http_error_response.http_error.should be_a(Savon::HTTP::Error)
@@ -217,8 +197,9 @@ describe Savon::SOAP::Response do
   def soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
+    http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
 
-    Savon::SOAP::Response.new HTTPI::Response.new(response[:code], response[:headers], response[:body])
+    Savon::SOAP::Response.new(config, http_response)
   end
 
   def soap_fault_response
@@ -232,8 +213,9 @@ describe Savon::SOAP::Response do
   def invalid_soap_response(options={})
     defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" }
     response = defaults.merge options
+    http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
 
-    Savon::SOAP::Response.new HTTPI::Response.new(response[:code], response[:headers], response[:body])
+    Savon::SOAP::Response.new(config, http_response)
   end
 
 end

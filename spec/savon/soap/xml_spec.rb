@@ -1,11 +1,12 @@
 require "spec_helper"
 
 describe Savon::SOAP::XML do
-  let(:xml) { Savon::SOAP::XML.new Endpoint.soap, [nil, :authenticate, {}], :id => 1 }
+  let(:xml) { Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authenticate, {}], :id => 1) }
+  let(:config) { Savon::Config.default }
 
   describe ".new" do
     it "should accept an endpoint, an input tag and a SOAP body" do
-      xml = Savon::SOAP::XML.new Endpoint.soap, [nil, :authentication, {}], :id => 1
+      xml = Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authentication, {}], :id => 1)
 
       xml.endpoint.should == Endpoint.soap
       xml.input.should == [nil, :authentication, {}]
@@ -33,10 +34,8 @@ describe Savon::SOAP::XML do
     end
 
     it "should default to the global default" do
-      Savon.config.soap_version = 2
+      config.soap_version = 2
       xml.version.should == 2
-
-      reset_soap_version
     end
 
     it "should set the SOAP version to use" do
@@ -60,7 +59,7 @@ describe Savon::SOAP::XML do
     end
 
     it "should use the global soap_header if set" do
-      Savon.config.stubs(:soap_header).returns({ "MySecret" => "abc" })
+      config.stubs(:soap_header).returns({ "MySecret" => "abc" })
       xml.header.should == { "MySecret" => "abc" }
     end
   end
@@ -76,7 +75,7 @@ describe Savon::SOAP::XML do
     end
 
     it "should use the global env_namespace if set as the SOAP envelope namespace" do
-      Savon.config.stubs(:env_namespace).returns(:soapenv)
+      config.stubs(:env_namespace).returns(:soapenv)
       xml.env_namespace.should == :soapenv
     end
   end
@@ -156,8 +155,6 @@ describe Savon::SOAP::XML do
   end
 
   describe "#to_xml" do
-    after { reset_soap_version }
-
     context "by default" do
       it "should start with an XML declaration" do
         xml.to_xml.should match(/^<\?xml version="1.0" encoding="UTF-8"\?>/)
@@ -230,22 +227,20 @@ describe Savon::SOAP::XML do
 
     context "with the global SOAP version set to 1.2" do
       it "should contain the namespace for SOAP 1.2" do
-        Savon.config.soap_version = 2
+        config.soap_version = 2
 
         uri = "http://www.w3.org/2003/05/soap-envelope"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
-        reset_soap_version
       end
     end
 
     context "with a global and request SOAP version" do
       it "should contain the namespace for the request SOAP version" do
-        Savon.config.soap_version = 2
+        config.soap_version = 2
         xml.version = 1
 
         uri = "http://schemas.xmlsoap.org/soap/envelope/"
         xml.to_xml.should match(/<env:Envelope (.*)xmlns:env="#{uri}"(.*)>/)
-        reset_soap_version
       end
     end
 
@@ -266,7 +261,7 @@ describe Savon::SOAP::XML do
 
     context "with :element_form_default set to :qualified and a :namespace" do
       let :xml do
-        Savon::SOAP::XML.new Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true }
+        Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true })
       end
 
       it "should namespace the default elements" do
@@ -326,10 +321,6 @@ describe Savon::SOAP::XML do
         xml.to_xml.should include('<wsdl:getUser only_active="false"><id>1</id></wsdl:getUser>')
       end
     end
-  end
-
-  def reset_soap_version
-    Savon.config.soap_version = Savon::SOAP::DefaultVersion
   end
 
 end

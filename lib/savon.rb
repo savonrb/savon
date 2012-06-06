@@ -1,6 +1,5 @@
 require "savon/version"
 require "savon/config"
-require "savon/logger"
 require "savon/client"
 require "savon/model"
 
@@ -16,11 +15,7 @@ module Savon
   end
 
   def config
-    @config ||= Config.new.tap { |config|
-      config.logger = Logger.new
-      config.raise_errors = true
-      config.soap_version = SOAP::DefaultVersion
-    }
+    @config ||= Config.default
   end
 
   attr_writer :config

@@ -1,8 +1,10 @@
 require "spec_helper"
 
 describe Savon::SOAP::Request do
-  let(:soap_request) { Savon::SOAP::Request.new HTTPI::Request.new, soap }
-  let(:soap) { Savon::SOAP::XML.new Endpoint.soap, [nil, :get_user, {}], :id => 1 }
+  let(:soap_request) { Savon::SOAP::Request.new(config, http_request, soap) }
+  let(:http_request) { HTTPI::Request.new }
+  let(:soap)         { Savon::SOAP::XML.new config, Endpoint.soap, [nil, :get_user, {}], :id => 1 }
+  let(:config)       { Savon::Config.default }
 
   it "contains the content type for each supported SOAP version" do
     content_type = Savon::SOAP::Request::ContentType
@@ -13,7 +15,7 @@ describe Savon::SOAP::Request do
   describe ".execute" do
     it "executes a SOAP request and returns the response" do
       HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, Fixture.response(:authentication))
-      response = Savon::SOAP::Request.execute HTTPI::Request.new, soap
+      response = Savon::SOAP::Request.execute config, http_request, soap
       response.should be_a(Savon::SOAP::Response)
     end
   end
@@ -42,11 +44,11 @@ describe Savon::SOAP::Request do
 
     it "sets the Content-Length header for every request" do
       http = HTTPI::Request.new
-      soap_request = Savon::SOAP::Request.new(http, soap)
+      soap_request = Savon::SOAP::Request.new(config, http, soap)
       http.headers.should include("Content-Length" => "272")
 
-      soap = Savon::SOAP::XML.new Endpoint.soap, [nil, :create_user, {}], :id => 123
-      soap_request = Savon::SOAP::Request.new(http, soap)
+      soap = Savon::SOAP::XML.new config, Endpoint.soap, [nil, :create_user, {}], :id => 123
+      soap_request = Savon::SOAP::Request.new(config, http, soap)
       http.headers.should include("Content-Length" => "280")
     end
   end
@@ -60,9 +62,9 @@ describe Savon::SOAP::Request do
     it "logs the filtered SOAP request body" do
       HTTPI.stubs(:post).returns(HTTPI::Response.new 200, {}, "")
 
-      Savon.config.logger.stubs(:log).times(2)
-      Savon.config.logger.expects(:log_filtered).with(soap.to_xml)
-      Savon.config.logger.stubs(:log).times(2)
+      config.logger.stubs(:log).times(2)
+      config.logger.expects(:log_filtered).with(soap.to_xml)
+      config.logger.stubs(:log).times(2)
 
       soap_request.response
     end

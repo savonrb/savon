@@ -12,12 +12,13 @@ module Savon
     class Response
 
       # Expects an <tt>HTTPI::Response</tt> and handles errors.
-      def initialize(response)
+      def initialize(config, response)
+        self.config = config
         self.http = response
-        raise_errors if Savon.config.raise_errors
+        raise_errors if config.raise_errors
       end
 
-      attr_accessor :http
+      attr_accessor :http, :config
 
       # Returns whether the request was successful.
       def success?

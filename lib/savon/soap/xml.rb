@@ -25,11 +25,14 @@ module Savon
       }
 
       # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.
-      def initialize(endpoint = nil, input = nil, body = nil)
+      def initialize(config, endpoint = nil, input = nil, body = nil)
+        self.config = config
         self.endpoint = endpoint if endpoint
         self.input = input if input
         self.body = body if body
       end
+
+      attr_accessor :config
 
       # Accessor for the SOAP +input+ tag.
       attr_accessor :input
@@ -45,7 +48,7 @@ module Savon
 
       # Returns the SOAP +version+. Defaults to <tt>Savon.config.soap_version</tt>.
       def version
-        @version ||= Savon.config.soap_version
+        @version ||= config.soap_version
       end
 
       # Sets the SOAP +header+ Hash.
@@ -53,7 +56,7 @@ module Savon
 
       # Returns the SOAP +header+. Defaults to an empty Hash.
       def header
-        @header ||= Savon.config.soap_header.nil? ? {} : Savon.config.soap_header
+        @header ||= config.soap_header.nil? ? {} : config.soap_header
       end
 
       # Sets the SOAP envelope namespace.
@@ -61,7 +64,7 @@ module Savon
 
       # Returns the SOAP envelope namespace. Uses the global namespace if set Defaults to :env.
       def env_namespace
-        @env_namespace ||= Savon.config.env_namespace.nil? ? :env : Savon.config.env_namespace
+        @env_namespace ||= config.env_namespace.nil? ? :env : config.env_namespace
       end
 
       # Sets the +namespaces+ Hash.

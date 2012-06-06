@@ -14,23 +14,26 @@ module Savon
 
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object
       # to execute a SOAP request and returns the response.
-      def self.execute(http, soap)
-        new(http, soap).response
+      def self.execute(config, http, soap)
+        new(config, http, soap).response
       end
 
-      # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object.
-      def initialize(http, soap)
+      # Expects an <tt>HTTPI::Request</tt>, a <tt>Savon::SOAP::XML</tt> object
+      # and a <tt>Savon::Config</tt>.
+      def initialize(config, http, soap)
+        self.config = config
         self.soap = soap
         self.http = configure(http)
       end
 
-      attr_accessor :soap, :http
+      attr_accessor :soap, :http, :config
 
       # Executes the request and returns the response.
       def response
-        @response ||= SOAP::Response.new(
-          Savon.config.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
-        )
+        @response ||= begin
+          response = config.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
+          SOAP::Response.new(config, response)
+        end
       end
 
     private
@@ -54,15 +57,15 @@ module Savon
 
       # Logs the SOAP request +url+, +headers+ and +body+.
       def log_request(url, headers, body)
-        Savon.config.logger.log "SOAP request: #{url}"
-        Savon.config.logger.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-        Savon.config.logger.log_filtered body
+        config.logger.log "SOAP request: #{url}"
+        config.logger.log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+        config.logger.log_filtered body
       end
 
       # Logs the SOAP response +code+ and +body+.
       def log_response(code, body)
-        Savon.config.logger.log "SOAP response (status #{code}):"
-        Savon.config.logger.log body
+        config.logger.log "SOAP response (status #{code}):"
+        config.logger.log body
       end
 
     end
