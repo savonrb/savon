@@ -4,6 +4,7 @@ describe Savon::SOAP::Fault do
   let(:soap_fault) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:soap_fault)) }
   let(:soap_fault2) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:soap_fault12)) }
   let(:another_soap_fault) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:another_soap_fault)) }
+  let(:html_soap_fault) { Savon::SOAP::Fault.new new_response(:body => Fixture.response(:html_soap_fault)) }
   let(:no_fault) { Savon::SOAP::Fault.new new_response }
 
   it "should be a Savon::Error" do
@@ -77,6 +78,16 @@ describe Savon::SOAP::Fault do
         }
       }
     end
+  end
+
+  it "should return an HTML wrapped SOAP fault as a Hash" do
+    html_soap_fault.to_hash.should == {
+      :fault => {
+        :faultstring => "No such operation 'add20100415'",
+        :faultcode   => "Server.userException",
+        :detail      => {:hostname=>"186602-3"}
+      }
+    }
   end
 
   def new_response(options = {})
