@@ -1,3 +1,11 @@
+## 2.2.0 (2012-06-06)
+
+* Improvement: [#5](https://github.com/rubiii/wasabi/pull/5) - Get input from message
+  element or portType input. See [rubiii/savon#277](https://github.com/rubiii/savon/pull/277)
+  to get the full picture on how this all works together, and enables you to pass a single
+  symbol into the `Savon::Client#request` method and get automatic namespace mapping, as well
+  as the proper operation name -> input message mapping.
+
 ## 2.1.1 (2012-05-18)
 
 * Fix: [issue 7](https://github.com/rubiii/wasabi/issues/7) - Performance regression.
