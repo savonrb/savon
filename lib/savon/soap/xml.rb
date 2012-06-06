@@ -24,12 +24,9 @@ module Savon
         "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
       }
 
-      # Accepts an +endpoint+, an +input+ tag and a SOAP +body+.
-      def initialize(config, endpoint = nil, input = nil, body = nil)
+      # Expects a +config+ object.
+      def initialize(config)
         self.config = config
-        self.endpoint = endpoint if endpoint
-        self.input = input if input
-        self.body = body if body
       end
 
       attr_accessor :config

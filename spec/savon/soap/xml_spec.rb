@@ -1,18 +1,18 @@
 require "spec_helper"
 
 describe Savon::SOAP::XML do
-  let(:xml) { Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authenticate, {}], :id => 1) }
-  let(:config) { Savon::Config.default }
 
-  describe ".new" do
-    it "should accept an endpoint, an input tag and a SOAP body" do
-      xml = Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authentication, {}], :id => 1)
-
-      xml.endpoint.should == Endpoint.soap
-      xml.input.should == [nil, :authentication, {}]
-      xml.body.should == { :id => 1 }
+  def xml(endpoint = nil, input = nil, body = nil)
+    @xml ||= begin
+      xml = Savon::SOAP::XML.new(config)
+      xml.endpoint = endpoint || Endpoint.soap
+      xml.input    = input    || [nil, :authenticate, {}]
+      xml.body     = body     || { :id => 1 }
+      xml
     end
   end
+
+  let(:config) { Savon::Config.default }
 
   describe "#input" do
     it "should set the input tag" do
@@ -260,11 +260,8 @@ describe Savon::SOAP::XML do
     end
 
     context "with :element_form_default set to :qualified and a :namespace" do
-      let :xml do
-        Savon::SOAP::XML.new(config, Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true })
-      end
-
       it "should namespace the default elements" do
+        xml = xml(Endpoint.soap, [nil, :authenticate, {}], :user => { :id => 1, ":noNamespace" => true })
         xml.element_form_default = :qualified
         xml.namespace_identifier = :wsdl
 
