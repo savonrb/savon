@@ -15,9 +15,9 @@ describe Wasabi::Document do
 
     its(:operations) do
       should include(
-        { :delete_client => { :input => "DeleteClient", :action => "http://api.example.com/api/Client.Delete" } },
-        { :get_clients   => { :input => "GetClients", :action => "http://api.example.com/api/User.GetClients" } },
-        { :get_api_key   => { :input => "GetApiKey", :action => "http://api.example.com/api/User.GetApiKey" } }
+        { :delete_client => { :input => "Client.Delete", :action => "http://api.example.com/api/Client.Delete", :namespace_identifier => "tns" } },
+        { :get_clients   => { :input => "User.GetClients", :action => "http://api.example.com/api/User.GetClients", :namespace_identifier => "tns" } },
+        { :get_api_key   => { :input => "User.GetApiKey", :action => "http://api.example.com/api/User.GetApiKey", :namespace_identifier => "tns" } }
       )
     end
 

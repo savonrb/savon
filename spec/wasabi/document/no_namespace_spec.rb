@@ -15,9 +15,9 @@ describe Wasabi::Document do
 
     its(:operations) do
       should include(
-        { :get_user_login_by_id => { :input => "GetUserLoginById", :action => "/api/api/GetUserLoginById" } },
-        { :get_all_contacts => { :input => "GetAllContacts", :action => "/api/api/GetAllContacts" } },
-        { :search_user => { :input => "SearchUser", :action => "/api/api/SearchUser" } }
+        { :get_user_login_by_id => { :input => "GetUserLoginById", :action => "/api/api/GetUserLoginById", :namespace_identifier => "typens" } },
+        { :get_all_contacts => { :input => "GetAllContacts", :action => "/api/api/GetAllContacts", :namespace_identifier => "typens" } },
+        { :search_user => { :input => "SearchUser", :action => "/api/api/SearchUser", :namespace_identifier => "typens" } }
       )
     end
 
