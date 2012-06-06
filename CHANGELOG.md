@@ -2,6 +2,11 @@
 
 * Feature: [#289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
 
+* Feature: In addition to the global configuration, there's now also one configuration per client.
+  The global config is duplicated when a new client is initialized and gets used instead of the global one.
+  Closes [#84](https://github.com/rubiii/savon/issues/84) by allowing one logger per client and 
+  [#270](https://github.com/rubiii/savon/issues/270) by allowing to specify error handling per client.
+
 * Feature: Added an option to pretty print XML in log messages. Closes [#256](https://github.com/rubiii/savon/issues/256)
   and [#280](https://github.com/rubiii/savon/issues/280).
 
@@ -13,6 +18,7 @@
 * Refactoring:
   * Added `Savon.client` as a shortcut for creating a new `Savon::Client`
   * Changed `Savon::Config` from a module to a class.
+  * Moved logging to the new `Savon::Logger` object.
   * Removed the `blank?` extension from `Object`.
 
 ## 0.9.9 (2012-02-17)
