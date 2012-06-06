@@ -22,7 +22,7 @@ Introduction
 require "savon"
 
 # create a client for your SOAP service
-client = Savon::Client.new("http://service.example.com?wsdl")
+client = Savon.client("http://service.example.com?wsdl")
 
 client.wsdl.soap_actions
 # => [:create_user, :get_user, :get_all_users]
