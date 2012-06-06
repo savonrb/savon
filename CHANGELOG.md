@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Fix: [#275](https://github.com/rubiii/savon/pull/275) - Add namespaces to keys in both the SOAP body hash as well
+  as any keys specified in a :order! Array instead of having to define them manually.
+
 ## 0.9.10 (2012-06-06)
 
 * Feature: [#289](https://github.com/rubiii/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
