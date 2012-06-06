@@ -11,8 +11,13 @@
   and [#280](https://github.com/rubiii/savon/issues/280).
 
     ``` ruby
-    Savon.config.pretty_print_xml = true    # global
-    client.config.pretty_print_xml = true   # per client instance
+    # global
+    Savon.configure do |config|
+      config.pretty_print_xml = true
+    end
+
+    # per client
+    client.config.pretty_print_xml = true
     ```
 
 * Refactoring:
