@@ -224,7 +224,7 @@ describe Savon::Client do
       client.http.headers.expects(:[]=).with("Cookie", anything).never
       client.http.headers.stubs(:[]=).with("SOAPAction", '"authenticate"')
       client.http.headers.stubs(:[]=).with("Content-Type", "text/xml;charset=UTF-8")
-      client.http.headers.stubs(:[]=).with("Content-Length", "384")
+      client.http.headers.stubs(:[]=).with("Content-Length", "383")
 
       client.request :authenticate
     end
@@ -405,7 +405,7 @@ describe Savon::Client do
 
     it "should namespaces each Array item as expected" do
       HTTPI::Request.any_instance.expects(:body=).with do |value|
-        value.include?("<ins0:cartItems><ins0:CartItem>") && value.include?("<wsdl:ItemID>SKU-TEST</wsdl:ItemID>")
+        value.include?("<ins0:cartItems><ins0:CartItem>") && value.include?("<tns:ItemID>SKU-TEST</tns:ItemID>")
       end
 
       address = { "Address1" => "888 6th Ave", "Address2" => nil, "City" => "New York", "State" => "NY", "Zip5" => "10001", "Zip4" => nil }
