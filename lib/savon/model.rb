@@ -24,7 +24,7 @@ module Savon
       end
     end
 
-  private
+    private
 
     # Defines a class-level SOAP action method.
     def define_class_action(action)

@@ -19,7 +19,7 @@ describe Savon::SOAP::Request do
   end
 
   it "contains the content type for each supported SOAP version" do
-    content_type = Savon::SOAP::Request::ContentType
+    content_type = Savon::SOAP::Request::CONTENT_TYPE
     content_type[1].should == "text/xml;charset=UTF-8"
     content_type[2].should == "application/soap+xml;charset=UTF-8"
   end
@@ -42,12 +42,12 @@ describe Savon::SOAP::Request do
     end
 
     it "sets the Content-Type header for SOAP 1.1" do
-      soap_request.http.headers["Content-Type"].should == Savon::SOAP::Request::ContentType[1]
+      soap_request.http.headers["Content-Type"].should == Savon::SOAP::Request::CONTENT_TYPE[1]
     end
 
     it "sets the Content-Type header for SOAP 1.2" do
       soap_xml.version = 2
-      soap_request.http.headers["Content-Type"].should == Savon::SOAP::Request::ContentType[2]
+      soap_request.http.headers["Content-Type"].should == Savon::SOAP::Request::CONTENT_TYPE[2]
     end
 
     it "sets the Content-Length header" do

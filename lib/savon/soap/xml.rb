@@ -20,7 +20,7 @@ module Savon
     class XML
 
       # XML Schema Type namespaces.
-      SchemaTypes = {
+      SCHEMA_TYPES = {
         "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
         "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
       }
@@ -40,7 +40,7 @@ module Savon
 
       # Sets the SOAP +version+.
       def version=(version)
-        raise ArgumentError, "Invalid SOAP version: #{version}" unless SOAP::Versions.include? version
+        raise ArgumentError, "Invalid SOAP version: #{version}" unless SOAP::VERSIONS.include? version
         @version = version
       end
 
@@ -73,7 +73,7 @@ module Savon
         @namespaces ||= begin
           key = ["xmlns"]
           key << env_namespace if env_namespace && env_namespace != ""
-          { key.join(":") => SOAP::Namespace[version] }
+          { key.join(":") => SOAP::NAMESPACE[version] }
         end
       end
 
@@ -175,7 +175,7 @@ module Savon
         end
       end
 
-    private
+      private
 
       # Returns a new <tt>Builder::XmlMarkup</tt> object.
       def builder(directive_tag = :xml, attrs = { :encoding => encoding })
@@ -196,7 +196,7 @@ module Savon
 
       # Returns the complete Hash of namespaces.
       def complete_namespaces
-        defaults = SchemaTypes.dup
+        defaults = SCHEMA_TYPES.dup
         defaults["xmlns:#{namespace_identifier}"] = namespace if namespace
         defaults.merge namespaces
       end

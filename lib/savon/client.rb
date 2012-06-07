@@ -91,7 +91,7 @@ module Savon
       response
     end
 
-  private
+    private
 
     # Writer for the <tt>Savon::SOAP::XML</tt> object.
     attr_writer :soap

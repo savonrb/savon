@@ -33,7 +33,7 @@ module Savon
         @hash ||= Nori.parse(http.body)[:envelope][:body]
       end
 
-    private
+      private
 
       # Returns whether the response contains a SOAP 1.1 fault.
       def soap1_fault?

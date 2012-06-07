@@ -10,7 +10,7 @@ module Savon
       config = new
       config._logger = Logger.new
       config.raise_errors = true
-      config.soap_version = SOAP::DefaultVersion
+      config.soap_version = SOAP::DEFAULT_VERSION
       config
     end
 

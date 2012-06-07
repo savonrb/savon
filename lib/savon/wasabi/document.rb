@@ -18,7 +18,7 @@ module Savon
       # Sets the <tt>HTTPI::Request</tt> for remote WSDL documents.
       attr_writer :request
 
-    private
+      private
 
       # Sets up and returns the <tt>HTTPI::Request</tt>.
       def request
@@ -30,7 +30,7 @@ module Savon
       # Resolves and returns the raw WSDL document.
       def resolve_document
         case document
-          when /^http[s]?:/ then 
+          when /^http[s]?:/ then
             response = HTTPI.get(request)
             if response.error?
               raise Savon::HTTP::Error.new(response)

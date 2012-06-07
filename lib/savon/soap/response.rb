@@ -101,7 +101,7 @@ module Savon
         doc.xpath(path, namespaces || xml_namespaces)
       end
 
-    private
+      private
 
       def raise_errors
         raise soap_fault if soap_fault?
