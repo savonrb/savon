@@ -21,7 +21,7 @@ module Savon
     end
 
     def log_level=(level)
-      _logger.level = log_level
+      _logger.level = level
     end
 
     def log=(log)
