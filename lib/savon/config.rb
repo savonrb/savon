@@ -14,6 +14,8 @@ module Savon
       config
     end
 
+    alias_method :logger, :_logger
+
     def logger=(logger)
       _logger.subject = logger
     end
@@ -36,7 +38,7 @@ module Savon
 
     def clone
       config = super
-      config.logger = config.logger.clone
+      config._logger = config._logger.clone
       config
     end
 

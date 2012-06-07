@@ -5,7 +5,7 @@ describe Savon::Config do
   describe "#clone" do
     subject do
       config = Savon::Config.new
-      config.logger = Savon::Logger.new
+      config._logger = Savon::Logger.new
       config
     end
 
