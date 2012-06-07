@@ -1,3 +1,7 @@
+## 0.9.13 (2012-06-07)
+
+* Fix: [#292](https://github.com/rubiii/savon/issues/292)
+
 ## 0.9.12 (2012-06-07)
 
 * Re-added the log method setters to the new config object for backwards compatibility.
