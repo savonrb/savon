@@ -1,3 +1,7 @@
+## 0.9.14 (2012-06-07)
+
+* Fix: [#292](https://github.com/rubiii/savon/issues/292) again
+
 ## 0.9.13 (2012-06-07)
 
 * Fix: [#292](https://github.com/rubiii/savon/issues/292)
