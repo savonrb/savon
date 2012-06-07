@@ -7,7 +7,6 @@ describe Savon::Model do
   end
 
   describe ":model_soap_response hook" do
-
     before(:all) do
       model.actions :get_user, "GetAllUsers"
     end
@@ -24,75 +23,57 @@ describe Savon::Model do
       model.client.stubs(:request).returns("world")  #
       model.get_user.should == "hello world"
     end
-
   end
 
   describe ".client" do
-
-    it "passes a given block to a new Savon::Client"
-
     it "memoizes the Savon::Client" do
       model.client.should equal(model.client)
     end
-
   end
 
   describe ".config" do
-
     it "memoizes a clone of the global config" do
       model.config.should be_a(Savon::Config)
       model.config.should_not equal(Savon.config)
     end
-
   end
 
   describe ".endpoint" do
-
     it "sets the SOAP endpoint" do
       model.endpoint "http://example.com"
       model.client.wsdl.endpoint.should == "http://example.com"
     end
-
   end
 
   describe ".namespace" do
-
     it "sets the target namespace" do
       model.namespace "http://v1.example.com"
       model.client.wsdl.namespace.should == "http://v1.example.com"
     end
-
   end
 
   describe ".document" do
-
     it "sets the WSDL document" do
       model.document "http://example.com/?wsdl"
       model.client.wsdl.document.should == "http://example.com/?wsdl"
     end
-
   end
 
   describe ".headers" do
-
     it "sets the HTTP headers" do
       model.headers("Accept-Charset" => "utf-8")
       model.client.http.headers.should == { "Accept-Charset" => "utf-8" }
     end
-
   end
 
   describe ".basic_auth" do
-
     it "sets HTTP Basic auth credentials" do
       model.basic_auth "login", "password"
       model.client.http.auth.basic.should == ["login", "password"]
     end
-
   end
 
   describe ".wsse_auth" do
-
     it "sets WSSE auth credentials" do
       model.wsse_auth "login", "password", :digest
 
@@ -100,11 +81,9 @@ describe Savon::Model do
       model.client.wsse.password.should == "password"
       model.client.wsse.should be_digest
     end
-
   end
 
   describe ".actions" do
-
     before(:all) do
       model.actions :get_user, "GetAllUsers"
     end
@@ -118,7 +97,6 @@ describe Savon::Model do
     end
 
     context "(class-level)" do
-
       it "executes SOAP requests with a given body" do
         model.client.expects(:request).with(:wsdl, :get_user, :body => { :id => 1 })
         model.get_user :id => 1
@@ -131,28 +109,21 @@ describe Savon::Model do
     end
 
     context "(instance-level)" do
-
       it "delegates to the corresponding class method" do
         model.expects(:get_all_users).with(:active => true)
         model.new.get_all_users :active => true
       end
-
     end
-
   end
 
   describe "#client" do
-
     it "returns the class-level Savon::Client" do
       model.new.client.should == model.client
     end
-
   end
 
   describe "overwriting action methods" do
-
     context "(class-level)" do
-
       let(:supermodel) do
         supermodel = model.dup
         supermodel.actions :get_user
@@ -171,11 +142,9 @@ describe Savon::Model do
 
         supermodel.get_user :id => 1
       end
-
     end
 
     context "(instance-level)" do
-
       let(:supermodel) do
         supermodel = model.dup
         supermodel.actions :get_user
@@ -195,9 +164,7 @@ describe Savon::Model do
 
         supermodel.get_user :id => 1
       end
-
     end
-
   end
 
 end
