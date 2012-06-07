@@ -15,10 +15,6 @@ module Savon
       log_raw LogMessage.new(message, filter, options).to_s
     end
 
-    def log_raw(message)
-      subject.send(level, message)
-    end
-
     attr_writer :subject, :level, :filter
 
     def subject
@@ -31,6 +27,12 @@ module Savon
 
     def filter
       @filter ||= []
+    end
+
+    private
+
+    def log_raw(message)
+      subject.send(level, message)
     end
 
   end
