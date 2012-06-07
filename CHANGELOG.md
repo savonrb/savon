@@ -1,3 +1,16 @@
+## 0.9.12 (2012-06-07)
+
+* Re-added the log method setters to the new config object for backwards compatibility.
+  You should be able to configure the logger as you used to do.
+
+    ``` ruby
+    Savon.configure do |config|
+      config.log = false            # disable logging
+      config.log_level = :info      # changing the log level
+      config.logger = Rails.logger  # using the Rails logger
+    end
+    ```
+
 ## 0.9.11 (2012-06-06)
 
 * Feature: [#264](https://github.com/rubiii/savon/pull/264) - Thanks to @hoverlover, Savon and Akami now support
