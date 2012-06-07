@@ -1,3 +1,7 @@
+## 2.3.0 (2012-06-07)
+
+* Improvement: [#3](https://github.com/rubiii/wasabi/pull/3) adds object inheritance.
+
 ## 2.2.0 (2012-06-06)
 
 * Improvement: [#5](https://github.com/rubiii/wasabi/pull/5) - Get input from message
