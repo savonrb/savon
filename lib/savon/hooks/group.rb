@@ -9,14 +9,12 @@ module Savon
     class Group
 
       # Accepts an Array of +hooks+ to start with.
-      def initialize(hooks = nil)
-        self.hooks = hooks
+      def initialize(hooks = [])
+        @hooks = hooks
       end
 
-      attr_writer :hooks
-
-      def hooks
-        @hooks ||= []
+      def empty?
+        hooks.empty?
       end
 
       # Adds a new hook.
@@ -30,15 +28,33 @@ module Savon
         hooks.reject! { |hook| ids.include? hook.id }
       end
 
-      # Returns a new group for a given +hook+.
-      def select(hook)
-        Group.new hooks.select { |h| h.hook == hook }
+      # Fire a given +hook+ with any given +args+.
+      def fire(hook, *args, &callback)
+        callable = select(hook)
+
+        if callable.empty?
+          callback.call
+        else
+          args.unshift(callback) if callback
+          callable.call(*args)
+        end
       end
 
       # Calls the hooks with the given +args+ and returns the
       # value of the last hooks.
       def call(*args)
         hooks.inject(nil) { |memo, hook| hook.call(*args) }
+      end
+
+      private
+
+      def hooks
+        @hooks ||= []
+      end
+
+      # Returns a new group for a given +hook+.
+      def select(hook)
+        Group.new hooks.select { |h| h.hook == hook }
       end
 
     end

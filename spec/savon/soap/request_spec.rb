@@ -2,8 +2,9 @@ require "spec_helper"
 
 describe Savon::SOAP::Request do
 
-  let(:soap_request) { Savon::SOAP::Request.new(config, http_request, soap_xml) }
-  let(:http_request) { HTTPI::Request.new }
+  let(:soap_request)  { Savon::SOAP::Request.new(config, http_request, soap_xml) }
+  let(:http_request)  { HTTPI::Request.new }
+  let(:http_response) { HTTPI::Response.new 200, {}, Fixture.response(:authentication) }
 
   let(:config) {
     config = Savon::Config.default
@@ -31,7 +32,7 @@ describe Savon::SOAP::Request do
 
   describe ".execute" do
     it "executes a SOAP request and returns the response" do
-      HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, Fixture.response(:authentication))
+      HTTPI.expects(:post).returns(http_response)
       response = Savon::SOAP::Request.execute config, http_request, soap_xml
       response.should be_a(Savon::SOAP::Response)
     end
@@ -72,8 +73,39 @@ describe Savon::SOAP::Request do
 
   describe "#response" do
     it "executes an HTTP POST request and returns a Savon::SOAP::Response" do
-      HTTPI.expects(:post).returns(HTTPI::Response.new 200, {}, Fixture.response(:authentication))
+      HTTPI.expects(:post).returns(http_response)
       soap_request.response.should be_a(Savon::SOAP::Response)
+    end
+
+    context "with a :soap_request hook" do
+      it "lets you replace the HTTP request and return your own response" do
+        config.hooks.define(:test, :soap_request) do |_, request|
+          request.should be_a(Savon::SOAP::Request)
+          http_response
+        end
+
+        response = soap_request.response
+        response.http.should equal(http_response)
+      end
+
+      it "works as an around filter for the SOAP request" do
+        HTTPI.expects(:post).returns(http_response)
+        state = []
+
+        config.hooks.define(:test, :soap_request) do |callback, request|
+          state << :before
+          response = callback.call
+          state << response
+          state << :after
+          response
+        end
+
+        response = soap_request.response
+
+        state[0].should == :before
+        state[1].should be_a(HTTPI::Response)
+        state[2].should == :after
+      end
     end
   end
 

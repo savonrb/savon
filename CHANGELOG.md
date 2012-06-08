@@ -1,3 +1,12 @@
+## UPCOMING
+
+* Improvement: [#291](https://github.com/rubiii/savon/issues/291) changed the `:soap_request` hook to act
+  like an around filter. The hook now receives a callback block to execute the SOAP call and can return
+  the result of the callback to continue the request. It can also not call the callback block and return
+  some `HTTPI::Response` to mock the SOAP request.
+
+  As this change affects `savon_spec`, you need to update `savon_spec` to v1.3.0.
+
 ## 0.9.14 (2012-06-07)
 
 * Fix: [#292](https://github.com/rubiii/savon/issues/292) again

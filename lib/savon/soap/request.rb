@@ -31,7 +31,7 @@ module Savon
       # Executes the request and returns the response.
       def response
         @response ||= begin
-          response = config.hooks.select(:soap_request).call(self) || with_logging { HTTPI.post(http) }
+          response = config.hooks.fire(:soap_request, self) { with_logging { HTTPI.post(http) } }
           SOAP::Response.new(config, response)
         end
       end
