@@ -30,8 +30,7 @@ module Savon
     def define_class_action(action)
       class_action_module.module_eval %{
         def #{action.to_s.snakecase}(body = nil, &block)
-          response = client.request :wsdl, #{action.inspect}, :body => body, &block
-          client.config.hooks.select(:model_soap_response).call(response) || response
+          client.request :wsdl, #{action.inspect}, :body => body, &block
         end
       }
     end

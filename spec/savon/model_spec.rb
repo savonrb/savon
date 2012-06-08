@@ -6,25 +6,6 @@ describe Savon::Model do
     Class.new { extend Savon::Model }
   end
 
-  describe ":model_soap_response hook" do
-    before(:all) do
-      model.actions :get_user, "GetAllUsers"
-    end
-
-    after do
-      Savon.config.hooks.reject! :test_hook
-    end
-
-    it "can be used for pre-processing SOAP responses" do
-      Savon.config.hooks.define(:test_hook, :model_soap_response) do |response|
-        "hello #{response}"
-      end
-
-      model.client.stubs(:request).returns("world")  #
-      model.get_user.should == "hello world"
-    end
-  end
-
   describe ".client" do
     it "memoizes the Savon::Client" do
       model.client.should equal(model.client)
