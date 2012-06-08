@@ -60,8 +60,10 @@ describe Savon::Hooks::Group do
 
     context "without hooks" do
       it "executes the callback" do
-        fallback.expects(:call)
+        report = :call
+        fallback = lambda { report = :back }
         group.fire(:soap_request, &fallback)
+        report.should == :back
       end
     end
   end
