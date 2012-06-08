@@ -9,7 +9,7 @@ describe Wasabi::Parser do
       parser
     end
 
-    let(:xml) { fixture(:symbolic_endpoint) }
+    let(:xml) { fixture(:symbolic_endpoint).read }
 
     it "allows symbolic endpoints" do
       subject.endpoint.should be_nil

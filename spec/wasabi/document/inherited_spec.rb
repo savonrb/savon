@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: inherited.xml" do
 
-    subject { Wasabi::Document.new fixture(:inherited) }
+    subject { Wasabi::Document.new fixture(:inherited).read }
 
     its(:type_definitions) do
       should include([["Account", "Id"], "ID"])

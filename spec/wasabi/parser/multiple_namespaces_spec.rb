@@ -9,7 +9,7 @@ describe Wasabi::Parser do
       parser
     end
 
-    let(:xml) { fixture(:multiple_namespaces) }
+    let(:xml) { fixture(:multiple_namespaces).read }
 
     it "lists the types" do
       subject.types.keys.sort.should == ["Article", "Save"]

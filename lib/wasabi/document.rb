@@ -1,4 +1,5 @@
 require "nokogiri"
+require "wasabi/resolver"
 require "wasabi/parser"
 
 module Wasabi
@@ -24,12 +25,9 @@ module Wasabi
       self.document = document
     end
 
-    attr_accessor :document
+    attr_accessor :document, :request, :xml
 
-    # Returns whether a +document+ was set.
-    def document?
-      !!document
-    end
+    alias_method :document?, :document
 
     # Returns the SOAP endpoint.
     def endpoint
@@ -49,7 +47,7 @@ module Wasabi
 
     # Returns the value of elementFormDefault.
     def element_form_default
-      @element_form_default ||= xml? ? parser.element_form_default : :unqualified
+      @element_form_default ||= document ? parser.element_form_default : :unqualified
     end
 
     # Sets the elementFormDefault value.
@@ -84,7 +82,7 @@ module Wasabi
         parser.types.each do |type, info|
           namespaces << [[type], info[:namespace]]
           (info.keys - [:namespace]).each { |field| namespaces << [[type, field], info[:namespace]] }
-        end if document?
+        end if document
         namespaces
       end
     end
@@ -98,7 +96,7 @@ module Wasabi
             tag, namespace = field_type.split(":").reverse
             result << [[type, field], tag] if user_defined(namespace)
           end
-        end if document?
+        end if document
         result
       end
     end
@@ -112,12 +110,7 @@ module Wasabi
     # Returns the raw WSDL document.
     # Can be used as a hook to extend the library.
     def xml
-      @xml ||= document
-    end
-
-    # Returns whether there is a WSDL document to parse.
-    def xml?
-      xml.kind_of?(String)
+      @xml ||= Resolver.new(document, request).xml
     end
 
     # Parses the WSDL document and returns the <tt>Wasabi::Parser</tt>.
@@ -129,7 +122,7 @@ module Wasabi
 
     # Raises an error if the WSDL document is missing.
     def guard_parse
-      return true if xml?
+      return true if document
       raise ArgumentError, "Wasabi needs a WSDL document"
     end
 

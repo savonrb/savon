@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: geotrust.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:geotrust) }
+    subject { Wasabi::Document.new fixture(:geotrust).read }
 
     its(:namespace) { should == "http://api.geotrust.com/webtrust/query" }
 

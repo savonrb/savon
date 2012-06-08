@@ -1,3 +1,9 @@
+## UPCOMING
+
+* Feature: `Wasabi::Document` now accepts either a URL of a remote document,
+  a path to a local file or raw XML. The code for this was moved from Savon over
+  here as a first step towards supporting WSDL imports.
+
 ## 2.3.0 (2012-06-07)
 
 * Improvement: [#3](https://github.com/rubiii/wasabi/pull/3) adds object inheritance.

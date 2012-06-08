@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: authentication.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:authentication) }
+    subject { Wasabi::Document.new fixture(:authentication).read }
 
     its(:namespace) { should == "http://v1_0.ws.auth.order.example.com/" }
 

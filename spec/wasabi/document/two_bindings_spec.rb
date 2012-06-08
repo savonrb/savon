@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: two_bindings.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:two_bindings) }
+    subject { Wasabi::Document.new fixture(:two_bindings).read }
 
     its(:element_form_default) { should == :unqualified }
 

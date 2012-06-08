@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: namespaced_actions.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:namespaced_actions) }
+    subject { Wasabi::Document.new fixture(:namespaced_actions).read }
 
     its(:namespace) { should == "http://api.example.com/api/" }
 

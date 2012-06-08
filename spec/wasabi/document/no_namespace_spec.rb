@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: no_namespace.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:no_namespace) }
+    subject { Wasabi::Document.new fixture(:no_namespace).read }
 
     its(:namespace) { should == "urn:ActionWebService" }
 

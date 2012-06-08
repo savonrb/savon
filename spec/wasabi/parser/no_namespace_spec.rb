@@ -9,7 +9,7 @@ describe Wasabi::Parser do
       parser
     end
 
-    let(:xml) { fixture(:no_namespace) }
+    let(:xml) { fixture(:no_namespace).read }
 
     it "lists the types" do
       subject.types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
