@@ -1,4 +1,4 @@
-## UPCOMING
+## 2.4.0 (2012-06-08)
 
 * Feature: `Wasabi::Document` now accepts either a URL of a remote document,
   a path to a local file or raw XML. The code for this was moved from Savon over
