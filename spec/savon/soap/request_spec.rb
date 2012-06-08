@@ -4,7 +4,12 @@ describe Savon::SOAP::Request do
 
   let(:soap_request) { Savon::SOAP::Request.new(config, http_request, soap_xml) }
   let(:http_request) { HTTPI::Request.new }
-  let(:config)       { Savon::Config.default }
+
+  let(:config) {
+    config = Savon::Config.default
+    config.log = false
+    config
+  }
 
   def soap_xml(*args)
     @soap_xml ||= soap_xml!(*args)

@@ -6,7 +6,7 @@ RSpec.configure do |config|
 end
 
 # Silence log output
-$stdout = StringIO.new
+Savon.config.log = false
 HTTPI.log = false
 
 require "support/endpoint"

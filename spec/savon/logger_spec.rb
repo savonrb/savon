@@ -26,7 +26,7 @@ describe Savon::Logger do
   it "logs a given message (pretty and filtered)" do
     logger.subject.expects(logger.level).with(filtered_message.to_xml(:indent => 2))
     logger.filter << :hello
-    warn logger.log(message, :pretty => true, :filter => true)
+    logger.log(message, :pretty => true, :filter => true)
   end
 
   it "defaults to wrap the standard Logger" do
