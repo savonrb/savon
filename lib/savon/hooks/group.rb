@@ -13,8 +13,14 @@ module Savon
         @hooks = hooks
       end
 
+      # Returns whether this group contains hooks.
       def empty?
         hooks.empty?
+      end
+
+      # Returns the number of hooks in this group.
+      def count
+        hooks.count
       end
 
       # Adds a new hook.
@@ -23,7 +29,7 @@ module Savon
       end
 
       # Removes hooks matching the given +ids+.
-      def reject!(*ids)
+      def reject(*ids)
         ids = ids.flatten
         hooks.reject! { |hook| ids.include? hook.id }
       end
