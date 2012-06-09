@@ -6,8 +6,8 @@ require "savon/model"
 module Savon
   extend self
 
-  def client(*args)
-    Client.new(*args)
+  def client(*args, &block)
+    Client.new(*args, &block)
   end
 
   def configure
