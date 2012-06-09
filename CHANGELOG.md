@@ -1,4 +1,6 @@
-## 1.0.0 (UPCOMING)
+## 1.0.0 (2012-06-09)
+
+* Fix: `Savon.client` didn't pass the optional block.
 
 * Improvement: [#291](https://github.com/rubiii/savon/issues/291) changed the `:soap_request` hook to act
   like an around filter. The hook now receives a callback block to execute the SOAP call and can return
