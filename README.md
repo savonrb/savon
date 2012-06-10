@@ -1,7 +1,7 @@
 Savon [![Build Status](https://secure.travis-ci.org/rubiii/savon.png?branch=master)](http://travis-ci.org/rubiii/savon)
 =====
 
-Heavy metal Ruby SOAP client
+Heavy metal SOAP client
 
 [Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
