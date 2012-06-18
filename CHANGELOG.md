@@ -1,3 +1,8 @@
+## 2.4.1 (2012-06-18)
+
+* Fix: [rubiii/savon#296](https://github.com/rubiii/savon/issues/296) fixes an issue where
+  the WSDL message element doesn't have part element.
+
 ## 2.4.0 (2012-06-08)
 
 * Feature: `Wasabi::Document` now accepts either a URL of a remote document,
