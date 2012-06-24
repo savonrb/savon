@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<definitions name="SendSMS" targetNamespace="http://bedrift.telefonkatalogen.no" xmlns:tns="http://bedrift.telefonkatalogen.no" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+    <types>
+     <xsd:schema elementFormDefault="qualified" targetNamespace="http://bedrift.telefonkatalogen.no" xmlns="http://www.w3.org/2001/XMLSchema">
+
+     </xsd:schema>
+    </types>
+
+
+<message name="sendsmsRequest">
+ <part name="sender" type="xsd:string"/>
+ <part name="cellular" type="xsd:string"/>
+ <part name="msg" type="xsd:string"/>
+ <part name="smsnumgroup" type="xsd:string"/>
+ <part name="emailaddr" type="xsd:string"/>
+ <part name="udh" type="xsd:string"/>
+ <part name="datetime" type="xsd:string"/>
+ <part name="format" type="xsd:string"/>
+ <part name="dlrurl" type="xsd:string"/>
+</message>
+<message name="sendsmsResponse">
+ <part name="body" type="xsd:string"/>
+</message>
+
+<portType name="SendSmsPortType">
+ <operation name="sendsms">
+  <input message="tns:sendsmsRequest"/>
+  <output message="tns:sendsmsResponse"/>
+ </operation>
+</portType>
+
+<binding name="SendSmsBinding" type="tns:SendSmsPortType">
+ <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+ <operation name="sendsms">
+  <soap:operation soapAction="sendsms"/>
+  <input>
+   <soap:body use="literal"/>
+  </input>
+  <output>
+   <soap:body use="literal"/>
+  </output>
+ </operation>
+</binding>
+
+<service name="SendSms">
+<documentation>Interfaces to telephone directory services, using rpc/literal</documentation>
+<port name="SendSmsPort" binding="tns:SendSmsBinding">
+<soap:address location="http://bedrift.telefonkatalogen.no/tk/websvcsendsms.php"/>
+</port>
+</service>
+
+</definitions>

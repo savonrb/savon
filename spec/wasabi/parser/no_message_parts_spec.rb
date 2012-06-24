@@ -12,7 +12,7 @@ describe Wasabi::Parser do
     let(:xml) { fixture(:no_message_parts).read }
 
     it "falls back to using the message type in the port element" do
-      subject.operations[:save][:input].should == "SaveSoapIn"
+      subject.operations[:save][:input].should == "Save"
     end
 
     it "falls back to using the namespace ID in the port element" do

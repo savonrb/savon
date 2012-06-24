@@ -146,7 +146,7 @@ module Wasabi
     end
 
     def input_for(operation)
-      operation_name = operation.attribute("name")
+      operation_name = operation["name"]
 
       # Look up the input by walking up to portType, then up to the message.
 
@@ -164,11 +164,11 @@ module Wasabi
         end
       end
 
-      # Fall back to message name in portType input if no 'element' attribute in wsdl:message
+      # Fall back to the name of the binding operation
       if message_type
         [message_ns_id, message_type]
       else
-        [port_message_ns_id, port_message_type]
+        [port_message_ns_id, operation_name]
       end
     end
 
