@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Refactoring: Moved code that sets the cookies from the last response for the
+  next request to `HTTPI::Request#set_cookies`.
+
 ## 1.0.0 (2012-06-09)
 
 * Fix: `Savon.client` didn't pass the optional block.
