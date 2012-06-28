@@ -1,3 +1,8 @@
+## 2.5.0 (2012-06-28)
+
+* Fix: [#10](https://github.com/rubiii/wasabi/issues/10) fixes an issue where
+  Wasabi used the wrong operation name.
+
 ## 2.4.1 (2012-06-18)
 
 * Fix: [rubiii/savon#296](https://github.com/rubiii/savon/issues/296) fixes an issue where
