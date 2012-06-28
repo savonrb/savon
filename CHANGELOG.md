@@ -7,17 +7,17 @@
     client.request :wsdl, "FindUser", "xmlns:wsdl" => "http://example.com"
     ```
 
-  with just passing the operation name:
+    with just passing the operation name:
 
     ``` ruby
     client.request :find_user
     ```
 
-  Please run `client.soap_actions`, find the (Symbol) name of your operation and use that instead.
-  If that doesn't work for you, please open an issue.
+    Please run `client.soap_actions`, find the (Symbol) name of your operation and use that instead.
+    If that doesn't work for you, please open an issue.
 
-  If you're passing a Hash with the special keys `:body` or `:soap_action`, that's ok for now.
-  But if you're using the Hash to set attributes on the operation tag, that's deprecated as well.
+    If you're passing a Hash with the special keys `:body` or `:soap_action`, that's ok for now.
+    But if you're using the Hash to set attributes on the operation tag, that's deprecated as well.
 
 ## 1.1.0 (2012-06-28)
 
@@ -34,14 +34,14 @@
     # => [:authenticate, :find_user]
     ```
 
-  and pass the Symbol to execute a request:
+    and pass the Symbol to execute a request:
 
     ``` ruby
     client.request :authenticate, body: { token: "secret" }
     ```
 
-  If you still pass anything other than a single Symbol to that method, please open an issue!
-  You shouldn't need to specify a namespace or additional attributes for the tag.
+    If you still pass anything other than a single Symbol to that method, please open an issue!
+    You shouldn't need to specify a namespace or additional attributes for the tag.
 
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request to `HTTPI::Request#set_cookies`.
@@ -330,16 +330,16 @@
     Gyoku.xml(:first_name => "Mac")  # => "<FirstName></Firstname>"
     ```
 
-  You can even define your own conversion formular.
+    You can even define your own conversion formular.
 
     ``` ruby
     Gyoku.convert_symbols_to { |key| key.upcase }
     Gyoku.xml(:first_name => "Mac")  # => "<FIRST_NAME></FIRST_NAME>"
     ```
 
-  This should also work for the SOAP input tag and SOAPAction header. So if you had to use a String for
-  the SOAP action to call because your services uses CamelCase instead of lowerCamelCase, you can now
-  change the default and use Symbols instead.
+    This should also work for the SOAP input tag and SOAPAction header. So if you had to use a String for
+    the SOAP action to call because your services uses CamelCase instead of lowerCamelCase, you can now
+    change the default and use Symbols instead.
 
     ``` ruby
     Gyoku.convert_symbols_to(:camelcase)
@@ -403,25 +403,31 @@
 
 * Changed `Savon::WSSE` to be based on a Hash instead of relying on builder ([4cebc3](https://github.com/rubiii/savon/commit/4cebc3)).
 
-  `Savon::WSSE` now supports wsse:Timestamp headers ([issue #122](https://github.com/rubiii/savon/issues/122)) by setting
-  `Savon::WSSE#timestamp` to `true`:
+    `Savon::WSSE` now supports wsse:Timestamp headers ([issue #122](https://github.com/rubiii/savon/issues/122)) by setting
+    `Savon::WSSE#timestamp` to `true`:
 
-      client.request :some_method do
-        wsse.timestamp = true
-      end
+    ``` ruby
+    client.request :some_method do
+      wsse.timestamp = true
+    end
+    ```
 
-   or by setting `Savon::WSSE#created_at` or `Savon::WSSE#expires_at`:
+     or by setting `Savon::WSSE#created_at` or `Savon::WSSE#expires_at`:
 
-      client.request :some_method do
-        wsse.created_at = Time.now
-        wsse.expires_at = Time.now + 60
-      end
+    ``` ruby
+    client.request :some_method do
+      wsse.created_at = Time.now
+      wsse.expires_at = Time.now + 60
+    end
+    ```
 
-  You can also add custom tags to the WSSE header ([issue #69](https://github.com/rubiii/savon/issues/69)):
+    You can also add custom tags to the WSSE header ([issue #69](https://github.com/rubiii/savon/issues/69)):
 
-      client.request :some_method do
-        wsse["wsse:Security"]["wsse:UsernameToken"] = { "Organization" => "ACME", "Domain" => "acme.com" }
-      end
+    ``` ruby
+    client.request :some_method do
+      wsse["wsse:Security"]["wsse:UsernameToken"] = { "Organization" => "ACME", "Domain" => "acme.com" }
+    end
+    ```
 
 ### 0.8.1 (2010-12-22)
 
@@ -451,8 +457,10 @@
   ([6df6a6](https://github.com/rubiii/savon/commit/6df6a6)). The method now accepts multiple arguments representing the response
   Hash keys to traverse and returns the result as an Array or an empty Array in case the key is nil or does not exist.
 
-      response.to_array :get_user_response, :return
-      # => [{ :id => 1, :name => "foo"}, { :id => 2, :name => "bar"}]
+    ``` ruby
+    response.to_array :get_user_response, :return
+    # => [{ :id => 1, :name => "foo"}, { :id => 2, :name => "bar"}]
+    ```
 
 ### 0.8.0.beta.3 (2010-11-06)
 
@@ -465,6 +473,7 @@
   the SOAP response Hash when a pattern (specified as an Array of Regexps and Symbols) matches the response. If for example
   your response always looks like ".+Response/return" as in:
 
+    ``` xml
       <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
         <soap:Body>
           <ns2:authenticateResponse xmlns:ns2="http://v1_0.ws.user.example.com">
@@ -474,23 +483,30 @@
           </ns2:authenticateResponse>
         </soap:Body>
       </soap:Envelope>
+    ```
 
-  you could set the response pattern to:
+    you could set the response pattern to:
 
-      Savon.configure do |config|
-        config.response_pattern = [/.+_response/, :return]
-      end
+    ``` ruby
+    Savon.configure do |config|
+      config.response_pattern = [/.+_response/, :return]
+    end
+    ```
 
-  then instead of calling:
+    then instead of calling:
 
-      response.to_hash[:authenticate_response][:return]  # :some => "thing"
+    ``` ruby
+    response.to_hash[:authenticate_response][:return]  # :some => "thing"
+    ```
 
-  to get the actual content, Savon::SOAP::Response#to_hash will try to apply given the pattern:
+    to get the actual content, Savon::SOAP::Response#to_hash will try to apply given the pattern:
 
-      response.to_hash  # :some => "thing"
+    ``` ruby
+    response.to_hash  # :some => "thing"
+    ```
 
-  Please notice, that if you don't specify a response pattern or if the pattern doesn't match the
-  response, Savon will behave like it always did.
+    Please notice, that if you don't specify a response pattern or if the pattern doesn't match the
+    response, Savon will behave like it always did.
 
 * Added `Savon::SOAP::Response#to_array` (which also uses the response pattern).
 
@@ -499,42 +515,52 @@
 * Changed `Savon::Client.new` to accept a block instead of multiple Hash arguments. You can access the
   wsdl, http and wsse objects inside the block to configure your client for a particular service.
 
-			# Instantiating a client to work with a WSDL document
-      client = Savon::Client.new do
-        wsdl.document = "http://example.com?wsdl"
-      end
+    ``` ruby
+    # Instantiating a client to work with a WSDL document
+    client = Savon::Client.new do
+      wsdl.document = "http://example.com?wsdl"
+    end
+    ```
 
-			# Directly accessing the SOAP endpoint
-			client = Savon::Client.new do
-        wsdl.endpoint = "http://example.com"
-        wsdl.namespace = "http://v1.example.com"
-      end
+    ``` ruby
+    # Directly accessing the SOAP endpoint
+    client = Savon::Client.new do
+      wsdl.endpoint = "http://example.com"
+      wsdl.namespace = "http://v1.example.com"
+    end
+    ```
 
 * Fix for [issue #77](https://github.com/rubiii/savon/issues/77), which means you can now use
   local WSDL documents:
 
-      client = Savon::Client.new do
-        wsdl.document = "../wsdl/service.xml"
-      end
+    ``` ruby
+    client = Savon::Client.new do
+      wsdl.document = "../wsdl/service.xml"
+    end
+    ```
 
 * Changed the way SOAP requests are being dispatched. Instead of using method_missing, you now use
   the new `request` method, which also accepts a block for you to access the wsdl, http, wsse and
   soap object. Please notice, that a new soap object is created for every request. So you can only
   access it inside this block.
 
-      # A simple request to an :authenticate method
-      client.request :authenticate do
-        soap.body = { :id => 1 }
-      end
+    ``` ruby
+    # A simple request to an :authenticate method
+    client.request :authenticate do
+      soap.body = { :id => 1 }
+    end
+    ```
 
 * The new `Savon::Client#request` method fixes issues [#37](https://github.com/rubiii/savon/issues/37),
   [#61](https://github.com/rubiii/savon/issues/61) and [#64](https://github.com/rubiii/savon/issues/64),
   which report problems with namespacing the SOAP input tag and attaching attributes to it.
   Some usage examples:
 
-      client.request :get_user                  # Input tag: <getUser>
-      client.request :wsdl, "GetUser"           # Input tag: <wsdl:GetUser>
-      client.request :get_user :active => true  # Input tag: <getUser active="true">
+    ``` ruby
+    client.request :get_user                  # Input tag: <getUser>
+    client.request :wsdl, "GetUser"           # Input tag: <wsdl:GetUser>
+    client.request :get_user :active => true  # Input tag: <getUser active="true">
+    ```
 
 * Savon's new `request` method respects the given namespace. If you don't give it a namespace,
   Savon will set the target namespace to "xmlns:wsdl". But if you do specify a namespace, it will
@@ -592,13 +618,17 @@
 * Added support for gzipped requests and responses (http://github.com/lucascs). While gzipped SOAP
   responses are decoded automatically, you have to manually instruct Savon to gzip SOAP requests:
 
-      client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
+    ``` ruby
+    client = Savon::Client.new "http://example.com/UserService?wsdl", :gzip => true
+    ```
 
 * Fix for [issue #51](https://github.com/rubiii/savon/issues/51). Added the :soap_endpoint option to
   `Savon::Client.new` which lets you specify a SOAP endpoint per client instance:
 
-      client = Savon::Client.new "http://example.com/UserService?wsdl",
-        :soap_endpoint => "http://localhost/UserService"
+    ``` ruby
+    client = Savon::Client.new "http://example.com/UserService?wsdl",
+      :soap_endpoint => "http://localhost/UserService"
+    ```
 
 * Fix for [issue #50](https://github.com/rubiii/savon/issues/50). Savon still escapes special characters
   in SOAP request Hash values, but you can now append an exclamation mark to Hash keys specifying that
