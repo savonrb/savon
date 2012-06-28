@@ -5,7 +5,7 @@
   This should improve the stability of the library and make it easier to update, because changes
   to these core dependencies will be documented here as well.
 
-* Fix: The latest version of Wasabi should now correctly detect the names of you operations.
+* Fix: The latest version of Wasabi should now correctly detect the names of your operations.
   So you should be able to just get the names of some operation:
 
     ``` ruby
