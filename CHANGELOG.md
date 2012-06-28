@@ -1,4 +1,26 @@
-## UPCOMING
+## 1.1.0 (2012-06-28)
+
+* Improvement: Changed Savon's core dependencies to be more strict and only allow bug fix changes.
+  Major or minor releases of these dependencies now need a release of Savon so they can be used.
+  This should improve the stability of the library and make it easier to update, because changes
+  to these core dependencies will be documented here as well.
+
+* Fix: The latest version of Wasabi should now correctly detect the names of you operations.
+  So you should be able to just get the names of some operation:
+
+    ``` ruby
+    client.wsdl.soap_actions
+    # => [:authenticate, :find_user]
+    ```
+
+  and pass the Symbol to execute a request:
+
+    ``` ruby
+    client.request :authenticate, body: { token: "secret" }
+    ```
+
+  If you still pass anything other than a single Symbol to that method, please open an issue!
+  You shouldn't need to specify a namespace or additional attributes for the tag.
 
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request to `HTTPI::Request#set_cookies`.
