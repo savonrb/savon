@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = "Daniel Harrington"
   s.email       = "me@rubiii.com"
   s.homepage    = "http://savonrb.com"
-  s.summary     = "Heavy metal Ruby SOAP client"
-  s.description = "Ruby's heavy metal SOAP client"
+  s.summary     = "Heavy metal SOAP client"
+  s.description = "Delicious SOAP for the Ruby community"
 
   s.rubyforge_project = s.name
 
