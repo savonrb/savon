@@ -111,8 +111,6 @@ module Savon
 
     # Expects an Array of +args+ to preconfigure the system.
     def preconfigure(args)
-      request_deprecations!(args)
-
       soap.endpoint = wsdl.endpoint
       soap.element_form_default = wsdl.element_form_default
 
@@ -129,6 +127,8 @@ module Savon
 
       soap_action = args[2].delete(:soap_action) || args[1]
       set_soap_action soap_action
+
+      request_deprecations!(args)
 
       if wsdl.document? && (operation = wsdl.operations[args[1]]) && operation[:namespace_identifier]
         soap.namespace_identifier = operation[:namespace_identifier].to_sym
@@ -192,6 +192,10 @@ module Savon
         deprecate "DEPRECATION: You passed #{args[1].inspect} as the operation name to Savon::Client#request\n" +
                   "Please run client.soap_actions, find the (Symbol) name of your operation and use that instead.\n" +
                   "Open an issue at https://github.com/rubiii/savon/issues if this doesn't work for you."
+      end
+      unless args[2].empty?
+        deprecate "DEPRECATION: You passed #{args[2].inspect} to Savon::Client#request\n" +
+                  "Open an issue at https://github.com/rubiii/savon/issues if you need these attributes."
       end
     end
 
