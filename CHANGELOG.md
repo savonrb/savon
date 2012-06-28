@@ -46,7 +46,7 @@
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request to `HTTPI::Request#set_cookies`.
 
-## 1.0.0 (2012-06-09)
+### 1.0.0 (2012-06-09)
 
 * Fix: `Savon.client` didn't pass the optional block.
 
@@ -55,7 +55,7 @@
   the result of the callback to continue the request. It can also not call the callback block and return
   some `HTTPI::Response` to mock the SOAP request.
 
-  As this change affects `savon_spec`, you need to update `savon_spec` to v1.3.0.
+    As this change affects `savon_spec`, you need to update `savon_spec` to v1.3.0.
 
 ### 0.9.14 (2012-06-07)
 
@@ -120,8 +120,8 @@
   The global config is cloned when a new client is initialized and gets used instead of the global one.
   In addition, for `Savon::Model` classes, the config is cloned per class.
 
-  Closes [#84](https://github.com/rubiii/savon/issues/84) by allowing one logger per client and 
-  [#270](https://github.com/rubiii/savon/issues/270) by allowing to specify error handling per client.
+    Closes [#84](https://github.com/rubiii/savon/issues/84) by allowing one logger per client and 
+    [#270](https://github.com/rubiii/savon/issues/270) by allowing to specify error handling per client.
 
 * Feature: Added an option to pretty print XML in log messages. Closes [#256](https://github.com/rubiii/savon/issues/256)
   and [#280](https://github.com/rubiii/savon/issues/280).
@@ -718,28 +718,38 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
   * SSL client authentication needs to be defined directly on the `Net::HTTP` object:
 
+      ``` ruby
       client.request.http.client_cert = ...
+      ```
 
     I added a shortcut method for setting all options through a Hash similar to the previous implementation:
 
+      ``` ruby
       client.request.http.ssl_client_auth :client_cert => ...
+      ```
 
   * Open and read timeouts also need to be set on the `Net::HTTP` object:
-  
+
+      ``` ruby
       client.request.http.open_timeout = 30
       client.request.http.read_timeout = 30
+      ```
 
   * Please refer to the `Net::HTTP` documentation for more details:
     http://www.ruby-doc.org/stdlib/libdoc/net/http/rdoc/index.html
 
 * Thanks to JulianMorrison, Savon now supports HTTP basic authentication:
 
+    ``` ruby
     client.request.http.basic_auth "username", "password"
+    ```
 
 * Julian also added a way to explicitly specify the order of Hash keys and values, so you should now be able
   to work with services requiring a specific order of input parameters while still using Hash input.
 
-      client.find_user { |soap| soap.body = { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+    ``` ruby
+    client.find_user { |soap| soap.body = { :name => "Lucy", :id => 666, :@inorder => [:id, :name] } }
+    ```
 
 * `Savon::Response#to_hash` now returns the content inside of "soap:Body" instead of trying to go one
   level deeper and return it's content. The previous implementation only worked when the "soap:Body" element
@@ -747,7 +757,9 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Added `Savon::SOAP#namespace` as a shortcut for setting the "xmlns:wsdl" namespace.
 
+    ``` ruby
     soap.namespace = "http://example.com"
+    ```
 
 ### 0.6.8 (2010-01-01)
 
@@ -760,9 +772,11 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
   please take a look at the `action` and `input` methods of the `Savon::SOAP` object.
   One specific problem I know of is working with the createsend WSDL and its namespaced actions.
 
-  To make it work, call the SOAP action without namespace and specify the input manually:
+    To make it work, call the SOAP action without namespace and specify the input manually:
 
+    ``` ruby
       client.get_api_key { |soap| soap.input = "User.GetApiKey" }
+    ```
 
 ### 0.6.7 (2009-12-18)
 
@@ -794,11 +808,13 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Replaced WSDL document with stream parsing.
 
-    Benchmarks (1000 SOAP calls):
+    ```
+      Benchmarks (1000 SOAP calls):
     
-           user        system     total       real
-    0.6.4  72.180000   8.280000   80.460000   (750.799011)
-    0.6.3  192.900000  19.630000  212.530000  (914.031865)
+             user        system     total       real
+      0.6.4  72.180000   8.280000   80.460000   (750.799011)
+      0.6.3  192.900000  19.630000  212.530000  (914.031865)
+    ```
 
 ### 0.6.3 (2009-12-11)
 
@@ -806,19 +822,23 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Added global and per request options for disabling `Savon::WSDL`.
 
+    ```
     Benchmarks (1000 SOAP calls):
     
                    user        system     total       real
     WSDL           192.900000  19.630000  212.530000  (914.031865)
     disabled WSDL  5.680000    1.340000   7.020000    (298.265318)
+    ```
 
 * Improved XPath expressions for parsing the WSDL document.
 
+    ```
     Benchmarks (1000 SOAP calls):
     
            user        system     total       real
     0.6.3  192.900000  19.630000  212.530000  (914.031865)
     0.6.2  574.720000  78.380000  653.100000  (1387.778539)
+    ```
 
 ### 0.6.2 (2009-12-06)
 
