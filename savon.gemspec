@@ -15,12 +15,13 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = s.name
 
+  s.add_dependency "nori",     "~> 1.1.0"
+  s.add_dependency "httpi",    "~> 1.1.0"
+  s.add_dependency "wasabi",   "~> 2.5.0"
+  s.add_dependency "akami",    "~> 1.2.0"
+  s.add_dependency "gyoku",    "~> 0.4.5"
+
   s.add_dependency "builder",  ">= 2.1.2"
-  s.add_dependency "nori",     "~> 1.1"
-  s.add_dependency "httpi",    "~> 1.1"
-  s.add_dependency "wasabi",   "~> 2.2"
-  s.add_dependency "akami",    "~> 1.1"
-  s.add_dependency "gyoku",    ">= 0.4.0"
   s.add_dependency "nokogiri", ">= 1.4.0"
 
   s.add_development_dependency "rake",    "~> 0.9"
