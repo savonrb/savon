@@ -1,24 +1,3 @@
-## UPCOMING
-
-* Deprecation: Passing anything other than a single Symbol to `Savon::Client#request` is deprecated.
-  What this means is, that Savon should be smart enough so you can replace this:
-
-    ``` ruby
-    client.request :wsdl, :find_user, "xmlns:wsdl" => "http://example.com"
-    ```
-
-    with just passing the operation name:
-
-    ``` ruby
-    client.request :find_user
-    ```
-
-    Please run `client.soap_actions`, find the (Symbol) name of your operation and use that instead.
-    If that doesn't work for you, please open an issue.
-
-    If you're passing a Hash with the special keys `:body` or `:soap_action`, that's ok for now.
-    But if you're using the Hash to set attributes on the operation tag, that's deprecated as well.
-
 ## 1.1.0 (2012-06-28)
 
 * Improvement: Changed Savon's core dependencies to be more strict and only allow bug fix changes.

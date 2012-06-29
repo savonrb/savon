@@ -128,8 +128,6 @@ module Savon
       soap_action = args[2].delete(:soap_action) || args[1]
       set_soap_action soap_action
 
-      request_deprecations!(args)
-
       if wsdl.document? && (operation = wsdl.operations[args[1]]) && operation[:namespace_identifier]
         soap.namespace_identifier = operation[:namespace_identifier].to_sym
         soap.namespace = wsdl.parser.namespaces[soap.namespace_identifier.to_s]
@@ -180,28 +178,6 @@ module Savon
     def method_missing(method, *args, &block)
       super unless original_self
       original_self.send method, *args, &block
-    end
-
-    def request_deprecations!(args)
-      if args[0]
-        deprecate "DEPRECATION: You passed #{args[0].inspect} as a namespace to Savon::Client#request\n" +
-                  "Please remove the namespace argument from the call as this feature will be removed in Savon v2.\n" +
-                  "Open an issue at https://github.com/rubiii/savon/issues if this doesn't work for you."
-      end
-      if args[1].kind_of?(String)
-        deprecate "DEPRECATION: You passed #{args[1].inspect} as the operation name to Savon::Client#request\n" +
-                  "Please run client.soap_actions, find the (Symbol) name of your operation and use that instead.\n" +
-                  "Open an issue at https://github.com/rubiii/savon/issues if this doesn't work for you."
-      end
-      unless args[2].empty?
-        deprecate "DEPRECATION: You passed #{args[2].inspect} to Savon::Client#request\n" +
-                  "Open an issue at https://github.com/rubiii/savon/issues if you need these attributes."
-      end
-    end
-
-    def deprecate(message)
-      config.logger.log message
-      puts message
     end
 
   end
