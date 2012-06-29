@@ -4,7 +4,7 @@ describe Wasabi::Resolver do
 
   describe "#xml" do
     it "resolves remote documents" do
-      HTTPI.expects(:get).returns(HTTPI::Response.new(200, {}, "wsdl"))
+      HTTPI.should_receive(:get) { HTTPI::Response.new(200, {}, "wsdl") }
       xml = Wasabi::Resolver.new("http://example.com?wsdl").xml
       xml.should == "wsdl"
     end
