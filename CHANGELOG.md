@@ -4,7 +4,7 @@
   What this means is, that Savon should be smart enough so you can replace this:
 
     ``` ruby
-    client.request :wsdl, "FindUser", "xmlns:wsdl" => "http://example.com"
+    client.request :wsdl, :find_user, "xmlns:wsdl" => "http://example.com"
     ```
 
     with just passing the operation name:
