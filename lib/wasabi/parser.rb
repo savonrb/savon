@@ -1,6 +1,5 @@
 require "uri"
 require "wasabi/xpath_helper"
-require "wasabi/core_ext/object"
 require "wasabi/core_ext/string"
 
 module Wasabi
@@ -86,7 +85,7 @@ module Wasabi
 
         if soap_action
           soap_action = soap_action.to_s
-          action = soap_action.blank? ? name : soap_action
+          action = soap_action && !soap_action.empty? ? soap_action : name
 
           # There should be a matching portType for each binding, so we will lookup the input from there.
           namespace_id, input = input_for(operation)

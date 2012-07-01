@@ -1,3 +1,7 @@
+## UPCOMING
+
+* Refactoring: Removed `Object#blank?` core extension.
+
 ## 2.5.0 (2012-06-28)
 
 * Fix: [#10](https://github.com/rubiii/wasabi/issues/10) fixes an issue where
