@@ -3,6 +3,9 @@ require "savon/soap/fault"
 require "savon/soap/invalid_response_error"
 require "savon/http/error"
 
+require 'stringio'
+require 'zlib'
+
 module Savon
   module SOAP
 
@@ -87,7 +90,7 @@ module Savon
 
       # Returns the SOAP response XML.
       def to_xml
-        http.body
+        body_is_gzipped? ? decoded_body : http.body
       end
 
       # Returns a <tt>Nokogiri::XML::Document</tt> for the SOAP response XML.
@@ -102,6 +105,17 @@ module Savon
       end
 
       private
+
+      def body_is_gzipped?
+        http.body[0..1] == "\x1f\x8b" || http.body[0..1] == "\x1F\x8B"
+      end
+
+      def decoded_body
+        gz = Zlib::GzipReader.new(StringIO.new(@http.body))
+        gz.read
+      ensure
+        gz.close
+      end
 
       def raise_errors
         raise soap_fault if soap_fault?
