@@ -383,29 +383,55 @@ describe Savon::Client do
   end
 
   context "with an Array of namespaced items" do
-    let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/taxcloud.xml" } }
+    context "with a single namespace" do
+      let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/taxcloud.xml" } }
 
-    before do
-      HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:taxcloud)))
-      HTTPI.stubs(:post).returns(new_response)
-    end
-
-    it "should namespaces each Array item as expected" do
-      HTTPI::Request.any_instance.expects(:body=).with do |value|
-        value.include?("<ins0:cartItems><ins0:CartItem>") && value.include?("<tns:ItemID>SKU-TEST</tns:ItemID>")
+      before do
+        HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:taxcloud)))
+        HTTPI.stubs(:post).returns(new_response)
       end
 
-      address = { "Address1" => "888 6th Ave", "Address2" => nil, "City" => "New York", "State" => "NY", "Zip5" => "10001", "Zip4" => nil }
-      cart_item = { "Index" => 0, "ItemID" => "SKU-TEST", "TIC" => "00000", "Price" => 50.0, "Qty" => 1 }
+      it "should namespaces each Array item as expected" do
+        HTTPI::Request.any_instance.expects(:body=).with do |value|
+          xml = Nokogiri::XML(value)
+          !!xml.at_xpath(".//tc:cartItems/tc:CartItem/tc:ItemID", { "tc" => "http://taxcloud.net" })
+        end
 
-      client.request :lookup, :body => {
-        "customerID"  => 123,
-        "cartID"      => 456,
-        "cartItems"   => { "CartItem" => [cart_item] },
-        "origin"      => address,
-        "destination" => address
-      }
+        address = { "Address1" => "888 6th Ave", "Address2" => nil, "City" => "New York", "State" => "NY", "Zip5" => "10001", "Zip4" => nil }
+        cart_item = { "Index" => 0, "ItemID" => "SKU-TEST", "TIC" => "00000", "Price" => 50.0, "Qty" => 1 }
+
+        client.request :lookup, :body => {
+          "customerID"  => 123,
+          "cartID"      => 456,
+          "cartItems"   => { "CartItem" => [cart_item] },
+          "origin"      => address,
+          "destination" => address
+        }
+      end
     end
+    
+    context "with multiple namespaces" do
+      let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/multiple_namespaces.xml" } }
+
+      before do
+        HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:multiple_namespaces)))
+        HTTPI.stubs(:post).returns(new_response)
+      end
+
+      it "should namespace each Array item as expected" do
+        HTTPI::Request.any_instance.expects(:body=).with do |value|
+          xml = Nokogiri::XML(value)
+          namespaces = { "actions" => "http://example.com/actions", "article" => "http://example.com/article" }
+          !!xml.at_xpath(".//actions:Lookup/actions:articles/article:Article/article:Author", namespaces)
+        end
+
+        article = { "Author" => "John Smith", "Title" => "Modern SOAP" }
+        client.request :lookup, :body => {
+          "articles" => { "Article" => [article] }
+        }
+      end
+    end
+
   end
 
   context "without a WSDL document" do
