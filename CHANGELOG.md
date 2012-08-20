@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Fix: [#312](https://github.com/rubiii/savon/pull/312) recursively determines the proper namespaces
+  for SOAP body Hashes with nested Arrays of Hashes.
+
 ## 1.1.0 (2012-06-28)
 
 * Improvement: Changed Savon's core dependencies to be more strict and only allow bug fix changes.
