@@ -82,7 +82,7 @@ describe Savon::SOAP::Fault do
   def new_response(options = {})
     defaults = { :code => 500, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-    
+
     HTTPI::Response.new response[:code], response[:headers], response[:body]
   end
 

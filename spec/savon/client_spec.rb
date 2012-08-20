@@ -409,7 +409,7 @@ describe Savon::Client do
         }
       end
     end
-    
+
     context "with multiple namespaces" do
       let(:client) { Savon::Client.new { wsdl.document = "spec/fixtures/wsdl/multiple_namespaces.xml" } }
 

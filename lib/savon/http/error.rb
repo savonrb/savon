@@ -25,7 +25,7 @@ module Savon
       # Returns the HTTP error message.
       def to_s
         return "" unless present?
-        
+
         @message ||= begin
           message = "HTTP error (#{http.code})"
           message << ": #{http.body}" unless http.body.empty?
