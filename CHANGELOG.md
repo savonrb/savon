@@ -1,4 +1,10 @@
-## UPCOMING
+## 2.5.1 (2012-08-22)
+
+* Fix: [#14](https://github.com/rubiii/wasabi/issues/14) fixes an issue where
+  finding the correct SOAP input tag and namespace identifier fails when portTypes
+  are imported, since imports are currently not supported.
+
+  The bug was introduced in v2.2.0 by [583cf6](https://github.com/rubiii/wasabi/commit/583cf658f1953411a7a7a4c22923fa0a046c8d6d).
 
 * Refactoring: Removed `Object#blank?` core extension.
 
