@@ -1,7 +1,7 @@
+require "wasabi/document"
 require "httpi/request"
 require "akami"
 
-require "savon/wasabi/document"
 require "savon/soap/xml"
 require "savon/soap/request"
 require "savon/soap/response"
@@ -40,7 +40,7 @@ module Savon
     # Accessor for the <tt>Savon::Config</tt>.
     attr_accessor :config
 
-    # Returns the <tt>Savon::Wasabi::Document</tt>.
+    # Returns the <tt>Wasabi::Document</tt>.
     def wsdl
       @wsdl ||= Wasabi::Document.new
     end
