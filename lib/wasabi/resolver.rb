@@ -9,37 +9,38 @@ module Wasabi
 
     class HTTPError < StandardError; end
 
+    URL = /^http[s]?:/
+    XML = /^</
+
     def initialize(document, request = nil)
       @document = document
-      @request = request
+      @request  = request || HTTPI::Request.new
     end
 
-    def xml
-      raise ArgumentError, "Wasabi is missing a document to resolve" unless @document
+    attr_reader :document, :request
 
-      case @document
-        when /^http[s]?:/ then from_remote
-        when /^</         then @document
-        else                   from_fs
+    def resolve
+      raise ArgumentError, "Unable to resolve: #{document.inspect}" unless document
+
+      case document
+        when URL then load_from_remote
+        when XML then document
+        else          load_from_disc
       end
     end
 
     private
 
-    def from_remote
+    def load_from_remote
+      request.url = document
       response = HTTPI.get(request)
-      raise HTTPError.new(response) if response.error?
+
+      raise HTTPError, response if response.error?
       response.body
     end
 
-    def request
-      @request ||= HTTPI::Request.new
-      @request.url = @document
-      @request
-    end
-
-    def from_fs
-      File.read(@document)
+    def load_from_disc
+      File.read(document)
     end
 
   end

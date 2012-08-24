@@ -110,7 +110,7 @@ module Wasabi
     # Returns the raw WSDL document.
     # Can be used as a hook to extend the library.
     def xml
-      @xml ||= Resolver.new(document, request).xml
+      @xml ||= Resolver.new(document, request).resolve
     end
 
     # Parses the WSDL document and returns the <tt>Wasabi::Parser</tt>.
