@@ -19,4 +19,29 @@ describe "Integration" do
     response_text.should == "Email Domain Not Found"
   end
 
+  it "supports threads making requests simultaneously" do
+    client = Savon::Client.new do
+        wsdl.document = "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl"
+    end
+
+    mutex = Mutex.new
+
+    request_data = [70070010, 24050110, 20050550]
+    threads_waiting = request_data.size
+
+    threads = request_data.map do |blz|
+      Thread.new do
+        response = client.request :get_bank, :body => { :blz => blz }
+        Thread.current[:value] = response.to_hash[:get_bank_response][:details]
+        mutex.synchronize { threads_waiting -= 1 }
+      end
+    end
+
+    sleep(1) until threads_waiting == 0
+
+    threads.each &:kill
+    values = threads.map { |thr| thr[:value] }.compact
+
+    values.uniq.size.should == values.size
+  end
 end

@@ -5,6 +5,7 @@ require "akami"
 require "savon/soap/xml"
 require "savon/soap/request"
 require "savon/soap/response"
+require "savon/soap/request_builder"
 
 module Savon
 
@@ -55,13 +56,9 @@ module Savon
       @wsse ||= Akami.wsse
     end
 
-    # Returns the <tt>Savon::SOAP::XML</tt> object. Please notice, that this object is only available
-    # in a block given to <tt>Savon::Client#request</tt>. A new instance of this object is created
-    # per SOAP request.
-    attr_reader :soap
-
     # Executes a SOAP request for a given SOAP action. Accepts a +block+ which is evaluated in the
-    # context of this object to let you access the +soap+, +wsdl+, +http+ and +wsse+ methods.
+    # context of the <tt>SOAP::RequestBuilder</tt> object to let you access its +soap+, +wsdl+, 
+    # +http+ and +wsse+ methods.
     #
     # == Examples
     #
@@ -76,12 +73,19 @@ module Savon
     def request(*args, &block)
       raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
 
-      self.soap = SOAP::XML.new(config)
-      preconfigure extract_options(args)
-      process &block if block
-      soap.wsse = wsse
+      options = extract_options(args)
 
-      response = SOAP::Request.new(config, http, soap).response
+      request_builder = SOAP::RequestBuilder.new(options.delete(:input))
+      options.each { |option, value| request_builder.send(:"#{option}=", value) unless value.nil? }
+
+      request_builder.wsdl = wsdl
+      request_builder.http = http.dup
+      request_builder.wsse = wsse.dup
+      request_builder.config = config.dup
+
+      post_configuration = -> { process(0, request_builder, &block) if block }
+
+      response = request_builder.request(&post_configuration).response
       http.set_cookies(response.http)
 
       if wsse.verify_response
@@ -93,92 +97,63 @@ module Savon
 
     private
 
-    # Writer for the <tt>Savon::SOAP::XML</tt> object.
-    attr_writer :soap
-
-    # Accessor for the original self of a given block.
-    attr_accessor :original_self
-
-    # Expects an Array of +args+ and returns an Array containing the namespace (might be +nil+),
-    # the SOAP input and a Hash of attributes for the input tag (which might be empty).
+    # Expects an Array of +args+ and returns a Hash containing the SOAP input, 
+    # the namespace (might be +nil+), the SOAP action (might be +nil+), 
+    # the SOAP body (might be +nil+), and a Hash of attributes for the input 
+    # tag (which might be empty).
     def extract_options(args)
       attributes = Hash === args.last ? args.pop : {}
-      namespace = args.size > 1 ? args.shift.to_sym : nil
+      body = attributes.delete(:body)
+      soap_action = attributes.delete(:soap_action)
+
+      namespace_identifier = args.size > 1 ? args.shift.to_sym : nil
       input = args.first
 
-      [namespace, input, attributes]
-    end
-
-    # Expects an Array of +args+ to preconfigure the system.
-    def preconfigure(args)
-      soap.endpoint = wsdl.endpoint
-      soap.element_form_default = wsdl.element_form_default
-
-      body = args[2].delete(:body)
-      soap.body = body if body
-
-      wsdl.type_namespaces.each do |path, uri|
-        soap.use_namespace(path, uri)
-      end
-
-      wsdl.type_definitions.each do |path, type|
-        soap.types[path] = type
-      end
-
-      soap_action = args[2].delete(:soap_action) || args[1]
-      set_soap_action soap_action
-
-      if wsdl.document? && (operation = wsdl.operations[args[1]]) && operation[:namespace_identifier]
-        soap.namespace_identifier = operation[:namespace_identifier].to_sym
-        soap.namespace = wsdl.parser.namespaces[soap.namespace_identifier.to_s]
-
-        # Override nil namespace with one specified in WSDL
-        args[0] = soap.namespace_identifier unless args[0]
-      else
-        soap.namespace_identifier = args[0]
-        soap.namespace = wsdl.namespace
-      end
-
-      set_soap_input *args
-    end
-
-    # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
-    def set_soap_action(input_tag)
-      soap_action = wsdl.soap_action(input_tag.to_sym) if wsdl.document?
-      soap_action ||= Gyoku::XMLKey.create(input_tag).to_sym
-      http.headers["SOAPAction"] = %{"#{soap_action}"}
-    end
-
-    # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
-    def set_soap_input(namespace, input, attributes)
-      new_input_tag = wsdl.soap_input(input.to_sym) if wsdl.document?
-      new_input_tag ||= Gyoku::XMLKey.create(input)
-      soap.input = [namespace, new_input_tag.to_sym, attributes]
+      {
+        :namespace_identifier => namespace_identifier,
+        :input                => input, 
+        :attributes           => attributes,
+        :body                 => body,
+        :soap_action          => soap_action
+      }
     end
 
     # Processes a given +block+. Yields objects if the block expects any arguments.
-    # Otherwise evaluates the block in the context of this object.
-    def process(offset = 0, &block)
-      block.arity > 0 ? yield_objects(offset, &block) : evaluate(&block)
+    # Otherwise evaluates the block in the context of +instance+.
+    def process(offset = 0, instance = self,  &block)
+      block.arity > 0 ? yield_objects(offset, instance, &block) : evaluate(instance, &block)
     end
 
     # Yields a number of objects to a given +block+ depending on how many arguments
     # the block is expecting.
-    def yield_objects(offset, &block)
-      yield *[soap, wsdl, http, wsse][offset, block.arity]
+    def yield_objects(offset, instance, &block)
+      to_yield = [:soap, :wsdl, :http, :wsse]
+      yield *(to_yield[offset, block.arity].map { |obj_name| instance.send(obj_name) })
     end
 
-    # Evaluates a given +block+ inside this object. Stores the original block binding.
-    def evaluate(&block)
-      self.original_self = eval "self", block.binding
-      instance_eval &block
-    end
+    # Evaluates a given +block+ inside +instance+. Stores the original block binding.
+    def evaluate(instance, &block)
+      original_self = eval "self", block.binding
 
-    # Handles calls to undefined methods by delegating to the original block binding.
-    def method_missing(method, *args, &block)
-      super unless original_self
-      original_self.send method, *args, &block
-    end
+      # A proxy that attemps to make method calls on +instance+. If a NoMethodError is
+      # raised, the call will be made on +original_self+.
+      proxy = Object.new  
+      proxy.instance_eval do 
+        class << self
+          attr_accessor :original_self, :instance
+        end
 
+        def method_missing(method, *args, &block)
+          instance.send(method, *args, &block)
+        rescue NoMethodError
+          original_self.send(method, *args, &block)
+        end
+      end
+
+      proxy.instance = instance
+      proxy.original_self = original_self
+
+      proxy.instance_eval &block
+    end
   end
 end
