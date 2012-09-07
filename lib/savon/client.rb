@@ -142,11 +142,10 @@ module Savon
       set_soap_input *args
     end
 
-    # Expects an +input+ and sets the +SOAPAction+ HTTP headers.
+    # Expects an +input+ and sets the SOAP action.
     def set_soap_action(input_tag)
-      soap_action = wsdl.soap_action(input_tag.to_sym) if wsdl.document?
-      soap_action ||= Gyoku::XMLKey.create(input_tag).to_sym
-      http.headers["SOAPAction"] = %{"#{soap_action}"}
+      soap.action = wsdl.soap_action(input_tag.to_sym) if wsdl.document?
+      soap.action ||= Gyoku::XMLKey.create(input_tag).to_sym
     end
 
     # Expects a +namespace+, +input+ and +attributes+ and sets the SOAP input.
