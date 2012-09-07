@@ -71,9 +71,16 @@ describe Savon::Client do
   end
 
   describe "#request" do
+    let(:request_builder) { stub_everything('request_builder') }
+    let(:response) { mock('response') }
+
     before do
       HTTPI.stubs(:get).returns(new_response(:body => Fixture.wsdl(:authentication)))
       HTTPI.stubs(:post).returns(new_response)
+
+      Savon::SOAP::RequestBuilder.stubs(:new).returns(request_builder)
+      request_builder.stubs(:request).returns(stub(:response => response))
+      response.stubs(:http).returns(new_response)
     end
 
     context "without any arguments" do
@@ -82,73 +89,66 @@ describe Savon::Client do
       end
     end
 
-    context "with a single argument (Symbol)" do
-      it "should set the input tag to result in <getUser>" do
-        client.request(:get_user) { soap.input.should == [nil, :getUser, {}] }
+    describe "setting dependencies of the request builder" do
+      it "sets the wsdl property with the client's WSDL document" do
+        request_builder.expects(:wsdl=).with(client.wsdl)
+        client.request(:get_user)
       end
 
-      it "should set the target namespace with the default identifier" do
-        namespace = 'xmlns:wsdl="http://v1_0.ws.auth.order.example.com/"'
-        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
-
-        client.request :get_user
+      it "sets the http property with an HTTPI::Request object" do
+        request_builder.expects(:http=).with { |http| http.is_a?(HTTPI::Request) }
+        client.request(:get_user)
       end
 
-      it "should not set the target namespace if soap.namespace was set to nil" do
-        namespace = 'wsdl="http://v1_0.ws.auth.order.example.com/"'
-        HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
-
-        client.request(:get_user) { soap.namespace = nil }
+      it "sets the wsse property with an Akami:WSSE object" do
+        request_builder.expects(:wsse=).with { |wsse| wsse.is_a?(Akami::WSSE) }
+        client.request(:get_user)
       end
 
-      context "when the wsdl's operation namespace identifier matches a document identifier" do
-        before do
-          client.wsdl.operations[:authenticate][:namespace_identifier] = "tns"
-        end
-
-        it "sets the soap's namespace identifier to the matching operation's namespace identifier" do
-          client.request(:authenticate) { soap.namespace_identifier.should == :tns }
-        end
-
-        it "sets the soap's namespace to the namspace matching the identifier" do
-          client.request(:authenticate) { soap.namespace.should == "http://v1_0.ws.auth.order.example.com/" }
-        end
-
-        it "sets the input tag to result in <tns:authenticate>" do
-          client.request(:authenticate) { soap.input.should == [:tns, :authenticate, {}] }
-        end
+      it "sets the config property with a Savon::Config object" do
+        request_builder.expects(:config=).with { |config| config.is_a?(Savon::Config) }
+        client.request(:get_user)
       end
     end
 
-    context "with a single argument (String)" do
-      it "should set the input tag to result in <get_user>" do
-        client.request("get_user") { soap.input.should == [nil, :get_user, {}] }
+    context "with a single argument" do
+      it "sets the operation of the request builder to the argument" do
+        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
+        client.request(:get_user)
       end
     end
 
     context "with a Symbol and a Hash" do
-      it "should set the input tag to result in <getUser active='true'>" do
-        client.request(:get_user, :active => true) { soap.input.should == [nil, :getUser, { :active => true }] }
+      it "uses the hash to set attributes of the request builder" do
+        request_builder.expects(:attributes=).with({ :active => true })
+        client.request(:get_user, :active => true) 
       end
 
-      it "should use the :soap_action key to set the SOAPAction header" do
-        client.request(:get_user, :soap_action => :test_action) { http.headers["SOAPAction"].should == %{"testAction"} }
+      it "uses the :soap_action key of the hash to set the SOAP action of the request builder" do
+        request_builder.expects(:soap_action=).with(:test_action)
+        client.request(:get_user, :soap_action => :test_action) 
+      end
+
+      it "uses the :body key of the hash to set the SOAP body of the request builder" do 
+        request_builder.expects(:body=).with({ :foo => "bar" })
+        client.request(:get_user, :body => { :foo => "bar" })
       end
     end
 
     context "with two Symbols" do
-      it "should set the input tag to result in <wsdl:getUser>" do
-        client.request(:v1, :get_user) { soap.input.should == [:v1, :getUser, {}] }
+      it "uses the first symbol to set the namespace of the request builder" do
+        request_builder.expects(:namespace_identifier=).with(:v1)
+        client.request(:v1, :get_user)
       end
 
-      it "should set the target namespace with the given identifier" do
-        namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
-        HTTPI::Request.any_instance.expects(:body=).with { |value| value.include? namespace }
-
-        client.request :v1, :get_user
+      it "uses the second symbol to set the operation of the request builder" do
+        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
+        client.request(:v1, :get_user)
       end
 
-      it "should not set the target namespace if soap.namespace was set to nil" do
+      it "should not set the target namespace if soap.namespace was set to nil in the post-configuration block" do
+        Savon::SOAP::RequestBuilder.unstub(:new)
+
         namespace = 'xmlns:v1="http://v1_0.ws.auth.order.example.com/"'
         HTTPI::Request.any_instance.expects(:body=).with { |value| !value.include?(namespace) }
 
@@ -157,66 +157,123 @@ describe Savon::Client do
     end
 
     context "with two Symbols and a Hash" do
-      it "should set the input tag to result in <wsdl:getUser active='true'>" do
-        client.request(:wsdl, :get_user, :active => true) { soap.input.should == [:wsdl, :getUser, { :active => true }] }
+      it "uses the first symbol to set the namespace of the request builder" do
+        request_builder.expects(:namespace_identifier=).with(:wsdl)
+        client.request(:wsdl, :get_user, :active => true) 
       end
 
-      it "should use the :soap_action key to set the SOAPAction header" do
-        client.request(:wsdl, :get_user, :soap_action => :test_action) { http.headers["SOAPAction"].should == %{"testAction"} }
+      it "should use the second symbol to set the operation of the request builder" do
+        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
+        client.request(:wsdl, :get_user, :active => true)
+      end
+
+      it "should use the hash to set the attributes of the request builder" do
+        request_builder.expects(:attributes=).with({ :active => true })
+        client.request(:wsdl, :get_user, :active => true)
+      end
+
+      it "should use the :soap_action key of the hash to set the SOAP action of the request builder" do
+        request_builder.expects(:soap_action=).with(:test_action)
+        client.request(:wsdl, :get_user, :soap_action => :test_action) 
+      end
+
+      it "should use the :body key of the hash to set the SOAP body of the request builder" do
+        request_builder.expects(:body=).with({ :foo => "bar" })
+        client.request(:wsdl, :get_user, :body => { :foo => "bar" })
       end
     end
 
-    context "with a block expecting one argument" do
-      it "should yield the SOAP object" do
-        client.request(:authenticate) { |soap| soap.should be_a(Savon::SOAP::XML) }
+    context "with a block" do
+      before do
+        Savon::SOAP::RequestBuilder.unstub(:new)
       end
-    end
 
-    context "with a block expecting two arguments" do
-      it "should yield the SOAP and WSDL objects" do
-        client.request(:authenticate) do |soap, wsdl|
-          soap.should be_a(Savon::SOAP::XML)
-          wsdl.should be_an(Wasabi::Document)
+      it "passes the block to the request builder" do
+        # this is painful. it would be trivial to test in > Ruby 1.9, but this is
+        # the only way I know how in < 1.9. 
+        dummy = Object.new
+        dummy.instance_eval do
+          class << self; attr_accessor :request_builder, :block_given; end
+          def request
+            self.block_given = block_given?
+            request_builder.request
+          end
+
+          def method_missing(_, *args)
+          end
+        end
+
+        dummy.request_builder = request_builder
+        Savon::SOAP::RequestBuilder.stubs(:new).returns(dummy)
+
+        blk = lambda {}
+        client.request(:authenticate, &blk)
+
+        dummy.block_given.should == true
+      end
+
+      it "executes the block in the context of the request builder" do
+        Savon::SOAP::RequestBuilder.class_eval do
+          def who
+            self
+          end
+        end
+
+        client.request(:authenticate) { who.should be_a Savon::SOAP::RequestBuilder }
+      end
+
+      context "with a block expecting one argument" do
+        it "should yield the SOAP object" do
+          client.request(:authenticate) { |soap| soap.should be_a Savon::SOAP::XML }
         end
       end
-    end
 
-    context "with a block expecting three arguments" do
-      it "should yield the SOAP, WSDL and HTTP objects" do
-        client.request(:authenticate) do |soap, wsdl, http|
-          soap.should be_a(Savon::SOAP::XML)
-          wsdl.should be_an(Wasabi::Document)
-          http.should be_an(HTTPI::Request)
+      context "with a block expecting two arguments" do
+        it "should yield the SOAP and WSDL objects" do
+          client.request(:authenticate) do |soap, wsdl|
+            soap.should be_a(Savon::SOAP::XML)
+            wsdl.should be_an(Wasabi::Document)
+          end
         end
       end
-    end
 
-    context "with a block expecting four arguments" do
-      it "should yield the SOAP, WSDL, HTTP and WSSE objects" do
-        client.request(:authenticate) do |soap, wsdl, http, wsse|
-          soap.should be_a(Savon::SOAP::XML)
-          wsdl.should be_a(Wasabi::Document)
-          http.should be_an(HTTPI::Request)
-          wsse.should be_a(Akami::WSSE)
+      context "with a block expecting three arguments" do
+        it "should yield the SOAP, WSDL and HTTP objects" do
+          client.request(:authenticate) do |soap, wsdl, http|
+            soap.should be_a(Savon::SOAP::XML)
+            wsdl.should be_an(Wasabi::Document)
+            http.should be_an(HTTPI::Request)
+          end
         end
       end
-    end
 
-    context "with a block expecting no arguments" do
-      it "should let you access the SOAP object" do
-        client.request(:authenticate) { soap.should be_a(Savon::SOAP::XML) }
+      context "with a block expecting four arguments" do
+        it "should yield the SOAP, WSDL, HTTP and WSSE objects" do
+          client.request(:authenticate) do |soap, wsdl, http, wsse|
+            soap.should be_a(Savon::SOAP::XML)
+            wsdl.should be_a(Wasabi::Document)
+            http.should be_an(HTTPI::Request)
+            wsse.should be_a(Akami::WSSE)
+          end
+        end
       end
 
-      it "should let you access the HTTP object" do
-        client.request(:authenticate) { http.should be_an(HTTPI::Request) }
-      end
+      context "with a block expecting no arguments" do
+        it "should let you access the SOAP object" do
+          client.request(:authenticate) { soap.should be_a(Savon::SOAP::XML) }
+        end
 
-      it "should let you access the WSSE object" do
-        client.request(:authenticate) { wsse.should be_a(Akami::WSSE) }
-      end
+        it "should let you access the HTTP object" do
+          client.request(:authenticate) { http.should be_an(HTTPI::Request) }
+        end
 
-      it "should let you access the WSDL object" do
-        client.request(:authenticate) { wsdl.should be_a(Wasabi::Document) }
+        it "should let you access the WSSE object" do
+          client.request(:authenticate) { wsse.should be_a(Akami::WSSE) }
+        end
+
+        it "should let you access the WSDL object" do
+          client.request(:authenticate) { wsdl.should be_a(Wasabi::Document) }
+        end
       end
     end
 
