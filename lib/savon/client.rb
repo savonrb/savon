@@ -83,7 +83,7 @@ module Savon
       request_builder.wsse = wsse.dup
       request_builder.config = config.dup
 
-      post_configuration = -> { process(0, request_builder, &block) if block }
+      post_configuration = lambda { process(0, request_builder, &block) if block }
 
       response = request_builder.request(&post_configuration).response
       http.set_cookies(response.http)

@@ -177,7 +177,7 @@ describe Savon::SOAP::RequestBuilder do
     context "with a post-configuration block given" do
       it "executes the block" do
         executed = false
-        blk = -> { executed = true }
+        blk = lambda { executed = true }
 
         request_builder.request(&blk)
         executed.should == true
@@ -185,7 +185,7 @@ describe Savon::SOAP::RequestBuilder do
 
       it "executes the block post-configuration" do
         request_builder.namespace_identifier = :conf
-        blk = ->(rb) { rb.soap.namespace_identifier = :blk }
+        blk = lambda { |rb| rb.soap.namespace_identifier = :blk }
 
         conf_sequence = sequence('conf_sequence')
         soap.expects(:namespace_identifier=).with(:conf).in_sequence(conf_sequence)
@@ -197,7 +197,7 @@ describe Savon::SOAP::RequestBuilder do
       context "when the block has an argument" do
         it "yields self to the block" do
           request_builder = self.request_builder
-          blk = ->(rb_given){ rb_given.should == request_builder }
+          blk = lambda { |rb_given| rb_given.should == request_builder }
 
           request_builder.request(&blk)
         end

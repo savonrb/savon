@@ -206,7 +206,7 @@ describe Savon::Client do
         dummy.request_builder = request_builder
         Savon::SOAP::RequestBuilder.stubs(:new).returns(dummy)
 
-        blk = ->{}
+        blk = lambda {}
         client.request(:authenticate, &blk)
 
         dummy.block_given.should == true
