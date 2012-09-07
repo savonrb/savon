@@ -57,6 +57,9 @@ module Savon
         @header ||= config.soap_header.nil? ? {} : config.soap_header
       end
 
+      # Accessor for SOAP +action+
+      attr_accessor :action
+
       # Sets the SOAP envelope namespace.
       attr_writer :env_namespace
 

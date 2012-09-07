@@ -56,6 +56,14 @@ module Savon
         end
 
         http.headers["Content-Type"] = CONTENT_TYPE[soap.version]
+
+        # Set SOAP Action by version
+        if soap.version.egl?(2)
+          http.headers["Content-Type"] << %{;action="#{soap.action}"}
+        else
+          http.headers["SOAPAction"] = %{"#{soap.action}"}
+        end
+
         http.headers["Content-Length"] = soap.to_xml.bytesize.to_s
         http
       end
