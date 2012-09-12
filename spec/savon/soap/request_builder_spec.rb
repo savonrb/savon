@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Savon::SOAP::RequestBuilder do 
+describe Savon::SOAP::RequestBuilder do
   describe "#request" do
     def build_request_builder(operation)
       request_builder = Savon::SOAP::RequestBuilder.new(operation)
@@ -20,7 +20,7 @@ describe Savon::SOAP::RequestBuilder do
     let(:soap) { stub_everything('soap') }
     let(:http) { stub_everything('http') }
     let(:config) { stub_everything('config') }
-    let(:wsse) { stub_everything('wsse') } 
+    let(:wsse) { stub_everything('wsse') }
     let(:request_builder) { build_request_builder(:get_user) }
 
     before do
@@ -76,7 +76,7 @@ describe Savon::SOAP::RequestBuilder do
           request_builder.wsdl.operations[:authenticate][:namespace_identifier] = "tns"
         end
 
-        let(:request_builder) { build_request_builder(:authenticate) } 
+        let(:request_builder) { build_request_builder(:authenticate) }
 
         it "sets the SOAP namespace to the operation's namespace" do
           namespace = "http://v1_0.ws.auth.order.example.com/"
@@ -92,7 +92,7 @@ describe Savon::SOAP::RequestBuilder do
           request_builder.request
         end
 
-        it "sets the SOAP input to include the namespace identifier" do 
+        it "sets the SOAP input to include the namespace identifier" do
           soap_input = [:tns, :authenticate, {}]
           soap.expects(:input=).with(soap_input)
 
@@ -101,7 +101,7 @@ describe Savon::SOAP::RequestBuilder do
       end
 
       context "when the operation is a string" do
-        let(:request_builder) { build_request_builder("get_user") } 
+        let(:request_builder) { build_request_builder("get_user") }
         it "should set the SOAP input tag to <get_user>" do
           soap_input = [nil, :get_user, {}]
           soap.expects(:input=).with(soap_input)

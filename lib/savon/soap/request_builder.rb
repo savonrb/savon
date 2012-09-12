@@ -2,7 +2,7 @@ module Savon
   module SOAP
     # = Savon::SOAP::RequestBuilder
     #
-    # Savon::SOAP::RequestBuilder builds Savon::SOAP::Request instances. 
+    # Savon::SOAP::RequestBuilder builds Savon::SOAP::Request instances.
     # The RequestBuilder is configured by the client that instantiates it.
     # It uses the options set by the client to build an appropriate request.
     class RequestBuilder
@@ -34,19 +34,19 @@ module Savon
       # Reader for the operation of the request being built by the request builder.
       attr_reader :operation
 
-      # Initialize a new +RequestBuilder+ with the given SOAP operation. 
+      # Initialize a new +RequestBuilder+ with the given SOAP operation.
       # The operation may be specified using a symbol or a string.
       def initialize(operation)
         @operation = operation
       end
 
-      # Builds and returns a <tt>Savon::SOAP::Request</tt> object. You may optionally 
-      # pass a block to the method that will be run after the initial configuration of 
+      # Builds and returns a <tt>Savon::SOAP::Request</tt> object. You may optionally
+      # pass a block to the method that will be run after the initial configuration of
       # the dependencies. +self+ will be yielded to the block if the block accepts an
       # argument.
       def request(&post_configuration_block)
         configure_dependencies
-        
+
         if post_configuration_block
           # Only yield self to the block if our block takes an argument
           args = [] and (args << self if post_configuration_block.arity == 1)
@@ -57,8 +57,8 @@ module Savon
       end
 
       # Returns the identifier for the default namespace. If an operation namespace
-      # identifier is defined for the current operation in the WSDL document, this 
-      # namespace identifier is used. Otherwise, the +@namespace_identifier+ instance  
+      # identifier is defined for the current operation in the WSDL document, this
+      # namespace identifier is used. Otherwise, the +@namespace_identifier+ instance
       # variable is used.
       def namespace_identifier
         if operation_namespace_defined_in_wsdl?
@@ -68,8 +68,8 @@ module Savon
         end
       end
 
-      # Returns the namespace identifier to be used for the the SOAP input tag. 
-      # If +@namespace_identifier+ is not +nil+, it will be returned. Otherwise, the 
+      # Returns the namespace identifier to be used for the the SOAP input tag.
+      # If +@namespace_identifier+ is not +nil+, it will be returned. Otherwise, the
       # default namespace identifier as returned by +namespace_identifier+ will be
       # returned.
       def input_namespace_identifier
@@ -87,15 +87,15 @@ module Savon
         end
       end
 
-      # Returns true if the operation's namespace is defined within the WSDL 
+      # Returns true if the operation's namespace is defined within the WSDL
       # document.
       def operation_namespace_defined_in_wsdl?
         return false unless wsdl.document?
         (operation = wsdl.operations[self.operation]) && operation[:namespace_identifier]
       end
 
-      # Returns the SOAP action. If +@soap_action+ has been defined, this will 
-      # be returned. Otherwise, if there is a WSDL document defined, the SOAP 
+      # Returns the SOAP action. If +@soap_action+ has been defined, this will
+      # be returned. Otherwise, if there is a WSDL document defined, the SOAP
       # action corresponding to the operation will be returned. Failing this,
       # the operation name will be used to form the SOAP action.
       def soap_action
@@ -109,7 +109,7 @@ module Savon
       end
 
       # Returns the SOAP operation input tag. If there is a WSDL document defined,
-      # and the operation's input tag is defined in the document, this will be 
+      # and the operation's input tag is defined in the document, this will be
       # returned. Otherwise, the operation name will be used to form the input tag.
       def soap_input_tag
         if wsdl.document? && (input = wsdl.soap_input(operation.to_sym))
@@ -141,7 +141,7 @@ module Savon
         @config ||= Savon.config.clone
       end
 
-      # Returns the <tt>HTTPI::Request</tt> object. 
+      # Returns the <tt>HTTPI::Request</tt> object.
       def http
         @http ||= HTTPI::Request.new
       end

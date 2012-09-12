@@ -57,7 +57,7 @@ module Savon
     end
 
     # Executes a SOAP request for a given SOAP action. Accepts a +block+ which is evaluated in the
-    # context of the <tt>SOAP::RequestBuilder</tt> object to let you access its +soap+, +wsdl+, 
+    # context of the <tt>SOAP::RequestBuilder</tt> object to let you access its +soap+, +wsdl+,
     # +http+ and +wsse+ methods.
     #
     # == Examples
@@ -97,9 +97,9 @@ module Savon
 
     private
 
-    # Expects an Array of +args+ and returns a Hash containing the SOAP input, 
-    # the namespace (might be +nil+), the SOAP action (might be +nil+), 
-    # the SOAP body (might be +nil+), and a Hash of attributes for the input 
+    # Expects an Array of +args+ and returns a Hash containing the SOAP input,
+    # the namespace (might be +nil+), the SOAP action (might be +nil+),
+    # the SOAP body (might be +nil+), and a Hash of attributes for the input
     # tag (which might be empty).
     def extract_options(args)
       attributes = Hash === args.last ? args.pop : {}
@@ -111,7 +111,7 @@ module Savon
 
       {
         :namespace_identifier => namespace_identifier,
-        :input                => input, 
+        :input                => input,
         :attributes           => attributes,
         :body                 => body,
         :soap_action          => soap_action
@@ -137,8 +137,8 @@ module Savon
 
       # A proxy that attemps to make method calls on +instance+. If a NoMethodError is
       # raised, the call will be made on +original_self+.
-      proxy = Object.new  
-      proxy.instance_eval do 
+      proxy = Object.new
+      proxy.instance_eval do
         class << self
           attr_accessor :original_self, :instance
         end

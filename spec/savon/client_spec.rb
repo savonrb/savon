@@ -121,15 +121,15 @@ describe Savon::Client do
     context "with a Symbol and a Hash" do
       it "uses the hash to set attributes of the request builder" do
         request_builder.expects(:attributes=).with({ :active => true })
-        client.request(:get_user, :active => true) 
+        client.request(:get_user, :active => true)
       end
 
       it "uses the :soap_action key of the hash to set the SOAP action of the request builder" do
         request_builder.expects(:soap_action=).with(:test_action)
-        client.request(:get_user, :soap_action => :test_action) 
+        client.request(:get_user, :soap_action => :test_action)
       end
 
-      it "uses the :body key of the hash to set the SOAP body of the request builder" do 
+      it "uses the :body key of the hash to set the SOAP body of the request builder" do
         request_builder.expects(:body=).with({ :foo => "bar" })
         client.request(:get_user, :body => { :foo => "bar" })
       end
@@ -159,7 +159,7 @@ describe Savon::Client do
     context "with two Symbols and a Hash" do
       it "uses the first symbol to set the namespace of the request builder" do
         request_builder.expects(:namespace_identifier=).with(:wsdl)
-        client.request(:wsdl, :get_user, :active => true) 
+        client.request(:wsdl, :get_user, :active => true)
       end
 
       it "should use the second symbol to set the operation of the request builder" do
@@ -174,7 +174,7 @@ describe Savon::Client do
 
       it "should use the :soap_action key of the hash to set the SOAP action of the request builder" do
         request_builder.expects(:soap_action=).with(:test_action)
-        client.request(:wsdl, :get_user, :soap_action => :test_action) 
+        client.request(:wsdl, :get_user, :soap_action => :test_action)
       end
 
       it "should use the :body key of the hash to set the SOAP body of the request builder" do
@@ -190,7 +190,7 @@ describe Savon::Client do
 
       it "passes the block to the request builder" do
         # this is painful. it would be trivial to test in > Ruby 1.9, but this is
-        # the only way I know how in < 1.9. 
+        # the only way I know how in < 1.9.
         dummy = Object.new
         dummy.instance_eval do
           class << self; attr_accessor :request_builder, :block_given; end
