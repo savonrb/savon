@@ -1,4 +1,4 @@
-## UPCOMING
+## 1.2.0 (2012-09-15)
 
 * Fix: [#312](https://github.com/rubiii/savon/pull/312) recursively determines the proper namespaces
   for SOAP body Hashes with nested Arrays of Hashes.
