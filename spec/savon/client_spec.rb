@@ -113,36 +113,31 @@ describe Savon::Client do
 
     context "with a single argument" do
       it "sets the operation of the request builder to the argument" do
-        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
+        expect_request_builder_to_receive(:get_user)
         client.request(:get_user)
       end
     end
 
     context "with a Symbol and a Hash" do
       it "uses the hash to set attributes of the request builder" do
-        request_builder.expects(:attributes=).with({ :active => true })
+        expect_request_builder_to_receive(:get_user, :attributes => { :active => true })
         client.request(:get_user, :active => true)
       end
 
       it "uses the :soap_action key of the hash to set the SOAP action of the request builder" do
-        request_builder.expects(:soap_action=).with(:test_action)
+        expect_request_builder_to_receive(:get_user, :soap_action => :test_action)
         client.request(:get_user, :soap_action => :test_action)
       end
 
       it "uses the :body key of the hash to set the SOAP body of the request builder" do
-        request_builder.expects(:body=).with({ :foo => "bar" })
+        expect_request_builder_to_receive(:get_user, :body => { :foo => "bar" })
         client.request(:get_user, :body => { :foo => "bar" })
       end
     end
 
     context "with two Symbols" do
-      it "uses the first symbol to set the namespace of the request builder" do
-        request_builder.expects(:namespace_identifier=).with(:v1)
-        client.request(:v1, :get_user)
-      end
-
-      it "uses the second symbol to set the operation of the request builder" do
-        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
+      it "uses the first symbol to set the namespace and the second symbol to set the operation of the request builder" do
+        expect_request_builder_to_receive(:get_user, :namespace_identifier => :v1)
         client.request(:v1, :get_user)
       end
 
@@ -157,28 +152,23 @@ describe Savon::Client do
     end
 
     context "with two Symbols and a Hash" do
-      it "uses the first symbol to set the namespace of the request builder" do
-        request_builder.expects(:namespace_identifier=).with(:wsdl)
-        client.request(:wsdl, :get_user, :active => true)
-      end
-
-      it "should use the second symbol to set the operation of the request builder" do
-        Savon::SOAP::RequestBuilder.expects(:new).with(:get_user).returns(request_builder)
-        client.request(:wsdl, :get_user, :active => true)
+      it "uses the first symbol to set the namespace and the second symbol to set the operation of the request builder" do
+        expect_request_builder_to_receive(:get_user, :namespace_identifier => :wsdl)
+        client.request(:wsdl, :get_user)
       end
 
       it "should use the hash to set the attributes of the request builder" do
-        request_builder.expects(:attributes=).with({ :active => true })
+        expect_request_builder_to_receive(:get_user, :namespace_identifier => :wsdl, :attributes => { :active => true })
         client.request(:wsdl, :get_user, :active => true)
       end
 
       it "should use the :soap_action key of the hash to set the SOAP action of the request builder" do
-        request_builder.expects(:soap_action=).with(:test_action)
+        expect_request_builder_to_receive(:get_user, :namespace_identifier => :wsdl, :soap_action => :test_action)
         client.request(:wsdl, :get_user, :soap_action => :test_action)
       end
 
       it "should use the :body key of the hash to set the SOAP body of the request builder" do
-        request_builder.expects(:body=).with({ :foo => "bar" })
+        expect_request_builder_to_receive(:get_user, :namespace_identifier => :wsdl, :body => { :foo => "bar" })
         client.request(:wsdl, :get_user, :body => { :foo => "bar" })
       end
     end
@@ -557,6 +547,10 @@ describe Savon::Client do
     response = defaults.merge options
 
     HTTPI::Response.new response[:code], response[:headers], response[:body]
+  end
+
+  def expect_request_builder_to_receive(operation, options = {})
+    Savon::SOAP::RequestBuilder.expects(:new).with(operation, options).returns(request_builder)
   end
 
 end

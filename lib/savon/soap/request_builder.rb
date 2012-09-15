@@ -1,11 +1,20 @@
 module Savon
   module SOAP
+
     # = Savon::SOAP::RequestBuilder
     #
     # Savon::SOAP::RequestBuilder builds Savon::SOAP::Request instances.
     # The RequestBuilder is configured by the client that instantiates it.
     # It uses the options set by the client to build an appropriate request.
     class RequestBuilder
+
+      # Initialize a new +RequestBuilder+ with the given SOAP operation.
+      # The operation may be specified using a symbol or a string.
+      def initialize(operation, options = {})
+        @operation = operation
+        assign_options(options)
+      end
+
       # Writer for the <tt>HTTPI::Request</tt> object.
       attr_writer :http
 
@@ -33,12 +42,6 @@ module Savon
 
       # Reader for the operation of the request being built by the request builder.
       attr_reader :operation
-
-      # Initialize a new +RequestBuilder+ with the given SOAP operation.
-      # The operation may be specified using a symbol or a string.
-      def initialize(operation)
-        @operation = operation
-      end
 
       # Builds and returns a <tt>Savon::SOAP::Request</tt> object. You may optionally
       # pass a block to the method that will be run after the initial configuration of
@@ -190,6 +193,13 @@ module Savon
           soap.types[path] = type
         end
       end
+
+      def assign_options(options)
+        options.each do |option, value|
+          send(:"#{option}=", value) if value
+        end
+      end
+
     end
   end
 end

@@ -75,9 +75,7 @@ module Savon
 
       options = extract_options(args)
 
-      request_builder = SOAP::RequestBuilder.new(options.delete(:input))
-      options.each { |option, value| request_builder.send(:"#{option}=", value) unless value.nil? }
-
+      request_builder = SOAP::RequestBuilder.new(options.delete(:input), options)
       request_builder.wsdl = wsdl
       request_builder.http = http.dup
       request_builder.wsse = wsse.dup
@@ -109,13 +107,15 @@ module Savon
       namespace_identifier = args.size > 1 ? args.shift.to_sym : nil
       input = args.first
 
-      {
+      options = {
         :namespace_identifier => namespace_identifier,
         :input                => input,
         :attributes           => attributes,
         :body                 => body,
         :soap_action          => soap_action
       }
+
+      options.delete_if { |_, value| value.nil? || value.empty? }
     end
 
     # Processes a given +block+. Yields objects if the block expects any arguments.
