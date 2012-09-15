@@ -3,6 +3,9 @@
 * Fix: [#312](https://github.com/rubiii/savon/pull/312) recursively determines the proper namespaces
   for SOAP body Hashes with nested Arrays of Hashes.
 
+* Improvement: [#318](https://github.com/rubiii/savon/pull/318) isolates building the request to
+  improve threadsafety.
+
 * Refactoring: Use the `Wasabi::Document` with resolver instead of the custom `Savon::Wasabi::Document`.
 
 ## 1.1.0 (2012-06-28)
