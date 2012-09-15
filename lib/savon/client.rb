@@ -107,15 +107,13 @@ module Savon
       namespace_identifier = args.size > 1 ? args.shift.to_sym : nil
       input = args.first
 
-      options = {
+      remove_blank_values(
         :namespace_identifier => namespace_identifier,
         :input                => input,
         :attributes           => attributes,
         :body                 => body,
         :soap_action          => soap_action
-      }
-
-      options.delete_if { |_, value| value.nil? || value.empty? }
+      )
     end
 
     # Processes a given +block+. Yields objects if the block expects any arguments.
@@ -155,5 +153,11 @@ module Savon
 
       proxy.instance_eval &block
     end
+
+    # Removes all blank values from a given +hash+.
+    def remove_blank_values(hash)
+      hash.delete_if { |_, value| value.respond_to?(:empty?) ? value.empty? : !value }
+    end
+
   end
 end
