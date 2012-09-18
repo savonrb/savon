@@ -136,7 +136,12 @@ module Savon
       # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create
       # custom body XML.
       def body
-        @body = yield builder(nil) if block_given?
+        if block_given?
+          xml = builder(nil)
+          yield xml
+          @body = xml.target!
+        end
+
         @body
       end
 
@@ -147,7 +152,11 @@ module Savon
       # Accepts a +block+ and yields a <tt>Builder::XmlMarkup</tt> object to let you create
       # a completely custom XML.
       def xml(directive_tag = :xml, attrs = {})
-        @xml = yield builder(directive_tag, attrs) if block_given?
+        return unless block_given?
+
+        xml = builder(directive_tag, attrs)
+        yield xml
+        @xml = xml.target!
       end
 
       # Accepts an XML String and lets you specify a completely custom request body.

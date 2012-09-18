@@ -114,12 +114,24 @@ describe Savon::SOAP::XML do
       xml.to_xml.should include("<id>1</id>")
     end
 
-    it "should accept a block" do
-      xml.body do |body|
-        body.user { body.id 1 }
+    context "with a block" do
+      it "should yield a Builder::XmlMarkup object" do
+        xml.body do |body|
+          body.user { body.id 1 }
+        end
+
+        xml.to_xml.should include("<authenticate><user><id>1</id></user></authenticate>")
       end
 
-      xml.to_xml.should include("<authenticate><user><id>1</id></user></authenticate>")
+      # https://github.com/savonrb/savon/issues/322
+      it "should use the builder (and not the block's return value) to generate the body" do
+        xml.body do |body|
+          body.user { body.id 1 }
+          body.whatever if false
+        end
+
+        xml.to_xml.should include("<authenticate><user><id>1</id></user></authenticate>")
+      end
     end
   end
 
@@ -135,22 +147,34 @@ describe Savon::SOAP::XML do
       xml.to_xml.should == "<custom>xml</custom>"
     end
 
-    it "yields a Builder::XmlMarkup object to a given block" do
-      xml.xml { |xml| xml.using("Builder") }
-      xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8"?><using>Builder</using>'
-    end
-
-    it "accepts options to pass to the Builder::XmlMarkup instruct!" do
-      xml.xml :xml, :aaa => :bbb do |xml|
-        xml.using("Builder")
+    context "with a block" do
+      it "yields a Builder::XmlMarkup object" do
+        xml.xml { |xml| xml.using("Builder") }
+        xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8"?><using>Builder</using>'
       end
 
-      xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8" aaa="bbb"?><using>Builder</using>'
-    end
+      it "accepts options to pass to the Builder::XmlMarkup instruct!" do
+        xml.xml :xml, :aaa => :bbb do |xml|
+          xml.using("Builder")
+        end
 
-    it "allows to change the encoding" do
-      xml.xml(:xml, :encoding => "US-ASCII") { |xml| xml.using("Builder") }
-      xml.to_xml.should == '<?xml version="1.0" encoding="US-ASCII"?><using>Builder</using>'
+        xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8" aaa="bbb"?><using>Builder</using>'
+      end
+
+      it "allows to change the encoding" do
+        xml.xml(:xml, :encoding => "US-ASCII") { |xml| xml.using("Builder") }
+        xml.to_xml.should == '<?xml version="1.0" encoding="US-ASCII"?><using>Builder</using>'
+      end
+
+      # https://github.com/savonrb/savon/issues/322
+      it "uses the builder (and not the block's return value) to generate the xml" do
+        xml.xml do |xml|
+          xml.using("Builder")
+          xml.whatever if false
+        end
+
+        xml.to_xml.should == '<?xml version="1.0" encoding="UTF-8"?><using>Builder</using>'
+      end
     end
   end
 

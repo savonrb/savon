@@ -1,3 +1,8 @@
+## UPCOMING
+
+* Fix: [#322](https://github.com/savonrb/savon/issues/322) use the builder's state instead of the
+  block's return value to set the soap body/xml values.
+
 ## 1.2.0 (2012-09-15)
 
 * Fix: [#312](https://github.com/savonrb/savon/pull/312) recursively determines the proper namespaces
