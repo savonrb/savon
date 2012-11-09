@@ -147,6 +147,11 @@ describe Savon::SOAP::Response do
         soap_response.to_array(:authenticate_response, :return).should ==
           [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
       end
+
+      it "should properly return FalseClass values [#327]" do
+        body = Gyoku.xml(:envelope => { :body => { :return => { :success => false } } })
+        soap_response(:body => body).to_array(:return, :success).should == [false]
+      end
     end
 
     context "when the given path returns nil" do

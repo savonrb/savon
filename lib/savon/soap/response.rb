@@ -73,7 +73,7 @@ module Savon
       # exist or returns nil.
       def to_array(*path)
         result = path.inject body do |memo, key|
-          return [] unless memo[key]
+          return [] if memo[key].nil?
           memo[key]
         end
 
