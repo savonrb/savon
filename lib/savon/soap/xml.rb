@@ -70,11 +70,19 @@ module Savon
 
       # Returns the +namespaces+. Defaults to a Hash containing the SOAP envelope namespace.
       def namespaces
-        @namespaces ||= begin
-          key = ["xmlns"]
-          key << env_namespace if env_namespace && env_namespace != ""
-          { key.join(":") => SOAP::NAMESPACE[version] }
-        end
+        @namespaces ||= {}
+        @namespaces.merge! soap_env_namespace
+      end
+
+      # Returns the +namespace_key+.
+      def namespace_key
+        key = ["xmlns"]
+        key << env_namespace if env_namespace && env_namespace != ""
+        key.join(":")
+      end
+
+      def soap_env_namespace
+        { namespace_key => SOAP::NAMESPACE[version] }
       end
 
       def namespace_by_uri(uri)
