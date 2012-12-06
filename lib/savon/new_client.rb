@@ -21,7 +21,9 @@ module Savon
     end
 
     def call(operation_name, options = {})
-      operation(operation_name).call(options)
+      response = operation(operation_name).call(options)
+      @options.add(:global, :last_response, response.http)
+      response
     end
 
   end

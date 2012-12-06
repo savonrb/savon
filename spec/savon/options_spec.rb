@@ -15,11 +15,15 @@ describe Savon::Options do
     end
   end
 
-  it "can set and retrieve values from a given scope" do
+  it "can add, set and get values from a given scope" do
     options.set(:global, :logger => :some_logger)
+    options.add(:global, :last_response, :http_response)
 
-    option = options.get(:global, :logger)
-    expect(option).to eq(:some_logger)
+    logger = options.get(:global, :logger)
+    expect(logger).to eq(:some_logger)
+
+    last_response = options.get(:global, :last_response)
+    expect(last_response).to eq(:http_response)
   end
 
   it "returns a default value for :soap_version" do

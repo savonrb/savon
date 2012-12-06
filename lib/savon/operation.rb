@@ -36,9 +36,6 @@ module Savon
       request = SOAP::Request.new(@options, http, soap)
       response = request.response
 
-      # XXX: store and resend cookies [dh, 2012-12-06]
-      #http.set_cookies(response.http)
-
       # XXX: leaving this out for now [dh, 2012-12-06]
       #if wsse.verify_response
         #WSSE::VerifySignature.new(response.http.body).verify!
@@ -77,6 +74,7 @@ module Savon
       # TODO: httpi needs to know about proxies, auth, etc [dh, 2012-12-06]
       http = HTTPI::Request.new
       http.headers["SOAPAction"] = %{"#{soap_action}"}
+      http.set_cookies(options.last_response) if options.last_response
       http
     end
 

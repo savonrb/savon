@@ -2,7 +2,7 @@ module Savon
   class Options
 
     GLOBAL   = [ :raise_errors, :env_namespace, :soap_version, :soap_header,
-                 :hooks, :logger, :pretty_print_xml ]
+                 :hooks, :logger, :pretty_print_xml, :last_response ]
 
     REQUEST  = [ :message, :xml ]
 
@@ -30,6 +30,13 @@ module Savon
       SCOPES.each do |scope, _|
         @options[scope] = {}
       end
+    end
+
+    def add(scope, option, value)
+      validate_scope! scope
+      validate_option! scope, option
+
+      @options[scope][option] = value
     end
 
     def set(scope, options)
