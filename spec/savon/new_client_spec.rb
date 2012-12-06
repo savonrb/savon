@@ -28,7 +28,7 @@ describe Savon::NewClient do
       options = { :message => { :symbol => "AAPL" } }
 
       wsdl = Wasabi::Document.new('http://example.com')
-      operation = Savon::Operation.new(:authenticate, wsdl)
+      operation = Savon::Operation.new(:authenticate, wsdl, Savon::Options.new)
       operation.expects(:call).with(options).returns(:response)
       Savon::Operation.expects(:create).returns(operation)
 

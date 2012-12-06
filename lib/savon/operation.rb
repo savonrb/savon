@@ -7,9 +7,9 @@ require "httpi"
 module Savon
   class Operation
 
-    def self.create(operation_name, wsdl)
+    def self.create(operation_name, wsdl, options)
       ensure_exists! operation_name, wsdl
-      new(operation_name, wsdl)
+      new(operation_name, wsdl, options)
     end
 
     def self.ensure_exists!(operation_name, wsdl)
@@ -19,27 +19,21 @@ module Savon
       end
     end
 
-    def initialize(name, wsdl)
+    def initialize(name, wsdl, options)
       @name = name
       @wsdl = wsdl
+      @options = options
     end
 
-    def call(opts = {})
-      # XXX: pretend like we already support all options from here on [dh, 2012-11-24]
-      options = Struct.new(:raise_errors, :env_namespace, :soap_version, :soap_header,
-                           :message, :xml, :hooks, :logger, :pretty_print_xml).new
+    def call(options = {})
+      @options.set(:request, options)
 
-      options.message      = opts[:message]
-      options.soap_version = 1
-      options.hooks        = Class.new { def fire(*) yield end }.new
-      options.logger       = Class.new { def log(msg, *) end   }.new
-
-      http = create_http(options)
-      wsse = create_wsse(options)
-      soap = create_soap(options)
+      http = create_http(@options)
+      wsse = create_wsse(@options)
+      soap = create_soap(@options)
       soap.wsse = wsse
 
-      request = SOAP::Request.new(options, http, soap)
+      request = SOAP::Request.new(@options, http, soap)
       response = request.response
 
       # XXX: store and resend cookies [dh, 2012-12-06]

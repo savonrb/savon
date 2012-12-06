@@ -11,8 +11,8 @@ module Savon
     Client.new(*args, &block)
   end
 
-  def new_client(wsdl_locator)
-    NewClient.new(wsdl_locator)
+  def new_client(wsdl_locator, options = {})
+    NewClient.new(wsdl_locator, options)
   end
 
   def configure
