@@ -2,7 +2,7 @@ module Savon
   class Options
 
     GLOBAL   = [ :raise_errors, :env_namespace, :soap_version, :soap_header,
-               :hooks, :logger, :pretty_print_xml ]
+                 :hooks, :logger, :pretty_print_xml ]
 
     REQUEST  = [ :message, :xml ]
 
