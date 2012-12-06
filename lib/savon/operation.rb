@@ -66,12 +66,12 @@ module Savon
     end
 
     def create_wsse(options)
-      # TODO: akami needs to be configured somehow [dh, 2012-12-06]
+      # XXX: not supported right now [dh, 2012-12-06]
       Akami.wsse
     end
 
     def create_http(options)
-      # TODO: httpi needs to know about proxies, auth, etc [dh, 2012-12-06]
+      # TODO: properly configure the request [dh, 2012-12-06]
       http = HTTPI::Request.new
       http.headers["SOAPAction"] = %{"#{soap_action}"}
       http.set_cookies(options.last_response) if options.last_response
