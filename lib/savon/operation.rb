@@ -42,7 +42,8 @@ module Savon
       request = SOAP::Request.new(options, http, soap)
       response = request.response
 
-      http.set_cookies(response.http)
+      # XXX: store and resend cookies [dh, 2012-12-06]
+      #http.set_cookies(response.http)
 
       # XXX: leaving this out for now [dh, 2012-12-06]
       #if wsse.verify_response
