@@ -28,7 +28,12 @@ describe "Integration" do
       response = client.request(:verify_email, :body => { :email => "soap@example.com", "LicenseKey" => "?" })
 
       response_text = response[:verify_email_response][:verify_email_result][:response_text]
-      response_text.should == "Email Domain Not Found"
+
+      if response_text == "Current license key only allows so many checks"
+        pending "API limit exceeded"
+      else
+        response_text.should == "Email Domain Not Found"
+      end
     end
   end
 
