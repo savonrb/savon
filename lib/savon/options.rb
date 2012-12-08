@@ -36,6 +36,9 @@ module Savon
       # The logger to use. Defaults to a Savon::Logger instance.
       :logger,
 
+      # Whether to pretty print request and response XML log messages.
+      :pretty_print_xml,
+
       # Used by Savon to store the last response to pass
       # its cookies to the next request.
       :last_response,
@@ -43,8 +46,7 @@ module Savon
       # XXX: not yet supported [dh, 2012-12-06]
       :soap_version,
       :soap_header,
-      :hooks,
-      :pretty_print_xml
+      :hooks
 
     ]
 

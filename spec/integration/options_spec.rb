@@ -156,6 +156,43 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :pretty_print_xml" do
+    it "is a nice but expensive way to debug XML messages" do
+      duck_logger = Class.new {
+
+        def self.logs
+          @logs ||= []
+        end
+
+        def log(message, options = {})
+          # TODO: probably not the best way to test this, since it repeats the loggers behavior,
+          #       but it's currently not possible to easily access the log messages. [dh, 2012-12-09]
+          self.class.logs << Savon::LogMessage.new(message, [], options).to_s
+        end
+
+      }
+
+      client = new_client(:logger => duck_logger.new, :pretty_print_xml => true)
+      client.call(:authenticate)
+
+      xml = unindent <<-xml
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>
+        <env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:tns=\"http://v1_0.ws.auth.order.example.com/\" xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ins0=\"http://v1_0.ws.auth.order.example.com/\">
+          <env:Body>
+            <ins0:authenticate/>
+          </env:Body>
+        </env:Envelope>
+       xml
+
+      expect(duck_logger.logs[2]).to eq(xml)
+    end
+
+    def unindent(string)
+      string.gsub(/^#{string[/\A\s*/]}/, '')
+    end
+
+  end
+
   context "request :message" do
     it "accepts a Hash which is passed to Gyoku to be converted to XML" do
       repeat_url = @server.url(:repeat)
