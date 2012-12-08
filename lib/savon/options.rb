@@ -30,6 +30,11 @@ module Savon
       # sure to add your WSDL document for debugging.
       :env_namespace,
 
+      # Changes the SOAP version to 1 or 2.
+      # If you need to use this option, please open an issue and make
+      # sure to add your WSDL document for debugging.
+      :soap_version,
+
       # Whether or not to raise SOAP fault and HTTP errors.
       :raise_errors,
 
@@ -44,7 +49,6 @@ module Savon
       :last_response,
 
       # XXX: not yet supported [dh, 2012-12-06]
-      :soap_version,
       :soap_header,
       :hooks
 
