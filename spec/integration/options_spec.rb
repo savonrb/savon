@@ -74,6 +74,12 @@ describe "NewClient Options" do
       response = new_client(:endpoint => repeat_url).call(:authenticate, :message => { :user => "luke", :password => "secret" })
       expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
     end
+
+    it "accepts a String of raw XML to send" do
+      repeat_url = @server.url + "repeat"
+      response = new_client(:endpoint => repeat_url).call(:authenticate, :message => "<user>lea</user><password>top-secret</password>")
+      expect(response.http.body).to include("<ins0:authenticate><user>lea</user><password>top-secret</password></ins0:authenticate>")
+    end
   end
 
   def new_client(options = {})
