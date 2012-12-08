@@ -69,7 +69,7 @@ describe "NewClient Options" do
   end
 
   context "request :message" do
-    it "wors" do
+    it "accepts a Hash which is passed to Gyoku to be converted to XML" do
       repeat_url = @server.url + "repeat"
       response = new_client(:endpoint => repeat_url).call(:authenticate, :message => { :user => "luke", :password => "secret" })
       expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
