@@ -13,6 +13,8 @@ module Savon
       @wsdl.endpoint = @options.endpoint if @options.endpoint
     end
 
+    attr_reader :options
+
     def operations
       @wsdl.soap_actions
     end
