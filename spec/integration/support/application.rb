@@ -2,41 +2,52 @@ require "rack/builder"
 
 class IntegrationServer
 
-  def self.respond_with(body)
-    [200, { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }, [body]]
+  def self.respond_with(options = {})
+    code = options.fetch(:code, 200)
+    body = options.fetch(:body, "")
+    headers = { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }
+
+    [code, headers, [body]]
   end
 
   Application = Rack::Builder.new do
 
     map "/" do
       run lambda { |env|
-        IntegrationServer.respond_with env["REQUEST_METHOD"].downcase
+        IntegrationServer.respond_with :body => env["REQUEST_METHOD"].downcase
       }
     end
 
     map "/repeat" do
       run lambda { |env|
-        IntegrationServer.respond_with env["rack.input"].read
+        # stupid way of extracting the value from a query string (e.g. "code=500") [dh, 2012-12-08]
+        IntegrationServer.respond_with :body => env["rack.input"].read
+      }
+    end
+
+    map "/404" do
+      run lambda { |env|
+        IntegrationServer.respond_with :code => 404, :body => env["rack.input"].read
       }
     end
 
     map "/timeout" do
       run lambda { |env|
         sleep 2
-        IntegrationServer.respond_with "timeout"
+        IntegrationServer.respond_with :body => "timeout"
       }
     end
 
     map "/repeat_header" do
       run lambda { |env|
-        IntegrationServer.respond_with env["HTTP_REPEAT_HEADER"]
+        IntegrationServer.respond_with :body => env["HTTP_REPEAT_HEADER"]
       }
     end
 
     map "/inspect_header" do
       run lambda { |env|
         header_to_inspect = "HTTP_" + env["HTTP_INSPECT_HEADER"].upcase
-        IntegrationServer.respond_with env[header_to_inspect]
+        IntegrationServer.respond_with :body => env[header_to_inspect]
       }
     end
 
@@ -46,13 +57,13 @@ class IntegrationServer
       end
 
       run lambda { |env|
-        IntegrationServer.respond_with "basic-auth"
+        IntegrationServer.respond_with :body => "basic-auth"
       }
     end
 
     map "/digest-auth" do
       unprotected_app = lambda { |env|
-        IntegrationServer.respond_with "digest-auth"
+        IntegrationServer.respond_with :body => "digest-auth"
       }
 
       realm = 'digest-realm'
