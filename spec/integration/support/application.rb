@@ -21,9 +21,16 @@ class IntegrationServer
       }
     end
 
-    map "/x-header" do
+    map "/echo-header" do
       run lambda { |env|
-        IntegrationServer.respond_with env["HTTP_X_HEADER"]
+        IntegrationServer.respond_with env["HTTP_ECHO_HEADER"]
+      }
+    end
+
+    map "/inspect-header" do
+      run lambda { |env|
+        header_to_inspect = "HTTP_" + env["HTTP_INSPECT_HEADER"].upcase
+        IntegrationServer.respond_with env[header_to_inspect]
       }
     end
 
