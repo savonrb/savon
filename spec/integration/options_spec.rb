@@ -29,7 +29,7 @@ describe "NewClient Options" do
     end
   end
 
-  context "global :read timeout" do
+  context "global :read_timeout" do
     it "makes the client timeout after n seconds" do
       timeout_url = @server.url + "timeout"
       client = new_client(:endpoint => timeout_url, :open_timeout => 1, :read_timeout => 1)
