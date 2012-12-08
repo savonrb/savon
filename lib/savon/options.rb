@@ -23,12 +23,14 @@ module Savon
       # sure to add your WSDL document for debugging.
       :element_form_default,
 
+      # Whether or not to raise SOAP fault and HTTP errors.
+      :raise_errors,
+
       # Used by Savon to store the last response to pass
       # its cookies to the next request.
       :last_response,
 
       # XXX: not yet supported [dh, 2012-12-06]
-      :raise_errors,
       :env_namespace,
       :soap_version,
       :soap_header,

@@ -19,6 +19,27 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :proxy" do
+    it "sets the proxy server to use" do
+      proxy_url = "http://example.com"
+      client = new_client(:endpoint => @server.url, :proxy => proxy_url)
+
+      # TODO: find a way to integration test this [dh, 2012-12-08]
+      HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
+
+      response = client.call(:authenticate)
+    end
+  end
+
+  context "global :headers" do
+    it "sets the HTTP headers for the next request" do
+      repeat_header_url = @server.url(:repeat_header)
+      client = new_client(:endpoint => repeat_header_url, :headers => { "Repeat-Header" => "savon" })
+
+      response = client.call(:authenticate)
+      expect(response.http.body).to eq("savon")
+    end
+
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
       non_routable_ip = "http://10.255.255.1"
@@ -54,27 +75,6 @@ describe "NewClient Options" do
     end
   end
 
-  context "global :proxy" do
-    it "sets the proxy server to use" do
-      proxy_url = "http://example.com"
-      client = new_client(:endpoint => @server.url, :proxy => proxy_url)
-
-      # TODO: find a way to integration test this [dh, 2012-12-08]
-      HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
-
-      response = client.call(:authenticate)
-    end
-  end
-
-  context "global :headers" do
-    it "sets the HTTP headers for the next request" do
-      repeat_header_url = @server.url(:repeat_header)
-      client = new_client(:endpoint => repeat_header_url, :headers => { "Repeat-Header" => "savon" })
-
-      response = client.call(:authenticate)
-      expect(response.http.body).to eq("savon")
-    end
-
     it "allows overwriting the SOAPAction HTTP header" do
       inspect_header_url = @server.url(:inspect_header)
       client = new_client(:endpoint => inspect_header_url, :headers => { "Inspect-Header" => "SOAPAction" })
@@ -82,6 +82,37 @@ describe "NewClient Options" do
       response = client.call(:authenticate)
       expect(response.http.body).to eq('"authenticate"')
     end
+  end
+
+  context "global: raise_errors" do
+    it "when true, instructs Savon to raise SOAP fault errors" do
+      client = new_client(:endpoint => @server.url(:repeat), :raise_errors => true)
+
+      expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }.
+        to raise_error(Savon::SOAP::Fault)
+    end
+
+    it "when true, instructs Savon to raise HTTP errors" do
+      client = new_client(:endpoint => @server.url(404), :raise_errors => true)
+      expect { client.call(:authenticate) }.to raise_error(Savon::HTTP::Error)
+    end
+
+    it "when false, instructs Savon to not raise SOAP fault errors" do
+      client = new_client(:endpoint => @server.url(:repeat), :raise_errors => false)
+      response = client.call(:authenticate, :xml => Fixture.response(:soap_fault))
+
+      expect(response).to_not be_successful
+      expect(response).to be_a_soap_fault
+    end
+
+    it "when false, instructs Savon to not raise HTTP errors" do
+      client = new_client(:endpoint => @server.url(404), :raise_errors => false)
+      response = client.call(:authenticate)
+
+      expect(response).to_not be_successful
+      expect(response).to be_a_http_error
+    end
+
   end
 
   context "request :message" do
