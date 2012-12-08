@@ -52,6 +52,14 @@ describe Savon::NewClient do
       HTTPI::Request.any_instance.expects(:set_cookies).with(last_response)
       client.call(:authenticate)
     end
+
+    it "raises when the operation name is not a symbol" do
+      expect { client.call("not a symbol") }.to raise_error(
+        ArgumentError,
+        "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
+        "Actual: \"not a symbol\" (String)"
+      )
+    end
   end
 
   def new_http_response(options = {})

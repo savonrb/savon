@@ -8,7 +8,9 @@ module Savon
   class Operation
 
     def self.create(operation_name, wsdl, options)
+      ensure_name_is_symbol! operation_name
       ensure_exists! operation_name, wsdl
+
       new(operation_name, wsdl, options)
     end
 
@@ -16,6 +18,13 @@ module Savon
       unless wsdl.soap_actions.include? operation_name
         raise ArgumentError, "Unable to find SOAP operation: #{operation_name}\n" \
                              "Operations provided by your service: #{wsdl.soap_actions.inspect}"
+      end
+    end
+
+    def self.ensure_name_is_symbol!(operation_name)
+      unless operation_name.kind_of? Symbol
+        raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
+                             "Actual: #{operation_name.inspect} (#{operation_name.class})"
       end
     end
 
