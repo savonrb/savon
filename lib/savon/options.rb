@@ -1,21 +1,45 @@
 module Savon
   class Options
 
-    GLOBAL   = [ :raise_errors, :env_namespace, :soap_version, :soap_header,
-                 :hooks, :logger, :pretty_print_xml, :last_response ]
+    GLOBAL = [
+
+      # SOAP endpoint.
+      :endpoint,
+
+      # Proxy server to use for all requests.
+      :proxy,
+
+      # A Hash of HTTP headers.
+      :headers,
+
+      # Open timeout in seconds.
+      :open_timeout,
+
+      # Read timeout in seconds.
+      :read_timeout,
+
+      # Used by Savon to store the last response to pass
+      # its cookies to the next request.
+      :last_response,
+
+      # XXX: not yet supported [dh, 2012-12-06]
+      :raise_errors,
+      :env_namespace,
+      :soap_version,
+      :soap_header,
+      :hooks,
+      :logger,
+      :pretty_print_xml
+    ]
 
     REQUEST  = [ :message, :xml ]
 
     SCOPES   = { :global => GLOBAL, :request => REQUEST }
 
     DEFAULTS = {
-
-      :soap_version => lambda { 1 },
-
-      :hooks => lambda { Class.new { def fire(*) yield end }.new },
-
-      :logger => lambda { Class.new { def log(msg, *) end }.new }
-
+      :hooks        => lambda { Class.new { def fire(*) yield end }.new },
+      :logger       => lambda { Class.new { def log(msg, *) end }.new },
+      :soap_version => lambda { 1 }
     }
 
     SCOPES.each do |scope_sym, scope|

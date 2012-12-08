@@ -3,6 +3,22 @@ require "integration/support/server"
 
 describe "NewClient Options" do
 
+  before :all do
+    @server = IntegrationServer.run
+  end
+
+  after :all do
+    @server.stop
+  end
+
+  context "global: endpoint" do
+    it "sets the SOAP endpoint to use to allow requests without a WSDL document" do
+      client = new_client(:endpoint => @server.url)
+      response = client.call(:authenticate)
+      expect(response.http.body).to eq("post")
+    end
+  end
+
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
       non_routable_ip = "http://10.255.255.1"
@@ -14,19 +30,41 @@ describe "NewClient Options" do
   end
 
   context "global :read timeout" do
-    before do
-      @server = IntegrationServer.run
-    end
-
-    after do
-      @server.stop
-    end
-
     it "makes the client timeout after n seconds" do
-      timeout_url = @server.url + "/timeout"
+      timeout_url = @server.url + "timeout"
       client = new_client(:endpoint => timeout_url, :open_timeout => 1, :read_timeout => 1)
 
       expect { client.call(:authenticate) }.to raise_error(HTTPClient::ReceiveTimeoutError)
+    end
+  end
+
+  context "global :proxy" do
+    it "sets the proxy server to use" do
+      proxy_url = "http://example.com"
+      client = new_client(:endpoint => @server.url, :proxy => proxy_url)
+
+      # TODO: find a way to integration test this [dh, 2012-12-08]
+      HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
+
+      response = client.call(:authenticate)
+    end
+  end
+
+  context "global :headers" do
+    it "sets the HTTP headers for the next request" do
+      echo_header_url = @server.url + "echo-header"
+      client = new_client(:endpoint => echo_header_url, :headers => { "Echo-Header" => "savon" })
+
+      response = client.call(:authenticate)
+      expect(response.http.body).to eq("savon")
+    end
+
+    it "allows overwriting the SOAPAction HTTP header" do
+      inspect_header_url = @server.url + "inspect-header"
+      client = new_client(:endpoint => inspect_header_url, :headers => { "Inspect-Header" => "SOAPAction" })
+
+      response = client.call(:authenticate)
+      expect(response.http.body).to eq('"authenticate"')
     end
   end
 

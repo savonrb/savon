@@ -6,10 +6,11 @@ module Savon
   class NewClient
 
     def initialize(wsdl_locator, options = {})
-      @wsdl = Wasabi::Document.new(wsdl_locator)
-
       @options = Options.new
       @options.set(:global, options)
+
+      @wsdl = Wasabi::Document.new(wsdl_locator)
+      @wsdl.endpoint = @options.endpoint if @options.endpoint
     end
 
     def operations

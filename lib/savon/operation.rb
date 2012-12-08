@@ -71,10 +71,17 @@ module Savon
     end
 
     def create_http(options)
-      # TODO: properly configure the request [dh, 2012-12-06]
       http = HTTPI::Request.new
-      http.headers["SOAPAction"] = %{"#{soap_action}"}
+
+      http.proxy = options.proxy if options.proxy
       http.set_cookies(options.last_response) if options.last_response
+
+      http.open_timeout = options.open_timeout if options.open_timeout
+      http.read_timeout = options.read_timeout if options.read_timeout
+
+      http.headers = options.headers if options.headers
+      http.headers["SOAPAction"] ||= %{"#{soap_action}"}
+
       http
     end
 
