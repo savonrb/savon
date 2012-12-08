@@ -75,10 +75,18 @@ describe "NewClient Options" do
       expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
     end
 
-    it "accepts a String of raw XML to send" do
+    it "also accepts a String of raw XML" do
       repeat_url = @server.url + "repeat"
       response = new_client(:endpoint => repeat_url).call(:authenticate, :message => "<user>lea</user><password>top-secret</password>")
       expect(response.http.body).to include("<ins0:authenticate><user>lea</user><password>top-secret</password></ins0:authenticate>")
+    end
+  end
+
+  context "request :xml" do
+    it "accepts a String of raw XML" do
+      repeat_url = @server.url + "repeat"
+      response = new_client(:endpoint => repeat_url).call(:authenticate, :xml => "<soap>request</soap>")
+      expect(response.http.body).to eq("<soap>request</soap>")
     end
   end
 
