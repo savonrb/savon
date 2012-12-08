@@ -18,6 +18,11 @@ module Savon
       # Read timeout in seconds.
       :read_timeout,
 
+      # Sets whether elements should be :qualified or unqualified.
+      # If you need to use this option, please open an issue and make
+      # sure to add your WSDL document for debugging.
+      :element_form_default,
+
       # Used by Savon to store the last response to pass
       # its cookies to the next request.
       :last_response,

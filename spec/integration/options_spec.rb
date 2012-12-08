@@ -38,6 +38,22 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :element_form_default" do
+    it "specifies whether elements should be :qualified or :unqualified" do
+      # qualified
+      client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :qualified)
+
+      response = client.call(:authenticate, :message => { :user => "luke", :password => "secret" })
+      expect(response.http.body).to include("<ins0:user>luke</ins0:user><ins0:password>secret</ins0:password>")
+
+      # unqualified
+      client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :unqualified)
+
+      response = client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
+      expect(response.http.body).to include("<user>lea</user><password>top-secret</password>")
+    end
+  end
+
   context "global :proxy" do
     it "sets the proxy server to use" do
       proxy_url = "http://example.com"
