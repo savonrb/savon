@@ -61,6 +61,7 @@ module Savon
       soap.xml = options.xml
 
       soap.endpoint = @wsdl.endpoint
+      soap.env_namespace = options.env_namespace if options.env_namespace
       soap.element_form_default = options.element_form_default || @wsdl.element_form_default
 
       soap.namespace = namespace

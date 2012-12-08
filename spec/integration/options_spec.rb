@@ -84,6 +84,22 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :env_namespace" do
+    it "when set, replaces the default namespace identifier for the SOAP envelope" do
+      client = new_client(:endpoint => @server.url(:repeat), :env_namespace => "soapenv")
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to include("<soapenv:Envelope")
+    end
+
+    it "when not set, Savon defaults to use :env as the namespace identifier for the SOAP envelope" do
+      client = new_client(:endpoint => @server.url(:repeat))
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to include("<env:Envelope")
+    end
+  end
+
   context "global: raise_errors" do
     it "when true, instructs Savon to raise SOAP fault errors" do
       client = new_client(:endpoint => @server.url(:repeat), :raise_errors => true)

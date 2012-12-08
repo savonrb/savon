@@ -23,6 +23,11 @@ module Savon
       # sure to add your WSDL document for debugging.
       :element_form_default,
 
+      # Can be used to change the SOAP envelope namespace identifier.
+      # If you need to use this option, please open an issue and make
+      # sure to add your WSDL document for debugging.
+      :env_namespace,
+
       # Whether or not to raise SOAP fault and HTTP errors.
       :raise_errors,
 
@@ -31,7 +36,6 @@ module Savon
       :last_response,
 
       # XXX: not yet supported [dh, 2012-12-06]
-      :env_namespace,
       :soap_version,
       :soap_header,
       :hooks,
