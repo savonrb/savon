@@ -38,9 +38,9 @@ class IntegrationServer
 
   attr_reader :app, :host, :port, :server
 
-  def url
+  def url(path = "")
     protocol = ssl? ? "https" : "http"
-    "#{protocol}://#{host}:#{port}/"
+    File.join "#{protocol}://#{host}:#{port}/", path.to_s
   end
 
   def ssl?
