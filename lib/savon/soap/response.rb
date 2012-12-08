@@ -25,6 +25,8 @@ module Savon
         !soap_fault? && !http_error?
       end
 
+      alias successful? success?
+
       # Returns whether there was a SOAP fault.
       def soap_fault?
         soap_fault.present?
