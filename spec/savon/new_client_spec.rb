@@ -37,7 +37,7 @@ describe Savon::NewClient do
       expect(response).to eq(soap_response)
     end
 
-    it "should set the cookies for the next request" do
+    it "sets the cookies for the next request" do
       last_response = new_http_response(:headers => { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" })
 
       HTTPI.stubs(:post).returns(last_response)
