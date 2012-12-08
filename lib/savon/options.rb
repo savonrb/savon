@@ -1,3 +1,5 @@
+require "savon/logger"
+
 module Savon
   class Options
 
@@ -31,6 +33,9 @@ module Savon
       # Whether or not to raise SOAP fault and HTTP errors.
       :raise_errors,
 
+      # The logger to use. Defaults to a Savon::Logger instance.
+      :logger,
+
       # Used by Savon to store the last response to pass
       # its cookies to the next request.
       :last_response,
@@ -39,7 +44,6 @@ module Savon
       :soap_version,
       :soap_header,
       :hooks,
-      :logger,
       :pretty_print_xml
 
     ]
@@ -58,7 +62,7 @@ module Savon
 
     DEFAULTS = {
       :hooks        => lambda { Class.new { def fire(*) yield end }.new },
-      :logger       => lambda { Class.new { def log(msg, *) end }.new },
+      :logger       => lambda { Logger.new },
       :soap_version => lambda { 1 }
     }
 

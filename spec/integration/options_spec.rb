@@ -128,7 +128,32 @@ describe "NewClient Options" do
       expect(response).to_not be_successful
       expect(response).to be_a_http_error
     end
+  end
 
+  context "global :logger" do
+    it "defaults to an instance of Savon::Logger" do
+      logger = new_client.options.logger
+      expect(logger).to be_a(Savon::Logger)
+    end
+
+    it "can be replaced by an object that responds to #log" do
+      duck_logger = Class.new {
+
+        def self.logs
+          @logs ||= []
+        end
+
+        def log(message, options = {})
+          self.class.logs << message
+        end
+
+      }
+
+      client = new_client(:logger => duck_logger.new)
+      client.call(:authenticate)
+
+      expect(duck_logger.logs).to include("SOAP request: http://example.com/validation/1.0/AuthenticationService")
+    end
   end
 
   context "request :message" do
