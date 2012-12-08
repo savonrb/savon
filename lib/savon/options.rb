@@ -30,9 +30,18 @@ module Savon
       :hooks,
       :logger,
       :pretty_print_xml
+
     ]
 
-    REQUEST  = [ :message, :xml ]
+    REQUEST  = [
+
+      # The SOAP message to send. Expected to be a Hash or a String.
+      :message,
+
+      # The SOAP request XML to send. Expected to be a String.
+      :xml
+
+    ]
 
     SCOPES   = { :global => GLOBAL, :request => REQUEST }
 
