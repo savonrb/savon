@@ -31,7 +31,7 @@ describe "NewClient Options" do
 
   context "global :read_timeout" do
     it "makes the client timeout after n seconds" do
-      timeout_url = @server.url + "timeout"
+      timeout_url = @server.url(:timeout)
       client = new_client(:endpoint => timeout_url, :open_timeout => 1, :read_timeout => 1)
 
       expect { client.call(:authenticate) }.to raise_error(HTTPClient::ReceiveTimeoutError)
@@ -68,7 +68,7 @@ describe "NewClient Options" do
 
   context "global :headers" do
     it "sets the HTTP headers for the next request" do
-      repeat_header_url = @server.url + "repeat-header"
+      repeat_header_url = @server.url(:repeat_header)
       client = new_client(:endpoint => repeat_header_url, :headers => { "Repeat-Header" => "savon" })
 
       response = client.call(:authenticate)
@@ -76,7 +76,7 @@ describe "NewClient Options" do
     end
 
     it "allows overwriting the SOAPAction HTTP header" do
-      inspect_header_url = @server.url + "inspect-header"
+      inspect_header_url = @server.url(:inspect_header)
       client = new_client(:endpoint => inspect_header_url, :headers => { "Inspect-Header" => "SOAPAction" })
 
       response = client.call(:authenticate)
@@ -86,13 +86,13 @@ describe "NewClient Options" do
 
   context "request :message" do
     it "accepts a Hash which is passed to Gyoku to be converted to XML" do
-      repeat_url = @server.url + "repeat"
+      repeat_url = @server.url(:repeat)
       response = new_client(:endpoint => repeat_url).call(:authenticate, :message => { :user => "luke", :password => "secret" })
       expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
     end
 
     it "also accepts a String of raw XML" do
-      repeat_url = @server.url + "repeat"
+      repeat_url = @server.url(:repeat)
       response = new_client(:endpoint => repeat_url).call(:authenticate, :message => "<user>lea</user><password>top-secret</password>")
       expect(response.http.body).to include("<ins0:authenticate><user>lea</user><password>top-secret</password></ins0:authenticate>")
     end
@@ -100,7 +100,7 @@ describe "NewClient Options" do
 
   context "request :xml" do
     it "accepts a String of raw XML" do
-      repeat_url = @server.url + "repeat"
+      repeat_url = @server.url(:repeat)
       response = new_client(:endpoint => repeat_url).call(:authenticate, :xml => "<soap>request</soap>")
       expect(response.http.body).to eq("<soap>request</soap>")
     end

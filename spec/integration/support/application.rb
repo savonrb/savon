@@ -27,13 +27,13 @@ class IntegrationServer
       }
     end
 
-    map "/repeat-header" do
+    map "/repeat_header" do
       run lambda { |env|
         IntegrationServer.respond_with env["HTTP_REPEAT_HEADER"]
       }
     end
 
-    map "/inspect-header" do
+    map "/inspect_header" do
       run lambda { |env|
         header_to_inspect = "HTTP_" + env["HTTP_INSPECT_HEADER"].upcase
         IntegrationServer.respond_with env[header_to_inspect]
