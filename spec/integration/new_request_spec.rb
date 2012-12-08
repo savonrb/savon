@@ -2,7 +2,9 @@
 
 describe "NewClient Integration" do
 
-  subject(:client) { Savon.new_client(service_endpoint) }
+  subject(:client) {
+    Savon.new_client(service_endpoint, :open_timeout => 3, :read_timeout => 3)
+  }
 
   context "stockquote" do
     let(:service_endpoint) { "http://www.webservicex.net/stockquote.asmx?WSDL" }
