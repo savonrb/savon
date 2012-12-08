@@ -52,8 +52,8 @@ describe "NewClient Options" do
 
   context "global :headers" do
     it "sets the HTTP headers for the next request" do
-      echo_header_url = @server.url + "echo-header"
-      client = new_client(:endpoint => echo_header_url, :headers => { "Echo-Header" => "savon" })
+      repeat_header_url = @server.url + "repeat-header"
+      client = new_client(:endpoint => repeat_header_url, :headers => { "Repeat-Header" => "savon" })
 
       response = client.call(:authenticate)
       expect(response.http.body).to eq("savon")

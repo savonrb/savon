@@ -21,9 +21,9 @@ class IntegrationServer
       }
     end
 
-    map "/echo-header" do
+    map "/repeat-header" do
       run lambda { |env|
-        IntegrationServer.respond_with env["HTTP_ECHO_HEADER"]
+        IntegrationServer.respond_with env["HTTP_REPEAT_HEADER"]
       }
     end
 
