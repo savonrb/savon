@@ -14,6 +14,12 @@ class IntegrationServer
       }
     end
 
+    map "/repeat" do
+      run lambda { |env|
+        IntegrationServer.respond_with env["rack.input"].read
+      }
+    end
+
     map "/timeout" do
       run lambda { |env|
         sleep 2

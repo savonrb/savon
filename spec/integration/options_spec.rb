@@ -68,6 +68,14 @@ describe "NewClient Options" do
     end
   end
 
+  context "request :message" do
+    it "wors" do
+      repeat_url = @server.url + "repeat"
+      response = new_client(:endpoint => repeat_url).call(:authenticate, :message => { :user => "luke", :password => "secret" })
+      expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
+    end
+  end
+
   def new_client(options = {})
     Savon.new_client(Fixture.wsdl(:authentication), options)
   end
