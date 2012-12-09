@@ -50,7 +50,7 @@ class IntegrationServer
       }
     end
 
-    map "/basic-auth" do
+    map "/basic_auth" do
       use Rack::Auth::Basic, "basic-realm" do |username, password|
         username == "admin" && password == "secret"
       end
@@ -60,7 +60,7 @@ class IntegrationServer
       }
     end
 
-    map "/digest-auth" do
+    map "/digest_auth" do
       unprotected_app = lambda { |env|
         IntegrationServer.respond_with :body => "digest-auth"
       }

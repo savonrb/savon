@@ -211,6 +211,15 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :basic_auth" do
+    it "sets the basic auth credentials" do
+      client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => ["admin", "secret"])
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to eq("basic-auth")
+    end
+  end
+
   context "global :pretty_print_xml" do
     it "is a nice but expensive way to debug XML messages" do
       duck_logger = Class.new {

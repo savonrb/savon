@@ -13,7 +13,8 @@ module Savon
     end
 
     def []=(option, value)
-      self.send(option, value)
+      value = [value].flatten
+      self.send(option, *value)
     end
 
     def include?(option)
@@ -126,7 +127,6 @@ module Savon
       @options[:logger] = logger
     end
 
-
     # Whether to pretty print request and response XML log messages.
     def pretty_print_xml(pretty_print_xml)
       @options[:pretty_print_xml] = pretty_print_xml
@@ -140,6 +140,11 @@ module Savon
 
     def hooks(hooks)
       @options[:hooks] = hooks
+    end
+
+    # Accepts basic authentication credentials.
+    def basic_auth(*credentials)
+      @options[:basic_auth] = credentials
     end
   end
 

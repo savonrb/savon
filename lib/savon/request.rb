@@ -42,6 +42,8 @@ module Savon
       http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"}
       http.headers["Content-Type"] = content_type
 
+      http.auth.basic *@globals[:basic_auth] if @globals.include? :basic_auth
+
       http
     end
 
