@@ -26,6 +26,7 @@ module Savon
       is_reader_method = option.to_s[-1, 1] == "?"
       return if is_reader_method
 
+      # we live dangerously! [dh, 2012-12-09]
       define_method("#{option}?") { @options.key? option }
     end
 
