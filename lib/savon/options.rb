@@ -142,10 +142,16 @@ module Savon
       @options[:hooks] = hooks
     end
 
-    # Accepts basic authentication credentials.
+    # HTTP basic auth credentials.
     def basic_auth(*credentials)
       @options[:basic_auth] = credentials
     end
+
+    # HTTP digest auth credentials.
+    def digest_auth(*credentials)
+      @options[:digest_auth] = credentials
+    end
+
   end
 
   class LocalOptions < Options

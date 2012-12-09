@@ -43,6 +43,7 @@ module Savon
       http.headers["Content-Type"] = content_type
 
       http.auth.basic *@globals[:basic_auth] if @globals.include? :basic_auth
+      http.auth.digest *@globals[:digest_auth] if @globals.include? :digest_auth
 
       http
     end
