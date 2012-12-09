@@ -4,8 +4,8 @@ describe "Integration" do
 
   subject(:client) {
     client = Savon.client(service_endpoint)
-    client.http.open_timeout = 10
-    client.http.read_timeout = 10
+    client.http.open_timeout = 3
+    client.http.read_timeout = 3
     client
   }
 
