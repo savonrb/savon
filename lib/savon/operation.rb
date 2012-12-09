@@ -57,10 +57,12 @@ module Savon
 
     def create_soap(options)
       soap = SOAP::XML.new(options)
+      soap.endpoint = @wsdl.endpoint
+
       soap.body = options.message
       soap.xml = options.xml
 
-      soap.endpoint = @wsdl.endpoint
+      soap.encoding = options.encoding
       soap.env_namespace = options.env_namespace if options.env_namespace
       soap.element_form_default = options.element_form_default || @wsdl.element_form_default
 

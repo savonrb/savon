@@ -39,6 +39,7 @@ describe "NewClient Options" do
       response = client.call(:authenticate)
       expect(response.http.body).to eq("savon")
     end
+  end
 
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
@@ -59,6 +60,24 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :encoding" do
+    it "changes the XML instruction" do
+      client = new_client(:endpoint => @server.url(:repeat), :encoding => "UTF-16")
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to match(/<\?xml version="1\.0" encoding="UTF-16"\?>/)
+    end
+
+    it "changes the Content-Type header" do
+      inspect_header_url = @server.url(:inspect_header)
+      client = new_client(:endpoint => inspect_header_url, :encoding => "UTF-16",
+                          :headers => { "Inspect" => "CONTENT_TYPE" })
+
+      response = client.call(:authenticate)
+      expect(response.http.body).to eq("text/xml;charset=UTF-16")
+    end
+  end
+
   context "global :element_form_default" do
     it "specifies whether elements should be :qualified or :unqualified" do
       # qualified
@@ -73,11 +92,11 @@ describe "NewClient Options" do
       response = client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
       expect(response.http.body).to include("<user>lea</user><password>top-secret</password>")
     end
-  end
 
     it "allows overwriting the SOAPAction HTTP header" do
       inspect_header_url = @server.url(:inspect_header)
-      client = new_client(:endpoint => inspect_header_url, :headers => { "Inspect-Header" => "SOAPAction" })
+      client = new_client(:endpoint => inspect_header_url,
+                          :headers => { "Inspect" => "HTTP_SOAPACTION" })
 
       response = client.call(:authenticate)
       expect(response.http.body).to eq('"authenticate"')

@@ -20,6 +20,9 @@ module Savon
       # Read timeout in seconds.
       :read_timeout,
 
+      # The encoding to use. Defaults to "UTF-8".
+      :encoding,
+
       # Sets whether elements should be :qualified or unqualified.
       # If you need to use this option, please open an issue and make
       # sure to add your WSDL document for debugging.
@@ -67,9 +70,10 @@ module Savon
     SCOPES   = { :global => GLOBAL, :request => REQUEST }
 
     DEFAULTS = {
-      :hooks        => lambda { Class.new { def fire(*) yield end }.new },
+      :encoding     => lambda { "UTF-8" },
+      :soap_version => lambda { 1 },
       :logger       => lambda { Logger.new },
-      :soap_version => lambda { 1 }
+      :hooks        => lambda { Class.new { def fire(*) yield end }.new }
     }
 
     SCOPES.each do |scope_sym, scope|

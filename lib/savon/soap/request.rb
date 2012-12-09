@@ -10,7 +10,7 @@ module Savon
     class Request
 
       # Content-Types by SOAP version.
-      CONTENT_TYPE = { 1 => "text/xml;charset=UTF-8", 2 => "application/soap+xml;charset=UTF-8" }
+      CONTENT_TYPE = { 1 => "text/xml;charset=%s", 2 => "application/soap+xml;charset=%s" }
 
       # Expects an <tt>HTTPI::Request</tt> and a <tt>Savon::SOAP::XML</tt> object
       # to execute a SOAP request and returns the response.
@@ -55,7 +55,8 @@ module Savon
           http.body = soap.to_xml
         end
 
-        http.headers["Content-Type"] = CONTENT_TYPE[soap.version]
+        content_type = CONTENT_TYPE[soap.version] % config.encoding
+        http.headers["Content-Type"] = content_type
         http.headers["Content-Length"] = soap.to_xml.bytesize.to_s
         http
       end

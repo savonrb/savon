@@ -127,7 +127,7 @@ module Savon
 
       # Returns the SOAP request encoding. Defaults to "UTF-8".
       def encoding
-        @encoding ||= "UTF-8"
+        @encoding ||= config.encoding
       end
 
       # Sets the SOAP request encoding.

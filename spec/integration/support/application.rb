@@ -46,8 +46,7 @@ class IntegrationServer
 
     map "/inspect_header" do
       run lambda { |env|
-        header_to_inspect = "HTTP_" + env["HTTP_INSPECT_HEADER"].upcase
-        IntegrationServer.respond_with :body => env[header_to_inspect]
+        IntegrationServer.respond_with :body => env[env["HTTP_INSPECT"]]
       }
     end
 
