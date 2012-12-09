@@ -8,14 +8,14 @@ module Savon
     def initialize(globals = {})
       @globals = GlobalOptions.new_with_defaults(globals)
 
-      unless @globals.wsdl? || (@globals.endpoint? && @globals.namespace?)
+      unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!
       end
 
       @wsdl = Wasabi::Document.new
-      @wsdl.document = @globals[:wsdl] if @globals.wsdl?
-      @wsdl.endpoint = @globals[:endpoint] if @globals.endpoint?
-      @wsdl.namespace = @globals[:namespace] if @globals.namespace?
+      @wsdl.document = @globals[:wsdl] if @globals.include? :wsdl
+      @wsdl.endpoint = @globals[:endpoint] if @globals.include? :endpoint
+      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
     end
 
     attr_reader :globals
@@ -36,6 +36,10 @@ module Savon
     end
 
     private
+
+    def wsdl_or_endpoint_and_namespace_specified?
+      @globals.include?(:wsdl) || (@globals.include?(:endpoint) && @globals.include?(:namespace))
+    end
 
     def raise_initialization_error!
       raise ArgumentError, "Expected either a WSDL document or the SOAP endpoint and target namespace options.\n\n" \

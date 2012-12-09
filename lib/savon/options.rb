@@ -16,20 +16,16 @@ module Savon
       self.send(option, value)
     end
 
+    def include?(option)
+      @options.key? option
+    end
+
     private
 
     def assign(options)
       options.each do |option, value|
         self.send(option, value)
       end
-    end
-
-    def self.method_added(option)
-      is_reader_method = option.to_s[-1, 1] == "?"
-      return if is_reader_method
-
-      # we live dangerously! [dh, 2012-12-09]
-      define_method("#{option}?") { @options.key? option }
     end
 
   end
