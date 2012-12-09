@@ -8,7 +8,7 @@ module Savon
       assign options
     end
 
-    def get(option)
+    def [](option)
       @options[option]
     end
 

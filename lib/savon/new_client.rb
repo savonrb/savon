@@ -13,9 +13,9 @@ module Savon
       end
 
       @wsdl = Wasabi::Document.new
-      @wsdl.document = @globals.get(:wsdl) if @globals.wsdl?
-      @wsdl.endpoint = @globals.get(:endpoint) if @globals.endpoint?
-      @wsdl.namespace = @globals.get(:namespace) if @globals.namespace?
+      @wsdl.document = @globals[:wsdl] if @globals.wsdl?
+      @wsdl.endpoint = @globals[:endpoint] if @globals.endpoint?
+      @wsdl.namespace = @globals[:namespace] if @globals.namespace?
     end
 
     attr_reader :globals

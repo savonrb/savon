@@ -187,7 +187,7 @@ describe "NewClient Options" do
 
   context "global :logger" do
     it "defaults to an instance of Savon::Logger" do
-      logger = new_client.globals.get(:logger)
+      logger = new_client.globals[:logger]
       expect(logger).to be_a(Savon::Logger)
     end
 

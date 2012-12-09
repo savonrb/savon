@@ -10,7 +10,7 @@ module Savon
       @globals = globals
       @locals  = locals
 
-      raise_soap_and_http_errors! if @globals.get(:raise_errors)
+      raise_soap_and_http_errors! if @globals[:raise_errors]
     end
 
     attr_reader :http, :globals, :locals

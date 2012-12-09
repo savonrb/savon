@@ -30,38 +30,38 @@ module Savon
 
     def create_http_client
       http = HTTPI::Request.new
-      http.url = @globals.get(:endpoint)
+      http.url = @globals[:endpoint]
 
-      http.proxy = @globals.get(:proxy) if @globals.proxy?
-      http.set_cookies @globals.get(:last_response) if @globals.last_response?
+      http.proxy = @globals[:proxy] if @globals.proxy?
+      http.set_cookies @globals[:last_response] if @globals.last_response?
 
-      http.open_timeout = @globals.get(:open_timeout) if @globals.open_timeout?
-      http.read_timeout = @globals.get(:read_timeout) if @globals.read_timeout?
+      http.open_timeout = @globals[:open_timeout] if @globals.open_timeout?
+      http.read_timeout = @globals[:read_timeout] if @globals.read_timeout?
 
-      http.headers = @globals.get(:headers) if @globals.headers?
-      http.headers["SOAPAction"] ||= %{"#{@locals.get(:soap_action)}"}
+      http.headers = @globals[:headers] if @globals.headers?
+      http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"}
       http.headers["Content-Type"] = content_type
 
       http
     end
 
     def content_type
-      CONTENT_TYPE[@globals.get(:soap_version)] % @globals.get(:encoding)
+      CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
     end
 
     def log_request(url, headers, body)
       log "SOAP request: #{url}"
       log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-      log body, :pretty => @globals.get(:pretty_print_xml), :filter => true
+      log body, :pretty => @globals[:pretty_print_xml], :filter => true
     end
 
     def log_response(code, body)
       log "SOAP response (status #{code}):"
-      log body, :pretty => @globals.get(:pretty_print_xml)
+      log body, :pretty => @globals[:pretty_print_xml]
     end
 
     def log(message, options = {})
-      @globals.get(:logger).log(message, options)
+      @globals[:logger].log(message, options)
     end
 
   end

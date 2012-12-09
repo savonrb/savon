@@ -14,8 +14,8 @@ module Savon
     end
 
     def to_s
-      message = @locals.get(:message)
-      element_form_default = @globals.get(:element_form_default)
+      message = @locals[:message]
+      element_form_default = @globals[:element_form_default]
 
       return message.to_s unless message.kind_of? Hash
 

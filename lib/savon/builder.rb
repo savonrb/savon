@@ -36,7 +36,7 @@ module Savon
     end
 
     def to_s
-      return @locals.get(:xml) if @locals.xml?
+      return @locals[:xml] if @locals.xml?
 
       tag(builder, :Envelope, namespaces) do |xml|
         tag(xml, :Header) { xml << header.to_s } unless header.empty?
@@ -48,14 +48,14 @@ module Savon
 
     def namespaces
       @namespaces ||= begin
-        env_namespace = @globals.get(:env_namespace)
+        env_namespace = @globals[:env_namespace]
 
         namespaces = SCHEMA_TYPES.dup
-        namespaces["xmlns:#{@globals.get(:namespace_identifier)}"] = @globals.get(:namespace)
+        namespaces["xmlns:#{@globals[:namespace_identifier]}"] = @globals[:namespace]
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""
-        namespaces[key.join(":")] = SOAP::NAMESPACE[@globals.get(:soap_version)]
+        namespaces[key.join(":")] = SOAP::NAMESPACE[@globals[:soap_version]]
 
         namespaces
       end
@@ -66,12 +66,12 @@ module Savon
     end
 
     def message_tag
-      return [@globals.get(:namespace_identifier), @locals.get(:message_tag).to_sym] unless used_namespaces[[@operation_name.to_s]]
-      [used_namespaces[[@operation_name.to_s]], @locals.get(:message_tag).to_sym]
+      return [@globals[:namespace_identifier], @locals[:message_tag].to_sym] unless used_namespaces[[@operation_name.to_s]]
+      [used_namespaces[[@operation_name.to_s]], @locals[:message_tag].to_sym]
     end
 
     def message
-      @message ||= Message.new(@operation_name, @globals.get(:namespace_identifier), @used_namespaces, @globals, @locals)
+      @message ||= Message.new(@operation_name, @globals[:namespace_identifier], @used_namespaces, @globals, @locals)
     end
 
     def used_namespaces
@@ -87,12 +87,12 @@ module Savon
 
     def builder
       builder = ::Builder::XmlMarkup.new
-      builder.instruct!(:xml, :encoding => @globals.get(:encoding))
+      builder.instruct!(:xml, :encoding => @globals[:encoding])
       builder
     end
 
     def tag(xml, name, namespaces = {}, &block)
-      env_namespace = @globals.get(:env_namespace)
+      env_namespace = @globals[:env_namespace]
 
       if env_namespace && env_namespace != ""
         xml.tag! env_namespace, name, namespaces, &block

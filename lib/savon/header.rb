@@ -20,7 +20,7 @@ module Savon
     private
 
     def header
-      @header ||= @globals.soap_header? ? @globals.get(:soap_header) : {}
+      @header ||= @globals.soap_header? ? @globals[:soap_header] : {}
     end
 
     def wsse_header
