@@ -96,6 +96,11 @@ module Savon
       @options[:encoding] = encoding
     end
 
+    # The global SOAP header. Expected to be a Hash.
+    def soap_header(header)
+      @options[:soap_header] = header
+    end
+
     # Sets whether elements should be :qualified or unqualified.
     # If you need to use this option, please open an issue and make
     # sure to add your WSDL document for debugging.
@@ -126,6 +131,7 @@ module Savon
     def logger(logger)
       @options[:logger] = logger
     end
+
 
     # Whether to pretty print request and response XML log messages.
     def pretty_print_xml(pretty_print_xml)

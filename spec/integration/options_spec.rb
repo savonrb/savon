@@ -90,6 +90,15 @@ describe "NewClient Options" do
     end
   end
 
+  context "soap_header" do
+    it "accepts a Hash of SOAP header information" do
+      client = new_client(:endpoint => @server.url(:repeat), :soap_header => { :auth_token => "secret" })
+
+      response = client.call(:authenticate)
+      expect(response.http.body).to include("<env:Header><authToken>secret</authToken></env:Header>")
+    end
+  end
+
   context "global :element_form_default" do
     it "specifies whether elements should be :qualified or :unqualified" do
       # qualified
