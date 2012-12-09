@@ -36,7 +36,7 @@ module Savon
     end
 
     def to_s
-      return @locals.get(:xml) if @locals.has?(:xml)
+      return @locals.get(:xml) if @locals.xml?
 
       tag(builder, :Envelope, namespaces) do |xml|
         tag(xml, :Header) { xml << header.to_s } unless header.empty?

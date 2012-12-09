@@ -22,16 +22,11 @@ module Savon
       end
     end
 
-    def has?(*options)
-      options.all? { |option| @options.include? option }
-    end
+    def self.method_added(option)
+      is_reader_method = option.to_s[-1, 1] == "?"
+      return if is_reader_method
 
-    def to_hash
-      @options
-    end
-
-    def method_missing(method, *arguments)
-      raise "No such method #{method.inspect}"
+      define_method("#{option}?") { @options.key? option }
     end
 
   end

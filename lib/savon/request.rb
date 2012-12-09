@@ -32,13 +32,13 @@ module Savon
       http = HTTPI::Request.new
       http.url = @globals.get(:endpoint)
 
-      http.proxy = @globals.get(:proxy) if @globals.has?(:proxy)
-      http.set_cookies @globals.get(:last_response) if @globals.has?(:last_response)
+      http.proxy = @globals.get(:proxy) if @globals.proxy?
+      http.set_cookies @globals.get(:last_response) if @globals.last_response?
 
-      http.open_timeout = @globals.get(:open_timeout) if @globals.has?(:open_timeout)
-      http.read_timeout = @globals.get(:read_timeout) if @globals.has?(:read_timeout)
+      http.open_timeout = @globals.get(:open_timeout) if @globals.open_timeout?
+      http.read_timeout = @globals.get(:read_timeout) if @globals.read_timeout?
 
-      http.headers = @globals.get(:headers) if @globals.has?(:headers)
+      http.headers = @globals.get(:headers) if @globals.headers?
       http.headers["SOAPAction"] ||= %{"#{@locals.get(:soap_action)}"}
       http.headers["Content-Type"] = content_type
 

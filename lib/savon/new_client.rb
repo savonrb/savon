@@ -8,14 +8,14 @@ module Savon
     def initialize(globals = {})
       @globals = GlobalOptions.new_with_defaults(globals)
 
-      unless @globals.has?(:wsdl) || @globals.has?(:endpoint, :namespace)
+      unless @globals.wsdl? || (@globals.endpoint? && @globals.namespace?)
         raise_initialization_error!
       end
 
       @wsdl = Wasabi::Document.new
-      @wsdl.document = @globals.get(:wsdl) if @globals.has?(:wsdl)
-      @wsdl.endpoint = @globals.get(:endpoint) if @globals.has?(:endpoint)
-      @wsdl.namespace = @globals.get(:namespace) if @globals.has?(:namespace)
+      @wsdl.document = @globals.get(:wsdl) if @globals.wsdl?
+      @wsdl.endpoint = @globals.get(:endpoint) if @globals.endpoint?
+      @wsdl.namespace = @globals.get(:namespace) if @globals.namespace?
     end
 
     attr_reader :globals
