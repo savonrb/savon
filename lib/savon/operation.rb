@@ -44,6 +44,7 @@ module Savon
       set_soap_action
       set_env_namespace
       set_element_form_default
+      set_namespace_identifer
       set_message_tag
 
       request = Request.new(@globals, @locals)
@@ -105,6 +106,18 @@ module Savon
     def set_element_form_default
       return if @globals.has?(:element_form_default)
       @globals.set(:element_form_default, @wsdl.element_form_default)
+    end
+
+    def set_namespace_identifer
+      return if @globals.has?(:namespace_identifier)
+
+      identifier = if @wsdl.document? && (operation = @wsdl.operations[@name]) && nsid = operation[:namespace_identifier]
+        nsid.to_sym
+      else
+        :wsdl
+      end
+
+      @globals.set(:namespace_identifier, identifier)
     end
 
     def set_message_tag

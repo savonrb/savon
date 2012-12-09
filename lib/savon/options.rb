@@ -66,6 +66,11 @@ module Savon
       @options[:namespace] = namespace
     end
 
+    # The namespace identifer.
+    def namespace_identifier(identifier)
+      @options[:namespace_identifier] = identifier
+    end
+
     # Proxy server to use for all requests.
     def proxy(proxy)
       @options[:proxy] = proxy

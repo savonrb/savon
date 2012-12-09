@@ -51,7 +51,7 @@ module Savon
         env_namespace = @globals.get(:env_namespace)
 
         namespaces = SCHEMA_TYPES.dup
-        namespaces["xmlns:#{namespace_identifier}"] = @globals.get(:namespace)
+        namespaces["xmlns:#{@globals.get(:namespace_identifier)}"] = @globals.get(:namespace)
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""
@@ -66,21 +66,12 @@ module Savon
     end
 
     def message_tag
-      return [namespace_identifier, @locals.get(:message_tag).to_sym] unless used_namespaces[[@operation_name.to_s]]
+      return [@globals.get(:namespace_identifier), @locals.get(:message_tag).to_sym] unless used_namespaces[[@operation_name.to_s]]
       [used_namespaces[[@operation_name.to_s]], @locals.get(:message_tag).to_sym]
     end
 
     def message
-      @message ||= Message.new(@operation_name, namespace_identifier, @used_namespaces, @globals, @locals)
-    end
-
-    def namespace_identifier
-      if operation_namespace_defined_in_wsdl?
-        @wsdl.operations[@operation_name][:namespace_identifier].to_sym
-      else
-        # TODO: should probably be changed to an option or something. [dh, 2012-12-09]
-        :wsdl
-      end
+      @message ||= Message.new(@operation_name, @globals.get(:namespace_identifier), @used_namespaces, @globals, @locals)
     end
 
     def used_namespaces
@@ -92,11 +83,6 @@ module Savon
         return candidate_identifier.gsub(/^xmlns:/, '') if candidate_uri == uri
       end
       nil
-    end
-
-    def operation_namespace_defined_in_wsdl?
-      return false unless @wsdl.document?
-      (operation = @wsdl.operations[@operation_name]) && operation[:namespace_identifier]
     end
 
     def builder

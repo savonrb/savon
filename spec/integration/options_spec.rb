@@ -24,6 +24,16 @@ describe "NewClient Options" do
     end
   end
 
+  context "global :namespace_identifier" do
+    it "changes the default namespace identifier" do
+      client = new_client(:endpoint => @server.url(:repeat), :namespace_identifier => :lol)
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to include('xmlns:lol="http://v1_0.ws.auth.order.example.com/"')
+      expect(response.http.body).to include("<lol:authenticate></lol:authenticate>")
+    end
+  end
+
   context "global :proxy" do
     it "sets the proxy server to use" do
       proxy_url = "http://example.com"
