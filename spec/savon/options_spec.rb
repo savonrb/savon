@@ -15,7 +15,7 @@ describe Savon::Options do
     end
   end
 
-  it "can add, set and get values from a given scope" do
+  it "can add, set, merge and get values from a given scope" do
     options.set(:global, :logger => :some_logger)
     options.add(:global, :last_response, :http_response)
 
@@ -24,6 +24,10 @@ describe Savon::Options do
 
     last_response = options.get(:global, :last_response)
     expect(last_response).to eq(:http_response)
+
+    new_options = options.merge(:request, :message => { :some => "xml" })
+    expect(new_options.logger).to eq(:some_logger)
+    expect(new_options.message).to eq(:some => "xml")
   end
 
   it "returns a default value for :soap_version" do
@@ -39,6 +43,18 @@ describe Savon::Options do
 
     it "validates the options" do
       expect { options.set(:global, :invalid_option => 111) }.
+        to raise_error(ArgumentError, /Unknown global option\(s\): \[:invalid_option\]/)
+    end
+  end
+
+  describe "#merge" do
+    it "validates the scope" do
+      expect { options.merge(:invalid_scope, {}) }.
+        to raise_error(ArgumentError, /Invalid option scope: :invalid_scope/)
+    end
+
+    it "validates the options" do
+      expect { options.merge(:global, :invalid_option => 111) }.
         to raise_error(ArgumentError, /Unknown global option\(s\): \[:invalid_option\]/)
     end
   end

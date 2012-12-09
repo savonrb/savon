@@ -4,6 +4,21 @@ describe Savon::NewClient do
 
   subject(:client) { Savon.new_client Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }
 
+  describe "#options" do
+    it "returns the current set of options" do
+      expect(client.options).to be_an_instance_of(Savon::Options)
+    end
+
+    it "does not persist the request options" do
+      expect(client.options.message).to be_nil
+
+      HTTPI.stubs(:post).returns(new_http_response)
+      client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
+
+      expect(client.options.message).to be_nil
+    end
+  end
+
   describe "#operations" do
     it "returns all operation names" do
       operations = client.operations

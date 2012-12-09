@@ -35,7 +35,7 @@ module Savon
     end
 
     def call(options = {})
-      @options.set(:request, options)
+      @options = @options.merge(:request, options)
 
       http = create_http(@options)
       wsse = create_wsse(@options)

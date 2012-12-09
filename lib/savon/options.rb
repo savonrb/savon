@@ -85,8 +85,9 @@ module Savon
       end
     end
 
-    def initialize
-      @options = {}
+    def initialize(options = {})
+      # only pass in valid options, as there's no validation at this point!
+      @options = options
     end
 
     def add(scope, option, value)
@@ -100,7 +101,14 @@ module Savon
       validate_scope! scope
       validate_all_options! scope, options
 
-      @options = @options.merge(options)
+      @options = options
+    end
+
+    def merge(scope, options)
+      validate_scope! scope
+      validate_all_options! scope, options
+
+      Options.new @options.merge(options)
     end
 
     def get(scope, option)
