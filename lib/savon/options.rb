@@ -38,7 +38,6 @@ module Savon
         :encoding         => "UTF-8",
         :soap_version     => 1,
         :logger           => Logger.new,
-        :hooks            => Class.new { def fire(*) yield end }.new,
         :pretty_print_xml => false,
         :raise_errors     => false
       }
@@ -136,10 +135,6 @@ module Savon
     # its cookies to the next request.
     def last_response(last_response)
       @options[:last_response] = last_response
-    end
-
-    def hooks(hooks)
-      @options[:hooks] = hooks
     end
 
     # HTTP basic auth credentials.
