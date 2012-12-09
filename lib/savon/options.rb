@@ -57,9 +57,6 @@ module Savon
       # its cookies to the next request.
       :last_response,
 
-      #
-      :wsse_auth,
-
       # XXX: not yet supported [dh, 2012-12-06]
       :soap_header,
       :hooks
