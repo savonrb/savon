@@ -1,6 +1,5 @@
 require "savon/soap/xml"
 require "savon/soap/request"
-require "savon/soap/response"
 require "akami"
 require "httpi"
 
