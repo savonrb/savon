@@ -47,11 +47,14 @@ describe "Integration" do
       threads_waiting = request_data.size
 
       threads = request_data.map do |blz|
-        Thread.new do
+        thread = Thread.new do
           response = client.request :get_bank, :body => { :blz => blz }
           Thread.current[:value] = response[:get_bank_response][:details]
           mutex.synchronize { threads_waiting -= 1 }
         end
+
+        thread.abort_on_exception = true
+        thread
       end
 
       sleep(1) until threads_waiting == 0
