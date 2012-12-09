@@ -90,7 +90,7 @@ describe "NewClient Options" do
     end
   end
 
-  context "soap_header" do
+  context "global :soap_header" do
     it "accepts a Hash of SOAP header information" do
       client = new_client(:endpoint => @server.url(:repeat), :soap_header => { :auth_token => "secret" })
 
