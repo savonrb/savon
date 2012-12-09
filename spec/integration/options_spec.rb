@@ -113,7 +113,7 @@ describe "NewClient Options" do
     end
 
     it "when not set, Savon defaults to use :env as the namespace identifier for the SOAP envelope" do
-      client = new_client(:endpoint => @server.url(:repeat), :logger => Savon::Logger.new)
+      client = new_client(:endpoint => @server.url(:repeat))
       response = client.call(:authenticate)
 
       expect(response.http.body).to include("<env:Envelope")
