@@ -51,6 +51,9 @@ module Savon
       # its cookies to the next request.
       :last_response,
 
+      #
+      :wsse_auth,
+
       # XXX: not yet supported [dh, 2012-12-06]
       :soap_header,
       :hooks
@@ -84,24 +87,20 @@ module Savon
 
     def initialize
       @options = {}
-
-      SCOPES.each do |scope, _|
-        @options[scope] = {}
-      end
     end
 
     def add(scope, option, value)
       validate_scope! scope
       validate_option! scope, option
 
-      @options[scope][option] = value
+      @options[option] = value
     end
 
     def set(scope, options)
       validate_scope! scope
       validate_all_options! scope, options
 
-      @options[scope] = options
+      @options = @options.merge(options)
     end
 
     def get(scope, option)
@@ -109,7 +108,7 @@ module Savon
       validate_option! scope, option
 
       default_option = DEFAULTS[option]
-      @options[scope][option] ||= default_option ? default_option.call : nil
+      @options[option] ||= default_option ? default_option.call : nil
     end
 
     private
