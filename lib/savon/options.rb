@@ -83,19 +83,23 @@ module Savon
 
     ]
 
-    SCOPES   = { :global => GLOBAL, :request => REQUEST }
-
-    DEFAULTS = {
-      :encoding     => lambda { "UTF-8" },
-      :soap_version => lambda { 1 },
-      :logger       => lambda { Logger.new },
-      :hooks        => lambda { Class.new { def fire(*) yield end }.new }
-    }
+    SCOPES = { :global => GLOBAL, :request => REQUEST }
 
     SCOPES.each do |scope_sym, scope|
       scope.each do |option|
         define_method(option) { get(scope_sym, option) }
       end
+    end
+
+    def self.new_with_defaults(options = {})
+      defaults = {
+        :encoding     => "UTF-8",
+        :soap_version => 1,
+        :logger       => Logger.new,
+        :hooks        => Class.new { def fire(*) yield end }.new
+      }
+
+      new defaults.merge(options)
     end
 
     def initialize(options = {})
@@ -110,13 +114,6 @@ module Savon
       @options[option] = value
     end
 
-    def set(scope, options)
-      validate_scope! scope
-      validate_all_options! scope, options
-
-      @options = options
-    end
-
     def merge(scope, options)
       validate_scope! scope
       validate_all_options! scope, options
@@ -128,8 +125,7 @@ module Savon
       validate_scope! scope
       validate_option! scope, option
 
-      default_option = DEFAULTS[option]
-      @options[option] ||= default_option ? default_option.call : nil
+      @options[option]
     end
 
     private

@@ -10,6 +10,11 @@ describe Savon::NewClient do
   end
 
   describe "#options" do
+    it "calls Options.new_with_defaults" do
+      Savon::Options.expects(:new_with_defaults).returns(Savon::Options.new)
+      new_client
+    end
+
     it "returns the current set of options" do
       expect(new_client.options).to be_an_instance_of(Savon::Options)
     end

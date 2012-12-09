@@ -6,8 +6,7 @@ module Savon
   class NewClient
 
     def initialize(options)
-      @options = Options.new
-      @options.set(:global, options)
+      @options = Options.new_with_defaults.merge(:global, options)
 
       unless @options.wsdl || (@options.endpoint && @options.namespace)
         raise_initialization_error!

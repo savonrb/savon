@@ -2,48 +2,61 @@ require "spec_helper"
 
 describe Savon::Options do
 
-  subject(:options) { Savon::Options.new }
+  subject(:options) { Savon::Options.new_with_defaults }
 
-  it "only contains default values for existing options" do
-    Savon::Options::DEFAULTS.keys.each do |option|
-      included_in_global = Savon::Options::GLOBAL.include? option
-      included_in_request = Savon::Options::REQUEST.include? option
+  describe "#add" do
+    it "adds a single value to a given option in a given scope" do
+      options.add :global, :soap_version, 2
+      soap_version = options.get(:global, :soap_version)
 
-      unless included_in_global || included_in_request
-        fail "Expected global or request options to contain default value for #{option.inspect}"
-      end
+      expect(soap_version).to eq(2)
     end
   end
 
-  it "can add, set, merge and get values from a given scope" do
-    options.set(:global, :logger => :some_logger)
-    options.add(:global, :last_response, :http_response)
+  describe "#merge" do
+    it "merges two Option objects and returns a new one" do
+      options = self.options
+      new_options = options.merge(:global, :logger => :some_logger, :soap_version => 2)
 
-    logger = options.get(:global, :logger)
-    expect(logger).to eq(:some_logger)
-
-    last_response = options.get(:global, :last_response)
-    expect(last_response).to eq(:http_response)
-
-    new_options = options.merge(:request, :message => { :some => "xml" })
-    expect(new_options.logger).to eq(:some_logger)
-    expect(new_options.message).to eq(:some => "xml")
+      expect(options.object_id).not_to eq(new_options.object_id)
+      expect(new_options.logger).to eq(:some_logger)
+      expect(new_options.soap_version).to eq(2)
+    end
   end
 
-  it "returns a default value for :soap_version" do
-    soap_version = options.get(:global, :soap_version)
-    expect(soap_version).to eq(1)
+  describe "#get" do
+    it "returns an option from a given scope" do
+      soap_version = options.get(:global, :soap_version)
+      expect(soap_version).to eq(1)
+    end
   end
 
-  describe "#set" do
-    it "validates the scope" do
-      expect { options.set(:invalid_scope, {}) }.
-        to raise_error(ArgumentError, /Invalid option scope: :invalid_scope/)
+  context "defaults" do
+    it "memoizes the default values" do
+      options = self.options
+
+      expect(options.logger).to equal(options.logger)
+      expect(options.encoding).to equal(options.encoding)
     end
 
-    it "validates the options" do
-      expect { options.set(:global, :invalid_option => 111) }.
-        to raise_error(ArgumentError, /Unknown global option\(s\): \[:invalid_option\]/)
+    it "returns a default value for the global :encoding option" do
+      encoding = options.get(:global, :encoding)
+      expect(encoding).to eq("UTF-8")
+    end
+
+    it "returns a default value for the global :soap_version option" do
+      soap_version = options.get(:global, :soap_version)
+      expect(soap_version).to eq(1)
+    end
+
+    it "returns a default value for the global :logger option" do
+      logger = options.get(:global, :logger)
+      expect(logger).to be_a(Savon::Logger)
+    end
+
+    it "returns a shim for the global :hooks option" do
+      hooks = options.get(:global, :hooks)
+      expect(hooks).to respond_to(:fire)
     end
   end
 
