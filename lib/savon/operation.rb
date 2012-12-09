@@ -65,18 +65,6 @@ module Savon
 
     private
 
-    def add_wsdl_namespaces_to_builder(builder)
-      @wsdl.type_namespaces.each do |path, uri|
-        builder.use_namespace(path, uri)
-      end
-    end
-
-    def add_wsdl_types_to_builder(builder)
-      @wsdl.type_definitions.each do |path, type|
-        builder.types[path] = type
-      end
-    end
-
     def set_endpoint
       return if @globals.endpoint? || !@wsdl.document?
       @globals.set(:endpoint, @wsdl.endpoint)
@@ -127,6 +115,18 @@ module Savon
       message_tag ||= Gyoku::XMLKey.create(@name)
 
       @locals.set(:message_tag, message_tag)
+    end
+
+    def add_wsdl_namespaces_to_builder(builder)
+      @wsdl.type_namespaces.each do |path, uri|
+        builder.use_namespace(path, uri)
+      end
+    end
+
+    def add_wsdl_types_to_builder(builder)
+      @wsdl.type_definitions.each do |path, type|
+        builder.types[path] = type
+      end
     end
 
   end
