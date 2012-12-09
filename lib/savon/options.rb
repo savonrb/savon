@@ -68,8 +68,8 @@ module Savon
 
     REQUEST  = [
 
-      # SOAP message tag. If not set, Savon gets the name from the WSDL document (if available).
-      # Otherwise, Gyoku converts the operation name into an XML element.
+      # SOAP message tag (formerly known as SOAP input tag). If it's not set, Savon retrieves the name from
+      # the WSDL document (if available). Otherwise, Gyoku converts the operation name into an XML element.
       :message_tag,
 
       # Value of the SOAPAction HTTP header.
