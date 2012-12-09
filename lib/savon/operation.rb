@@ -8,8 +8,10 @@ module Savon
   class Operation
 
     def self.create(operation_name, wsdl, options)
-      ensure_name_is_symbol! operation_name
-      ensure_exists! operation_name, wsdl
+      if wsdl.document?
+        ensure_name_is_symbol! operation_name
+        ensure_exists! operation_name, wsdl
+      end
 
       new(operation_name, wsdl, options)
     end
@@ -66,14 +68,14 @@ module Savon
       soap.env_namespace = options.env_namespace if options.env_namespace
       soap.element_form_default = options.element_form_default || @wsdl.element_form_default
 
-      soap.namespace = namespace
+      soap.namespace = namespace(options)
       soap.namespace_identifier = namespace_identifier
 
       add_wsdl_namespaces_to_soap(soap)
       add_wsdl_types_to_soap(soap)
 
       # XXX: leaving out the option to set attributes on the input tag for now [dh, 2012-12-06]
-      soap.input = [namespace_identifier, soap_input_tag.to_sym, {}] # attributes]
+      soap.input = [namespace_identifier, message_tag(options).to_sym, {}] # attributes]
       soap
     end
 
@@ -92,29 +94,43 @@ module Savon
       http.read_timeout = options.read_timeout if options.read_timeout
 
       http.headers = options.headers if options.headers
-      http.headers["SOAPAction"] ||= %{"#{soap_action}"}
+      http.headers["SOAPAction"] ||= %{"#{soap_action(options)}"}
 
       http
     end
 
-    def soap_input_tag
-      @wsdl.soap_input(@name.to_sym)
+    def message_tag(options)
+      if options.message_tag
+        options.message_tag
+      elsif @wsdl.document? && (input = @wsdl.soap_input(@name.to_sym))
+        input
+      else
+        Gyoku::XMLKey.create(@name)
+      end
     end
 
-    def soap_action
-      @wsdl.soap_action(@name.to_sym)
+    def soap_action(options)
+      if options.soap_action
+        options.soap_action
+      elsif @wsdl.document?
+        @wsdl.soap_action(@name.to_sym)
+      else
+        Gyoku::XMLKey.create(@name).to_sym
+      end
     end
 
-    def namespace
-      # XXX: why the fallback? [dh, 2012-11-24]
-      #if operation_namespace_defined_in_wsdl?
+    def namespace(options)
+      if options.namespace
+        options.namespace
+      elsif operation_namespace_defined_in_wsdl?
         @wsdl.parser.namespaces[namespace_identifier.to_s]
-      #else
-        #@wsdl.namespace
-      #end
+      else
+        @wsdl.namespace
+      end
     end
 
     def namespace_identifier
+      return :wsdl unless operation_namespace_defined_in_wsdl?
       @wsdl.operations[@name][:namespace_identifier].to_sym
     end
 
@@ -128,6 +144,11 @@ module Savon
       @wsdl.type_definitions.each do |path, type|
         soap.types[path] = type
       end
+    end
+
+    def operation_namespace_defined_in_wsdl?
+      return false unless @wsdl.document?
+      (operation = @wsdl.operations[@name]) && operation[:namespace_identifier]
     end
 
   end

@@ -5,8 +5,14 @@ module Savon
 
     GLOBAL = [
 
+      # Location of the local or remote WSDL document.
+      :wsdl,
+
       # SOAP endpoint.
       :endpoint,
+
+      # Target namespace.
+      :namespace,
 
       # Proxy server to use for all requests.
       :proxy,
@@ -61,6 +67,13 @@ module Savon
     ]
 
     REQUEST  = [
+
+      # SOAP message tag. If not set, Savon gets the name from the WSDL document (if available).
+      # Otherwise, Gyoku converts the operation name into an XML element.
+      :message_tag,
+
+      # Value of the SOAPAction HTTP header.
+      :soap_action,
 
       # The SOAP message to send. Expected to be a Hash or a String.
       :message,
