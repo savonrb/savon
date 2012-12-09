@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Savon::NewClient do
 
-  subject(:client) { Savon.new_client Fixture.wsdl(:authentication) }
+  subject(:client) { Savon.new_client Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }
 
   describe "#operations" do
     it "returns all operation names" do

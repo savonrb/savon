@@ -251,6 +251,7 @@ describe "NewClient Options" do
   end
 
   def new_client(options = {})
+    options = { :logger => Savon::NullLogger.new }.merge(options)
     Savon.new_client(Fixture.wsdl(:authentication), options)
   end
 
