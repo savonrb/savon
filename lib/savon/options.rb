@@ -12,9 +12,11 @@ module Savon
       @options[option]
     end
 
-    def set(option, value)
+    def []=(option, value)
       self.send(option, value)
     end
+
+    private
 
     def assign(options)
       options.each do |option, value|

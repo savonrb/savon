@@ -31,7 +31,7 @@ module Savon
 
     def call(operation_name, locals = {})
       response = operation(operation_name).call(locals)
-      @globals.set(:last_response, response.http)
+      @globals[:last_response] = response.http
       response
     end
 

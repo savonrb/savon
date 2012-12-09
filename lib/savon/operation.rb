@@ -67,12 +67,12 @@ module Savon
 
     def set_endpoint
       return if @globals.endpoint? || !@wsdl.document?
-      @globals.set(:endpoint, @wsdl.endpoint)
+      @globals[:endpoint] = @wsdl.endpoint
     end
 
     def set_namespace
       return if @globals.namespace? || !@wsdl.document?
-      @globals.set(:namespace, @wsdl.namespace)
+      @globals[:namespace] = @wsdl.namespace
     end
 
     def set_soap_action
@@ -83,17 +83,17 @@ module Savon
         else                      Gyoku::XMLKey.create(@name).to_sym
       end
 
-      @locals.set(:soap_action, soap_action)
+      @locals[:soap_action] = soap_action
     end
 
     def set_env_namespace
       return if @globals.env_namespace?
-      @globals.set(:env_namespace, :env)
+      @globals[:env_namespace] = :env
     end
 
     def set_element_form_default
       return if @globals.element_form_default?
-      @globals.set(:element_form_default, @wsdl.element_form_default)
+      @globals[:element_form_default] = @wsdl.element_form_default
     end
 
     def set_namespace_identifer
@@ -105,7 +105,7 @@ module Savon
         :wsdl
       end
 
-      @globals.set(:namespace_identifier, identifier)
+      @globals[:namespace_identifier] = identifier
     end
 
     def set_message_tag
@@ -114,7 +114,7 @@ module Savon
       message_tag = @wsdl.soap_input(@name.to_sym) if @wsdl.document?
       message_tag ||= Gyoku::XMLKey.create(@name)
 
-      @locals.set(:message_tag, message_tag)
+      @locals[:message_tag] = message_tag
     end
 
     def add_wsdl_namespaces_to_builder(builder)
