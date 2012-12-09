@@ -7,25 +7,18 @@ describe Savon::NewClient do
       expect { Savon.new_client(:endpoint => "http://example.com") }.
         to raise_error(ArgumentError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
-  end
 
-  describe "#options" do
-    it "calls Options.new_with_defaults" do
-      Savon::Options.expects(:new_with_defaults).returns(Savon::Options.new)
+    it "calls GlobalOptions.new_with_defaults" do
+      globals = Savon::GlobalOptions.new(:wsdl => Fixture.wsdl(:authentication))
+      Savon::GlobalOptions.expects(:new_with_defaults).returns(globals)
+
       new_client
     end
+  end
 
-    it "returns the current set of options" do
-      expect(new_client.options).to be_an_instance_of(Savon::Options)
-    end
-
-    it "does not persist the request options" do
-      expect(new_client.options.message).to be_nil
-
-      HTTPI.stubs(:post).returns(new_http_response)
-      new_client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
-
-      expect(new_client.options.message).to be_nil
+  describe "#globals" do
+    it "returns the current set of global options" do
+      expect(new_client.globals).to be_an_instance_of(Savon::GlobalOptions)
     end
   end
 
@@ -58,15 +51,15 @@ describe Savon::NewClient do
 
   describe "#call" do
     it "calls a new SOAP operation" do
-      options = { :message => { :symbol => "AAPL" } }
+      locals = { :message => { :symbol => "AAPL" } }
       soap_response = new_soap_response
 
       wsdl = Wasabi::Document.new('http://example.com')
-      operation = Savon::Operation.new(:authenticate, wsdl, Savon::Options.new)
-      operation.expects(:call).with(options).returns(soap_response)
+      operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new_with_defaults)
+      operation.expects(:call).with(locals).returns(soap_response)
       Savon::Operation.expects(:create).returns(operation)
 
-      response = new_client.call(:authenticate, options)
+      response = new_client.call(:authenticate, locals)
       expect(response).to eq(soap_response)
     end
 
@@ -110,14 +103,14 @@ describe Savon::NewClient do
     Savon::SOAP::Response.new(config, response)
   end
 
-  def new_client(options = {})
-    options = { :wsdl => Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }.merge(options)
-    Savon.new_client(options)
+  def new_client(globals = {})
+    globals = { :wsdl => Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }.merge(globals)
+    Savon.new_client(globals)
   end
 
-  def new_client_without_wsdl(options = {})
-    options = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :logger => Savon::NullLogger.new }.merge(options)
-    Savon.new_client(options)
+  def new_client_without_wsdl(globals = {})
+    globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :logger => Savon::NullLogger.new }.merge(globals)
+    Savon.new_client(globals)
   end
 
 end

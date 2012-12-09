@@ -188,7 +188,7 @@ module Savon
 
       # Returns a new <tt>Builder::XmlMarkup</tt> object.
       def builder(directive_tag = :xml, attrs = { :encoding => encoding })
-        builder = Builder::XmlMarkup.new
+        builder = ::Builder::XmlMarkup.new
         builder.instruct!(directive_tag, attrs) if directive_tag
         builder
       end

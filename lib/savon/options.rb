@@ -3,154 +3,162 @@ require "savon/logger"
 module Savon
   class Options
 
-    GLOBAL = [
+    def initialize(options = {})
+      @options = {}
+      assign options
+    end
 
-      # Location of the local or remote WSDL document.
-      :wsdl,
+    def get(option)
+      @options[option]
+    end
 
-      # SOAP endpoint.
-      :endpoint,
+    def set(option, value)
+      self.send(option, value)
+    end
 
-      # Target namespace.
-      :namespace,
-
-      # Proxy server to use for all requests.
-      :proxy,
-
-      # A Hash of HTTP headers.
-      :headers,
-
-      # Open timeout in seconds.
-      :open_timeout,
-
-      # Read timeout in seconds.
-      :read_timeout,
-
-      # The encoding to use. Defaults to "UTF-8".
-      :encoding,
-
-      # Sets whether elements should be :qualified or unqualified.
-      # If you need to use this option, please open an issue and make
-      # sure to add your WSDL document for debugging.
-      :element_form_default,
-
-      # Can be used to change the SOAP envelope namespace identifier.
-      # If you need to use this option, please open an issue and make
-      # sure to add your WSDL document for debugging.
-      :env_namespace,
-
-      # Changes the SOAP version to 1 or 2.
-      # If you need to use this option, please open an issue and make
-      # sure to add your WSDL document for debugging.
-      :soap_version,
-
-      # Whether or not to raise SOAP fault and HTTP errors.
-      :raise_errors,
-
-      # The logger to use. Defaults to a Savon::Logger instance.
-      :logger,
-
-      # Whether to pretty print request and response XML log messages.
-      :pretty_print_xml,
-
-      # Used by Savon to store the last response to pass
-      # its cookies to the next request.
-      :last_response,
-
-      # XXX: not yet supported [dh, 2012-12-06]
-      :soap_header,
-      :hooks
-
-    ]
-
-    REQUEST  = [
-
-      # SOAP message tag (formerly known as SOAP input tag). If it's not set, Savon retrieves the name from
-      # the WSDL document (if available). Otherwise, Gyoku converts the operation name into an XML element.
-      :message_tag,
-
-      # Value of the SOAPAction HTTP header.
-      :soap_action,
-
-      # The SOAP message to send. Expected to be a Hash or a String.
-      :message,
-
-      # The SOAP request XML to send. Expected to be a String.
-      :xml
-
-    ]
-
-    SCOPES = { :global => GLOBAL, :request => REQUEST }
-
-    SCOPES.each do |scope_sym, scope|
-      scope.each do |option|
-        define_method(option) { get(scope_sym, option) }
+    def assign(options)
+      options.each do |option, value|
+        self.send(option, value)
       end
     end
 
+    def has?(*options)
+      options.all? { |option| @options.include? option }
+    end
+
+    def to_hash
+      @options
+    end
+
+    def method_missing(method, *arguments)
+      raise "No such method #{method.inspect}"
+    end
+
+  end
+
+  class GlobalOptions < Options
+
     def self.new_with_defaults(options = {})
       defaults = {
-        :encoding     => "UTF-8",
-        :soap_version => 1,
-        :logger       => Logger.new,
-        :hooks        => Class.new { def fire(*) yield end }.new
+        :encoding         => "UTF-8",
+        :soap_version     => 1,
+        :logger           => Logger.new,
+        :hooks            => Class.new { def fire(*) yield end }.new,
+        :pretty_print_xml => false,
+        :raise_errors     => false
       }
 
       new defaults.merge(options)
     end
 
-    def initialize(options = {})
-      # only pass in valid options, as there's no validation at this point!
-      @options = options
+    # Location of the local or remote WSDL document.
+    def wsdl(wsdl_address)
+      @options[:wsdl] = wsdl_address
     end
 
-    def add(scope, option, value)
-      validate_scope! scope
-      validate_option! scope, option
-
-      @options[option] = value
+    # SOAP endpoint.
+    def endpoint(endpoint)
+      @options[:endpoint] = endpoint
     end
 
-    def merge(scope, options)
-      validate_scope! scope
-      validate_all_options! scope, options
-
-      Options.new @options.merge(options)
+    # Target namespace.
+    def namespace(namespace)
+      @options[:namespace] = namespace
     end
 
-    def get(scope, option)
-      validate_scope! scope
-      validate_option! scope, option
-
-      @options[option]
+    # Proxy server to use for all requests.
+    def proxy(proxy)
+      @options[:proxy] = proxy
     end
 
-    private
-
-    def validate_scope!(scope)
-      unless SCOPES.include? scope
-        raise ArgumentError, "Invalid option scope: #{scope.inspect}\n" \
-                             "Available scopes: #{SCOPES.keys.inspect}"
-      end
+    # A Hash of HTTP headers.
+    def headers(headers)
+      @options[:headers] = headers
     end
 
-    def validate_option!(scope, option)
-      available_options = SCOPES[scope]
-
-      unless available_options.include? option
-        raise ArgumentError, "Unknown #{scope} option: #{option.inspect}\n" \
-                             "Available options: #{available_options.inspect}"
-      end
+    # Open timeout in seconds.
+    def open_timeout(open_timeout)
+      @options[:open_timeout] = open_timeout
     end
 
-    def validate_all_options!(scope, options)
-      available_options = SCOPES[scope]
-      unknown_options   = options.keys - available_options
+    # Read timeout in seconds.
+    def read_timeout(read_timeout)
+      @options[:read_timeout] = read_timeout
+    end
 
-      unless unknown_options.empty?
-        raise ArgumentError, "Unknown #{scope} option(s): #{unknown_options.inspect}\n" \
-                             "Available options: #{available_options.inspect}"
-      end
+    # The encoding to use. Defaults to "UTF-8".
+    def encoding(encoding)
+      @options[:encoding] = encoding
+    end
+
+    # Sets whether elements should be :qualified or unqualified.
+    # If you need to use this option, please open an issue and make
+    # sure to add your WSDL document for debugging.
+    def element_form_default(element_form_default)
+      @options[:element_form_default] = element_form_default
+    end
+
+    # Can be used to change the SOAP envelope namespace identifier.
+    # If you need to use this option, please open an issue and make
+    # sure to add your WSDL document for debugging.
+    def env_namespace(env_namespace)
+      @options[:env_namespace] = env_namespace
+    end
+
+    # Changes the SOAP version to 1 or 2.
+    # If you need to use this option, please open an issue and make
+    # sure to add your WSDL document for debugging.
+    def soap_version(soap_version)
+      @options[:soap_version] = soap_version
+    end
+
+    # Whether or not to raise SOAP fault and HTTP errors.
+    def raise_errors(raise_errors)
+      @options[:raise_errors] = raise_errors
+    end
+
+    # The logger to use. Defaults to a Savon::Logger instance.
+    def logger(logger)
+      @options[:logger] = logger
+    end
+
+    # Whether to pretty print request and response XML log messages.
+    def pretty_print_xml(pretty_print_xml)
+      @options[:pretty_print_xml] = pretty_print_xml
+    end
+
+    # Used by Savon to store the last response to pass
+    # its cookies to the next request.
+    def last_response(last_response)
+      @options[:last_response] = last_response
+    end
+
+    def hooks(hooks)
+      @options[:hooks] = hooks
+    end
+  end
+
+  class LocalOptions < Options
+
+    # The SOAP message to send. Expected to be a Hash or a String.
+    def message(message)
+      @options[:message] = message
+    end
+
+    # SOAP message tag (formerly known as SOAP input tag). If it's not set, Savon retrieves the name from
+    # the WSDL document (if available). Otherwise, Gyoku converts the operation name into an XML element.
+    def message_tag(message_tag)
+      @options[:message_tag] = message_tag
+    end
+
+    # Value of the SOAPAction HTTP header.
+    def soap_action(soap_action)
+      @options[:soap_action] = soap_action
+    end
+
+    # The SOAP request XML to send. Expected to be a String.
+    def xml(xml)
+      @options[:xml] = xml
     end
 
   end

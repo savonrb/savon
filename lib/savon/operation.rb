@@ -1,18 +1,19 @@
-require "savon/soap/xml"
-require "savon/soap/request"
+require "savon/options"
+require "savon/request"
+require "savon/builder"
 require "akami"
 require "httpi"
 
 module Savon
   class Operation
 
-    def self.create(operation_name, wsdl, options)
+    def self.create(operation_name, wsdl, globals)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
         ensure_exists! operation_name, wsdl
       end
 
-      new(operation_name, wsdl, options)
+      new(operation_name, wsdl, globals)
     end
 
     def self.ensure_exists!(operation_name, wsdl)
@@ -29,22 +30,29 @@ module Savon
       end
     end
 
-    def initialize(name, wsdl, options)
+    def initialize(name, wsdl, globals)
       @name = name
       @wsdl = wsdl
-      @options = options
+      @globals = globals
     end
 
-    def call(options = {})
-      @options = @options.merge(:request, options)
+    def call(locals = {})
+      @locals = LocalOptions.new(locals)
 
-      http = create_http(@options)
-      wsse = create_wsse(@options)
-      soap = create_soap(@options)
-      soap.wsse = wsse
+      set_endpoint
+      set_namespace
+      set_soap_action
+      set_env_namespace
+      set_element_form_default
+      set_message_tag
 
-      request = SOAP::Request.new(@options, http, soap)
-      response = request.response
+      request = Request.new(@globals, @locals)
+      builder = Builder.new(@name, @wsdl, @globals, @locals)
+
+      add_wsdl_namespaces_to_builder(builder)
+      add_wsdl_types_to_builder(builder)
+
+      response = request.call builder.to_s
 
       # XXX: leaving this out for now [dh, 2012-12-06]
       #if wsse.verify_response
@@ -56,98 +64,56 @@ module Savon
 
     private
 
-    def create_soap(options)
-      soap = SOAP::XML.new(options)
-      soap.endpoint = @wsdl.endpoint
-
-      soap.body = options.message
-      soap.xml = options.xml
-
-      soap.encoding = options.encoding
-      soap.env_namespace = options.env_namespace if options.env_namespace
-      soap.element_form_default = options.element_form_default || @wsdl.element_form_default
-
-      soap.namespace = namespace(options)
-      soap.namespace_identifier = namespace_identifier
-
-      add_wsdl_namespaces_to_soap(soap)
-      add_wsdl_types_to_soap(soap)
-
-      # XXX: leaving out the option to set attributes on the input tag for now [dh, 2012-12-06]
-      soap.input = [namespace_identifier, message_tag(options).to_sym, {}] # attributes]
-      soap
-    end
-
-    def create_wsse(options)
-      # XXX: not supported right now [dh, 2012-12-06]
-      Akami.wsse
-    end
-
-    def create_http(options)
-      http = HTTPI::Request.new
-
-      http.proxy = options.proxy if options.proxy
-      http.set_cookies(options.last_response) if options.last_response
-
-      http.open_timeout = options.open_timeout if options.open_timeout
-      http.read_timeout = options.read_timeout if options.read_timeout
-
-      http.headers = options.headers if options.headers
-      http.headers["SOAPAction"] ||= %{"#{soap_action(options)}"}
-
-      http
-    end
-
-    def message_tag(options)
-      if options.message_tag
-        options.message_tag
-      elsif @wsdl.document? && (input = @wsdl.soap_input(@name.to_sym))
-        input
-      else
-        Gyoku::XMLKey.create(@name)
-      end
-    end
-
-    def soap_action(options)
-      if options.soap_action
-        options.soap_action
-      elsif @wsdl.document?
-        @wsdl.soap_action(@name.to_sym)
-      else
-        Gyoku::XMLKey.create(@name).to_sym
-      end
-    end
-
-    def namespace(options)
-      if options.namespace
-        options.namespace
-      elsif operation_namespace_defined_in_wsdl?
-        @wsdl.parser.namespaces[namespace_identifier.to_s]
-      else
-        @wsdl.namespace
-      end
-    end
-
-    def namespace_identifier
-      return :wsdl unless operation_namespace_defined_in_wsdl?
-      @wsdl.operations[@name][:namespace_identifier].to_sym
-    end
-
-    def add_wsdl_namespaces_to_soap(soap)
+    def add_wsdl_namespaces_to_builder(builder)
       @wsdl.type_namespaces.each do |path, uri|
-        soap.use_namespace(path, uri)
+        builder.use_namespace(path, uri)
       end
     end
 
-    def add_wsdl_types_to_soap(soap)
+    def add_wsdl_types_to_builder(builder)
       @wsdl.type_definitions.each do |path, type|
-        soap.types[path] = type
+        builder.types[path] = type
       end
     end
 
-    def operation_namespace_defined_in_wsdl?
-      return false unless @wsdl.document?
-      (operation = @wsdl.operations[@name]) && operation[:namespace_identifier]
+    def set_endpoint
+      return if @globals.has?(:endpoint) || !@wsdl.document?
+      @globals.set(:endpoint, @wsdl.endpoint)
+    end
+
+    def set_namespace
+      return if @globals.has?(:namespace) || !@wsdl.document?
+      @globals.set(:namespace, @wsdl.namespace)
+    end
+
+    def set_soap_action
+      return if @locals.has?(:soap_action)
+
+      soap_action = case
+        when @wsdl.document? then @wsdl.soap_action(@name.to_sym)
+        else                      Gyoku::XMLKey.create(@name).to_sym
+      end
+
+      @locals.set(:soap_action, soap_action)
+    end
+
+    def set_env_namespace
+      return if @globals.has?(:env_namespace)
+      @globals.set(:env_namespace, :env)
+    end
+
+    def set_element_form_default
+      return if @globals.has?(:element_form_default)
+      @globals.set(:element_form_default, @wsdl.element_form_default)
+    end
+
+    def set_message_tag
+      return if @locals.has?(:message_tag)
+
+      message_tag = @wsdl.soap_input(@name.to_sym) if @wsdl.document?
+      message_tag ||= Gyoku::XMLKey.create(@name)
+
+      @locals.set(:message_tag, message_tag)
     end
 
   end

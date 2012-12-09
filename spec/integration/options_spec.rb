@@ -86,7 +86,7 @@ describe "NewClient Options" do
       client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :qualified)
 
       response = client.call(:authenticate, :message => { :user => "luke", :password => "secret" })
-      expect(response.http.body).to include("<ins0:user>luke</ins0:user><ins0:password>secret</ins0:password>")
+      expect(response.http.body).to include("<tns:user>luke</tns:user><tns:password>secret</tns:password>")
 
       # unqualified
       client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :unqualified)
@@ -141,12 +141,12 @@ describe "NewClient Options" do
       client = new_client(:endpoint => @server.url(:repeat), :raise_errors => true)
 
       expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }.
-        to raise_error(Savon::SOAP::Fault)
+        to raise_error(Savon::SOAPFault)
     end
 
     it "when true, instructs Savon to raise HTTP errors" do
       client = new_client(:endpoint => @server.url(404), :raise_errors => true)
-      expect { client.call(:authenticate) }.to raise_error(Savon::HTTP::Error)
+      expect { client.call(:authenticate) }.to raise_error(Savon::HTTPError)
     end
 
     it "when false, instructs Savon to not raise SOAP fault errors" do
@@ -168,7 +168,7 @@ describe "NewClient Options" do
 
   context "global :logger" do
     it "defaults to an instance of Savon::Logger" do
-      logger = new_client.options.logger
+      logger = new_client.globals.get(:logger)
       expect(logger).to be_a(Savon::Logger)
     end
 
@@ -213,9 +213,9 @@ describe "NewClient Options" do
 
       xml = unindent <<-xml
         <?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        <env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:tns=\"http://v1_0.ws.auth.order.example.com/\" xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ins0=\"http://v1_0.ws.auth.order.example.com/\">
+        <env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:tns=\"http://v1_0.ws.auth.order.example.com/\" xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">
           <env:Body>
-            <ins0:authenticate/>
+            <tns:authenticate/>
           </env:Body>
         </env:Envelope>
        xml
@@ -232,7 +232,7 @@ describe "NewClient Options" do
   context "request: message_tag" do
     it "without it, Savon tries to get the message tag from the WSDL document and falls back to Gyoku" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate)
-      expect(response.http.body).to include("<ins0:authenticate></ins0:authenticate>")
+      expect(response.http.body).to include("<tns:authenticate></tns:authenticate>")
     end
 
     it "when set, changes the SOAP message tag" do
@@ -262,12 +262,12 @@ describe "NewClient Options" do
   context "request :message" do
     it "accepts a Hash which is passed to Gyoku to be converted to XML" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message => { :user => "luke", :password => "secret" })
-      expect(response.http.body).to include("<ins0:authenticate><user>luke</user><password>secret</password></ins0:authenticate>")
+      expect(response.http.body).to include("<tns:authenticate><user>luke</user><password>secret</password></tns:authenticate>")
     end
 
     it "also accepts a String of raw XML" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message => "<user>lea</user><password>top-secret</password>")
-      expect(response.http.body).to include("<ins0:authenticate><user>lea</user><password>top-secret</password></ins0:authenticate>")
+      expect(response.http.body).to include("<tns:authenticate><user>lea</user><password>top-secret</password></tns:authenticate>")
     end
   end
 
@@ -278,14 +278,14 @@ describe "NewClient Options" do
     end
   end
 
-  def new_client(options = {})
-    options = { :logger => Savon::NullLogger.new, :wsdl => Fixture.wsdl(:authentication) }.merge(options)
-    Savon.new_client(options)
+  def new_client(globals = {})
+    globals = { :logger => Savon::NullLogger.new, :wsdl => Fixture.wsdl(:authentication) }.merge(globals)
+    Savon.new_client(globals)
   end
 
-  def new_client_without_wsdl(options = {})
-    options = { :logger => Savon::NullLogger.new }.merge(options)
-    Savon.new_client(options)
+  def new_client_without_wsdl(globals = {})
+    globals = { :logger => Savon::NullLogger.new }.merge(globals)
+    Savon.new_client(globals)
   end
 
 end

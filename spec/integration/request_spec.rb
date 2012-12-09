@@ -15,7 +15,7 @@ describe "Integration" do
     it "returns the result in a CDATA tag" do
       response = client.request(:get_quote, :body => { :symbol => "AAPL" })
 
-      cdata = response[:get_quote_response][:get_quote_result]
+      cdata = response.body[:get_quote_response][:get_quote_result]
       result = Nori.parse(cdata)
       result[:stock_quotes][:stock][:symbol].should == "AAPL"
     end
@@ -27,7 +27,7 @@ describe "Integration" do
     it "passes Strings as they are" do
       response = client.request(:verify_email, :body => { :email => "soap@example.com", "LicenseKey" => "?" })
 
-      response_text = response[:verify_email_response][:verify_email_result][:response_text]
+      response_text = response.body[:verify_email_response][:verify_email_result][:response_text]
 
       if response_text == "Current license key only allows so many checks"
         pending "API limit exceeded"
@@ -49,7 +49,7 @@ describe "Integration" do
       threads = request_data.map do |blz|
         thread = Thread.new do
           response = client.request :get_bank, :body => { :blz => blz }
-          Thread.current[:value] = response[:get_bank_response][:details]
+          Thread.current[:value] = response.body[:get_bank_response][:details]
           mutex.synchronize { threads_waiting -= 1 }
         end
 

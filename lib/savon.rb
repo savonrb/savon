@@ -11,8 +11,8 @@ module Savon
     Client.new(*args, &block)
   end
 
-  def new_client(options)
-    NewClient.new(options)
+  def new_client(globals = {})
+    NewClient.new(globals)
   end
 
   def configure

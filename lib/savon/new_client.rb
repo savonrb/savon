@@ -5,20 +5,20 @@ require "wasabi"
 module Savon
   class NewClient
 
-    def initialize(options)
-      @options = Options.new_with_defaults.merge(:global, options)
+    def initialize(globals = {})
+      @globals = GlobalOptions.new_with_defaults(globals)
 
-      unless @options.wsdl || (@options.endpoint && @options.namespace)
+      unless @globals.has?(:wsdl) || @globals.has?(:endpoint, :namespace)
         raise_initialization_error!
       end
 
       @wsdl = Wasabi::Document.new
-      @wsdl.document = @options.wsdl if @options.wsdl
-      @wsdl.endpoint = @options.endpoint if @options.endpoint
-      @wsdl.namespace = @options.namespace if @options.namespace
+      @wsdl.document = @globals.get(:wsdl) if @globals.has?(:wsdl)
+      @wsdl.endpoint = @globals.get(:endpoint) if @globals.has?(:endpoint)
+      @wsdl.namespace = @globals.get(:namespace) if @globals.has?(:namespace)
     end
 
-    attr_reader :options
+    attr_reader :globals
 
     def operations
       raise "Unable to inspect the service without a WSDL document." unless @wsdl.document?
@@ -26,12 +26,12 @@ module Savon
     end
 
     def operation(operation_name)
-      Operation.create(operation_name, @wsdl, @options)
+      Operation.create(operation_name, @wsdl, @globals)
     end
 
-    def call(operation_name, options = {})
-      response = operation(operation_name).call(options)
-      @options.add(:global, :last_response, response.http)
+    def call(operation_name, locals = {})
+      response = operation(operation_name).call(locals)
+      @globals.set(:last_response, response.http)
       response
     end
 
