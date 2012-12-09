@@ -110,8 +110,6 @@ module Savon
     end
 
     # Changes the SOAP version to 1 or 2.
-    # If you need to use this option, please open an issue and make
-    # sure to add your WSDL document for debugging.
     def soap_version(soap_version)
       @options[:soap_version] = soap_version
     end
