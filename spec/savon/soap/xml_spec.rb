@@ -90,9 +90,16 @@ describe Savon::SOAP::XML do
       xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
     end
 
+    it "should contain the correct namespace if the SOAP version changes from 1.1 to 1.2" do
+      xml.version = 1
+      xml.namespaces.should == { "xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/" }
+      xml.version = 2
+      xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
+    end
+
     it "should set the SOAP header" do
       xml.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
-      xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
+      xml.namespaces.should include({ "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" })
     end
   end
 

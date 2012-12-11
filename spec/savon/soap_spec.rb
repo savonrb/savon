@@ -9,7 +9,7 @@ describe Savon::SOAP do
     end
   end
 
-  it "should contain a Rage of supported SOAP versions" do
+  it "should contain a Range of supported SOAP versions" do
     Savon::SOAP::VERSIONS.should == (1..2)
   end
 
