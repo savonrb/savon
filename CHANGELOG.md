@@ -6,6 +6,11 @@
 * Fix: [#327](https://github.com/savonrb/savon/issues/327) `response.to_array` now properly
   returns FalseClass values.
 
+* Fix: [320](https://github.com/savonrb/savon/issues/320) use the correct SOAP namespace when the
+  SOAP version changes between requests.
+
+* Fix: [321](https://github.com/savonrb/savon/issues/321) preserve `[false]` values in Hashes.
+
 ## 1.2.0 (2012-09-15)
 
 * Fix: [#312](https://github.com/savonrb/savon/pull/312) recursively determines the proper namespaces

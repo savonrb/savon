@@ -90,9 +90,16 @@ describe Savon::SOAP::XML do
       xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
     end
 
+    it "should contain the correct namespace if the SOAP version changes from 1.1 to 1.2" do
+      xml.version = 1
+      xml.namespaces.should == { "xmlns:env" => "http://schemas.xmlsoap.org/soap/envelope/" }
+      xml.version = 2
+      xml.namespaces.should == { "xmlns:env" => "http://www.w3.org/2003/05/soap-envelope" }
+    end
+
     it "should set the SOAP header" do
       xml.namespaces = { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
-      xml.namespaces.should == { "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" }
+      xml.namespaces.should include({ "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema" })
     end
   end
 
@@ -375,6 +382,18 @@ describe Savon::SOAP::XML do
         :order! => ["ns0:id", "ns1:name"]
       }
     end
+
+    it "preserves false values in Arrays (fixes #321)" do
+      xml.used_namespaces.merge!({
+        ["authenticate", "includeDeleted"] =>"ns1"
+      })
+
+      body = { :include_deleted => [false] }
+      actual = xml.send(:add_namespaces_to_body, body)
+
+      actual.should == { "ns1:includeDeleted" => [false] }
+    end
+
   end
 
 end
