@@ -236,7 +236,7 @@ module Savon
       end
 
       def add_namespaces_to_body(hash, path = [input[1].to_s])
-        return unless hash
+        return hash unless hash
         return hash.map { |value| add_namespaces_to_body(value, path) } if hash.kind_of?(Array)
         return hash.to_s unless hash.kind_of? Hash
 

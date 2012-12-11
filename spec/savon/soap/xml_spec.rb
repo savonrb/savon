@@ -382,6 +382,18 @@ describe Savon::SOAP::XML do
         :order! => ["ns0:id", "ns1:name"]
       }
     end
+
+    it "preserves false values in Arrays (fixes #321)" do
+      xml.used_namespaces.merge!({
+        ["authenticate", "includeDeleted"] =>"ns1"
+      })
+
+      body = { :include_deleted => [false] }
+      actual = xml.send(:add_namespaces_to_body, body)
+
+      actual.should == { "ns1:includeDeleted" => [false] }
+    end
+
   end
 
 end
