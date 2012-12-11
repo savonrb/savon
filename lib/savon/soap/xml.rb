@@ -235,23 +235,23 @@ module Savon
         Gyoku.xml body_to_xml, :element_form_default => element_form_default, :namespace => namespace_identifier
       end
 
-      def add_namespaces_to_body(hash, path = [input[1].to_s])
-        return hash unless hash
-        return hash.map { |value| add_namespaces_to_body(value, path) } if hash.kind_of?(Array)
-        return hash.to_s unless hash.kind_of? Hash
+      def add_namespaces_to_body(object, path = [input[1].to_s])
+        return object unless object
+        return object.map { |value| add_namespaces_to_body(value, path) } if object.kind_of?(Array)
+        return object.to_s unless object.kind_of? Hash
 
-        hash.inject({}) do |newhash, (key, value)|
+        object.inject({}) do |hash, (key, value)|
           camelcased_key = Gyoku::XMLKey.create(key)
           newpath = path + [camelcased_key]
 
           if used_namespaces[newpath]
-            newhash.merge(
+            hash.merge(
               "#{used_namespaces[newpath]}:#{camelcased_key}" =>
                 add_namespaces_to_body(value, types[newpath] ? [types[newpath]] : newpath)
             )
           else
             add_namespaces_to_values(value, path) if key == :order!
-            newhash.merge(key => value)
+            hash.merge(key => value)
           end
         end
       end
