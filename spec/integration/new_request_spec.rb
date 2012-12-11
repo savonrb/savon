@@ -3,7 +3,7 @@
 describe "NewClient Integration" do
 
   subject(:client) {
-    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 3, :read_timeout => 3, :logger => Savon::NullLogger.new)
+    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 3, :read_timeout => 3) #, :logger => Savon::NullLogger.new)
   }
 
   context "stockquote" do
@@ -61,6 +61,12 @@ describe "NewClient Integration" do
 
       values.uniq.size.should == values.size
     end
+  end
+
+  context "redirectes" do
+    it "follows 301 redirects"
+    it "follows 302 redirects"
+    it "follows 307 redirects"
   end
 
 end
