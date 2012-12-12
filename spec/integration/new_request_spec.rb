@@ -3,7 +3,8 @@
 describe "NewClient Integration" do
 
   subject(:client) {
-    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 3, :read_timeout => 3, :raise_errors => false, :logger => Savon::NullLogger.new)
+    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 10, :read_timeout => 10,
+                     :raise_errors => false, :logger => Savon::NullLogger.new)
   }
 
   context "stockquote" do
