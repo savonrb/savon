@@ -3,7 +3,7 @@
 describe "NewClient Integration" do
 
   subject(:client) {
-    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 3, :read_timeout => 3) #, :logger => Savon::NullLogger.new)
+    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 3, :read_timeout => 3, :logger => Savon::NullLogger.new)
   }
 
   context "stockquote" do
@@ -13,7 +13,10 @@ describe "NewClient Integration" do
       response = client.call(:get_quote, :message => { :symbol => "AAPL" })
 
       cdata = response.body[:get_quote_response][:get_quote_result]
-      result = Nori.parse(cdata)
+
+      nori_options = { :convert_tags_to => lambda { |tag| tag.snakecase.to_sym } }
+      result = Nori.new(nori_options).parse(cdata)
+
       result[:stock_quotes][:stock][:symbol].should == "AAPL"
     end
   end

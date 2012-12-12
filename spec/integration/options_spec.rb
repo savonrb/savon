@@ -161,6 +161,13 @@ describe "NewClient Options" do
 
       expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }.
         to raise_error(Savon::SOAPFault)
+
+      begin
+        client.call(:authenticate, :xml => Fixture.response(:soap_fault))
+      rescue Savon::SOAPFault => soap_fault
+        # check whether the configured nori instance is used by the soap fault
+        expect(soap_fault.to_hash[:fault][:faultcode]).to eq("soap:Server")
+      end
     end
 
     it "when true, instructs Savon to raise HTTP errors" do
@@ -266,6 +273,27 @@ describe "NewClient Options" do
 
   end
 
+  context "global :strip_namespaces" do
+    it "can be changed to not strip any namespaces" do
+      client = new_client(:endpoint => @server.url(:repeat), :convert_tags_to => lambda { |tag| tag.snakecase }, :strip_namespaces => false)
+      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
+
+      # the header/body convenience methods fails when conventions are not met. [dh, 2012-12-12]
+      expect { response.body }.to raise_error(Savon::InvalidResponseError)
+
+      expect(response.hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
+    end
+  end
+
+  context "global :convert_tags_to" do
+    it "can be changed to convert XML tags to a different format" do
+      client = new_client(:endpoint => @server.url(:repeat), :convert_tags_to => lambda { |tag| tag.snakecase.upcase })
+      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
+
+      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+    end
+  end
+
   context "request: message_tag" do
     it "without it, Savon tries to get the message tag from the WSDL document and falls back to Gyoku" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate)
@@ -312,6 +340,27 @@ describe "NewClient Options" do
     it "accepts a String of raw XML" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :xml => "<soap>request</soap>")
       expect(response.http.body).to eq("<soap>request</soap>")
+    end
+  end
+
+  context "request :advanced_typecasting" do
+    it "can be changed to false to disable Nori's advanced typecasting" do
+      client = new_client(:endpoint => @server.url(:repeat))
+      response = client.call(:authenticate, :xml => Fixture.response(:authentication), :advanced_typecasting => false)
+
+      expect(response.body[:authenticate_response][:return][:success]).to eq("true")
+    end
+  end
+
+  context "request :response_parser" do
+    it "instructs Nori to change the response parser" do
+      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
+      Nori.expects(:new).with { |options| options[:parser] == :nokogiri }.returns(nori)
+
+      client = new_client(:endpoint => @server.url(:repeat))
+      response = client.call(:authenticate, :xml => Fixture.response(:authentication), :response_parser => :nokogiri)
+
+      expect(response.body).to_not be_empty
     end
   end
 

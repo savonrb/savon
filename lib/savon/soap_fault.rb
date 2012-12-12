@@ -11,18 +11,19 @@ module Savon
       fault_node && (soap1_fault || soap2_fault)
     end
 
-    def initialize(http)
+    def initialize(http, nori)
       @http = http
+      @nori = nori
     end
 
-    attr_reader :http
+    attr_reader :http, :nori
 
     def to_s
       @message ||= message_by_version to_hash[:fault]
     end
 
     def to_hash
-      @hash ||= Nori.parse(@http.body)[:envelope][:body]
+      @hash ||= nori.parse(@http.body)[:envelope][:body]
     end
 
     private

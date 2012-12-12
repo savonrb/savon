@@ -1,5 +1,8 @@
 ## UPCOMING
 
+* Update: Use Nori 2.0 to minimalize global state. All Nori options are now encapsulated and can
+  be configured through Savon.
+
 * Fix: [#322](https://github.com/savonrb/savon/issues/322) use the builder's state instead of the
   block's return value to set the soap body/xml values.
 

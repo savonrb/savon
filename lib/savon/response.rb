@@ -1,3 +1,4 @@
+require "nori"
 require "savon/soap_fault"
 require "savon/http_error"
 require "savon/invalid_response_error"
@@ -49,7 +50,7 @@ module Savon
     end
 
     def hash
-      @hash ||= Nori.parse(to_xml)
+      @hash ||= nori.parse(to_xml)
     end
 
     def to_xml
@@ -67,7 +68,7 @@ module Savon
     private
 
     def raise_soap_and_http_errors!
-      raise SOAPFault.new(@http) if soap_fault?
+      raise SOAPFault.new(@http, nori) if soap_fault?
       raise HTTPError.new(@http) if http_error?
     end
 
@@ -77,6 +78,20 @@ module Savon
 
     def xml_namespaces
       @xml_namespaces ||= doc.collect_namespaces
+    end
+
+    def nori
+      return @nori if @nori
+
+      nori_options = {
+        :strip_namespaces     => @globals[:strip_namespaces],
+        :convert_tags_to      => @globals[:convert_tags_to],
+        :advanced_typecasting => @locals[:advanced_typecasting],
+        :parser               => @locals[:response_parser]
+      }
+
+      non_nil_nori_options = nori_options.select { |_, value| !value.nil? }
+      @nori = Nori.new(non_nil_nori_options)
     end
 
   end

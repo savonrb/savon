@@ -21,6 +21,10 @@ module Savon
       @options.key? option
     end
 
+    def select(&block)
+      @options.select(&block)
+    end
+
     private
 
     def assign(options)
@@ -39,7 +43,9 @@ module Savon
         :soap_version     => 1,
         :logger           => Logger.new,
         :pretty_print_xml => false,
-        :raise_errors     => false
+        :raise_errors     => false,
+        :strip_namespaces => true,
+        :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }
       }
 
       new defaults.merge(options)
@@ -145,6 +151,16 @@ module Savon
       @options[:digest_auth] = credentials
     end
 
+    # Instruct Nori whether to strip namespaces from XML nodes.
+    def strip_namespaces(strip_namespaces)
+      @options[:strip_namespaces] = strip_namespaces
+    end
+
+    # Tell Nori how to convert XML tags. Expects a lambda which receives an XML tag and returns
+    # the conversion result. Defaults to convert tags to snakecase Symbols.
+    def convert_tags_to(converter)
+      @options[:convert_tags_to] = converter
+    end
   end
 
   class LocalOptions < Options
@@ -168,6 +184,16 @@ module Savon
     # The SOAP request XML to send. Expected to be a String.
     def xml(xml)
       @options[:xml] = xml
+    end
+
+    # Instruct Nori to use advanced typecasting.
+    def advanced_typecasting(advanced)
+      @options[:advanced_typecasting] = advanced
+    end
+
+    # Instruct Nori to use :rexml or :nokogiri to parse the response.
+    def response_parser(parser)
+      @options[:response_parser] = parser
     end
 
   end
