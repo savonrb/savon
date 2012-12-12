@@ -43,7 +43,7 @@ module Savon
         :soap_version     => 1,
         :logger           => Logger.new,
         :pretty_print_xml => false,
-        :raise_errors     => false,
+        :raise_errors     => true,
         :strip_namespaces => true,
         :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }
       }
