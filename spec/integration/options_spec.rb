@@ -1,7 +1,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe "NewClient Options" do
+describe "Options" do
 
   before :all do
     @server = IntegrationServer.run

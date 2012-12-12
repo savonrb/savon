@@ -1,22 +1,23 @@
-require "spec_helper"
+ require "spec_helper"
 
-describe "Integration" do
+describe "Requests" do
 
   subject(:client) {
-    client = Savon.client(service_endpoint)
-    client.http.open_timeout = 3
-    client.http.read_timeout = 3
-    client
+    Savon.new_client(:wsdl => service_endpoint, :open_timeout => 10, :read_timeout => 10,
+                     :raise_errors => false, :logger => Savon::NullLogger.new)
   }
 
   context "stockquote" do
     let(:service_endpoint) { "http://www.webservicex.net/stockquote.asmx?WSDL" }
 
     it "returns the result in a CDATA tag" do
-      response = client.request(:get_quote, :body => { :symbol => "AAPL" })
+      response = client.call(:get_quote, :message => { :symbol => "AAPL" })
 
       cdata = response.body[:get_quote_response][:get_quote_result]
-      result = Nori.parse(cdata)
+
+      nori_options = { :convert_tags_to => lambda { |tag| tag.snakecase.to_sym } }
+      result = Nori.new(nori_options).parse(cdata)
+
       result[:stock_quotes][:stock][:symbol].should == "AAPL"
     end
   end
@@ -25,7 +26,7 @@ describe "Integration" do
     let(:service_endpoint) { "http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx?wsdl" }
 
     it "passes Strings as they are" do
-      response = client.request(:verify_email, :body => { :email => "soap@example.com", "LicenseKey" => "?" })
+      response = client.call(:verify_email, :message => { :email => "soap@example.com", "LicenseKey" => "?" })
 
       response_text = response.body[:verify_email_response][:verify_email_result][:response_text]
 
@@ -48,7 +49,7 @@ describe "Integration" do
 
       threads = request_data.map do |blz|
         thread = Thread.new do
-          response = client.request :get_bank, :body => { :blz => blz }
+          response = client.call :get_bank, :message => { :blz => blz }
           Thread.current[:value] = response.body[:get_bank_response][:details]
           mutex.synchronize { threads_waiting -= 1 }
         end
@@ -59,11 +60,17 @@ describe "Integration" do
 
       sleep(1) until threads_waiting == 0
 
-      threads.each &:kill
+      threads.each(&:kill)
       values = threads.map { |thr| thr[:value] }.compact
 
       values.uniq.size.should == values.size
     end
+  end
+
+  context "redirectes" do
+    it "follows 301 redirects"
+    it "follows 302 redirects"
+    it "follows 307 redirects"
   end
 
 end
