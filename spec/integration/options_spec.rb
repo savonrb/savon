@@ -211,10 +211,10 @@ describe "NewClient Options" do
 
       }
 
-      client = new_client(:logger => duck_logger.new)
+      client = new_client(:endpoint => @server.url, :logger => duck_logger.new)
       client.call(:authenticate)
 
-      expect(duck_logger.logs).to include("SOAP request: http://example.com/validation/1.0/AuthenticationService")
+      expect(duck_logger.logs).to include("SOAP request: #{@server.url}")
     end
   end
 
@@ -252,7 +252,7 @@ describe "NewClient Options" do
 
       }
 
-      client = new_client(:logger => duck_logger.new, :pretty_print_xml => true)
+      client = new_client(:endpoint => @server.url, :logger => duck_logger.new, :pretty_print_xml => true)
       client.call(:authenticate)
 
       xml = unindent <<-xml

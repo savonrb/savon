@@ -10,7 +10,7 @@ class Fixture
 
     def response_hash(fixture)
       @response_hash ||= {}
-      @response_hash[fixture] ||= Nori.parse(response(fixture))[:envelope][:body]
+      @response_hash[fixture] ||= nori.parse(response(fixture))[:envelope][:body]
     end
 
     TYPES.each do |type, ext|
@@ -18,6 +18,10 @@ class Fixture
     end
 
   private
+
+    def nori
+      Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
+    end
 
     def fixtures(type)
       @fixtures ||= {}

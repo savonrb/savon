@@ -1,31 +1,32 @@
 require "spec_helper"
 
-describe Savon::SOAP::Response do
+describe Savon::Response do
 
-  let(:config) { Savon::Config.default }
+  let(:globals) { Savon::GlobalOptions.new_with_defaults }
+  let(:locals)  { Savon::LocalOptions.new }
 
   describe ".new" do
-    it "should raise a Savon::SOAP::Fault in case of a SOAP fault" do
-      lambda { soap_fault_response }.should raise_error(Savon::SOAP::Fault)
+    it "should raise a Savon::Fault in case of a SOAP fault" do
+      lambda { soap_fault_response }.should raise_error(Savon::SOAPFault)
     end
 
-    it "should not raise a Savon::SOAP::Fault in case the default is turned off" do
-      config.raise_errors = false
-      lambda { soap_fault_response }.should_not raise_error(Savon::SOAP::Fault)
+    it "should not raise a Savon::Fault in case the default is turned off" do
+      globals[:raise_errors] = false
+      lambda { soap_fault_response }.should_not raise_error(Savon::SOAPFault)
     end
 
     it "should raise a Savon::HTTP::Error in case of an HTTP error" do
-      lambda { soap_response :code => 500 }.should raise_error(Savon::HTTP::Error)
+      lambda { soap_response :code => 500 }.should raise_error(Savon::HTTPError)
     end
 
     it "should not raise a Savon::HTTP::Error in case the default is turned off" do
-      config.raise_errors = false
+      globals[:raise_errors] = false
       soap_response :code => 500
     end
   end
 
   describe "#success?" do
-    before { config.raise_errors = false }
+    before { globals[:raise_errors] = false }
 
     it "should return true if the request was successful" do
       soap_response.should be_a_success
@@ -41,7 +42,7 @@ describe Savon::SOAP::Response do
   end
 
   describe "#soap_fault?" do
-    before { config.raise_errors = false }
+    before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
       soap_response.soap_fault?.should be_false
@@ -52,24 +53,8 @@ describe Savon::SOAP::Response do
     end
   end
 
-  describe "#soap_fault" do
-    before { config.raise_errors = false }
-
-    it "should return a Savon::SOAP::Fault" do
-      soap_fault_response.soap_fault.should be_a(Savon::SOAP::Fault)
-    end
-
-    it "should return a Savon::SOAP::Fault containing the HTTPI::Response" do
-      soap_fault_response.soap_fault.http.should be_an(HTTPI::Response)
-    end
-
-    it "should return a Savon::SOAP::Fault even if the SOAP response seems to be ok" do
-      soap_response.soap_fault.should be_a(Savon::SOAP::Fault)
-    end
-  end
-
   describe "#http_error?" do
-    before { config.raise_errors = false }
+    before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
       soap_response.http_error?.should_not be_true
@@ -80,33 +65,6 @@ describe Savon::SOAP::Response do
     end
   end
 
-  describe "#http_error" do
-    before { config.raise_errors = false }
-
-    it "should return a Savon::HTTP::Error" do
-      http_error_response.http_error.should be_a(Savon::HTTP::Error)
-    end
-
-    it "should return a Savon::HTTP::Error containing the HTTPI::Response" do
-      http_error_response.http_error.http.should be_an(HTTPI::Response)
-    end
-
-    it "should return a Savon::HTTP::Error even if the HTTP response seems to be ok" do
-      soap_response.http_error.should be_a(Savon::HTTP::Error)
-    end
-  end
-
-  describe "#[]" do
-    it "should return the SOAP response body as a Hash" do
-      soap_response[:authenticate_response][:return].should ==
-        Fixture.response_hash(:authentication)[:authenticate_response][:return]
-    end
-
-    it "should throw an exception when the response body isn't parsable" do
-      lambda { invalid_soap_response.body }.should raise_error Savon::SOAP::InvalidResponseError
-    end
-  end
-
   describe "#header" do
     it "should return the SOAP response header as a Hash" do
       response = soap_response :body => Fixture.response(:header)
@@ -114,7 +72,7 @@ describe Savon::SOAP::Response do
     end
 
     it "should throw an exception when the response header isn't parsable" do
-      lambda { invalid_soap_response.header }.should raise_error Savon::SOAP::InvalidResponseError
+      lambda { invalid_soap_response.header }.should raise_error Savon::InvalidResponseError
     end
   end
 
@@ -204,7 +162,7 @@ describe Savon::SOAP::Response do
     response = defaults.merge options
     http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
 
-    Savon::SOAP::Response.new(config, http_response)
+    Savon::Response.new(http_response, globals, locals)
   end
 
   def soap_fault_response
@@ -215,12 +173,12 @@ describe Savon::SOAP::Response do
     soap_response :code => 404, :body => "Not found"
   end
 
-  def invalid_soap_response(options={})
+  def invalid_soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" }
     response = defaults.merge options
     http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
 
-    Savon::SOAP::Response.new(config, http_response)
+    Savon::Response.new(http_response, globals, locals)
   end
 
 end
