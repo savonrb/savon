@@ -3,11 +3,8 @@ require "gyoku"
 module Savon
   class QualifiedMessage
 
-    def initialize(used_namespaces, globals, locals)
+    def initialize(used_namespaces)
       @used_namespaces = used_namespaces
-
-      @globals = globals
-      @locals = locals
     end
 
     def to_hash(hash, path)
@@ -34,7 +31,7 @@ module Savon
     private
 
     def add_namespaces_to_body(value, path)
-      QualifiedMessage.new(@used_namespaces, @globals, @locals).to_hash(value, path)
+      QualifiedMessage.new(@used_namespaces).to_hash(value, path)
     end
 
     def add_namespaces_to_values(values, path)

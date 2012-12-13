@@ -21,7 +21,7 @@ module Savon
 
       @string = begin
         if element_form_default == :qualified
-          message = QualifiedMessage.new(@used_namespaces, @globals, @locals).to_hash(message, [@operation_name])
+          message = QualifiedMessage.new(@used_namespaces).to_hash(message, [@operation_name])
         end
 
         Gyoku.xml message, :element_form_default => element_form_default, :namespace => @namespace_identifier
