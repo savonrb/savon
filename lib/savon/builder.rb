@@ -23,11 +23,8 @@ module Savon
       @globals = globals
       @locals  = locals
 
-      @types = {}
-      add_wsdl_types_to_builder
-
-      @used_namespaces = {}
-      add_wsdl_namespaces_to_builder
+      @types = convert_type_definitions_to_hash
+      @used_namespaces = convert_type_namespaces_to_hash
     end
 
     def to_s
@@ -41,15 +38,18 @@ module Savon
 
     private
 
-    def add_wsdl_types_to_builder
-      @wsdl.type_definitions.each do |path, type|
-        @types[path] = type
+    def convert_type_definitions_to_hash
+      @wsdl.type_definitions.inject({}) do |memo, (path, type)|
+        memo[path] = type
+        memo
       end
     end
 
-    def add_wsdl_namespaces_to_builder
-      @wsdl.type_namespaces.each do |path, uri|
-        use_namespace(path, uri)
+    def convert_type_namespaces_to_hash
+      @wsdl.type_namespaces.inject({}) do |memo, (path, uri)|
+        key, value = use_namespace(path, uri)
+        memo[key] = value
+        memo
       end
     end
 
@@ -62,7 +62,7 @@ module Savon
         @internal_namespace_count += 1
       end
 
-      @used_namespaces[path] = identifier
+      [path, identifier]
     end
 
     def namespaces
