@@ -89,7 +89,7 @@ module Savon
         :parser               => @locals[:response_parser]
       }
 
-      non_nil_nori_options = nori_options.select { |_, value| !value.nil? }
+      non_nil_nori_options = nori_options.reject { |_, value| value.nil? }
       @nori = Nori.new(non_nil_nori_options)
     end
 
