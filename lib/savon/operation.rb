@@ -39,7 +39,6 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_global_element_form_default
       set_global_namespace_identifier
 
       builder = Builder.new(@name, @wsdl, @globals, @locals)
@@ -58,11 +57,6 @@ module Savon
     end
 
     private
-
-    def set_global_element_form_default
-      return if @globals.include? :element_form_default
-      @globals[:element_form_default] = @wsdl.element_form_default
-    end
 
     def set_global_namespace_identifier
       return if @globals.include? :namespace_identifier

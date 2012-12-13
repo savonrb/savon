@@ -44,20 +44,6 @@ describe Savon::Operation do
       expect(new_operation.call).to be_a(Savon::Response)
     end
 
-    it "sets the global :element_form_default option from the WSDL" do
-      wsdl.element_form_default = :qualified
-
-      response = new_operation.call
-      expect(response.globals[:element_form_default]).to eq(:qualified)
-    end
-
-    it "does not set the global :element_form_default option if it is already specified" do
-      globals[:element_form_default] = :qualified
-
-      response = new_operation.call
-      expect(response.globals[:element_form_default]).to eq(:qualified)
-    end
-
     it "sets the global :namespace_identifier option from the WSDL" do
       response = new_operation.call
       expect(response.globals[:namespace_identifier]).to eq(:tns)

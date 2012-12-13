@@ -46,6 +46,21 @@ describe Savon::Builder do
 
       expect(builder.to_s).to include("<tns:authenticate>")
     end
+
+    it "uses the global :element_form_default option if it's available " do
+      globals[:element_form_default] = :qualified
+      locals[:message] = { :username => "luke", :password => "secret" }
+
+      expect(builder.to_s).to include("<tns:username>luke</tns:username>")
+    end
+
+    it "uses the WSDL's element_form_default value if the global option was set specified" do
+      locals[:message] = { :username => "luke", :password => "secret" }
+      wsdl.element_form_default = :qualified
+
+      expect(builder.to_s).to include("<tns:username>luke</tns:username>")
+    end
+
   end
 
 end
