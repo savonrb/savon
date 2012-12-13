@@ -97,10 +97,11 @@ describe Savon::NewClient do
   end
 
   def new_soap_response(options = {})
-    config = Savon::Config.default
-    response = new_http_response(options)
+    http = new_http_response(options)
+    globals = Savon::GlobalOptions.new_with_defaults
+    locals = Savon::LocalOptions.new
 
-    Savon::SOAP::Response.new(config, response)
+    Savon::Response.new(http, globals, locals)
   end
 
   def new_client(globals = {})
