@@ -9,7 +9,9 @@ module Savon
       2 => "application/soap+xml;charset=%s"
     }
 
-    def initialize(wsdl, globals, locals)
+    def initialize(operation_name, wsdl, globals, locals)
+      @operation_name = operation_name
+
       @wsdl    = wsdl
       @globals = globals
       @locals  = locals
@@ -42,13 +44,24 @@ module Savon
       http.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
 
       http.headers = @globals[:headers] if @globals.include? :headers
-      http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"} if @locals.include? :soap_action
+      http.headers["SOAPAction"] ||= %{"#{soap_action}"} if soap_action
       http.headers["Content-Type"] = CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
 
       http.auth.basic(*@globals[:basic_auth]) if @globals.include? :basic_auth
       http.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
 
       http
+    end
+
+    def soap_action
+      return if @locals.include?(:soap_action) && !@locals[:soap_action]
+      return @soap_action if defined? @soap_action
+
+      soap_action = @locals[:soap_action]
+      soap_action ||= @wsdl.soap_action(@operation_name.to_sym) if @wsdl.document?
+      soap_action ||= Gyoku::XMLKey.create(@operation_name)
+
+      @soap_action = soap_action
     end
 
     def log_request(url, headers, body)

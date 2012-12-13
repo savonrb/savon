@@ -43,13 +43,11 @@ module Savon
       set_global_element_form_default
       set_global_namespace_identifier
 
-      set_local_soap_action
-
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       add_wsdl_namespaces_to_builder(builder)
       add_wsdl_types_to_builder(builder)
 
-      request = Request.new(@wsdl, @globals, @locals)
+      request = Request.new(@name, @wsdl, @globals, @locals)
       response = request.call(builder.to_s)
 
       # XXX: leaving this out for now [dh, 2012-12-06]
@@ -83,15 +81,6 @@ module Savon
       identifier ||= "wsdl"
 
       @globals[:namespace_identifier] = identifier.to_sym
-    end
-
-    def set_local_soap_action
-      return if @locals.include? :soap_action
-
-      soap_action = @wsdl.soap_action(@name.to_sym) if @wsdl.document?
-      soap_action ||= Gyoku::XMLKey.create(@name)
-
-      @locals[:soap_action] = soap_action
     end
 
     def add_wsdl_namespaces_to_builder(builder)

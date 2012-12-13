@@ -3,11 +3,12 @@ require "integration/support/server"
 
 describe Savon::Request do
 
-  subject(:request) { Savon::Request.new(wsdl, globals, locals) }
+  subject(:request) { Savon::Request.new(:authenticate, wsdl, globals, locals) }
 
-  let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :logger => Savon::NullLogger.new) }
   let(:locals)      { Savon::LocalOptions.new }
+  let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
+  let(:no_wsdl)     { Wasabi::Document.new }
 
   before :all do
     @server = IntegrationServer.run
@@ -31,7 +32,7 @@ describe Savon::Request do
     it "falls back to use the WSDL's endpoint if the global :endpoint option was not set" do
       wsdl.endpoint = @server.url
       globals_without_endpoint = Savon::GlobalOptions.new(:logger => Savon::NullLogger.new)
-      request = Savon::Request.new(wsdl, globals_without_endpoint, locals)
+      request = Savon::Request.new(:authenticate, wsdl, globals_without_endpoint, locals)
       response = request.call("<xml/>")
 
       expect(request.http.url).to eq(URI(wsdl.endpoint))
@@ -87,6 +88,15 @@ describe Savon::Request do
       expect(request.http.headers["SOAPAction"]).to eq(%{"#{locals[:soap_action]}"})
     end
 
+    it "sets the SOAPAction header using the WSDL if it's available" do
+      expect(request.http.headers["SOAPAction"]).to eq(%{"authenticate"})
+    end
+
+    it "sets the SOAPAction header using Gyoku if both option and WSDL were not set" do
+      request = Savon::Request.new(:authenticate, no_wsdl, globals, locals)
+      expect(request.http.headers["SOAPAction"]).to eq(%{"authenticate"})
+    end
+
     it "does not set the SOAPAction header if it's already set" do
       locals[:soap_action] = "urn://authenticate"
       globals[:headers] = { "SOAPAction" => %{"doAuthenticate"} }
@@ -94,7 +104,8 @@ describe Savon::Request do
       expect(request.http.headers["SOAPAction"]).to eq(%{"doAuthenticate"})
     end
 
-    it "does not set the SOAPAction header using the local :soap_action option when it's not available" do
+    it "does not set the SOAPAction header if the local :soap_action was set to nil" do
+      locals[:soap_action] = nil
       expect(request.http.headers).to_not include("SOAPAction")
     end
 
