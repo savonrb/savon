@@ -2,7 +2,6 @@ require "savon/options"
 require "savon/request"
 require "savon/builder"
 require "akami"
-require "httpi"
 
 module Savon
   class Operation
