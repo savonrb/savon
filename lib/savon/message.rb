@@ -4,9 +4,10 @@ require "gyoku"
 module Savon
   class Message
 
-    def initialize(operation_name, namespace_identifier, used_namespaces, message, element_form_default)
+    def initialize(operation_name, namespace_identifier, types, used_namespaces, message, element_form_default)
       @operation_name = operation_name
       @namespace_identifier = namespace_identifier
+      @types = types
       @used_namespaces = used_namespaces
 
       @message = message
@@ -17,7 +18,7 @@ module Savon
       return @message.to_s unless @message.kind_of? Hash
 
       if @element_form_default == :qualified
-        @message = QualifiedMessage.new(@used_namespaces).to_hash(@message, [@operation_name])
+        @message = QualifiedMessage.new(@types, @used_namespaces).to_hash(@message, [@operation_name.to_s])
       end
 
       Gyoku.xml @message, :element_form_default => @element_form_default, :namespace => @namespace_identifier

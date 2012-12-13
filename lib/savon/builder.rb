@@ -101,7 +101,7 @@ module Savon
 
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
-      Message.new(@operation_name, namespace_identifier, @used_namespaces, @locals[:message], element_form_default)
+      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message], element_form_default)
     end
 
     def namespace_identifier
