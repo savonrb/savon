@@ -4,7 +4,7 @@ require "savon/hooks/group"
 require "savon/soap"
 
 module Savon
-  Config = Struct.new(:_logger, :pretty_print_xml, :raise_errors, :soap_version, :env_namespace, :soap_header) do
+  Config = Struct.new(:_logger, :pretty_print_xml, :raise_errors, :soap_version, :env_namespace, :soap_header, :soap_encoding) do
 
     def self.default
       config = new
@@ -40,6 +40,14 @@ module Savon
       config = super
       config._logger = config._logger.clone
       config
+    end
+
+    def soap_encoding
+      @soap_encoding
+    end
+    
+    def soap_encoding=(soap_encoding)
+      @soap_encoding = soap_encoding
     end
 
   end
