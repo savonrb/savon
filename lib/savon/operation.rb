@@ -43,7 +43,7 @@ module Savon
       set_global_namespace
       set_global_env_namespace
       set_global_element_form_default
-      set_global_namespace_identifer
+      set_global_namespace_identifier
 
       set_local_soap_action
       set_local_message_tag
@@ -89,7 +89,7 @@ module Savon
       @globals[:element_form_default] = @wsdl.element_form_default
     end
 
-    def set_global_namespace_identifer
+    def set_global_namespace_identifier
       return if @globals.include? :namespace_identifier
 
       if @wsdl.document?
