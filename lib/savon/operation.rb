@@ -18,7 +18,7 @@ module Savon
 
     def self.ensure_exists!(operation_name, wsdl)
       unless wsdl.soap_actions.include? operation_name
-        raise ArgumentError, "Unable to find SOAP operation: #{operation_name}\n" \
+        raise ArgumentError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
                              "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
     end
@@ -47,13 +47,12 @@ module Savon
       set_namespace_identifer
       set_message_tag
 
-      request = Request.new(@globals, @locals)
       builder = Builder.new(@name, @wsdl, @globals, @locals)
-
       add_wsdl_namespaces_to_builder(builder)
       add_wsdl_types_to_builder(builder)
 
-      response = request.call builder.to_s
+      request = Request.new(@globals, @locals)
+      response = request.call(builder.to_s)
 
       # XXX: leaving this out for now [dh, 2012-12-06]
       #if wsse.verify_response
@@ -66,12 +65,16 @@ module Savon
     private
 
     def set_endpoint
-      return if @globals.include?(:endpoint) || !@wsdl.document?
+      return if @globals.include?(:endpoint)
+      raise_error_for_missing_no_wsdl_option! :endpoint unless @wsdl.document?
+
       @globals[:endpoint] = @wsdl.endpoint
     end
 
     def set_namespace
-      return if @globals.include?(:namespace) || !@wsdl.document?
+      return if @globals.include?(:namespace)
+      raise_error_for_missing_no_wsdl_option! :namespace unless @wsdl.document?
+
       @globals[:namespace] = @wsdl.namespace
     end
 
@@ -80,7 +83,7 @@ module Savon
 
       soap_action = case
         when @wsdl.document? then @wsdl.soap_action(@name.to_sym)
-        else                      Gyoku::XMLKey.create(@name).to_sym
+        else                      Gyoku::XMLKey.create(@name)
       end
 
       @locals[:soap_action] = soap_action
@@ -127,6 +130,11 @@ module Savon
       @wsdl.type_definitions.each do |path, type|
         builder.types[path] = type
       end
+    end
+
+    def raise_error_for_missing_no_wsdl_option!(option)
+      raise ArgumentError, "Expected the global :#{option} option to be specified to work without a WSDL document.\n" \
+                             "Please make sure to specify both global :endpoint and :namespace options or provide a WSDL document."
     end
 
   end
