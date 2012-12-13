@@ -105,13 +105,15 @@ describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :qualified)
 
       response = client.call(:authenticate, :message => { :user => "luke", :password => "secret" })
-      expect(response.http.body).to include("<tns:user>luke</tns:user><tns:password>secret</tns:password>")
+      expect(response.http.body).to include("<tns:user>luke</tns:user>")
+      expect(response.http.body).to include("<tns:password>secret</tns:password>")
 
       # unqualified
       client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :unqualified)
 
       response = client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
-      expect(response.http.body).to include("<user>lea</user><password>top-secret</password>")
+      expect(response.http.body).to include("<user>lea</user>")
+      expect(response.http.body).to include("<password>top-secret</password>")
     end
 
     it "allows overwriting the SOAPAction HTTP header" do
@@ -256,15 +258,12 @@ describe "Options" do
       client.call(:authenticate)
 
       xml = unindent <<-xml
-        <?xml version=\"1.0\" encoding=\"UTF-8\"?>
-        <env:Envelope xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:tns=\"http://v1_0.ws.auth.order.example.com/\" xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">
-          <env:Body>
+        <env:Body>
             <tns:authenticate/>
           </env:Body>
-        </env:Envelope>
-       xml
+      xml
 
-      expect(duck_logger.logs[2]).to eq(xml)
+      expect(duck_logger.logs[2]).to include(xml)
     end
 
     def unindent(string)
