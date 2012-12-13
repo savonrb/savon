@@ -53,8 +53,6 @@ module Savon
 
     def namespaces
       @namespaces ||= begin
-        env_namespace = @globals[:env_namespace]
-
         namespaces = SCHEMA_TYPES.dup
         namespaces["xmlns:#{@globals[:namespace_identifier]}"] = @globals[:namespace] || @wsdl.namespace
 
@@ -64,6 +62,10 @@ module Savon
 
         namespaces
       end
+    end
+
+    def env_namespace
+      @env_namespace ||= @globals[:env_namespace] || :env
     end
 
     def header
@@ -105,8 +107,6 @@ module Savon
     end
 
     def tag(xml, name, namespaces = {}, &block)
-      env_namespace = @globals[:env_namespace]
-
       if env_namespace && env_namespace != ""
         xml.tag! env_namespace, name, namespaces, &block
       else

@@ -10,6 +10,15 @@ describe Savon::Builder do
   let(:no_wsdl)     { Wasabi::Document.new }
 
   describe "#to_s" do
+    it "includes the global :env_namespace if it's available" do
+      globals[:env_namespace] = :soapenv
+      expect(builder.to_s).to include("<soapenv:Envelope")
+    end
+
+    it "defaults to include the default envelope namespace of :env" do
+      expect(builder.to_s).to include("<env:Envelope")
+    end
+
     it "includes the target namespace from the WSDL" do
       expect(builder.to_s).to include('xmlns:tns="http://v1_0.ws.auth.order.example.com/"')
     end

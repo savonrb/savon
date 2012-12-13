@@ -39,7 +39,6 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_global_env_namespace
       set_global_element_form_default
       set_global_namespace_identifier
 
@@ -59,11 +58,6 @@ module Savon
     end
 
     private
-
-    def set_global_env_namespace
-      return if @globals.include? :env_namespace
-      @globals[:env_namespace] = :env
-    end
 
     def set_global_element_form_default
       return if @globals.include? :element_form_default

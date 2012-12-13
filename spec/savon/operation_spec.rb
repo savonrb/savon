@@ -44,18 +44,6 @@ describe Savon::Operation do
       expect(new_operation.call).to be_a(Savon::Response)
     end
 
-    it "sets the global :env_namespace to :env" do
-      response = new_operation.call
-      expect(response.globals[:env_namespace]).to eq(:env)
-    end
-
-    it "does not set the global :env_namespace option if it is already specified" do
-      globals[:env_namespace] = :soapenv
-
-      response = new_operation.call
-      expect(response.globals[:env_namespace]).to eq(:soapenv)
-    end
-
     it "sets the global :element_form_default option from the WSDL" do
       wsdl.element_form_default = :qualified
 
