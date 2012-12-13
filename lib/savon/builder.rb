@@ -56,7 +56,7 @@ module Savon
         env_namespace = @globals[:env_namespace]
 
         namespaces = SCHEMA_TYPES.dup
-        namespaces["xmlns:#{@globals[:namespace_identifier]}"] = @globals[:namespace]
+        namespaces["xmlns:#{@globals[:namespace_identifier]}"] = @globals[:namespace] || @wsdl.namespace
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""

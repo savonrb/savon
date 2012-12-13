@@ -39,7 +39,6 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_global_namespace
       set_global_env_namespace
       set_global_element_form_default
       set_global_namespace_identifier
@@ -63,13 +62,6 @@ module Savon
     end
 
     private
-
-    def set_global_namespace
-      return if @globals.include?(:namespace)
-      raise_error_for_missing_no_wsdl_option! :namespace unless @wsdl.document?
-
-      @globals[:namespace] = @wsdl.namespace
-    end
 
     def set_global_env_namespace
       return if @globals.include? :env_namespace

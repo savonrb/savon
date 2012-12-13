@@ -44,22 +44,6 @@ describe Savon::Operation do
       expect(new_operation.call).to be_a(Savon::Response)
     end
 
-    it "sets the global :namespace option from the WSDL" do
-      wsdl.namespace = "http://v1.example.com"
-
-      operation = Savon::Operation.new(:authenticate, wsdl, globals)
-      response = operation.call
-
-      expect(response.globals[:namespace]).to eq("http://v1.example.com")
-    end
-
-    it "does not set the local :namespace if it is already specified" do
-      globals[:namespace] = "http://new.example.com"
-
-      response = new_operation.call
-      expect(response.globals[:namespace]).to eq(globals[:namespace])
-    end
-
     it "sets the global :soap_action option from the WSDL" do
       response = new_operation.call
       expect(response.locals[:soap_action]).to eq("authenticate")
