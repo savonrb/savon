@@ -51,12 +51,5 @@ module Savon
       response
     end
 
-    private
-
-    def raise_error_for_missing_no_wsdl_option!(option)
-      raise ArgumentError, "Expected the global :#{option} option to be specified to work without a WSDL document.\n" \
-                             "Please make sure to specify both global :endpoint and :namespace options or provide a WSDL document."
-    end
-
   end
 end
