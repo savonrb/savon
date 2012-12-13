@@ -80,20 +80,6 @@ describe Savon::Operation do
       expect(response.locals[:soap_action]).to eq("authenticate")
     end
 
-    it "uses Gyoku to create the local :soap_action option when there is no WSDL" do
-      globals[:namespace] = "http://v1.example.com"
-
-      operation = Savon::Operation.new(:authenticate, no_wsdl, globals)
-      response = operation.call
-
-      expect(response.locals[:soap_action]).to eq("authenticate")
-    end
-
-    it "does not set the local :soap_action option if it is already specified" do
-      response = new_operation.call(:soap_action => "urn:authenticate")
-      expect(response.locals[:soap_action]).to eq("urn:authenticate")
-    end
-
     it "sets the global :env_namespace to :env" do
       response = new_operation.call
       expect(response.globals[:env_namespace]).to eq(:env)
@@ -139,6 +125,20 @@ describe Savon::Operation do
 
       response = new_operation.call
       expect(response.globals[:namespace_identifier]).to eq(:v1)
+    end
+
+    it "uses Gyoku to create the local :soap_action option when there is no WSDL" do
+      globals[:namespace] = "http://v1.example.com"
+
+      operation = Savon::Operation.new(:authenticate, no_wsdl, globals)
+      response = operation.call
+
+      expect(response.locals[:soap_action]).to eq("authenticate")
+    end
+
+    it "does not set the local :soap_action option if it is already specified" do
+      response = new_operation.call(:soap_action => "urn:authenticate")
+      expect(response.locals[:soap_action]).to eq("urn:authenticate")
     end
 
     it "sets the local :message_tag option from the WSDL" do

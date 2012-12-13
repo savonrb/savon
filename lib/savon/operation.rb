@@ -39,13 +39,14 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_endpoint
-      set_namespace
-      set_soap_action
-      set_env_namespace
-      set_element_form_default
-      set_namespace_identifer
-      set_message_tag
+      set_global_endpoint
+      set_global_namespace
+      set_global_env_namespace
+      set_global_element_form_default
+      set_global_namespace_identifer
+
+      set_local_soap_action
+      set_local_message_tag
 
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       add_wsdl_namespaces_to_builder(builder)
@@ -64,42 +65,31 @@ module Savon
 
     private
 
-    def set_endpoint
+    def set_global_endpoint
       return if @globals.include?(:endpoint)
       raise_error_for_missing_no_wsdl_option! :endpoint unless @wsdl.document?
 
       @globals[:endpoint] = @wsdl.endpoint
     end
 
-    def set_namespace
+    def set_global_namespace
       return if @globals.include?(:namespace)
       raise_error_for_missing_no_wsdl_option! :namespace unless @wsdl.document?
 
       @globals[:namespace] = @wsdl.namespace
     end
 
-    def set_soap_action
-      return if @locals.include? :soap_action
-
-      soap_action = case
-        when @wsdl.document? then @wsdl.soap_action(@name.to_sym)
-        else                      Gyoku::XMLKey.create(@name)
-      end
-
-      @locals[:soap_action] = soap_action
-    end
-
-    def set_env_namespace
+    def set_global_env_namespace
       return if @globals.include? :env_namespace
       @globals[:env_namespace] = :env
     end
 
-    def set_element_form_default
+    def set_global_element_form_default
       return if @globals.include? :element_form_default
       @globals[:element_form_default] = @wsdl.element_form_default
     end
 
-    def set_namespace_identifer
+    def set_global_namespace_identifer
       return if @globals.include? :namespace_identifier
 
       identifier = if @wsdl.document? && (operation = @wsdl.operations[@name]) && nsid = operation[:namespace_identifier]
@@ -111,7 +101,18 @@ module Savon
       @globals[:namespace_identifier] = identifier
     end
 
-    def set_message_tag
+    def set_local_soap_action
+      return if @locals.include? :soap_action
+
+      soap_action = case
+        when @wsdl.document? then @wsdl.soap_action(@name.to_sym)
+        else                      Gyoku::XMLKey.create(@name)
+      end
+
+      @locals[:soap_action] = soap_action
+    end
+
+    def set_local_message_tag
       return if @locals.include? :message_tag
 
       message_tag = @wsdl.soap_input(@name.to_sym) if @wsdl.document?
