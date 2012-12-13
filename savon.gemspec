@@ -25,12 +25,11 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", ">= 1.4.0"
 
   s.add_development_dependency "rack"
-  s.add_development_dependency "puma",    ">= 2.0.0.b3"
+  s.add_development_dependency "puma",  ">= 2.0.0.b3"
 
-  s.add_development_dependency "rake",    "~> 0.9"
-  s.add_development_dependency "rspec",   "~> 2.10"
-  s.add_development_dependency "mocha",   "~> 0.11"
-  s.add_development_dependency "timecop", "~> 0.3"
+  s.add_development_dependency "rake",  "~> 0.9"
+  s.add_development_dependency "rspec", "~> 2.10"
+  s.add_development_dependency "mocha", "~> 0.11"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
