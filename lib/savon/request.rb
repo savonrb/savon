@@ -15,9 +15,11 @@ module Savon
       @http = create_http_client
     end
 
-    def call(body)
-      @http.body = body  # TODO: implement soap.signature? [dh, 2012-12-09]
-      @http.headers["Content-Length"] = body.bytesize.to_s
+    attr_reader :http
+
+    def call(xml)
+      @http.body = xml  # TODO: implement soap.signature? [dh, 2012-12-09]
+      @http.headers["Content-Length"] = xml.bytesize.to_s
 
       log_request @http.url, @http.headers, @http.body
       response = HTTPI.post(@http)
@@ -39,7 +41,7 @@ module Savon
       http.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
 
       http.headers = @globals[:headers] if @globals.include? :headers
-      http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"}
+      http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"} if @locals.include? :soap_action
       http.headers["Content-Type"] = content_type
 
       http.auth.basic *@globals[:basic_auth] if @globals.include? :basic_auth
