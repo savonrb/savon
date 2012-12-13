@@ -1,5 +1,4 @@
 require "logger"
-require "nokogiri"
 require "savon/log_message"
 
 module Savon
@@ -33,6 +32,13 @@ module Savon
 
     def log_raw(message)
       subject.send(level, message)
+    end
+
+  end
+
+  class NullLogger < Logger
+
+    def log(*)
     end
 
   end

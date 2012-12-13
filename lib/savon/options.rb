@@ -1,5 +1,4 @@
 require "savon/logger"
-require "savon/null_logger"
 
 module Savon
   class Options
