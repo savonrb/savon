@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Savon::Response do
 
-  let(:globals) { Savon::GlobalOptions.new_with_defaults }
+  let(:globals) { Savon::GlobalOptions.new }
   let(:locals)  { Savon::LocalOptions.new }
 
   describe ".new" do

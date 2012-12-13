@@ -38,7 +38,7 @@ module Savon
 
   class GlobalOptions < Options
 
-    def self.new_with_defaults(options = {})
+    def initialize(options = {})
       defaults = {
         :encoding         => "UTF-8",
         :soap_version     => 1,
@@ -49,7 +49,7 @@ module Savon
         :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }
       }
 
-      new defaults.merge(options)
+      super defaults.merge(options)
     end
 
     # Location of the local or remote WSDL document.

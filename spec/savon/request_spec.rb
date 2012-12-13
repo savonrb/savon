@@ -5,7 +5,7 @@ describe Savon::Request do
 
   subject(:request) { Savon::Request.new(globals, locals) }
 
-  let(:globals)     { Savon::GlobalOptions.new_with_defaults(:endpoint => @server.url, :logger => Savon::NullLogger.new) }
+  let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :logger => Savon::NullLogger.new) }
   let(:locals)      { Savon::LocalOptions.new }
 
   before :all do

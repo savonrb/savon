@@ -7,13 +7,6 @@ describe Savon::Client do
       expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(ArgumentError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
-
-    it "calls GlobalOptions.new_with_defaults" do
-      globals = Savon::GlobalOptions.new(:wsdl => Fixture.wsdl(:authentication))
-      Savon::GlobalOptions.expects(:new_with_defaults).returns(globals)
-
-      new_client
-    end
   end
 
   describe "#globals" do
@@ -55,7 +48,7 @@ describe Savon::Client do
       soap_response = new_soap_response
 
       wsdl = Wasabi::Document.new('http://example.com')
-      operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new_with_defaults)
+      operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new)
       operation.expects(:call).with(locals).returns(soap_response)
       Savon::Operation.expects(:create).returns(operation)
 
@@ -98,7 +91,7 @@ describe Savon::Client do
 
   def new_soap_response(options = {})
     http = new_http_response(options)
-    globals = Savon::GlobalOptions.new_with_defaults
+    globals = Savon::GlobalOptions.new
     locals = Savon::LocalOptions.new
 
     Savon::Response.new(http, globals, locals)

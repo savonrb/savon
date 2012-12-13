@@ -6,7 +6,7 @@ module Savon
   class Client
 
     def initialize(globals = {})
-      @globals = GlobalOptions.new_with_defaults(globals)
+      @globals = GlobalOptions.new(globals)
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!
