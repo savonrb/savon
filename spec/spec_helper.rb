@@ -1,5 +1,8 @@
 require "bundler"
-Bundler.require :default, :development
+Bundler.setup(:default, :development)
+
+require "savon"
+require "rspec"
 
 RSpec.configure do |config|
   config.mock_with :mocha
