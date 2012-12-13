@@ -42,16 +42,12 @@ module Savon
 
       http.headers = @globals[:headers] if @globals.include? :headers
       http.headers["SOAPAction"] ||= %{"#{@locals[:soap_action]}"} if @locals.include? :soap_action
-      http.headers["Content-Type"] = content_type
+      http.headers["Content-Type"] = CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
 
       http.auth.basic *@globals[:basic_auth] if @globals.include? :basic_auth
       http.auth.digest *@globals[:digest_auth] if @globals.include? :digest_auth
 
       http
-    end
-
-    def content_type
-      CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
     end
 
     def log_request(url, headers, body)
