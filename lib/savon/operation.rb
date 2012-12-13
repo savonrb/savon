@@ -44,7 +44,6 @@ module Savon
       set_global_namespace_identifier
 
       set_local_soap_action
-      set_local_message_tag
 
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       add_wsdl_namespaces_to_builder(builder)
@@ -93,15 +92,6 @@ module Savon
       soap_action ||= Gyoku::XMLKey.create(@name)
 
       @locals[:soap_action] = soap_action
-    end
-
-    def set_local_message_tag
-      return if @locals.include? :message_tag
-
-      message_tag = @wsdl.soap_input(@name.to_sym) if @wsdl.document?
-      message_tag ||= Gyoku::XMLKey.create(@name)
-
-      @locals[:message_tag] = message_tag
     end
 
     def add_wsdl_namespaces_to_builder(builder)

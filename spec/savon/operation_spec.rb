@@ -110,20 +110,6 @@ describe Savon::Operation do
       expect(response.locals[:soap_action]).to eq("urn:authenticate")
     end
 
-    it "sets the local :message_tag option from the WSDL" do
-      response = new_operation.call
-      expect(response.locals[:message_tag]).to eq("authenticate")
-    end
-
-    it "uses Gyoku to create the local :message_tag option when there is no WSDL" do
-      globals[:namespace] = "http://v1.example.com"
-
-      operation = Savon::Operation.new(:authenticate, no_wsdl, globals)
-      response = operation.call
-
-      expect(response.locals[:message_tag]).to eq("authenticate")
-    end
-
     it "does not set the local :message_tag option if it is already specified" do
       response = new_operation.call(:message_tag => "doAuthenticate")
       expect(response.locals[:message_tag]).to eq("doAuthenticate")

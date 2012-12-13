@@ -45,7 +45,7 @@ module Savon
 
       tag(builder, :Envelope, namespaces) do |xml|
         tag(xml, :Header) { xml << header.to_s } unless header.empty?
-        tag(xml, :Body)   { xml.tag!(*message_tag) { xml << message.to_s } }
+        tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
       end
     end
 
@@ -70,9 +70,17 @@ module Savon
       @header ||= Header.new(@globals, @locals)
     end
 
+    def namespaced_message_tag
+      return [@globals[:namespace_identifier], message_tag] unless used_namespaces[[@operation_name.to_s]]
+      [used_namespaces[[@operation_name.to_s]], message_tag]
+    end
+
     def message_tag
-      return [@globals[:namespace_identifier], @locals[:message_tag].to_sym] unless used_namespaces[[@operation_name.to_s]]
-      [used_namespaces[[@operation_name.to_s]], @locals[:message_tag].to_sym]
+      message_tag = @locals[:message_tag]
+      message_tag ||= @wsdl.soap_input(@operation_name.to_sym) if @wsdl.document?
+      message_tag ||= Gyoku::XMLKey.create(@operation_name)
+
+      @message_tag = message_tag.to_sym
     end
 
     def message
