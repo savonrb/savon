@@ -11,6 +11,11 @@ module Savon
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
     }
 
+    SOAP_NAMESPACE = {
+      1 => "http://schemas.xmlsoap.org/soap/envelope/",
+      2 => "http://www.w3.org/2003/05/soap-envelope"
+    }
+
     def initialize(operation_name, wsdl, globals, locals)
       @operation_name = operation_name
 
@@ -55,7 +60,7 @@ module Savon
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""
-        namespaces[key.join(":")] = SOAP::NAMESPACE[@globals[:soap_version]]
+        namespaces[key.join(":")] = SOAP_NAMESPACE[@globals[:soap_version]]
 
         namespaces
       end
