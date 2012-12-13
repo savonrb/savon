@@ -6,8 +6,8 @@ RSpec.configure do |config|
   config.order = "random"
 end
 
-# Silence log output
-Savon.config.log = false
+# TODO: replace with alternative impl. [dh, 2012-12-13]
+#Savon.config.log = false
 HTTPI.log = false
 
 require "support/endpoint"
