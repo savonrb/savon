@@ -92,22 +92,21 @@ module Savon
     def set_global_namespace_identifer
       return if @globals.include? :namespace_identifier
 
-      identifier = if @wsdl.document? && (operation = @wsdl.operations[@name]) && nsid = operation[:namespace_identifier]
-        nsid.to_sym
-      else
-        :wsdl
+      if @wsdl.document?
+        operation = @wsdl.operations[@name]
+        identifier = operation[:namespace_identifier] if operation
       end
 
-      @globals[:namespace_identifier] = identifier
+      identifier ||= "wsdl"
+
+      @globals[:namespace_identifier] = identifier.to_sym
     end
 
     def set_local_soap_action
       return if @locals.include? :soap_action
 
-      soap_action = case
-        when @wsdl.document? then @wsdl.soap_action(@name.to_sym)
-        else                      Gyoku::XMLKey.create(@name)
-      end
+      soap_action = @wsdl.soap_action(@name.to_sym) if @wsdl.document?
+      soap_action ||= Gyoku::XMLKey.create(@name)
 
       @locals[:soap_action] = soap_action
     end
