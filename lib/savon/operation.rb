@@ -39,11 +39,8 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      builder = Builder.new(@name, @wsdl, @globals, @locals)
-      add_wsdl_namespaces_to_builder(builder)
-      add_wsdl_types_to_builder(builder)
-
-      request = Request.new(@name, @wsdl, @globals, @locals)
+      builder  = Builder.new(@name, @wsdl, @globals, @locals)
+      request  = Request.new(@name, @wsdl, @globals, @locals)
       response = request.call(builder.to_s)
 
       # XXX: leaving this out for now [dh, 2012-12-06]
@@ -55,18 +52,6 @@ module Savon
     end
 
     private
-
-    def add_wsdl_namespaces_to_builder(builder)
-      @wsdl.type_namespaces.each do |path, uri|
-        builder.use_namespace(path, uri)
-      end
-    end
-
-    def add_wsdl_types_to_builder(builder)
-      @wsdl.type_definitions.each do |path, type|
-        builder.types[path] = type
-      end
-    end
 
     def raise_error_for_missing_no_wsdl_option!(option)
       raise ArgumentError, "Expected the global :#{option} option to be specified to work without a WSDL document.\n" \

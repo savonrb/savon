@@ -22,22 +22,12 @@ module Savon
       @wsdl    = wsdl
       @globals = globals
       @locals  = locals
-    end
 
-    def use_namespace(path, uri)
-      @internal_namespace_count ||= 0
+      @types = {}
+      add_wsdl_types_to_builder
 
-      unless identifier = namespace_by_uri(uri)
-        identifier = "ins#{@internal_namespace_count}"
-        namespaces["xmlns:#{identifier}"] = uri
-        @internal_namespace_count += 1
-      end
-
-      used_namespaces[path] = identifier
-    end
-
-    def types
-      @types ||= {}
+      @used_namespaces = {}
+      add_wsdl_namespaces_to_builder
     end
 
     def to_s
@@ -50,6 +40,30 @@ module Savon
     end
 
     private
+
+    def add_wsdl_types_to_builder
+      @wsdl.type_definitions.each do |path, type|
+        @types[path] = type
+      end
+    end
+
+    def add_wsdl_namespaces_to_builder
+      @wsdl.type_namespaces.each do |path, uri|
+        use_namespace(path, uri)
+      end
+    end
+
+    def use_namespace(path, uri)
+      @internal_namespace_count ||= 0
+
+      unless identifier = namespace_by_uri(uri)
+        identifier = "ins#{@internal_namespace_count}"
+        namespaces["xmlns:#{identifier}"] = uri
+        @internal_namespace_count += 1
+      end
+
+      @used_namespaces[path] = identifier
+    end
 
     def namespaces
       @namespaces ||= begin
@@ -73,8 +87,8 @@ module Savon
     end
 
     def namespaced_message_tag
-      return [namespace_identifier, message_tag] unless used_namespaces[[@operation_name.to_s]]
-      [used_namespaces[[@operation_name.to_s]], message_tag]
+      return [namespace_identifier, message_tag] unless @used_namespaces[[@operation_name.to_s]]
+      [@used_namespaces[[@operation_name.to_s]], message_tag]
     end
 
     def message_tag
@@ -99,10 +113,6 @@ module Savon
       namespace_identifier ||= "wsdl"
 
       @namespace_identifier = namespace_identifier.to_sym
-    end
-
-    def used_namespaces
-      @used_namespaces ||= {}
     end
 
     def namespace_by_uri(uri)
