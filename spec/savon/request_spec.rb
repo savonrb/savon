@@ -3,8 +3,9 @@ require "integration/support/server"
 
 describe Savon::Request do
 
-  subject(:request) { Savon::Request.new(globals, locals) }
+  subject(:request) { Savon::Request.new(wsdl, globals, locals) }
 
+  let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :logger => Savon::NullLogger.new) }
   let(:locals)      { Savon::LocalOptions.new }
 
@@ -25,6 +26,15 @@ describe Savon::Request do
       expect(request.http.headers["Content-Length"]).to eq("<xml/>".bytesize.to_s)
 
       expect(response).to be_a(Savon::Response)
+    end
+
+    it "falls back to use the WSDL's endpoint if the global :endpoint option was not set" do
+      wsdl.endpoint = @server.url
+      globals_without_endpoint = Savon::GlobalOptions.new(:logger => Savon::NullLogger.new)
+      request = Savon::Request.new(wsdl, globals_without_endpoint, locals)
+      response = request.call("<xml/>")
+
+      expect(request.http.url).to eq(URI(wsdl.endpoint))
     end
 
     it "sets the global :proxy option if it's available" do

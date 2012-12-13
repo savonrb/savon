@@ -44,21 +44,6 @@ describe Savon::Operation do
       expect(new_operation.call).to be_a(Savon::Response)
     end
 
-    it "sets the global :endpoint option from the WSDL" do
-      globals = Savon::GlobalOptions.new(:logger => Savon::NullLogger.new)
-      wsdl.endpoint = @server.url(:repeat)
-
-      operation = Savon::Operation.new(:authenticate, wsdl, globals)
-      response = operation.call
-
-      expect(response.globals[:endpoint]).to eq(wsdl.endpoint)
-    end
-
-    it "does not set the global :endpoint if it is already specified" do
-      response = new_operation.call
-      expect(response.globals[:endpoint]).to eq(globals[:endpoint])
-    end
-
     it "sets the global :namespace option from the WSDL" do
       wsdl.namespace = "http://v1.example.com"
 

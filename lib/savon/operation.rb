@@ -39,7 +39,6 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_global_endpoint
       set_global_namespace
       set_global_env_namespace
       set_global_element_form_default
@@ -52,7 +51,7 @@ module Savon
       add_wsdl_namespaces_to_builder(builder)
       add_wsdl_types_to_builder(builder)
 
-      request = Request.new(@globals, @locals)
+      request = Request.new(@wsdl, @globals, @locals)
       response = request.call(builder.to_s)
 
       # XXX: leaving this out for now [dh, 2012-12-06]
@@ -64,13 +63,6 @@ module Savon
     end
 
     private
-
-    def set_global_endpoint
-      return if @globals.include?(:endpoint)
-      raise_error_for_missing_no_wsdl_option! :endpoint unless @wsdl.document?
-
-      @globals[:endpoint] = @wsdl.endpoint
-    end
 
     def set_global_namespace
       return if @globals.include?(:namespace)

@@ -9,10 +9,11 @@ module Savon
       2 => "application/soap+xml;charset=%s"
     }
 
-    def initialize(globals, locals)
+    def initialize(wsdl, globals, locals)
+      @wsdl    = wsdl
       @globals = globals
-      @locals = locals
-      @http = create_http_client
+      @locals  = locals
+      @http    = create_http_client
     end
 
     attr_reader :http
@@ -32,7 +33,7 @@ module Savon
 
     def create_http_client
       http = HTTPI::Request.new
-      http.url = @globals[:endpoint]
+      http.url = @globals[:endpoint] || @wsdl.endpoint
 
       http.proxy = @globals[:proxy] if @globals.include? :proxy
       http.set_cookies @globals[:last_response] if @globals.include? :last_response
