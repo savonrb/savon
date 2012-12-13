@@ -41,17 +41,9 @@ describe Savon::Operation do
 
   describe "#call" do
     it "returns a response object" do
-      expect(new_operation.call).to be_a(Savon::Response)
+      operation = Savon::Operation.create(:authenticate, wsdl, globals)
+      expect(operation.call).to be_a(Savon::Response)
     end
-
-    it "does not set the local :message_tag option if it is already specified" do
-      response = new_operation.call(:message_tag => "doAuthenticate")
-      expect(response.locals[:message_tag]).to eq("doAuthenticate")
-    end
-  end
-
-  def new_operation
-    Savon::Operation.create(:authenticate, wsdl, globals)
   end
 
 end
