@@ -133,9 +133,9 @@ module Savon
         wsse.respond_to?(:signature?) && wsse.signature?
       end
 
-      # Returns the SOAP request encoding. Defaults to "UTF-8".
+      # Returns the SOAP request encoding. Defaults to soap_encoding in config or "UTF-8".
       def encoding
-        @encoding ||= "UTF-8"
+        @encoding ||= self.config.soap_encoding || "UTF-8"
       end
 
       # Sets the SOAP request encoding.
