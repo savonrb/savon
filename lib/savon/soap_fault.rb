@@ -19,11 +19,11 @@ module Savon
     attr_reader :http, :nori
 
     def to_s
-      @message ||= message_by_version to_hash[:fault]
+      message_by_version to_hash[:fault]
     end
 
     def to_hash
-      @hash ||= nori.parse(@http.body)[:envelope][:body]
+      nori.parse(@http.body)[:envelope][:body]
     end
 
     private
