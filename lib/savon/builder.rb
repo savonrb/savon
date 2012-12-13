@@ -54,7 +54,7 @@ module Savon
     def namespaces
       @namespaces ||= begin
         namespaces = SCHEMA_TYPES.dup
-        namespaces["xmlns:#{@globals[:namespace_identifier]}"] = @globals[:namespace] || @wsdl.namespace
+        namespaces["xmlns:#{namespace_identifier}"] = @globals[:namespace] || @wsdl.namespace
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""
@@ -73,7 +73,7 @@ module Savon
     end
 
     def namespaced_message_tag
-      return [@globals[:namespace_identifier], message_tag] unless used_namespaces[[@operation_name.to_s]]
+      return [namespace_identifier, message_tag] unless used_namespaces[[@operation_name.to_s]]
       [used_namespaces[[@operation_name.to_s]], message_tag]
     end
 
@@ -87,7 +87,18 @@ module Savon
 
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
-      Message.new(@operation_name, @globals[:namespace_identifier], @used_namespaces, @locals[:message], element_form_default)
+      Message.new(@operation_name, namespace_identifier, @used_namespaces, @locals[:message], element_form_default)
+    end
+
+    def namespace_identifier
+      return @globals[:namespace_identifier] if @globals.include? :namespace_identifier
+      return @namespace_identifier if @namespace_identifier
+
+      operation = @wsdl.operations[@operation_name] if @wsdl.document?
+      namespace_identifier = operation[:namespace_identifier] if operation
+      namespace_identifier ||= "wsdl"
+
+      @namespace_identifier = namespace_identifier.to_sym
     end
 
     def used_namespaces

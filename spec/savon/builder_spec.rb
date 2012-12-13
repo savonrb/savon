@@ -4,8 +4,8 @@ describe Savon::Builder do
 
   subject(:builder) { Savon::Builder.new(:authenticate, wsdl, globals, locals) }
 
-  let(:globals)     { Savon::GlobalOptions.new(:namespace_identifier => :tns) }
-  let(:locals)      { Savon::LocalOptions.new(:message_tag => :authenticate) }
+  let(:globals)     { Savon::GlobalOptions.new }
+  let(:locals)      { Savon::LocalOptions.new }
   let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:no_wsdl)     { Wasabi::Document.new }
 
@@ -38,13 +38,28 @@ describe Savon::Builder do
     end
 
     it "includes a message tag created by Gyoku if both option and WSDL are missing" do
-      # TODO: why do i have to set this? needs to be cleaned up! [dh, 2012-12-13]
       globals[:namespace] = "http://v1.example.com"
 
       locals = Savon::LocalOptions.new
       builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
 
+      expect(builder.to_s).to include("<wsdl:authenticate>")
+    end
+
+    it "uses the global :namespace_identifier option if it's available" do
+      globals[:namespace_identifier] = :v1
+      expect(builder.to_s).to include("<v1:authenticate>")
+    end
+
+    it "uses the WSDL's namespace_identifier if the global option was not specified" do
       expect(builder.to_s).to include("<tns:authenticate>")
+    end
+
+    it "uses the default :wsdl identifier if both option and WSDL were not specified" do
+      globals[:namespace] = "http://v1.example.com"
+
+      builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
+      expect(builder.to_s).to include("<wsdl:authenticate>")
     end
 
     it "uses the global :element_form_default option if it's available " do

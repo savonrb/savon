@@ -39,8 +39,6 @@ module Savon
     def call(locals = {})
       @locals = LocalOptions.new(locals)
 
-      set_global_namespace_identifier
-
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       add_wsdl_namespaces_to_builder(builder)
       add_wsdl_types_to_builder(builder)
@@ -57,19 +55,6 @@ module Savon
     end
 
     private
-
-    def set_global_namespace_identifier
-      return if @globals.include? :namespace_identifier
-
-      if @wsdl.document?
-        operation = @wsdl.operations[@name]
-        identifier = operation[:namespace_identifier] if operation
-      end
-
-      identifier ||= "wsdl"
-
-      @globals[:namespace_identifier] = identifier.to_sym
-    end
 
     def add_wsdl_namespaces_to_builder(builder)
       @wsdl.type_namespaces.each do |path, uri|
