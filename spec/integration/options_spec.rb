@@ -366,12 +366,12 @@ describe "Options" do
 
   def new_client(globals = {})
     globals = { :logger => Savon::NullLogger.new, :wsdl => Fixture.wsdl(:authentication) }.merge(globals)
-    Savon.new_client(globals)
+    Savon.client(globals)
   end
 
   def new_client_without_wsdl(globals = {})
     globals = { :logger => Savon::NullLogger.new }.merge(globals)
-    Savon.new_client(globals)
+    Savon.client(globals)
   end
 
 end

@@ -1,10 +1,10 @@
 require "spec_helper"
 
-describe Savon::NewClient do
+describe Savon::Client do
 
   describe ".new" do
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
-      expect { Savon.new_client(:endpoint => "http://example.com") }.
+      expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(ArgumentError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
 
@@ -106,12 +106,12 @@ describe Savon::NewClient do
 
   def new_client(globals = {})
     globals = { :wsdl => Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }.merge(globals)
-    Savon.new_client(globals)
+    Savon.client(globals)
   end
 
   def new_client_without_wsdl(globals = {})
     globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :logger => Savon::NullLogger.new }.merge(globals)
-    Savon.new_client(globals)
+    Savon.client(globals)
   end
 
 end

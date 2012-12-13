@@ -3,7 +3,7 @@ require "savon/options"
 require "wasabi"
 
 module Savon
-  class NewClient
+  class Client
 
     def initialize(globals = {})
       @globals = GlobalOptions.new_with_defaults(globals)
@@ -43,9 +43,9 @@ module Savon
 
     def raise_initialization_error!
       raise ArgumentError, "Expected either a WSDL document or the SOAP endpoint and target namespace options.\n\n" \
-                           "Savon.new_client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
-                           "Savon.new_client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
-                           "Savon.new_client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
+                           "Savon.client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
+                           "Savon.client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
+                           "Savon.client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
     end
 
   end

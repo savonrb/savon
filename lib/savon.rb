@@ -1,11 +1,11 @@
 require "savon/version"
-require "savon/new_client"
+require "savon/client"
 require "savon/model"
 
 module Savon
 
-  def self.new_client(globals = {})
-    NewClient.new(globals)
+  def self.client(globals = {})
+    Client.new(globals)
   end
 
 end
