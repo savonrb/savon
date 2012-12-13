@@ -165,6 +165,15 @@ module Savon
 
   class LocalOptions < Options
 
+    def initialize(options = {})
+      defaults = {
+        :advanced_typecasting => true,
+        :response_parser      => :nokogiri
+      }
+
+      super defaults.merge(options)
+    end
+
     # The SOAP message to send. Expected to be a Hash or a String.
     def message(message)
       @options[:message] = message
