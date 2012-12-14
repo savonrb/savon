@@ -42,10 +42,11 @@ module Savon
     end
 
     def raise_initialization_error!
-      raise ArgumentError, "Expected either a WSDL document or the SOAP endpoint and target namespace options.\n\n" \
-                           "Savon.client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
-                           "Savon.client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
-                           "Savon.client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
+      raise InitializationError,
+            "Expected either a WSDL document or the SOAP endpoint and target namespace options.\n\n" \
+            "Savon.client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
+            "Savon.client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
+            "Savon.client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
     end
 
   end

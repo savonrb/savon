@@ -1,146 +1,155 @@
 require "spec_helper"
+require "integration/support/server"
 
 describe Savon::Model do
 
-  it "should work with the new interface"
+  before :all do
+    @server = IntegrationServer.run
+  end
 
-  #let(:model) do
-    #Class.new { extend Savon::Model }
-  #end
+  after :all do
+    @server.stop
+  end
 
-  #describe ".client" do
-    #it "memoizes the Savon::Client" do
-      #model.client.should equal(model.client)
-    #end
-  #end
+  describe ".client" do
+    it "returns the memoized client" do
+      model = Class.new {
+        extend Savon::Model
+        client :wsdl => Fixture.wsdl(:authentication)
+      }
 
-  #describe ".endpoint" do
-    #it "sets the SOAP endpoint" do
-      #model.endpoint "http://example.com"
-      #model.client.wsdl.endpoint.should == "http://example.com"
-    #end
-  #end
+      expect(model.client).to be_a(Savon::Client)
+      expect(model.client).to equal(model.client)
+    end
 
-  #describe ".namespace" do
-    #it "sets the target namespace" do
-      #model.namespace "http://v1.example.com"
-      #model.client.wsdl.namespace.should == "http://v1.example.com"
-    #end
-  #end
+    it "raises if the client was not initialized properly" do
+      model = Class.new { extend Savon::Model }
 
-  #describe ".document" do
-    #it "sets the WSDL document" do
-      #model.document "http://example.com/?wsdl"
-      #model.client.wsdl.document.should == "http://example.com/?wsdl"
-    #end
-  #end
+      expect { model.client }.
+        to raise_error(Savon::InitializationError, /^Expected the model to be initialized/)
+    end
+  end
 
-  #describe ".headers" do
-    #it "sets the HTTP headers" do
-      #model.headers("Accept-Charset" => "utf-8")
-      #model.client.http.headers.should == { "Accept-Charset" => "utf-8" }
-    #end
-  #end
+  describe ".global" do
+    it "sets global options" do
+      model = Class.new {
+        extend Savon::Model
 
-  #describe ".basic_auth" do
-    #it "sets HTTP Basic auth credentials" do
-      #model.basic_auth "login", "password"
-      #model.client.http.auth.basic.should == ["login", "password"]
-    #end
-  #end
+        client :wsdl => Fixture.wsdl(:authentication)
 
-  #describe ".wsse_auth" do
-    #it "sets WSSE auth credentials" do
-      #model.wsse_auth "login", "password", :digest
+        global :soap_version, 2
+        global :open_timeout, 71
+        global :wsse_auth, "luke", "secret", :digest
+      }
 
-      #model.client.wsse.username.should == "login"
-      #model.client.wsse.password.should == "password"
-      #model.client.wsse.should be_digest
-    #end
-  #end
+      expect(model.client.globals[:soap_version]).to eq(2)
+      expect(model.client.globals[:open_timeout]).to eq(71)
+      expect(model.client.globals[:wsse_auth]).to eq(["luke", "secret", :digest])
+    end
+  end
 
-  #describe ".actions" do
-    #before(:all) do
-      #model.actions :get_user, "GetAllUsers"
-    #end
+  describe ".operations" do
+    subject(:model)
+    it "defines class methods for each operation" do
+      model = Class.new {
+        extend Savon::Model
 
-    #it "defines class methods each action" do
-      #model.should respond_to(:get_user, :get_all_users)
-    #end
+        client :wsdl => Fixture.wsdl(:authentication)
+        operations :authenticate
+      }
 
-    #it "defines instance methods each action" do
-      #model.new.should respond_to(:get_user, :get_all_users)
-    #end
+      expect(model).to respond_to(:authenticate)
+    end
 
-    #context "(class-level)" do
-      #it "executes SOAP requests with a given body" do
-        #model.client.expects(:request).with(:wsdl, :get_user, :body => { :id => 1 })
-        #model.get_user :id => 1
-      #end
+    it "executes class-level SOAP operations" do
+      repeat_url = @server.url(:repeat)
 
-      #it "accepts and passes Strings for action names" do
-        #model.client.expects(:request).with(:wsdl, "GetAllUsers", :body => { :id => 1 })
-        #model.get_all_users :id => 1
-      #end
-    #end
+      model = Class.new {
+        extend Savon::Model
 
-    #context "(instance-level)" do
-      #it "delegates to the corresponding class method" do
-        #model.expects(:get_all_users).with(:active => true)
-        #model.new.get_all_users :active => true
-      #end
-    #end
-  #end
+        client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+        global :logger, Savon::NullLogger.new
 
-  #describe "#client" do
-    #it "returns the class-level Savon::Client" do
-      #model.new.client.should == model.client
-    #end
-  #end
+        operations :authenticate
+      }
 
-  #describe "overwriting action methods" do
-    #context "(class-level)" do
-      #let(:supermodel) do
-        #supermodel = model.dup
-        #supermodel.actions :get_user
+      response = model.authenticate(:xml => Fixture.response(:authentication))
+      expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
+    end
 
-        #def supermodel.get_user(body = nil, &block)
-          #p "super"
-          #super
-        #end
+    it "defines instance methods for each operation" do
+      model = Class.new {
+        extend Savon::Model
 
-        #supermodel
-      #end
+        client :wsdl => Fixture.wsdl(:authentication)
+        operations :authenticate
+      }
 
-      #it "works" do
-        #supermodel.client.expects(:request).with(:wsdl, :get_user, :body => { :id => 1 })
-        #supermodel.expects(:p).with("super")  # stupid, but works
+      model_instance = model.new
+      expect(model_instance).to respond_to(:authenticate)
+    end
 
-        #supermodel.get_user :id => 1
-      #end
-    #end
+    it "executes instance-level SOAP operations" do
+      repeat_url = @server.url(:repeat)
 
-    #context "(instance-level)" do
-      #let(:supermodel) do
-        #supermodel = model.dup
-        #supermodel.actions :get_user
-        #supermodel = supermodel.new
+      model = Class.new {
+        extend Savon::Model
 
-        #def supermodel.get_user(body = nil, &block)
-          #p "super"
-          #super
-        #end
+        client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+        global :logger, Savon::NullLogger.new
 
-        #supermodel
-      #end
+        operations :authenticate
+      }
 
-      #it "works" do
-        #supermodel.client.expects(:request).with(:wsdl, :get_user, :body => { :id => 1 })
-        #supermodel.expects(:p).with("super")  # stupid, but works
+      model_instance = model.new
+      response = model_instance.authenticate(:xml => Fixture.response(:authentication))
+      expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
+    end
+  end
 
-        #supermodel.get_user :id => 1
-      #end
-    #end
-  #end
+  it "allows to overwrite class operations" do
+    repeat_url = @server.url(:repeat)
+
+    model = Class.new {
+      extend Savon::Model
+      client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+    }
+
+    supermodel = model.dup
+    supermodel.operations :authenticate
+
+    def supermodel.authenticate(locals = {})
+      p "super"
+      super
+    end
+
+    supermodel.client.expects(:call).with(:authenticate, :message => { :username => "luke", :password => "secret" })
+    supermodel.expects(:p).with("super")  # stupid, but works
+
+    supermodel.authenticate(:message => { :username => "luke", :password => "secret" })
+  end
+
+  it "allows to overwrite instance operations" do
+    repeat_url = @server.url(:repeat)
+
+    model = Class.new {
+      extend Savon::Model
+      client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+    }
+
+    supermodel = model.dup
+    supermodel.operations :authenticate
+    supermodel = supermodel.new
+
+    def supermodel.authenticate(lcoals = {})
+      p "super"
+      super
+    end
+
+    supermodel.client.expects(:call).with(:authenticate, :message => { :username => "luke", :password => "secret" })
+    supermodel.expects(:p).with("super")  # stupid, but works
+
+    supermodel.authenticate(:message => { :username => "luke", :password => "secret" })
+  end
 
 end

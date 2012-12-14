@@ -5,7 +5,7 @@ describe Savon::Client do
   describe ".new" do
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
       expect { Savon.client(:endpoint => "http://example.com") }.
-        to raise_error(ArgumentError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
+        to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
   end
 

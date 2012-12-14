@@ -1,8 +1,4 @@
 module Savon
-
-  # = Savon::Model
-  #
-  # Model for SOAP service oriented applications.
   module Model
 
     def self.extended(base)
@@ -10,92 +6,74 @@ module Savon
     end
 
     def setup
-      class_action_module
-      instance_action_module
+      class_operation_module
+      instance_operation_module
     end
 
-    # Accepts one or more SOAP actions and generates both class and instance methods named
-    # after the given actions. Each generated method accepts an optional SOAP body Hash and
-    # a block to be passed to <tt>Savon::Client#request</tt> and executes a SOAP request.
-    def actions(*actions)
-      actions.each do |action|
-        define_class_action(action)
-        define_instance_action(action)
+    # Accepts one or more SOAP operations and generates both class and instance methods named
+    # after the given operations. Each generated method accepts an optional SOAP message Hash.
+    def operations(*operations)
+      operations.each do |operation|
+        define_class_operation(operation)
+        define_instance_operation(operation)
       end
     end
 
     private
 
-    # Defines a class-level SOAP action method.
-    def define_class_action(action)
-      class_action_module.module_eval %{
-        def #{action.to_s.snakecase}(body = nil, &block)
-          client.request :wsdl, #{action.inspect}, :body => body, &block
+    # Defines a class-level SOAP operation.
+    def define_class_operation(operation)
+      class_operation_module.module_eval %{
+        def #{operation.to_s.snakecase}(locals = {})
+          client.call #{operation.inspect}, locals
         end
       }
     end
 
-    # Defines an instance-level SOAP action method.
-    def define_instance_action(action)
-      instance_action_module.module_eval %{
-        def #{action.to_s.snakecase}(body = nil, &block)
-          self.class.#{action.to_s.snakecase} body, &block
+    # Defines an instance-level SOAP operation.
+    def define_instance_operation(operation)
+      instance_operation_module.module_eval %{
+        def #{operation.to_s.snakecase}(locals = {})
+          self.class.#{operation.to_s.snakecase} locals
         end
       }
     end
 
     # Class methods.
-    def class_action_module
-      @class_action_module ||= Module.new do
+    def class_operation_module
+      @class_operation_module ||= Module.new {
 
-        # Returns the memoized <tt>Savon::Client</tt>.
-        def client(&block)
-          @client ||= Savon::Client.new(&block)
+        def client(globals = {})
+          @client ||= Savon::Client.new(globals)
+        rescue InitializationError
+          raise_initialization_error!
         end
 
-        # Sets the SOAP endpoint to the given +uri+.
-        def endpoint(uri)
-          client.wsdl.endpoint = uri
+        def global(option, *value)
+          client.globals[option] = value
         end
 
-        # Sets the target namespace.
-        def namespace(uri)
-          client.wsdl.namespace = uri
+        def raise_initialization_error!
+          raise InitializationError,
+            "Expected the model to be initialized with either a WSDL document or the SOAP endpoint and target namespace options.\n" \
+            "Make sure to setup the model by calling the .client class method before calling the .global method.\n\n" \
+            "client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
+            "client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
+            "client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
         end
 
-        # Sets the WSDL document to the given +uri+.
-        def document(uri)
-          client.wsdl.document = uri
-        end
-
-        # Sets the HTTP headers.
-        def headers(headers)
-          client.http.headers = headers
-        end
-
-        # Sets basic auth +login+ and +password+.
-        def basic_auth(login, password)
-          client.http.auth.basic(login, password)
-        end
-
-        # Sets WSSE auth credentials.
-        def wsse_auth(*args)
-          client.wsse.credentials(*args)
-        end
-
-      end.tap { |mod| extend(mod) }
+      }.tap { |mod| extend(mod) }
     end
 
     # Instance methods.
-    def instance_action_module
-      @instance_action_module ||= Module.new do
+    def instance_operation_module
+      @instance_operation_module ||= Module.new {
 
-        # Returns the <tt>Savon::Client</tt> from the class instance.
-        def client(&block)
-          self.class.client(&block)
+        def client
+          self.class.client
         end
 
-      end.tap { |mod| include(mod) }
+      }.tap { |mod| include(mod) }
     end
 
   end
