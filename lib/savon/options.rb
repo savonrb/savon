@@ -156,6 +156,11 @@ module Savon
       @options[:wsse_auth] = credentials.flatten
     end
 
+    # Instruct Akami to enable wsu:Timestamp headers.
+    def wsse_timestamp(*timestamp)
+      @options[:wsse_timestamp] = timestamp.flatten
+    end
+
     # Instruct Nori whether to strip namespaces from XML nodes.
     def strip_namespaces(strip_namespaces)
       @options[:strip_namespaces] = strip_namespaces
