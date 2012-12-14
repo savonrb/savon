@@ -143,12 +143,12 @@ module Savon
 
     # HTTP basic auth credentials.
     def basic_auth(*credentials)
-      @options[:basic_auth] = credentials
+      @options[:basic_auth] = credentials.flatten
     end
 
     # HTTP digest auth credentials.
     def digest_auth(*credentials)
-      @options[:digest_auth] = credentials
+      @options[:digest_auth] = credentials.flatten
     end
 
     # WSSE auth credentials for Akami.
