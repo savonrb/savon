@@ -31,11 +31,15 @@ module Savon
 
     def call(operation_name, locals = {})
       response = operation(operation_name).call(locals)
-      @globals[:last_response] = response.http
+      persist_last_response(response)
       response
     end
 
     private
+
+    def persist_last_response(response)
+      @globals[:last_response] = response.http
+    end
 
     def wsdl_or_endpoint_and_namespace_specified?
       @globals.include?(:wsdl) || (@globals.include?(:endpoint) && @globals.include?(:namespace))
