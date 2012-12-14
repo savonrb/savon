@@ -272,6 +272,59 @@ describe "Options" do
 
   end
 
+  context "global :wsse_auth" do
+    it "adds WSSE basic auth information to the SOAP header" do
+      client = new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["luke", "secret"])
+      response = client.call(:authenticate)
+
+      request = response.http.body
+
+      # the header and wsse security node
+      wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+
+      # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+      expect(request).to include("<wsse:UsernameToken")
+      expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+      expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+
+      # the username and password node with type attribute
+      expect(request).to include("<wsse:Username>luke</wsse:Username>")
+      password_text = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+      expect(request).to include("<wsse:Password Type=\"#{password_text}\">secret</wsse:Password>")
+    end
+
+    it "adds WSSE digest auth information to the SOAP header" do
+      client = new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["lea", "top-secret", :digest])
+      response = client.call(:authenticate)
+
+      request = response.http.body
+
+      # the header and wsse security node
+      wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+
+      # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+      expect(request).to include("<wsse:UsernameToken")
+      expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+      expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+
+      # the username node
+      expect(request).to include("<wsse:Username>lea</wsse:Username>")
+
+      # the nonce node
+      expect(request).to match(/<wsse:Nonce>.+<\/wsse:Nonce>/)
+
+      # the created node with a timestamp
+      expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+
+      # the password node contains the encrypted value
+      password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+      expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
+      expect(request).to_not include("top-secret")
+    end
+  end
+
   context "global :strip_namespaces" do
     it "can be changed to not strip any namespaces" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_tags_to => lambda { |tag| tag.snakecase }, :strip_namespaces => false)

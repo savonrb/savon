@@ -1,12 +1,13 @@
+require "akami"
 require "gyoku"
 
 module Savon
   class Header
 
     def initialize(globals, locals)
-      @wsse = :replace_me_with_something_real
       @globals = globals
       @locals = locals
+      @wsse = create_wsse
     end
 
     def empty?
@@ -19,6 +20,13 @@ module Savon
 
     private
 
+    def create_wsse
+      wsse = Akami.wsse
+      wsse.credentials(*@globals[:wsse_auth]) if @globals.include? :wsse_auth
+      wsse.timestamp = @globals[:wsse_timestamp] if @globals.include? :wsse_timestamp
+      wsse
+    end
+
     def header
       @header ||= @globals.include?(:soap_header) ? @globals[:soap_header] : {}
     end
@@ -26,5 +34,6 @@ module Savon
     def wsse_header
       @wsse.respond_to?(:to_xml) ? @wsse.to_xml : ""
     end
+
   end
 end

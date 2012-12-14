@@ -151,6 +151,11 @@ module Savon
       @options[:digest_auth] = credentials
     end
 
+    # WSSE auth credentials for Akami.
+    def wsse_auth(*credentials)
+      @options[:wsse_auth] = credentials.flatten
+    end
+
     # Instruct Nori whether to strip namespaces from XML nodes.
     def strip_namespaces(strip_namespaces)
       @options[:strip_namespaces] = strip_namespaces
