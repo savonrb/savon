@@ -1,5 +1,5 @@
 require "savon/options"
-require "savon/evaluator"
+require "savon/block_interface"
 require "savon/request"
 require "savon/builder"
 
@@ -38,7 +38,7 @@ module Savon
     def call(locals = {}, &block)
       @locals = LocalOptions.new(locals)
 
-      Evaluator.new(@locals).evaluate(block) if block
+      BlockInterface.new(@locals).evaluate(block) if block
 
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       request = Request.new(@name, @wsdl, @globals, @locals)

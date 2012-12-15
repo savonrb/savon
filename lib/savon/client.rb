@@ -1,6 +1,6 @@
 require "savon/operation"
 require "savon/options"
-require "savon/evaluator"
+require "savon/block_interface"
 require "wasabi"
 
 module Savon
@@ -9,7 +9,7 @@ module Savon
     def initialize(globals = {}, &block)
       @globals = GlobalOptions.new(globals)
 
-      Evaluator.new(@globals).evaluate(block) if block
+      BlockInterface.new(@globals).evaluate(block) if block
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!

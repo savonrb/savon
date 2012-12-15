@@ -1,5 +1,5 @@
 module Savon
-  class Evaluator
+  class BlockInterface
 
     def initialize(target)
       @target = target
