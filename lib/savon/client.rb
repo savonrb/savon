@@ -16,8 +16,8 @@ module Savon
       end
 
       @wsdl = Wasabi::Document.new
-      @wsdl.document  = @globals[:wsdl] if @globals.include? :wsdl
-      @wsdl.endpoint  = @globals[:endpoint] if @globals.include? :endpoint
+      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
+      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
       @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
     end
 
