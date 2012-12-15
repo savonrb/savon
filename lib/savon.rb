@@ -4,8 +4,8 @@ module Savon
   class InitializationError < Error; end
   class InvalidResponseError < Error; end
 
-  def self.client(globals = {})
-    Client.new(globals)
+  def self.client(globals = {}, &block)
+    Client.new(globals, &block)
   end
 
 end

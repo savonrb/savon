@@ -1,12 +1,15 @@
 require "savon/operation"
 require "savon/options"
+require "savon/evaluator"
 require "wasabi"
 
 module Savon
   class Client
 
-    def initialize(globals = {})
+    def initialize(globals = {}, &block)
       @globals = GlobalOptions.new(globals)
+
+      Evaluator.new(@globals).evaluate(block) if block
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!
@@ -29,8 +32,8 @@ module Savon
       Operation.create(operation_name, @wsdl, @globals)
     end
 
-    def call(operation_name, locals = {})
-      response = operation(operation_name).call(locals)
+    def call(operation_name, locals = {}, &block)
+      response = operation(operation_name).call(locals, &block)
       persist_last_response(response)
       response
     end

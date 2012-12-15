@@ -1,8 +1,33 @@
 require "spec_helper"
+require "integration/support/server"
 
 describe Savon::Client do
 
+  before :all do
+    @server = IntegrationServer.run
+  end
+
+  after :all do
+    @server.stop
+  end
+
   describe ".new" do
+    it "supports a block without arguments to create a client with global options" do
+      client = Savon.client do
+        wsdl Fixture.wsdl(:authentication)
+      end
+
+      expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
+    end
+
+    it "supports a block with one argument to create a client with global options" do
+      client = Savon.client do |globals|
+        globals.wsdl Fixture.wsdl(:authentication)
+      end
+
+      expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
+    end
+
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
       expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
@@ -71,6 +96,26 @@ describe Savon::Client do
       # sets cookies from the last response
       HTTPI::Request.any_instance.expects(:set_cookies).with(last_response)
       client.call(:authenticate)
+    end
+
+    it "supports a block without arguments to call an operation with local options" do
+      client = new_client(:endpoint => @server.url(:repeat))
+
+      response = client.call(:authenticate) do
+        message(:symbol => "AAPL" )
+      end
+
+      expect(response.http.body).to include("<symbol>AAPL</symbol>")
+    end
+
+    it "supports a block with one argument to call an operation with local options" do
+      client = new_client(:endpoint => @server.url(:repeat))
+
+      response = client.call(:authenticate) do |locals|
+        locals.message(:symbol => "AAPL" )
+      end
+
+      expect(response.http.body).to include("<symbol>AAPL</symbol>")
     end
 
     it "raises when the operation name is not a symbol" do
