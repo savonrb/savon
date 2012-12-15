@@ -21,10 +21,6 @@ module Savon
       @options.key? option
     end
 
-    def select(&block)
-      @options.select(&block)
-    end
-
     private
 
     def assign(options)
