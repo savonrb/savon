@@ -41,7 +41,7 @@ module Savon
         :pretty_print_xml => false,
         :raise_errors     => true,
         :strip_namespaces => true,
-        :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }
+        :convert_tags_to  => lambda { |tag| tag.snakecase.to_sym }
       }
 
       super defaults.merge(options)
