@@ -21,7 +21,7 @@ module Savon
     attr_reader :http
 
     def call(xml)
-      @http.body = xml  # TODO: implement soap.signature? [dh, 2012-12-09]
+      @http.body = xml
       @http.headers["Content-Length"] = xml.bytesize.to_s
 
       log_request @http.url, @http.headers, @http.body

@@ -41,16 +41,10 @@ module Savon
 
       Evaluator.new(@locals).evaluate(block) if block
 
-      builder  = Builder.new(@name, @wsdl, @globals, @locals)
-      request  = Request.new(@name, @wsdl, @globals, @locals)
-      response = request.call(builder.to_s)
+      builder = Builder.new(@name, @wsdl, @globals, @locals)
+      request = Request.new(@name, @wsdl, @globals, @locals)
 
-      # XXX: leaving this out for now [dh, 2012-12-06]
-      #if wsse.verify_response
-        #WSSE::VerifySignature.new(response.http.body).verify!
-      #end
-
-      response
+      request.call(builder.to_s)
     end
 
   end
