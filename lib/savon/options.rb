@@ -166,10 +166,10 @@ module Savon
       @options[:strip_namespaces] = strip_namespaces
     end
 
-    # Tell Nori how to convert XML tags. Expects a lambda which receives an XML tag and returns
-    # the conversion result. Defaults to convert tags to snakecase Symbols.
-    def convert_tags_to(converter)
-      @options[:convert_tags_to] = converter
+    # Tell Nori how to con vert XML tags. Accepts a lambda or a block which receives an
+    # XML tag and simply returns the result. Defaults to convert tags to snakecase Symbols.
+    def convert_tags_to(converter = nil, &block)
+      @options[:convert_tags_to] = block || converter
     end
   end
 

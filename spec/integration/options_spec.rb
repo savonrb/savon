@@ -368,6 +368,21 @@ describe "Options" do
 
       expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
+
+    it "accepts a block in the block-based interface" do
+      client = Savon.client do |globals|
+        globals.logger          Savon::NullLogger.new
+        globals.wsdl            Fixture.wsdl(:authentication)
+        globals.endpoint        @server.url(:repeat)
+        globals.convert_tags_to { |tag| tag.snakecase.upcase }
+      end
+
+      response = client.call(:authenticate) do |locals|
+        locals.xml Fixture.response(:authentication)
+      end
+
+      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+    end
   end
 
   context "request: message_tag" do
