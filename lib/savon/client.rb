@@ -24,7 +24,7 @@ module Savon
     attr_reader :globals
 
     def operations
-      raise "Unable to inspect the service without a WSDL document." unless @wsdl.document?
+      raise_missing_wsdl_error! unless @wsdl.document?
       @wsdl.soap_actions
     end
 
@@ -54,6 +54,10 @@ module Savon
             "Savon.client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
             "Savon.client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
             "Savon.client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
+    end
+
+    def raise_missing_wsdl_error!
+      raise "Unable to inspect the service without a WSDL document."
     end
 
   end
