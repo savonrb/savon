@@ -111,8 +111,11 @@ describe Savon::Client do
     it "supports a block with one argument to call an operation with local options" do
       client = new_client(:endpoint => @server.url(:repeat))
 
+      # supports instance variables!
+      @instance_variable = { :symbol => "AAPL" }
+
       response = client.call(:authenticate) do |locals|
-        locals.message(:symbol => "AAPL" )
+        locals.message(@instance_variable)
       end
 
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
