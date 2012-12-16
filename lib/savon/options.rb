@@ -35,13 +35,13 @@ module Savon
 
     def initialize(options = {})
       defaults = {
-        :encoding         => "UTF-8",
-        :soap_version     => 1,
-        :logger           => Logger.new,
-        :pretty_print_xml => false,
-        :raise_errors     => true,
-        :strip_namespaces => true,
-        :convert_tags_to  => lambda { |tag| tag.snakecase.to_sym }
+        :encoding                  => "UTF-8",
+        :soap_version              => 1,
+        :logger                    => Logger.new,
+        :pretty_print_xml          => false,
+        :raise_errors              => true,
+        :strip_namespaces          => true,
+        :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym }
       }
 
       super defaults.merge(options)
@@ -162,10 +162,11 @@ module Savon
       @options[:strip_namespaces] = strip_namespaces
     end
 
-    # Tell Nori how to con vert XML tags. Accepts a lambda or a block which receives an
-    # XML tag and simply returns the result. Defaults to convert tags to snakecase Symbols.
-    def convert_tags_to(converter = nil, &block)
-      @options[:convert_tags_to] = block || converter
+    # Tell Nori how to convert XML tags from the SOAP response into Hash keys.
+    # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
+    # Defaults to convert tags to snakecase Symbols.
+    def convert_response_tags_to(converter = nil, &block)
+      @options[:convert_response_tags_to] = block || converter
     end
   end
 

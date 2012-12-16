@@ -351,7 +351,7 @@ describe "Options" do
 
   context "global :strip_namespaces" do
     it "can be changed to not strip any namespaces" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_tags_to => lambda { |tag| tag.snakecase }, :strip_namespaces => false)
+      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase }, :strip_namespaces => false)
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
       # the header/body convenience methods fails when conventions are not met. [dh, 2012-12-12]
@@ -361,9 +361,9 @@ describe "Options" do
     end
   end
 
-  context "global :convert_tags_to" do
+  context "global :convert_response_tags_to" do
     it "can be changed to convert XML tags to a different format" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_tags_to => lambda { |tag| tag.snakecase.upcase })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
       expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
@@ -371,10 +371,10 @@ describe "Options" do
 
     it "accepts a block in the block-based interface" do
       client = Savon.client do |globals|
-        globals.logger          Savon::NullLogger.new
-        globals.wsdl            Fixture.wsdl(:authentication)
-        globals.endpoint        @server.url(:repeat)
-        globals.convert_tags_to { |tag| tag.snakecase.upcase }
+        globals.logger                   Savon::NullLogger.new
+        globals.wsdl                     Fixture.wsdl(:authentication)
+        globals.endpoint                 @server.url(:repeat)
+        globals.convert_response_tags_to { |tag| tag.snakecase.upcase }
       end
 
       response = client.call(:authenticate) do |locals|

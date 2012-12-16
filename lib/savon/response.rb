@@ -84,7 +84,7 @@ module Savon
 
       nori_options = {
         :strip_namespaces     => @globals[:strip_namespaces],
-        :convert_tags_to      => @globals[:convert_tags_to],
+        :convert_tags_to      => @globals[:convert_response_tags_to],
         :advanced_typecasting => @locals[:advanced_typecasting],
         :parser               => @locals[:response_parser]
       }
