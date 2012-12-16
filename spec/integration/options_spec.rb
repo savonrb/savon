@@ -386,14 +386,22 @@ describe "Options" do
   end
 
   context "request: message_tag" do
-    it "without it, Savon tries to get the message tag from the WSDL document and falls back to Gyoku" do
+    it "when set, changes the SOAP message tag" do
+      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message_tag => :doAuthenticate)
+      expect(response.http.body).to include("<tns:doAuthenticate></tns:doAuthenticate>")
+    end
+
+    it "without it, Savon tries to get the message tag from the WSDL document" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate)
       expect(response.http.body).to include("<tns:authenticate></tns:authenticate>")
     end
 
-    it "when set, changes the SOAP message tag" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message_tag => :doAuthenticate)
-      expect(response.http.body).to include("<tns:doAuthenticate></tns:doAuthenticate>")
+    it "without the option and a WSDL, Savon defaults to Gyoku to create the name" do
+      client = Savon.client(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com",
+                            :logger => Savon::NullLogger.new)
+
+      response = client.call(:init_authentication)
+      expect(response.http.body).to include("<wsdl:initAuthentication></wsdl:initAuthentication>")
     end
   end
 
