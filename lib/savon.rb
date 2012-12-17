@@ -8,6 +8,10 @@ module Savon
     Client.new(globals, &block)
   end
 
+  def self.mocked?
+    defined?(super) ? super : false
+  end
+
 end
 
 require "savon/version"

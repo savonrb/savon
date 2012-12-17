@@ -43,7 +43,20 @@ module Savon
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       request = Request.new(@name, @wsdl, @globals, @locals)
 
-      request.call(builder.to_s)
+      if Savon.mocked?
+        log "Mocking Savon request to the #{@name.inspect} operation"
+
+        response = Savon.expected_request(@name, builder, @globals, @locals)
+        Response.new(response, @globals, @locals)
+      else
+        request.call(builder.to_s)
+      end
+    end
+
+    private
+
+    def log(message)
+      @globals[:logger].log(message)
     end
 
   end
