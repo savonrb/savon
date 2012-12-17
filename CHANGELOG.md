@@ -1,3 +1,7 @@
+## 3.0.0 (2012-12-17)
+
+* Updated to HTTPI 2.0 to play nicely with Savon 2.0.
+
 ## 2.5.1 (2012-08-22)
 
 * Fix: [#14](https://github.com/rubiii/wasabi/issues/14) fixes an issue where
