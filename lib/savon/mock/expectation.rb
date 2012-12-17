@@ -25,6 +25,11 @@ module Savon
     end
 
     def verify!
+      unless @actual
+        raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation, " \
+                                "but no request was executed."
+      end
+
       verify_operation_name!
       verify_message!
     end

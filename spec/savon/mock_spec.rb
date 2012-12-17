@@ -49,6 +49,11 @@ describe "Savon's mock interface" do
     new_client.call(:find_user, :message => find_user_message)
   end
 
+  it "fails when the expected operation was not called" do
+    # TODO: find out how to test this! [dh, 2012-12-17]
+    #savon.expects(:authenticate)
+  end
+
   it "fails with an unexpected request" do
     expect { new_client.call(:authenticate) }.
       to raise_error(Savon::ExpectationError, "Unexpected request to the :authenticate operation.")
