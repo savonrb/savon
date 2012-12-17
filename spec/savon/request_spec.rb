@@ -26,7 +26,7 @@ describe Savon::Request do
       expect(request.http.body).to eq("<xml/>")
       expect(request.http.headers["Content-Length"]).to eq("<xml/>".bytesize.to_s)
 
-      expect(response).to be_a(Savon::Response)
+      expect(response).to be_a(HTTPI::Response)
     end
 
     it "falls back to use the WSDL's endpoint if the global :endpoint option was not set" do

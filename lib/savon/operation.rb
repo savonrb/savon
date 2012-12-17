@@ -43,17 +43,20 @@ module Savon
       builder = Builder.new(@name, @wsdl, @globals, @locals)
       request = Request.new(@name, @wsdl, @globals, @locals)
 
-      if Savon.mocked?
-        log "Mocking Savon request to the #{@name.inspect} operation"
+      response = Savon.notify_observers(@name, builder, @globals, @locals)
+      response ||= request.call(builder.to_s)
 
-        response = Savon.expected_request(@name, builder, @globals, @locals)
-        Response.new(response, @globals, @locals)
-      else
-        request.call(builder.to_s)
-      end
+      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
+
+      Response.new(response, @globals, @locals)
     end
 
     private
+
+    def raise_expected_httpi_response!
+      raise Error, "Observers need to return an HTTPI::Response to mock " \
+                   "the request or nil to execute the request."
+    end
 
     def log(message)
       @globals[:logger].log(message)

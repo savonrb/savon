@@ -28,7 +28,7 @@ module Savon
       response = HTTPI.post(@http)
       log_response response.code, response.body
 
-      Response.new(response, @globals, @locals)
+      response
     end
 
     private

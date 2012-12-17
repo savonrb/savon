@@ -8,8 +8,14 @@ module Savon
     Client.new(globals, &block)
   end
 
-  def self.mocked?
-    defined?(super) ? super : false
+  def self.observers
+    @observers ||= []
+  end
+
+  def self.notify_observers(operation_name, builder, globals, locals)
+    observers.inject(nil) do |response, observer|
+      observer.notify(operation_name, builder, globals, locals)
+    end
   end
 
 end

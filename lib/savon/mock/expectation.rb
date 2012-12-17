@@ -1,3 +1,5 @@
+require "httpi"
+
 module Savon
   class MockExpectation
 
@@ -17,7 +19,7 @@ module Savon
       self
     end
 
-    def record!(operation_name, builder, globals, locals)
+    def actual(operation_name, builder, globals, locals)
       @actual = {
         :operation_name => operation_name,
         :message        => locals[:message]
