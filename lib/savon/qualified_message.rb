@@ -3,9 +3,10 @@ require "gyoku"
 module Savon
   class QualifiedMessage
 
-    def initialize(types, used_namespaces)
+    def initialize(types, used_namespaces, key_converter)
       @types = types
       @used_namespaces = used_namespaces
+      @key_converter = key_converter
     end
 
     def to_hash(hash, path)
@@ -14,7 +15,7 @@ module Savon
       return hash.to_s unless hash.kind_of? Hash
 
       hash.inject({}) do |newhash, (key, value)|
-        camelcased_key = Gyoku::XMLKey.create(key).to_s
+        camelcased_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
         newpath = path + [camelcased_key]
 
         if @used_namespaces[newpath]
@@ -32,12 +33,12 @@ module Savon
     private
 
     def add_namespaces_to_body(value, path)
-      QualifiedMessage.new(@types, @used_namespaces).to_hash(value, path)
+      QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(value, path)
     end
 
     def add_namespaces_to_values(values, path)
       values.collect! { |value|
-        camelcased_value = Gyoku::XMLKey.create(value)
+        camelcased_value = Gyoku.xml_tag(value, :key_converter => @key_converter)
         namespace_path = path + [camelcased_value.to_s]
         namespace = @used_namespaces[namespace_path]
         "#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"

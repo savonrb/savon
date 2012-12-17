@@ -361,8 +361,29 @@ describe "Options" do
     end
   end
 
+  context "global :convert_request_keys_to" do
+    it "changes how Hash message key Symbols are translated to XML tags for the request" do
+      client = new_client_without_wsdl do |globals|
+        globals.endpoint @server.url(:repeat)
+        globals.namespace "http://v1.example.com"
+        globals.convert_request_keys_to :camelcase  # or one of [:lower_camelcase, :upcase, :none]
+      end
+
+      response = client.call(:find_user) do |locals|
+        locals.message(user_name: "luke", "pass_word" => "secret")
+      end
+
+      request = response.http.body
+
+      # split into multiple assertions thanks to 1.8
+      expect(request).to include("<wsdl:FindUser>")
+      expect(request).to include("<UserName>luke</UserName>")
+      expect(request).to include("<pass_word>secret</pass_word>")
+    end
+  end
+
   context "global :convert_response_tags_to" do
-    it "can be changed to convert XML tags to a different format" do
+    it "changes how XML tags from the SOAP response are translated into Hash keys" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
@@ -463,14 +484,14 @@ describe "Options" do
     end
   end
 
-  def new_client(globals = {})
+  def new_client(globals = {}, &block)
     globals = { :logger => Savon::NullLogger.new, :wsdl => Fixture.wsdl(:authentication) }.merge(globals)
-    Savon.client(globals)
+    Savon.client(globals, &block)
   end
 
-  def new_client_without_wsdl(globals = {})
+  def new_client_without_wsdl(globals = {}, &block)
     globals = { :logger => Savon::NullLogger.new }.merge(globals)
-    Savon.client(globals)
+    Savon.client(globals, &block)
   end
 
 end

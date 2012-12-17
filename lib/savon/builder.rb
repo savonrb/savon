@@ -94,14 +94,16 @@ module Savon
     def message_tag
       message_tag = @locals[:message_tag]
       message_tag ||= @wsdl.soap_input(@operation_name.to_sym) if @wsdl.document?
-      message_tag ||= Gyoku::XMLKey.create(@operation_name)
+      message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
 
       @message_tag = message_tag.to_sym
     end
 
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
-      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message], element_form_default)
+      # TODO: clean this up! [dh, 2012-12-17]
+      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message],
+                  element_form_default, @globals[:convert_request_keys_to])
     end
 
     def namespace_identifier

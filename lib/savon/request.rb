@@ -59,7 +59,7 @@ module Savon
 
       soap_action = @locals[:soap_action]
       soap_action ||= @wsdl.soap_action(@operation_name.to_sym) if @wsdl.document?
-      soap_action ||= Gyoku::XMLKey.create(@operation_name)
+      soap_action ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
 
       @soap_action = soap_action
     end

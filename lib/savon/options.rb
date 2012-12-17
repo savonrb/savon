@@ -162,6 +162,12 @@ module Savon
       @options[:strip_namespaces] = strip_namespaces
     end
 
+    # Tell Gyoku how to convert Hash key Symbols to XML tags.
+    # Accepts one of :lower_camelcase, :camelcase, :upcase, or :none.
+    def convert_request_keys_to(converter)
+      @options[:convert_request_keys_to] = converter
+    end
+
     # Tell Nori how to convert XML tags from the SOAP response into Hash keys.
     # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
     # Defaults to convert tags to snakecase Symbols.

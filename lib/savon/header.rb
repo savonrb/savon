@@ -15,7 +15,10 @@ module Savon
     end
 
     def to_s
-      @string ||= (Hash === header ? Gyoku.xml(header) : header) + wsse_header
+      return @header if @header
+
+      gyoku_options = { :key_converter => @globals[:convert_request_keys_to] }
+      @header = (Hash === header ? Gyoku.xml(header, gyoku_options) : header) + wsse_header
     end
 
     private
