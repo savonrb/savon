@@ -58,9 +58,5 @@ module Savon
                    "the request or nil to execute the request."
     end
 
-    def log(message)
-      @globals[:logger].log(message)
-    end
-
   end
 end
