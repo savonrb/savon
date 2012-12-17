@@ -32,13 +32,17 @@ module Savon
       else
         raise ExpectationError, "Unexpected request to the #{operation_name.inspect} operation."
       end
+    rescue ExpectationError
+      @expectations = nil
+      raise
     end
 
     def verify!
-      return if @expectations.empty?
-      @expectations.each(&:verify!)
-    ensure
+      return if expectations.empty?
+      expectations.each(&:verify!)
+    rescue ExpectationError
       @expectations = nil
+      raise
     end
 
     def expectations
