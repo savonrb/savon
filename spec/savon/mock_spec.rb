@@ -54,6 +54,13 @@ describe "Savon's mock interface" do
     #savon.expects(:authenticate)
   end
 
+  it "fails when the return value for an expectation was not specified" do
+    savon.expects(:authenticate)
+
+    expect { new_client.call(:authenticate) }.
+      to raise_error(Savon::ExpectationError, "This expectation was not set up with a response.")
+  end
+
   it "fails with an unexpected request" do
     expect { new_client.call(:authenticate) }.
       to raise_error(Savon::ExpectationError, "Unexpected request to the :authenticate operation.")

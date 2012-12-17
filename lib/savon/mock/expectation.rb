@@ -35,6 +35,10 @@ module Savon
     end
 
     def response!
+      unless @response
+        raise ExpectationError, "This expectation was not set up with a response."
+      end
+
       HTTPI::Response.new(@response[:code], @response[:headers], @response[:body])
     end
 
