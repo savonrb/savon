@@ -9,7 +9,7 @@ Heavy metal SOAP client
 Version 2
 ---------
 
-Savon 2.0 is almost feature-complete and I would really appreciate your feedback!
+Savon 2.0 is almost feature-complete and I would really appreciate your feedback!  
 To get started, add the following line to your Gemfile:
 
 ``` ruby
