@@ -1,10 +1,6 @@
-## 2.0.0 (UPCOMING)
+## 2.0.0 (2012-12-18)
 
-* Changed the public interface. See [#332](https://github.com/savonrb/savon/issues/332) and read
-  the [documentation](http://savonrb.com/version2.html) to get to know what changed and why.
-
-* Update: Use Nori 2.0 to minimalize global state. All Nori options are now encapsulated and can
-  be configured through Savon.
+* Read about all the changes in the [updated documentation](http://savonrb.com/version2.html).
 
 * Fix: [#322](https://github.com/savonrb/savon/issues/322) use the builder's state instead of the
   block's return value to set the soap body/xml values.
