@@ -18,14 +18,12 @@ describe Savon::LogMessage do
     message = log_message("<envelope><body>hello</body></envelope>", [], :pretty_print).to_s
 
     expect(message).to include("\n<envelope>")
-    expect(message).to include("\n  <body>hello</body>")
+    expect(message).to include("\n  <body>")
   end
 
   it "filters tags in a given message" do
     message = log_message("<root><password>secret</password></root>", [:password], false).to_s
-
-    # notice that filtering also does pretty print the message
-    expect(message).to include("\n  <password>***FILTERED***</password>")
+    expect(message).to include("<password>***FILTERED***</password>")
   end
 
   def log_message(*args)
