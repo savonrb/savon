@@ -118,7 +118,7 @@ describe "Savon's mock interface" do
     defaults = {
       :endpoint  => "http://example.com",
       :namespace => "http://v1.example.com",
-      :logger    => Savon::NullLogger.new
+      :log       => false
     }
 
     Savon.client defaults.merge(globals)

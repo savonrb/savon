@@ -5,7 +5,7 @@ describe Savon::Request do
 
   subject(:request) { Savon::Request.new(:authenticate, wsdl, globals, locals) }
 
-  let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :logger => Savon::NullLogger.new) }
+  let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :log => false) }
   let(:locals)      { Savon::LocalOptions.new }
   let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:no_wsdl)     { Wasabi::Document.new }
@@ -31,7 +31,7 @@ describe Savon::Request do
 
     it "falls back to use the WSDL's endpoint if the global :endpoint option was not set" do
       wsdl.endpoint = @server.url
-      globals_without_endpoint = Savon::GlobalOptions.new(:logger => Savon::NullLogger.new)
+      globals_without_endpoint = Savon::GlobalOptions.new(:log => false)
       request = Savon::Request.new(:authenticate, wsdl, globals_without_endpoint, locals)
       response = request.call("<xml/>")
 

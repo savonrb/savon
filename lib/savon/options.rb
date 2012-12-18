@@ -1,4 +1,4 @@
-require "savon/logger"
+require "logger"
 
 module Savon
   class Options
@@ -37,14 +37,25 @@ module Savon
       defaults = {
         :encoding                  => "UTF-8",
         :soap_version              => 1,
-        :logger                    => Logger.new,
+        :logger                    => Logger.new($stdout),
+        :filters                   => [],
         :pretty_print_xml          => false,
         :raise_errors              => true,
         :strip_namespaces          => true,
         :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym }
       }
 
-      super defaults.merge(options)
+      options = defaults.merge(options)
+
+      # these options are shortcuts on the logger which needs to be set
+      # before it can be modified to set these options.
+      delayed_log = options.delete(:log)
+      delayed_level = options.delete(:log_level)
+
+      super(options)
+
+      log(delayed_log) unless delayed_log.nil?
+      log_level(delayed_level) unless delayed_level.nil?
     end
 
     # Location of the local or remote WSDL document.
@@ -121,9 +132,38 @@ module Savon
       @options[:raise_errors] = raise_errors
     end
 
+    # Whether or not to log.
+    def log(log)
+      if log
+        target = $stdout
+      else
+        windows = RUBY_PLATFORM =~ /(mingw|bccwin|wince|mswin32)/i
+        target = windows ? "NUL:" : "/dev/null"
+      end
+
+      @options[:logger] = Logger.new(target)
+    end
+
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
       @options[:logger] = logger
+    end
+
+    # Changes the Logger's log level.
+    def log_level(level)
+      levels = { :debug => 0, :info => 1, :warn => 2, :error => 3, :fatal => 4 }
+
+      unless levels.include? level
+        raise ArgumentError, "Invalid log level: #{level.inspect}\n" \
+                             "Expected one of: #{levels.keys.inspect}"
+      end
+
+      @options[:logger].level = levels[level]
+    end
+
+    # A list of XML tags to filter from logged SOAP messages.
+    def filters(*filters)
+      @options[:filters] = filters.flatten
     end
 
     # Whether to pretty print request and response XML log messages.

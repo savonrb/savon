@@ -195,28 +195,51 @@ describe "Options" do
   end
 
   context "global :logger" do
-    it "defaults to an instance of Savon::Logger" do
+    it "defaults to an instance of Ruby's standard Logger" do
       logger = new_client.globals[:logger]
-      expect(logger).to be_a(Savon::Logger)
+      expect(logger).to be_a(Logger)
+    end
+  end
+
+  context "global :log_level" do
+    it "allows changing the Logger's log level to :debug" do
+      client = new_client(:log_level => :debug)
+      level = client.globals[:logger].level
+
+      expect(level).to eq(0)
     end
 
-    it "can be replaced by an object that responds to #log" do
-      duck_logger = Class.new {
+    it "allows changing the Logger's log level to :info" do
+      client = new_client(:log_level => :info)
+      level = client.globals[:logger].level
 
-        def self.logs
-          @logs ||= []
-        end
+      expect(level).to eq(1)
+    end
 
-        def log(message, options = {})
-          self.class.logs << message
-        end
+    it "allows changing the Logger's log level to :warn" do
+      client = new_client(:log_level => :warn)
+      level = client.globals[:logger].level
 
-      }
+      expect(level).to eq(2)
+    end
 
-      client = new_client(:endpoint => @server.url, :logger => duck_logger.new)
-      client.call(:authenticate)
+    it "allows changing the Logger's log level to :error" do
+      client = new_client(:log_level => :error)
+      level = client.globals[:logger].level
 
-      expect(duck_logger.logs).to include("SOAP request: #{@server.url}")
+      expect(level).to eq(3)
+    end
+
+    it "allows changing the Logger's log level to :fatal" do
+      client = new_client(:log_level => :fatal)
+      level = client.globals[:logger].level
+
+      expect(level).to eq(4)
+    end
+
+    it "raises when the given level is not valid" do
+      expect { new_client(:log_level => :invalid) }.
+        to raise_error(ArgumentError, /Invalid log level: :invalid/)
     end
   end
 
@@ -238,38 +261,43 @@ describe "Options" do
     end
   end
 
+  context "global :filters" do
+    it "filters a list of XML tags from logged SOAP messages" do
+      client = new_client(:endpoint => @server.url(:repeat), :log => true)
+
+      client.globals[:filters] << :password
+
+      # filter out logs we're not interested in
+      client.globals[:logger].expects(:info).at_least_once
+
+      # check whether the password is filtered
+      client.globals[:logger].expects(:debug).with { |message|
+        message.include? "<password>***FILTERED***</password>"
+      }.twice
+
+      message = { :username => "luke", :password => "secret" }
+      client.call(:authenticate, :message => message)
+    end
+  end
+
   context "global :pretty_print_xml" do
     it "is a nice but expensive way to debug XML messages" do
-      duck_logger = Class.new {
+      client = new_client(:endpoint => @server.url(:repeat), :pretty_print_xml => true, :log => true)
 
-        def self.logs
-          @logs ||= []
-        end
+      # filter out logs we're not interested in
+      client.globals[:logger].expects(:info).at_least_once
 
-        def log(message, options = {})
-          # TODO: probably not the best way to test this, since it repeats the loggers behavior,
-          #       but it's currently not possible to easily access the log messages. [dh, 2012-12-09]
-          self.class.logs << Savon::LogMessage.new(message, [], options).to_s
-        end
+      # check whether the message is pretty printed
+      client.globals[:logger].expects(:debug).with { |message|
+        envelope    = message =~ /\n<env:Envelope/
+        body        = message =~ /\n  <env:Body>/
+        message_tag = message =~ /\n    <tns:authenticate\/>/
 
-      }
+        envelope && body && message_tag
+      }.twice
 
-      client = new_client(:endpoint => @server.url, :logger => duck_logger.new, :pretty_print_xml => true)
       client.call(:authenticate)
-
-      xml = unindent <<-xml
-        <env:Body>
-            <tns:authenticate/>
-          </env:Body>
-      xml
-
-      expect(duck_logger.logs[2]).to include(xml)
     end
-
-    def unindent(string)
-      string.gsub(/^#{string[/\A\s*/]}/, '')
-    end
-
   end
 
   context "global :wsse_auth" do
@@ -392,7 +420,7 @@ describe "Options" do
 
     it "accepts a block in the block-based interface" do
       client = Savon.client do |globals|
-        globals.logger                   Savon::NullLogger.new
+        globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
         globals.convert_response_tags_to { |tag| tag.snakecase.upcase }
@@ -418,8 +446,7 @@ describe "Options" do
     end
 
     it "without the option and a WSDL, Savon defaults to Gyoku to create the name" do
-      client = Savon.client(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com",
-                            :logger => Savon::NullLogger.new)
+      client = Savon.client(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com", :log => false)
 
       response = client.call(:init_authentication)
       expect(response.http.body).to include("<wsdl:initAuthentication></wsdl:initAuthentication>")
@@ -485,12 +512,12 @@ describe "Options" do
   end
 
   def new_client(globals = {}, &block)
-    globals = { :logger => Savon::NullLogger.new, :wsdl => Fixture.wsdl(:authentication) }.merge(globals)
+    globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
     Savon.client(globals, &block)
   end
 
   def new_client_without_wsdl(globals = {}, &block)
-    globals = { :logger => Savon::NullLogger.new }.merge(globals)
+    globals = { :log => false }.merge(globals)
     Savon.client(globals, &block)
   end
 

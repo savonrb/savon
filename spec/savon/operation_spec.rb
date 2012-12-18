@@ -3,7 +3,7 @@ require "integration/support/server"
 
 describe Savon::Operation do
 
-  let(:globals) { Savon::GlobalOptions.new(:endpoint => @server.url(:repeat), :logger => Savon::NullLogger.new) }
+  let(:globals) { Savon::GlobalOptions.new(:endpoint => @server.url(:repeat), :log => false) }
   let(:wsdl)    { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:no_wsdl) { Wasabi::Document.new }
 

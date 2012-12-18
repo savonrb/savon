@@ -68,7 +68,7 @@ describe Savon::Model do
         extend Savon::Model
 
         client :endpoint => repeat_url, :namespace => "http://v1.example.com"
-        global :logger, Savon::NullLogger.new
+        global :log, false
 
         operations :authenticate
       }
@@ -96,7 +96,7 @@ describe Savon::Model do
         extend Savon::Model
 
         client :endpoint => repeat_url, :namespace => "http://v1.example.com"
-        global :logger, Savon::NullLogger.new
+        global :log, false
 
         operations :authenticate
       }

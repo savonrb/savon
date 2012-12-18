@@ -3,49 +3,45 @@ require "nokogiri"
 module Savon
   class LogMessage
 
-    def initialize(message, filters, options = {})
-      @message = message
-      @filters = filters
-      @options = options
+    def initialize(message, filters = [], pretty_print = false)
+      @message      = message
+      @filters      = filters
+      @pretty_print = pretty_print
     end
 
     def to_s
-      return @message unless pretty? || filter?
+      message_is_xml = @message =~ /^</
+      has_filters    = @filters.any?
+      pretty_print   = @pretty_print
 
-      doc = Nokogiri.XML(@message)
-      doc = apply_filter(doc) if filter?
-      doc.to_xml(pretty_options)
+      return @message unless message_is_xml
+      return @message unless has_filters || pretty_print
+
+      document = Nokogiri.XML(@message)
+      document = apply_filter(document) if has_filters
+      document.to_xml(nokogiri_options)
     end
 
     private
 
-    def filter?
-      @options[:filter] && @filters.any?
-    end
-
-    def pretty?
-      @options[:pretty]
-    end
-
-    def apply_filter(doc)
-      return doc unless doc.errors.empty?
+    def apply_filter(document)
+      return document unless document.errors.empty?
 
       @filters.each do |filter|
-        apply_filter!(doc, filter)
+        apply_filter! document, filter
       end
 
-      doc
+      document
     end
 
-    def apply_filter!(doc, filter)
-      doc.xpath("//*[local-name()='#{filter}']").each do |node|
+    def apply_filter!(document, filter)
+      document.xpath("//*[local-name()='#{filter}']").each do |node|
         node.content = "***FILTERED***"
       end
     end
 
-    def pretty_options
-      return {} unless pretty?
-      { :indent => 2 }
+    def nokogiri_options
+      @pretty_print ? { :indent => 2 } : {}
     end
 
   end

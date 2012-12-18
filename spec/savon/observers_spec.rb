@@ -85,7 +85,7 @@ describe Savon do
     Savon.client(
       :endpoint  => @server.url(:repeat),
       :namespace => "http://v1.example.com",
-      :logger    => Savon::NullLogger.new
+      :log       => false
     )
   end
 

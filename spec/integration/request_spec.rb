@@ -4,7 +4,7 @@ describe "Requests" do
 
   subject(:client) {
     Savon.client(:wsdl => service_endpoint, :open_timeout => 10, :read_timeout => 10,
-                 :raise_errors => false, :logger => Savon::NullLogger.new)
+                 :raise_errors => false, :log => false)
   }
 
   context "stockquote" do

@@ -1,5 +1,6 @@
 require "httpi"
 require "savon/response"
+require "savon/log_message"
 
 module Savon
   class Request
@@ -65,18 +66,26 @@ module Savon
     end
 
     def log_request(url, headers, body)
-      log "SOAP request: #{url}"
-      log headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-      log body, :pretty => @globals[:pretty_print_xml], :filter => true
+      logger.info  "SOAP request: #{url}"
+      logger.info  headers_to_log(headers)
+      logger.debug body_to_log(body)
     end
 
     def log_response(code, body)
-      log "SOAP response (status #{code}):"
-      log body, :pretty => @globals[:pretty_print_xml]
+      logger.info  "SOAP response (status #{code})"
+      logger.debug body_to_log(body)
     end
 
-    def log(message, options = {})
-      @globals[:logger].log(message, options)
+    def headers_to_log(headers)
+      headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+    end
+
+    def body_to_log(body)
+      LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
+    end
+
+    def logger
+      @globals[:logger]
     end
 
   end

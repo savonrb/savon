@@ -146,12 +146,12 @@ describe Savon::Client do
   end
 
   def new_client(globals = {})
-    globals = { :wsdl => Fixture.wsdl(:authentication), :logger => Savon::NullLogger.new }.merge(globals)
+    globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
     Savon.client(globals)
   end
 
   def new_client_without_wsdl(globals = {})
-    globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :logger => Savon::NullLogger.new }.merge(globals)
+    globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :log => false }.merge(globals)
     Savon.client(globals)
   end
 
