@@ -1,4 +1,5 @@
 require "logger"
+require "httpi"
 
 module Savon
   class Options
@@ -135,8 +136,10 @@ module Savon
     # Whether or not to log.
     def log(log)
       if log
+        HTTPI.log = true
         target = $stdout
       else
+        HTTPI.log = false
         windows = RUBY_PLATFORM =~ /(mingw|bccwin|wince|mswin32)/i
         target = windows ? "NUL:" : "/dev/null"
       end

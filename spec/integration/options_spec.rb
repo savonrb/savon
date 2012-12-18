@@ -194,6 +194,18 @@ describe "Options" do
     end
   end
 
+  context "global :log" do
+    it "silences HTTPI" do
+      HTTPI.expects(:log=).with(false)
+      new_client(:log => false)
+    end
+
+    it "turns HTTPI logging back on as well" do
+      HTTPI.expects(:log=).with(true)
+      new_client(:log => true)
+    end
+  end
+
   context "global :logger" do
     it "defaults to an instance of Ruby's standard Logger" do
       logger = new_client.globals[:logger]
