@@ -1,3 +1,9 @@
+## 2.0.1 (2012-12-19)
+
+* Fix [#342](https://github.com/savonrb/savon/issues/342) fixes an issue where namespaces could
+  not be resolved if the actual operation name to call did not match the operation name passed
+  to the client's `#call` method. For example: `:get_stations` for a `getStations` operation.
+
 ## 2.0.0 (2012-12-18)
 
 * Read about all the changes in the [updated documentation](http://savonrb.com/version2.html).
