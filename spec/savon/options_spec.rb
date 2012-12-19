@@ -255,6 +255,15 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_verify_mode" do
+    it "sets the verify mode to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none)
+
+      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :none)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
       client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => ["admin", "secret"])

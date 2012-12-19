@@ -180,6 +180,11 @@ module Savon
       @options[:last_response] = last_response
     end
 
+    # Whether and how to to verify the connection.
+    def ssl_verify_mode(verify_mode)
+      @options[:ssl_verify_mode] = verify_mode
+    end
+
     # HTTP basic auth credentials.
     def basic_auth(*credentials)
       @options[:basic_auth] = credentials.flatten

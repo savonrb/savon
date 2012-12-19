@@ -48,6 +48,7 @@ module Savon
       http.headers["SOAPAction"] ||= %{"#{soap_action}"} if soap_action
       http.headers["Content-Type"] = CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
 
+      http.auth.ssl.verify_mode = @globals[:ssl_verify_mode] if @globals.include? :ssl_verify_mode
       http.auth.basic(*@globals[:basic_auth]) if @globals.include? :basic_auth
       http.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
 
