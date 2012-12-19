@@ -2,14 +2,21 @@
 
 describe "ZIP code example" do
 
-  subject(:client) {
-    Savon.client(:wsdl => service_endpoint, :open_timeout => 10, :read_timeout => 10,
-                 :raise_errors => false, :log => false)
-  }
-
-  let(:service_endpoint) { "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl" }
+  let(:service_wsdl) { "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl" }
 
   it "supports threads making requests simultaneously" do
+    client = Savon.client(
+      # The WSDL document provided by the service.
+      :wsdl => service_wsdl,
+
+      # Lower timeouts so these specs don't take forever when the service is not available.
+      :open_timeout => 10,
+      :read_timeout => 10,
+
+      # Disable logging for cleaner spec output.
+      :log => false
+    )
+
     mutex = Mutex.new
 
     request_data = [70070010, 24050110, 20050550]

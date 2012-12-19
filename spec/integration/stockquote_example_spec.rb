@@ -2,14 +2,21 @@
 
 describe "Stockquote example" do
 
-  subject(:client) {
-    Savon.client(:wsdl => service_endpoint, :open_timeout => 10, :read_timeout => 10,
-                 :raise_errors => false, :log => false)
-  }
-
-  let(:service_endpoint) { "http://www.webservicex.net/stockquote.asmx?WSDL" }
+  let(:service_wsdl) { "http://www.webservicex.net/stockquote.asmx?WSDL" }
 
   it "returns the result in a CDATA tag" do
+    client = Savon.client(
+      # The WSDL document provided by the service.
+      :wsdl => service_wsdl,
+
+      # Lower timeouts so these specs don't take forever when the service is not available.
+      :open_timeout => 10,
+      :read_timeout => 10,
+
+      # Disable logging for cleaner spec output.
+      :log => false
+    )
+
     response = client.call(:get_quote, :message => { :symbol => "AAPL" })
 
     cdata = response.body[:get_quote_response][:get_quote_result]
