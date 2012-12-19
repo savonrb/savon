@@ -16,20 +16,6 @@ describe "RATP example" do
     end
 
     response = client.call(:get_stations) do
-      # For the corrent values to pass for :from_unit and :to_unit, I searched the WSDL for
-      # the "FromUnit" type which is a "TemperatureUnit" enumeration that looks like this:
-      #
-      # <s:simpleType name="TemperatureUnit">
-      #   <s:restriction base="s:string">
-      #     <s:enumeration value="degreeCelsius"/>
-      #     <s:enumeration value="degreeFahrenheit"/>
-      #     <s:enumeration value="degreeRankine"/>
-      #     <s:enumeration value="degreeReaumur"/>
-      #     <s:enumeration value="kelvin"/>
-      #   </s:restriction>
-      # </s:simpleType>
-      #
-      # Support for XS schema types needs to be improved.
       message(:station => { :id => 1975 }, :limit => 1)
     end
 
