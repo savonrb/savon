@@ -1,7 +1,7 @@
 ## 2.0.2 (UPCOMING)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
-  `:ssl_verify_mode` option set the verify mode to use for SOAP requests.
+  `:ssl_verify_mode` and `:ssl_version` options which were missing.
 
 ## 2.0.1 (2012-12-19)
 

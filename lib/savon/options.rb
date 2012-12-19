@@ -180,6 +180,11 @@ module Savon
       @options[:last_response] = last_response
     end
 
+    # Specifies the SSL version to use.
+    def ssl_version(version)
+      @options[:ssl_version] = version
+    end
+
     # Whether and how to to verify the connection.
     def ssl_verify_mode(verify_mode)
       @options[:ssl_verify_mode] = verify_mode
