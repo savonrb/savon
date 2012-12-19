@@ -2,13 +2,10 @@
 
 describe "Email example" do
 
-  let(:service_wsdl) { "http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx?wsdl" }
-
-
   it "passes Strings as they are" do
     client = Savon.client(
       # The WSDL document provided by the service.
-      :wsdl => service_wsdl,
+      :wsdl => "http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx?wsdl",
 
       # Lower timeouts so these specs don't take forever when the service is not available.
       :open_timeout => 10,

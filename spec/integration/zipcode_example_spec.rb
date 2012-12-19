@@ -2,12 +2,10 @@
 
 describe "ZIP code example" do
 
-  let(:service_wsdl) { "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl" }
-
   it "supports threads making requests simultaneously" do
     client = Savon.client(
       # The WSDL document provided by the service.
-      :wsdl => service_wsdl,
+      :wsdl => "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl",
 
       # Lower timeouts so these specs don't take forever when the service is not available.
       :open_timeout => 10,

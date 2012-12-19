@@ -2,12 +2,10 @@
 
 describe "Temperature example" do
 
-  let(:service_wsdl) { "http://www.webservicex.net/ConvertTemperature.asmx?WSDL" }
-
   it "converts 30 degrees celsius to 86 degrees fahrenheit" do
     client = Savon.client do
       # The WSDL document provided by the service.
-      wsdl service_wsdl
+      wsdl "http://www.webservicex.net/ConvertTemperature.asmx?WSDL"
 
       # Needed because (up until now), Savon doesn't match XS types to Hash keys,
       # but defaults to convert Hash message Symbols (like :from_unit) to lowerCamelCase.
@@ -24,9 +22,8 @@ describe "Temperature example" do
     end
 
     response = client.call(:convert_temp) do
-      # For the corrent values to pass for :from_unit and :to_unit, I searched the WSDL
-      # for the "FromUnit" type which references the "TemperatureUnit" type which is an
-      # enumerable and looks like this:
+      # For the corrent values to pass for :from_unit and :to_unit, I searched the WSDL for
+      # the "FromUnit" type which is a "TemperatureUnit" enumeration that looks like this:
       #
       # <s:simpleType name="TemperatureUnit">
       #   <s:restriction base="s:string">
@@ -37,6 +34,8 @@ describe "Temperature example" do
       #     <s:enumeration value="kelvin"/>
       #   </s:restriction>
       # </s:simpleType>
+      #
+      # Support for XS schema types needs to be improved.
       message(:temperature => 30, :from_unit => "degreeCelsius", :to_unit => "degreeFahrenheit")
     end
 

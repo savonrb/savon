@@ -2,12 +2,10 @@
 
 describe "Stockquote example" do
 
-  let(:service_wsdl) { "http://www.webservicex.net/stockquote.asmx?WSDL" }
-
   it "returns the result in a CDATA tag" do
     client = Savon.client(
       # The WSDL document provided by the service.
-      :wsdl => service_wsdl,
+      :wsdl => "http://www.webservicex.net/stockquote.asmx?WSDL",
 
       # Lower timeouts so these specs don't take forever when the service is not available.
       :open_timeout => 10,
