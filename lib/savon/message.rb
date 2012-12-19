@@ -19,7 +19,8 @@ module Savon
       return @message.to_s unless @message.kind_of? Hash
 
       if @element_form_default == :qualified
-        @message = QualifiedMessage.new(@types, @used_namespaces, @request_key_converter).to_hash(@message, [@operation_name.to_s])
+        translated_operation_name = Gyoku.xml_tag(@operation_name, :key_converter => @key_converter).to_s
+        @message = QualifiedMessage.new(@types, @used_namespaces, @request_key_converter).to_hash(@message, [translated_operation_name])
       end
 
       gyoku_options = {

@@ -15,12 +15,12 @@ module Savon
       return hash.to_s unless hash.kind_of? Hash
 
       hash.inject({}) do |newhash, (key, value)|
-        camelcased_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
-        newpath = path + [camelcased_key]
+        translated_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
+        newpath = path + [translated_key]
 
         if @used_namespaces[newpath]
           newhash.merge(
-            "#{@used_namespaces[newpath]}:#{camelcased_key}" =>
+            "#{@used_namespaces[newpath]}:#{translated_key}" =>
               add_namespaces_to_body(value, @types[newpath] ? [@types[newpath]] : newpath)
           )
         else
