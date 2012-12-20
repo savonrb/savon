@@ -1,4 +1,4 @@
-## 2.0.2 (UPCOMING)
+## 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
   `:ssl_verify_mode` and `:ssl_version` options which were missing.
