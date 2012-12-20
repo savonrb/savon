@@ -36,25 +36,45 @@ module Savon
 
     def create_http_client
       http = HTTPI::Request.new
-      http.url = @globals[:endpoint] || @wsdl.endpoint
 
+      configure_request(http)
+      configure_timeouts(http)
+      configure_headers(http)
+      configure_ssl(http)
+      configure_auth(http)
+
+      http
+    end
+
+    def configure_request(http)
+      http.url = @globals[:endpoint] || @wsdl.endpoint
       http.proxy = @globals[:proxy] if @globals.include? :proxy
       http.set_cookies @globals[:last_response] if @globals.include? :last_response
+    end
 
+    def configure_timeouts(http)
       http.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
       http.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
+    end
 
+    def configure_headers(http)
       http.headers = @globals[:headers] if @globals.include? :headers
       http.headers["SOAPAction"] ||= %{"#{soap_action}"} if soap_action
       http.headers["Content-Type"] = CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
+    end
 
+    def configure_ssl(http)
       http.auth.ssl.ssl_version = @globals[:ssl_version] if @globals.include? :ssl_version
       http.auth.ssl.verify_mode = @globals[:ssl_verify_mode] if @globals.include? :ssl_verify_mode
 
+      http.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
+      http.auth.ssl.cert_file = @globals[:ssl_cert_file] if @globals.include? :ssl_cert_file
+      http.auth.ssl.ca_cert_file = @globals[:ssl_ca_cert_file] if @globals.include? :ssl_ca_cert_file
+    end
+
+    def configure_auth(http)
       http.auth.basic(*@globals[:basic_auth]) if @globals.include? :basic_auth
       http.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
-
-      http
     end
 
     def soap_action

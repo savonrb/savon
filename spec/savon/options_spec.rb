@@ -273,6 +273,36 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_cert_key_file" do
+    it "sets the cert key file to use" do
+      cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
+      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key)
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_cert_file" do
+    it "sets the cert file to use" do
+      cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+      HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert)
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_file => cert)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_ca_cert_file" do
+    it "sets the ca cert file to use" do
+      ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert)
+
+      client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
       client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => ["admin", "secret"])

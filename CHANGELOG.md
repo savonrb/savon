@@ -3,6 +3,9 @@
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
   `:ssl_verify_mode` and `:ssl_version` options which were missing.
 
+* Fix: [#344](https://github.com/savonrb/savon/issues/344) added missing global ssl cert options
+  `:ssl_cert_file`, `:ssl_cert_key_file` and `:ssl_ca_cert_file`.
+
 ## 2.0.1 (2012-12-19)
 
 * Fix [#342](https://github.com/savonrb/savon/issues/342) fixes an issue where namespaces could

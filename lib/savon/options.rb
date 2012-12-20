@@ -190,6 +190,21 @@ module Savon
       @options[:ssl_verify_mode] = verify_mode
     end
 
+    # Sets the cert key file to use.
+    def ssl_cert_key_file(file)
+      @options[:ssl_cert_key_file] = file
+    end
+
+    # Sets the cert file to use.
+    def ssl_cert_file(file)
+      @options[:ssl_cert_file] = file
+    end
+
+    # Sets the ca cert file to use.
+    def ssl_ca_cert_file(file)
+      @options[:ssl_ca_cert_file] = file
+    end
+
     # HTTP basic auth credentials.
     def basic_auth(*credentials)
       @options[:basic_auth] = credentials.flatten
