@@ -75,18 +75,18 @@ describe "Options" do
 
   context "global :encoding" do
     it "changes the XML instruction" do
-      client = new_client(:endpoint => @server.url(:repeat), :encoding => "UTF-16")
+      client = new_client(:endpoint => @server.url(:repeat), :encoding => "ISO-8859-1")
       response = client.call(:authenticate)
 
-      expect(response.http.body).to match(/<\?xml version="1\.0" encoding="UTF-16"\?>/)
+      expect(response.http.body).to match(/<\?xml version="1\.0" encoding="ISO-8859-1"\?>/)
     end
 
     it "changes the Content-Type header" do
-      client = new_client(:endpoint => @server.url(:inspect_header), :encoding => "UTF-16",
+      client = new_client(:endpoint => @server.url(:inspect_header), :encoding => "ISO-8859-1",
                           :headers => { "Inspect" => "CONTENT_TYPE" })
 
       response = client.call(:authenticate)
-      expect(response.http.body).to eq("text/xml;charset=UTF-16")
+      expect(response.http.body).to eq("text/xml;charset=ISO-8859-1")
     end
   end
 
@@ -534,7 +534,10 @@ describe "Options" do
   context "request :message" do
     it "accepts a Hash which is passed to Gyoku to be converted to XML" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message => { :user => "luke", :password => "secret" })
-      expect(response.http.body).to include("<tns:authenticate><user>luke</user><password>secret</password></tns:authenticate>")
+
+      request = response.http.body
+      expect(request).to include("<user>luke</user>")
+      expect(request).to include("<password>secret</password>")
     end
 
     it "also accepts a String of raw XML" do
