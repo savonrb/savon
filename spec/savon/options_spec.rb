@@ -458,7 +458,7 @@ describe "Options" do
       end
 
       response = client.call(:find_user) do |locals|
-        locals.message(user_name: "luke", "pass_word" => "secret")
+        locals.message(:user_name => "luke", "pass_word" => "secret")
       end
 
       request = response.http.body
