@@ -61,6 +61,7 @@ describe "Options" do
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 1)
 
       # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError instead of a specific client error [dh, 2012-12-08]
+      # TODO: this spec fails when run in isolation "uninitialized constant HTTPClient" [dh, 2012-12-31]
       expect { client.call(:authenticate) }.to raise_error(HTTPClient::ConnectTimeoutError)
     end
   end
@@ -69,6 +70,7 @@ describe "Options" do
     it "makes the client timeout after n seconds" do
       client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 1, :read_timeout => 1)
 
+      # TODO: this spec fails when run in isolation "uninitialized constant HTTPClient" [dh, 2012-12-31]
       expect { client.call(:authenticate) }.to raise_error(HTTPClient::ReceiveTimeoutError)
     end
   end
