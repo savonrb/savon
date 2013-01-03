@@ -1,5 +1,6 @@
 require "spec_helper"
 require "integration/support/server"
+require "logger"
 
 describe "Options" do
 
@@ -212,6 +213,14 @@ describe "Options" do
     it "defaults to an instance of Ruby's standard Logger" do
       logger = new_client.globals[:logger]
       expect(logger).to be_a(Logger)
+    end
+
+    it "allows a custom logger to be set" do
+      custom_logger = Logger.new($stdout)
+      c = new_client(logger: custom_logger, log: true)
+      logger = c.globals[:logger]
+
+      expect(logger).to be_equal(custom_logger)
     end
   end
 
