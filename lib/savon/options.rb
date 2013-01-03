@@ -137,17 +137,15 @@ module Savon
     def log(log)
       if log
         HTTPI.log = true
-        target = $stdout
       else
         HTTPI.log = false
         windows = RUBY_PLATFORM =~ /(mingw|bccwin|wince|mswin32)/i
         target = windows ? "NUL:" : "/dev/null"
+        @options[:logger] = Logger.new(target)
       end
-
-      @options[:logger] = Logger.new(target)
     end
 
-    # The logger to use. Defaults to a Savon::Logger instance.
+    # The logger to use. Defaults to a Logger instance.
     def logger(logger)
       @options[:logger] = logger
     end
