@@ -75,7 +75,12 @@ describe Savon::Client do
       wsdl = Wasabi::Document.new('http://example.com')
       operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new)
       operation.expects(:call).with(locals).returns(soap_response)
-      Savon::Operation.expects(:create).returns(operation)
+
+      Savon::Operation.expects(:create).with(
+        :authenticate,
+        instance_of(Wasabi::Document),
+        instance_of(Savon::GlobalOptions)
+      ).returns(operation)
 
       response = new_client.call(:authenticate, locals)
       expect(response).to eq(soap_response)
