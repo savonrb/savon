@@ -87,7 +87,8 @@ describe Savon::Client do
     end
 
     it "sets the cookies for the next request" do
-      last_response = new_http_response(:headers => { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" })
+      headers = { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }
+      last_response = new_http_response(:headers => headers)
       client = new_client
 
       HTTPI.stubs(:post).returns(last_response)
