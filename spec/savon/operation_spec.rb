@@ -7,6 +7,10 @@ describe Savon::Operation do
   let(:wsdl)    { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:no_wsdl) { Wasabi::Document.new }
 
+  def new_operation(operation_name, wsdl, globals)
+    Savon::Operation.create(operation_name, wsdl, globals)
+  end
+
   before :all do
     @server = IntegrationServer.run
   end
@@ -17,31 +21,31 @@ describe Savon::Operation do
 
   describe ".create with a WSDL" do
     it "returns a new operation" do
-      operation = Savon::Operation.create(:authenticate, wsdl, globals)
+      operation = new_operation(:authenticate, wsdl, globals)
       expect(operation).to be_a(Savon::Operation)
     end
 
     it "raises if the operation name is not a Symbol" do
-      expect { Savon::Operation.create("not a symbol", wsdl, globals) }.
+      expect { new_operation("not a symbol", wsdl, globals) }.
         to raise_error(ArgumentError, /Expected the first parameter \(the name of the operation to call\) to be a symbol/)
     end
 
     it "raises if the operation is not available for the service" do
-      expect { Savon::Operation.create(:no_such_operation, wsdl, globals) }.
+      expect { new_operation(:no_such_operation, wsdl, globals) }.
         to raise_error(ArgumentError, /Unable to find SOAP operation: :no_such_operation/)
     end
   end
 
   describe ".create without a WSDL" do
     it "returns a new operation" do
-      operation = Savon::Operation.create(:authenticate, no_wsdl, globals)
+      operation = new_operation(:authenticate, no_wsdl, globals)
       expect(operation).to be_a(Savon::Operation)
     end
   end
 
   describe "#call" do
     it "returns a response object" do
-      operation = Savon::Operation.create(:authenticate, wsdl, globals)
+      operation = new_operation(:authenticate, wsdl, globals)
       expect(operation.call).to be_a(Savon::Response)
     end
   end
