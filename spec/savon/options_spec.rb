@@ -60,10 +60,16 @@ describe "Options" do
       non_routable_ip = "http://10.255.255.1"
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 1)
 
-      # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
-      #       instead of a specific client error [dh, 2012-12-08]
-      expect { client.call(:authenticate) }.
-        to raise_error(HTTPClient::ConnectTimeoutError)
+      expect { client.call(:authenticate) }.to raise_error { |error|
+        if error.kind_of? Errno::EHOSTUNREACH
+          warn "Warning: looks like your network may be down?!\n" +
+               "-> skipping spec at #{__FILE__}:#{__LINE__}"
+        else
+          # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
+          #       instead of a specific client error [dh, 2012-12-08]
+          expect(error).to be_an(HTTPClient::ConnectTimeoutError)
+        end
+      }
     end
   end
 
