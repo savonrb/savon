@@ -220,10 +220,11 @@ describe "Options" do
 
     it "allows a custom logger to be set" do
       custom_logger = Logger.new($stdout)
-      c = new_client(logger: custom_logger, log: true)
-      logger = c.globals[:logger]
 
-      expect(logger).to be_equal(custom_logger)
+      client = new_client(:logger => custom_logger, :log => true)
+      logger = client.globals[:logger]
+
+      expect(logger).to eq(custom_logger)
     end
   end
 
