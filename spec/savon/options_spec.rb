@@ -124,14 +124,6 @@ describe "Options" do
       expect(response.http.body).to include("<user>lea</user>")
       expect(response.http.body).to include("<password>top-secret</password>")
     end
-
-    it "allows overwriting the SOAPAction HTTP header" do
-      client = new_client(:endpoint => @server.url(:inspect_header),
-                          :headers => { "Inspect" => "HTTP_SOAPACTION" })
-
-      response = client.call(:authenticate)
-      expect(response.http.body).to eq('"authenticate"')
-    end
   end
 
   context "global :env_namespace" do
