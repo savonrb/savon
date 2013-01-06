@@ -3,6 +3,12 @@
 * Fix: [#349](https://github.com/savonrb/savon/issues/349) global timeout and SSL options are
   now used to retrieve a remote WSDL document.
 
+* Fix: [#353](https://github.com/savonrb/savon/issues/353) simplified logging. the global `:log`
+  option is now only used to store whether Savon should log instead of creating a new `Logger`
+  and changing its logdev to `$stdout` or `/dev/null` depending on the what was passed.
+
+  This also fixes [rubiii/savon#2](https://github.com/rubiii/savon/issues/2) logging on Windows.
+
 ## 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global

@@ -39,6 +39,7 @@ module Savon
         :encoding                  => "UTF-8",
         :soap_version              => 1,
         :logger                    => Logger.new($stdout),
+        :log                       => true,
         :filters                   => [],
         :pretty_print_xml          => false,
         :raise_errors              => true,
@@ -48,14 +49,12 @@ module Savon
 
       options = defaults.merge(options)
 
-      # these options are shortcuts on the logger which needs to be set
-      # before it can be modified to set these options.
-      delayed_log = options.delete(:log)
+      # this option is a shortcut on the logger which needs to be set
+      # before it can be modified to set the option.
       delayed_level = options.delete(:log_level)
 
       super(options)
 
-      log(delayed_log) unless delayed_log.nil?
       log_level(delayed_level) unless delayed_level.nil?
     end
 
@@ -135,16 +134,8 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      if log
-        HTTPI.log = true
-        target = $stdout
-      else
-        HTTPI.log = false
-        windows = RUBY_PLATFORM =~ /(mingw|bccwin|wince|mswin32)/i
-        target = windows ? "NUL:" : "/dev/null"
-      end
-
-      @options[:logger] = Logger.new(target)
+      HTTPI.log = log
+      @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.

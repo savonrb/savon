@@ -201,14 +201,42 @@ describe "Options" do
   end
 
   context "global :log" do
-    it "silences HTTPI" do
+    it "instructs Savon not to log SOAP requests and responses" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => false)
+        client.call(:authenticate)
+      }
+
+      expect(stdout.string).to be_empty
+    end
+
+    it "silences HTTPI as well" do
       HTTPI.expects(:log=).with(false)
       new_client(:log => false)
+    end
+
+    it "instructs Savon to log SOAP requests and responses" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => true)
+        client.call(:authenticate)
+      }
+
+      expect(stdout.string).to include("INFO -- : SOAP request")
     end
 
     it "turns HTTPI logging back on as well" do
       HTTPI.expects(:log=).with(true)
       new_client(:log => true)
+    end
+
+    def mock_stdout
+      stdout = StringIO.new
+      $stdout = stdout
+
+      yield
+
+      $stdout = STDOUT
+      stdout
     end
   end
 

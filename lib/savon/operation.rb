@@ -55,9 +55,9 @@ module Savon
     private
 
     def call!(request)
-      log_request(request)
+      log_request(request) if log?
       response = HTTPI.post(request)
-      log_response(response)
+      log_response(response) if log?
 
       response
     end
@@ -112,6 +112,10 @@ module Savon
 
     def logger
       @globals[:logger]
+    end
+
+    def log?
+      @globals[:log]
     end
 
     def raise_expected_httpi_response!
