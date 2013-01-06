@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake",  "~> 0.9"
   s.add_development_dependency "rspec", "~> 2.10"
   s.add_development_dependency "mocha", "~> 0.11"
+  s.add_development_dependency "json",  "~> 1.7"
 
   s.files = `git ls-files`.split("\n")
   s.require_path = "lib"
