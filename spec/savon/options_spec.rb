@@ -1,5 +1,7 @@
 require "spec_helper"
 require "integration/support/server"
+require "json"
+require "ostruct"
 
 describe "Options" do
 
@@ -48,10 +50,12 @@ describe "Options" do
 
   context "global :headers" do
     it "sets the HTTP headers for the next request" do
-      client = new_client(:endpoint => @server.url(:repeat_header), :headers => { "Repeat-Header" => "savon" })
+      client = new_client(:endpoint => @server.url(:inspect_request), :headers => { "X-Token" => "secret" })
 
       response = client.call(:authenticate)
-      expect(response.http.body).to eq("savon")
+      x_token  = inspect_request(response).x_token
+
+      expect(x_token).to eq("secret")
     end
   end
 
@@ -91,11 +95,11 @@ describe "Options" do
     end
 
     it "changes the Content-Type header" do
-      client = new_client(:endpoint => @server.url(:inspect_header), :encoding => "ISO-8859-1",
-                          :headers => { "Inspect" => "CONTENT_TYPE" })
+      client = new_client(:endpoint => @server.url(:inspect_request), :encoding => "ISO-8859-1")
 
       response = client.call(:authenticate)
-      expect(response.http.body).to eq("text/xml;charset=ISO-8859-1")
+      content_type = inspect_request(response).content_type
+      expect(content_type).to eq("text/xml;charset=ISO-8859-1")
     end
   end
 
@@ -258,7 +262,7 @@ describe "Options" do
 
   context "global :ssl_version" do
     it "sets the SSL version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:SSLv3)
+      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:SSLv3).twice
 
       client = new_client(:endpoint => @server.url, :ssl_version => :SSLv3)
       client.call(:authenticate)
@@ -267,7 +271,7 @@ describe "Options" do
 
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none)
+      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none).twice
 
       client = new_client(:endpoint => @server.url, :ssl_verify_mode => :none)
       client.call(:authenticate)
@@ -277,7 +281,7 @@ describe "Options" do
   context "global :ssl_cert_key_file" do
     it "sets the cert key file to use" do
       cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key)
+      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key)
       client.call(:authenticate)
@@ -287,7 +291,7 @@ describe "Options" do
   context "global :ssl_cert_file" do
     it "sets the cert file to use" do
       cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert)
+      HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_file => cert)
       client.call(:authenticate)
@@ -297,7 +301,7 @@ describe "Options" do
   context "global :ssl_ca_cert_file" do
     it "sets the ca cert file to use" do
       ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert)
+      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
       client.call(:authenticate)
@@ -516,19 +520,19 @@ describe "Options" do
 
   context "request: soap_action" do
     it "without it, Savon tries to get the SOAPAction from the WSDL document and falls back to Gyoku" do
-      client = new_client(:endpoint => @server.url(:inspect_header),
-                          :headers => { "Inspect" => "HTTP_SOAPACTION" })
+      client = new_client(:endpoint => @server.url(:inspect_request))
 
       response = client.call(:authenticate)
-      expect(response.http.body).to eq('"authenticate"')
+      soap_action = inspect_request(response).soap_action
+      expect(soap_action).to eq('"authenticate"')
     end
 
     it "when set, changes the SOAPAction HTTP header" do
-      client = new_client(:endpoint => @server.url(:inspect_header),
-                          :headers => { "Inspect" => "HTTP_SOAPACTION" })
+      client = new_client(:endpoint => @server.url(:inspect_request))
 
       response = client.call(:authenticate, :soap_action => "doAuthenticate")
-      expect(response.http.body).to eq('"doAuthenticate"')
+      soap_action = inspect_request(response).soap_action
+      expect(soap_action).to eq('"doAuthenticate"')
     end
   end
 
@@ -583,6 +587,11 @@ describe "Options" do
   def new_client_without_wsdl(globals = {}, &block)
     globals = { :log => false }.merge(globals)
     Savon.client(globals, &block)
+  end
+
+  def inspect_request(response)
+    hash = JSON.parse(response.http.body)
+    OpenStruct.new(hash)
   end
 
 end

@@ -1,144 +1,360 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe Savon::Request do
+describe Savon::WSDLRequest do
 
-  subject(:request) { Savon::Request.new(:authenticate, wsdl, globals, locals) }
+  let(:globals)      { Savon::GlobalOptions.new }
+  let(:http_request) { HTTPI::Request.new }
 
-  let(:globals)     { Savon::GlobalOptions.new(:endpoint => @server.url, :log => false) }
-  let(:locals)      { Savon::LocalOptions.new }
-  let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
-  let(:no_wsdl)     { Wasabi::Document.new }
-
-  before :all do
-    @server = IntegrationServer.run
+  def new_wsdl_request
+    Savon::WSDLRequest.new(globals, http_request)
   end
 
-  after :all do
-    @server.stop
+  describe "#build" do
+    it "returns an HTTPI::Request" do
+      wsdl_request = Savon::WSDLRequest.new(globals)
+      expect(wsdl_request.build).to be_an(HTTPI::Request)
+    end
+
+    describe "open timeout" do
+      it "is set when specified" do
+        globals.open_timeout(22)
+        http_request.expects(:open_timeout=).with(22)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:open_timeout=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "read timeout" do
+      it "is set when specified" do
+        globals.read_timeout(33)
+        http_request.expects(:read_timeout=).with(33)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:read_timeout=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl version" do
+      it "is set when specified" do
+        globals.ssl_version(:SSLv3)
+        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ssl_version=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl verify mode" do
+      it "is set when specified" do
+        globals.ssl_verify_mode(:none)
+        http_request.auth.ssl.expects(:verify_mode=).with(:none)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:verify_mode=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl cert key file" do
+      it "is set when specified" do
+        cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
+        globals.ssl_cert_key_file(cert_key)
+        http_request.auth.ssl.expects(:cert_key_file=).with(cert_key)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_key_file=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl cert file" do
+      it "is set when specified" do
+        cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+        globals.ssl_cert_file(cert)
+        http_request.auth.ssl.expects(:cert_file=).with(cert)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_file=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl ca cert file" do
+      it "is set when specified" do
+        ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+        globals.ssl_ca_cert_file(ca_cert)
+        http_request.auth.ssl.expects(:ca_cert_file=).with(ca_cert)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ca_cert_file=).never
+        new_wsdl_request.build
+      end
+    end
   end
 
-  describe "#call" do
-    it "expects the XML to POST" do
-      response = request.call("<xml/>")
+end
 
-      expect(request.http.url).to eq(URI(globals[:endpoint]))
-      expect(request.http.body).to eq("<xml/>")
-      expect(request.http.headers["Content-Length"]).to eq("<xml/>".bytesize.to_s)
+describe Savon::SOAPRequest do
 
-      expect(response).to be_a(HTTPI::Response)
+  let(:globals)      { Savon::GlobalOptions.new }
+  let(:http_request) { HTTPI::Request.new }
+
+  def new_soap_request
+    Savon::SOAPRequest.new(globals, http_request)
+  end
+
+  describe "#build" do
+    it "returns an HTTPI::Request" do
+      soap_request = Savon::SOAPRequest.new(globals)
+      expect(soap_request.build).to be_an(HTTPI::Request)
     end
 
-    it "falls back to use the WSDL's endpoint if the global :endpoint option was not set" do
-      wsdl.endpoint = @server.url
-      globals_without_endpoint = Savon::GlobalOptions.new(:log => false)
-      request = Savon::Request.new(:authenticate, wsdl, globals_without_endpoint, locals)
-      response = request.call("<xml/>")
+    describe "proxy" do
+      it "is set when specified" do
+        globals.proxy("http://proxy.example.com")
+        http_request.expects(:proxy=).with("http://proxy.example.com")
 
-      expect(request.http.url).to eq(URI(wsdl.endpoint))
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:proxy=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the global :proxy option if it's available" do
-      globals[:proxy] = "http://proxy.example.com"
-      expect(request.http.proxy).to eq(URI(globals[:proxy]))
+    describe "cookies" do
+      it "sets the cookies from the last response" do
+        headers  = { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }
+        response = HTTPI::Response.new(200, headers, "")
+        globals.last_response(response)
+
+        http_request.expects(:set_cookies).with(response)
+        new_soap_request.build
+      end
+
+      it "does not set the cookies if there is no last response" do
+        http_request.expects(:set_cookies).never
+        new_soap_request.build
+      end
     end
 
-    it "does not set the global :proxy option when it's not available" do
-      expect(request.http.proxy).to be_nil
+    describe "open timeout" do
+      it "is set when specified" do
+        globals.open_timeout(22)
+        http_request.expects(:open_timeout=).with(22)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:open_timeout=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the request cookies using the global :last_response option if it's available" do
-      http = HTTPI::Response.new(200, {}, ["<success/>"])
-      globals[:last_response] = Savon::Response.new(http, globals, locals)
+    describe "read timeout" do
+      it "is set when specified" do
+        globals.read_timeout(33)
+        http_request.expects(:read_timeout=).with(33)
 
-      HTTPI::Request.any_instance.expects(:set_cookies).with(globals[:last_response]).once
-      request
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:read_timeout=).never
+        new_soap_request.build
+      end
     end
 
-    it "does not set the cookies using the global :last_response option when it's not available" do
-      expect(request.http.open_timeout).to be_nil
+    describe "headers" do
+      it "are set when specified" do
+        globals.headers("X-Token" => "secret")
+        configured_http_request = new_soap_request.build
+
+        expect(configured_http_request.headers["X-Token"]).to eq("secret")
+      end
+
+      it "are not set otherwise" do
+        configured_http_request = new_soap_request.build
+        expect(configured_http_request.headers).to_not include("X-Token")
+      end
     end
 
-    it "sets the global :open_timeout option if it's available" do
-      globals[:open_timeout] = 33
-      expect(request.http.open_timeout).to eq(globals[:open_timeout])
+    describe "SOAPAction header" do
+      it "is set and wrapped in parenthesis" do
+        configured_http_request = new_soap_request.build("findUser")
+        soap_action = configured_http_request.headers["SOAPAction"]
+
+        expect(soap_action).to eq(%("findUser"))
+      end
+
+      it "is not set when it's explicitely set to nil" do
+        configured_http_request = new_soap_request.build(nil)
+        expect(configured_http_request.headers).to_not include("SOAPAction")
+      end
+
+      it "is not set when there is already a SOAPAction value" do
+        globals.headers("SOAPAction" => %("authenticate"))
+        configured_http_request = new_soap_request.build("findUser")
+        soap_action = configured_http_request.headers["SOAPAction"]
+
+        expect(soap_action).to eq(%("authenticate"))
+      end
     end
 
-    it "does not set the global :open_timeout option when it's not available" do
-      request.call("<xml/>")
-      expect(request.http.open_timeout).to be_nil
+    describe "Content-Type header" do
+      it "defaults to SOAP 1.1 and UTF-8" do
+        configured_http_request = new_soap_request.build
+        content_type = configured_http_request.headers["Content-Type"]
+
+        expect(content_type).to eq("text/xml;charset=UTF-8")
+      end
+
+      it "can be changed to SOAP 1.2 and any other encoding" do
+        globals.soap_version(2)
+        globals.encoding("ISO-8859-1")
+
+        configured_http_request = new_soap_request.build
+        content_type = configured_http_request.headers["Content-Type"]
+
+        expect(content_type).to eq("application/soap+xml;charset=ISO-8859-1")
+      end
+
+      it "is not set when there is already a Content-Type value" do
+        globals.headers("Content-Type" => "application/awesomeness;charset=UTF-3000")
+        configured_http_request = new_soap_request.build("findUser")
+        content_type = configured_http_request.headers["Content-Type"]
+
+        expect(content_type).to eq("application/awesomeness;charset=UTF-3000")
+      end
     end
 
-    it "sets the global :read_timeout option if it's available" do
-      globals[:read_timeout] = 44
-      expect(request.http.read_timeout).to eq(globals[:read_timeout])
+    describe "ssl version" do
+      it "is set when specified" do
+        globals.ssl_version(:SSLv3)
+        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ssl_version=).never
+        new_soap_request.build
+      end
     end
 
-    it "does not set the global :read_timeout option when it's not available" do
-      expect(request.http.read_timeout).to be_nil
+    describe "ssl verify mode" do
+      it "is set when specified" do
+        globals.ssl_verify_mode(:none)
+        http_request.auth.ssl.expects(:verify_mode=).with(:none)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:verify_mode=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the global :headers option if it's available" do
-      globals[:headers] = { "X-Authorize" => "secret" }
-      expect(request.http.headers["X-Authorize"]).to eq("secret")
+    describe "ssl cert key file" do
+      it "is set when specified" do
+        cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
+        globals.ssl_cert_key_file(cert_key)
+        http_request.auth.ssl.expects(:cert_key_file=).with(cert_key)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_key_file=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the SOAPAction header using the local :soap_action option if it's available" do
-      locals[:soap_action] = "urn://authenticate"
-      expect(request.http.headers["SOAPAction"]).to eq(%{"#{locals[:soap_action]}"})
+    describe "ssl cert file" do
+      it "is set when specified" do
+        cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+        globals.ssl_cert_file(cert)
+        http_request.auth.ssl.expects(:cert_file=).with(cert)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_file=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the SOAPAction header using the WSDL if it's available" do
-      expect(request.http.headers["SOAPAction"]).to eq(%{"authenticate"})
+    describe "ssl ca cert file" do
+      it "is set when specified" do
+        ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+        globals.ssl_ca_cert_file(ca_cert)
+        http_request.auth.ssl.expects(:ca_cert_file=).with(ca_cert)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ca_cert_file=).never
+        new_soap_request.build
+      end
     end
 
-    it "sets the SOAPAction header using Gyoku if both option and WSDL were not set" do
-      request = Savon::Request.new(:authenticate, no_wsdl, globals, locals)
-      expect(request.http.headers["SOAPAction"]).to eq(%{"authenticate"})
+    describe "basic auth" do
+      it "is set when specified" do
+        globals.basic_auth("luke", "secret")
+        http_request.auth.expects(:basic).with("luke", "secret")
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.expects(:basic).never
+        new_soap_request.build
+      end
     end
 
-    it "does not set the SOAPAction header if it's already set" do
-      locals[:soap_action] = "urn://authenticate"
-      globals[:headers] = { "SOAPAction" => %{"doAuthenticate"} }
+    describe "digest auth" do
+      it "is set when specified" do
+        globals.digest_auth("lea", "top-secret")
+        http_request.auth.expects(:digest).with("lea", "top-secret")
 
-      expect(request.http.headers["SOAPAction"]).to eq(%{"doAuthenticate"})
-    end
+        new_soap_request.build
+      end
 
-    it "does not set the SOAPAction header if the local :soap_action was set to nil" do
-      locals[:soap_action] = nil
-      expect(request.http.headers).to_not include("SOAPAction")
-    end
-
-    it "sets the SOAP 1.2 Content-Type header using the global :soap_version and :encoding options if available" do
-      globals[:soap_version] = 2
-      globals[:encoding] = "UTF-16"
-
-      expect(request.http.headers["Content-Type"]).to eq("application/soap+xml;charset=UTF-16")
-    end
-
-    it "sets the SOAP 1.1 Content-Type header using the global :soap_version and :encoding options if available" do
-      globals[:soap_version] = 1
-      globals[:encoding] = "UTF-8"
-
-      expect(request.http.headers["Content-Type"]).to eq("text/xml;charset=UTF-8")
-    end
-
-    it "sets the global :basic_auth option if it's available" do
-      globals[:basic_auth] = [:luke, "secret"]
-      expect(request.http.auth.basic).to eq(globals[:basic_auth])
-    end
-
-    it "does not set the global :basic_auth option when it's not available" do
-      expect(request.http.auth.basic).to be_nil
-    end
-
-    it "sets the global :digest_auth option if it's available" do
-      globals[:digest_auth] = [:lea, "top-secret"]
-      expect(request.http.auth.digest).to eq(globals[:digest_auth])
-    end
-
-    it "does not set the global :digest_auth option when it's not available" do
-      expect(request.http.auth.digest).to be_nil
+      it "is not set otherwise" do
+        http_request.auth.expects(:digest).never
+        new_soap_request.build
+      end
     end
   end
 

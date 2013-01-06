@@ -1,4 +1,5 @@
 require "rack/builder"
+require "json"
 
 class IntegrationServer
 
@@ -38,15 +39,15 @@ class IntegrationServer
       }
     end
 
-    map "/repeat_header" do
+    map "/inspect_request" do
       run lambda { |env|
-        IntegrationServer.respond_with :body => env["HTTP_REPEAT_HEADER"]
-      }
-    end
+        body = {
+          :soap_action  => env["HTTP_SOAPACTION"],
+          :x_token      => env["HTTP_X_TOKEN"],
+          :content_type => env["CONTENT_TYPE"]
+        }
 
-    map "/inspect_header" do
-      run lambda { |env|
-        IntegrationServer.respond_with :body => env[env["HTTP_INSPECT"]]
+        IntegrationServer.respond_with :body => JSON.dump(body)
       }
     end
 

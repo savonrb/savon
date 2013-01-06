@@ -28,6 +28,15 @@ describe Savon::Client do
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
 
+    it "builds an HTTPI request for Wasabi" do
+      http_request = mock
+      wsdl_request = mock(:build => http_request)
+      Savon::WSDLRequest.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(wsdl_request)
+
+      Wasabi::Document.any_instance.expects(:request=).with(http_request)
+      Savon.client(:wsdl => "http://example.com")
+    end
+
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
       expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)

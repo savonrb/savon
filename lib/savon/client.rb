@@ -1,4 +1,5 @@
 require "savon/operation"
+require "savon/request"
 require "savon/options"
 require "savon/block_interface"
 require "wasabi"
@@ -15,10 +16,7 @@ module Savon
         raise_initialization_error!
       end
 
-      @wsdl = Wasabi::Document.new
-      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
-      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
-      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
+      build_wsdl_document
     end
 
     attr_reader :globals
@@ -39,6 +37,16 @@ module Savon
     end
 
     private
+
+    def build_wsdl_document
+      @wsdl = Wasabi::Document.new
+
+      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
+      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
+      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
+
+      @wsdl.request = WSDLRequest.new(@globals).build
+    end
 
     def persist_last_response(response)
       @globals[:last_response] = response.http
