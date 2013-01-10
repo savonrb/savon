@@ -257,6 +257,11 @@ module Savon
       @options[:message_tag] = message_tag
     end
 
+    # Attributes for the SOAP message tag.
+    def attributes(attributes)
+      @options[:attributes] = attributes
+    end
+
     # Value of the SOAPAction HTTP header.
     def soap_action(soap_action)
       @options[:soap_action] = soap_action

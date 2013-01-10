@@ -556,6 +556,15 @@ describe "Options" do
     end
   end
 
+  context "request: attributes" do
+    it "when set, adds the attributes to the message tag" do
+      client   = new_client(:endpoint => @server.url(:repeat))
+      response = client.call(:authenticate, :attributes => { "Token" => "secret"})
+
+      expect(response.http.body).to include('<tns:authenticate Token="secret">')
+    end
+  end
+
   context "request: soap_action" do
     it "without it, Savon tries to get the SOAPAction from the WSDL document and falls back to Gyoku" do
       client = new_client(:endpoint => @server.url(:inspect_request))

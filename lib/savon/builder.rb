@@ -87,8 +87,11 @@ module Savon
     end
 
     def namespaced_message_tag
-      return [namespace_identifier, message_tag] unless @used_namespaces[[@operation_name.to_s]]
-      [@used_namespaces[[@operation_name.to_s]], message_tag]
+      if @used_namespaces[[@operation_name.to_s]]
+        [@used_namespaces[[@operation_name.to_s]], message_tag, message_attributes]
+      else
+        [namespace_identifier, message_tag, message_attributes]
+      end
     end
 
     def message_tag
@@ -97,6 +100,10 @@ module Savon
       message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
 
       @message_tag = message_tag.to_sym
+    end
+
+    def message_attributes
+      @locals[:attributes] || {}
     end
 
     def message

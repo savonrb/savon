@@ -9,6 +9,9 @@
 
   This also fixes [rubiii/savon#2](https://github.com/rubiii/savon/issues/2) logging on Windows.
 
+* Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
+  option to allow adding XML attributes to the SOAP message tag.
+
 ## 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global

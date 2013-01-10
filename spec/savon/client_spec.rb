@@ -136,6 +136,13 @@ describe Savon::Client do
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
     end
 
+    it "accepts arguments for the message tag" do
+      client   = new_client(:endpoint => @server.url(:repeat))
+      response = client.call(:authenticate, :attributes => { "ID" => "ABC321"})
+
+      expect(response.http.body).to include('<tns:authenticate ID="ABC321">')
+    end
+
     it "raises when the operation name is not a symbol" do
       expect { new_client.call("not a symbol") }.to raise_error(
         ArgumentError,
