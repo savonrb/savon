@@ -11,7 +11,7 @@ module Savon
 
     def to_hash(hash, path)
       return unless hash
-      return hash.map { |value| add_namespaces_to_body(value, path) } if hash.kind_of?(Array)
+      return hash.map { |value| to_hash(value, path) } if hash.kind_of?(Array)
       return hash.to_s unless hash.kind_of? Hash
 
       hash.inject({}) do |newhash, (key, value)|
@@ -21,7 +21,7 @@ module Savon
         if @used_namespaces[newpath]
           newhash.merge(
             "#{@used_namespaces[newpath]}:#{translated_key}" =>
-              add_namespaces_to_body(value, @types[newpath] ? [@types[newpath]] : newpath)
+              to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
           )
         else
           add_namespaces_to_values(value, path) if key == :order!
@@ -31,10 +31,6 @@ module Savon
     end
 
     private
-
-    def add_namespaces_to_body(value, path)
-      QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(value, path)
-    end
 
     def add_namespaces_to_values(values, path)
       values.collect! { |value|
