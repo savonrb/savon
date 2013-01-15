@@ -87,6 +87,21 @@ describe Savon::WSDLRequest do
       end
     end
 
+    describe "ssl cert key password" do
+      it "is set when specified" do
+        the_pass = "secure-password!42"
+        globals.ssl_cert_key_password(the_pass)
+        http_request.auth.ssl.expects(:cert_key_password=).with(the_pass)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_key_password=).never
+        new_wsdl_request.build
+      end
+    end
+    
     describe "ssl cert file" do
       it "is set when specified" do
         cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
@@ -295,6 +310,21 @@ describe Savon::SOAPRequest do
 
       it "is not set otherwise" do
         http_request.auth.ssl.expects(:cert_key_file=).never
+        new_soap_request.build
+      end
+    end
+    
+    describe "ssl cert key password" do
+      it "is set when specified" do
+        the_pass = "secure-password!42"
+        globals.ssl_cert_key_password(the_pass)
+        http_request.auth.ssl.expects(:cert_key_password=).with(the_pass)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:cert_key_password=).never
         new_soap_request.build
       end
     end

@@ -25,10 +25,10 @@ module Savon
     def configure_ssl
       @http_request.auth.ssl.ssl_version   = @globals[:ssl_version]       if @globals.include? :ssl_version
       @http_request.auth.ssl.verify_mode   = @globals[:ssl_verify_mode]   if @globals.include? :ssl_verify_mode
-
       @http_request.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
       @http_request.auth.ssl.cert_file     = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
       @http_request.auth.ssl.ca_cert_file  = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
+      @http_request.auth.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
     end
 
   end
@@ -80,6 +80,8 @@ module Savon
       @http_request.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
       @http_request.auth.ssl.cert_file     = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
       @http_request.auth.ssl.ca_cert_file  = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
+
+      @http_request.auth.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
     end
 
     def configure_auth
