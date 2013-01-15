@@ -28,13 +28,9 @@ describe Savon::Client do
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
 
-    it "builds an HTTPI request for Wasabi" do
-      http_request = mock
-      wsdl_request = mock(:build => http_request)
-      Savon::WSDLRequest.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(wsdl_request)
-
-      Wasabi::Document.any_instance.expects(:request=).with(http_request)
-      Savon.client(:wsdl => "http://example.com")
+    it "raises if initialized with anything other than a Hash" do
+      expect { Savon.client("http://example.com") }.
+        to raise_error(Savon::InitializationError, /Some code tries to initialize Savon with the "http:\/\/example\.com" \(String\)/)
     end
 
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
@@ -84,20 +80,14 @@ describe Savon::Client do
       wsdl = Wasabi::Document.new('http://example.com')
       operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new)
       operation.expects(:call).with(locals).returns(soap_response)
-
-      Savon::Operation.expects(:create).with(
-        :authenticate,
-        instance_of(Wasabi::Document),
-        instance_of(Savon::GlobalOptions)
-      ).returns(operation)
+      Savon::Operation.expects(:create).returns(operation)
 
       response = new_client.call(:authenticate, locals)
       expect(response).to eq(soap_response)
     end
 
     it "sets the cookies for the next request" do
-      headers = { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }
-      last_response = new_http_response(:headers => headers)
+      last_response = new_http_response(:headers => { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" })
       client = new_client
 
       HTTPI.stubs(:post).returns(last_response)
@@ -134,13 +124,6 @@ describe Savon::Client do
       end
 
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
-    end
-
-    it "accepts arguments for the message tag" do
-      client   = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :attributes => { "ID" => "ABC321"})
-
-      expect(response.http.body).to include('<tns:authenticate ID="ABC321">')
     end
 
     it "raises when the operation name is not a symbol" do
