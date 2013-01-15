@@ -37,6 +37,11 @@ describe Savon::Client do
       Savon.client(:wsdl => "http://example.com")
     end
 
+    it "raises if initialized with anything other than a Hash" do
+      expect { Savon.client("http://example.com") }.
+        to raise_error(Savon::InitializationError, /Some code tries to initialize Savon with the "http:\/\/example\.com" \(String\)/)
+    end
+
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
       expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)

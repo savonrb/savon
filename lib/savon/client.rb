@@ -8,6 +8,10 @@ module Savon
   class Client
 
     def initialize(globals = {}, &block)
+      unless globals.kind_of? Hash
+        raise_version1_initialize_error! globals
+      end
+
       @globals = GlobalOptions.new(globals)
 
       BlockInterface.new(@globals).evaluate(block) if block
@@ -54,6 +58,13 @@ module Savon
 
     def wsdl_or_endpoint_and_namespace_specified?
       @globals.include?(:wsdl) || (@globals.include?(:endpoint) && @globals.include?(:namespace))
+    end
+
+    def raise_version1_initialize_error!(object)
+      raise InitializationError,
+        "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
+        "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
+        "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
     end
 
     def raise_initialization_error!
