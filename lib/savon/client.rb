@@ -1,4 +1,5 @@
 require "savon/operation"
+require "savon/request"
 require "savon/options"
 require "savon/block_interface"
 require "wasabi"
@@ -7,10 +8,6 @@ module Savon
   class Client
 
     def initialize(globals = {}, &block)
-      unless globals.kind_of? Hash
-        raise_version1_initialize_error! globals
-      end
-
       @globals = GlobalOptions.new(globals)
 
       BlockInterface.new(@globals).evaluate(block) if block
@@ -19,10 +16,7 @@ module Savon
         raise_initialization_error!
       end
 
-      @wsdl = Wasabi::Document.new
-      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
-      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
-      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
+      build_wsdl_document
     end
 
     attr_reader :globals
@@ -44,19 +38,22 @@ module Savon
 
     private
 
+    def build_wsdl_document
+      @wsdl = Wasabi::Document.new
+
+      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
+      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
+      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
+
+      @wsdl.request = WSDLRequest.new(@globals).build
+    end
+
     def persist_last_response(response)
       @globals[:last_response] = response.http
     end
 
     def wsdl_or_endpoint_and_namespace_specified?
       @globals.include?(:wsdl) || (@globals.include?(:endpoint) && @globals.include?(:namespace))
-    end
-
-    def raise_version1_initialize_error!(object)
-      raise InitializationError,
-        "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
-        "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
-        "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
     end
 
     def raise_initialization_error!
