@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = s.name
 
-  s.add_dependency "nori",     "~> 2.0.0"
+  s.add_dependency "nori",     "~> 2.0.3"
   s.add_dependency "httpi",    "~> 2.0.0"
   s.add_dependency "wasabi",   "~> 3.0.0"
   s.add_dependency "akami",    "~> 1.2.0"
