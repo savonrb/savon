@@ -11,6 +11,7 @@ module Savon
     def build
       configure_timeouts
       configure_ssl
+      configure_auth
 
       @http_request
     end
@@ -29,6 +30,11 @@ module Savon
       @http_request.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
       @http_request.auth.ssl.cert_file     = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
       @http_request.auth.ssl.ca_cert_file  = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
+    end
+
+    def configure_auth
+      @http_request.auth.basic(*@globals[:basic_auth])   if @globals.include? :basic_auth
+      @http_request.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
     end
 
   end
