@@ -12,6 +12,11 @@
 * Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
   option to allow adding XML attributes to the SOAP message tag.
 
+## 2.0.3 (2013-01-19)
+
+* Upgraded Nori dependency to prevent people from using a version that is vulnerable to
+  the recent [remote code execution bug](https://gist.github.com/4532291).
+
 ## 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
