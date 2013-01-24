@@ -134,12 +134,13 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log = log
+      HTTPI    .log  = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
+      HTTPI    .logger  = logger
       @options[:logger] = logger
     end
 
@@ -152,6 +153,7 @@ module Savon
                              "Expected one of: #{levels.keys.inspect}"
       end
 
+      HTTPI        .log_level = level
       @options[:logger].level = levels[level]
     end
 
