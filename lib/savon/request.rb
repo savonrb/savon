@@ -9,6 +9,7 @@ module Savon
     end
 
     def build
+      configure_request
       configure_timeouts
       configure_ssl
 
@@ -16,6 +17,10 @@ module Savon
     end
 
     private
+
+    def configure_request
+      @http_request.proxy = @globals[:proxy] if @globals.include? :proxy
+    end
 
     def configure_timeouts
       @http_request.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
