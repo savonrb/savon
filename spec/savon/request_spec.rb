@@ -16,6 +16,20 @@ describe Savon::WSDLRequest do
       expect(wsdl_request.build).to be_an(HTTPI::Request)
     end
 
+    describe "proxy" do
+      it "is set when specified" do
+        globals.proxy("http://proxy.example.com")
+        http_request.expects(:proxy=).with("http://proxy.example.com")
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:proxy=).never
+        new_wsdl_request.build
+      end
+    end
+
     describe "open timeout" do
       it "is set when specified" do
         globals.open_timeout(22)
