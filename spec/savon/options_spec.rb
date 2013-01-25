@@ -325,6 +325,19 @@ describe "Options" do
       client.call(:authenticate)
     end
   end
+  
+  context "global :ssl_cert_key_password" do
+    it "sets the encrypted cert key file password to use" do
+      cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
+      cert_key_pass = "secure-password!42"
+      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
+      HTTPI::Auth::SSL.any_instance.expects(:cert_key_password=).with(cert_key_pass).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key, :ssl_cert_key_password => cert_key_pass)
+      client.call(:authenticate)
+    end
+
+  end
 
   context "global :ssl_cert_file" do
     it "sets the cert file to use" do

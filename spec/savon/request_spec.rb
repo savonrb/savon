@@ -101,6 +101,39 @@ describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
+
+    describe "ssl encrypted cert key file" do
+      describe "set with an invalid decrypting password" do
+        it "fails when attempting to use the SSL private key" do
+          pass = "wrong-password"
+          key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
+          cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
+
+          globals.ssl_cert_file(cert)
+          globals.ssl_cert_key_password(pass)
+          globals.ssl_cert_key_file(key)
+
+          new_wsdl_request.build
+
+          expect { http_request.auth.ssl.cert_key }.to raise_error(OpenSSL::PKey::RSAError)
+        end
+      end
+      describe "set with a valid decrypting password" do
+        it "handles SSL private keys properly" do
+          pass = "secure-password!42"
+          key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
+          cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
+
+          globals.ssl_cert_file(cert)
+          globals.ssl_cert_key_password(pass)
+          globals.ssl_cert_key_file(key)
+
+          new_wsdl_request.build
+
+          http_request.auth.ssl.cert_key.to_s.should =~ /BEGIN RSA PRIVATE KEY/          
+        end
+      end
+    end
     
     describe "ssl cert file" do
       it "is set when specified" do
