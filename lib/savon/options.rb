@@ -192,6 +192,11 @@ module Savon
       @options[:ssl_cert_key_file] = file
     end
 
+    # Sets the cert key password to use.
+    def ssl_cert_key_password(password)
+      @options[:ssl_cert_key_password] = password
+    end
+    
     # Sets the cert file to use.
     def ssl_cert_file(file)
       @options[:ssl_cert_file] = file
