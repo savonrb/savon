@@ -30,7 +30,7 @@ module Savon
     def to_s
       return @locals[:xml] if @locals.include? :xml
 
-      tag(builder, :Envelope, namespaces) do |xml|
+      tag(builder, :Envelope, namespaces_with_globals) do |xml|
         tag(xml, :Header) { xml << header.to_s } unless header.empty?
         tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
       end
@@ -63,6 +63,10 @@ module Savon
       end
 
       [path, identifier]
+    end
+
+    def namespaces_with_globals
+      namespaces.merge @globals[:namespaces]
     end
 
     def namespaces

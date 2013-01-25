@@ -38,6 +38,7 @@ module Savon
       defaults = {
         :encoding                  => "UTF-8",
         :soap_version              => 1,
+        :namespaces                => {},
         :logger                    => Logger.new($stdout),
         :log                       => true,
         :filters                   => [],
@@ -76,6 +77,11 @@ module Savon
     # The namespace identifer.
     def namespace_identifier(identifier)
       @options[:namespace_identifier] = identifier
+    end
+
+    # Namespaces for the SOAP envelope.
+    def namespaces(namespaces)
+      @options[:namespaces] = namespaces
     end
 
     # Proxy server to use for all requests.

@@ -9,6 +9,9 @@
 
   This also fixes [rubiii/savon#2](https://github.com/rubiii/savon/issues/2) logging on Windows.
 
+* Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
+  for adding namespaces to the SOAP envelope.
+
 * Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
   option to allow adding XML attributes to the SOAP message tag.
 

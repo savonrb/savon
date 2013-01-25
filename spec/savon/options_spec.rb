@@ -37,6 +37,16 @@ describe "Options" do
     end
   end
 
+  context "global :namespaces" do
+    it "adds additional namespaces to the SOAP envelope" do
+      namespaces = { "xmlns:whatever" => "http://whatever.example.com" }
+      client = new_client(:endpoint => @server.url(:repeat), :namespaces => namespaces)
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to include('xmlns:whatever="http://whatever.example.com"')
+    end
+  end
+
   context "global :proxy" do
     it "sets the proxy server to use" do
       proxy_url = "http://example.com"
