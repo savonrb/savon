@@ -12,6 +12,8 @@
 * Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
   for adding namespaces to the SOAP envelope.
 
+* Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
+
 * Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
   option to allow adding XML attributes to the SOAP message tag.
 
