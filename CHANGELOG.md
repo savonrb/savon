@@ -11,7 +11,8 @@
   option is now only used to store whether Savon should log instead of creating a new `Logger`
   and changing its logdev to `$stdout` or `/dev/null` depending on the what was passed.
 
-  This also fixes [rubiii/savon#2](https://github.com/rubiii/savon/issues/2) logging on Windows.
+  This also fixes [rubiii/savon#2](https://github.com/rubiii/savon/issues/2) and
+  [#379](https://github.com/savonrb/savon/issues/379).
 
 * Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
   for adding namespaces to the SOAP envelope.
