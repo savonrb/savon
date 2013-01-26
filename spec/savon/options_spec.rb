@@ -639,7 +639,10 @@ describe "Options" do
       response = client.call(:authenticate, :cookies => cookies)
 
       cookie = inspect_request(response).cookie
-      expect(cookie).to eq("some-cookie=choc-chip;another-cookie=ny-cheesecake")
+      expect(cookie.split(";")).to include(
+        "some-cookie=choc-chip",
+        "another-cookie=ny-cheesecake"
+      )
     end
   end
 
