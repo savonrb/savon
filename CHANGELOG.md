@@ -1,5 +1,9 @@
 ## master
 
+* Fix: [#369](https://github.com/savonrb/savon/pull/369) use HTTP basic and digest authentication
+  credentials to retrieve WSDL files.
+  Fixes [#367](https://github.com/savonrb/savon/issues/367#issuecomment-12720307).
+
 * Fix: [#349](https://github.com/savonrb/savon/issues/349) global timeout and SSL options are
   now used to retrieve a remote WSDL document.
 
