@@ -105,6 +105,16 @@ describe Savon::Operation do
       expect(actual_soap_action).to eq(%("#{soap_action}"))
     end
 
+    it "uses the local :cookies option" do
+      globals.endpoint @server.url(:inspect_request)
+      cookies = [HTTPI::Cookie.new("some-cookie=choc-chip")]
+
+      HTTPI::Request.any_instance.expects(:set_cookies).with(cookies)
+
+      operation = new_operation(:verify_address, wsdl, globals)
+      operation.call(:cookies => cookies)
+    end
+
     it "passes nil to the request builder if the :soap_action was set to nil" do
       globals.endpoint @server.url(:inspect_request)
 

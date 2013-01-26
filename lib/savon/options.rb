@@ -171,12 +171,6 @@ module Savon
       @options[:pretty_print_xml] = pretty_print_xml
     end
 
-    # Used by Savon to store the last response to pass
-    # its cookies to the next request.
-    def last_response(last_response)
-      @options[:last_response] = last_response
-    end
-
     # Specifies the SSL version to use.
     def ssl_version(version)
       @options[:ssl_version] = version
@@ -196,7 +190,7 @@ module Savon
     def ssl_cert_key_password(password)
       @options[:ssl_cert_key_password] = password
     end
-    
+
     # Sets the cert file to use.
     def ssl_cert_file(file)
       @options[:ssl_cert_file] = file
@@ -276,6 +270,11 @@ module Savon
     # Value of the SOAPAction HTTP header.
     def soap_action(soap_action)
       @options[:soap_action] = soap_action
+    end
+
+    # Cookies to be used for the next request.
+    def cookies(cookies)
+      @options[:cookies] = cookies
     end
 
     # The SOAP request XML to send. Expected to be a String.

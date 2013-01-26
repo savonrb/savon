@@ -43,6 +43,7 @@ class IntegrationServer
       run lambda { |env|
         body = {
           :soap_action  => env["HTTP_SOAPACTION"],
+          :cookie       => env["HTTP_COOKIE"],
           :x_token      => env["HTTP_X_TOKEN"],
           :content_type => env["CONTENT_TYPE"]
         }

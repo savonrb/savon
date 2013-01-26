@@ -100,24 +100,6 @@ describe Savon::Client do
       expect(response).to eq(soap_response)
     end
 
-    it "sets the cookies for the next request" do
-      headers = { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }
-      last_response = new_http_response(:headers => headers)
-      client = new_client
-
-      HTTPI.stubs(:post).returns(last_response)
-
-      # does not try to set cookies for the first request
-      HTTPI::Request.any_instance.expects(:set_cookies).never
-      client.call(:authenticate)
-
-      HTTPI.stubs(:post).returns(new_http_response)
-
-      # sets cookies from the last response
-      HTTPI::Request.any_instance.expects(:set_cookies).with(last_response)
-      client.call(:authenticate)
-    end
-
     it "supports a block without arguments to call an operation with local options" do
       client = new_client(:endpoint => @server.url(:repeat))
 

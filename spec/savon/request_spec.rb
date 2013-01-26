@@ -241,16 +241,14 @@ describe Savon::SOAPRequest do
     end
 
     describe "cookies" do
-      it "sets the cookies from the last response" do
-        headers  = { "Set-Cookie" => "some-cookie=choc-chip; Path=/; HttpOnly" }
-        response = HTTPI::Response.new(200, headers, "")
-        globals.last_response(response)
+      it "sets the given cookies" do
+        cookies = [HTTPI::Cookie.new("some-cookie=choc-chip; Path=/; HttpOnly")]
 
-        http_request.expects(:set_cookies).with(response)
-        new_soap_request.build
+        http_request.expects(:set_cookies).with(cookies)
+        new_soap_request.build(:cookies => cookies)
       end
 
-      it "does not set the cookies if there is no last response" do
+      it "does not set the cookies if there are none" do
         http_request.expects(:set_cookies).never
         new_soap_request.build
       end
@@ -300,20 +298,20 @@ describe Savon::SOAPRequest do
 
     describe "SOAPAction header" do
       it "is set and wrapped in parenthesis" do
-        configured_http_request = new_soap_request.build("findUser")
+        configured_http_request = new_soap_request.build(:soap_action => "findUser")
         soap_action = configured_http_request.headers["SOAPAction"]
 
         expect(soap_action).to eq(%("findUser"))
       end
 
       it "is not set when it's explicitely set to nil" do
-        configured_http_request = new_soap_request.build(nil)
+        configured_http_request = new_soap_request.build(:soap_action => nil)
         expect(configured_http_request.headers).to_not include("SOAPAction")
       end
 
       it "is not set when there is already a SOAPAction value" do
         globals.headers("SOAPAction" => %("authenticate"))
-        configured_http_request = new_soap_request.build("findUser")
+        configured_http_request = new_soap_request.build(:soap_action => "findUser")
         soap_action = configured_http_request.headers["SOAPAction"]
 
         expect(soap_action).to eq(%("authenticate"))
@@ -340,7 +338,7 @@ describe Savon::SOAPRequest do
 
       it "is not set when there is already a Content-Type value" do
         globals.headers("Content-Type" => "application/awesomeness;charset=UTF-3000")
-        configured_http_request = new_soap_request.build("findUser")
+        configured_http_request = new_soap_request.build(:soap_action => "findUser")
         content_type = configured_http_request.headers["Content-Type"]
 
         expect(content_type).to eq("application/awesomeness;charset=UTF-3000")

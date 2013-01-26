@@ -1,5 +1,14 @@
 ## master
 
+* Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
+
+* Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
+  option to allow adding XML attributes to the SOAP message tag.
+
+* Improvement: [#363](https://github.com/savonrb/savon/issues/363) Savon 2.0 remembers the cookies from
+  the last response and passes it to the next request, which is not a proper way to handle cookies.
+  I removed this behavior and introduced an easy way to handle cookies manually instead.
+
 * Fix: [#378](https://github.com/savonrb/savon/pull/378) use the proxy option for WSDL requests.
 
 * Fix: [#369](https://github.com/savonrb/savon/pull/369) use HTTP basic and digest authentication
@@ -18,11 +27,6 @@
 
 * Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
   for adding namespaces to the SOAP envelope.
-
-* Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
-
-* Feature: [#361](https://github.com/savonrb/savon/issues/361) added the local `:attributes`
-  option to allow adding XML attributes to the SOAP message tag.
 
 ## 2.0.3 (2013-01-19)
 

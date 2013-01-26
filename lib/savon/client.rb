@@ -35,9 +35,7 @@ module Savon
     end
 
     def call(operation_name, locals = {}, &block)
-      response = operation(operation_name).call(locals, &block)
-      persist_last_response(response)
-      response
+      operation(operation_name).call(locals, &block)
     end
 
     private
@@ -50,10 +48,6 @@ module Savon
       @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
 
       @wsdl.request = WSDLRequest.new(@globals).build
-    end
-
-    def persist_last_response(response)
-      @globals[:last_response] = response.http
     end
 
     def wsdl_or_endpoint_and_namespace_specified?

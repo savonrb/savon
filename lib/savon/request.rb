@@ -61,11 +61,11 @@ module Savon
       2 => "application/soap+xml;charset=%s"
     }
 
-    def build(soap_action = nil)
+    def build(options = {})
       configure_proxy
-      configure_cookies
+      configure_cookies options[:cookies]
       configure_timeouts
-      configure_headers(soap_action)
+      configure_headers options[:soap_action]
       configure_ssl
       configure_auth
 
@@ -74,8 +74,8 @@ module Savon
 
     private
 
-    def configure_cookies
-      @http_request.set_cookies @globals[:last_response] if @globals.include? :last_response
+    def configure_cookies(cookies)
+      @http_request.set_cookies(cookies) if cookies
     end
 
     def configure_headers(soap_action)

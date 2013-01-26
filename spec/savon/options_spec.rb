@@ -335,7 +335,7 @@ describe "Options" do
       client.call(:authenticate)
     end
   end
-  
+
   context "global :ssl_cert_key_password" do
     it "sets the encrypted cert key file password to use" do
       cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
@@ -625,6 +625,21 @@ describe "Options" do
     it "accepts a String of raw XML" do
       response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :xml => "<soap>request</soap>")
       expect(response.http.body).to eq("<soap>request</soap>")
+    end
+  end
+
+  context "request :cookies" do
+    it "accepts an Array of HTTPI::Cookie objects for the next request" do
+      cookies  = [
+        HTTPI::Cookie.new("some-cookie=choc-chip"),
+        HTTPI::Cookie.new("another-cookie=ny-cheesecake")
+      ]
+
+      client   = new_client(:endpoint => @server.url(:inspect_request))
+      response = client.call(:authenticate, :cookies => cookies)
+
+      cookie = inspect_request(response).cookie
+      expect(cookie).to eq("some-cookie=choc-chip;another-cookie=ny-cheesecake")
     end
   end
 
