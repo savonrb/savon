@@ -1,4 +1,4 @@
-## master
+### master
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
 
@@ -28,12 +28,12 @@
 * Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
   for adding namespaces to the SOAP envelope.
 
-## 2.0.3 (2013-01-19)
+### 2.0.3 (2013-01-19)
 
 * Upgraded Nori dependency to prevent people from using a version that is vulnerable to
   the recent [remote code execution bug](https://gist.github.com/4532291).
 
-## 2.0.2 (2012-12-20)
+### 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
   `:ssl_verify_mode` and `:ssl_version` options which were missing.
@@ -41,13 +41,13 @@
 * Fix: [#344](https://github.com/savonrb/savon/issues/344) added missing global ssl cert options
   `:ssl_cert_file`, `:ssl_cert_key_file` and `:ssl_ca_cert_file`.
 
-## 2.0.1 (2012-12-19)
+### 2.0.1 (2012-12-19)
 
 * Fix [#342](https://github.com/savonrb/savon/issues/342) fixes an issue where namespaces could
   not be resolved if the actual operation name to call did not match the operation name passed
   to the client's `#call` method. For example: `:get_stations` for a `getStations` operation.
 
-## 2.0.0 (2012-12-18)
+### 2.0.0 (2012-12-18)
 
 * Read about all the changes in the [updated documentation](http://savonrb.com/version2.html).
 
@@ -62,7 +62,7 @@
 
 * Fix: [321](https://github.com/savonrb/savon/issues/321) preserve `[false]` values in Hashes.
 
-## 1.2.0 (2012-09-15)
+### 1.2.0 (2012-09-15)
 
 * Fix: [#312](https://github.com/savonrb/savon/pull/312) recursively determines the proper namespaces
   for SOAP body Hashes with nested Arrays of Hashes.
@@ -72,7 +72,7 @@
 
 * Refactoring: Use the `Wasabi::Document` with resolver instead of the custom `Savon::Wasabi::Document`.
 
-## 1.1.0 (2012-06-28)
+### 1.1.0 (2012-06-28)
 
 * Improvement: Changed Savon's core dependencies to be more strict and only allow bug fix changes.
   Major or minor releases of these dependencies now need a release of Savon so they can be used.
