@@ -1,5 +1,7 @@
 ## master
 
+* Fix: [#378](https://github.com/savonrb/savon/pull/378) use the proxy option for WSDL requests.
+
 * Fix: [#369](https://github.com/savonrb/savon/pull/369) use HTTP basic and digest authentication
   credentials to retrieve WSDL files.
   Fixes [#367](https://github.com/savonrb/savon/issues/367#issuecomment-12720307).
