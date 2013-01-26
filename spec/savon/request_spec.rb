@@ -164,6 +164,34 @@ describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
+
+    describe "basic auth" do
+      it "is set when specified" do
+        globals.basic_auth("luke", "secret")
+        http_request.auth.expects(:basic).with("luke", "secret")
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.expects(:basic).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "digest auth" do
+      it "is set when specified" do
+        globals.digest_auth("lea", "top-secret")
+        http_request.auth.expects(:digest).with("lea", "top-secret")
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.expects(:digest).never
+        new_wsdl_request.build
+      end
+    end
   end
 
 end
