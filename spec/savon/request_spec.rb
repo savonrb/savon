@@ -118,6 +118,7 @@ describe Savon::WSDLRequest do
           expect { http_request.auth.ssl.cert_key }.to raise_error(OpenSSL::PKey::RSAError)
         end
       end
+
       describe "set with a valid decrypting password" do
         it "handles SSL private keys properly" do
           pass = "secure-password!42"
@@ -130,11 +131,11 @@ describe Savon::WSDLRequest do
 
           new_wsdl_request.build
 
-          http_request.auth.ssl.cert_key.to_s.should =~ /BEGIN RSA PRIVATE KEY/          
+          http_request.auth.ssl.cert_key.to_s.should =~ /BEGIN RSA PRIVATE KEY/
         end
       end
     end
-    
+
     describe "ssl cert file" do
       it "is set when specified" do
         cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
@@ -374,7 +375,7 @@ describe Savon::SOAPRequest do
         new_soap_request.build
       end
     end
-    
+
     describe "ssl cert key password" do
       it "is set when specified" do
         the_pass = "secure-password!42"
