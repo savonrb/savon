@@ -1,8 +1,8 @@
 module Savon
 
-  class Error < RuntimeError; end
-  class InitializationError < Error; end
-  class InvalidResponseError < Error; end
+  Error                = Class.new(RuntimeError)
+  InitializationError  = Class.new(Error)
+  InvalidResponseError = Class.new(Error)
 
   def self.client(globals = {}, &block)
     Client.new(globals, &block)
