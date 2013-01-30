@@ -9,6 +9,8 @@
   the last response and passes it to the next request, which is not a proper way to handle cookies.
   I removed this behavior and introduced an easy way to handle cookies manually instead.
 
+* Improvement: [#380](https://github.com/savonrb/savon/pull/380) changed the gemspec to not rely on git.
+
 * Fix: [#378](https://github.com/savonrb/savon/pull/378) use the proxy option for WSDL requests.
 
 * Fix: [#369](https://github.com/savonrb/savon/pull/369) use HTTP basic and digest authentication
