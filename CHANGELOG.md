@@ -1,4 +1,4 @@
-### master
+### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
 
