@@ -42,7 +42,7 @@ describe Savon::Operation do
 
     it "raises if the operation is not available for the service" do
       expect { new_operation(:no_such_operation, wsdl, globals) }.
-        to raise_error(ArgumentError, /Unable to find SOAP operation: :no_such_operation/)
+        to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
     end
   end
 

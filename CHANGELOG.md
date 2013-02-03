@@ -16,6 +16,11 @@
        Unknown global option: :wsdk
     ```
 
+* Improvement: [#385](https://github.com/savonrb/savon/issues/385) Instead of raising an
+  `ArgumentError` when Wasabi can't find any operations in the WSDL. Savon now raises a
+  `Savon::UnknownOperationError`. This might happen when Wasabi fails to parse the WSDL
+  because of imports for example.
+
 ### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.

@@ -83,7 +83,7 @@ describe Savon::Client do
 
     it "raises if there's no such SOAP operation" do
       expect { new_client.operation(:does_not_exist) }.
-        to raise_error(ArgumentError)
+        to raise_error(Savon::UnknownOperationError)
     end
 
     it "does not raise when there is no WSDL document" do

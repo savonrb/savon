@@ -19,8 +19,8 @@ module Savon
 
     def self.ensure_exists!(operation_name, wsdl)
       unless wsdl.soap_actions.include? operation_name
-        raise ArgumentError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
-                             "Operations provided by your service: #{wsdl.soap_actions.inspect}"
+        raise UnknownOperationError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
+                                     "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
     end
 
