@@ -11,6 +11,11 @@
   As of this change, Savon now catches those errors and raise a `Savon::UnknownOptionError`
   with a slightly more helpful error message instead.
 
+    ```
+    Savon::UnknownOptionError:
+       Unknown global option: :wsdk
+    ```
+
 ### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
