@@ -2,6 +2,7 @@ module Savon
 
   Error                = Class.new(RuntimeError)
   InitializationError  = Class.new(Error)
+  UnknownOptionError   = Class.new(Error)
   InvalidResponseError = Class.new(Error)
 
   def self.client(globals = {}, &block)

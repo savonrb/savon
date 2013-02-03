@@ -9,6 +9,8 @@ module Savon
       assign options
     end
 
+    attr_reader :option_type
+
     def [](option)
       @options[option]
     end
@@ -30,11 +32,17 @@ module Savon
       end
     end
 
+    def method_missing(option, _)
+      raise UnknownOptionError, "Unknown #{option_type} option: #{option.inspect}"
+    end
+
   end
 
   class GlobalOptions < Options
 
     def initialize(options = {})
+      @option_type = :global
+
       defaults = {
         :encoding                  => "UTF-8",
         :soap_version              => 1,
@@ -243,6 +251,8 @@ module Savon
   class LocalOptions < Options
 
     def initialize(options = {})
+      @option_type = :local
+
       defaults = {
         :advanced_typecasting => true,
         :response_parser      => :nokogiri

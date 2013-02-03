@@ -1,3 +1,16 @@
+### master
+
+* Improvement: When mistyping an option name, Savon used to raise a simple `NoMethodError`.
+  This is because regardless of whether you're using the Hash or block syntax to pass global
+  or local options, both are just method calls on some options object.
+
+    ```
+    NoMethodError: undefined method 'wsdk' for #<Savon::GlobalOptions:0x007fed95a55228>
+    ```
+
+  As of this change, Savon now catches those errors and raise a `Savon::UnknownOptionError`
+  with a slightly more helpful error message instead.
+
 ### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.

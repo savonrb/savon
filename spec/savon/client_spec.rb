@@ -46,6 +46,16 @@ describe Savon::Client do
       expect { Savon.client(:endpoint => "http://example.com") }.
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
+
+    it "raises a when given an unknown option via the Hash syntax" do
+      expect { Savon.client(:invalid_global_option => true) }.
+        to raise_error(Savon::UnknownOptionError, "Unknown global option: :invalid_global_option")
+    end
+
+    it "raises a when given an unknown option via the block syntax" do
+      expect { Savon.client { another_invalid_global_option true } }.
+        to raise_error(Savon::UnknownOptionError, "Unknown global option: :another_invalid_global_option")
+    end
   end
 
   describe "#globals" do
@@ -136,6 +146,16 @@ describe Savon::Client do
         "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
         "Actual: \"not a symbol\" (String)"
       )
+    end
+
+    it "raises a when given an unknown option via the Hash syntax" do
+      expect { new_client.call(:authenticate, :invalid_local_option => true) }.
+        to raise_error(Savon::UnknownOptionError, "Unknown local option: :invalid_local_option")
+    end
+
+    it "raises a when given an unknown option via the block syntax" do
+      expect { new_client.call(:authenticate) { another_invalid_local_option true } }.
+        to raise_error(Savon::UnknownOptionError, "Unknown local option: :another_invalid_local_option")
     end
   end
 
