@@ -11,6 +11,13 @@ module Savon
 
     def to_hash(hash, path)
       return unless hash
+
+      new_path = []
+      path.each do |p|
+        new_path << p.snakecase
+      end
+      path = new_path
+
       return hash.map { |value| to_hash(value, path) } if hash.kind_of?(Array)
       return hash.to_s unless hash.kind_of? Hash
 
