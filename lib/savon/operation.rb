@@ -38,9 +38,7 @@ module Savon
     end
 
     def call(locals = {}, &block)
-      @locals = LocalOptions.new(locals)
-
-      BlockInterface.new(@locals).evaluate(block) if block
+      set_locals(locals, block)
 
       builder = Builder.new(@name, @wsdl, @globals, @locals)
 
@@ -53,6 +51,13 @@ module Savon
     end
 
     private
+
+    def set_locals(locals, block)
+      locals = LocalOptions.new(locals)
+      BlockInterface.new(locals).evaluate(block) if block
+
+      @locals = locals
+    end
 
     def call!(request)
       log_request(request) if log?

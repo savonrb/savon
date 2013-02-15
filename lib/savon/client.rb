@@ -12,9 +12,7 @@ module Savon
         raise_version1_initialize_error! globals
       end
 
-      @globals = GlobalOptions.new(globals)
-
-      BlockInterface.new(@globals).evaluate(block) if block
+      set_globals(globals, block)
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!
@@ -39,6 +37,13 @@ module Savon
     end
 
     private
+
+    def set_globals(globals, block)
+      globals = GlobalOptions.new(globals)
+      BlockInterface.new(globals).evaluate(block) if block
+
+      @globals = globals
+    end
 
     def build_wsdl_document
       @wsdl = Wasabi::Document.new
