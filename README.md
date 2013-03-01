@@ -1,10 +1,12 @@
-Savon [![Build Status](https://secure.travis-ci.org/savonrb/savon.png)](http://travis-ci.org/savonrb/savon)
+Savon
 =====
 
 Heavy metal SOAP client
 
 [Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
+
+[![Build Status](https://secure.travis-ci.org/savonrb/savon.png)](http://travis-ci.org/savonrb/savon) [![Gem Version](https://badge.fury.io/rb/savon.png)](http://badge.fury.io/rb/savon)
 
 
 Installation
