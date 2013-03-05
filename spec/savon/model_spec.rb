@@ -49,7 +49,7 @@ describe Savon::Model do
   end
 
   describe ".operations" do
-    subject(:model)
+    #subject(:model)
     it "defines class methods for each operation" do
       model = Class.new {
         extend Savon::Model
