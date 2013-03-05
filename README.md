@@ -31,7 +31,7 @@ client = Savon.client(wsdl: 'http://service.example.com?wsdl')
 client.operations
 # => [:find_user, :list_users]
 
-# call the 'getUser' operation
+# call the 'findUser' operation
 response = client.call(:find_user, message: { id: 42 })
 
 response.body
