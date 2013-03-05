@@ -26,7 +26,7 @@ Introduction
 require 'savon'
 
 # create a client for the service
-client = Savon.client(wsdl: "http://service.example.com?wsdl")
+client = Savon.client(wsdl: 'http://service.example.com?wsdl')
 
 client.operations
 # => [:find_user, :list_users]
