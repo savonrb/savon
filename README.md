@@ -23,21 +23,19 @@ Introduction
 ------------
 
 ``` ruby
-require "savon"
+require 'savon'
 
-# create a client for your SOAP service
+# create a client for the service
 client = Savon.client(wsdl: "http://service.example.com?wsdl")
 
 client.operations
-# => [:create_user, :get_user, :get_all_users]
+# => [:find_user, :list_users]
 
-# execute a SOAP request to call the "getUser" action
-response = client.call(:get_user) do
-  message(user_id: 1)
-end
+# call the 'getUser' operation
+response = client.call(:find_user, message: { id: 42 })
 
 response.body
-# => { :get_user_response => { :first_name => "The", :last_name => "Hoff" } }
+# => { find_user_response: { id: 42, name: 'Hoff' } }
 ```
 
 
