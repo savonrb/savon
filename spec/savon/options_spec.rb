@@ -73,7 +73,7 @@ describe "Options" do
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
       non_routable_ip = "http://10.255.255.1"
-      client = new_client(:endpoint => non_routable_ip, :open_timeout => 1)
+      client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
 
       expect { client.call(:authenticate) }.to raise_error { |error|
         if error.kind_of? Errno::EHOSTUNREACH
@@ -90,7 +90,7 @@ describe "Options" do
 
   context "global :read_timeout" do
     it "makes the client timeout after n seconds" do
-      client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 1, :read_timeout => 1)
+      client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 0.1, :read_timeout => 0.1)
 
       expect { client.call(:authenticate) }.
         to raise_error(HTTPClient::ReceiveTimeoutError)
