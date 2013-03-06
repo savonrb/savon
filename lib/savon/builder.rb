@@ -1,5 +1,6 @@
 require "savon/header"
 require "savon/message"
+require "nokogiri"
 require "builder"
 require "gyoku"
 
@@ -25,6 +26,10 @@ module Savon
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
+    end
+
+    def pretty
+      Nokogiri.XML(to_s).to_xml(:indent => 2)
     end
 
     def to_s

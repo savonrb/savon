@@ -9,6 +9,12 @@ describe Savon::Builder do
   let(:wsdl)        { Wasabi::Document.new Fixture.wsdl(:authentication) }
   let(:no_wsdl)     { Wasabi::Document.new }
 
+  describe "#pretty" do
+    it "returns the pretty printed request" do
+      expect(builder.pretty).to include("<env:Body>\n    <tns:authenticate/>")
+    end
+  end
+
   describe "#to_s" do
     it "includes the global :env_namespace if it's available" do
       globals[:env_namespace] = :soapenv
