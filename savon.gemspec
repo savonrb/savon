@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = "me@rubiii.com"
   s.homepage    = "http://savonrb.com"
   s.summary     = "Heavy metal SOAP client"
-  s.description = "Delicious SOAP for the Ruby community"
+  s.description = s.summary
 
   s.rubyforge_project = s.name
 
