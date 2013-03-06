@@ -37,10 +37,13 @@ module Savon
       @globals = globals
     end
 
-    def call(locals = {}, &block)
+    def build(locals = {}, &block)
       set_locals(locals, block)
+      Builder.new(@name, @wsdl, @globals, @locals)
+    end
 
-      builder = Builder.new(@name, @wsdl, @globals, @locals)
+    def call(locals = {}, &block)
+      builder = build(locals, &block)
 
       response = Savon.notify_observers(@name, builder, @globals, @locals)
       response ||= call! build_request(builder)
