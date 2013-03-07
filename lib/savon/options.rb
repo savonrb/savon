@@ -219,6 +219,11 @@ module Savon
       @options[:digest_auth] = credentials.flatten
     end
 
+    # NTLM auth credentials.
+    def ntlm(*credentials)
+      @options[:ntlm] = credentials.flatten
+    end
+
     # WSSE auth credentials for Akami.
     def wsse_auth(*credentials)
       @options[:wsse_auth] = credentials.flatten

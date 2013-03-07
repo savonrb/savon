@@ -387,6 +387,18 @@ describe "Options" do
     end
   end
 
+  context "global :ntlm" do
+    it "sets the ntlm credentials to use" do
+      credentials = ["admin", "secret"]
+      client = new_client(:endpoint => @server.url, :ntlm => credentials)
+
+      # TODO: find a way to integration test this. including an entire ntlm server implementation seems a bit over the top though.
+      HTTPI::Auth::Config.any_instance.expects(:ntlm).with(credentials)
+
+      response = client.call(:authenticate)
+    end
+  end
+
   context "global :filters" do
     it "filters a list of XML tags from logged SOAP messages" do
       client = new_client(:endpoint => @server.url(:repeat), :log => true)
