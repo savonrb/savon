@@ -1,57 +1,46 @@
-# Savon
+# Contribution Guide
 
-Heavy metal SOAP client
+This page describes how to contribute changes to Savon.
 
-[Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
-[Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
+Please do not create a pull request without reading this guide first.
+Make sure to read the documentation for your version at [savonrb.com](http://savonrb.com/)
+and post questions to the [mailing list](https://groups.google.com/forum/#!forum/savonrb).
 
-[![Build Status](https://secure.travis-ci.org/savonrb/savon.png)](http://travis-ci.org/savonrb/savon)
-[![Gem Version](https://badge.fury.io/rb/savon.png)](http://badge.fury.io/rb/savon)
-[![Code Climate](https://codeclimate.com/github/savonrb/savon.png)](https://codeclimate.com/github/savonrb/savon)
+**Bug fixes**
 
+If you really think you found a bug, please make sure to add as many information as possible
+to the ticket. You're a developer, we are developers and you know we need tests to reproduce
+problems and make sure they don't come back.
 
-## Installation
+So if you can reproduce your problem in a spec, that would be awesome! If you can't, please
+let us know how we could make this easier for you. Also, provide code and the WSDL of the
+service your working with so others can try to come up with a spec for your problem.
 
-Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
+After we have a failing spec, it obviously needs to be fixed. Make sure your new spec is the
+only failing one under the `spec` directory. Travis only runs the "unit tests" at `spec/savon`,
+but Savon actually has with some additional "integration/example specs" at `spec/integration`,
+which you need to run locally to make sure the integration with real world services still works.
 
-```
-$ gem install savon
-```
+Notice that these specs are not run by Travis, because the service's are not guaranteed to work
+all the time and the specs will timeout after a few seconds when the service is currently down.
 
-or add it to your Gemfile like this:
+Please follow this basic workflow for pull requests:
 
-```
-gem 'savon', '~> 2.1.0'
-```
-
-
-## Usage example
-
-``` ruby
-require 'savon'
-
-# create a client for the service
-client = Savon.client(wsdl: 'http://service.example.com?wsdl')
-
-client.operations
-# => [:find_user, :list_users]
-
-# call the 'findUser' operation
-response = client.call(:find_user, message: { id: 42 })
-
-response.body
-# => { find_user_response: { id: 42, name: 'Hoff' } }
-```
-
-For more examples, you should check out the [integration tests](https://github.com/savonrb/savon/tree/master/spec/integration).
+* [Fork the project](https://help.github.com/articles/fork-a-repo)
+* Create a feature branch and make your bug fix
+* Add tests for it!
+* Update the [Changelog](https://github.com/savonrb/savon/blob/master/CHANGELOG.md)
+* [Send a pull request](https://help.github.com/articles/using-pull-requests)
+* [Check that your pull request passes the build](https://travis-ci.org/savonrb/savon/pull_requests)
 
 
-## Documentation
+**Improvements and feature requests**
 
-Please make sure to read the documentation for your version:
+If you have an idea for an improvement or a new feature, please feel free to
+[create a new issue](https://github.com/savonrb/savon/issues/new) and describe your idea
+so that other people can give their insights and opinions. This is also important to avoid
+duplicate work.
 
-* [Version 2](http://savonrb.com/version2.html)
-* [Version 1](http://savonrb.com)
-
-And if you find any problems with it or if you think something's missing,  
-feel free to [help out and improve the documentation](https://github.com/savonrb/savonrb.com).
+Pull requests and issues on GitHub are meant to be used to discuss problems and ideas,
+so please make sure to participate and follow up on questions. In case noone comments
+on your ticket, please keep updating the ticket with additional information.
