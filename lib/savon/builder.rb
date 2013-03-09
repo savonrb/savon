@@ -67,7 +67,15 @@ module Savon
         @internal_namespace_count += 1
       end
 
-      [path, identifier]
+      # The paths should be in snake case to match @operation_name.  We iterate
+      # through each item in path and convert to snake case and return the new
+      # array.
+      new_path = []
+      path.each do |p|
+        new_path << p.snakecase
+      end
+
+      [new_path, identifier]
     end
 
     def namespaces_with_globals
@@ -97,6 +105,7 @@ module Savon
 
     def namespaced_message_tag
       if @used_namespaces[[@operation_name.to_s]]
+        @message_namespace = @used_namespaces[[@operation_name.to_s]]
         [@used_namespaces[[@operation_name.to_s]], message_tag, message_attributes]
       else
         [namespace_identifier, message_tag, message_attributes]
@@ -118,7 +127,7 @@ module Savon
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
       # TODO: clean this up! [dh, 2012-12-17]
-      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message],
+      Message.new(@message_namespace, @operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message],
                   element_form_default, @globals[:convert_request_keys_to])
     end
 

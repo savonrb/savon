@@ -3,7 +3,8 @@ require "gyoku"
 module Savon
   class QualifiedMessage
 
-    def initialize(types, used_namespaces, key_converter)
+    def initialize(message_namespace, types, used_namespaces, key_converter)
+      @message_namespace = message_namespace
       @types = types
       @used_namespaces = used_namespaces
       @key_converter = key_converter
@@ -20,7 +21,8 @@ module Savon
 
         if @used_namespaces[newpath]
           newhash.merge(
-            "#{@used_namespaces[newpath]}:#{translated_key}" =>
+            #"#{@used_namespaces[newpath]}:#{translated_key}" =>
+            "#{@message_namespace}:#{translated_key}" =>
               to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
           )
         else
@@ -37,7 +39,8 @@ module Savon
         camelcased_value = Gyoku.xml_tag(value, :key_converter => @key_converter)
         namespace_path = path + [camelcased_value.to_s]
         namespace = @used_namespaces[namespace_path]
-        "#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"
+        #"#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"
+        "#{@message_namespace + ":"}#{camelcased_value}"
       }
     end
 
