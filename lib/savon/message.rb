@@ -20,6 +20,8 @@ module Savon
 
       if @element_form_default == :qualified
         translated_operation_name = Gyoku.xml_tag(@operation_name, :key_converter => @key_converter).to_s
+        # XXX: there is no `@request_key_converter` instance variable!
+        #      the third argument is therefore always `nil`. [dh, 2013-03-09]
         @message = QualifiedMessage.new(@types, @used_namespaces, @request_key_converter).to_hash(@message, [translated_operation_name])
       end
 
