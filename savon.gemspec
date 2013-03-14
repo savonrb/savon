@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "json",  "~> 1.7"
 
   ignores  = File.readlines(".gitignore").grep(/\S+/).map(&:chomp)
-  dotfiles = %w[.gitignore .rspec .travis.yml .yardopts]
+  dotfiles = %w[.gitignore .travis.yml .yardopts]
 
   all_files_without_ignores = Dir["**/*"].reject { |f|
     File.directory?(f) || ignores.any? { |i| File.fnmatch(i, f) }
