@@ -76,6 +76,13 @@ module Wasabi
       @operations ||= parser.operations
     end
 
+    # Returns the service name.
+    def servicename
+      @servicename ||= parser.servicename
+    end
+
+    attr_writer :servicename
+
     def type_namespaces
       @type_namespaces ||= begin
         namespaces = []
