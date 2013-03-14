@@ -81,7 +81,7 @@ module Wasabi
     end
 
     def parse_servicename
-      servicename = at_xpath("wsdl:definitions@name") || ''
+      servicename = at_xpath("wsdl:definitions/@name") || ''
     end
 
     def parse_operations
