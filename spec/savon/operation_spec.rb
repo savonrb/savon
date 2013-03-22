@@ -56,7 +56,7 @@ describe Savon::Operation do
   describe "#build" do
     it "returns the Builder" do
       operation = new_operation(:verify_address, wsdl, globals)
-      builder = operation.build(message: { test: 'message' })
+      builder = operation.build(:message => { :test => 'message' })
 
       expect(builder).to be_a(Savon::Builder)
       expect(builder.to_s).to include('<tns:VerifyAddress><tns:test>message</tns:test></tns:VerifyAddress>')
