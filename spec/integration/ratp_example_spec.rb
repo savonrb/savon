@@ -12,9 +12,11 @@ describe "RATP example" do
       read_timeout 10
 
       # Disable logging for cleaner spec output.
-      log false
+      #log false
     end
 
+    # XXX: the service seems to rely on the order of arguments.
+    #      try to fix this with the new wsdl parser.
     response = client.call(:get_stations) do
       message(:station => { :id => 1975 }, :limit => 1)
     end
