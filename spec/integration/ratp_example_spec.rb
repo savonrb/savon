@@ -12,7 +12,7 @@ describe "RATP example" do
       read_timeout 10
 
       # Disable logging for cleaner spec output.
-      #log false
+      log false
     end
 
     # XXX: the service seems to rely on the order of arguments.
