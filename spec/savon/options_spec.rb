@@ -35,6 +35,14 @@ describe "Options" do
       expect(response.http.body).to include('xmlns:lol="http://v1_0.ws.auth.order.example.com/"')
       expect(response.http.body).to include("<lol:authenticate></lol:authenticate>")
     end
+
+    it "ignores namespace identifier if it is nil" do
+      client = new_client(:endpoint => @server.url(:repeat), :namespace_identifier => nil)
+      response = client.call(:authenticate, message: {user: 'foo'})
+
+      expect(response.http.body).to include('xmlns="http://v1_0.ws.auth.order.example.com/"')
+      expect(response.http.body).to include("<authenticate><user>foo</user></authenticate>")
+    end
   end
 
   context "global :namespaces" do
