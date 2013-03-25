@@ -77,7 +77,12 @@ module Savon
     def namespaces
       @namespaces ||= begin
         namespaces = SCHEMA_TYPES.dup
-        namespaces["xmlns:#{namespace_identifier}"] = @globals[:namespace] || @wsdl.namespace
+
+        if namespace_identifier == nil
+          namespaces["xmlns"] = @globals[:namespace] || @wsdl.namespace
+        else
+          namespaces["xmlns:#{namespace_identifier}"] = @globals[:namespace] || @wsdl.namespace
+        end
 
         key = ["xmlns"]
         key << env_namespace if env_namespace && env_namespace != ""
@@ -96,7 +101,9 @@ module Savon
     end
 
     def namespaced_message_tag
-      if @used_namespaces[[@operation_name.to_s]]
+      if namespace_identifier == nil
+        [message_tag, message_attributes]
+      elsif @used_namespaces[[@operation_name.to_s]]
         [@used_namespaces[[@operation_name.to_s]], message_tag, message_attributes]
       else
         [namespace_identifier, message_tag, message_attributes]
