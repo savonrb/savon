@@ -105,6 +105,8 @@ module Savon
         [message_tag, message_attributes]
       elsif @used_namespaces[[@operation_name.to_s]]
         [@used_namespaces[[@operation_name.to_s]], message_tag, message_attributes]
+      elsif namespace_identifier.eql?(:none)
+        [message_tag, message_attributes]
       else
         [namespace_identifier, message_tag, message_attributes]
       end
