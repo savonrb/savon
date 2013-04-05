@@ -1,3 +1,8 @@
+## master
+
+* Fix: [#23](https://github.com/savonrb/wasabi/issues/23) ignore extension base elements
+  defined in imports.
+
 ## 3.0.0 (2012-12-17)
 
 * Updated to HTTPI 2.0 to play nicely with Savon 2.0.

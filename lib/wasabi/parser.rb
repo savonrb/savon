@@ -128,7 +128,9 @@ module Wasabi
         if @types[base]
           @types[name].merge! @types[base]
         else
-          deferred_types << Proc.new { @types[name].merge! @types[base] }
+          deferred_types << Proc.new {
+            @types[name].merge! @types[base] if @types[base]
+          }
         end
       end
     end
