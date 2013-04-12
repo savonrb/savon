@@ -1,3 +1,4 @@
+# encoding: utf-8
 require "spec_helper"
 
 describe Savon::Builder do
@@ -80,6 +81,14 @@ describe Savon::Builder do
       wsdl.element_form_default = :qualified
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
+    end
+    
+    it "converts the message to the configured encoding" do
+      globals[:encoding] = "ISO-8859-1"
+      locals[:message] = { :username => "lüke", :password => "secret" }
+      expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
+      expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
+      
     end
 
   end
