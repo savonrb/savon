@@ -50,10 +50,35 @@ module Savon
 
       raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
 
-      Response.new(response, @globals, @locals)
+      create_response(response)
     end
 
     private
+
+    def create_response(response)
+      if multipart_supported?
+        Multipart::Response.new(response, @globals, @locals)
+      else
+        Response.new(response, @globals, @locals)
+      end
+    end
+
+    def multipart_supported?
+      return false unless @globals[:multipart] || @locals[:multipart]
+      return @@supports_multipart unless @@supports_multipart.nil?
+
+      begin
+        @@supports_multipart = false
+        require 'multipart-savon/multipartresponse'
+        if Savon::Version.to_f >= 2.0 && Savon.const_defined?(:Multipart)
+          @@supports_multipart = Savon::Multipart.const_defined?(:Response)
+        end
+      rescue
+        @@supports_multipart = false
+      end
+
+      @@supports_multipart
+    end
 
     def set_locals(locals, block)
       locals = LocalOptions.new(locals)

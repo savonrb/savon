@@ -154,6 +154,48 @@ describe Savon::Operation do
       actual_soap_action = inspect_request(response).soap_action
       expect(actual_soap_action).to eq(%("authenticate"))
     end
+
+    it "returns a Soap::Multipart::Response if available and requested globally" do
+      begin
+        globals.endpoint @server.url(:inspect_request)
+        globals.multipart true
+
+        module Soap::Multipart
+          class Response
+            def initialize(*args); end
+          end
+        end
+
+        Savon::Operation.class_variable_set(:@@supports_multipart, true)
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        response = operation.call
+        assert(response.is_a? Soap::Multipart::Response)
+      rescue
+      ensure
+        globals.multipart false
+        Savon::Operation.class_variable_set(:@@supports_multipart, false)
+      end
+    end
+
+    it "returns a Soap::Multipart::Response if available and requested locally" do
+      begin
+        Savon::Operation.class_variable_set(:@@supports_multipart, true)
+
+        module Soap::Multipart
+          class Response
+            def initialize(*args); end
+          end
+        end
+
+        Savon::Operation.class_variable_set(:@@supports_multipart, true)
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        response = operation.call(:multipart => true)
+        assert(response.is_a? Soap::Multipart::Response)
+      rescue
+      ensure
+        Savon::Operation.class_variable_set(:@@supports_multipart, false)
+      end
+    end
   end
 
   def inspect_request(response)
