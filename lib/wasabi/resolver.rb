@@ -7,7 +7,13 @@ module Wasabi
   # Resolves local and remote WSDL documents.
   class Resolver
 
-    class HTTPError < StandardError; end
+    class HTTPError < StandardError
+      def initialize(message, response=nil)
+        super(message)
+        @response = response
+      end
+      attr_reader :response
+    end
 
     URL = /^http[s]?:/
     XML = /^</
@@ -35,7 +41,8 @@ module Wasabi
       request.url = document
       response = HTTPI.get(request)
 
-      raise HTTPError, response if response.error?
+      raise HTTPError.new("Error: #{response.code}", response) if response.error?
+
       response.body
     end
 
