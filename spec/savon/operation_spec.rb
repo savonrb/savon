@@ -166,20 +166,21 @@ describe Savon::Operation do
           end
         end
 
-        Savon::Operation.class_variable_set(:@@supports_multipart, true)
+        Savon::Operation.send(:class_variable_set, :@@supports_multipart, true)
         operation = new_operation(:authenticate, no_wsdl, globals)
         response = operation.call
         assert(response.is_a? Soap::Multipart::Response)
       rescue
       ensure
         globals.multipart false
-        Savon::Operation.class_variable_set(:@@supports_multipart, false)
+        Savon::Operation.send(:class_variable_set, :@@supports_multipart, false)
       end
     end
 
     it "returns a Soap::Multipart::Response if available and requested locally" do
       begin
-        Savon::Operation.class_variable_set(:@@supports_multipart, true)
+        Savon::Operation.send(:class_variable_set, :@@supports_multipart, true)
+        globals.multipart = false
 
         module Soap::Multipart
           class Response
@@ -187,13 +188,12 @@ describe Savon::Operation do
           end
         end
 
-        Savon::Operation.class_variable_set(:@@supports_multipart, true)
         operation = new_operation(:authenticate, no_wsdl, globals)
         response = operation.call(:multipart => true)
         assert(response.is_a? Soap::Multipart::Response)
       rescue
       ensure
-        Savon::Operation.class_variable_set(:@@supports_multipart, false)
+        Savon::Operation.send(:class_variable_set, :@@supports_multipart, false)
       end
     end
   end
@@ -202,5 +202,4 @@ describe Savon::Operation do
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
-
 end
