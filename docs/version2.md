@@ -1,13 +1,13 @@
-Version 2
----------
+---
+title: Version 2
+---
 
-Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
-{% highlight bash %}
+Savon is available through [RubyGems.org](http://rubygems.org/gems/savon) and can be installed via:
+
+``` bash
 $ gem install savon
-{% endhighlight %}
-
-The project is [hosted on GitHub](http://github.com/savonrb/savon), it has [source code documentation](http://rubydoc.info/gems/savon/frames), it uses [continuous integration](http://travis-ci.org/#!/savonrb/savon) and support can be found in the [mailing list](https://groups.google.com/forum/#!forum/savonrb).
+```
 
 
 Client
@@ -154,7 +154,7 @@ Savon.client(raise_errors: false)
 ```
 
 
-### Globals: HTTP
+### HTTP
 
 #### proxy
 
@@ -182,7 +182,7 @@ Savon.client(open_timeout: 5, read_timeout: 5)
 ```
 
 
-### Globals: SSL
+### SSL
 
 Unfortunately, SSL options were [missing from the initial 2.0 release](https://github.com/savonrb/savon/issues/344).
 Please update to at least version 2.0.2 to use the following options. These will be used for retrieving remote WSDL
@@ -237,7 +237,7 @@ Savon.client(ssl_cert_key_password: "secret")
 ```
 
 
-### Globals: Request
+### Request
 
 #### convert_request_keys_to
 
@@ -393,7 +393,7 @@ Savon.client(soap_version: 2)
 ```
 
 
-### Globals: Authentication
+### Authentication
 
 HTTP authentication will be used for retrieving remote WSDL documents and actual SOAP requests.
 
@@ -436,7 +436,7 @@ Savon.client(wsse_timestamp: true)
 ```
 
 
-### Globals: Response
+### Response
 
 #### strip_namespaces
 
@@ -477,7 +477,7 @@ response.body["USER_RESPONSE"]["ID"]
 ```
 
 
-### Globals: Logging
+### Logging
 
 #### logger
 
@@ -566,7 +566,7 @@ Locals
 
 Local options are passed to the client's `#call` method and are specific to a single request.
 
-### Locals: HTTP
+### HTTP
 
 #### soap_action
 
@@ -594,7 +594,7 @@ This option accepts an Array of `HTTPI::Cookie` objects or any object that respo
 (like for example, an `HTTPI::Response`).
 
 
-### Locals: Request
+### Request
 
 #### message
 
@@ -684,7 +684,7 @@ client.call(:authenticate, xml: "<envelope><body></body></envelope>")
 ```
 
 
-### Locals: Response
+### Response
 
 #### advanced_typecasting
 

@@ -2,6 +2,7 @@
 .DS_Store
 .yardoc
 doc
+rdox
 coverage
 tmp
 *.rbc
