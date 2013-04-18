@@ -7,11 +7,6 @@ describe Savon do
     expect(message_tag).to eq(['http://v1_0.ws.auth.order.example.com/', 'authenticate'])
   end
 
-  it 'knows the message tag for :edialog' do
-    message_tag = message_tag_for(:edialog, :list_all_data_columns)
-    expect(message_tag).to eq(['uri:dataupload.ws.sdk.edialog.com', 'listAllDataColumns'])
-  end
-
   it 'knows the message tag for :taxcloud' do
     message_tag = message_tag_for(:taxcloud, :verify_address)
     expect(message_tag).to eq(['http://taxcloud.net', 'VerifyAddress'])
