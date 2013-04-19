@@ -260,7 +260,8 @@ module Savon
 
       defaults = {
         :advanced_typecasting => true,
-        :response_parser      => :nokogiri
+        :response_parser      => :nokogiri,
+        :multipart            => false
       }
 
       super defaults.merge(options)
@@ -305,6 +306,11 @@ module Savon
     # Instruct Nori to use :rexml or :nokogiri to parse the response.
     def response_parser(parser)
       @options[:response_parser] = parser
+    end
+
+    # Instruction Savon to create a Savon::Multipart::Response if available
+    def multipart(bool)
+      @options[:multipart] = bool
     end
 
   end

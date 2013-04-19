@@ -65,19 +65,14 @@ module Savon
 
     def multipart_supported?
       return false unless @globals[:multipart] || @locals[:multipart]
-      return @@supports_multipart unless @@supports_multipart.nil?
 
-      begin
-        @@supports_multipart = false
-        require 'multipart-savon/multipartresponse'
-        if Savon::Version.to_f >= 2.0 && Savon.const_defined?(:Multipart)
-          @@supports_multipart = Savon::Multipart.const_defined?(:Response)
-        end
-      rescue
-        @@supports_multipart = false
+      if Savon.const_defined?(:Multipart) && Savon::Multipart.const_defined?(:Response)
+        return true
+      else
+        raise RuntimeError.new('Could not find Savon::Multipart. Perhaps you did not require multipart-savon?')
       end
 
-      @@supports_multipart
+      return false
     end
 
     def set_locals(locals, block)
