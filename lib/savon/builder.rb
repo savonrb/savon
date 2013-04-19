@@ -41,9 +41,10 @@ module Savon
         tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
       end
       
-      if @globals[:encoding]
+      if @globals[:encoding] && @globals[:encode_message]
         string.encode!(@globals[:encoding])
       end
+      string
     end
 
     private
