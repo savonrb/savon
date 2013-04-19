@@ -45,7 +45,7 @@ module Savon
         end
       end
 
-      if @globals[:encoding]
+      if @globals[:encoding] && @globals[:encode_message]
         xml.encode!(@globals[:encoding])
       end
 
