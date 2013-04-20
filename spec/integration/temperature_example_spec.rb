@@ -21,7 +21,7 @@ describe "Temperature example" do
       log false
     end
 
-    response = client.call(:convert_temp) do
+    response = call_and_fail_gracefully(client, :convert_temp) do
       # For the corrent values to pass for :from_unit and :to_unit, I searched the WSDL for
       # the "FromUnit" type which is a "TemperatureUnit" enumeration that looks like this:
       #
@@ -41,6 +41,12 @@ describe "Temperature example" do
 
     fahrenheit = response.body[:convert_temp_response][:convert_temp_result]
     expect(fahrenheit).to eq("86")
+  end
+
+  def call_and_fail_gracefully(client, *args, &block)
+    client.call(*args, &block)
+  rescue Savon::SOAPFault => e
+    pending e.message
   end
 
 end
