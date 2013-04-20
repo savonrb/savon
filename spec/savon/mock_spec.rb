@@ -118,13 +118,13 @@ describe "Savon's mock interface" do
     message = { :username => "luke" }
     savon.expects(:find_user).with(:message => message).returns("<fixture/>")
 
-    expect do
+    expect {
       begin
         new_client.call(:find_user)
       rescue Savon::Error => e
         puts "any real error (e.g. SOAP fault or HTTP error) is OK in the big picture, move on"
       end
-    end.to raise_error(Savon::ExpectationError, "Expected a request to the :find_user operation\n" \
+    }.to raise_error(Savon::ExpectationError, "Expected a request to the :find_user operation\n" \
                                               "  with this message: #{message.inspect}\n" \
                                               "Received a request to the :find_user operation\n" \
                                               "  with no message.")
