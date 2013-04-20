@@ -17,7 +17,7 @@ describe "RATP example" do
 
     # XXX: the service seems to rely on the order of arguments.
     #      try to fix this with the new wsdl parser.
-    response = client.call(:get_stations) do
+    response = call_and_fail_gracefully(client, :get_stations) do
       message(:station => { :id => 1975 }, :limit => 1)
     end
 

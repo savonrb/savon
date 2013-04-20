@@ -15,9 +15,8 @@ require "rspec"
 # it can't actually be refered to inside the specs.
 require "httpclient"
 
-require "support/endpoint"
-require "support/fixture"
-require "support/stdout"
+support_files = File.expand_path("spec/support/**/*.rb")
+Dir[support_files].each { |file| require file }
 
 RSpec.configure do |config|
   config.include SpecSupport

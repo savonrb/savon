@@ -15,7 +15,7 @@ describe "Email example" do
       :log => false
     )
 
-    response = client.call(:verify_email, :message => { :email => "soap@example.com", "LicenseKey" => "?" })
+    response = call_and_fail_gracefully(client, :verify_email, :message => { :email => "soap@example.com", "LicenseKey" => "?" })
 
     response_text = response.body[:verify_email_response][:verify_email_result][:response_text]
 

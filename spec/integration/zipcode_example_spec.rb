@@ -22,7 +22,7 @@ describe "ZIP code example" do
 
     threads = request_data.map do |blz|
       thread = Thread.new do
-        response = client.call :get_bank, :message => { :blz => blz }
+        response = call_and_fail_gracefully client, :get_bank, :message => { :blz => blz }
         Thread.current[:value] = response.body[:get_bank_response][:details]
         mutex.synchronize { threads_waiting -= 1 }
       end
