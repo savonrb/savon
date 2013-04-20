@@ -1,5 +1,5 @@
 module Savon
-  class ExpectationError < ::Exception; end
+  class ExpectationError < StandardError; end
 end
 
 require "savon/mock/expectation"
