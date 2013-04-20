@@ -234,10 +234,10 @@ describe "Options" do
     end
 
     it "instructs Savon to log SOAP requests and responses" do
-      stdout = mock_stdout {
+      stdout = mock_stdout do
         client = new_client(:endpoint => @server.url, :log => true)
         client.call(:authenticate)
-      }
+      end
 
       expect(stdout.string).to include("INFO -- : SOAP request")
     end
@@ -245,16 +245,6 @@ describe "Options" do
     it "turns HTTPI logging back on as well" do
       HTTPI.expects(:log=).with(true)
       new_client(:log => true)
-    end
-
-    def mock_stdout
-      stdout = StringIO.new
-      $stdout = stdout
-
-      yield
-
-      $stdout = STDOUT
-      stdout
     end
   end
 
@@ -397,40 +387,44 @@ describe "Options" do
 
   context "global :filters" do
     it "filters a list of XML tags from logged SOAP messages" do
-      client = new_client(:endpoint => @server.url(:repeat), :log => true)
+      silence_stdout do
+        client = new_client(:endpoint => @server.url(:repeat), :log => true)
 
-      client.globals[:filters] << :password
+        client.globals[:filters] << :password
 
-      # filter out logs we're not interested in
-      client.globals[:logger].expects(:info).at_least_once
+        # filter out logs we're not interested in
+        client.globals[:logger].expects(:info).at_least_once
 
-      # check whether the password is filtered
-      client.globals[:logger].expects(:debug).with { |message|
-        message.include? "<password>***FILTERED***</password>"
-      }.twice
+        # check whether the password is filtered
+        client.globals[:logger].expects(:debug).with { |message|
+          message.include? "<password>***FILTERED***</password>"
+        }.twice
 
-      message = { :username => "luke", :password => "secret" }
-      client.call(:authenticate, :message => message)
+        message = { :username => "luke", :password => "secret" }
+        client.call(:authenticate, :message => message)
+      end
     end
   end
 
   context "global :pretty_print_xml" do
     it "is a nice but expensive way to debug XML messages" do
-      client = new_client(:endpoint => @server.url(:repeat), :pretty_print_xml => true, :log => true)
+      silence_stdout do
+        client = new_client(:endpoint => @server.url(:repeat), :pretty_print_xml => true, :log => true)
 
-      # filter out logs we're not interested in
-      client.globals[:logger].expects(:info).at_least_once
+        # filter out logs we're not interested in
+        client.globals[:logger].expects(:info).at_least_once
 
-      # check whether the message is pretty printed
-      client.globals[:logger].expects(:debug).with { |message|
-        envelope    = message =~ /\n<env:Envelope/
-        body        = message =~ /\n  <env:Body>/
-        message_tag = message =~ /\n    <tns:authenticate\/>/
+        # check whether the message is pretty printed
+        client.globals[:logger].expects(:debug).with { |message|
+          envelope    = message =~ /\n<env:Envelope/
+          body        = message =~ /\n  <env:Body>/
+          message_tag = message =~ /\n    <tns:authenticate\/>/
 
-        envelope && body && message_tag
-      }.twice
+          envelope && body && message_tag
+        }.twice
 
-      client.call(:authenticate)
+        client.call(:authenticate)
+      end
     end
   end
 
