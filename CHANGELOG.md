@@ -24,6 +24,9 @@
   `Savon::UnknownOperationError`. This might happen when Wasabi fails to parse the WSDL
   because of imports for example.
 
+* Fix: [#430](https://github.com/savonrb/savon/pull/430) allows you to rescue and ignore
+  `Savon::Error` errors in production while still having mocks trigger test failures.
+
 ### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
