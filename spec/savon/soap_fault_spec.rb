@@ -3,10 +3,13 @@ require "spec_helper"
 describe Savon::SOAPFault do
   let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
   let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
+  let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
+  let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
   let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
   let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }) }
+  let(:nori_no_convert) { Nori.new(:strip_namespaces => true, :convert_tags_to => nil) }
 
   it "inherits from Savon::Error" do
     expect(Savon::SOAPFault.ancestors).to include(Savon::Error)
@@ -52,6 +55,14 @@ describe Savon::SOAPFault do
       it "returns a SOAP fault message (with different namespaces)" do
         expect(another_soap_fault.send method).to eq("(ERR_NO_SESSION) Wrong session message")
       end
+
+      it "works even if the keys are different in a SOAP 1.1 fault message" do
+        soap_fault_nc.send method
+      end
+
+      it "works even if the keys are different in a SOAP 1.2 fault message" do
+        soap_fault_nc2.send method
+      end
     end
   end
 
@@ -81,6 +92,10 @@ describe Savon::SOAPFault do
       }
 
       expect(soap_fault2.to_hash).to eq(expected)
+    end
+
+    it "works even if the keys are different" do
+      soap_fault_nc2.to_hash
     end
   end
 
