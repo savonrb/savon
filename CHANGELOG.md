@@ -1,4 +1,4 @@
-## master
+## 3.1.0 (2013-04-21)
 
 * Feature: [#22](https://github.com/savonrb/wasabi/issues/22) added `Wasabi::Document#service_name`
   to return the name of the SOAP service. Original issue: [savonrb/savon#408](https://github.com/savonrb/savon/pull/408).
