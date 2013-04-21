@@ -19,20 +19,28 @@ module Savon
     attr_reader :http, :nori
 
     def to_s
-      message_by_version to_hash[:fault]
+      fault = nori.find(to_hash, 'Fault')
+      message_by_version(fault)
     end
 
     def to_hash
-      nori.parse(@http.body)[:envelope][:body]
+      parsed = nori.parse(@http.body)
+      nori.find(parsed, 'Envelope', 'Body')
     end
 
     private
 
     def message_by_version(fault)
-      if fault[:faultcode]
-        "(#{fault[:faultcode]}) #{fault[:faultstring]}"
-      elsif fault[:code]
-        "(#{fault[:code][:value]}) #{fault[:reason][:text]}"
+      if nori.find(fault, 'faultcode')
+        code = nori.find(fault, 'faultcode')
+        text = nori.find(fault, 'faultstring')
+
+        "(#{code}) #{text}"
+      elsif nori.find(fault, 'Code')
+        code = nori.find(fault, 'Code', 'Value')
+        text = nori.find(fault, 'Reason', 'Text')
+
+        "(#{code}) #{text}"
       end
     end
 

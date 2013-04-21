@@ -57,11 +57,11 @@ describe Savon::SOAPFault do
       end
 
       it "works even if the keys are different in a SOAP 1.1 fault message" do
-        soap_fault_nc.send method
+        expect(soap_fault_nc.send method).to eq("(soap:Server) Fault occurred while processing.")
       end
 
       it "works even if the keys are different in a SOAP 1.2 fault message" do
-        soap_fault_nc2.send method
+        expect(soap_fault_nc2.send method).to eq("(soap:Sender) Sender Timeout")
       end
     end
   end
@@ -95,7 +95,24 @@ describe Savon::SOAPFault do
     end
 
     it "works even if the keys are different" do
-      soap_fault_nc2.to_hash
+      expected = {
+        "Fault" => {
+          "Code" => {
+            "Value"  => "soap:Sender",
+            "Subcode"=> {
+              "Value" => "m:MessageTimeout"
+            }
+          },
+          "Reason" => {
+            "Text" => "Sender Timeout"
+          },
+          "Detail" => {
+            "MaxTime" => "P5M"
+          }
+        }
+      }
+
+      expect(soap_fault_nc2.to_hash).to eq(expected)
     end
   end
 
