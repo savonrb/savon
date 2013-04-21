@@ -36,9 +36,9 @@ module Savon
       operation(operation_name).call(locals, &block)
     end
 
-    def servicename
+    def service_name
       raise_missing_wsdl_error! unless @wsdl.document?
-      @wsdl.servicename
+      @wsdl.service_name
     end
 
     private

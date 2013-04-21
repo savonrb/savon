@@ -64,10 +64,9 @@ describe Savon::Client do
     end
   end
 
-  describe "#servicename" do
-    it "returns the 'name' attribute" do
-      servicename = new_client.servicename
-      expect(servicename).to eq('AuthenticationWebServiceImplService')
+  describe "#service_name" do
+    it "returns the name of the service" do
+      expect(new_client.service_name).to eq('AuthenticationWebServiceImplService')
     end
   end
 

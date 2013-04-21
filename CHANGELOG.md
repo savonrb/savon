@@ -3,6 +3,9 @@
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.
 
+* Feature: [#408](https://github.com/savonrb/savon/pull/408) Added `Savon::Client#service_name`
+  to return the name of the SOAP service.
+
 * Improvement: When mistyping an option name, Savon used to raise a simple `NoMethodError`.
   This is because regardless of whether you're using the Hash or block syntax to pass global
   or local options, both are just method calls on some options object.
