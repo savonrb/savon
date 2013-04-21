@@ -33,6 +33,9 @@
 * Fix: [#393](https://github.com/savonrb/savon/pull/393) changed `Savon::SOAPFault` to work
   with generic response Hash keys.
 
+* Fix: [#423](https://github.com/savonrb/savon/issues/423) fixes a problem where Wasabi was
+  not able to find extension base elements defined in imports it didn't follow.
+
 ### 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
