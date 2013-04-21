@@ -36,6 +36,11 @@ module Savon
       operation(operation_name).call(locals, &block)
     end
 
+    def servicename
+      raise_missing_wsdl_error! unless @wsdl.document?
+      @wsdl.servicename
+    end
+
     private
 
     def set_globals(globals, block)
@@ -48,9 +53,10 @@ module Savon
     def build_wsdl_document
       @wsdl = Wasabi::Document.new
 
-      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
-      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
-      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
+      @wsdl.document    = @globals[:wsdl]        if @globals.include? :wsdl
+      @wsdl.endpoint    = @globals[:endpoint]    if @globals.include? :endpoint
+      @wsdl.namespace   = @globals[:namespace]   if @globals.include? :namespace
+      @wsdl.servicename = @globals[:servicename] if @globals.include? :servicename
 
       @wsdl.request = WSDLRequest.new(@globals).build
     end
