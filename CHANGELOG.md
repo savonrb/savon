@@ -1,4 +1,4 @@
-### master
+### 2.2.0 (2013-04-21)
 
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.
