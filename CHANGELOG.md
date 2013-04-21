@@ -1,5 +1,8 @@
 ## master
 
+* Fix: [#21](https://github.com/savonrb/wasabi/issues/21) when the Resolver gets an
+  erroneous response (such as a 404), we now raise a more useful HTTPError.
+
 * Fix: [#23](https://github.com/savonrb/wasabi/issues/23) ignore extension base elements
   defined in imports.
 
