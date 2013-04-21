@@ -1,5 +1,8 @@
 ## master
 
+* Feature: [#22](https://github.com/savonrb/wasabi/issues/22) added `Wasabi::Document#service_name`
+  to return the name of the SOAP service. Original issue: [savonrb/savon#408](https://github.com/savonrb/savon/pull/408).
+
 * Fix: [#21](https://github.com/savonrb/wasabi/issues/21) when the Resolver gets an
   erroneous response (such as a 404), we now raise a more useful HTTPError.
 
@@ -16,7 +19,7 @@
   finding the correct SOAP input tag and namespace identifier fails when portTypes
   are imported, since imports are currently not supported.
 
-  The bug was introduced in v2.2.0 by [583cf6](https://github.com/rubiii/wasabi/commit/583cf658f1953411a7a7a4c22923fa0a046c8d6d).
+  The bug was introduced in v2.2.0 by [583cf6](https://github.com/rubiii/wasabi/commit/583cf658f1953411a7a7a4c22923fa0a046c8d6d)
 
 * Refactoring: Removed `Object#blank?` core extension.
 
