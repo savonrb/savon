@@ -77,11 +77,11 @@ module Wasabi
     end
 
     # Returns the service name.
-    def servicename
-      @servicename ||= parser.servicename
+    def service_name
+      @service_name ||= parser.service_name
     end
 
-    attr_writer :servicename
+    attr_writer :service_name
 
     def type_namespaces
       @type_namespaces ||= begin

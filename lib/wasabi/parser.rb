@@ -14,7 +14,7 @@ module Wasabi
       self.document = document
       self.operations = {}
       self.namespaces = {}
-      self.servicename = ''
+      self.service_name = ''
       self.types = {}
       self.deferred_types = []
       self.element_form_default = :unqualified
@@ -42,7 +42,7 @@ module Wasabi
     attr_accessor :endpoint
 
     # Returns the SOAP Service Name
-    attr_accessor :servicename
+    attr_accessor :service_name
 
     # Returns the elementFormDefault value.
     attr_accessor :element_form_default
@@ -50,7 +50,7 @@ module Wasabi
     def parse
       parse_namespaces
       parse_endpoint
-      parse_servicename
+      parse_service_name
       parse_operations
       parse_types
       parse_deferred_types
@@ -80,9 +80,9 @@ module Wasabi
       end
     end
 
-    def parse_servicename
-      servicename = at_xpath("wsdl:definitions/@name")
-      @servicename = servicename.to_s if servicename
+    def parse_service_name
+      service_name = at_xpath("wsdl:definitions/@name")
+      @service_name = service_name.to_s if service_name
     end
 
     def parse_operations
