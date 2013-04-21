@@ -14,6 +14,7 @@ module Wasabi
       self.document = document
       self.operations = {}
       self.namespaces = {}
+      self.servicename = ''
       self.types = {}
       self.deferred_types = []
       self.element_form_default = :unqualified
@@ -40,12 +41,16 @@ module Wasabi
     # Returns the SOAP endpoint.
     attr_accessor :endpoint
 
+    # Returns the SOAP Service Name
+    attr_accessor :servicename
+
     # Returns the elementFormDefault value.
     attr_accessor :element_form_default
 
     def parse
       parse_namespaces
       parse_endpoint
+      parse_servicename
       parse_operations
       parse_types
       parse_deferred_types
@@ -73,6 +78,11 @@ module Wasabi
       rescue URI::InvalidURIError
         @endpoint = nil
       end
+    end
+
+    def parse_servicename
+      servicename = at_xpath("wsdl:definitions/@name")
+      @servicename = servicename.to_s if servicename
     end
 
     def parse_operations
