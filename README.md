@@ -8,6 +8,7 @@ Heavy metal SOAP client
 [![Build Status](https://secure.travis-ci.org/savonrb/savon.png)](http://travis-ci.org/savonrb/savon)
 [![Gem Version](https://badge.fury.io/rb/savon.png)](http://badge.fury.io/rb/savon)
 [![Code Climate](https://codeclimate.com/github/savonrb/savon.png)](https://codeclimate.com/github/savonrb/savon)
+[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.png?branch=master)](https://coveralls.io/r/savonrb/savon)
 
 
 ## Installation
