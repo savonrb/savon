@@ -55,4 +55,4 @@ Please make sure to read the documentation for your version:
 * [Version 1](http://savonrb.com)
 
 And if you find any problems with it or if you think something's missing,  
-feel free to [help out and improve the documentation](https://github.com/savonrb/savonrb.com).
+feel free to [help out and improve the documentation](https://github.com/savonrb/savon/tree/master/docs).
