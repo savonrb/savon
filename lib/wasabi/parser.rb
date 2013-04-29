@@ -54,6 +54,9 @@ module Wasabi
       parse_namespaces
       parse_endpoint
       parse_service_name
+      parse_messages
+      parse_port_types
+      parse_port_type_operations
       parse_operations
       parse_types
       parse_deferred_types
@@ -88,6 +91,25 @@ module Wasabi
     def parse_service_name
       service_name = document.root['name']
       @service_name = service_name.to_s if service_name
+    end
+
+    def parse_messages
+      messages = document.root.element_children.select { |node| node.name == 'message' }
+      @messages = Hash[messages.map { |node| [node['name'], node] }]
+    end
+
+    def parse_port_types
+      port_types = document.root.element_children.select { |node| node.name == 'portType' }
+      @port_types = Hash[port_types.map { |node| [node['name'], node] }]
+    end
+
+    def parse_port_type_operations
+      @port_type_operations = {}
+
+      @port_types.each do |port_type_name, port_type|
+        operations = port_type.element_children.select { |node| node.name == 'operation' }
+        @port_type_operations[port_type_name] = Hash[operations.map { |node| [node['name'], node] }]
+      end
     end
 
     def parse_operations
@@ -159,42 +181,15 @@ module Wasabi
       deferred_types.each(&:call)
     end
 
-    def messages
-      @messages ||= begin
-        messages = document.root.element_children.select { |node| node.name == 'message' }
-        Hash[messages.map { |node| [node['name'], node] }]
-      end
-    end
-
-    def port_types
-      @port_types ||= begin
-        port_types = document.root.element_children.select { |node| node.name == 'portType' }
-        Hash[port_types.map { |node| [node['name'], node] }]
-      end
-    end
-
-    def port_type_operations(port_type_name, operation_name)
-      @port_type_operations ||= {}
-
-      @port_type_operations[port_type_name] ||= begin
-        port_type = port_types[port_type_name]
-        return unless port_type
-
-        operations = port_type.element_children.select { |node| node.name == 'operation' }
-
-        Hash[operations.map { |node| [node['name'], node] }]
-      end
-
-      @port_type_operations[port_type_name][operation_name]
-    end
-
     def input_for(operation)
       operation_name = operation["name"]
 
       # Look up the input by walking up to portType, then up to the message.
 
       binding_type = operation.parent['type'].to_s.split(':').last
-      port_type_operation = port_type_operations(binding_type, operation_name)
+      if @port_type_operations[binding_type]
+        port_type_operation = @port_type_operations[binding_type][operation_name]
+      end
 
       port_type_input = port_type_operation && port_type_operation.element_children.find { |node| node.name == 'input' }
 
@@ -206,7 +201,7 @@ module Wasabi
         message_ns_id, message_type = nil
 
         # TODO: Support multiple 'part' elements in the message.
-        message = messages[port_message_type]
+        message = @messages[port_message_type]
         port_message_part = message.element_children.find { |node| node.name == 'part' }
 
         if port_message_part
