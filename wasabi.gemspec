@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Wasabi::VERSION
   s.authors     = ["Daniel Harrington"]
   s.email       = ["me@rubiii.com"]
-  s.homepage    = "https://github.com/rubiii/#{s.name}"
+  s.homepage    = "https://github.com/savonrb/#{s.name}"
   s.summary     = "A simple WSDL parser"
   s.description = s.summary
 
