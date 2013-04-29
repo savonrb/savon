@@ -1,5 +1,4 @@
 require "uri"
-require "wasabi/xpath_helper"
 require "wasabi/core_ext/string"
 
 module Wasabi
@@ -8,7 +7,11 @@ module Wasabi
   #
   # Parses WSDL documents and remembers their important parts.
   class Parser
-    include XPathHelper
+
+    XSD      = "http://www.w3.org/2001/XMLSchema"
+    WSDL     = "http://schemas.xmlsoap.org/wsdl/"
+    SOAP_1_1 = "http://schemas.xmlsoap.org/wsdl/soap/"
+    SOAP_1_2 = "http://schemas.xmlsoap.org/wsdl/soap12/"
 
     def initialize(document)
       self.document = document
@@ -71,8 +74,8 @@ module Wasabi
 
     def parse_endpoint
       if service_node = service
-        endpoint = at_xpath(service_node, ".//soap11:address/@location")
-        endpoint ||= at_xpath(service_node, ".//soap12:address/@location")
+        endpoint = service_node.at_xpath(".//soap11:address/@location", 'soap11' => SOAP_1_1)
+        endpoint ||= service_node.at_xpath(service_node, ".//soap12:address/@location", 'soap12' => SOAP_1_2)
       end
 
       begin
@@ -83,12 +86,12 @@ module Wasabi
     end
 
     def parse_service_name
-      service_name = at_xpath("wsdl:definitions/@name")
+      service_name = document.root['name']
       @service_name = service_name.to_s if service_name
     end
 
     def parse_operations
-      operations = xpath("wsdl:definitions/wsdl:binding/wsdl:operation")
+      operations = document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => WSDL)
       operations.each do |operation|
         name = operation.attribute("name").to_s
 
@@ -120,7 +123,7 @@ module Wasabi
 
           case node.name
           when 'element'
-            process_type namespace, at_xpath(node, './xs:complexType'), node['name'].to_s
+            process_type namespace, node.at_xpath('./xs:complexType', 'xs' => XSD), node['name'].to_s
           when 'complexType'
             process_type namespace, node, node['name'].to_s
           end
@@ -132,27 +135,22 @@ module Wasabi
       return unless type
       @types[name] ||= { :namespace => namespace }
 
-      xpath(type, "./xs:sequence/xs:element").
+      type.xpath("./xs:sequence/xs:element", 'xs' => XSD).
         each { |inner| @types[name][inner.attribute("name").to_s] = { :type => inner.attribute("type").to_s } }
 
-      type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element",
-        "xs" => "http://www.w3.org/2001/XMLSchema"
-      ).each do |inner_element|
+      type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => XSD).each do |inner_element|
         @types[name][inner_element.attribute('name').to_s] = {
           :type => inner_element.attribute('type').to_s
         }
       end
 
-      type.xpath('./xs:complexContent/xs:extension[@base]',
-        "xs" => "http://www.w3.org/2001/XMLSchema"
-      ).each do |inherits|
+      type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => XSD).each do |inherits|
         base = inherits.attribute('base').value.match(/\w+$/).to_s
+
         if @types[base]
           @types[name].merge! @types[base]
         else
-          deferred_types << Proc.new {
-            @types[name].merge! @types[base] if @types[base]
-          }
+          deferred_types << Proc.new { @types[name].merge! @types[base] if @types[base] }
         end
       end
     end
