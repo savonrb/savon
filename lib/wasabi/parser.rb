@@ -57,10 +57,10 @@ module Wasabi
     end
 
     def parse_namespaces
-      element_form_default = at_xpath("wsdl:definitions/wsdl:types/xs:schema/@elementFormDefault")
+      element_form_default = schemas.first && schemas.first['elementFormDefault']
       @element_form_default = element_form_default.to_s.to_sym if element_form_default
 
-      namespace = at_xpath("wsdl:definitions/@targetNamespace")
+      namespace = document.root['targetNamespace']
       @namespace = namespace.to_s if namespace
 
       @namespaces = @document.namespaces.inject({}) do |memo, (key, value)|
@@ -70,8 +70,10 @@ module Wasabi
     end
 
     def parse_endpoint
-      endpoint = at_xpath("wsdl:definitions/wsdl:service//soap11:address/@location")
-      endpoint ||= at_xpath("wsdl:definitions/wsdl:service//soap12:address/@location")
+      if service_node = service
+        endpoint = at_xpath(service_node, ".//soap11:address/@location")
+        endpoint ||= at_xpath(service_node, ".//soap12:address/@location")
+      end
 
       begin
         @endpoint = URI(URI.escape(endpoint.to_s)) if endpoint
@@ -90,8 +92,9 @@ module Wasabi
       operations.each do |operation|
         name = operation.attribute("name").to_s
 
-        soap_action = at_xpath(operation, ".//soap11:operation/@soapAction")
-        soap_action ||= at_xpath(operation, ".//soap12:operation/@soapAction")
+        # TODO: check for soap namespace?
+        soap_operation = operation.element_children.find { |node| node.name == 'operation' }
+        soap_action = soap_operation['soapAction'] if soap_operation
 
         if soap_action
           soap_action = soap_action.to_s
@@ -109,16 +112,25 @@ module Wasabi
     end
 
     def parse_types
-      xpath("wsdl:definitions/wsdl:types/xs:schema/xs:element[@name]").
-        each { |type| process_type(at_xpath(type, "./xs:complexType"), type.attribute("name").to_s) }
+      schemas.each do |schema|
+        schema_namespace = schema['targetNamespace']
 
-      xpath("wsdl:definitions/wsdl:types/xs:schema/xs:complexType[@name]").
-        each { |type| process_type(type, type.attribute("name").to_s) }
+        schema.element_children.each do |node|
+          namespace = schema_namespace || @namespace
+
+          case node.name
+          when 'element'
+            process_type namespace, at_xpath(node, './xs:complexType'), node['name'].to_s
+          when 'complexType'
+            process_type namespace, node, node['name'].to_s
+          end
+        end
+      end
     end
 
-    def process_type(type, name)
+    def process_type(namespace, type, name)
       return unless type
-      @types[name] ||= { :namespace => find_namespace(type) }
+      @types[name] ||= { :namespace => namespace }
 
       xpath(type, "./xs:sequence/xs:element").
         each { |inner| @types[name][inner.attribute("name").to_s] = { :type => inner.attribute("type").to_s } }
@@ -149,9 +161,33 @@ module Wasabi
       deferred_types.each(&:call)
     end
 
-    def find_namespace(type)
-      schema_namespace = at_xpath(type, "ancestor::xs:schema/@targetNamespace")
-      schema_namespace ? schema_namespace.to_s : @namespace
+    def messages
+      @messages ||= begin
+        messages = document.root.element_children.select { |node| node.name == 'message' }
+        Hash[messages.map { |node| [node['name'], node] }]
+      end
+    end
+
+    def port_types
+      @port_types ||= begin
+        port_types = document.root.element_children.select { |node| node.name == 'portType' }
+        Hash[port_types.map { |node| [node['name'], node] }]
+      end
+    end
+
+    def port_type_operations(port_type_name, operation_name)
+      @port_type_operations ||= {}
+
+      @port_type_operations[port_type_name] ||= begin
+        port_type = port_types[port_type_name]
+        return unless port_type
+
+        operations = port_type.element_children.select { |node| node.name == 'operation' }
+
+        Hash[operations.map { |node| [node['name'], node] }]
+      end
+
+      @port_type_operations[port_type_name][operation_name]
     end
 
     def input_for(operation)
@@ -159,8 +195,10 @@ module Wasabi
 
       # Look up the input by walking up to portType, then up to the message.
 
-      binding_type = at_xpath(operation, "../@type").to_s.split(':').last
-      port_type_input = at_xpath(operation, "../../wsdl:portType[@name='#{binding_type}']/wsdl:operation[@name='#{operation_name}']/wsdl:input")
+      binding_type = operation.parent['type'].to_s.split(':').last
+      port_type_operation = port_type_operations(binding_type, operation_name)
+
+      port_type_input = port_type_operation && port_type_operation.element_children.find { |node| node.name == 'input' }
 
       # TODO: Stupid fix for missing support for imports.
       # Sometimes portTypes are actually included in a separate WSDL.
@@ -170,7 +208,10 @@ module Wasabi
         message_ns_id, message_type = nil
 
         # TODO: Support multiple 'part' elements in the message.
-        if (port_message_part = at_xpath(port_type_input, "../../../wsdl:message[@name='#{port_message_type}']/wsdl:part[1]"))
+        message = messages[port_message_type]
+        port_message_part = message.element_children.find { |node| node.name == 'part' }
+
+        if port_message_part
           if (port_message_part_element = port_message_part.attribute("element"))
             message_ns_id, message_type = port_message_part_element.to_s.split(':')
           end
@@ -185,6 +226,31 @@ module Wasabi
       else
         [nil, operation_name]
       end
+    end
+
+    def schemas
+      types = section('types').first
+      types ? types.element_children : []
+    end
+
+    def service
+      services = section('service')
+      services.first if services  # service nodes could be imported?
+    end
+
+    def section(section_name)
+      sections[section_name] || []
+    end
+
+    def sections
+      return @sections if @sections
+
+      sections = {}
+      document.root.element_children.each do |node|
+        (sections[node.name] ||= []) << node
+      end
+
+      @sections = sections
     end
 
   end
