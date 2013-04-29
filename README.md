@@ -1,11 +1,14 @@
-Wasabi [![Build Status](https://secure.travis-ci.org/rubiii/wasabi.png)](http://travis-ci.org/rubiii/wasabi)
-=====
+# Wasabi
 
 A simple WSDL parser.
 
+[![Build Status](https://secure.travis-ci.org/savonrb/wasabi.png)](http://travis-ci.org/savonrb/wasabi)
+[![Gem Version](https://badge.fury.io/rb/wasabi.png)](http://badge.fury.io/rb/wasabi)
+[![Code Climate](https://codeclimate.com/github/savonrb/wasabi.png)](https://codeclimate.com/github/savonrb/wasabi)
+[![Coverage Status](https://coveralls.io/repos/savonrb/wasabi/badge.png?branch=master)](https://coveralls.io/r/savonrb/wasabi)
 
-Installation
-------------
+
+## Installation
 
 Wasabi is available through [Rubygems](http://rubygems.org/gems/wasabi) and can be installed via:
 
@@ -14,8 +17,7 @@ $ gem install wasabi
 ```
 
 
-Getting started
----------------
+## Getting started
 
 ``` ruby
 document = Wasabi.document File.read("some.wsdl")
