@@ -1,4 +1,8 @@
 source "http://rubygems.org"
 gemspec
 
-gem "method_profiler", :require => false
+group :test do
+  gem "simplecov",       :require => false
+  gem "method_profiler", :require => false
+  gem "coveralls",       :require => false
+end
