@@ -145,7 +145,8 @@ module Wasabi
 
           case node.name
           when 'element'
-            process_type namespace, node.at_xpath('./xs:complexType', 'xs' => XSD), node['name'].to_s
+            complex_type = node.at_xpath('./xs:complexType', 'xs' => XSD)
+            process_type namespace, complex_type, node['name'].to_s if complex_type
           when 'complexType'
             process_type namespace, node, node['name'].to_s
           end
@@ -154,7 +155,6 @@ module Wasabi
     end
 
     def process_type(namespace, type, name)
-      return unless type
       @types[name] ||= { :namespace => namespace }
 
       type.xpath("./xs:sequence/xs:element", 'xs' => XSD).
