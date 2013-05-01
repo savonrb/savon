@@ -1,3 +1,7 @@
+## master
+
+* Improvement: [#7](https://github.com/savonrb/wasabi/issues/7) Major speed improvements.
+
 ## 3.1.0 (2013-04-21)
 
 * Feature: [#22](https://github.com/savonrb/wasabi/issues/22) added `Wasabi::Document#service_name`
