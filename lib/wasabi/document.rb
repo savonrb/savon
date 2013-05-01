@@ -83,25 +83,26 @@ module Wasabi
 
     attr_writer :service_name
 
+    # XXX: legacy interface. change savon to use the new types interface.
     def type_namespaces
       @type_namespaces ||= begin
         namespaces = []
-        parser.types.each do |type, info|
-          namespaces << [[type], info[:namespace]]
-          (info.keys - [:namespace]).each { |field| namespaces << [[type, field], info[:namespace]] }
+        parser.types.each do |name, type|
+          namespaces << [[name], type.namespace]
+          type.children.each { |child| namespaces << [[name, child[:name]], type.namespace] }
         end if document
         namespaces
       end
     end
 
+    # XXX: legacy interface. change savon to use the new types interface.
     def type_definitions
       @type_definitions ||= begin
         result = []
-        parser.types.each do |type, info|
-          (info.keys - [:namespace]).each do |field|
-            field_type = info[field][:type]
-            tag, namespace = field_type.split(":").reverse
-            result << [[type, field], tag] if user_defined(namespace)
+        parser.types.each do |name, type|
+          type.children.each do |child|
+            tag, nsid = child[:type].split(":").reverse
+            result << [[name, child[:name]], tag] if user_defined(nsid)
           end
         end if document
         result

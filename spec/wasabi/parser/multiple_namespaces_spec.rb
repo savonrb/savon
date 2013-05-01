@@ -16,19 +16,22 @@ describe Wasabi::Parser do
     end
 
     it "records the namespace for each type" do
-      subject.types["Save"][:namespace].should == "http://example.com/actions"
+      subject.types["Save"].namespace.should == "http://example.com/actions"
     end
 
     it "records the fields under a type" do
-      subject.types["Save"].keys.should =~ ["article", :namespace]
+      subject.types["Save"].children.should == [{ :name => "article", :type => "article:Article" }]
     end
 
     it "records multiple fields when there are more than one" do
-      subject.types["Article"].keys.should =~ ["Title", "Author", :namespace]
+      subject.types["Article"].children.should == [
+        { :name => "Author", :type => "s:string" },
+        { :name => "Title",  :type => "s:string" }
+      ]
     end
 
     it "records the type of a field" do
-      subject.types["Save"]["article"][:type].should == "article:Article"
+      subject.types["Save"].children.first[:type].should == "article:Article"
       subject.namespaces["article"].should == "http://example.com/article"
     end
 

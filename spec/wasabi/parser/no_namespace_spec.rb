@@ -11,12 +11,17 @@ describe Wasabi::Parser do
 
     let(:xml) { fixture(:no_namespace).read }
 
-    it "lists the types" do
-      subject.types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
+    it "lists the elements" do
+      subject.elements.keys.sort.should == []
     end
 
-    it "ignores xsd:all" do
-      subject.types["MpUser"].keys.should == [:namespace]
+    it "lists the complexTypes" do
+      subject.complex_types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
+    end
+
+    # TODO: this seems to document a lacking feature.
+    it "ignores xsd:all types" do
+      subject.types["MpUser"].children.should be_empty
     end
 
   end

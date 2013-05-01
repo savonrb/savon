@@ -1,4 +1,5 @@
 require "uri"
+require "wasabi/type"
 require "wasabi/core_ext/string"
 
 module Wasabi
@@ -13,14 +14,15 @@ module Wasabi
     SOAP_1_1 = "http://schemas.xmlsoap.org/wsdl/soap/"
     SOAP_1_2 = "http://schemas.xmlsoap.org/wsdl/soap12/"
 
+    # TODO: parse simple types as well
+    SCHEMA_CHILD_TYPES = %w[element complexType] # simpleType]
+
     def initialize(document)
-      self.document = document
-      self.operations = {}
-      self.namespaces = {}
-      self.service_name = ''
-      self.types = {}
-      self.deferred_types = []
-      self.element_form_default = :unqualified
+      @document = document
+      @operations = {}
+      @namespaces = {}
+      @service_name = ''
+      @element_form_default = :unqualified
     end
 
     # Returns the Nokogiri document.
@@ -35,11 +37,11 @@ module Wasabi
     # Returns the SOAP operations.
     attr_accessor :operations
 
-    # Returns a map from a type name to a Hash with type information.
-    attr_accessor :types
+    # Returns a map from a type name to an element Type object.
+    attr_accessor :elements
 
-    # Returns a map of deferred type Proc objects.
-    attr_accessor :deferred_types
+    # Returns a map from a type name to a complexType Type object.
+    attr_accessor :complex_types
 
     # Returns the SOAP endpoint.
     attr_accessor :endpoint
@@ -50,6 +52,11 @@ module Wasabi
     # Returns the elementFormDefault value.
     attr_accessor :element_form_default
 
+    # TODO: this is bad, but it's how this already worked before.
+    def types
+      @types ||= @elements.merge(@complex_types)
+    end
+
     def parse
       parse_namespaces
       parse_endpoint
@@ -59,7 +66,6 @@ module Wasabi
       parse_port_type_operations
       parse_operations
       parse_types
-      parse_deferred_types
     end
 
     def parse_namespaces
@@ -137,48 +143,26 @@ module Wasabi
     end
 
     def parse_types
+      @elements = {}
+      @complex_types = {}
+
       schemas.each do |schema|
         schema_namespace = schema['targetNamespace']
 
         schema.element_children.each do |node|
+          next unless SCHEMA_CHILD_TYPES.include? node.name
+
           namespace = schema_namespace || @namespace
+          type_name = node['name']
+
+          type = Type.new(self, namespace, node)
 
           case node.name
-          when 'element'
-            complex_type = node.at_xpath('./xs:complexType', 'xs' => XSD)
-            process_type namespace, complex_type, node['name'].to_s if complex_type
-          when 'complexType'
-            process_type namespace, node, node['name'].to_s
+          when 'element'     then @elements[type_name] = type
+          when 'complexType' then @complex_types[type_name] = type
           end
         end
       end
-    end
-
-    def process_type(namespace, type, name)
-      @types[name] ||= { :namespace => namespace }
-
-      type.xpath("./xs:sequence/xs:element", 'xs' => XSD).
-        each { |inner| @types[name][inner.attribute("name").to_s] = { :type => inner.attribute("type").to_s } }
-
-      type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => XSD).each do |inner_element|
-        @types[name][inner_element.attribute('name').to_s] = {
-          :type => inner_element.attribute('type').to_s
-        }
-      end
-
-      type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => XSD).each do |inherits|
-        base = inherits.attribute('base').value.match(/\w+$/).to_s
-
-        if @types[base]
-          @types[name].merge! @types[base]
-        else
-          deferred_types << Proc.new { @types[name].merge! @types[base] if @types[base] }
-        end
-      end
-    end
-
-    def parse_deferred_types
-      deferred_types.each(&:call)
     end
 
     def input_for(operation)

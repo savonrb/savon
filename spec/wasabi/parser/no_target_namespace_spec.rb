@@ -29,7 +29,7 @@ describe Wasabi::Parser do
     # but I suppose we should do something reasonable if they do.
 
     it "defaults to the target namespace from xs:definitions" do
-      subject.types["Save"][:namespace].should == "http://def.example.com"
+      subject.types["Save"].namespace.should == "http://def.example.com"
     end
 
   end
