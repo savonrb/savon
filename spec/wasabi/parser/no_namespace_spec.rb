@@ -19,10 +19,5 @@ describe Wasabi::Parser do
       subject.complex_types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
     end
 
-    # TODO: this seems to document a lacking feature.
-    it "ignores xsd:all types" do
-      subject.types["MpUser"].children.should be_empty
-    end
-
   end
 end
