@@ -79,6 +79,8 @@ module Wasabi
         memo[key.sub("xmlns:", "")] = value
         memo
       end
+
+      @namespaces_by_value = @namespaces.invert
     end
 
     def parse_endpoint
@@ -148,14 +150,16 @@ module Wasabi
 
       schemas.each do |schema|
         schema_namespace = schema['targetNamespace']
+        element_form_default = schema['elementFormDefault']
 
         schema.element_children.each do |node|
           next unless SCHEMA_CHILD_TYPES.include? node.name
 
           namespace = schema_namespace || @namespace
+          nsid = @namespaces_by_value[namespace]
           type_name = node['name']
 
-          type = Type.new(self, namespace, node)
+          type = Type.new(self, namespace, nsid, element_form_default, node)
 
           case node.name
           when 'element'     then @elements[type_name] = type

@@ -1,16 +1,29 @@
 module Wasabi
   class Type
 
-    def initialize(parser, namespace, node)
-      @parser    = parser
+    def initialize(parser, namespace, nsid, element_form_default, node)
+      @parser = parser
       @namespace = namespace
-      @node      = node
+      @nsid = nsid
+      @element_form_default = element_form_default
+      @node = node
+
+      @prefix, @name = qname(node['name'])
     end
+
+    attr_reader :name, :prefix
 
     attr_reader :namespace
 
     def type
       @node.name
+    end
+
+    def qname(qname)
+      local, nsid = qname.to_s.split(':').reverse
+      nsid ||= @nsid
+
+      [nsid, local]
     end
 
     def children
@@ -34,15 +47,15 @@ module Wasabi
       children = []
 
       complex_type.xpath("./xs:all/xs:element", 'xs' => Parser::XSD).each do |element|
-        children << { :name => element["name"].to_s, :type => element["type"].to_s }
+        children << parse_element(element)
       end
 
       complex_type.xpath("./xs:sequence/xs:element", 'xs' => Parser::XSD).each do |element|
-        children << { :name => element["name"].to_s, :type => element["type"].to_s }
+        children << parse_element(element)
       end
 
       complex_type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => Parser::XSD).each do |element|
-        children << { :name => element["name"].to_s, :type => element["type"].to_s }
+        children << parse_element(element)
       end
 
       complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Parser::XSD).each do |extension|
@@ -53,6 +66,19 @@ module Wasabi
       end
 
       children
+    end
+
+    def parse_element(element)
+      name = element['name'].to_s
+      type = element['type'].to_s
+
+      form = element['form'] || @element_form_default
+      qualified = form == 'qualified'
+
+      max_occurs = element['maxOccurs'].to_s
+      singular = max_occurs.empty? || max_occurs == '1'
+
+      { :name => name, :type => type, :qualified => qualified, :singular => singular }
     end
 
   end

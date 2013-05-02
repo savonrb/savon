@@ -30,16 +30,14 @@ describe Wasabi::Parser do
     mp_user = parser.complex_types['MpUser']
 
     expect(mp_user).to be_a(Wasabi::Type)
-    expect(mp_user.children).to eq([
-      { :name => 'avatar_thumb_url', :type => 'xsd:string' },
-      { :name => 'speciality',       :type => 'xsd:string' },
-      { :name => 'avatar_icon_url',  :type => 'xsd:string' },
-      { :name => 'firstname',        :type => 'xsd:string' },
-      { :name => 'city',             :type => 'xsd:string' },
-      { :name => 'mp_id',            :type => 'xsd:int'    },
-      { :name => 'lastname',         :type => 'xsd:string' },
-      { :name => 'login',            :type => 'xsd:string' }
-    ])
+    expect(mp_user).to have(8).children
+
+    expect(mp_user.children).to include(
+      { :name => 'mp_id',     :type => 'xsd:int',    :qualified => false, :singular => true },
+      { :name => 'firstname', :type => 'xsd:string', :qualified => false, :singular => true },
+      { :name => 'lastname',  :type => 'xsd:string', :qualified => false, :singular => true },
+      { :name => 'login',     :type => 'xsd:string', :qualified => false, :singular => true }
+    )
   end
 
   def parse(xml)
