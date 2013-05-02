@@ -21,14 +21,14 @@ describe Wasabi::Parser do
 
     it "records the fields under a type" do
       subject.types["Save"].children.should == [
-        { :name => "article", :type => "article:Article", :qualified => true, :singular => true }
+        { :name => "article", :type => "article:Article", :simple_type => false, :qualified => true, :singular => true }
       ]
     end
 
     it "records multiple fields when there are more than one" do
       subject.types["Article"].children.should == [
-        { :name => "Author", :type => "s:string", :qualified => true, :singular => true },
-        { :name => "Title",  :type => "s:string", :qualified => true, :singular => true }
+        { :name => "Author", :type => "s:string", :simple_type => true, :qualified => true, :singular => true },
+        { :name => "Title",  :type => "s:string", :simple_type => true, :qualified => true, :singular => true }
       ]
     end
 

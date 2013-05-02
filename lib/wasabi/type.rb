@@ -69,8 +69,18 @@ module Wasabi
     end
 
     def parse_element(element)
-      name = element['name'].to_s
-      type = element['type'].to_s
+      name = element['name']
+      type = element['type']
+
+      local, nsid = type.split(':').reverse
+
+      if nsid
+        namespace = @parser.namespaces.fetch(nsid)
+        simple_type = namespace == Parser::XSD
+      else
+        # assume that elements with a @type qname lacking an nsid to reference the xml schema.
+        simple_type = true
+      end
 
       form = element['form'] || @element_form_default
       qualified = form == 'qualified'
@@ -78,7 +88,8 @@ module Wasabi
       max_occurs = element['maxOccurs'].to_s
       singular = max_occurs.empty? || max_occurs == '1'
 
-      { :name => name, :type => type, :qualified => qualified, :singular => singular }
+      { :name => name, :type => type,
+        :simple_type => simple_type, :qualified => qualified, :singular => singular }
     end
 
   end

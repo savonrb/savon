@@ -25,11 +25,47 @@ describe Wasabi::Parser do
     expect(mp_user).to have(8).children
 
     expect(mp_user.children).to include(
-      { :name => 'mp_id',     :type => 'xsd:int',    :qualified => false, :singular => true },
-      { :name => 'firstname', :type => 'xsd:string', :qualified => false, :singular => true },
-      { :name => 'lastname',  :type => 'xsd:string', :qualified => false, :singular => true },
-      { :name => 'login',     :type => 'xsd:string', :qualified => false, :singular => true }
+      { :name => 'mp_id',     :type => 'xs:int',    :simple_type => true, :qualified => false, :singular => true },
+      { :name => 'firstname', :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true },
+      { :name => 'lastname',  :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true },
+      { :name => 'login',     :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true }
     )
+  end
+
+  it 'determines whether elements are simple types by their namespace' do
+    parser = parse('
+      <xs:element name="TermOfPayment">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="1" name="termOfPaymentHandle" type="tns:TermOfPaymentHandle" />
+            <xs:element minOccurs="1" maxOccurs="1" name="value" nillable="true" type="xs:decimal" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    ')
+
+    expect(parser.elements).to include('TermOfPayment')
+    terms = parser.elements['TermOfPayment']
+
+    expect(terms).to be_a(Wasabi::Type)
+    expect(terms).to have(2).children
+
+    expect(terms.children).to eq([
+      {
+        :name        => 'termOfPaymentHandle',
+        :type        => 'tns:TermOfPaymentHandle',
+        :simple_type => false,
+        :qualified   => false,
+        :singular    => true
+      },
+      {
+        :name        => 'value',
+        :type        => 'xs:decimal',
+        :simple_type => true,
+        :qualified   => false,
+        :singular    => true
+      }
+    ])
   end
 
   def parse(types)
