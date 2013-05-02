@@ -83,6 +83,10 @@ module Wasabi
 
     attr_writer :service_name
 
+    def namespaces
+      parser.namespaces
+    end
+
     # XXX: legacy interface. change savon to use the new types interface.
     def type_namespaces
       @type_namespaces ||= begin
