@@ -4,26 +4,18 @@ describe Wasabi::Parser do
 
   it 'knows xs:all types' do
     parser = parse('
-      <definitions name="Api" targetNamespace="urn:ActionWebService"
-          xmlns="http://schemas.xmlsoap.org/wsdl/"
-          xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-        <types>
-          <xsd:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
-            <xsd:complexType name="MpUser">
-              <xsd:all>
-                <xsd:element name="avatar_thumb_url" type="xsd:string"/>
-                <xsd:element name="speciality" type="xsd:string"/>
-                <xsd:element name="avatar_icon_url" type="xsd:string"/>
-                <xsd:element name="firstname" type="xsd:string"/>
-                <xsd:element name="city" type="xsd:string"/>
-                <xsd:element name="mp_id" type="xsd:int"/>
-                <xsd:element name="lastname" type="xsd:string"/>
-                <xsd:element name="login" type="xsd:string"/>
-              </xsd:all>
-            </xsd:complexType>
-          </xsd:schema>
-        </types>
-      </definitions>
+      <xs:complexType name="MpUser">
+        <xs:all>
+          <xs:element name="avatar_thumb_url" type="xs:string"/>
+          <xs:element name="speciality" type="xs:string"/>
+          <xs:element name="avatar_icon_url" type="xs:string"/>
+          <xs:element name="firstname" type="xs:string"/>
+          <xs:element name="city" type="xs:string"/>
+          <xs:element name="mp_id" type="xs:int"/>
+          <xs:element name="lastname" type="xs:string"/>
+          <xs:element name="login" type="xs:string"/>
+        </xs:all>
+      </xs:complexType>
     ')
 
     expect(parser.complex_types).to include('MpUser')
@@ -40,8 +32,19 @@ describe Wasabi::Parser do
     )
   end
 
-  def parse(xml)
-    parser = Wasabi::Parser.new Nokogiri.XML(xml)
+  def parse(types)
+    wsdl = %'<definitions name="Api" targetNamespace="urn:ActionWebService"
+                 xmlns="http://schemas.xmlsoap.org/wsdl/"
+                 xmlns:tns="urn:ActionWebService"
+                 xmlns:xs="http://www.w3.org/2001/XMLSchema">
+               <types>
+                 <xs:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
+                   #{types}
+                 </xs:schema>
+               </types>
+             </definitions>'
+
+    parser = Wasabi::Parser.new Nokogiri.XML(wsdl)
     parser.parse
     parser
   end
