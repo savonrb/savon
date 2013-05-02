@@ -1,5 +1,13 @@
 ### 2.2.0 (2013-04-21)
 
+* Feature: Adds the ability to mock the response object from Savon without sending an actual request.
+  ```
+    include Savon::SpecHelper
+    fixture = File.read("spec/fixtures/response/authentication.xml")
+    response = mock_savon_response fixture
+    response.body[:key][:other_key][:etc]
+  ```
+
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.
 

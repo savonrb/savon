@@ -128,6 +128,14 @@ describe "Savon's mock interface" do
                                               "  with this message: #{message.inspect}\n" \
                                               "Received a request to the :find_user operation\n" \
                                               "  with no message.")
+                                              
+  end
+
+  it "can mock the response object returned by a soap request" do
+    fixture = File.read("spec/fixtures/response/authentication.xml")
+    response = mock_savon_response fixture
+    expect(response).to be_an_instance_of Savon::Response
+    expect(response.body).to have_key :authenticate_response
   end
 
   def new_client(globals = {})
