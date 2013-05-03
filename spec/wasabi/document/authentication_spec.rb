@@ -22,12 +22,13 @@ describe Wasabi::Document do
 
     its(:element_form_default) { should == :unqualified }
 
-    it { should have(1).operations }
+    it 'knows the operations' do
+      expect(document).to have(1).operations
 
-    its(:operations) do
-      should == {
-        :authenticate => { :input => "authenticate", :action => "authenticate", :namespace_identifier => "tns" }
-      }
+      operation = document.operations[:authenticate]
+      expect(operation.input).to eq('authenticate')
+      expect(operation.soap_action).to eq('authenticate')
+      expect(operation.nsid).to eq('tns')
     end
 
   end

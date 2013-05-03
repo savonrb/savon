@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: multiple_namespaces.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:multiple_namespaces).read }
+    subject(:document) { Wasabi::Document.new fixture(:multiple_namespaces).read }
 
     its(:namespace) { should == "http://example.com/actions" }
 
@@ -11,10 +11,13 @@ describe Wasabi::Document do
 
     its(:element_form_default) { should == :qualified }
 
-    it { should have(1).operations }
+    it 'knows the operations' do
+      expect(document).to have(1).operations
 
-    its(:operations) do
-      should == { :save => { :input => "Save", :action => "http://example.com/actions.Save", :namespace_identifier => "actions" } }
+      operation = document.operations[:save]
+      expect(operation.input).to eq('Save')
+      expect(operation.soap_action).to eq('http://example.com/actions.Save')
+      expect(operation.nsid).to eq('actions')
     end
 
     its(:type_namespaces) do

@@ -3,18 +3,24 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: two_bindings.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:two_bindings).read }
+    subject(:document) { Wasabi::Document.new fixture(:two_bindings).read }
 
     its(:element_form_default) { should == :unqualified }
 
-    it { should have(3).operations }
+    it 'knows the operations' do
+      expect(document).to have(3).operations
 
-    its(:operations) do
-      should include(
-        { :post => { :input => "Post", :action => "Post" } },
-        { :post11only => { :input => "Post11only", :action => "Post11only" } },
-        { :post12only => { :input => "Post12only", :action => "Post12only" } }
-      )
+      operation = document.operations[:post]
+      expect(operation.input).to eq('Post')
+      expect(operation.soap_action).to eq('Post')
+
+      operation = document.operations[:post11only]
+      expect(operation.input).to eq('Post11only')
+      expect(operation.soap_action).to eq('Post11only')
+
+      operation = document.operations[:post12only]
+      expect(operation.input).to eq('Post12only')
+      expect(operation.soap_action).to eq('Post12only')
     end
 
   end

@@ -1,5 +1,6 @@
 require "uri"
 require "wasabi/type"
+require "wasabi/operation"
 require "wasabi/core_ext/string"
 
 module Wasabi
@@ -147,12 +148,12 @@ module Wasabi
           action = soap_action && !soap_action.empty? ? soap_action : name
 
           # There should be a matching portType for each binding, so we will lookup the input from there.
-          namespace_id, input = input_for(operation)
+          nsid, input = input_for(operation)
 
           # Store namespace identifier so this operation can be mapped to the proper namespace.
-          @operations[name.snakecase.to_sym] = { :action => action, :input => input, :namespace_identifier => namespace_id }
+          @operations[name.snakecase.to_sym] = Operation.new(:soap_action => action, :input => input, :nsid => nsid)
         elsif !@operations[name.snakecase.to_sym]
-          @operations[name.snakecase.to_sym] = { :action => name, :input => name }
+          @operations[name.snakecase.to_sym] = Operation.new(:soap_action => name, :input => name)
         end
       end
     end

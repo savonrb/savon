@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: geotrust.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:geotrust).read }
+    subject(:document) { Wasabi::Document.new fixture(:geotrust).read }
 
     its(:namespace) { should == "http://api.geotrust.com/webtrust/query" }
 
@@ -11,13 +11,16 @@ describe Wasabi::Document do
 
     its(:element_form_default) { should == :qualified }
 
-    it { should have(2).operations }
+    it 'knows the operations' do
+      expect(document).to have(2).operations
 
-    its(:operations) do
-      should include(
-        { :get_quick_approver_list => { :input => "GetQuickApproverList", :action => "GetQuickApproverList" } },
-        { :hello => { :input => "hello", :action => "hello" } }
-      )
+      operation = document.operations[:get_quick_approver_list]
+      expect(operation.input).to eq('GetQuickApproverList')
+      expect(operation.soap_action).to eq('GetQuickApproverList')
+
+      operation = document.operations[:hello]
+      expect(operation.input).to eq('hello')
+      expect(operation.soap_action).to eq('hello')
     end
 
   end

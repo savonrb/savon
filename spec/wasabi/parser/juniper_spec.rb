@@ -12,11 +12,11 @@ describe Wasabi::Parser do
     let(:xml) { fixture(:juniper).read }
 
     it 'does not blow up when an extension base element is defined in an import' do
-      request = subject.operations[:get_system_info_request]
+      operation = subject.operations[:get_system_info_request]
 
-      request[:input].should == 'GetSystemInfoRequest'
-      request[:action].should == 'urn:#GetSystemInfoRequest'
-      request[:namespace_identifier].should == 'impl'
+      operation.input.should == 'GetSystemInfoRequest'
+      operation.soap_action.should == 'urn:#GetSystemInfoRequest'
+      operation.nsid.should == 'impl'
     end
 
   end

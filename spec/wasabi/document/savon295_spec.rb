@@ -1,14 +1,16 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Wasabi::Document do
-  context "with: savon295.wsdl" do
+  context 'with: savon295.wsdl' do
 
-    subject { Wasabi::Document.new fixture(:savon295).read }
+    subject(:document) { Wasabi::Document.new fixture(:savon295).read }
 
-    its(:operations) do
-      should include(
-        { :sendsms => { :input => "sendsms", :action => "sendsms", :namespace_identifier => "tns" } }
-      )
+    it 'knows the sendsms operation' do
+      operation = document.operations[:sendsms]
+
+      expect(operation.soap_action).to eq('sendsms')
+      expect(operation.input).to eq('sendsms')
+      expect(operation.nsid).to eq('tns')
     end
 
   end

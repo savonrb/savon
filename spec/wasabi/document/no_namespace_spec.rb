@@ -3,7 +3,7 @@ require "spec_helper"
 describe Wasabi::Document do
   context "with: no_namespace.wsdl" do
 
-    subject { Wasabi::Document.new fixture(:no_namespace).read }
+    subject(:document) { Wasabi::Document.new fixture(:no_namespace).read }
 
     its(:namespace) { should == "urn:ActionWebService" }
 
@@ -11,14 +11,23 @@ describe Wasabi::Document do
 
     its(:element_form_default) { should == :unqualified }
 
-    it { should have(3).operations }
+    it 'knows the operations' do
+      expect(document).to have(3).operations
 
-    its(:operations) do
-      should include(
-        { :get_user_login_by_id => { :input => "GetUserLoginById", :action => "/api/api/GetUserLoginById", :namespace_identifier => "typens" } },
-        { :get_all_contacts => { :input => "GetAllContacts", :action => "/api/api/GetAllContacts", :namespace_identifier => "typens" } },
-        { :search_user => { :input => "SearchUser", :action => "/api/api/SearchUser", :namespace_identifier => "typens" } }
-      )
+      operation = document.operations[:get_user_login_by_id]
+      expect(operation.input).to eq('GetUserLoginById')
+      expect(operation.soap_action).to eq('/api/api/GetUserLoginById')
+      expect(operation.nsid).to eq('typens')
+
+      operation = document.operations[:get_all_contacts]
+      expect(operation.input).to eq('GetAllContacts')
+      expect(operation.soap_action).to eq('/api/api/GetAllContacts')
+      expect(operation.nsid).to eq('typens')
+
+      operation = document.operations[:search_user]
+      expect(operation.input).to eq('SearchUser')
+      expect(operation.soap_action).to eq('/api/api/SearchUser')
+      expect(operation.nsid).to eq('typens')
     end
 
   end

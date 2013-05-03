@@ -12,10 +12,10 @@ describe Wasabi::Parser do
     let(:xml) { fixture(:import_port_types).read }
 
     it "does blow up when portTypes are imported" do
-      get_customer = subject.operations[:get_customer]
+      operation = subject.operations[:get_customer]
 
-      get_customer[:input].should == "GetCustomer"
-      get_customer[:namespace_identifier].should be_nil
+      operation.input.should == "GetCustomer"
+      operation.nsid.should be_nil
     end
 
   end
