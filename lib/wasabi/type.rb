@@ -1,4 +1,21 @@
 module Wasabi
+
+  class SimpleType
+
+    def initialize(parser, node)
+      @parser = parser
+      @node = node
+    end
+
+    def type
+      first_child = @node.element_children.first
+      if first_child.name == 'restriction'
+        first_child['base']
+      end
+    end
+
+  end
+
   class Type
 
     def initialize(parser, namespace, nsid, element_form_default, node)
@@ -93,4 +110,5 @@ module Wasabi
     end
 
   end
+
 end

@@ -2,6 +2,26 @@ require 'spec_helper'
 
 describe Wasabi::Parser do
 
+  it 'knows simple types' do
+    parser = parse('
+      <xs:simpleType name="TemperatureUnit">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="degreeCelsius" />
+          <xs:enumeration value="degreeFahrenheit" />
+          <xs:enumeration value="degreeRankine" />
+          <xs:enumeration value="degreeReaumur" />
+          <xs:enumeration value="kelvin" />
+        </xs:restriction>
+      </xs:simpleType>
+    ')
+
+    expect(parser.simple_types).to include('TemperatureUnit')
+    unit = parser.simple_types['TemperatureUnit']
+
+    expect(unit).to be_a(Wasabi::SimpleType)
+    expect(unit.type).to eq('xs:string')
+  end
+
   it 'knows xs:all types' do
     parser = parse('
       <xs:complexType name="MpUser">

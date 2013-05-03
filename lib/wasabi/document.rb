@@ -83,6 +83,18 @@ module Wasabi
 
     attr_writer :service_name
 
+    def elements
+      parser.elements
+    end
+
+    def complex_types
+      parser.complex_types
+    end
+
+    def simple_types
+      parser.simple_types
+    end
+
     def namespaces
       parser.namespaces
     end

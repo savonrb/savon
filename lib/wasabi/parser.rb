@@ -14,8 +14,7 @@ module Wasabi
     SOAP_1_1 = "http://schemas.xmlsoap.org/wsdl/soap/"
     SOAP_1_2 = "http://schemas.xmlsoap.org/wsdl/soap12/"
 
-    # TODO: parse simple types as well
-    SCHEMA_CHILD_TYPES = %w[element complexType] # simpleType]
+    SCHEMA_CHILD_TYPES = %w[element complexType simpleType]
 
     def initialize(document)
       @document = document
@@ -37,11 +36,14 @@ module Wasabi
     # Returns the SOAP operations.
     attr_accessor :operations
 
-    # Returns a map from a type name to an element Type object.
+    # Returns the XML Schema elements.
     attr_accessor :elements
 
-    # Returns a map from a type name to a complexType Type object.
+    # Returns the XML Schema complexType elements.
     attr_accessor :complex_types
+
+    # Returns the XML Schema simpleType elements.
+    attr_accessor :simple_types
 
     # Returns the SOAP endpoint.
     attr_accessor :endpoint
@@ -156,8 +158,9 @@ module Wasabi
     end
 
     def parse_types
-      @elements = {}
+      @elements      = {}
       @complex_types = {}
+      @simple_types  = {}
 
       schemas.each do |schema|
         schema_namespace = schema['targetNamespace']
@@ -170,11 +173,16 @@ module Wasabi
           nsid = @namespaces_by_value[namespace]
           type_name = node['name']
 
-          type = Type.new(self, namespace, nsid, element_form_default, node)
-
           case node.name
-          when 'element'     then @elements[type_name] = type
-          when 'complexType' then @complex_types[type_name] = type
+          when 'element'
+            type = Type.new(self, namespace, nsid, element_form_default, node)
+            @elements[type_name] = type
+          when 'complexType'
+            type = Type.new(self, namespace, nsid, element_form_default, node)
+            @complex_types[type_name] = type
+          when 'simpleType'
+            simple_type = SimpleType.new(self, node)
+            @simple_types[type_name] = simple_type
           end
         end
       end
