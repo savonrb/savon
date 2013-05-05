@@ -1,6 +1,22 @@
-### 2.2.0 (2013-04-21)
+## master
 
-* Feature: [#424](https://github.com/savonrb/savon/issues/424) After releasing Savon version 2, support for multipart SOAP messages was dropped. You can now specify `:multipart => true` for either your client constructor or `#call` method to indicate that you would like to use savon-multipart.
+* Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
+  through the updated [savon-multipart](https://github.com/savonrb/savon-multipart) gem. You can now
+  specify the `multipart: true` either as a global or local option. Please make sure you have the
+  updated `savon-multipart` gem installed and loaded, as it is not a direct dependency of Savon.
+
+    ```
+    require 'savon'
+    require 'savon-multipart'
+
+    # expect multipart responses for every operation
+    client = Savon.client(wsdl: wsdl, multipart: true)
+    
+    # only expect a multipart response for this operation
+    client.call(:my_operation, multipart: true)
+    ```
+
+### 2.2.0 (2013-04-21)
 
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.

@@ -248,8 +248,9 @@ module Savon
       @options[:convert_response_tags_to] = block || converter
     end
 
-    def multipart(is_multipart)
-      @options[:multipart] = is_multipart
+    # Instruct Savon to create a multipart response if available.
+    def multipart(multipart)
+      @options[:multipart] = multipart
     end
   end
 
@@ -308,9 +309,9 @@ module Savon
       @options[:response_parser] = parser
     end
 
-    # Instruction Savon to create a Savon::Multipart::Response if available
-    def multipart(bool)
-      @options[:multipart] = bool
+    # Instruct Savon to create a multipart response if available.
+    def multipart(multipart)
+      @options[:multipart] = multipart
     end
 
   end

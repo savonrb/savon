@@ -156,52 +156,52 @@ describe Savon::Operation do
     end
 
     it "returns a Savon::Multipart::Response if available and requested globally" do
-      begin
-        module Savon::Multipart
-          class Response
-            def initialize(*args); end
-          end
-        end
+      globals.multipart true
 
-        globals_with_multipart = Savon::GlobalOptions.new(:multipart => true)
-        operation = new_operation(:authenticate, no_wsdl, globals_with_multipart)
+      with_multipart_mocked do
+        operation = new_operation(:authenticate, no_wsdl, globals)
         response = operation.call
-        expect(response.is_a? Savon::Multipart::Response)
-      ensure
-        Savon.send(:remove_const, :Multipart) if Savon.const_defined?(:Multipart)
+
+        expect(response).to be_a(Savon::Multipart::Response)
       end
     end
 
     it "returns a Savon::Multipart::Response if available and requested locally" do
-      begin
-        module Savon::Multipart
-          class Response
-            def initialize(*args); end
-          end
-        end
-
+      with_multipart_mocked do
         operation = new_operation(:authenticate, no_wsdl, globals)
         response = operation.call(:multipart => true)
-        expect(response.is_a? Savon::Multipart::Response)
-      ensure
-        Savon.send(:remove_const, :Multipart) if Savon.const_defined?(:Multipart)
+
+        expect(response).to be_a(Savon::Multipart::Response)
       end
     end
 
-    it "raises a RuntimeError if savon-multipart is not available and it was requested globally" do
-      expect do
-        globals_with_multipart = Savon::GlobalOptions.new(:multipart => true)
-        operation = new_operation(:authenticate, no_wsdl, globals_with_multipart)
-        operation.call
-      end.to raise_error RuntimeError, /Could not find Savon::Multipart/
+    it "raises if savon-multipart is not available and it was requested globally" do
+      globals.multipart true
+
+      operation = new_operation(:authenticate, no_wsdl, globals)
+
+      expect { operation.call }.
+        to raise_error RuntimeError, /Unable to find Savon::Multipart/
     end
 
-    it "raises a RuntimeError if savon-multipart is not available and it was requested locally" do
-      expect do
-        operation = new_operation(:authenticate, no_wsdl, globals)
-        operation.call(:multipart => true)
-      end.to raise_error RuntimeError, /Could not find Savon::Multipart/
+    it "raises if savon-multipart is not available and it was requested locally" do
+      operation = new_operation(:authenticate, no_wsdl, globals)
+
+      expect { operation.call(:multipart => true) }.
+        to raise_error RuntimeError, /Unable to find Savon::Multipart/
     end
+  end
+
+  def with_multipart_mocked
+    multipart_response = Class.new { def initialize(*args); end }
+    multipart_mock = Module.new
+    multipart_mock.const_set('Response', multipart_response)
+
+    Savon.const_set('Multipart', multipart_mock)
+
+    yield
+  ensure
+    Savon.send(:remove_const, :Multipart) if Savon.const_defined? :Multipart
   end
 
   def inspect_request(response)
