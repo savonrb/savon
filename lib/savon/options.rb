@@ -53,7 +53,8 @@ module Savon
         :pretty_print_xml          => false,
         :raise_errors              => true,
         :strip_namespaces          => true,
-        :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym }
+        :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym},
+        :multipart                 => false,
       }
 
       options = defaults.merge(options)
@@ -246,6 +247,10 @@ module Savon
     def convert_response_tags_to(converter = nil, &block)
       @options[:convert_response_tags_to] = block || converter
     end
+
+    def multipart(is_multipart)
+      @options[:multipart] = is_multipart
+    end
   end
 
   class LocalOptions < Options
@@ -255,7 +260,8 @@ module Savon
 
       defaults = {
         :advanced_typecasting => true,
-        :response_parser      => :nokogiri
+        :response_parser      => :nokogiri,
+        :multipart            => false
       }
 
       super defaults.merge(options)
@@ -300,6 +306,11 @@ module Savon
     # Instruct Nori to use :rexml or :nokogiri to parse the response.
     def response_parser(parser)
       @options[:response_parser] = parser
+    end
+
+    # Instruction Savon to create a Savon::Multipart::Response if available
+    def multipart(bool)
+      @options[:multipart] = bool
     end
 
   end

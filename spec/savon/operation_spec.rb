@@ -154,11 +154,58 @@ describe Savon::Operation do
       actual_soap_action = inspect_request(response).soap_action
       expect(actual_soap_action).to eq(%("authenticate"))
     end
+
+    it "returns a Savon::Multipart::Response if available and requested globally" do
+      begin
+        module Savon::Multipart
+          class Response
+            def initialize(*args); end
+          end
+        end
+
+        globals_with_multipart = Savon::GlobalOptions.new(:multipart => true)
+        operation = new_operation(:authenticate, no_wsdl, globals_with_multipart)
+        response = operation.call
+        expect(response.is_a? Savon::Multipart::Response)
+      ensure
+        Savon.send(:remove_const, :Multipart) if Savon.const_defined?(:Multipart)
+      end
+    end
+
+    it "returns a Savon::Multipart::Response if available and requested locally" do
+      begin
+        module Savon::Multipart
+          class Response
+            def initialize(*args); end
+          end
+        end
+
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        response = operation.call(:multipart => true)
+        expect(response.is_a? Savon::Multipart::Response)
+      ensure
+        Savon.send(:remove_const, :Multipart) if Savon.const_defined?(:Multipart)
+      end
+    end
+
+    it "raises a RuntimeError if savon-multipart is not available and it was requested globally" do
+      expect do
+        globals_with_multipart = Savon::GlobalOptions.new(:multipart => true)
+        operation = new_operation(:authenticate, no_wsdl, globals_with_multipart)
+        operation.call
+      end.to raise_error RuntimeError, /Could not find Savon::Multipart/
+    end
+
+    it "raises a RuntimeError if savon-multipart is not available and it was requested locally" do
+      expect do
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        operation.call(:multipart => true)
+      end.to raise_error RuntimeError, /Could not find Savon::Multipart/
+    end
   end
 
   def inspect_request(response)
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
-
 end

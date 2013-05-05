@@ -1,5 +1,7 @@
 ### 2.2.0 (2013-04-21)
 
+* Feature: [#424](https://github.com/savonrb/savon/issues/424) After releasing Savon version 2, support for multipart SOAP messages was dropped. You can now specify `:multipart => true` for either your client constructor or `#call` method to indicate that you would like to use savon-multipart.
+
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.
 
