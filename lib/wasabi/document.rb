@@ -117,6 +117,10 @@ module Wasabi
         result = []
         parser.types.each do |name, type|
           type.children.each do |child|
+            # how can we properly handle anyType elements here?
+            # see Type#parse_element
+            next unless child[:type]
+
             tag, nsid = child[:type].split(":").reverse
             result << [[name, child[:name]], tag] if user_defined(nsid)
           end

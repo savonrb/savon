@@ -89,7 +89,9 @@ module Wasabi
       name = element['name']
       type = element['type']
 
-      local, nsid = type.split(':').reverse
+      # anyType elements don't have a type attribute.
+      # see email_validation.wsdl
+      _, nsid = type && type.split(':').reverse
 
       if nsid
         namespace = @parser.namespaces.fetch(nsid)
