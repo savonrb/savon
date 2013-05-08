@@ -81,7 +81,7 @@ module Wasabi
     def type_namespaces
       @type_namespaces ||= begin
         namespaces = []
-        parser.types.each do |name, type|
+        parser.schemas.types.each do |name, type|
           namespaces << [[name], type.namespace]
           type.children.each { |child| namespaces << [[name, child[:name]], type.namespace] }
         end if document
@@ -93,7 +93,7 @@ module Wasabi
     def type_definitions
       @type_definitions ||= begin
         result = []
-        parser.types.each do |name, type|
+        parser.schemas.types.each do |name, type|
           type.children.each do |child|
             # how can we properly handle anyType elements here?
             # see Type#parse_element

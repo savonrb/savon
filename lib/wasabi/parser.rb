@@ -1,7 +1,8 @@
 require "uri"
-require "wasabi/type"
-require "wasabi/operation"
 require "wasabi/core_ext/string"
+require "wasabi/schema_collection"
+require 'wasabi/schema'
+require "wasabi/operation"
 
 module Wasabi
 
@@ -15,8 +16,6 @@ module Wasabi
     SOAP_1_1 = "http://schemas.xmlsoap.org/wsdl/soap/"
     SOAP_1_2 = "http://schemas.xmlsoap.org/wsdl/soap12/"
 
-    SCHEMA_CHILD_TYPES = %w[element complexType simpleType]
-
     def initialize(document)
       @document = document
       @operations = {}
@@ -28,35 +27,35 @@ module Wasabi
     end
 
     def namespaces
-      @namespaces ||= collect_namespaces(@document, *schemas)
+      @namespaces ||= collect_namespaces(@document, *schema_nodes)
     end
 
     def namespaces_by_value
       @namespaces_by_value ||= namespaces.invert
     end
 
+    def schemas
+      @schemas ||= begin
+        schemas = schema_nodes.map { |node| Schema.new(node, self) }
+        SchemaCollection.new(schemas)
+      end
+    end
+
+    def schema_nodes
+      @schema_nodes ||= begin
+        types = @document.at_xpath('/wsdl:definitions/wsdl:types', 'wsdl' => WSDL)
+        types ? types.element_children : []
+      end
+    end
+
     # Returns the SOAP operations.
     attr_accessor :operations
-
-    # Returns the XML Schema elements.
-    attr_accessor :elements
-
-    # Returns the XML Schema complexType elements.
-    attr_accessor :complex_types
-
-    # Returns the XML Schema simpleType elements.
-    attr_accessor :simple_types
 
     # Returns the SOAP endpoint.
     attr_accessor :endpoint
 
     # Returns the SOAP Service Name
     attr_accessor :service_name
-
-    # TODO: this is bad, but it's how this already worked before.
-    def types
-      @types ||= @elements.merge(@complex_types)
-    end
 
     def parse
       parse_endpoint
@@ -65,7 +64,6 @@ module Wasabi
       parse_port_types
       parse_port_type_operations
       parse_operations
-      parse_types
     end
 
     def collect_namespaces(*nodes)
@@ -143,37 +141,6 @@ module Wasabi
       end
     end
 
-    def parse_types
-      @elements      = {}
-      @complex_types = {}
-      @simple_types  = {}
-
-      schemas.each do |schema|
-        schema_namespace = schema['targetNamespace']
-        element_form_default = schema['elementFormDefault']
-
-        schema.element_children.each do |node|
-          next unless SCHEMA_CHILD_TYPES.include? node.name
-
-          namespace = schema_namespace || target_namespace
-          nsid = namespaces_by_value[namespace]
-          type_name = node['name']
-
-          case node.name
-          when 'element'
-            type = Type.new(self, namespace, nsid, element_form_default, node)
-            @elements[type_name] = type
-          when 'complexType'
-            type = Type.new(self, namespace, nsid, element_form_default, node)
-            @complex_types[type_name] = type
-          when 'simpleType'
-            simple_type = SimpleType.new(self, node)
-            @simple_types[type_name] = simple_type
-          end
-        end
-      end
-    end
-
     def input_for(operation)
       operation_name = operation["name"]
 
@@ -214,29 +181,8 @@ module Wasabi
       end
     end
 
-    def schemas
-      types = section('types').first
-      types ? types.element_children : []
-    end
-
     def service
-      services = section('service')
-      services.first if services  # service nodes could be imported?
-    end
-
-    def section(section_name)
-      sections[section_name] || []
-    end
-
-    def sections
-      return @sections if @sections
-
-      sections = {}
-      @document.root.element_children.each do |node|
-        (sections[node.name] ||= []) << node
-      end
-
-      @sections = sections
+      @document.at_xpath('/wsdl:definitions/wsdl:service', 'wsdl' => WSDL)
     end
 
   end

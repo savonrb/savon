@@ -12,11 +12,11 @@ describe Wasabi::Parser do
     let(:xml) { fixture(:no_namespace).read }
 
     it "lists the elements" do
-      subject.elements.keys.sort.should == []
+      subject.schemas.first.elements.keys.sort.should == []
     end
 
     it "lists the complexTypes" do
-      subject.complex_types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
+      subject.schemas.first.complex_types.keys.sort.should == ["McContact", "McContactArray", "MpUser", "MpUserArray"]
     end
 
   end

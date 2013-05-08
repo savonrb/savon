@@ -15,8 +15,7 @@ describe Wasabi::Parser do
       </xs:simpleType>
     ')
 
-    expect(parser.simple_types).to include('TemperatureUnit')
-    unit = parser.simple_types['TemperatureUnit']
+    unit = parser.schemas.simple_type('TemperatureUnit')
 
     expect(unit).to be_a(Wasabi::SimpleType)
     expect(unit.type).to eq('xs:string')
@@ -38,8 +37,7 @@ describe Wasabi::Parser do
       </xs:complexType>
     ')
 
-    expect(parser.complex_types).to include('MpUser')
-    mp_user = parser.complex_types['MpUser']
+    mp_user = parser.schemas.complex_type('MpUser')
 
     expect(mp_user).to be_a(Wasabi::Type)
     expect(mp_user).to have(8).children
@@ -64,8 +62,7 @@ describe Wasabi::Parser do
       </xs:element>
     ')
 
-    expect(parser.elements).to include('TermOfPayment')
-    terms = parser.elements['TermOfPayment']
+    terms = parser.schemas.element('TermOfPayment')
 
     expect(terms).to be_a(Wasabi::Type)
     expect(terms).to have(2).children

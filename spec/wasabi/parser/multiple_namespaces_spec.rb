@@ -12,28 +12,28 @@ describe Wasabi::Parser do
     let(:xml) { fixture(:multiple_namespaces).read }
 
     it "lists the types" do
-      subject.types.keys.sort.should == ["Article", "Save"]
+      subject.schemas.types.keys.sort.should == ["Article", "Save"]
     end
 
     it "records the namespace for each type" do
-      subject.types["Save"].namespace.should == "http://example.com/actions"
+      subject.schemas.types["Save"].namespace.should == "http://example.com/actions"
     end
 
     it "records the fields under a type" do
-      subject.types["Save"].children.should == [
+      subject.schemas.types["Save"].children.should == [
         { :name => "article", :type => "article:Article", :simple_type => false, :qualified => true, :singular => true }
       ]
     end
 
     it "records multiple fields when there are more than one" do
-      subject.types["Article"].children.should == [
+      subject.schemas.types["Article"].children.should == [
         { :name => "Author", :type => "s:string", :simple_type => true, :qualified => true, :singular => true },
         { :name => "Title",  :type => "s:string", :simple_type => true, :qualified => true, :singular => true }
       ]
     end
 
     it "records the type of a field" do
-      subject.types["Save"].children.first[:type].should == "article:Article"
+      subject.schemas.types["Save"].children.first[:type].should == "article:Article"
       subject.namespaces["article"].should == "http://example.com/article"
     end
 

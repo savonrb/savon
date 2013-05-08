@@ -77,7 +77,7 @@ module Wasabi
 
       complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Parser::XSD).each do |extension|
         base = extension.attribute('base').value.match(/\w+$/).to_s
-        base_type = @parser.types.fetch(base) { raise "expected to find extension base #{base} in types" }
+        base_type = @parser.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
 
         children += base_type.children
       end
