@@ -94,7 +94,7 @@ class Wasabi
     # Returns the raw WSDL document.
     # Can be used as a hook to extend the library.
     def xml
-      @xml ||= Resolver.new(document, request).resolve
+      @xml ||= Resolver.new(request).resolve(document)
     end
 
     def parser

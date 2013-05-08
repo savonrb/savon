@@ -5,17 +5,17 @@ describe Wasabi::Resolver do
   describe "#resolve" do
     it "resolves remote documents" do
       HTTPI.should_receive(:get) { HTTPI::Response.new(200, {}, "wsdl") }
-      xml = Wasabi::Resolver.new("http://example.com?wsdl").resolve
+      xml = Wasabi::Resolver.new.resolve("http://example.com?wsdl")
       xml.should == "wsdl"
     end
 
     it "resolves local documents" do
-      xml = Wasabi::Resolver.new(fixture(:authentication).path).resolve
+      xml = Wasabi::Resolver.new.resolve(fixture(:authentication).path)
       xml.should == fixture(:authentication).read
     end
 
     it "simply returns raw XML" do
-      xml = Wasabi::Resolver.new("<xml/>").resolve
+      xml = Wasabi::Resolver.new.resolve("<xml/>")
       xml.should == "<xml/>"
     end
 
@@ -28,7 +28,7 @@ describe Wasabi::Resolver do
       failed_response = HTTPI::Response.new(code, headers, body)
       HTTPI.stub(:get => failed_response)
       lambda do
-        Wasabi::Resolver.new("http://example.com?wsdl").resolve
+        Wasabi::Resolver.new.resolve("http://example.com?wsdl")
       end.should raise_error { |ex|
         ex.should be_a(Wasabi::Resolver::HTTPError)
         ex.message.should == "Error: #{code}"
