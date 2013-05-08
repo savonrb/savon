@@ -39,16 +39,6 @@ module Wasabi
       @soap_actions ||= parser.operations.keys
     end
 
-    # Returns the SOAP action for a given +key+.
-    def soap_action(key)
-      operations[key][:action] if operations[key]
-    end
-
-    # Returns the SOAP input for a given +key+.
-    def soap_input(key)
-      operations[key][:input] if operations[key]
-    end
-
     # Returns a map of SOAP operations.
     def operations
       @operations ||= parser.operations
