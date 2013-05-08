@@ -8,9 +8,11 @@ module Wasabi
     def initialize(schema, parser)
       @schema = schema
 
+      @target_namespace     = @schema['targetNamespace']
+      @element_form_default = @schema['elementFormDefault']
+
       # TODO: get rid of this dependency.
       @parser = parser
-      @namespaces = parser.namespaces
 
       @elements      = {}
       @complex_types = {}
@@ -19,7 +21,8 @@ module Wasabi
       parse_types
     end
 
-    attr_accessor :elements, :complex_types, :simple_types
+    attr_accessor :target_namespace, :element_form_default,
+                  :elements, :complex_types, :simple_types
 
     # TODO: change the code to use elements, complex_types and simple_types
     #       instead of merging different kinds of elements for all schemas.
@@ -30,27 +33,20 @@ module Wasabi
     private
 
     def parse_types
-      schema_namespace     = @schema['targetNamespace']
-      element_form_default = @schema['elementFormDefault']
-      namespaces_by_value  = @namespaces.invert
-
-      raise 'schema does not define a targetNamespace' unless schema_namespace
-
       @schema.element_children.each do |node|
         next unless CHILD_TYPES.include? node.name
 
-        nsid = namespaces_by_value[schema_namespace]
         type_name = node['name']
 
         case node.name
         when 'element'
-          type = Type.new(@parser, schema_namespace, nsid, element_form_default, node)
+          type = Type.new(node, @parser)
           @elements[type_name] = type
         when 'complexType'
-          type = Type.new(@parser, schema_namespace, nsid, element_form_default, node)
+          type = Type.new(node, @parser)
           @complex_types[type_name] = type
         when 'simpleType'
-          simple_type = SimpleType.new(@parser, node)
+          simple_type = SimpleType.new(node, @parser)
           @simple_types[type_name] = simple_type
         end
       end

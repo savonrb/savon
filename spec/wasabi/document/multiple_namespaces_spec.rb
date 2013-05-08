@@ -19,6 +19,9 @@ describe Wasabi::Document do
     end
 
     its(:type_namespaces) do
+      pending "types currently don't know about their schema. this will have to be resolved " \
+              "when we're creating instances of the schema"
+
       should =~ [
         [["Save"], "http://example.com/actions"],
         [["Save", "article"], "http://example.com/actions"],

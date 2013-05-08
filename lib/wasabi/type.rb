@@ -2,9 +2,9 @@ module Wasabi
 
   class SimpleType
 
-    def initialize(parser, node)
-      @parser = parser
+    def initialize(node, parser)
       @node = node
+      @parser = parser
     end
 
     def type
@@ -18,29 +18,17 @@ module Wasabi
 
   class Type
 
-    def initialize(parser, namespace, nsid, element_form_default, node)
-      @parser = parser
-      @namespace = namespace
-      @nsid = nsid
-      @element_form_default = element_form_default
+    def initialize(node, parser)
       @node = node
+      @parser = parser
 
-      @prefix, @name = qname(node['name'])
+      @name = node['name']
     end
 
-    attr_reader :name, :prefix
-
-    attr_reader :namespace
+    attr_reader :name
 
     def type
       @node.name
-    end
-
-    def qname(qname)
-      local, nsid = qname.to_s.split(':').reverse
-      nsid ||= @nsid
-
-      [nsid, local]
     end
 
     def children
@@ -101,14 +89,13 @@ module Wasabi
         simple_type = true
       end
 
-      form = element['form'] || @element_form_default
-      qualified = form == 'qualified'
+      form = element['form']
 
       max_occurs = element['maxOccurs'].to_s
       singular = max_occurs.empty? || max_occurs == '1'
 
       { :name => name, :type => type,
-        :simple_type => simple_type, :qualified => qualified, :singular => singular }
+        :simple_type => simple_type, :form => form, :singular => singular }
     end
 
   end

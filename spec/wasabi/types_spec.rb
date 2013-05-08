@@ -43,10 +43,10 @@ describe Wasabi::Parser do
     expect(mp_user).to have(8).children
 
     expect(mp_user.children).to include(
-      { :name => 'mp_id',     :type => 'xs:int',    :simple_type => true, :qualified => false, :singular => true },
-      { :name => 'firstname', :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true },
-      { :name => 'lastname',  :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true },
-      { :name => 'login',     :type => 'xs:string', :simple_type => true, :qualified => false, :singular => true }
+      { :name => 'mp_id',     :type => 'xs:int',    :simple_type => true, :form => nil, :singular => true },
+      { :name => 'firstname', :type => 'xs:string', :simple_type => true, :form => nil, :singular => true },
+      { :name => 'lastname',  :type => 'xs:string', :simple_type => true, :form => nil, :singular => true },
+      { :name => 'login',     :type => 'xs:string', :simple_type => true, :form => nil, :singular => true }
     )
   end
 
@@ -72,14 +72,14 @@ describe Wasabi::Parser do
         :name        => 'termOfPaymentHandle',
         :type        => 'tns:TermOfPaymentHandle',
         :simple_type => false,
-        :qualified   => false,
+        :form        => nil,
         :singular    => true
       },
       {
         :name        => 'value',
         :type        => 'xs:decimal',
         :simple_type => true,
-        :qualified   => false,
+        :form        => nil,
         :singular    => true
       }
     ])

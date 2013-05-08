@@ -29,6 +29,7 @@ describe Wasabi::Parser do
     # but I suppose we should do something reasonable if they do.
 
     it "defaults to the target namespace from xs:definitions" do
+      pending "find out if this meets the specification"
       subject.schemas.types["Save"].namespace.should == "http://def.example.com"
     end
 

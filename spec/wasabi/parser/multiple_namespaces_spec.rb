@@ -16,19 +16,22 @@ describe Wasabi::Parser do
     end
 
     it "records the namespace for each type" do
+      pending "types currently don't know about their schema. this will have to be resolved " \
+              "when we're creating instances of the schema"
+
       subject.schemas.types["Save"].namespace.should == "http://example.com/actions"
     end
 
     it "records the fields under a type" do
       subject.schemas.types["Save"].children.should == [
-        { :name => "article", :type => "article:Article", :simple_type => false, :qualified => true, :singular => true }
+        { :name => "article", :type => "article:Article", :simple_type => false, :form => nil, :singular => true }
       ]
     end
 
     it "records multiple fields when there are more than one" do
       subject.schemas.types["Article"].children.should == [
-        { :name => "Author", :type => "s:string", :simple_type => true, :qualified => true, :singular => true },
-        { :name => "Title",  :type => "s:string", :simple_type => true, :qualified => true, :singular => true }
+        { :name => "Author", :type => "s:string", :simple_type => true, :form => nil, :singular => true },
+        { :name => "Title",  :type => "s:string", :simple_type => true, :form => nil, :singular => true }
       ]
     end
 
