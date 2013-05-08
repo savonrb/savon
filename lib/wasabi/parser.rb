@@ -24,11 +24,6 @@ class Wasabi
       @namespaces ||= collect_namespaces(@document, *schema_nodes)
     end
 
-    # TODO: remove in separate commit if unused
-    #def namespaces_by_value
-      #@namespaces_by_value ||= namespaces.invert
-    #end
-
     def schemas
       @schemas ||= begin
         schemas = schema_nodes.map { |node| Schema.new(node, self) }
