@@ -20,7 +20,6 @@ module Wasabi
     def initialize(document)
       @document = document
       @operations = {}
-      @namespaces = {}
       @service_name = ''
     end
 
@@ -28,8 +27,13 @@ module Wasabi
       @document.root['targetNamespace']
     end
 
-    # Returns a map from namespace identifier to namespace URI.
-    attr_accessor :namespaces
+    def namespaces
+      @namespaces ||= collect_namespaces(@document, *schemas)
+    end
+
+    def namespaces_by_value
+      @namespaces_by_value ||= namespaces.invert
+    end
 
     # Returns the SOAP operations.
     attr_accessor :operations
@@ -55,7 +59,6 @@ module Wasabi
     end
 
     def parse
-      parse_namespaces
       parse_endpoint
       parse_service_name
       parse_messages
@@ -63,11 +66,6 @@ module Wasabi
       parse_port_type_operations
       parse_operations
       parse_types
-    end
-
-    def parse_namespaces
-      @namespaces = collect_namespaces(@document, *schemas)
-      @namespaces_by_value = @namespaces.invert
     end
 
     def collect_namespaces(*nodes)
@@ -158,7 +156,7 @@ module Wasabi
           next unless SCHEMA_CHILD_TYPES.include? node.name
 
           namespace = schema_namespace || target_namespace
-          nsid = @namespaces_by_value[namespace]
+          nsid = namespaces_by_value[namespace]
           type_name = node['name']
 
           case node.name
