@@ -97,9 +97,7 @@ describe Wasabi::Parser do
                </types>
              </definitions>'
 
-    parser = Wasabi::Parser.new Nokogiri.XML(wsdl)
-    parser.parse
-    parser
+    Wasabi::Parser.new Nokogiri.XML(wsdl)
   end
 
 end

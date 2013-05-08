@@ -119,24 +119,19 @@ module Wasabi
       @xml ||= Resolver.new(document, request).resolve
     end
 
-    # Parses the WSDL document and returns the <tt>Wasabi::Parser</tt>.
     def parser
       @parser ||= guard_parse && parse
     end
 
   private
 
-    # Raises an error if the WSDL document is missing.
     def guard_parse
       return true if document
       raise ArgumentError, "Wasabi needs a WSDL document"
     end
 
-    # Parses the WSDL document and returns <tt>Wasabi::Parser</tt>.
     def parse
-      parser = Parser.new Nokogiri::XML(xml)
-      parser.parse
-      parser
+      Parser.new Nokogiri::XML(xml)
     end
 
   end

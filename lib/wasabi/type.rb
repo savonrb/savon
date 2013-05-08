@@ -51,19 +51,19 @@ module Wasabi
     def parse_complex_type(complex_type, name)
       children = []
 
-      complex_type.xpath("./xs:all/xs:element", 'xs' => Parser::XSD).each do |element|
+      complex_type.xpath("./xs:all/xs:element", 'xs' => Wasabi::XSD).each do |element|
         children << parse_element(element)
       end
 
-      complex_type.xpath("./xs:sequence/xs:element", 'xs' => Parser::XSD).each do |element|
+      complex_type.xpath("./xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
         children << parse_element(element)
       end
 
-      complex_type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => Parser::XSD).each do |element|
+      complex_type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
         children << parse_element(element)
       end
 
-      complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Parser::XSD).each do |extension|
+      complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Wasabi::XSD).each do |extension|
         base = extension.attribute('base').value.match(/\w+$/).to_s
         base_type = @parser.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
 
@@ -83,7 +83,7 @@ module Wasabi
 
       if nsid
         namespace = @parser.namespaces.fetch(nsid)
-        simple_type = namespace == Parser::XSD
+        simple_type = namespace == Wasabi::XSD
       else
         # assume that elements with a @type qname lacking an nsid to reference the xml schema.
         simple_type = true
