@@ -2,7 +2,7 @@ require "nokogiri"
 require "wasabi/resolver"
 require "wasabi/parser"
 
-module Wasabi
+class Wasabi
 
   # = Wasabi::Document
   #

@@ -1,4 +1,4 @@
-module Wasabi
+class Wasabi
   class SchemaCollection
     include Enumerable
 

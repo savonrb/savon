@@ -1,7 +1,7 @@
 require 'wasabi/core_ext/string'
 require 'wasabi/operation'
 
-module Wasabi
+class Wasabi
   class Operations
 
     def initialize(parser)

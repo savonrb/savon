@@ -1,4 +1,4 @@
-module Wasabi
+class Wasabi
 
   class SimpleType
 

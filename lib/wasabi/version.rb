@@ -1,4 +1,4 @@
-module Wasabi
+class Wasabi
 
   VERSION = "3.1.0"
 

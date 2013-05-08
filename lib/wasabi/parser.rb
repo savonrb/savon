@@ -3,7 +3,7 @@ require "wasabi/schema_collection"
 require 'wasabi/schema'
 require "wasabi/operations"
 
-module Wasabi
+class Wasabi
   class Parser
 
     def initialize(document)

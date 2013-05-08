@@ -2,7 +2,7 @@ require "wasabi/version"
 require "wasabi/document"
 require "wasabi/resolver"
 
-module Wasabi
+class Wasabi
 
   XSD      = "http://www.w3.org/2001/XMLSchema"
   WSDL     = "http://schemas.xmlsoap.org/wsdl/"

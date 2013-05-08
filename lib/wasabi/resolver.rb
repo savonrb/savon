@@ -1,6 +1,6 @@
 require "httpi"
 
-module Wasabi
+class Wasabi
 
   # = Wasabi::Resolver
   #

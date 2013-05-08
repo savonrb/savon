@@ -1,6 +1,6 @@
 require "wasabi/type"
 
-module Wasabi
+class Wasabi
   class Schema
 
     CHILD_TYPES = %w[element complexType simpleType]
