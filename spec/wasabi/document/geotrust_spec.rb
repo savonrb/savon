@@ -9,8 +9,6 @@ describe Wasabi::Document do
 
     its(:endpoint) { should == URI("https://test-api.geotrust.com:443/webtrust/query.jws") }
 
-    its(:element_form_default) { should == :qualified }
-
     it 'knows the operations' do
       expect(document).to have(2).operations
 

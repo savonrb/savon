@@ -20,8 +20,6 @@ describe Wasabi::Document do
 
     its(:endpoint) { should == URI("http://example.com/validation/1.0/AuthenticationService") }
 
-    its(:element_form_default) { should == :unqualified }
-
     it 'knows the operations' do
       expect(document).to have(1).operations
 

@@ -9,17 +9,6 @@ module Wasabi
   # Represents a WSDL document.
   class Document
 
-    ELEMENT_FORM_DEFAULTS = [:unqualified, :qualified]
-
-    # Validates if a given +value+ is a valid elementFormDefault value.
-    # Raises an +ArgumentError+ if the value is not valid.
-    def self.validate_element_form_default!(value)
-      return if ELEMENT_FORM_DEFAULTS.include?(value)
-
-      raise ArgumentError, "Invalid value for elementFormDefault: #{value}\n" +
-                           "Must be one of: #{ELEMENT_FORM_DEFAULTS.inspect}"
-    end
-
     # Accepts a WSDL +document+ to parse.
     def initialize(document = nil)
       self.document = document
@@ -44,17 +33,6 @@ module Wasabi
 
     # Sets the target namespace.
     attr_writer :namespace
-
-    # Returns the value of elementFormDefault.
-    def element_form_default
-      @element_form_default ||= document ? parser.element_form_default : :unqualified
-    end
-
-    # Sets the elementFormDefault value.
-    def element_form_default=(value)
-      self.class.validate_element_form_default!(value)
-      @element_form_default = value
-    end
 
     # Returns a list of available SOAP actions.
     def soap_actions

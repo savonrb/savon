@@ -22,7 +22,6 @@ module Wasabi
       @operations = {}
       @namespaces = {}
       @service_name = ''
-      @element_form_default = :unqualified
     end
 
     # Returns the Nokogiri document.
@@ -52,9 +51,6 @@ module Wasabi
     # Returns the SOAP Service Name
     attr_accessor :service_name
 
-    # Returns the elementFormDefault value.
-    attr_accessor :element_form_default
-
     # TODO: this is bad, but it's how this already worked before.
     def types
       @types ||= @elements.merge(@complex_types)
@@ -72,10 +68,6 @@ module Wasabi
     end
 
     def parse_namespaces
-      # TODO: remove. this belongs to a schema.
-      element_form_default = schemas.first && schemas.first['elementFormDefault']
-      @element_form_default = element_form_default.to_s.to_sym if element_form_default
-
       namespace = document.root['targetNamespace']
       @namespace = namespace if namespace
 

@@ -9,8 +9,6 @@ describe Wasabi::Document do
 
     its(:endpoint) { should == URI("http://example.com:1234/soap") }
 
-    its(:element_form_default) { should == :qualified }
-
     it 'knows the operations' do
       expect(document).to have(1).operations
 

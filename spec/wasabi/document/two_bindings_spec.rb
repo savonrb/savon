@@ -5,8 +5,6 @@ describe Wasabi::Document do
 
     subject(:document) { Wasabi::Document.new fixture(:two_bindings).read }
 
-    its(:element_form_default) { should == :unqualified }
-
     it 'knows the operations' do
       expect(document).to have(3).operations
 
