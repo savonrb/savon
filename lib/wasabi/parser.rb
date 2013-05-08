@@ -24,9 +24,6 @@ module Wasabi
       @service_name = ''
     end
 
-    # Returns the Nokogiri document.
-    attr_accessor :document
-
     # Returns the target namespace.
     attr_accessor :namespace
 
@@ -68,7 +65,7 @@ module Wasabi
     end
 
     def parse_namespaces
-      namespace = document.root['targetNamespace']
+      namespace = @document.root['targetNamespace']
       @namespace = namespace if namespace
 
       @namespaces = collect_namespaces(@document, *schemas)
@@ -103,17 +100,17 @@ module Wasabi
     end
 
     def parse_service_name
-      service_name = document.root['name']
+      service_name = @document.root['name']
       @service_name = service_name.to_s if service_name
     end
 
     def parse_messages
-      messages = document.root.element_children.select { |node| node.name == 'message' }
+      messages = @document.root.element_children.select { |node| node.name == 'message' }
       @messages = Hash[messages.map { |node| [node['name'], node] }]
     end
 
     def parse_port_types
-      port_types = document.root.element_children.select { |node| node.name == 'portType' }
+      port_types = @document.root.element_children.select { |node| node.name == 'portType' }
       @port_types = Hash[port_types.map { |node| [node['name'], node] }]
     end
 
@@ -127,7 +124,7 @@ module Wasabi
     end
 
     def parse_operations
-      operations = document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => WSDL)
+      operations = @document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => WSDL)
       operations.each do |operation|
         name = operation.attribute("name").to_s
 
@@ -239,7 +236,7 @@ module Wasabi
       return @sections if @sections
 
       sections = {}
-      document.root.element_children.each do |node|
+      @document.root.element_children.each do |node|
         (sections[node.name] ||= []) << node
       end
 
