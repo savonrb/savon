@@ -5,7 +5,7 @@ describe Wasabi::Document do
 
     subject(:document) { Wasabi::Document.new fixture(:namespaced_actions).read }
 
-    its(:namespace) { should == "http://api.example.com/api/" }
+    its(:target_namespace) { should == "http://api.example.com/api/" }
 
     its(:endpoint) { should == URI("https://api.example.com/api/api.asmx") }
 

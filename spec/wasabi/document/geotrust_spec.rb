@@ -5,7 +5,7 @@ describe Wasabi::Document do
 
     subject(:document) { Wasabi::Document.new fixture(:geotrust).read }
 
-    its(:namespace) { should == "http://api.geotrust.com/webtrust/query" }
+    its(:target_namespace) { should == "http://api.geotrust.com/webtrust/query" }
 
     its(:endpoint) { should == URI("https://test-api.geotrust.com:443/webtrust/query.jws") }
 

@@ -5,7 +5,7 @@ describe Wasabi::Document do
 
     subject(:document) { Wasabi::Document.new fixture(:authentication).read }
 
-    its(:namespace) { should == "http://v1_0.ws.auth.order.example.com/" }
+    its(:target_namespace) { should == "http://v1_0.ws.auth.order.example.com/" }
 
     it 'knows all the namespaces' do
       expect(document.namespaces).to eq(

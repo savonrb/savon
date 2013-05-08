@@ -27,12 +27,12 @@ module Wasabi
     attr_writer :endpoint
 
     # Returns the target namespace.
-    def namespace
-      @namespace ||= parser.namespace
+    def target_namespace
+      @target_namespace ||= parser.target_namespace
     end
 
     # Sets the target namespace.
-    attr_writer :namespace
+    attr_writer :target_namespace
 
     # Returns a list of available SOAP actions.
     def soap_actions

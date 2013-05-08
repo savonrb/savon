@@ -24,8 +24,9 @@ module Wasabi
       @service_name = ''
     end
 
-    # Returns the target namespace.
-    attr_accessor :namespace
+    def target_namespace
+      @document.root['targetNamespace']
+    end
 
     # Returns a map from namespace identifier to namespace URI.
     attr_accessor :namespaces
@@ -65,9 +66,6 @@ module Wasabi
     end
 
     def parse_namespaces
-      namespace = @document.root['targetNamespace']
-      @namespace = namespace if namespace
-
       @namespaces = collect_namespaces(@document, *schemas)
       @namespaces_by_value = @namespaces.invert
     end
@@ -159,7 +157,7 @@ module Wasabi
         schema.element_children.each do |node|
           next unless SCHEMA_CHILD_TYPES.include? node.name
 
-          namespace = schema_namespace || @namespace
+          namespace = schema_namespace || target_namespace
           nsid = @namespaces_by_value[namespace]
           type_name = node['name']
 
