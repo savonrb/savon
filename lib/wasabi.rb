@@ -1,6 +1,7 @@
 require 'wasabi/version'
 require 'wasabi/document'
 require 'wasabi/resolver'
+require 'wasabi/importer'
 
 class Wasabi
 
@@ -12,38 +13,32 @@ class Wasabi
 
   def initialize(wsdl, request = nil)
     resolver = Resolver.new(request)
+    importer = Importer.new(resolver, self)
 
-    xml = resolver.resolve(wsdl)
-    document = Nokogiri.XML(xml)
-
-    @parser = Parser.new(document)
+    @documents, @schemas = importer.import(wsdl)
   end
 
-  attr_reader :parser
+  attr_reader :documents, :schemas
 
   def service_name
-    @parser.service_name
+    @documents.service_name
   end
 
-  # TODO: move this to an operation.
+  # TODO: move this up to the operation.
   def endpoint
-    @parser.endpoint
+    @documents.endpoint
   end
 
   def target_namespace
-    @parser.target_namespace
+    @documents.target_namespace
   end
 
   def namespaces
-    @parser.namespaces
-  end
-
-  def schemas
-    @parser.schemas
+    @documents.namespaces
   end
 
   def operation(operation_name)
-    @parser.operations[operation_name]
+    @documents.operations[operation_name]
   end
 
 end

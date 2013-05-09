@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-describe Wasabi::Parser do
+describe Wasabi do
 
   it 'knows simple types' do
-    parser = parse('
+    wsdl = wsdl('
       <xs:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
         <xs:simpleType name="TemperatureUnit">
           <xs:restriction base="xs:string">
@@ -17,14 +17,14 @@ describe Wasabi::Parser do
       </xs:schema>
     ')
 
-    unit = parser.schemas.simple_type('TemperatureUnit')
+    unit = wsdl.schemas.simple_type('TemperatureUnit')
 
     expect(unit).to be_a(Wasabi::SimpleType)
     expect(unit.type).to eq('xs:string')
   end
 
   it 'knows xs:all types' do
-    parser = parse('
+    wsdl = wsdl('
       <xs:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
         <xs:complexType name="MpUser">
           <xs:all>
@@ -41,7 +41,7 @@ describe Wasabi::Parser do
       </xs:schema>
     ')
 
-    mp_user = parser.schemas.complex_type('MpUser')
+    mp_user = wsdl.schemas.complex_type('MpUser')
 
     expect(mp_user).to be_a(Wasabi::Type)
     expect(mp_user).to have(8).children
@@ -55,7 +55,7 @@ describe Wasabi::Parser do
   end
 
   it 'works with multiple schemas and extensions' do
-    parser = parse('
+    wsdl = wsdl('
 		<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://object.api.example.com/"
             attributeFormDefault="qualified" elementFormDefault="qualified">
 			<complexType name="Account">
@@ -94,7 +94,7 @@ describe Wasabi::Parser do
     </schema>
     ')
 
-    account = parser.schemas.complex_type('Account')
+    account = wsdl.schemas.complex_type('Account')
 
     expect(account).to be_a(Wasabi::Type)
     expect(account).to have(5).children
@@ -110,7 +110,7 @@ describe Wasabi::Parser do
   end
 
   it 'determines whether elements are simple types by their namespace' do
-    parser = parse('
+    wsdl = wsdl('
       <xs:schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:ActionWebService">
         <xs:element name="TermOfPayment">
           <xs:complexType>
@@ -123,7 +123,7 @@ describe Wasabi::Parser do
       </xs:schema>
     ')
 
-    terms = parser.schemas.element('TermOfPayment')
+    terms = wsdl.schemas.element('TermOfPayment')
 
     expect(terms).to be_a(Wasabi::Type)
     expect(terms).to have(2).children
@@ -146,7 +146,7 @@ describe Wasabi::Parser do
     ])
   end
 
-  def parse(types)
+  def wsdl(types)
     wsdl = %'<definitions name="Api" targetNamespace="urn:ActionWebService"
                  xmlns="http://schemas.xmlsoap.org/wsdl/"
                  xmlns:tns="urn:ActionWebService"
@@ -158,7 +158,7 @@ describe Wasabi::Parser do
                </types>
              </definitions>'
 
-    Wasabi::Parser.new Nokogiri.XML(wsdl)
+    Wasabi.new(wsdl)
   end
 
 end

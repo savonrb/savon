@@ -2,10 +2,10 @@ require 'wasabi/core_ext/string'
 require 'wasabi/operation'
 
 class Wasabi
-  class Operations
+  class LegacyOperationParser
 
-    def initialize(parser)
-      @parser = parser
+    def initialize(document)
+      @document = document
 
       @operations = {}
       parse
@@ -21,12 +21,12 @@ class Wasabi
     end
 
     def parse_messages
-      messages = @parser.document.root.element_children.select { |node| node.name == 'message' }
+      messages = @document.root.element_children.select { |node| node.name == 'message' }
       @messages = Hash[messages.map { |node| [node['name'], node] }]
     end
 
     def parse_port_types
-      port_types = @parser.document.root.element_children.select { |node| node.name == 'portType' }
+      port_types = @document.root.element_children.select { |node| node.name == 'portType' }
       @port_types = Hash[port_types.map { |node| [node['name'], node] }]
     end
 
@@ -40,7 +40,7 @@ class Wasabi
     end
 
     def parse_operations
-      operations = @parser.document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => Wasabi::WSDL)
+      operations = @document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => Wasabi::WSDL)
       operations.each do |operation|
         name = operation.attribute("name").to_s
 

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://connect.bookt.com/svc/connect.svc?wsdl=wsdl0 -->
+<wsdl:definitions targetNamespace="https://connect.bookt.com/connect" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://connect.bookt.com/connect" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+   <wsdl:types>
+      <xsd:schema targetNamespace="https://connect.bookt.com/connect/Imports">
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd0" namespace="https://connect.bookt.com/connect"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd3" namespace="http://connect.bookt.com/Schemas/Property.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd4" namespace="http://connect.bookt.com/Schemas/Fee.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd5" namespace="http://connect.bookt.com/Schemas/Media.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd6" namespace="http://connect.bookt.com/Schemas/Tax.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd7" namespace="http://connect.bookt.com/Schemas/Unit.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd8" namespace="http://connect.bookt.com/Schemas/Rate.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd9" namespace="http://connect.bookt.com/Schemas/Booking.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd10" namespace="http://connect.bookt.com/Schemas/Person.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd11" namespace="http://connect.bookt.com/Schemas/CreditCard.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd12" namespace="http://connect.bookt.com/Schemas/Statement.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd13" namespace="http://connect.bookt.com/Schemas/StatementDetail.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd14" namespace="http://connect.bookt.com/Schemas/Event.xsd"/>
+         <xsd:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd15" namespace="http://connect.bookt.com/Schemas/Review.xsd"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="IConnect_GetPropertyCategories_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyCategories"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPropertyCategories_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyCategoriesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPropertyIDs_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyIDs"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPropertyIDs_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyIDsResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetProperty_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetProperty"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetProperty_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPropertyIDsByCategory_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyIDsByCategory"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPropertyIDsByCategory_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetPropertyIDsByCategoryResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetRates_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetRates"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetRates_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetRatesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPerRoomRates_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetPerRoomRates"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetPerRoomRates_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetPerRoomRatesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetAvailability_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetAvailability"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetAvailability_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetAvailabilityResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetRates_InputMessage">
+      <wsdl:part name="parameters" element="tns:SetRates"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetRates_OutputMessage">
+      <wsdl:part name="parameters" element="tns:SetRatesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetPerRoomRates_InputMessage">
+      <wsdl:part name="parameters" element="tns:SetPerRoomRates"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetPerRoomRates_OutputMessage">
+      <wsdl:part name="parameters" element="tns:SetPerRoomRatesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetAvailability_InputMessage">
+      <wsdl:part name="parameters" element="tns:SetAvailability"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetAvailability_OutputMessage">
+      <wsdl:part name="parameters" element="tns:SetAvailabilityResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetRatesAndAvailability_InputMessage">
+      <wsdl:part name="parameters" element="tns:SetRatesAndAvailability"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_SetRatesAndAvailability_OutputMessage">
+      <wsdl:part name="parameters" element="tns:SetRatesAndAvailabilityResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetBooking_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetBooking"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetBooking_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetBookingResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_MakeBooking_InputMessage">
+      <wsdl:part name="parameters" element="tns:MakeBooking"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_MakeBooking_OutputMessage">
+      <wsdl:part name="parameters" element="tns:MakeBookingResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CancelBooking_InputMessage">
+      <wsdl:part name="parameters" element="tns:CancelBooking"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CancelBooking_OutputMessage">
+      <wsdl:part name="parameters" element="tns:CancelBookingResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_ModifyBooking_InputMessage">
+      <wsdl:part name="parameters" element="tns:ModifyBooking"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_ModifyBooking_OutputMessage">
+      <wsdl:part name="parameters" element="tns:ModifyBookingResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateLead_InputMessage">
+      <wsdl:part name="parameters" element="tns:CreateLead"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateLead_OutputMessage">
+      <wsdl:part name="parameters" element="tns:CreateLeadResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateEvent_InputMessage">
+      <wsdl:part name="parameters" element="tns:CreateEvent"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateEvent_OutputMessage">
+      <wsdl:part name="parameters" element="tns:CreateEventResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetEventCategories_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetEventCategories"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetEventCategories_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetEventCategoriesResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetLead_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetLead"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetLead_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetLeadResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetEvent_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetEvent"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetEvent_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetEventResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReviewIDs_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetReviewIDs"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReviewIDs_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetReviewIDsResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReview_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetReview"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReview_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetReviewResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReviews_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetReviews"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetReviews_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetReviewsResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateReview_InputMessage">
+      <wsdl:part name="parameters" element="tns:CreateReview"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_CreateReview_OutputMessage">
+      <wsdl:part name="parameters" element="tns:CreateReviewResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_DeleteReview_InputMessage">
+      <wsdl:part name="parameters" element="tns:DeleteReview"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_DeleteReview_OutputMessage">
+      <wsdl:part name="parameters" element="tns:DeleteReviewResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetBusinessRules_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetBusinessRules"/>
+   </wsdl:message>
+   <wsdl:message name="IConnect_GetBusinessRules_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetBusinessRulesResponse"/>
+   </wsdl:message>
+   <wsdl:portType name="IConnect">
+      <wsdl:operation name="GetPropertyCategories">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyCategories" message="tns:IConnect_GetPropertyCategories_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyCategoriesResponse" message="tns:IConnect_GetPropertyCategories_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetPropertyIDs">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyIDs" message="tns:IConnect_GetPropertyIDs_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyIDsResponse" message="tns:IConnect_GetPropertyIDs_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetProperty">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetProperty" message="tns:IConnect_GetProperty_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyResponse" message="tns:IConnect_GetProperty_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetPropertyIDsByCategory">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyIDsByCategory" message="tns:IConnect_GetPropertyIDsByCategory_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPropertyIDsByCategoryResponse" message="tns:IConnect_GetPropertyIDsByCategory_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetRates">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetRates" message="tns:IConnect_GetRates_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetRatesResponse" message="tns:IConnect_GetRates_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetPerRoomRates">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPerRoomRates" message="tns:IConnect_GetPerRoomRates_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetPerRoomRatesResponse" message="tns:IConnect_GetPerRoomRates_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetAvailability">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetAvailability" message="tns:IConnect_GetAvailability_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetAvailabilityResponse" message="tns:IConnect_GetAvailability_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="SetRates">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/SetRates" message="tns:IConnect_SetRates_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/SetRatesResponse" message="tns:IConnect_SetRates_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="SetPerRoomRates">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/SetPerRoomRates" message="tns:IConnect_SetPerRoomRates_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/SetPerRoomRatesResponse" message="tns:IConnect_SetPerRoomRates_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="SetAvailability">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/SetAvailability" message="tns:IConnect_SetAvailability_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/SetAvailabilityResponse" message="tns:IConnect_SetAvailability_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="SetRatesAndAvailability">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/SetRatesAndAvailability" message="tns:IConnect_SetRatesAndAvailability_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/SetRatesAndAvailabilityResponse" message="tns:IConnect_SetRatesAndAvailability_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetBooking">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetBooking" message="tns:IConnect_GetBooking_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetBookingResponse" message="tns:IConnect_GetBooking_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="MakeBooking">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/MakeBooking" message="tns:IConnect_MakeBooking_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/MakeBookingResponse" message="tns:IConnect_MakeBooking_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="CancelBooking">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/CancelBooking" message="tns:IConnect_CancelBooking_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/CancelBookingResponse" message="tns:IConnect_CancelBooking_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ModifyBooking">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/ModifyBooking" message="tns:IConnect_ModifyBooking_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/ModifyBookingResponse" message="tns:IConnect_ModifyBooking_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="CreateLead">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateLead" message="tns:IConnect_CreateLead_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateLeadResponse" message="tns:IConnect_CreateLead_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="CreateEvent">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateEvent" message="tns:IConnect_CreateEvent_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateEventResponse" message="tns:IConnect_CreateEvent_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetEventCategories">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetEventCategories" message="tns:IConnect_GetEventCategories_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetEventCategoriesResponse" message="tns:IConnect_GetEventCategories_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetLead">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetLead" message="tns:IConnect_GetLead_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetLeadResponse" message="tns:IConnect_GetLead_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetEvent">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetEvent" message="tns:IConnect_GetEvent_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetEventResponse" message="tns:IConnect_GetEvent_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetReviewIDs">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReviewIDs" message="tns:IConnect_GetReviewIDs_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReviewIDsResponse" message="tns:IConnect_GetReviewIDs_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetReview">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReview" message="tns:IConnect_GetReview_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReviewResponse" message="tns:IConnect_GetReview_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetReviews">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReviews" message="tns:IConnect_GetReviews_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetReviewsResponse" message="tns:IConnect_GetReviews_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="CreateReview">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateReview" message="tns:IConnect_CreateReview_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/CreateReviewResponse" message="tns:IConnect_CreateReview_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="DeleteReview">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/DeleteReview" message="tns:IConnect_DeleteReview_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/DeleteReviewResponse" message="tns:IConnect_DeleteReview_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetBusinessRules">
+         <wsdl:input wsaw:Action="https://connect.bookt.com/connect/IConnect/GetBusinessRules" message="tns:IConnect_GetBusinessRules_InputMessage"/>
+         <wsdl:output wsaw:Action="https://connect.bookt.com/connect/IConnect/GetBusinessRulesResponse" message="tns:IConnect_GetBusinessRules_OutputMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

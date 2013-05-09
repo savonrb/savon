@@ -1,5 +1,7 @@
-require "bundler"
-Bundler.require :default, :development
+require 'bundler'
+Bundler.setup
+
+require 'wasabi'
 
 unless RUBY_PLATFORM =~ /java/
   require "simplecov"
@@ -15,5 +17,6 @@ support_files = File.expand_path("spec/support/**/*.rb")
 Dir[support_files].each { |file| require file }
 
 RSpec.configure do |config|
-  config.include SpecSupport::Methods
+  config.include SpecSupport
+  config.mock_framework = :mocha
 end

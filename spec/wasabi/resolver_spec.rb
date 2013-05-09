@@ -4,7 +4,7 @@ describe Wasabi::Resolver do
 
   describe "#resolve" do
     it "resolves remote documents" do
-      HTTPI.should_receive(:get) { HTTPI::Response.new(200, {}, "wsdl") }
+      HTTPI.expects(:get).returns HTTPI::Response.new(200, {}, "wsdl")
       xml = Wasabi::Resolver.new.resolve("http://example.com?wsdl")
       xml.should == "wsdl"
     end
@@ -25,14 +25,14 @@ describe Wasabi::Resolver do
         "content-type" => "text/html"
       }
       body = "<html><head><title>404 Not Found</title></head><body>Oops!</body></html>"
+
       failed_response = HTTPI::Response.new(code, headers, body)
-      HTTPI.stub(:get => failed_response)
-      lambda do
-        Wasabi::Resolver.new.resolve("http://example.com?wsdl")
-      end.should raise_error { |ex|
-        ex.should be_a(Wasabi::Resolver::HTTPError)
-        ex.message.should == "Error: #{code}"
-        ex.response.should == failed_response
+      HTTPI.stubs(:get).returns(failed_response)
+
+      expect { Wasabi::Resolver.new.resolve("http://example.com?wsdl") }.to raise_error { |error|
+        error.should be_a(Wasabi::Resolver::HTTPError)
+        error.message.should == "Error: #{code}"
+        error.response.should == failed_response
       }
     end
   end

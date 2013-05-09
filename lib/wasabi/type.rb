@@ -2,9 +2,9 @@ class Wasabi
 
   class SimpleType
 
-    def initialize(node, parser)
+    def initialize(node, wsdl)
       @node = node
-      @parser = parser
+      @wsdl = wsdl
     end
 
     def type
@@ -18,9 +18,9 @@ class Wasabi
 
   class Type
 
-    def initialize(node, parser)
+    def initialize(node, wsdl)
       @node = node
-      @parser = parser
+      @wsdl = wsdl
 
       @name = node['name']
     end
@@ -65,7 +65,7 @@ class Wasabi
 
       complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Wasabi::XSD).each do |extension|
         base = extension.attribute('base').value.match(/\w+$/).to_s
-        base_type = @parser.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
+        base_type = @wsdl.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
 
         children += base_type.children
       end
@@ -82,7 +82,7 @@ class Wasabi
       _, nsid = type && type.split(':').reverse
 
       if nsid
-        namespace = @parser.namespaces.fetch(nsid)
+        namespace = @wsdl.namespaces.fetch(nsid)
         simple_type = namespace == Wasabi::XSD
       else
         # assume that elements with a @type qname lacking an nsid to reference the xml schema.

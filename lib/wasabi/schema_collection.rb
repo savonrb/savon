@@ -2,8 +2,16 @@ class Wasabi
   class SchemaCollection
     include Enumerable
 
-    def initialize(schemas)
-      @schemas = schemas
+    def initialize
+      @schemas = []
+    end
+
+    def <<(schema)
+      @schemas << schema
+    end
+
+    def push(schemas)
+      @schemas += schemas
     end
 
     def each(&block)

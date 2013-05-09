@@ -8,7 +8,7 @@ describe Wasabi do
     # XXX: this might be useless now that almost everything is parsed lazily.
     it 'has an ok parse-time for huge wsdl files' do
       #profiler = MethodProfiler.observe(Wasabi::Parser)
-      expect(wsdl.parser.operations.count).to eq(1511)
+      expect(wsdl.documents.operations.count).to eq(1511)
       #puts profiler.report
     end
 

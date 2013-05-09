@@ -1,14 +1,14 @@
 require "spec_helper"
 
-describe Wasabi::Parser do
+describe Wasabi do
   context "with: symbolic_endpoint.wsdl" do
 
-    subject(:parser) { Wasabi::Parser.new Nokogiri::XML(xml) }
+    subject(:wsdl) { Wasabi.new(xml) }
 
     let(:xml) { fixture(:symbolic_endpoint).read }
 
     it "allows symbolic endpoints" do
-      parser.endpoint.should be_nil
+      wsdl.endpoint.should be_nil
     end
 
   end

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://connect.bookt.com/svc/connect.svc?wsdl -->
+<wsdl:definitions name="Connect" targetNamespace="https://connect.bookt.com/svc" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:i0="http://tempuri.org/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://connect.bookt.com/svc" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/">
+   <wsdl:import namespace="http://tempuri.org/" location="http://connect.bookt.com/svc/connect.svc?wsdl=wsdl1"/>
+   <wsdl:types/>
+   <wsdl:service name="Connect">
+      <wsdl:port name="IConnect" binding="i0:IConnect">
+         <soap:address location="http://connect.bookt.com/svc/connect.svc"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>

@@ -1,6 +1,7 @@
 module SpecSupport
 
   class Fixture
+
     def self.[](name)
       fixtures[name]
     end
@@ -31,12 +32,11 @@ module SpecSupport
     def read
       Fixture[filename] ||= File.read(path)
     end
+
   end
 
-  module Methods
-    def fixture(*args)
-      Fixture.new(*args)
-    end
+  def fixture(*args)
+    Fixture.new(*args)
   end
 
 end

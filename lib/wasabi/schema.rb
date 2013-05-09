@@ -5,14 +5,12 @@ class Wasabi
 
     CHILD_TYPES = %w[element complexType simpleType]
 
-    def initialize(schema, parser)
+    def initialize(schema, wsdl)
       @schema = schema
+      @wsdl = wsdl
 
       @target_namespace     = @schema['targetNamespace']
       @element_form_default = @schema['elementFormDefault']
-
-      # TODO: get rid of this dependency.
-      @parser = parser
 
       @elements      = {}
       @complex_types = {}
@@ -40,13 +38,13 @@ class Wasabi
 
         case node.name
         when 'element'
-          type = Type.new(node, @parser)
+          type = Type.new(node, @wsdl)
           @elements[type_name] = type
         when 'complexType'
-          type = Type.new(node, @parser)
+          type = Type.new(node, @wsdl)
           @complex_types[type_name] = type
         when 'simpleType'
-          simple_type = SimpleType.new(node, @parser)
+          simple_type = SimpleType.new(node, @wsdl)
           @simple_types[type_name] = simple_type
         end
       end
