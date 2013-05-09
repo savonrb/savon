@@ -35,6 +35,8 @@ class Wasabi
         type = yield schema
         return type if type
       end
+
+      nil
     end
 
   end

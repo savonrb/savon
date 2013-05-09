@@ -19,10 +19,13 @@ class Wasabi
     @parser = Parser.new(document)
   end
 
+  attr_reader :parser
+
   def service_name
     @parser.service_name
   end
 
+  # TODO: move this to an operation.
   def endpoint
     @parser.endpoint
   end
@@ -33,6 +36,10 @@ class Wasabi
 
   def namespaces
     @parser.namespaces
+  end
+
+  def schemas
+    @parser.schemas
   end
 
   def operation(operation_name)

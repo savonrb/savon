@@ -1,13 +1,14 @@
 require 'spec_helper'
 
-describe Wasabi::Document do
+describe Wasabi do
   context 'with: economic.wsdl' do
 
-    subject { Wasabi::Document.new fixture(:economic).read }
+    subject(:wsdl) { Wasabi.new fixture(:economic).read }
 
+    # XXX: this might be useless now that almost everything is parsed lazily.
     it 'has an ok parse-time for huge wsdl files' do
       #profiler = MethodProfiler.observe(Wasabi::Parser)
-      expect(subject.operations.count).to eq(1511)
+      expect(wsdl.parser.operations.count).to eq(1511)
       #puts profiler.report
     end
 

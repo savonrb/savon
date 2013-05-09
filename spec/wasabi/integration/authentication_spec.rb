@@ -1,14 +1,16 @@
-require "spec_helper"
+require 'spec_helper'
 
-describe Wasabi::Document do
-  context "with: authentication.wsdl" do
+describe Wasabi do
+  context 'with: authentication.wsdl' do
 
-    subject(:document) { Wasabi::Document.new fixture(:authentication).read }
+    subject(:wsdl) { Wasabi.new fixture(:authentication).read }
 
-    its(:target_namespace) { should == "http://v1_0.ws.auth.order.example.com/" }
+    it 'knows the target namespace' do
+      expect(wsdl.target_namespace).to eq('http://v1_0.ws.auth.order.example.com/')
+    end
 
-    it 'knows all the namespaces' do
-      expect(document.namespaces).to eq(
+    it 'knows the namespaces' do
+      expect(wsdl.namespaces).to eq(
         'tns'  => 'http://v1_0.ws.auth.order.example.com/',
         'xs'   => 'http://www.w3.org/2001/XMLSchema',
         'ns1'  => 'http://cxf.apache.org/bindings/xformat',
@@ -18,12 +20,13 @@ describe Wasabi::Document do
       )
     end
 
-    its(:endpoint) { should == URI("http://example.com/validation/1.0/AuthenticationService") }
+    it 'knows the endpoint' do
+      expect(wsdl.endpoint).to eq(URI.parse 'http://example.com/validation/1.0/AuthenticationService')
+    end
 
     it 'knows the operations' do
-      expect(document).to have(1).operations
+      operation = wsdl.operation(:authenticate)
 
-      operation = document.operations[:authenticate]
       expect(operation.input).to eq('authenticate')
       expect(operation.soap_action).to eq('authenticate')
       expect(operation.nsid).to eq('tns')
@@ -31,3 +34,4 @@ describe Wasabi::Document do
 
   end
 end
+
