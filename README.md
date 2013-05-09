@@ -1,6 +1,7 @@
 # Wasabi
 
-A simple WSDL parser.
+Wasabi is a simple WSDL parser written in Ruby and extracted from the
+[Savon](https://github.com/savonrb/savon) SOAP client.
 
 [![Build Status](https://secure.travis-ci.org/savonrb/wasabi.png)](http://travis-ci.org/savonrb/wasabi)
 [![Gem Version](https://badge.fury.io/rb/wasabi.png)](http://badge.fury.io/rb/wasabi)
@@ -8,53 +9,40 @@ A simple WSDL parser.
 [![Coverage Status](https://coveralls.io/repos/savonrb/wasabi/badge.png?branch=master)](https://coveralls.io/r/savonrb/wasabi)
 
 
-## Installation
-
 Wasabi is available through [Rubygems](http://rubygems.org/gems/wasabi) and can be installed via:
 
 ```
 $ gem install wasabi
 ```
 
+or add it to your Gemfile like this:
 
-## Getting started
-
-``` ruby
-document = Wasabi.document File.read("some.wsdl")
+```
+gem 'wasabi'
 ```
 
-Get the SOAP endpoint:
+**Attention:** This targets the code on GitHub master.  
+Here is the [README for the latest released version (v3.1.0)](https://github.com/savonrb/wasabi/blob/v3.1.0/README.md).
+
 
 ``` ruby
-document.endpoint
-# => "http://soap.example.com"
-```
+# Instantiate Wasabi with a URL or the path to a WSDL document.
+wsdl = Wasabi.new('http://example.com?wsdl')
 
-Get the target namespace:
+# Get the name of the service.
+wsdl.service_name  # => 'ExampleWebService'
 
-``` ruby
-document.namespace
-# => "http://v1.example.com"
-```
+# Get the SOAP endpoint of the service.
+# This will be moved to the operation soon.
+wsdl.endpoint  # => 'http://v1.example.com'
 
-Check whether elementFormDefault is set to `:qualified` or `:unqualified`:
+# Get the target namespace of the document.
+wsdl.target_namespace  # => 'http://v1.example.com'
 
-``` ruby
-document.element_form_default
-# => :qualified
-```
+# Get the namespaces.
+wsdl.namespaces  # => { 'wsdl' => 'http://schemas.xmlsoap.org/wsdl/', ... }
 
-Get a list of available SOAP actions (snakecase for convenience):
-
-``` ruby
-document.soap_actions
-# => [:create_user, :find_user]
-```
-
-Get a map of SOAP action Symbols, their input tag and original SOAP action name:
-
-``` ruby
-document.operations
-# => { :create_user => { :input => "createUser", :action => "createUser" },
-# =>   :find_user => { :input => "findUser", :action => "findUser" } }
+# Get an operation by name.
+# This will be changed to use the original operation name.
+wsdl.operation(:authenticate)  # => '<Wasabi::Operation ...>'
 ```
