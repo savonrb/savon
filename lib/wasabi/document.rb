@@ -10,7 +10,18 @@ class Wasabi
     def initialize(document, wsdl)
       @document = document
       @wsdl = wsdl
+
+      @messages, @bindings, @port_types, @services = {}, {}, {}, {}
+
+      collect_sections(
+        'message'  => { :collection => @messages,   :container => Message  },
+        'binding'  => { :collection => @bindings,   :container => Binding  },
+        'portType' => { :collection => @port_types, :container => PortType },
+        'service'  => { :collection => @services,   :container => Service  }
+      )
     end
+
+    attr_reader :messages, :port_types, :bindings, :services
 
     def service_name
       @document.root['name']
@@ -39,45 +50,28 @@ class Wasabi
       imports
     end
 
-    # TODO: can we combine walking the root child nodes for each section?
-    #       benchmark whether this would increase performance with economic.
-    def messages
-      @messages ||= begin
-        nodes = @document.root.xpath('wsdl:message', 'wsdl' => Wasabi::WSDL)
-        messages = nodes.map { |node| [node['name'], Message.new(node)] }
-        Hash[messages]
-      end
-    end
-
-    def port_types
-      @port_types ||= begin
-        nodes = @document.root.xpath('wsdl:portType', 'wsdl' => Wasabi::WSDL)
-        port_types = nodes.map { |node| [node['name'], PortType.new(node)] }
-        Hash[port_types]
-      end
-    end
-
-    def bindings
-      @bindings ||= begin
-        nodes = @document.root.xpath('wsdl:binding', 'wsdl' => Wasabi::WSDL)
-        bindings = nodes.map { |node| [node['name'], Binding.new(node)] }
-        Hash[bindings]
-      end
-    end
-
-    def services
-      @services ||= begin
-        nodes = @document.root.xpath('wsdl:service', 'wsdl' => Wasabi::WSDL)
-        services = nodes.map { |node| [node['name'], Service.new(node)] }
-        Hash[services]
-      end
-    end
-
     def service_node
       @document.root.at_xpath('wsdl:service', 'wsdl' => Wasabi::WSDL)
     end
 
     private
+
+    def collect_sections(mapping)
+      section_types = mapping.keys
+
+      @document.root.element_children.each do |node|
+        section_type = node.name
+        next unless section_types.include? section_type
+
+        node_name = node['name']
+        type_mapping = mapping.fetch(section_type)
+
+        collection = type_mapping[:collection]
+        container = type_mapping[:container]
+
+        collection[node_name] = container.new(node)
+      end
+    end
 
     def schema_nodes
       @schema_nodes ||= begin
