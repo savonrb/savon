@@ -32,17 +32,18 @@ wsdl = Wasabi.new('http://example.com?wsdl')
 # Get the name of the service.
 wsdl.service_name  # => 'ExampleWebService'
 
-# Get the SOAP endpoint of the service.
-# This will be moved to the operation soon.
-wsdl.endpoint  # => 'http://v1.example.com'
-
 # Get the target namespace of the document.
 wsdl.target_namespace  # => 'http://v1.example.com'
 
 # Get the namespaces.
 wsdl.namespaces  # => { 'wsdl' => 'http://schemas.xmlsoap.org/wsdl/', ... }
 
-# Get an operation by name.
-# This will be changed to use the original operation name.
-wsdl.operation(:authenticate)  # => '<Wasabi::Operation ...>'
+operation = wsdl.operation('authenticate')  # => '<Wasabi::Operation ...>'
+
+# Get information about an operation.
+operation.name         # => 'authenticate'
+operation.nsid         # => 'tns'
+operation.input        # => 'authenticate'
+operation.soap_action  # => 'urn:authenticate'
+operation.endpoint     # => 'http://v1.example.com'
 ```
