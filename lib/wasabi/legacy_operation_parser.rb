@@ -40,9 +40,9 @@ class Wasabi
     end
 
     def parse_operations
-      operations = @document.xpath("wsdl:definitions/wsdl:binding/wsdl:operation", 'wsdl' => Wasabi::WSDL)
+      operations = @document.root.xpath('wsdl:binding/wsdl:operation', 'wsdl' => Wasabi::WSDL)
       operations.each do |operation|
-        name = operation.attribute("name").to_s
+        name = operation.attribute('name').to_s
 
         # TODO: check for soap namespace?
         soap_operation = operation.element_children.find { |node| node.name == 'operation' }

@@ -28,7 +28,7 @@ class Wasabi
     def imports
       imports = []
 
-      @document.xpath('/wsdl:definitions/wsdl:import', 'wsdl' => Wasabi::WSDL).each do |node|
+      @document.root.xpath('wsdl:import', 'wsdl' => Wasabi::WSDL).each do |node|
         location = node['location']
         imports << location if location
       end
@@ -41,14 +41,14 @@ class Wasabi
     end
 
     def service_node
-      @document.at_xpath('/wsdl:definitions/wsdl:service', 'wsdl' => Wasabi::WSDL)
+      @document.root.at_xpath('wsdl:service', 'wsdl' => Wasabi::WSDL)
     end
 
     private
 
     def schema_nodes
       @schema_nodes ||= begin
-        types = @document.at_xpath('/wsdl:definitions/wsdl:types', 'wsdl' => Wasabi::WSDL)
+        types = @document.root.at_xpath('wsdl:types', 'wsdl' => Wasabi::WSDL)
         types ? types.element_children : []
       end
     end
