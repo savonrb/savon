@@ -28,7 +28,7 @@ describe Wasabi do
       operation = wsdl.operation('authenticate')
 
       expect(operation.input).to eq('authenticate')
-      expect(operation.soap_action).to eq('authenticate')
+      expect(operation.soap_action).to eq('')
       expect(operation.nsid).to eq('tns')
     end
 
