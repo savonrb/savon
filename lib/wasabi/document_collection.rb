@@ -53,23 +53,6 @@ class Wasabi
       @services ||= collect_sections { |document| document.services }
     end
 
-    # TODO: this works for now, but it should be moved into the Operation,
-    #       because there can be different endpoints for different operations.
-    def endpoint
-      return @endpoint if @endpoint
-
-      if service = first.service_node
-        endpoint = service.at_xpath(".//soap11:address/@location", 'soap11' => Wasabi::SOAP_1_1)
-        endpoint ||= service.at_xpath(service_node, ".//soap12:address/@location", 'soap12' => Wasabi::SOAP_1_2)
-      end
-
-      begin
-        @endpoint = URI(URI.escape(endpoint.to_s)) if endpoint
-      rescue URI::InvalidURIError
-        @endpoint = nil
-      end
-    end
-
     private
 
     def collect_sections

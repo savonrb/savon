@@ -23,16 +23,13 @@ describe Wasabi do
       )
     end
 
-    it 'knows the endpoint' do
-      expect(wsdl.endpoint).to eq(URI.parse 'https://api.example.com/api/api.asmx')
-    end
-
     it 'works fine with dot-namespaced operations' do
       operation = wsdl.operation('DeleteClient')
 
       expect(operation.input).to eq('Client.Delete')
       expect(operation.soap_action).to eq('http://api.example.com/api/Client.Delete')
       expect(operation.nsid).to eq('tns')
+      expect(operation.endpoint).to eq('https://api.example.com/api/api.asmx')
     end
 
   end

@@ -1,8 +1,9 @@
 class Wasabi
   class Operation
 
-    def initialize(name, binding_operation, port_type_operation, documents)
+    def initialize(name, endpoint, binding_operation, port_type_operation, documents)
       @name = name
+      @endpoint = endpoint
       @binding_operation = binding_operation
       @port_type_operation = port_type_operation
 
@@ -10,7 +11,7 @@ class Wasabi
       parse_nsid_and_input
     end
 
-    attr_reader :name, :binding_operation, :port_type_operation, :nsid, :input
+    attr_reader :name, :endpoint, :binding_operation, :port_type_operation, :nsid, :input
 
     def soap_action
       @binding_operation.soap_action

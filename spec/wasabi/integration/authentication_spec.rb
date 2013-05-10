@@ -20,16 +20,13 @@ describe Wasabi do
       )
     end
 
-    it 'knows the endpoint' do
-      expect(wsdl.endpoint).to eq(URI.parse 'http://example.com/validation/1.0/AuthenticationService')
-    end
-
     it 'knows the operations' do
       operation = wsdl.operation('authenticate')
 
       expect(operation.input).to eq('authenticate')
       expect(operation.soap_action).to eq('')
       expect(operation.nsid).to eq('tns')
+      expect(operation.endpoint).to eq('http://example.com/validation/1.0/AuthenticationService')
     end
 
   end

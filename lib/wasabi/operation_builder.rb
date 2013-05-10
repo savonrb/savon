@@ -15,9 +15,7 @@ class Wasabi
       soap_service, soap_version = find_soap_service
 
       soap_port = soap_service.find_port_by_type(soap_version)
-
-      # TODO: store the endpoint with the operation
-      #endpoint = soap_port.location
+      endpoint = soap_port.location
 
       binding = find_binding(soap_port)
       port_type = find_port_type(binding)
@@ -25,7 +23,7 @@ class Wasabi
       binding.operations.each do |operation_name, binding_operation|
         port_type_operation = port_type.find_operation_by_name(operation_name)
 
-        operation = Operation.new(operation_name, binding_operation, port_type_operation, @documents)
+        operation = Operation.new(operation_name, endpoint, binding_operation, port_type_operation, @documents)
         operations[operation_name] = operation
       end
 
