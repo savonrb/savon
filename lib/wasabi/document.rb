@@ -1,4 +1,5 @@
 require 'wasabi/schema'
+require 'wasabi/port_type'
 require 'wasabi/binding'
 require 'wasabi/service'
 require 'wasabi/legacy_operation_parser'
@@ -40,6 +41,14 @@ class Wasabi
 
     def operations
       @operations ||= LegacyOperationParser.new(@document).operations
+    end
+
+    def port_types
+      @port_types ||= begin
+        nodes = @document.root.xpath('wsdl:portType', 'wsdl' => Wasabi::WSDL)
+        port_types = nodes.map { |node| [node['name'], PortType.new(node)] }
+        Hash[port_types]
+      end
     end
 
     def bindings

@@ -2,6 +2,37 @@ require 'spec_helper'
 
 describe Wasabi::Document do
 
+  describe '#port_types' do
+    it 'works with multiple bindings' do
+      document = get_documents(:oracle).first
+
+      expect(document.port_types.keys).to match_array([
+        'ConditionServiceSoap', 'HtmlViewServiceSoap', 'IBotServiceSoap',
+        'JobManagementServiceSoap', 'MetadataServiceSoap', 'ReplicationServiceSoap',
+        'ReportEditingServiceSoap', 'SAWSessionServiceSoap', 'SecurityServiceSoap',
+        'WebCatalogServiceSoap', 'XmlViewServiceSoap'
+      ])
+
+      # port type
+
+      port_type = document.port_types['IBotServiceSoap']
+      expect(port_type.name).to eq('IBotServiceSoap')
+
+      expect(port_type.operations.keys).to match_array([
+        "deleteIBot", "executeIBotNow", "moveIBot", "sendMessage",
+        "subscribe", "unsubscribe", "writeIBot"
+      ])
+
+      # port type operation
+
+      port_type_operation = port_type.operations['moveIBot']
+      expect(port_type_operation.name).to eq('moveIBot')
+
+      expect(port_type_operation.input).to eq(:name => nil, :message => 'sawsoap:moveIBotIn')
+      expect(port_type_operation.output).to eq(:name => nil, :message => 'sawsoap:moveIBotOut')
+    end
+  end
+
   describe '#bindings' do
     it 'works with multiple bindings' do
       document = get_documents(:oracle).first
