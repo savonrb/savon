@@ -22,5 +22,9 @@ class Wasabi
       @soap_node['location']
     end
 
+    def to_hash
+      { :name => name, :binding => binding, :type => type, :location => location }
+    end
+
   end
 end

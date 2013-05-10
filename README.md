@@ -46,4 +46,8 @@ operation.nsid         # => 'tns'
 operation.input        # => 'authenticate'
 operation.soap_action  # => 'urn:authenticate'
 operation.endpoint     # => 'http://v1.example.com'
+
+# Inspect the service. Returns a big Hash with useful
+# information about the service. Very helpful for debugging.
+wsdl.inspect.to_hash   # => { :service_name => 'ExampleWebService', ... }
 ```

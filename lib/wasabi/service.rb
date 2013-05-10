@@ -36,6 +36,11 @@ class Wasabi
       find_port_by_type(Wasabi::SOAP_1_2)
     end
 
+    def to_hash
+      ports_hash = Hash[ports.map { |name, port| [name, port.to_hash] }]
+      { :name  => name, :ports => ports_hash }
+    end
+
     private
 
     def ports!

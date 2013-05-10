@@ -5,13 +5,21 @@ class Wasabi
     def initialize(node, wsdl)
       @node = node
       @wsdl = wsdl
+
+      @name = node['name']
     end
+
+    attr_reader :name
 
     def type
       first_child = @node.element_children.first
       if first_child.name == 'restriction'
         first_child['base']
       end
+    end
+
+    def to_hash
+      { :name => name, :type => type }
     end
 
   end
@@ -47,6 +55,12 @@ class Wasabi
 
       @children = children || []
     end
+
+    def to_hash
+      { :name => name, :type => type, :children => children }
+    end
+
+    private
 
     def parse_complex_type(complex_type, name)
       children = []

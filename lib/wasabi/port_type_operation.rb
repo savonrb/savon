@@ -22,6 +22,10 @@ class Wasabi
       @output = parse_node(@output_node)
     end
 
+    def to_hash
+      { :name => name, :input => input, :output => output }
+    end
+
     private
 
     def find_node(node_name)

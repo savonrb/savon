@@ -23,6 +23,11 @@ class Wasabi
       @operations ||= operations!
     end
 
+    def to_hash
+      operations_hash = Hash[operations.map { |name, operation| [name, operation.to_hash] }]
+      { :name => name, :operations => operations_hash }
+    end
+
     private
 
     def operations!

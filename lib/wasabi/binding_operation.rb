@@ -18,6 +18,10 @@ class Wasabi
       @soap_operation_node['style']
     end
 
+    def to_hash
+      { :name => name, :soap_action => soap_action, :style => style }
+    end
+
     private
 
     def find_soap_operation_node

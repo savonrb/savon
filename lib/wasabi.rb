@@ -2,6 +2,7 @@ require 'wasabi/version'
 require 'wasabi/document'
 require 'wasabi/resolver'
 require 'wasabi/importer'
+require 'wasabi/inspector'
 
 class Wasabi
 
@@ -34,6 +35,10 @@ class Wasabi
 
   def operation(operation_name)
     @documents.operations[operation_name]
+  end
+
+  def inspect
+    Inspector.new(self)
   end
 
 end
