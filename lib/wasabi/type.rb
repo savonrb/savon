@@ -96,7 +96,7 @@ class Wasabi
       _, nsid = type && type.split(':').reverse
 
       if nsid
-        namespace = @wsdl.namespaces.fetch(nsid)
+        namespace = find_namespace(nsid, element)
         simple_type = namespace == Wasabi::XSD
       else
         # assume that elements with a @type qname lacking an nsid to reference the xml schema.
@@ -110,6 +110,25 @@ class Wasabi
 
       { :name => name, :type => type,
         :simple_type => simple_type, :form => form, :singular => singular }
+    end
+
+    def find_namespace(nsid, element)
+      # look for the namespace in the global namespaces collection
+      namespace = @wsdl.namespaces[nsid]
+
+      # look for the namespace declaration on the element itself
+      if element_namespace = element.namespaces["xmlns:#{nsid}"]
+        namespace = element_namespace
+        @wsdl.namespaces[nsid] = element_namespace
+      end
+
+      missing_namespace! nsid unless namespace
+      namespace
+    end
+
+    def missing_namespace!(nsid)
+      raise "Unable to find the namespace for #{nsid.inspect} in:\n" +
+            @wsdl.namespaces.inspect
     end
 
   end
