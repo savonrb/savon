@@ -3,19 +3,17 @@ class Wasabi
 
     def initialize(operation_node)
       @operation_node = operation_node
-      @soap_operation_node = find_soap_operation_node
+
+      if soap_operation_node = find_soap_operation_node
+        @soap_action = soap_operation_node['soapAction']
+        @style = soap_operation_node['style']
+      end
     end
+
+    attr_reader :soap_action, :style
 
     def name
       @operation_node['name']
-    end
-
-    def soap_action
-      @soap_operation_node['soapAction']
-    end
-
-    def style
-      @soap_operation_node['style']
     end
 
     def to_hash

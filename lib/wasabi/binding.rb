@@ -5,8 +5,14 @@ class Wasabi
 
     def initialize(binding_node)
       @binding_node = binding_node
-      @soap_node = find_soap_node
+
+      if soap_node = find_soap_node
+        @style = soap_node['style']
+        @transport = soap_node['transport']
+      end
     end
+
+    attr_reader :style, :transport
 
     def name
       @binding_node['name']
@@ -14,14 +20,6 @@ class Wasabi
 
     def port_type
       @binding_node['type']
-    end
-
-    def style
-      @soap_node['style']
-    end
-
-    def transport
-      @soap_node['transport']
     end
 
     def operations
