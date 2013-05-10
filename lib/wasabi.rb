@@ -24,11 +24,6 @@ class Wasabi
     @documents.service_name
   end
 
-  # TODO: move this up to the operation.
-  def endpoint
-    @documents.endpoint
-  end
-
   def target_namespace
     @documents.target_namespace
   end
