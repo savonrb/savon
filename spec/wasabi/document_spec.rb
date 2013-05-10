@@ -2,6 +2,67 @@ require 'spec_helper'
 
 describe Wasabi::Document do
 
+  describe '#messages' do
+    it 'works with single element parts' do
+      document = get_documents(:oracle).first
+
+      expect(document.messages.keys).to include(
+        'addReportToPageIn', 'addReportToPageOut', 'applyReportDefaultsIn', 'applyReportDefaultsOut'
+      )
+
+      # message
+
+      message = document.messages['addReportToPageIn']
+      expect(message.name).to eq('addReportToPageIn')
+
+      expect(message.parts).to eq([
+        { :name => 'parameters', :type => nil, :element => 'sawsoap:addReportToPage' }
+      ])
+    end
+
+    it 'works with single type parts' do
+      document = get_documents(:symbolic_endpoint).first
+
+      expect(document.messages.keys).to include(
+        'ptsLiesListeResponse', 'ptsLiesListeRequest'
+      )
+
+      # message
+
+      message = document.messages['ptsLiesListeRequest']
+      expect(message.name).to eq('ptsLiesListeRequest')
+
+      expect(message.parts).to eq([
+        { :name => 'user', :type => 'tns2:DtTqEbUser', :element => nil }
+      ])
+    end
+
+    it 'works with multiple type parts' do
+      document = get_documents(:telefonkatalogen).first
+
+      expect(document.messages.keys).to include(
+        'sendsmsRequest', 'sendsmsResponse'
+      )
+
+      # message
+
+      message = document.messages['sendsmsRequest']
+      expect(message.name).to eq('sendsmsRequest')
+
+      expect(message.parts).to eq([
+        { :name => 'sender',      :type  => 'xsd:string', :element => nil },
+        { :name => 'cellular',    :type  => 'xsd:string', :element => nil },
+        { :name => 'msg',         :type  => 'xsd:string', :element => nil },
+        { :name => 'smsnumgroup', :type  => 'xsd:string', :element => nil },
+        { :name => 'emailaddr',   :type  => 'xsd:string', :element => nil },
+        { :name => 'udh',         :type  => 'xsd:string', :element => nil },
+        { :name => 'datetime',    :type  => 'xsd:string', :element => nil },
+        { :name => 'format',      :type  => 'xsd:string', :element => nil },
+        { :name => 'dlrurl',      :type  => 'xsd:string', :element => nil }
+      ])
+    end
+  end
+
   describe '#port_types' do
     it 'works with multiple bindings' do
       document = get_documents(:oracle).first
