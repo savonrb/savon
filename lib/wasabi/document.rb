@@ -1,4 +1,5 @@
 require 'wasabi/schema'
+require 'wasabi/service'
 require 'wasabi/legacy_operation_parser'
 
 class Wasabi
@@ -38,6 +39,14 @@ class Wasabi
 
     def operations
       @operations ||= LegacyOperationParser.new(@document).operations
+    end
+
+    def services
+      @services ||= begin
+        nodes = @document.root.xpath('wsdl:service', 'wsdl' => Wasabi::WSDL)
+        services = nodes.map { |node| [node['name'], Service.new(node)] }
+        Hash[services]
+      end
     end
 
     def service_node

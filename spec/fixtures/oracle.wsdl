@@ -1,0 +1,3629 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!-- https://fap0023-bi.oracleads.com/analytics-ws/saw.dll/wsdl/v7 -->
+<wsdl:definitions targetNamespace="urn://oracle.bi.webservices/v7" xmlns:sawsoap="urn://oracle.bi.webservices/v7" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+   <wsdl:types>
+      <xsd:schema elementFormDefault="qualified" jxb:version="1.0" targetNamespace="urn://oracle.bi.webservices/v7" version="1.0" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+         <xsd:annotation>
+            <xsd:appinfo>
+               <jxb:schemaBindings>
+                  <jxb:package name="oracle.bi.web.soap">
+                     <jxb:javadoc/>
+                  </jxb:package>
+               </jxb:schemaBindings>
+            </xsd:appinfo>
+         </xsd:annotation>
+         <xsd:complexType name="SAWLocale">
+            <xsd:sequence>
+               <xsd:element name="language" nillable="true" type="xsd:string"/>
+               <xsd:element name="country" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="LogonParameter">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="value" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="SAWSessionParameters">
+            <xsd:sequence>
+               <xsd:element name="locale" nillable="true" type="sawsoap:SAWLocale"/>
+               <xsd:element name="language" nillable="true" type="sawsoap:SAWLocale"/>
+               <xsd:element name="userAgent" nillable="true" type="xsd:string"/>
+               <xsd:element name="asyncLogon" type="xsd:boolean"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="logonParams" nillable="true" type="sawsoap:LogonParameter"/>
+               <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               <xsd:element name="syndicate" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="ReportRef">
+            <xsd:sequence>
+               <xsd:element name="reportPath" nillable="true" type="xsd:string"/>
+               <xsd:element name="reportXml" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="Variable">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="value" nillable="true"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="ReportParams">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="filterExpressions" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="variables" type="sawsoap:Variable"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="nameValues" type="sawsoap:NameValuePair"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="templateInfos" type="sawsoap:TemplateInfo"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="viewName" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="NameValuePair">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="value" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="TemplateInfoInstance">
+            <xsd:sequence>
+               <xsd:element name="instanceName" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="nameValues" type="sawsoap:NameValuePair"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="TemplateInfo">
+            <xsd:sequence>
+               <xsd:element name="templateForEach" type="xsd:string"/>
+               <xsd:element name="templateIterator" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="instance" type="sawsoap:TemplateInfoInstance"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="NameValueArrayPair">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="values" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="Account">
+            <xsd:annotation>
+               <xsd:documentation>accountType values:
+              0 - user
+              1 - group
+              4 - role</xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/>
+               <xsd:element name="accountType" type="xsd:int"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="guid" type="xsd:string"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="displayName" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="AccessControlToken">
+            <xsd:annotation>
+               <xsd:documentation>permissionMask field value is  combination of the following flags:
+            1 permission to read items content
+            2 permission to traverse directory
+            4 permission to change items content
+            8 permission to delete an item
+            16 permission to assign permissions to others
+            32 can take ownership of the item
+            2048 permission to run a publisher report live
+            4096 permission to schedule a publisher report
+            8192 permission to view output of a publisher report</xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="account" type="sawsoap:Account"/>
+               <xsd:element name="permissionMask" type="xsd:int"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="ACL">
+            <xsd:sequence>
+               <xsd:element maxOccurs="1" minOccurs="0" name="dummy" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="accessControlTokens" type="sawsoap:AccessControlToken"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="Privilege">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="description" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="UpdateACLParams">
+            <xsd:sequence>
+               <xsd:element name="updateFlag" type="sawsoap:UpdateACLMode"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:simpleType name="ItemInfoType">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="Folder"/>
+               <xsd:enumeration value="Link"/>
+               <xsd:enumeration value="Object"/>
+               <xsd:enumeration value="Missing"/>
+               <xsd:enumeration value="NoAccess"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="ItemInfo">
+            <xsd:annotation>
+               <xsd:documentation>attributes field value is  a combination of the following flags:
+                1 - read only,
+                2 - archive,
+                4 - hidden,
+                8 - system,
+                16 - dont index</xsd:documentation>
+            </xsd:annotation>
+            <xsd:sequence>
+               <xsd:element name="path" type="xsd:string"/>
+               <xsd:element name="type" type="sawsoap:ItemInfoType"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="caption" type="xsd:string"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="description" type="xsd:string"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="attributes" type="xsd:int"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="lastModified" type="xsd:dateTime"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="created" type="xsd:dateTime"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="accessed" type="xsd:dateTime"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="creator" type="sawsoap:Account"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="lastModifier" type="sawsoap:Account"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="signature" type="xsd:string"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="targetPath" type="xsd:string"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="acl" type="sawsoap:ACL"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="owner" type="sawsoap:Account"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="itemProperties" type="sawsoap:NameValuePair"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="AuthResult">
+            <xsd:sequence>
+               <xsd:element name="sessionID" type="xsd:string"/>
+               <xsd:element name="authCompleted" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="SessionEnvironment">
+            <xsd:sequence>
+               <xsd:element name="userName" type="xsd:string"/>
+               <xsd:element name="homeDirectory" type="sawsoap:ItemInfo"/>
+               <xsd:element minOccurs="0" name="locale" type="sawsoap:SAWLocale"/>
+               <xsd:element minOccurs="0" name="language" type="sawsoap:SAWLocale"/>
+               <xsd:element minOccurs="0" name="timezoneid" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="sharedDirectories" type="sawsoap:ItemInfo"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="logon">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="name" nillable="true" type="xsd:string"/>
+                  <xsd:element name="password" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="logonResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="logonex">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="name" nillable="true" type="xsd:string"/>
+                  <xsd:element name="password" nillable="true" type="xsd:string"/>
+                  <xsd:element name="sessionparams" nillable="true" type="sawsoap:SAWSessionParameters"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="logonexResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:AuthResult"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="logoff">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="logoffResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="keepAlive">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="keepAliveResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCurUser">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCurUserResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSessionEnvironment">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSessionEnvironmentResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:SessionEnvironment"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSessionVariables">
+            <xsd:complexType>
+               <xsd:annotation>
+                  <xsd:documentation>Predefined variable names:
+                   NQ_SESSION.USER,
+                   NQ_SESSION.USERGUID,
+                   NQ_SESSION.GROUP,
+                   NQ_SESSION.GROUPGUIDS,
+                   NQ_SESSION.WEBGROUPS, 
+                   NQ_SESSION.REALM,
+                   NQ_SESSION.REALMGUID,
+                   NQ_SESSION.TOKENS,
+                   NQ_SESSION.REQUESTKEY,
+                   NQ_SESSION.PORTALPATH,
+                   NQ_SESSION.DISPLAYNAME,
+                   NQ_SESSION.SKIN,
+                   NQ_SESSION.STYLE,
+                   NQ_SESSION.EMAIL,
+                   NQ_SESSION.CURRENCYTAG,
+                   NQ_SESSION.ACTUATEUSERID,
+                   NQ_SESSION.TIMEZONE,
+                   NQ_SESSION.DATA_TZ,
+                   NQ_SESSION.DATA_DISPLAY_TZ,
+                   NQ_SESSION.PROXYLEVEL,
+                   NQ_SESSION.USERLOCALE,
+                   NQ_SESSION.USERLANG,
+                   NQ_SESSION.PREFERRED_CURRENCY</xsd:documentation>
+               </xsd:annotation>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="names" nillable="true" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSessionVariablesResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="impersonate">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="name" nillable="true" type="xsd:string"/>
+                  <xsd:element name="password" nillable="true" type="xsd:string"/>
+                  <xsd:element name="impersonateID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="impersonateResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="impersonateex">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="name" type="xsd:string"/>
+                  <xsd:element name="password" type="xsd:string"/>
+                  <xsd:element name="impersonateID" type="xsd:string"/>
+                  <xsd:element name="sessionparams" nillable="true" type="sawsoap:SAWSessionParameters"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="impersonateexResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:AuthResult"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="ErrorDetailsLevel">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="ErrorCode"/>
+               <xsd:enumeration value="ErrorCodeAndText"/>
+               <xsd:enumeration value="FullDetails"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="ErrorInfo">
+            <xsd:sequence>
+               <xsd:element minOccurs="0" name="code" type="xsd:string"/>
+               <xsd:element minOccurs="0" name="context" type="xsd:string"/>
+               <xsd:element minOccurs="0" name="message" type="xsd:string"/>
+               <xsd:element minOccurs="0" name="details" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="CatalogObject">
+            <xsd:sequence>
+               <xsd:element minOccurs="0" name="catalogObject" type="xsd:string"/>
+               <xsd:element minOccurs="0" name="catalogObjectBytes" type="xsd:base64Binary" xmime:expectedContentTypes="application/obipscatalogobject" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"/>
+               <xsd:element minOccurs="0" name="itemInfo" type="sawsoap:ItemInfo"/>
+               <xsd:element minOccurs="0" name="errorInfo" type="sawsoap:ErrorInfo"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="voidType">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="deleteItem">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="deleteItemResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="removeFolder">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="recursive" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="removeFolderResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="createFolder">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="createIfNotExists" type="xsd:boolean"/>
+                  <xsd:element name="createIntermediateDirs" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="createFolderResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="createLink">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="pathTarget" type="xsd:string"/>
+                  <xsd:element name="overwriteIfExists" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="createLinkResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="moveItem">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pathSrc" type="xsd:string"/>
+                  <xsd:element name="pathDest" type="xsd:string"/>
+                  <xsd:element name="flagACL" type="xsd:int"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="moveItemResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="copyItem">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pathSrc" type="xsd:string"/>
+                  <xsd:element name="pathDest" type="xsd:string"/>
+                  <xsd:element name="flagACL" type="xsd:int"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="copyItemResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="copyItem2">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element name="recursive" type="xsd:boolean"/>
+                  <xsd:element name="permissions" type="xsd:boolean"/>
+                  <xsd:element name="timestamps" type="xsd:boolean"/>
+                  <xsd:element default="false" name="useMtom" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="copyItem2Result">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="archive" type="xsd:base64Binary" xmime:expectedContentTypes="application/obipsarchive" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="pasteItem2">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="archive" type="xsd:base64Binary" xmime:expectedContentTypes="application/obipsarchive" xmlns:xmime="http://www.w3.org/2005/05/xmlmime"/>
+                  <xsd:element name="replacePath" type="xsd:string"/>
+                  <xsd:element name="flagACL" type="xsd:int"/>
+                  <xsd:element name="flagOverwrite" type="xsd:int"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="pasteItem2Result">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="GetSubItemsFilter">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="itemInfoFilters" nillable="true" type="sawsoap:NameValuePair"/>
+               <xsd:element name="dummy" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="GetSubItemsParams">
+            <xsd:sequence>
+               <xsd:element name="filter" nillable="true" type="sawsoap:GetSubItemsFilter"/>
+               <xsd:element name="includeACL" type="xsd:boolean"/>
+               <xsd:element name="withPermission" type="xsd:int"/>
+               <xsd:element name="withPermissionMask" type="xsd:int"/>
+               <xsd:element name="withAttributes" type="xsd:int"/>
+               <xsd:element name="withAttributesMask" type="xsd:int"/>
+               <xsd:element name="preserveOriginalLinkPath" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="getSubItems">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="mask" type="xsd:string"/>
+                  <xsd:element name="resolveLinks" type="xsd:boolean"/>
+                  <xsd:element name="options" nillable="true" type="sawsoap:GetSubItemsParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSubItemsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="itemInfo" type="sawsoap:ItemInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getItemInfo">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="resolveLinks" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getItemInfoResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:ItemInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="ReadObjectsReturnOptions">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="NoObject"/>
+               <xsd:enumeration value="ObjectAsString"/>
+               <xsd:enumeration value="ObjectAsBinary"/>
+               <xsd:enumeration value="ObjectAsBinaryUseMtom"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:element name="readObjects">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="paths" type="xsd:string"/>
+                  <xsd:element name="resolveLinks" type="xsd:boolean"/>
+                  <xsd:element name="errorMode" type="sawsoap:ErrorDetailsLevel"/>
+                  <xsd:element name="returnOptions" type="sawsoap:ReadObjectsReturnOptions"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="readObjectsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="catalogObject" type="sawsoap:CatalogObject"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="writeObjects">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="catalogObjects" type="sawsoap:CatalogObject"/>
+                  <xsd:element name="allowOverwrite" type="xsd:boolean"/>
+                  <xsd:element name="createIntermediateDirs" type="xsd:boolean"/>
+                  <xsd:element name="errorMode" type="sawsoap:ErrorDetailsLevel"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="writeObjectsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="errorInfo" type="sawsoap:ErrorInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="UpdateCatalogItemACLParams">
+            <xsd:complexContent>
+               <xsd:extension base="sawsoap:UpdateACLParams">
+                  <xsd:sequence>
+                     <xsd:element name="recursive" type="xsd:boolean"/>
+                  </xsd:sequence>
+               </xsd:extension>
+            </xsd:complexContent>
+         </xsd:complexType>
+         <xsd:element name="updateCatalogItemACL">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element name="acl" type="sawsoap:ACL"/>
+                  <xsd:element name="options" type="sawsoap:UpdateCatalogItemACLParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="updateCatalogItemACLResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setOwnership">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="owner" type="sawsoap:Account"/>
+                  <xsd:element name="recursive" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setOwnershipResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setItemAttributes">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element name="value" type="xsd:int"/>
+                  <xsd:element name="valueOff" type="xsd:int"/>
+                  <xsd:element name="recursive" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setItemAttributesResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setItemProperty">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="name" type="xsd:string"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="value" type="xsd:string"/>
+                  <xsd:element name="recursive" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setItemPropertyResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="maintenanceMode">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="flag" type="xsd:boolean"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="maintenanceModeResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="XMLQueryOutputFormat">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="SAWRowsetData"/>
+               <xsd:enumeration value="SAWRowsetSchema"/>
+               <xsd:enumeration value="SAWRowsetSchemaAndData"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="XMLQueryExecutionOptions">
+            <xsd:sequence>
+               <xsd:element name="async" type="xsd:boolean"/>
+               <xsd:element name="maxRowsPerPage" type="xsd:int"/>
+               <xsd:element name="refresh" type="xsd:boolean"/>
+               <xsd:element name="presentationInfo" type="xsd:boolean"/>
+               <xsd:element name="type" nillable="true" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="QueryResults">
+            <xsd:sequence>
+               <xsd:element name="rowset" type="xsd:string"/>
+               <xsd:element name="queryID" type="xsd:string"/>
+               <xsd:element name="finished" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="executeXMLQuery">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="report" type="sawsoap:ReportRef"/>
+                  <xsd:element name="outputFormat" type="sawsoap:XMLQueryOutputFormat"/>
+                  <xsd:element name="executionOptions" nillable="true" type="sawsoap:XMLQueryExecutionOptions"/>
+                  <xsd:element name="reportParams" nillable="true" type="sawsoap:ReportParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="executeXMLQueryResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:QueryResults"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="upgradeXML">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="xml" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="upgradeXMLResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="executeSQLQuery">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sql" type="xsd:string"/>
+                  <xsd:element name="outputFormat" type="sawsoap:XMLQueryOutputFormat"/>
+                  <xsd:element name="executionOptions" nillable="true" type="sawsoap:XMLQueryExecutionOptions"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="executeSQLQueryResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:QueryResults"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="fetchNext">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="queryID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="fetchNextResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="sawsoap:QueryResults"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="cancelQuery">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="queryID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="cancelQueryResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPromptedFilters">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="report" type="sawsoap:ReportRef"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPromptedFiltersResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="promptedFilter" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="UpdateACLMode">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="ReplaceAcl"/>
+               <xsd:enumeration value="ReplaceForSpecifiedAccounts"/>
+               <xsd:enumeration value="DeleteAccountsFromAcl"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:element name="getGlobalPrivileges">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getGlobalPrivilegesResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="sawPrivileges" type="sawsoap:Privilege"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getGlobalPrivilegeACL">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="privilegeName" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getGlobalPrivilegeACLResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="acl" type="sawsoap:ACL"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="updateGlobalPrivilegeACL">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="privilegeName" type="xsd:string"/>
+                  <xsd:element name="acl" type="sawsoap:ACL"/>
+                  <xsd:element name="updateACLParams" nillable="true" type="sawsoap:UpdateACLParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="updateGlobalPrivilegeACLResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPermissions">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="acls" type="sawsoap:ACL"/>
+                  <xsd:element name="account" nillable="true" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPermissionsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:int"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPrivilegesStatus">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="privileges" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPrivilegesStatusResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="return" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getAccounts">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="account" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getAccountsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="accountDetails" type="sawsoap:Account"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="forgetAccounts">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="account" type="sawsoap:Account"/>
+                  <xsd:element name="cleanuplevel" type="xsd:int"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="forgetAccountsResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="renameAccounts">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="from" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="to" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="renameAccountsResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="joinGroups">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="group" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="member" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="joinGroupsResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="leaveGroups">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="group" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="member" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="leaveGroupsResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getGroups">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="member" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="expandGroups" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getGroupsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="account" type="sawsoap:Account"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getMembers">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="group" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="expandGroups" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getMembersResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="account" type="sawsoap:Account"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="isMember">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="group" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="1" name="member" type="sawsoap:Account"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="expandGroups" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="isMemberResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="result" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getAccountTenantID">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="account" type="sawsoap:Account"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getAccountTenantIDResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="evaluateCondition">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="reportCustomizationParameters" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="evaluateConditionResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="conditionIsTrue" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="evaluateInlineCondition">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="conditionXML" type="xsd:string"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="reportCustomizationParameters" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="evaluateInlineConditionResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="conditionIsTrue" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getConditionCustomizableReportElements">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="path" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getConditionCustomizableReportElementsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="customizableElement" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="ReportHTMLLinksMode">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="SamePage"/>
+               <xsd:enumeration value="NewPage"/>
+               <xsd:enumeration value="InPlace"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="ReportHTMLOptions">
+            <xsd:sequence>
+               <xsd:element name="enableDelayLoading" type="xsd:boolean"/>
+               <xsd:element name="linkMode" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="StartPageParams">
+            <xsd:sequence>
+               <xsd:element name="idsPrefix" nillable="true" type="xsd:string"/>
+               <xsd:element default="false" name="dontUseHttpCookies" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="startPage">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="options" nillable="true" type="sawsoap:StartPageParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="startPageResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="endPage">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pageID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="endPageResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="addReportToPage">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pageID" type="xsd:string"/>
+                  <xsd:element name="reportID" type="xsd:string"/>
+                  <xsd:element name="report" type="sawsoap:ReportRef"/>
+                  <xsd:element name="reportViewName" nillable="true" type="xsd:string"/>
+                  <xsd:element name="reportParams" nillable="true" type="sawsoap:ReportParams"/>
+                  <xsd:element name="options" nillable="true" type="sawsoap:ReportHTMLOptions"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="addReportToPageResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHeadersHtml">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pageID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHeadersHtmlResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCommonBodyHtml">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pageID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCommonBodyHtmlResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHtmlForReport">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="pageID" type="xsd:string"/>
+                  <xsd:element name="pageReportID" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHtmlForReportResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setBridge">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="bridge" nillable="true" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="setBridgeResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHtmlForPageWithOneReport">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reportID" type="xsd:string"/>
+                  <xsd:element name="report" type="sawsoap:ReportRef"/>
+                  <xsd:element name="reportViewName" nillable="true" type="xsd:string"/>
+                  <xsd:element name="reportParams" nillable="true" type="sawsoap:ReportParams"/>
+                  <xsd:element name="reportOptions" nillable="true" type="sawsoap:ReportHTMLOptions"/>
+                  <xsd:element name="pageParams" nillable="true" type="sawsoap:StartPageParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getHtmlForPageWithOneReportResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="executeIBotNow">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="executeIBotNowResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="writeIBot">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="obj" type="sawsoap:CatalogObject"/>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="resolveLinks" type="xsd:boolean"/>
+                  <xsd:element name="allowOverwrite" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="writeIBotResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobID" type="xsd:int"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="moveIBot">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="fromPath" type="xsd:string"/>
+                  <xsd:element name="toPath" type="xsd:string"/>
+                  <xsd:element name="resolveLinks" type="xsd:boolean"/>
+                  <xsd:element name="allowOverwrite" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="moveIBotResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="deleteIBot">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="deleteIBotResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="subscribe">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element name="customizationXml" nillable="true" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="subscribeResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="unsubscribe">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="path" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="unsubscribeResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="sendMessage">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="recipient" type="xsd:string"/>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="group" type="xsd:string"/>
+                  <xsd:element name="subject" type="xsd:string"/>
+                  <xsd:element name="body" type="xsd:string"/>
+                  <xsd:element name="priority" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="sendMessageResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="status" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="SAWException">
+            <xsd:sequence>
+               <xsd:element name="message" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="exception" type="sawsoap:SAWException"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="PromptedColumnInfo">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="Columns" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="JobInfo">
+            <xsd:sequence>
+               <xsd:element name="jobStats" type="sawsoap:JobStats"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="fileInfo" type="sawsoap:FileInfo"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="detailedInfo">
+                  <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:any maxOccurs="unbounded" minOccurs="0" processContents="skip"/>
+                     </xsd:sequence>
+                  </xsd:complexType>
+               </xsd:element>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="JobStats">
+            <xsd:sequence>
+               <xsd:element name="jobID" type="xsd:integer"/>
+               <xsd:element name="jobType" type="xsd:string"/>
+               <xsd:element name="jobUser" type="xsd:string"/>
+               <xsd:element name="jobState">
+                  <xsd:simpleType>
+                     <xsd:restriction base="xsd:string">
+                        <xsd:enumeration value="Running"/>
+                        <xsd:enumeration value="Finished"/>
+                        <xsd:enumeration value="Error"/>
+                        <xsd:enumeration value="Queued"/>
+                        <xsd:enumeration value="Cancelled"/>
+                     </xsd:restriction>
+                  </xsd:simpleType>
+               </xsd:element>
+               <xsd:element name="jobTotalMilliSec" type="xsd:string"/>
+               <xsd:element name="jobStartedTime" type="xsd:dateTime"/>
+               <xsd:element maxOccurs="1" minOccurs="0" name="jobFinishedTime" type="xsd:dateTime"/>
+               <xsd:element name="jobIsCancelling" type="xsd:string"/>
+               <xsd:element minOccurs="0" name="exception" type="sawsoap:SAWException"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="FileInfo">
+            <xsd:sequence>
+               <xsd:element name="filepath" type="xsd:string"/>
+               <xsd:element name="startTime" type="xsd:dateTime"/>
+               <xsd:element name="endTime" type="xsd:dateTime"/>
+               <xsd:element name="filesize" type="xsd:long"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="fileAttribs" type="sawsoap:NameValueArrayPair"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:simpleType name="OverrideType">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="Default"/>
+               <xsd:enumeration value="None"/>
+               <xsd:enumeration value="All"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="SegmentationOptions">
+            <xsd:sequence>
+               <xsd:element default="false" maxOccurs="1" minOccurs="0" name="removeCacheHits" type="xsd:boolean"/>
+               <xsd:element default="Default" maxOccurs="1" minOccurs="0" name="countOverride" type="sawsoap:OverrideType"/>
+               <xsd:element default="Default" maxOccurs="1" minOccurs="0" name="cacheOverride" type="sawsoap:OverrideType"/>
+               <xsd:element default="100" maxOccurs="1" minOccurs="0" name="samplingFactor" type="xsd:decimal"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="govRules" type="sawsoap:NameValuePair"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="prompts" type="sawsoap:NameValuePair"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="TreeNodePath">
+            <xsd:sequence>
+               <xsd:element name="treePath" type="xsd:string"/>
+               <xsd:element name="treeNode" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="writeListFiles">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="report" type="sawsoap:ReportRef"/>
+                  <xsd:element minOccurs="0" name="reportParams" type="sawsoap:ReportParams"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treeNodePath" type="sawsoap:TreeNodePath"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentationOptions" type="sawsoap:SegmentationOptions"/>
+                  <xsd:element name="filesystem" type="xsd:string"/>
+                  <xsd:element name="timeout" type="xsd:integer"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="writeListFilesResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getJobInfo">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobID" type="xsd:integer"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getJobInfoResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="cancelJob">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobID" type="xsd:integer"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="cancelJobResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCounts">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treePath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentationOptions" type="sawsoap:SegmentationOptions"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getCountsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPromptedColumns">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treePath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getPromptedColumnsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="ColumnInfo" type="sawsoap:PromptedColumnInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="purgeCache">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treePath" type="xsd:string"/>
+                  <xsd:element default="false" maxOccurs="1" minOccurs="0" name="ignoreCacheRef" type="xsd:boolean"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="purgeCacheResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="prepareCache">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treePath" type="xsd:string"/>
+                  <xsd:element default="false" maxOccurs="1" minOccurs="0" name="refresh" type="xsd:boolean"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="prepareCacheResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="saveResultSet">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="treeNodePath" type="sawsoap:TreeNodePath"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="savedSegmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentationOptions" type="sawsoap:SegmentationOptions"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="SRCustomLabel" type="xsd:string"/>
+                  <xsd:element default="false" maxOccurs="1" minOccurs="0" name="appendStaticSegment" type="xsd:boolean"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="saveResultSetResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="arrayOfGUIDs">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="GUID" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="deleteResultSet">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="targetLevel" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="GUIDs" type="sawsoap:arrayOfGUIDs"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="segmentPath" type="xsd:string"/>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="deleteResultSetResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="jobInfo" type="sawsoap:JobInfo"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:simpleType name="SATableDetails">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="Minimum"/>
+               <xsd:enumeration value="IncludeColumns"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="SASubjectAreaDetails">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="Minimum"/>
+               <xsd:enumeration value="IncludeTables"/>
+               <xsd:enumeration value="IncludeTablesAndColumns"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="AggregationRule">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="None"/>
+               <xsd:enumeration value="Sum"/>
+               <xsd:enumeration value="Count"/>
+               <xsd:enumeration value="Rank"/>
+               <xsd:enumeration value="Avg"/>
+               <xsd:enumeration value="Min"/>
+               <xsd:enumeration value="Max"/>
+               <xsd:enumeration value="Last"/>
+               <xsd:enumeration value="Percentile"/>
+               <xsd:enumeration value="First"/>
+               <xsd:enumeration value="ServerDefault"/>
+               <xsd:enumeration value="CountStar"/>
+               <xsd:enumeration value="Complex"/>
+               <xsd:enumeration value="TopN"/>
+               <xsd:enumeration value="BottomN"/>
+               <xsd:enumeration value="SubTotal"/>
+               <xsd:enumeration value="DimensionAggr"/>
+               <xsd:enumeration value="CountDistinct"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="SADataType">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="Invalid"/>
+               <xsd:enumeration value="Unknown"/>
+               <xsd:enumeration value="VarBinary"/>
+               <xsd:enumeration value="LongVarBinary"/>
+               <xsd:enumeration value="Binary"/>
+               <xsd:enumeration value="Char"/>
+               <xsd:enumeration value="VarChar"/>
+               <xsd:enumeration value="LongVarChar"/>
+               <xsd:enumeration value="Date"/>
+               <xsd:enumeration value="Time"/>
+               <xsd:enumeration value="TimeStamp"/>
+               <xsd:enumeration value="Numeric"/>
+               <xsd:enumeration value="Decimal"/>
+               <xsd:enumeration value="Integer"/>
+               <xsd:enumeration value="SmallInt"/>
+               <xsd:enumeration value="BigInt"/>
+               <xsd:enumeration value="TinyInt"/>
+               <xsd:enumeration value="Bit"/>
+               <xsd:enumeration value="Float"/>
+               <xsd:enumeration value="Real"/>
+               <xsd:enumeration value="Double"/>
+               <xsd:enumeration value="Coordinate"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:complexType name="SAColumn">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="displayName" type="xsd:string"/>
+               <xsd:element name="description" type="xsd:string"/>
+               <xsd:element name="nullable" type="xsd:boolean"/>
+               <xsd:element name="dataType" type="xsd:string"/>
+               <xsd:element name="aggregatable" type="xsd:boolean"/>
+               <xsd:element name="aggrRule" nillable="false" type="xsd:string"/>
+               <xsd:element default="false" name="hidden" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="SATable">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="displayName" type="xsd:string"/>
+               <xsd:element name="description" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="columns" nillable="true" type="sawsoap:SAColumn"/>
+               <xsd:element default="false" name="hidden" type="xsd:boolean"/>
+               <xsd:element minOccurs="0" name="parentTableName" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="SASubjectArea">
+            <xsd:sequence>
+               <xsd:element name="name" type="xsd:string"/>
+               <xsd:element name="displayName" type="xsd:string"/>
+               <xsd:element name="description" type="xsd:string"/>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="tables" nillable="true" type="sawsoap:SATable"/>
+               <xsd:element default="false" name="hidden" type="xsd:boolean"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:element name="clearQueryCache">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="0" name="sessionID" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="clearQueryCacheResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="result" type="xsd:boolean"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSubjectAreas">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="getSubjectAreasResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="subjectArea" type="sawsoap:SASubjectArea"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeSubjectArea">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="subjectAreaName" type="xsd:string"/>
+                  <xsd:element name="detailsLevel" type="sawsoap:SASubjectAreaDetails"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeSubjectAreaResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="subjectArea" type="sawsoap:SASubjectArea"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeTable">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="subjectAreaName" type="xsd:string"/>
+                  <xsd:element name="tableName" type="xsd:string"/>
+                  <xsd:element name="detailsLevel" type="sawsoap:SATableDetails"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeTableResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="table" type="sawsoap:SATable"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeColumn">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="subjectAreaName" type="xsd:string"/>
+                  <xsd:element name="tableName" type="xsd:string"/>
+                  <xsd:element name="columnName" type="xsd:string"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="describeColumnResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="column" type="sawsoap:SAColumn"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:complexType name="ImportError">
+            <xsd:sequence>
+               <xsd:element name="item" type="xsd:string"/>
+               <xsd:element name="operation" type="xsd:string"/>
+               <xsd:element name="file" type="xsd:string"/>
+               <xsd:element name="line" type="xsd:integer"/>
+               <xsd:element name="catalogError" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="CatalogItemsFilter">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="items" type="xsd:string"/>
+               <xsd:element name="from" type="xsd:dateTime"/>
+               <xsd:element name="to" type="xsd:dateTime"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="PathMapEntry">
+            <xsd:sequence>
+               <xsd:element name="source" type="xsd:string"/>
+               <xsd:element name="destination" type="xsd:string"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:complexType name="PathMap">
+            <xsd:sequence>
+               <xsd:element maxOccurs="unbounded" minOccurs="0" name="pathMapEntries" type="sawsoap:PathMapEntry"/>
+            </xsd:sequence>
+         </xsd:complexType>
+         <xsd:simpleType name="ExportFlags">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="processAll_ForMerge"/>
+               <xsd:enumeration value="processAll_ForReplace"/>
+               <xsd:enumeration value="processAll_ForWriteIfNotExists"/>
+               <xsd:enumeration value="processLocalChanges"/>
+               <xsd:enumeration value="processRemoteChanges"/>
+               <xsd:enumeration value="processAllChanges"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:simpleType name="ImportFlags">
+            <xsd:restriction base="xsd:string">
+               <xsd:enumeration value="processLocalChanges"/>
+               <xsd:enumeration value="processRemoteChanges"/>
+               <xsd:enumeration value="processAllChanges"/>
+            </xsd:restriction>
+         </xsd:simpleType>
+         <xsd:element name="export">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="filename" type="xsd:string"/>
+                  <xsd:element name="filter" type="sawsoap:CatalogItemsFilter"/>
+                  <xsd:element name="flag" type="sawsoap:ExportFlags"/>
+                  <xsd:element default="true" name="exportSecurity" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="exportResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="import">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="filename" type="xsd:string"/>
+                  <xsd:element name="flag" type="sawsoap:ImportFlags"/>
+                  <xsd:element name="lastPurgedLog" type="xsd:dateTime"/>
+                  <xsd:element name="updateReplicationLog" type="xsd:boolean"/>
+                  <xsd:element name="returnErrors" type="xsd:boolean"/>
+                  <xsd:element name="filter" nillable="true" type="sawsoap:CatalogItemsFilter"/>
+                  <xsd:element name="pathMap" nillable="true" type="sawsoap:PathMap"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="importResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="error" type="sawsoap:ImportError"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="markForReplication">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="item" type="xsd:string"/>
+                  <xsd:element name="replicate" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="markForReplicationResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="purgeLog">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="unbounded" minOccurs="0" name="items" type="xsd:string"/>
+                  <xsd:element name="timestamp" type="xsd:dateTime"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="purgeLogResult">
+            <xsd:complexType>
+               <xsd:sequence/>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="applyReportParams">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reportRef" type="sawsoap:ReportRef"/>
+                  <xsd:element name="reportParams" type="sawsoap:ReportParams"/>
+                  <xsd:element name="encodeInString" type="xsd:boolean"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="applyReportParamsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:anyType"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="generateReportSQL">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="reportRef" type="sawsoap:ReportRef"/>
+                  <xsd:element name="reportParams" nillable="true" type="sawsoap:ReportParams"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="generateReportSQLResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element name="return" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="applyReportDefaults">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="reportRefs" type="sawsoap:ReportRef"/>
+                  <xsd:element name="sessionID" nillable="true" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+         <xsd:element name="applyReportDefaultsResult">
+            <xsd:complexType>
+               <xsd:sequence>
+                  <xsd:element maxOccurs="1" minOccurs="1" name="reportXml" type="xsd:string"/>
+               </xsd:sequence>
+            </xsd:complexType>
+         </xsd:element>
+      </xsd:schema>
+   </wsdl:types>
+   <jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws">
+      <jaxws:package name="oracle.bi.web.soap">
+         <jaxws:javadoc/>
+      </jaxws:package>
+   </jaxws:bindings>
+   <wsdl:message name="logonIn">
+      <wsdl:part element="sawsoap:logon" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="logonOut">
+      <wsdl:part element="sawsoap:logonResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="logonexIn">
+      <wsdl:part element="sawsoap:logonex" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="logonexOut">
+      <wsdl:part element="sawsoap:logonexResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="logoffIn">
+      <wsdl:part element="sawsoap:logoff" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="logoffOut">
+      <wsdl:part element="sawsoap:logoffResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="keepAliveIn">
+      <wsdl:part element="sawsoap:keepAlive" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="keepAliveOut">
+      <wsdl:part element="sawsoap:keepAliveResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCurUserIn">
+      <wsdl:part element="sawsoap:getCurUser" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCurUserOut">
+      <wsdl:part element="sawsoap:getCurUserResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSessionEnvironmentIn">
+      <wsdl:part element="sawsoap:getSessionEnvironment" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSessionEnvironmentOut">
+      <wsdl:part element="sawsoap:getSessionEnvironmentResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSessionVariablesIn">
+      <wsdl:part element="sawsoap:getSessionVariables" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSessionVariablesOut">
+      <wsdl:part element="sawsoap:getSessionVariablesResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="impersonateIn">
+      <wsdl:part element="sawsoap:impersonate" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="impersonateOut">
+      <wsdl:part element="sawsoap:impersonateResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="impersonateexIn">
+      <wsdl:part element="sawsoap:impersonateex" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="impersonateexOut">
+      <wsdl:part element="sawsoap:impersonateexResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="SAWSessionServiceSoap">
+      <wsdl:operation name="logon">
+         <wsdl:input message="sawsoap:logonIn"/>
+         <wsdl:output message="sawsoap:logonOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="logonex">
+         <wsdl:input message="sawsoap:logonexIn"/>
+         <wsdl:output message="sawsoap:logonexOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="logoff">
+         <wsdl:input message="sawsoap:logoffIn"/>
+         <wsdl:output message="sawsoap:logoffOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="keepAlive">
+         <wsdl:input message="sawsoap:keepAliveIn"/>
+         <wsdl:output message="sawsoap:keepAliveOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getCurUser">
+         <wsdl:input message="sawsoap:getCurUserIn"/>
+         <wsdl:output message="sawsoap:getCurUserOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getSessionEnvironment">
+         <wsdl:input message="sawsoap:getSessionEnvironmentIn"/>
+         <wsdl:output message="sawsoap:getSessionEnvironmentOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getSessionVariables">
+         <wsdl:documentation>Returns values of BIEE variables associated with the current session
+           Here is the list of predefined variables :
+           NQ_SESSION.USER,
+           NQ_SESSION.USERGUID,
+           NQ_SESSION.GROUP,
+           NQ_SESSION.GROUPGUIDS,
+           NQ_SESSION.WEBGROUPS,
+           NQ_SESSION.REALM,
+           NQ_SESSION.REALMGUID,
+           NQ_SESSION.TOKENS,
+           NQ_SESSION.REQUESTKEY,
+           NQ_SESSION.PORTALPATH,
+           NQ_SESSION.DISPLAYNAME,
+           NQ_SESSION.SKIN,
+           NQ_SESSION.STYLE,
+           NQ_SESSION.EMAIL,
+           NQ_SESSION.CURRENCYTAG,
+           NQ_SESSION.ACTUATEUSERID,
+           NQ_SESSION.TIMEZONE,
+           NQ_SESSION.DATA_TZ,
+           NQ_SESSION.DATA_DISPLAY_TZ,
+           NQ_SESSION.PROXYLEVEL,
+           NQ_SESSION.USERLOCALE,
+           NQ_SESSION.USERLANG,
+           NQ_SESSION.PREFERRED_CURRENCY</wsdl:documentation>
+         <wsdl:input message="sawsoap:getSessionVariablesIn"/>
+         <wsdl:output message="sawsoap:getSessionVariablesOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="impersonate">
+         <wsdl:input message="sawsoap:impersonateIn"/>
+         <wsdl:output message="sawsoap:impersonateOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="impersonateex">
+         <wsdl:input message="sawsoap:impersonateexIn"/>
+         <wsdl:output message="sawsoap:impersonateexOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="SAWSessionService" type="sawsoap:SAWSessionServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="logon">
+         <soap:operation soapAction="#logon" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="logonex">
+         <soap:operation soapAction="#logonex" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="logoff">
+         <soap:operation soapAction="#logoff" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="keepAlive">
+         <soap:operation soapAction="#keepAlive" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getCurUser">
+         <soap:operation soapAction="#getCurUser" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getSessionEnvironment">
+         <soap:operation soapAction="#getSessionEnvironment" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getSessionVariables">
+         <soap:operation soapAction="#getSessionVariables" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="impersonate">
+         <soap:operation soapAction="#impersonate" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="impersonateex">
+         <soap:operation soapAction="#impersonateex" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="SAWSessionService">
+      <wsdl:port binding="sawsoap:SAWSessionService" name="SAWSessionServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=nQSessionService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="deleteItemIn">
+      <wsdl:part element="sawsoap:deleteItem" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="deleteItemOut">
+      <wsdl:part element="sawsoap:deleteItemResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="removeFolderIn">
+      <wsdl:part element="sawsoap:removeFolder" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="removeFolderOut">
+      <wsdl:part element="sawsoap:removeFolderResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="createFolderIn">
+      <wsdl:part element="sawsoap:createFolder" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="createFolderOut">
+      <wsdl:part element="sawsoap:createFolderResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="createLinkIn">
+      <wsdl:part element="sawsoap:createLink" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="createLinkOut">
+      <wsdl:part element="sawsoap:createLinkResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="moveItemIn">
+      <wsdl:part element="sawsoap:moveItem" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="moveItemOut">
+      <wsdl:part element="sawsoap:moveItemResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="copyItemIn">
+      <wsdl:part element="sawsoap:copyItem" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="copyItemOut">
+      <wsdl:part element="sawsoap:copyItemResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="copyItem2In">
+      <wsdl:part element="sawsoap:copyItem2" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="copyItem2Out">
+      <wsdl:part element="sawsoap:copyItem2Result" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="pasteItem2In">
+      <wsdl:part element="sawsoap:pasteItem2" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="pasteItem2Out">
+      <wsdl:part element="sawsoap:pasteItem2Result" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSubItemsIn">
+      <wsdl:part element="sawsoap:getSubItems" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSubItemsOut">
+      <wsdl:part element="sawsoap:getSubItemsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getItemInfoIn">
+      <wsdl:part element="sawsoap:getItemInfo" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getItemInfoOut">
+      <wsdl:part element="sawsoap:getItemInfoResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setItemPropertyIn">
+      <wsdl:part element="sawsoap:setItemProperty" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setItemPropertyOut">
+      <wsdl:part element="sawsoap:setItemPropertyResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="maintenanceModeIn">
+      <wsdl:part element="sawsoap:maintenanceMode" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="maintenanceModeOut">
+      <wsdl:part element="sawsoap:maintenanceModeResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="readObjectsIn">
+      <wsdl:part element="sawsoap:readObjects" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="readObjectsOut">
+      <wsdl:part element="sawsoap:readObjectsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="writeObjectsIn">
+      <wsdl:part element="sawsoap:writeObjects" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="writeObjectsOut">
+      <wsdl:part element="sawsoap:writeObjectsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="updateCatalogItemACLIn">
+      <wsdl:part element="sawsoap:updateCatalogItemACL" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="updateCatalogItemACLOut">
+      <wsdl:part element="sawsoap:updateCatalogItemACLResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setOwnershipIn">
+      <wsdl:part element="sawsoap:setOwnership" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setOwnershipOut">
+      <wsdl:part element="sawsoap:setOwnershipResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setItemAttributesIn">
+      <wsdl:part element="sawsoap:setItemAttributes" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setItemAttributesOut">
+      <wsdl:part element="sawsoap:setItemAttributesResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="WebCatalogServiceSoap">
+      <wsdl:operation name="deleteItem">
+         <wsdl:input message="sawsoap:deleteItemIn"/>
+         <wsdl:output message="sawsoap:deleteItemOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="removeFolder">
+         <wsdl:input message="sawsoap:removeFolderIn"/>
+         <wsdl:output message="sawsoap:removeFolderOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="createFolder">
+         <wsdl:input message="sawsoap:createFolderIn"/>
+         <wsdl:output message="sawsoap:createFolderOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="createLink">
+         <wsdl:input message="sawsoap:createLinkIn"/>
+         <wsdl:output message="sawsoap:createLinkOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="moveItem">
+         <wsdl:input message="sawsoap:moveItemIn"/>
+         <wsdl:output message="sawsoap:moveItemOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="copyItem">
+         <wsdl:input message="sawsoap:copyItemIn"/>
+         <wsdl:output message="sawsoap:copyItemOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="copyItem2">
+         <wsdl:input message="sawsoap:copyItem2In"/>
+         <wsdl:output message="sawsoap:copyItem2Out"/>
+      </wsdl:operation>
+      <wsdl:operation name="pasteItem2">
+         <wsdl:input message="sawsoap:pasteItem2In"/>
+         <wsdl:output message="sawsoap:pasteItem2Out"/>
+      </wsdl:operation>
+      <wsdl:operation name="getSubItems">
+         <wsdl:input message="sawsoap:getSubItemsIn"/>
+         <wsdl:output message="sawsoap:getSubItemsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getItemInfo">
+         <wsdl:input message="sawsoap:getItemInfoIn"/>
+         <wsdl:output message="sawsoap:getItemInfoOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="setItemProperty">
+         <wsdl:input message="sawsoap:setItemPropertyIn"/>
+         <wsdl:output message="sawsoap:setItemPropertyOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="maintenanceMode">
+         <wsdl:input message="sawsoap:maintenanceModeIn"/>
+         <wsdl:output message="sawsoap:maintenanceModeOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="readObjects">
+         <wsdl:input message="sawsoap:readObjectsIn"/>
+         <wsdl:output message="sawsoap:readObjectsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="writeObjects">
+         <wsdl:input message="sawsoap:writeObjectsIn"/>
+         <wsdl:output message="sawsoap:writeObjectsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="updateCatalogItemACL">
+         <wsdl:input message="sawsoap:updateCatalogItemACLIn"/>
+         <wsdl:output message="sawsoap:updateCatalogItemACLOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="setOwnership">
+         <wsdl:input message="sawsoap:setOwnershipIn"/>
+         <wsdl:output message="sawsoap:setOwnershipOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="setItemAttributes">
+         <wsdl:input message="sawsoap:setItemAttributesIn"/>
+         <wsdl:output message="sawsoap:setItemAttributesOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="WebCatalogService" type="sawsoap:WebCatalogServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="deleteItem">
+         <soap:operation soapAction="#deleteItem"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="createFolder">
+         <soap:operation soapAction="#createFolder"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="createLink">
+         <soap:operation soapAction="#createLink"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="removeFolder">
+         <soap:operation soapAction="#removeFolder"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="moveItem">
+         <soap:operation soapAction="#moveItem"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="copyItem">
+         <soap:operation soapAction="#copyItem"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="copyItem2">
+         <soap:operation soapAction="#copyItem2" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="pasteItem2">
+         <soap:operation soapAction="#pasteItem2"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getSubItems">
+         <soap:operation soapAction="#getSubItems" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getItemInfo">
+         <soap:operation soapAction="#getItemInfo" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="setItemProperty">
+         <soap:operation soapAction="#setItemProperty" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="maintenanceMode">
+         <soap:operation soapAction="#maintenanceMode" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="readObjects">
+         <soap:operation soapAction="#readObjects" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="writeObjects">
+         <soap:operation soapAction="#writeObjects" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="updateCatalogItemACL">
+         <soap:operation soapAction="#updateCatalogItemACL" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="setOwnership">
+         <soap:operation soapAction="#setOwnership" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="setItemAttributes">
+         <soap:operation soapAction="#setItemAttributes" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="WebCatalogService">
+      <wsdl:port binding="sawsoap:WebCatalogService" name="WebCatalogServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=webCatalogService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="executeXMLQueryIn">
+      <wsdl:part element="sawsoap:executeXMLQuery" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="executeXMLQueryOut">
+      <wsdl:part element="sawsoap:executeXMLQueryResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="upgradeXMLIn">
+      <wsdl:part element="sawsoap:upgradeXML" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="upgradeXMLOut">
+      <wsdl:part element="sawsoap:upgradeXMLResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="executeSQLQueryIn">
+      <wsdl:part element="sawsoap:executeSQLQuery" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="executeSQLQueryOut">
+      <wsdl:part element="sawsoap:executeSQLQueryResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="fetchNextIn">
+      <wsdl:part element="sawsoap:fetchNext" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="fetchNextOut">
+      <wsdl:part element="sawsoap:fetchNextResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="cancelQueryIn">
+      <wsdl:part element="sawsoap:cancelQuery" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="cancelQueryOut">
+      <wsdl:part element="sawsoap:cancelQueryResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPromptedFiltersIn">
+      <wsdl:part element="sawsoap:getPromptedFilters" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPromptedFiltersOut">
+      <wsdl:part element="sawsoap:getPromptedFiltersResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="XmlViewServiceSoap">
+      <wsdl:operation name="executeXMLQuery">
+         <wsdl:input message="sawsoap:executeXMLQueryIn"/>
+         <wsdl:output message="sawsoap:executeXMLQueryOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="upgradeXML">
+         <wsdl:input message="sawsoap:upgradeXMLIn"/>
+         <wsdl:output message="sawsoap:upgradeXMLOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="executeSQLQuery">
+         <wsdl:input message="sawsoap:executeSQLQueryIn"/>
+         <wsdl:output message="sawsoap:executeSQLQueryOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="fetchNext">
+         <wsdl:input message="sawsoap:fetchNextIn"/>
+         <wsdl:output message="sawsoap:fetchNextOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="cancelQuery">
+         <wsdl:input message="sawsoap:cancelQueryIn"/>
+         <wsdl:output message="sawsoap:cancelQueryOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getPromptedFilters">
+         <wsdl:input message="sawsoap:getPromptedFiltersIn"/>
+         <wsdl:output message="sawsoap:getPromptedFiltersOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="XmlViewService" type="sawsoap:XmlViewServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="executeXMLQuery">
+         <soap:operation soapAction="#executeXMLQuery" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="upgradeXML">
+         <soap:operation soapAction="#upgradeXML" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="executeSQLQuery">
+         <soap:operation soapAction="#executeSQLQuery" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="fetchNext">
+         <soap:operation soapAction="#fetchNext" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="cancelQuery">
+         <soap:operation soapAction="#cancelQuery" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getPromptedFilters">
+         <soap:operation soapAction="#getPromptedFilters" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="XmlViewService">
+      <wsdl:port binding="sawsoap:XmlViewService" name="XmlViewServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=xmlViewService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="getGlobalPrivilegesIn">
+      <wsdl:part element="sawsoap:getGlobalPrivileges" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getGlobalPrivilegesOut">
+      <wsdl:part element="sawsoap:getGlobalPrivilegesResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getGlobalPrivilegeACLIn">
+      <wsdl:part element="sawsoap:getGlobalPrivilegeACL" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getGlobalPrivilegeACLOut">
+      <wsdl:part element="sawsoap:getGlobalPrivilegeACLResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="updateGlobalPrivilegeACLIn">
+      <wsdl:part element="sawsoap:updateGlobalPrivilegeACL" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="updateGlobalPrivilegeACLOut">
+      <wsdl:part element="sawsoap:updateGlobalPrivilegeACLResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="forgetAccountsIn">
+      <wsdl:part element="sawsoap:forgetAccounts" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="forgetAccountsOut">
+      <wsdl:part element="sawsoap:forgetAccountsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="renameAccountsIn">
+      <wsdl:part element="sawsoap:renameAccounts" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="renameAccountsOut">
+      <wsdl:part element="sawsoap:renameAccountsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="joinGroupsIn">
+      <wsdl:part element="sawsoap:joinGroups" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="joinGroupsOut">
+      <wsdl:part element="sawsoap:joinGroupsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="leaveGroupsIn">
+      <wsdl:part element="sawsoap:leaveGroups" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="leaveGroupsOut">
+      <wsdl:part element="sawsoap:leaveGroupsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getGroupsIn">
+      <wsdl:part element="sawsoap:getGroups" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getGroupsOut">
+      <wsdl:part element="sawsoap:getGroupsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getMembersIn">
+      <wsdl:part element="sawsoap:getMembers" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getMembersOut">
+      <wsdl:part element="sawsoap:getMembersResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="isMemberIn">
+      <wsdl:part element="sawsoap:isMember" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="isMemberOut">
+      <wsdl:part element="sawsoap:isMemberResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPermissionsIn">
+      <wsdl:part element="sawsoap:getPermissions" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPermissionsOut">
+      <wsdl:part element="sawsoap:getPermissionsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPrivilegesStatusIn">
+      <wsdl:part element="sawsoap:getPrivilegesStatus" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPrivilegesStatusOut">
+      <wsdl:part element="sawsoap:getPrivilegesStatusResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getAccountsIn">
+      <wsdl:part element="sawsoap:getAccounts" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getAccountsOut">
+      <wsdl:part element="sawsoap:getAccountsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getAccountTenantIDIn">
+      <wsdl:part element="sawsoap:getAccountTenantID" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getAccountTenantIDOut">
+      <wsdl:part element="sawsoap:getAccountTenantIDResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="SecurityServiceSoap">
+      <wsdl:operation name="getGlobalPrivileges">
+         <wsdl:input message="sawsoap:getGlobalPrivilegesIn"/>
+         <wsdl:output message="sawsoap:getGlobalPrivilegesOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getGlobalPrivilegeACL">
+         <wsdl:input message="sawsoap:getGlobalPrivilegeACLIn"/>
+         <wsdl:output message="sawsoap:getGlobalPrivilegeACLOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="updateGlobalPrivilegeACL">
+         <wsdl:input message="sawsoap:updateGlobalPrivilegeACLIn"/>
+         <wsdl:output message="sawsoap:updateGlobalPrivilegeACLOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="forgetAccounts">
+         <wsdl:input message="sawsoap:forgetAccountsIn"/>
+         <wsdl:output message="sawsoap:forgetAccountsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="renameAccounts">
+         <wsdl:input message="sawsoap:renameAccountsIn"/>
+         <wsdl:output message="sawsoap:renameAccountsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="joinGroups">
+         <wsdl:input message="sawsoap:joinGroupsIn"/>
+         <wsdl:output message="sawsoap:joinGroupsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="leaveGroups">
+         <wsdl:input message="sawsoap:leaveGroupsIn"/>
+         <wsdl:output message="sawsoap:leaveGroupsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getGroups">
+         <wsdl:input message="sawsoap:getGroupsIn"/>
+         <wsdl:output message="sawsoap:getGroupsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getMembers">
+         <wsdl:input message="sawsoap:getMembersIn"/>
+         <wsdl:output message="sawsoap:getMembersOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="isMember">
+         <wsdl:input message="sawsoap:isMemberIn"/>
+         <wsdl:output message="sawsoap:isMemberOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getPermissions">
+         <wsdl:input message="sawsoap:getPermissionsIn"/>
+         <wsdl:output message="sawsoap:getPermissionsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getPrivilegesStatus">
+         <wsdl:input message="sawsoap:getPrivilegesStatusIn"/>
+         <wsdl:output message="sawsoap:getPrivilegesStatusOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getAccounts">
+         <wsdl:input message="sawsoap:getAccountsIn"/>
+         <wsdl:output message="sawsoap:getAccountsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getAccountTenantID">
+         <wsdl:input message="sawsoap:getAccountTenantIDIn"/>
+         <wsdl:output message="sawsoap:getAccountTenantIDOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="SecurityService" type="sawsoap:SecurityServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="getGlobalPrivileges">
+         <soap:operation soapAction="#getGlobalPrivileges" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getGlobalPrivilegeACL">
+         <soap:operation soapAction="#getGlobalPrivilegeACL" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="updateGlobalPrivilegeACL">
+         <soap:operation soapAction="#updateGlobalPrivilegeACL" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="forgetAccounts">
+         <soap:operation soapAction="#forgetAccounts" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="renameAccounts">
+         <soap:operation soapAction="#renameAccounts" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="joinGroups">
+         <soap:operation soapAction="#joinGroups" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="leaveGroups">
+         <soap:operation soapAction="#leaveGroups" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getGroups">
+         <soap:operation soapAction="#getGroups" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getMembers">
+         <soap:operation soapAction="#getMembers" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="isMember">
+         <soap:operation soapAction="#isMember" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getPermissions">
+         <soap:operation soapAction="#getPermissions" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getPrivilegesStatus">
+         <soap:operation soapAction="#getPrivilegesStatus" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getAccounts">
+         <soap:operation soapAction="#getAccounts" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getAccountTenantID">
+         <soap:operation soapAction="#getAccountTenantID" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="SecurityService">
+      <wsdl:port binding="sawsoap:SecurityService" name="SecurityServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=securityService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="evaluateConditionIn">
+      <wsdl:part element="sawsoap:evaluateCondition" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="evaluateConditionOut">
+      <wsdl:part element="sawsoap:evaluateConditionResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="evaluateInlineConditionIn">
+      <wsdl:part element="sawsoap:evaluateInlineCondition" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="evaluateInlineConditionOut">
+      <wsdl:part element="sawsoap:evaluateInlineConditionResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getConditionCustomizableReportElementsIn">
+      <wsdl:part element="sawsoap:getConditionCustomizableReportElements" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getConditionCustomizableReportElementsOut">
+      <wsdl:part element="sawsoap:getConditionCustomizableReportElementsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="ConditionServiceSoap">
+      <wsdl:operation name="evaluateCondition">
+         <wsdl:input message="sawsoap:evaluateConditionIn"/>
+         <wsdl:output message="sawsoap:evaluateConditionOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="evaluateInlineCondition">
+         <wsdl:input message="sawsoap:evaluateInlineConditionIn"/>
+         <wsdl:output message="sawsoap:evaluateInlineConditionOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getConditionCustomizableReportElements">
+         <wsdl:input message="sawsoap:getConditionCustomizableReportElementsIn"/>
+         <wsdl:output message="sawsoap:getConditionCustomizableReportElementsOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ConditionService" type="sawsoap:ConditionServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="evaluateCondition">
+         <soap:operation soapAction="#evaluateCondition" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="evaluateInlineCondition">
+         <soap:operation soapAction="#evaluateInlineCondition" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getConditionCustomizableReportElements">
+         <soap:operation soapAction="#getConditionCustomizableReportElements" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="ConditionService">
+      <wsdl:port binding="sawsoap:ConditionService" name="ConditionServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=conditionService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="startPageIn">
+      <wsdl:part element="sawsoap:startPage" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="startPageOut">
+      <wsdl:part element="sawsoap:startPageResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="endPageIn">
+      <wsdl:part element="sawsoap:endPage" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="endPageOut">
+      <wsdl:part element="sawsoap:endPageResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="addReportToPageIn">
+      <wsdl:part element="sawsoap:addReportToPage" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="addReportToPageOut">
+      <wsdl:part element="sawsoap:addReportToPageResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHeadersHtmlIn">
+      <wsdl:part element="sawsoap:getHeadersHtml" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHeadersHtmlOut">
+      <wsdl:part element="sawsoap:getHeadersHtmlResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCommonBodyHtmlIn">
+      <wsdl:part element="sawsoap:getCommonBodyHtml" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCommonBodyHtmlOut">
+      <wsdl:part element="sawsoap:getCommonBodyHtmlResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHtmlForReportIn">
+      <wsdl:part element="sawsoap:getHtmlForReport" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHtmlForReportOut">
+      <wsdl:part element="sawsoap:getHtmlForReportResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setBridgeIn">
+      <wsdl:part element="sawsoap:setBridge" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="setBridgeOut">
+      <wsdl:part element="sawsoap:setBridgeResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHtmlForPageWithOneReportIn">
+      <wsdl:part element="sawsoap:getHtmlForPageWithOneReport" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getHtmlForPageWithOneReportOut">
+      <wsdl:part element="sawsoap:getHtmlForPageWithOneReportResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="HtmlViewServiceSoap">
+      <wsdl:operation name="startPage">
+         <wsdl:input message="sawsoap:startPageIn"/>
+         <wsdl:output message="sawsoap:startPageOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="endPage">
+         <wsdl:input message="sawsoap:endPageIn"/>
+         <wsdl:output message="sawsoap:endPageOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="addReportToPage">
+         <wsdl:input message="sawsoap:addReportToPageIn"/>
+         <wsdl:output message="sawsoap:addReportToPageOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getHeadersHtml">
+         <wsdl:input message="sawsoap:getHeadersHtmlIn"/>
+         <wsdl:output message="sawsoap:getHeadersHtmlOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getCommonBodyHtml">
+         <wsdl:input message="sawsoap:getCommonBodyHtmlIn"/>
+         <wsdl:output message="sawsoap:getCommonBodyHtmlOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getHtmlForReport">
+         <wsdl:input message="sawsoap:getHtmlForReportIn"/>
+         <wsdl:output message="sawsoap:getHtmlForReportOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="setBridge">
+         <wsdl:input message="sawsoap:setBridgeIn"/>
+         <wsdl:output message="sawsoap:setBridgeOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getHtmlForPageWithOneReport">
+         <wsdl:input message="sawsoap:getHtmlForPageWithOneReportIn"/>
+         <wsdl:output message="sawsoap:getHtmlForPageWithOneReportOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="HtmlViewService" type="sawsoap:HtmlViewServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="startPage">
+         <soap:operation soapAction="#startPage" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="endPage">
+         <soap:operation soapAction="#endPage" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="addReportToPage">
+         <soap:operation soapAction="#addReportToPage" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getHeadersHtml">
+         <soap:operation soapAction="#getHeadersHtml" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getCommonBodyHtml">
+         <soap:operation soapAction="#getCommonBodyHtml" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getHtmlForReport">
+         <soap:operation soapAction="#getHtmlForReport" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="setBridge">
+         <soap:operation soapAction="#setBridge" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getHtmlForPageWithOneReport">
+         <soap:operation soapAction="#getHtmlForPageWithOneReport" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="HtmlViewService">
+      <wsdl:port binding="sawsoap:HtmlViewService" name="HtmlViewService">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=htmlViewService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="executeIBotNowIn">
+      <wsdl:part element="sawsoap:executeIBotNow" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="executeIBotNowOut">
+      <wsdl:part element="sawsoap:executeIBotNowResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="writeIBotIn">
+      <wsdl:part element="sawsoap:writeIBot" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="writeIBotOut">
+      <wsdl:part element="sawsoap:writeIBotResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="moveIBotIn">
+      <wsdl:part element="sawsoap:moveIBot" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="moveIBotOut">
+      <wsdl:part element="sawsoap:moveIBotResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="deleteIBotIn">
+      <wsdl:part element="sawsoap:deleteIBot" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="deleteIBotOut">
+      <wsdl:part element="sawsoap:deleteIBotResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="subscribeIBotIn">
+      <wsdl:part element="sawsoap:subscribe" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="subscribeIBotOut">
+      <wsdl:part element="sawsoap:subscribeResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="unsubscribeIBotIn">
+      <wsdl:part element="sawsoap:unsubscribe" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="unsubscribeIBotOut">
+      <wsdl:part element="sawsoap:unsubscribeResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="sendMessageIn">
+      <wsdl:part element="sawsoap:sendMessage" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="sendMessageOut">
+      <wsdl:part element="sawsoap:sendMessageResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="IBotServiceSoap">
+      <wsdl:operation name="executeIBotNow">
+         <wsdl:input message="sawsoap:executeIBotNowIn"/>
+         <wsdl:output message="sawsoap:executeIBotNowOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="writeIBot">
+         <wsdl:input message="sawsoap:writeIBotIn"/>
+         <wsdl:output message="sawsoap:writeIBotOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="subscribe">
+         <wsdl:input message="sawsoap:subscribeIBotIn"/>
+         <wsdl:output message="sawsoap:subscribeIBotOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="unsubscribe">
+         <wsdl:input message="sawsoap:unsubscribeIBotIn"/>
+         <wsdl:output message="sawsoap:unsubscribeIBotOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="moveIBot">
+         <wsdl:input message="sawsoap:moveIBotIn"/>
+         <wsdl:output message="sawsoap:moveIBotOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="deleteIBot">
+         <wsdl:input message="sawsoap:deleteIBotIn"/>
+         <wsdl:output message="sawsoap:deleteIBotOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="sendMessage">
+         <wsdl:input message="sawsoap:sendMessageIn"/>
+         <wsdl:output message="sawsoap:sendMessageOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="IBotService" type="sawsoap:IBotServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="executeIBotNow">
+         <soap:operation soapAction="#executeIBotNow" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="writeIBot">
+         <soap:operation soapAction="#writeIBot" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="moveIBot">
+         <soap:operation soapAction="#moveIBot" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="subscribe">
+         <soap:operation soapAction="#subscribe" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="unsubscribe">
+         <soap:operation soapAction="#unsubscribe" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="deleteIBot">
+         <soap:operation soapAction="#deleteIBot" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="sendMessage">
+         <soap:operation soapAction="#sendMessage" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="IBotService">
+      <wsdl:port binding="sawsoap:IBotService" name="IBotServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=ibotService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="writeListFilesIn">
+      <wsdl:part element="sawsoap:writeListFiles" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="writeListFilesOut">
+      <wsdl:part element="sawsoap:writeListFilesResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getJobInfoIn">
+      <wsdl:part element="sawsoap:getJobInfo" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getJobInfoOut">
+      <wsdl:part element="sawsoap:getJobInfoResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="cancelJobIn">
+      <wsdl:part element="sawsoap:cancelJob" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="cancelJobOut">
+      <wsdl:part element="sawsoap:cancelJobResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCountsIn">
+      <wsdl:part element="sawsoap:getCounts" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getCountsOut">
+      <wsdl:part element="sawsoap:getCountsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPromptedColumnsIn">
+      <wsdl:part element="sawsoap:getPromptedColumns" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getPromptedColumnsOut">
+      <wsdl:part element="sawsoap:getPromptedColumnsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="purgeCacheIn">
+      <wsdl:part element="sawsoap:purgeCache" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="purgeCacheOut">
+      <wsdl:part element="sawsoap:purgeCacheResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="prepareCacheIn">
+      <wsdl:part element="sawsoap:prepareCache" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="prepareCacheOut">
+      <wsdl:part element="sawsoap:prepareCacheResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="saveResultSetIn">
+      <wsdl:part element="sawsoap:saveResultSet" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="saveResultSetOut">
+      <wsdl:part element="sawsoap:saveResultSetResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="deleteResultSetIn">
+      <wsdl:part element="sawsoap:deleteResultSet" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="deleteResultSetOut">
+      <wsdl:part element="sawsoap:deleteResultSetResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="JobManagementServiceSoap">
+      <wsdl:operation name="writeListFiles">
+         <wsdl:input message="sawsoap:writeListFilesIn"/>
+         <wsdl:output message="sawsoap:writeListFilesOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getJobInfo">
+         <wsdl:input message="sawsoap:getJobInfoIn"/>
+         <wsdl:output message="sawsoap:getJobInfoOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="cancelJob">
+         <wsdl:input message="sawsoap:cancelJobIn"/>
+         <wsdl:output message="sawsoap:cancelJobOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getCounts">
+         <wsdl:input message="sawsoap:getCountsIn"/>
+         <wsdl:output message="sawsoap:getCountsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getPromptedColumns">
+         <wsdl:input message="sawsoap:getPromptedColumnsIn"/>
+         <wsdl:output message="sawsoap:getPromptedColumnsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="purgeCache">
+         <wsdl:input message="sawsoap:purgeCacheIn"/>
+         <wsdl:output message="sawsoap:purgeCacheOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="prepareCache">
+         <wsdl:input message="sawsoap:prepareCacheIn"/>
+         <wsdl:output message="sawsoap:prepareCacheOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="saveResultSet">
+         <wsdl:input message="sawsoap:saveResultSetIn"/>
+         <wsdl:output message="sawsoap:saveResultSetOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="deleteResultSet">
+         <wsdl:input message="sawsoap:deleteResultSetIn"/>
+         <wsdl:output message="sawsoap:deleteResultSetOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="JobManagementService" type="sawsoap:JobManagementServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="writeListFiles">
+         <soap:operation soapAction="#writeListFiles" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getJobInfo">
+         <soap:operation soapAction="#getJobInfo" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="cancelJob">
+         <soap:operation soapAction="#cancelJob" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getCounts">
+         <soap:operation soapAction="#getCounts" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getPromptedColumns">
+         <soap:operation soapAction="#getPromptedColumns" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="purgeCache">
+         <soap:operation soapAction="#purgeCache" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="prepareCache">
+         <soap:operation soapAction="#prepareCache" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="saveResultSet">
+         <soap:operation soapAction="#saveResultSet" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="deleteResultSet">
+         <soap:operation soapAction="#deleteResultSet" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="JobManagementService">
+      <wsdl:port binding="sawsoap:JobManagementService" name="JobManagementServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=jobManagementService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="clearQueryCacheIn">
+      <wsdl:part element="sawsoap:clearQueryCache" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="clearQueryCacheOut">
+      <wsdl:part element="sawsoap:clearQueryCacheResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSubjectAreasIn">
+      <wsdl:part element="sawsoap:getSubjectAreas" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="getSubjectAreasOut">
+      <wsdl:part element="sawsoap:getSubjectAreasResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeSubjectAreaIn">
+      <wsdl:part element="sawsoap:describeSubjectArea" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeSubjectAreaOut">
+      <wsdl:part element="sawsoap:describeSubjectAreaResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeTableIn">
+      <wsdl:part element="sawsoap:describeTable" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeTableOut">
+      <wsdl:part element="sawsoap:describeTableResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeColumnIn">
+      <wsdl:part element="sawsoap:describeColumn" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="describeColumnOut">
+      <wsdl:part element="sawsoap:describeColumnResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="MetadataServiceSoap">
+      <wsdl:operation name="clearQueryCache">
+         <wsdl:input message="sawsoap:clearQueryCacheIn"/>
+         <wsdl:output message="sawsoap:clearQueryCacheOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="getSubjectAreas">
+         <wsdl:input message="sawsoap:getSubjectAreasIn"/>
+         <wsdl:output message="sawsoap:getSubjectAreasOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="describeSubjectArea">
+         <wsdl:input message="sawsoap:describeSubjectAreaIn"/>
+         <wsdl:output message="sawsoap:describeSubjectAreaOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="describeTable">
+         <wsdl:input message="sawsoap:describeTableIn"/>
+         <wsdl:output message="sawsoap:describeTableOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="describeColumn">
+         <wsdl:input message="sawsoap:describeColumnIn"/>
+         <wsdl:output message="sawsoap:describeColumnOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="MetadataService" type="sawsoap:MetadataServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="clearQueryCache">
+         <soap:operation soapAction="#clearQueryCache" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="getSubjectAreas">
+         <soap:operation soapAction="#getSubjectAreas" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="describeSubjectArea">
+         <soap:operation soapAction="#describeSubjectArea" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="describeTable">
+         <soap:operation soapAction="#describeTable" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="describeColumn">
+         <soap:operation soapAction="#describeColumn" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="MetadataService">
+      <wsdl:port binding="sawsoap:MetadataService" name="MetadataServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=metadataService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="exportIn">
+      <wsdl:part element="sawsoap:export" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="exportOut">
+      <wsdl:part element="sawsoap:exportResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="importIn">
+      <wsdl:part element="sawsoap:import" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="importOut">
+      <wsdl:part element="sawsoap:importResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="markForReplicationIn">
+      <wsdl:part element="sawsoap:markForReplication" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="markForReplicationOut">
+      <wsdl:part element="sawsoap:markForReplicationResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="purgeLogIn">
+      <wsdl:part element="sawsoap:purgeLog" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="purgeLogOut">
+      <wsdl:part element="sawsoap:purgeLogResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="ReplicationServiceSoap">
+      <wsdl:operation name="export">
+         <wsdl:input message="sawsoap:exportIn"/>
+         <wsdl:output message="sawsoap:exportOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="import">
+         <jaxws:bindings xmlns:jaxws="http://java.sun.com/xml/ns/jaxws">
+            <jaxws:method name="_import">
+               <jaxws:javadoc>imports change log</jaxws:javadoc>
+            </jaxws:method>
+         </jaxws:bindings>
+         <wsdl:input message="sawsoap:importIn"/>
+         <wsdl:output message="sawsoap:importOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="markForReplication">
+         <wsdl:input message="sawsoap:markForReplicationIn"/>
+         <wsdl:output message="sawsoap:markForReplicationOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="purgeLog">
+         <wsdl:input message="sawsoap:purgeLogIn"/>
+         <wsdl:output message="sawsoap:purgeLogOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ReplicationService" type="sawsoap:ReplicationServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="export">
+         <soap:operation soapAction="#export" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="import">
+         <soap:operation soapAction="#import" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="markForReplication">
+         <soap:operation soapAction="#markForReplication" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="purgeLog">
+         <soap:operation soapAction="#purgeLog" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="ReplicationService">
+      <wsdl:port binding="sawsoap:ReplicationService" name="ReplicationServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=replicationService"/>
+      </wsdl:port>
+   </wsdl:service>
+   <wsdl:message name="applyReportParamsIn">
+      <wsdl:part element="sawsoap:applyReportParams" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="applyReportParamsOut">
+      <wsdl:part element="sawsoap:applyReportParamsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="generateReportSQLIn">
+      <wsdl:part element="sawsoap:generateReportSQL" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="generateReportSQLOut">
+      <wsdl:part element="sawsoap:generateReportSQLResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="applyReportDefaultsIn">
+      <wsdl:part element="sawsoap:applyReportDefaults" name="parameters"/>
+   </wsdl:message>
+   <wsdl:message name="applyReportDefaultsOut">
+      <wsdl:part element="sawsoap:applyReportDefaultsResult" name="parameters"/>
+   </wsdl:message>
+   <wsdl:portType name="ReportEditingServiceSoap">
+      <wsdl:operation name="applyReportParams">
+         <wsdl:input message="sawsoap:applyReportParamsIn"/>
+         <wsdl:output message="sawsoap:applyReportParamsOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="generateReportSQL">
+         <wsdl:input message="sawsoap:generateReportSQLIn"/>
+         <wsdl:output message="sawsoap:generateReportSQLOut"/>
+      </wsdl:operation>
+      <wsdl:operation name="applyReportDefaults">
+         <wsdl:input message="sawsoap:applyReportDefaultsIn"/>
+         <wsdl:output message="sawsoap:applyReportDefaultsOut"/>
+      </wsdl:operation>
+   </wsdl:portType>
+   <wsdl:binding name="ReportEditingService" type="sawsoap:ReportEditingServiceSoap">
+      <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="applyReportParams">
+         <soap:operation soapAction="#applyReportParams" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="generateReportSQL">
+         <soap:operation soapAction="#generateReportSQL" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+      <wsdl:operation name="applyReportDefaults">
+         <soap:operation soapAction="#applyReportDefaults" style="document"/>
+         <wsdl:input>
+            <soap:body use="literal"/>
+         </wsdl:input>
+         <wsdl:output>
+            <soap:body use="literal"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+   <wsdl:service name="ReportEditingService">
+      <wsdl:port binding="sawsoap:ReportEditingService" name="ReportEditingServiceSoap">
+         <soap:address location="https://fap0023-bi.oracleads.com/analytics-ws/saw.dll?SoapImpl=reportService"/>
+      </wsdl:port>
+   </wsdl:service>
+</wsdl:definitions>
