@@ -2,16 +2,49 @@ require 'spec_helper'
 
 describe Wasabi::Document do
 
+  describe '#bindings' do
+    it 'works with multiple bindings' do
+      document = get_documents(:oracle).first
+
+      expect(document.bindings.keys).to match_array([
+        'ConditionService', 'HtmlViewService', 'IBotService', 'JobManagementService',
+        'MetadataService', 'ReplicationService', 'ReportEditingService', 'SAWSessionService',
+        'SecurityService', 'WebCatalogService', 'XmlViewService'
+      ])
+
+      # binding
+
+      binding = document.bindings['SecurityService']
+
+      expect(binding.name).to eq('SecurityService')
+      expect(binding.port_type).to eq('sawsoap:SecurityServiceSoap')
+      expect(binding.style).to eq('document')
+      expect(binding.transport).to eq('http://schemas.xmlsoap.org/soap/http')
+
+      expect(binding.operations.keys).to match_array([
+        'forgetAccounts', 'getAccountTenantID', 'getAccounts', 'getGlobalPrivilegeACL',
+        'getGlobalPrivileges', 'getGroups', 'getMembers', 'getPermissions', 'getPrivilegesStatus',
+        'isMember', 'joinGroups', 'leaveGroups', 'renameAccounts', 'updateGlobalPrivilegeACL'
+      ])
+
+      # binding operation
+
+      binding_operation = binding.operations['getAccounts']
+      expect(binding_operation.name).to eq('getAccounts')
+
+      expect(binding_operation.soap_action).to eq('#getAccounts')
+      expect(binding_operation.style).to eq('document')
+    end
+  end
+
   describe '#services' do
     it 'works with multiple services' do
       document = get_documents(:oracle).first
 
-      # services
-
       expect(document.services.keys).to match_array([
-        'SAWSessionService', 'WebCatalogService',  'XmlViewService', 'SecurityService',
-        'ConditionService',  'HtmlViewService',    'IBotService',    'JobManagementService',
-        'MetadataService',   'ReplicationService', 'ReportEditingService'
+        'SAWSessionService', 'WebCatalogService', 'XmlViewService', 'SecurityService',
+        'ConditionService', 'HtmlViewService', 'IBotService', 'JobManagementService',
+        'MetadataService', 'ReplicationService', 'ReportEditingService'
       ])
 
       service = document.services['ConditionService']
@@ -31,12 +64,12 @@ describe Wasabi::Document do
     it 'only knows about the SOAP ports of each service' do
       document = get_documents(:email_validation).first
 
-      # services
-
       expect(document.services.keys).to eq(['EmailVerNoTestEmail'])
 
       service = document.services['EmailVerNoTestEmail']
-      expect(service.ports.keys).to match_array(['EmailVerNoTestEmailSoap', 'EmailVerNoTestEmailSoap12'])
+      expect(service.ports.keys).to match_array([
+        'EmailVerNoTestEmailSoap', 'EmailVerNoTestEmailSoap12'
+      ])
 
       # soap 1.1 port
 
