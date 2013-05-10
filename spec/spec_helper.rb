@@ -1,6 +1,7 @@
 require 'bundler'
 Bundler.setup
 
+require 'method_profiler'
 require 'wasabi'
 
 unless RUBY_PLATFORM =~ /java/
