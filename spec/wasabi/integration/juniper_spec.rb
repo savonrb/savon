@@ -8,7 +8,7 @@ describe Wasabi do
     let(:xml) { fixture(:juniper).read }
 
     it 'does not blow up when an extension base element is defined in an import' do
-      operation = wsdl.documents.operations[:get_system_info_request]
+      operation = wsdl.documents.operations['GetSystemInfoRequest']
 
       operation.input.should == 'GetSystemInfoRequest'
       operation.soap_action.should == 'urn:#GetSystemInfoRequest'

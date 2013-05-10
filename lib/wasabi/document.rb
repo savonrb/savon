@@ -3,7 +3,6 @@ require 'wasabi/message'
 require 'wasabi/port_type'
 require 'wasabi/binding'
 require 'wasabi/service'
-require 'wasabi/legacy_operation_parser'
 
 class Wasabi
   class Document
@@ -38,10 +37,6 @@ class Wasabi
       end
 
       imports
-    end
-
-    def operations
-      @operations ||= LegacyOperationParser.new(@document).operations
     end
 
     # TODO: can we combine walking the root child nodes for each section?

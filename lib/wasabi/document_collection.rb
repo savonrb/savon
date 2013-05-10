@@ -1,4 +1,5 @@
 require 'uri'
+require 'wasabi/operation_builder'
 
 class Wasabi
   class DocumentCollection
@@ -33,7 +34,23 @@ class Wasabi
     end
 
     def operations
-      @operations ||= inject({}) { |memo, document| memo.merge(document.operations) }
+      @operations ||= OperationBuilder.new(self).build
+    end
+
+    def messages
+      @messages ||= collect_sections { |document| document.messages }
+    end
+
+    def port_types
+      @port_types ||= collect_sections { |document| document.port_types }
+    end
+
+    def bindings
+      @bindings ||= collect_sections { |document| document.bindings }
+    end
+
+    def services
+      @services ||= collect_sections { |document| document.services }
     end
 
     # TODO: this works for now, but it should be moved into the Operation,
@@ -51,6 +68,19 @@ class Wasabi
       rescue URI::InvalidURIError
         @endpoint = nil
       end
+    end
+
+    private
+
+    def collect_sections
+      result = {}
+
+      each do |document|
+        sections = yield document
+        result.merge! sections
+      end
+
+      result
     end
 
   end

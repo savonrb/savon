@@ -7,7 +7,7 @@ describe Wasabi do
     subject(:wsdl) { Wasabi.new fixture(:telefonkatalogen).read }
 
     it 'knows the operations' do
-      operation = wsdl.operation(:sendsms)
+      operation = wsdl.operation('sendsms')
 
       expect(operation.input).to eq('sendsms')
       expect(operation.soap_action).to eq('sendsms')

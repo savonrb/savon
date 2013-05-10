@@ -25,7 +25,7 @@ describe Wasabi do
     end
 
     it 'knows the operations' do
-      operation = wsdl.operation(:authenticate)
+      operation = wsdl.operation('authenticate')
 
       expect(operation.input).to eq('authenticate')
       expect(operation.soap_action).to eq('authenticate')

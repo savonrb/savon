@@ -14,9 +14,8 @@ describe Wasabi do
     end
 
     it 'resolves WSDL imports to get the operations' do
-      expect(wsdl.documents.operations.keys).to include(:get_customer)
+      expect(wsdl.documents.operations.keys).to include('GetCustomer')
     end
 
   end
 end
-

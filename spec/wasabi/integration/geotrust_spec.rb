@@ -14,13 +14,13 @@ describe Wasabi do
     end
 
     it 'knows the operations' do
-      operation = wsdl.operation(:get_quick_approver_list)
+      operation = wsdl.operation('GetQuickApproverList')
 
       expect(operation.input).to eq('GetQuickApproverList')
       expect(operation.soap_action).to eq('GetQuickApproverList')
       expect(operation.nsid).to eq(nil)
 
-      operation = wsdl.operation(:hello)
+      operation = wsdl.operation('hello')
 
       expect(operation.input).to eq('hello')
       expect(operation.soap_action).to eq('hello')

@@ -11,6 +11,14 @@ class Wasabi
       @port_type_node['name']
     end
 
+    def find_operation_by_name(operation_name)
+      operations.each do |_, operation|
+        return operation if operation.name == operation_name
+      end
+
+      nil
+    end
+
     def operations
       @operations ||= operations!
     end
