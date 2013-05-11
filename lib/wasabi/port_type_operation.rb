@@ -4,13 +4,12 @@ class Wasabi
     def initialize(operation_node)
       @operation_node = operation_node
 
+      @name = operation_node['name']
       @input_node = find_node('input')
       @output_node = find_node('output')
     end
 
-    def name
-      @operation_node['name']
-    end
+    attr_reader :name
 
     def input
       return @input if defined? @input
