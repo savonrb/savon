@@ -47,6 +47,12 @@ response.body
 For more examples, you should check out the [integration tests](https://github.com/savonrb/savon/tree/master/spec/integration).
 
 
+## Give back
+
+If you're using Savon and making money from it, then please consider donating via
+[Gittip](https://www.gittip.com/rubiii/) so that I can continue to improve it.
+
+
 ## Documentation
 
 Please make sure to read the documentation for your version:
