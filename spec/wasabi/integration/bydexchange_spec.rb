@@ -13,6 +13,19 @@ describe Wasabi do
       mock_request wsdl2_url, :bydexchange2
     end
 
+    it 'returns a map of services and ports' do
+      expect(wsdl.services).to eq(
+        'BYDExchangeServer' => {
+          :ports => {
+            'BasicHttpBinding_IBYDExchangeServer' => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap/',
+              :location => 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc'
+            }
+          }
+        }
+      )
+    end
+
     it 'resolves WSDL imports to get the operations' do
       expect(wsdl.documents.operations.keys).to include('GetCustomer')
     end

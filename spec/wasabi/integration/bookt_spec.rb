@@ -15,6 +15,19 @@ describe Wasabi do
       mock_request wsdl3_url, :bookt3
     end
 
+    it 'returns a map of services and ports' do
+      expect(wsdl.services).to eq(
+        'Connect'       => {
+          :ports        => {
+            'IConnect'  => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap/',
+              :location => 'http://connect.bookt.com/svc/connect.svc'
+            }
+          }
+        }
+      )
+    end
+
     it 'resolves WSDL imports to get the operations' do
       expect(wsdl.documents.operations).to_not be_empty
     end

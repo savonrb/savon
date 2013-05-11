@@ -6,6 +6,19 @@ describe Wasabi do
     # reference: savon#295
     subject(:wsdl) { Wasabi.new fixture(:telefonkatalogen).read }
 
+    it 'returns a map of services and ports' do
+      expect(wsdl.services).to eq(
+        'SendSms' => {
+          :ports => {
+            'SendSmsPort' => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap/',
+              :location => 'http://bedrift.telefonkatalogen.no/tk/websvcsendsms.php'
+            }
+          }
+        }
+      )
+    end
+
     it 'knows the operations' do
       operation = wsdl.operation('sendsms')
 

@@ -37,6 +37,21 @@ class Wasabi
     @documents.operations[operation_name]
   end
 
+  def services
+    @services ||= begin
+      services = {}
+
+      @documents.services.each do |name, service|
+        ports = service.ports.map { |name, port|
+          [name, { :type => port.type, :location => port.location }]
+        }
+        services[name] = { :ports => Hash[ports] }
+      end
+
+      services
+    end
+  end
+
   def inspect
     Inspector.new(self)
   end

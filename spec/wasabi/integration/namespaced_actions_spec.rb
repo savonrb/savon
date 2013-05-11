@@ -23,6 +23,23 @@ describe Wasabi do
       )
     end
 
+    it 'returns a map of services and ports' do
+      expect(wsdl.services).to eq(
+        'api' => {
+          :ports => {
+            'apiSoap'   => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap/',
+              :location => 'https://api.example.com/api/api.asmx'
+            },
+            'apiSoap12' => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap12/',
+              :location => 'https://api.example.com/api/api.asmx'
+            }
+          }
+        }
+      )
+    end
+
     it 'works fine with dot-namespaced operations' do
       operation = wsdl.operation('DeleteClient')
 

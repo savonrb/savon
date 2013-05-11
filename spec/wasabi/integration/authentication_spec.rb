@@ -20,6 +20,19 @@ describe Wasabi do
       )
     end
 
+    it 'returns a map of services and ports' do
+      expect(wsdl.services).to eq(
+        'AuthenticationWebServiceImplService' => {
+          :ports => {
+            'AuthenticationWebServiceImplPort' => {
+              :type     => 'http://schemas.xmlsoap.org/wsdl/soap/',
+              :location => 'http://example.com/validation/1.0/AuthenticationService'
+            }
+          }
+        }
+      )
+    end
+
     it 'knows the operations' do
       operation = wsdl.operation('authenticate')
 
