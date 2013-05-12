@@ -1,5 +1,7 @@
 ## master
 
+* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks that don't care about the message sent: `savon.expects(:authenticate).with(message: :any)`.
+
 * Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
   through the updated [savon-multipart](https://github.com/savonrb/savon-multipart) gem. You can now
   specify the `multipart: true` either as a global or local option. Please make sure you have the

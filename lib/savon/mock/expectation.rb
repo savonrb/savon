@@ -54,6 +54,7 @@ module Savon
     end
 
     def verify_message!
+      return if @expected[:message] == :any
       unless @expected[:message] == @actual[:message]
         expected_message = "  with this message: #{@expected[:message].inspect}" if @expected[:message]
         expected_message ||= "  with no message."
