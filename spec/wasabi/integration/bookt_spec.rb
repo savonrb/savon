@@ -29,7 +29,8 @@ describe Wasabi do
     end
 
     it 'resolves WSDL imports to get the operations' do
-      expect(wsdl.documents.operations).to_not be_empty
+      operations = wsdl.operations('Connect', 'IConnect')
+      expect(operations.count).to eq(26)
     end
 
   end

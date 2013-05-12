@@ -27,7 +27,8 @@ describe Wasabi do
     end
 
     it 'resolves WSDL imports to get the operations' do
-      expect(wsdl.documents.operations.keys).to include('GetCustomer')
+      operations = wsdl.operations('BYDExchangeServer', 'BasicHttpBinding_IBYDExchangeServer')
+      expect(operations.keys).to include('GetCustomer')
     end
 
   end

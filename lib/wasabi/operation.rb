@@ -1,13 +1,13 @@
 class Wasabi
   class Operation
 
-    def initialize(name, endpoint, binding_operation, port_type_operation, documents)
+    def initialize(name, endpoint, binding_operation, port_type_operation, wsdl)
       @name = name
       @endpoint = endpoint
       @binding_operation = binding_operation
       @port_type_operation = port_type_operation
 
-      @documents = documents
+      @wsdl = wsdl
       parse_nsid_and_input
     end
 
@@ -42,7 +42,7 @@ class Wasabi
     def find_message(message_name)
       message_name = message_name.split(':').last
 
-      @documents.messages.fetch(message_name) {
+      @wsdl.documents.messages.fetch(message_name) {
         raise "Unable to find message #{message_name.inspect}"
       }
     end

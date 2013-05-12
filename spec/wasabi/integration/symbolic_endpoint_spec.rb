@@ -21,7 +21,10 @@ describe Wasabi do
     end
 
     it 'allows symbolic endpoints' do
-      operation = wsdl.operation('ptsLiesListe')
+      service = 'PaPtsStBezRollenService'
+      port = 'de.example.partner.webservices'
+
+      operation = wsdl.operation(service, port, 'ptsLiesListe')
       expect(operation.endpoint).to eq('http://server:port/CICS/CWBA/DFHWSDSH/DQ5006')
     end
 

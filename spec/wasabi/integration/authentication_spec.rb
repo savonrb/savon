@@ -34,7 +34,10 @@ describe Wasabi do
     end
 
     it 'knows the operations' do
-      operation = wsdl.operation('authenticate')
+      service = 'AuthenticationWebServiceImplService'
+      port = 'AuthenticationWebServiceImplPort'
+
+      operation = wsdl.operation(service, port, 'authenticate')
 
       expect(operation.input).to eq('authenticate')
       expect(operation.soap_action).to eq('')

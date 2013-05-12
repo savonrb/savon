@@ -2,6 +2,7 @@ require 'wasabi/version'
 require 'wasabi/document'
 require 'wasabi/resolver'
 require 'wasabi/importer'
+require 'wasabi/operation_builder'
 require 'wasabi/inspector'
 
 class Wasabi
@@ -33,10 +34,6 @@ class Wasabi
     @documents.namespaces
   end
 
-  def operation(operation_name)
-    @documents.operations[operation_name]
-  end
-
   def services
     @services ||= begin
       services = {}
@@ -50,6 +47,14 @@ class Wasabi
 
       services
     end
+  end
+
+  def operations(service_name, port_name)
+    OperationBuilder.new(service_name, port_name, self).build
+  end
+
+  def operation(service_name, port_name, operation_name)
+    operations(service_name, port_name)[operation_name]
   end
 
   def inspect

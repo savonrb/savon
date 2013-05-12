@@ -1,5 +1,4 @@
 require 'uri'
-require 'wasabi/operation_builder'
 
 class Wasabi
   class DocumentCollection
@@ -31,10 +30,6 @@ class Wasabi
 
     def namespaces
       @namespaces ||= inject({}) { |memo, document| memo.merge(document.namespaces) }
-    end
-
-    def operations
-      @operations ||= OperationBuilder.new(self).build
     end
 
     def messages

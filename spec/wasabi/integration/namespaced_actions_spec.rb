@@ -41,7 +41,7 @@ describe Wasabi do
     end
 
     it 'works fine with dot-namespaced operations' do
-      operation = wsdl.operation('DeleteClient')
+      operation = wsdl.operation('api', 'apiSoap', 'DeleteClient')
 
       expect(operation.input).to eq('Client.Delete')
       expect(operation.soap_action).to eq('http://api.example.com/api/Client.Delete')

@@ -21,7 +21,7 @@ describe Wasabi do
     end
 
     it 'does not blow up when an extension base element is defined in an import' do
-      operation = wsdl.documents.operations['GetSystemInfoRequest']
+      operation = wsdl.operation('SystemService', 'System', 'GetSystemInfoRequest')
 
       operation.input.should == 'GetSystemInfoRequest'
       operation.soap_action.should == 'urn:#GetSystemInfoRequest'
