@@ -1080,7 +1080,7 @@ but can easily be changed to support any global and or local option along with t
 This is possible because Savon mocks the request as late as possible to ensure everything works as expected
 in your integration tests.
 
-If you're trying to "stub" a request, you can simply leave out the `#with` method, but you need to call the
+If you're trying to "stub" a request, you can pass `message: any` to the `#with` method to accept any message. You still need to call the
 `#returns` method to return a response that Savon can work with.
 
 ``` ruby
