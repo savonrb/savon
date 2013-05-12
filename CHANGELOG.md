@@ -20,6 +20,9 @@ Here's a summary of the changes:
 
 * Wasabi now knows **custom simpleType elements**. Support for this can probably be improved, but it's a start.
 
+* Removed the `String#snakecase` core extension. Savon will probably still let you use
+  snakecase names in future releases, but Wasabi doesn't have to care.
+
 ## 3.1.0 (2013-04-21)
 
 * Feature: [#22](https://github.com/savonrb/wasabi/issues/22) added `Wasabi::Document#service_name`
