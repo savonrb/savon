@@ -9,45 +9,68 @@ Wasabi is a simple WSDL parser written in Ruby and extracted from the
 [![Coverage Status](https://coveralls.io/repos/savonrb/wasabi/badge.png?branch=master)](https://coveralls.io/r/savonrb/wasabi)
 
 
-Wasabi is available through [Rubygems](http://rubygems.org/gems/wasabi) and can be installed via:
-
-```
-$ gem install wasabi
-```
-
-or add it to your Gemfile like this:
-
-```
-gem 'wasabi'
-```
-
-**Attention:** This targets the code on GitHub master.  
-Here is the [README for the latest released version (v3.1.0)](https://github.com/savonrb/wasabi/blob/v3.1.0/README.md).
-
+Wasabi 4.0 is under active development and currently only available via GitHub.  
+To give it a try, just add it to your Gemfile.
 
 ``` ruby
-# Instantiate Wasabi with a URL or the path to a WSDL document.
+gem 'wasabi', github: 'savonrb/wasabi'
+```
+
+Instantiate Wasabi with a URL or the path to a WSDL document.
+
+``` ruby
 wsdl = Wasabi.new('http://example.com?wsdl')
+```
 
-# Get the name of the service.
-wsdl.service_name  # => 'ExampleWebService'
+Get the name of the service.
 
-# Get the target namespace of the document.
-wsdl.target_namespace  # => 'http://v1.example.com'
+``` ruby
+wsdl.service_name
+```
 
-# Get the namespaces.
-wsdl.namespaces  # => { 'wsdl' => 'http://schemas.xmlsoap.org/wsdl/', ... }
+Get the target namespace of the document.
 
-operation = wsdl.operation('authenticate')  # => '<Wasabi::Operation ...>'
+``` ruby
+wsdl.target_namespace
+```
 
-# Get information about an operation.
-operation.name         # => 'authenticate'
-operation.nsid         # => 'tns'
-operation.input        # => 'authenticate'
-operation.soap_action  # => 'urn:authenticate'
-operation.endpoint     # => 'http://v1.example.com'
+Get the namespaces.
 
-# Inspect the service. Returns a big Hash with useful
-# information about the service. Very helpful for debugging.
-wsdl.inspect.to_hash   # => { :service_name => 'ExampleWebService', ... }
+``` ruby
+wsdl.namespaces
+```
+
+Get a summary of the services and ports.
+
+``` ruby
+wsdl.services
+```
+
+Get a list of operations by service and port.
+
+``` ruby
+wsdl.operations('ExampleService', 'ExamplePort')
+```
+
+Get a single operation by service, port and operation name.
+
+``` ruby
+wsdl.operation('ExampleService', 'ExamplePort', 'authenticate')
+```
+
+Query the operation for its information.
+
+``` ruby
+operation.name
+operation.nsid
+operation.input
+operation.soap_action
+operation.endpoint
+```
+
+Inspect the service. Returns a big Hash with useful
+information about the service. Very helpful for debugging.
+
+``` ruby
+wsdl.inspect.to_hash
 ```
