@@ -1,8 +1,6 @@
 require 'bundler'
 Bundler.setup
 
-require 'wasabi'
-
 unless RUBY_PLATFORM =~ /java/
   require "simplecov"
   require "coveralls"
@@ -12,6 +10,8 @@ unless RUBY_PLATFORM =~ /java/
     add_filter "spec"
   end
 end
+
+require 'wasabi'
 
 support_files = File.expand_path("spec/support/**/*.rb")
 Dir[support_files].each { |file| require file }
