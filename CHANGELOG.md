@@ -1,24 +1,24 @@
 ## master
 
-* Complete rewrite. Cleaned up a lot of old and false assertions on how this should work.
-  Here's a summary of the changes:
+Complete rewrite. Cleaned up a lot of old and false assertions on how this should work.
+Here's a summary of the changes:
 
-  * Support for **WSDL imports**. If your WSDL is split into multiple files, Wasabi will
-    now resolve those imports and assemble the pieces from all documents.
+* Support for **WSDL imports**. If your WSDL is split into multiple files, Wasabi will
+  now resolve those imports and assemble the pieces from all documents.
 
-  * **Major performance improvements** to finally solve [#7](https://github.com/savonrb/wasabi/issues/7).
-    Did some benchmarking and replaced a lot of slow xpath queries with walking
-    the DOM (in a readable way) instead. Nokogiri <3
+* **Major performance improvements** to finally solve [#7](https://github.com/savonrb/wasabi/issues/7).
+  Did some benchmarking and replaced a lot of slow xpath queries with walking
+  the DOM (in a readable way) instead. Nokogiri <3
 
-  * Fixed a problem with the **soapAction header**. In some cases, when the WSDL secified an
-    empty soapAction, Wasabi was falling back to use the operation name for the soapAction header.
-    This has been corrected.
+* Fixed a problem with the **soapAction header**. In some cases, when the WSDL secified an
+  empty soapAction, Wasabi was falling back to use the operation name for the soapAction header.
+  This has been corrected.
 
-  * **Endpoints** are now associated with an operation. Previously Wasabi just looked for
-    the first SOAP endpoint it could find which kind of worked, but didn't allow you to
-    choose the correct set of operations for a service.
+* **Endpoints** are now associated with an operation. Previously Wasabi just looked for
+  the first SOAP endpoint it could find which kind of worked, but didn't allow you to
+  choose the correct set of operations for a service.
 
-  * Wasabi now knows **custom simpleType elements**. Support for this can probably be improved, but it's a start.
+* Wasabi now knows **custom simpleType elements**. Support for this can probably be improved, but it's a start.
 
 ## 3.1.0 (2013-04-21)
 
