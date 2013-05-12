@@ -38,11 +38,11 @@ class Wasabi
     @services ||= begin
       services = {}
 
-      @documents.services.each do |name, service|
-        ports = service.ports.map { |name, port|
-          [name, { :type => port.type, :location => port.location }]
+      @documents.services.each do |service_name, service|
+        ports = service.ports.map { |port_name, port|
+          [port_name, { :type => port.type, :location => port.location }]
         }
-        services[name] = { :ports => Hash[ports] }
+        services[service_name] = { :ports => Hash[ports] }
       end
 
       services
