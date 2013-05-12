@@ -18,14 +18,20 @@ class Wasabi
       @schemas.each(&block)
     end
 
+    # TODO: find out if we can replace iterating the schemas by
+    #       finding the schema by its namespace.
     def element(name)
       find_type { |schema| schema.elements[name] }
     end
 
+    # TODO: find out if we can replace iterating the schemas by
+    #       finding the schema by its namespace.
     def complex_type(name)
       find_type { |schema| schema.complex_types[name] }
     end
 
+    # TODO: find out if we can replace iterating the schemas by
+    #       finding the schema by its namespace.
     def simple_type(name)
       find_type { |schema| schema.simple_types[name] }
     end
