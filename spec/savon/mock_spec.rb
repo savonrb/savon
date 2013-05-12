@@ -114,6 +114,20 @@ describe "Savon's mock interface" do
                                               "  with this message: #{message.inspect}")
   end
 
+  it "does not fail when any message is expected and an actual message" do
+    savon.expects(:find_user).with(:message => :any).returns("<fixture/>")
+    message = { :username => "luke" }
+
+    expect { new_client.call(:find_user, :message => message) }.to_not raise_error
+  end
+
+  it "does not fail when any message is expected and no actual message" do
+    savon.expects(:find_user).with(:message => :any).returns("<fixture/>")
+
+    expect { new_client.call(:find_user) }.to_not raise_error
+  end
+
+
   it "allows code to rescue Savon::Error and still report test failures" do
     message = { :username => "luke" }
     savon.expects(:find_user).with(:message => message).returns("<fixture/>")
