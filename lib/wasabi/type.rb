@@ -1,16 +1,25 @@
 class Wasabi
   class Type
 
-    class SimpleType
+    class BaseType
 
       def initialize(node, wsdl)
         @node = node
         @wsdl = wsdl
 
         @name = node['name']
+        @type = node['type']
       end
 
-      attr_reader :name
+      attr_reader :node, :wsdl, :name, :type
+
+      def to_hash
+        { :name => name, :type => type }
+      end
+
+    end
+
+    class SimpleType < BaseType
 
       def type
         first_child = @node.element_children.first
@@ -19,31 +28,18 @@ class Wasabi
         end
       end
 
-      def to_hash
-        { :name => name, :type => type }
-      end
-
     end
 
-    class LegacyType
+    class LegacyType < BaseType
 
-      def initialize(node, wsdl)
-        @node = node
-        @wsdl = wsdl
-
-        @name = node['name']
-      end
-
-      attr_reader :name
-
-      def type
+      def element_type
         @node.name
       end
 
       def children
         return @children if @children
 
-        case type
+        case element_type
         when 'element'
           first_child = @node.element_children.first
 
@@ -55,10 +51,6 @@ class Wasabi
         end
 
         @children = children || []
-      end
-
-      def to_hash
-        { :name => name, :type => type, :children => children }
       end
 
       private
