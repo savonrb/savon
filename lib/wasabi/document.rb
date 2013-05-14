@@ -50,10 +50,6 @@ class Wasabi
       imports
     end
 
-    def service_node
-      @document.root.at_xpath('wsdl:service', 'wsdl' => Wasabi::WSDL)
-    end
-
     private
 
     def collect_sections(mapping)
