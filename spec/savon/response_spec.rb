@@ -53,6 +53,18 @@ describe Savon::Response do
     end
   end
 
+  describe "#soap_fault" do
+    before { globals[:raise_errors] = false }
+
+    it "should return nil in case the response seems to be ok" do
+      soap_response.soap_fault.should be_nil
+    end
+
+    it "should return a SOAPFault in case of a SOAP fault" do
+      soap_fault_response.soap_fault.should be_a(Savon::SOAPFault)
+    end
+  end
+
   describe "#http_error?" do
     before { globals[:raise_errors] = false }
 
@@ -62,6 +74,18 @@ describe Savon::Response do
 
     it "should return true in case of an HTTP error" do
       soap_response(:code => 500).http_error?.should be_true
+    end
+  end
+
+  describe "#http_error" do
+    before { globals[:raise_errors] = false }
+
+    it "should return nil in case the response seems to be ok" do
+      soap_response.http_error.should be_nil
+    end
+
+    it "should return a HTTPError in case of an HTTP error" do
+      soap_response(:code => 500).http_error.should be_a(Savon::HTTPError)
     end
   end
 
