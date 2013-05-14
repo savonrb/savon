@@ -67,10 +67,3 @@ operation.input
 operation.soap_action
 operation.endpoint
 ```
-
-Inspect the service. Returns a big Hash with useful
-information about the service. Very helpful for debugging.
-
-``` ruby
-wsdl.to_hash
-```
