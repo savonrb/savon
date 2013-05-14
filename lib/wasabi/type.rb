@@ -22,10 +22,6 @@ class Wasabi
         @children ||= @node.element_children.map { |c| Type.build(c) }
       end
 
-      def to_hash
-        { :name => name, :type => type }
-      end
-
     end
 
     class SimpleType < BaseType

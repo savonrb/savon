@@ -3,7 +3,6 @@ require 'wasabi/document'
 require 'wasabi/resolver'
 require 'wasabi/importer'
 require 'wasabi/operation_builder'
-require 'wasabi/inspector'
 
 class Wasabi
 
@@ -55,10 +54,6 @@ class Wasabi
 
   def operation(service_name, port_name, operation_name)
     operations(service_name, port_name)[operation_name]
-  end
-
-  def to_hash
-    Inspector.new(self).to_hash
   end
 
 end

@@ -15,11 +15,6 @@ class Wasabi
       @ports ||= ports!
     end
 
-    def to_hash
-      ports_hash = Hash[ports.map { |name, port| [name, port.to_hash] }]
-      { :name  => name, :ports => ports_hash }
-    end
-
     private
 
     def ports!

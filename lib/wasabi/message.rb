@@ -13,10 +13,6 @@ class Wasabi
       @parts ||= parts!
     end
 
-    def to_hash
-      { :name => name, :parts => parts }
-    end
-
     private
 
     def parts!

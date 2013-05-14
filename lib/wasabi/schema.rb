@@ -28,16 +28,6 @@ class Wasabi
       @types ||= @elements.merge(@complex_types)
     end
 
-    def to_hash
-      {
-        :target_namespace     => target_namespace,
-        :element_form_default => element_form_default,
-        :elements             => inspect_all(elements),
-        :complex_types        => inspect_all(complex_types),
-        :simple_types         => inspect_all(simple_types)
-      }
-    end
-
     private
 
     def parse_types
@@ -52,10 +42,6 @@ class Wasabi
         when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node)
         end
       end
-    end
-
-    def inspect_all(collection)
-      Hash[collection.map { |name, element| [name, element.to_hash] }]
     end
 
   end
