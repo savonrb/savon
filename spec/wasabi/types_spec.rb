@@ -19,7 +19,7 @@ describe Wasabi do
 
     unit = wsdl.schemas.simple_type('TemperatureUnit')
 
-    expect(unit).to be_a(Wasabi::SimpleType)
+    expect(unit).to be_a(Wasabi::Type::SimpleType)
     expect(unit.type).to eq('xs:string')
   end
 
@@ -43,7 +43,7 @@ describe Wasabi do
 
     mp_user = wsdl.schemas.complex_type('MpUser')
 
-    expect(mp_user).to be_a(Wasabi::Type)
+    expect(mp_user).to be_a(Wasabi::Type::LegacyType)
     expect(mp_user).to have(8).children
 
     expect(mp_user.children).to include(
@@ -96,7 +96,7 @@ describe Wasabi do
 
     account = wsdl.schemas.complex_type('Account')
 
-    expect(account).to be_a(Wasabi::Type)
+    expect(account).to be_a(Wasabi::Type::LegacyType)
     expect(account).to have(5).children
 
     # TODO: also track whether the elements are nillable like the 'filedToNull' in this example.
@@ -125,7 +125,7 @@ describe Wasabi do
 
     terms = wsdl.schemas.element('TermOfPayment')
 
-    expect(terms).to be_a(Wasabi::Type)
+    expect(terms).to be_a(Wasabi::Type::LegacyType)
     expect(terms).to have(2).children
 
     expect(terms.children).to eq([

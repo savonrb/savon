@@ -48,13 +48,13 @@ class Wasabi
 
         case node.name
         when 'element'
-          type = Type.new(node, @wsdl)
+          type = Type::LegacyType.new(node, @wsdl)
           @elements[type_name] = type
         when 'complexType'
-          type = Type.new(node, @wsdl)
+          type = Type::LegacyType.new(node, @wsdl)
           @complex_types[type_name] = type
         when 'simpleType'
-          simple_type = SimpleType.new(node, @wsdl)
+          simple_type = Type::SimpleType.new(node, @wsdl)
           @simple_types[type_name] = simple_type
         end
       end

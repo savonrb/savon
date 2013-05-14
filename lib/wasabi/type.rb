@@ -1,136 +1,138 @@
 class Wasabi
-
-  class SimpleType
-
-    def initialize(node, wsdl)
-      @node = node
-      @wsdl = wsdl
-
-      @name = node['name']
-    end
-
-    attr_reader :name
-
-    def type
-      first_child = @node.element_children.first
-      if first_child.name == 'restriction'
-        first_child['base']
-      end
-    end
-
-    def to_hash
-      { :name => name, :type => type }
-    end
-
-  end
-
   class Type
 
-    def initialize(node, wsdl)
-      @node = node
-      @wsdl = wsdl
+    class SimpleType
 
-      @name = node['name']
-    end
+      def initialize(node, wsdl)
+        @node = node
+        @wsdl = wsdl
 
-    attr_reader :name
+        @name = node['name']
+      end
 
-    def type
-      @node.name
-    end
+      attr_reader :name
 
-    def children
-      return @children if @children
-
-      case type
-      when 'element'
+      def type
         first_child = @node.element_children.first
-
-        if first_child && first_child.name == 'complexType'
-          children = parse_complex_type first_child, @node['name'].to_s
+        if first_child.name == 'restriction'
+          first_child['base']
         end
-      when 'complexType'
-        children = parse_complex_type @node, @node['name'].to_s
       end
 
-      @children = children || []
+      def to_hash
+        { :name => name, :type => type }
+      end
+
     end
 
-    def to_hash
-      { :name => name, :type => type, :children => children }
-    end
+    class LegacyType
 
-    private
+      def initialize(node, wsdl)
+        @node = node
+        @wsdl = wsdl
 
-    def parse_complex_type(complex_type, name)
-      children = []
-
-      complex_type.xpath("./xs:all/xs:element", 'xs' => Wasabi::XSD).each do |element|
-        children << parse_element(element)
+        @name = node['name']
       end
 
-      complex_type.xpath("./xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
-        children << parse_element(element)
+      attr_reader :name
+
+      def type
+        @node.name
       end
 
-      complex_type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
-        children << parse_element(element)
+      def children
+        return @children if @children
+
+        case type
+        when 'element'
+          first_child = @node.element_children.first
+
+          if first_child && first_child.name == 'complexType'
+            children = parse_complex_type first_child, @node['name'].to_s
+          end
+        when 'complexType'
+          children = parse_complex_type @node, @node['name'].to_s
+        end
+
+        @children = children || []
       end
 
-      complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Wasabi::XSD).each do |extension|
-        base = extension.attribute('base').value.match(/\w+$/).to_s
-        base_type = @wsdl.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
-
-        children += base_type.children
+      def to_hash
+        { :name => name, :type => type, :children => children }
       end
 
-      children
-    end
+      private
 
-    def parse_element(element)
-      name = element['name']
-      type = element['type']
+      def parse_complex_type(complex_type, name)
+        children = []
 
-      # anyType elements don't have a type attribute.
-      # see email_validation.wsdl
-      _, nsid = type && type.split(':').reverse
+        complex_type.xpath("./xs:all/xs:element", 'xs' => Wasabi::XSD).each do |element|
+          children << parse_element(element)
+        end
 
-      if nsid
-        namespace = find_namespace(nsid, element)
-        simple_type = namespace == Wasabi::XSD
-      else
-        # assume that elements with a @type qname lacking an nsid to reference the xml schema.
-        simple_type = true
+        complex_type.xpath("./xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
+          children << parse_element(element)
+        end
+
+        complex_type.xpath("./xs:complexContent/xs:extension/xs:sequence/xs:element", 'xs' => Wasabi::XSD).each do |element|
+          children << parse_element(element)
+        end
+
+        complex_type.xpath('./xs:complexContent/xs:extension[@base]', 'xs' => Wasabi::XSD).each do |extension|
+          base = extension.attribute('base').value.match(/\w+$/).to_s
+          base_type = @wsdl.schemas.types.fetch(base) { raise "expected to find extension base #{base} in types" }
+
+          children += base_type.children
+        end
+
+        children
       end
 
-      form = element['form']
+      def parse_element(element)
+        name = element['name']
+        type = element['type']
 
-      max_occurs = element['maxOccurs'].to_s
-      singular = max_occurs.empty? || max_occurs == '1'
+        # anyType elements don't have a type attribute.
+        # see email_validation.wsdl
+        _, nsid = type && type.split(':').reverse
 
-      { :name => name, :type => type,
-        :simple_type => simple_type, :form => form, :singular => singular }
-    end
+        if nsid
+          namespace = find_namespace(nsid, element)
+          simple_type = namespace == Wasabi::XSD
+        else
+          # assume that elements with a @type qname lacking an nsid to reference the xml schema.
+          simple_type = true
+        end
 
-    def find_namespace(nsid, element)
-      # look for the namespace in the global namespaces collection
-      namespace = @wsdl.namespaces[nsid]
+        form = element['form']
 
-      # look for the namespace declaration on the element itself
-      if element_namespace = element.namespaces["xmlns:#{nsid}"]
-        namespace = element_namespace
-        @wsdl.namespaces[nsid] = element_namespace
+        max_occurs = element['maxOccurs'].to_s
+        singular = max_occurs.empty? || max_occurs == '1'
+
+        { :name => name, :type => type,
+          :simple_type => simple_type, :form => form, :singular => singular }
       end
 
-      missing_namespace! nsid unless namespace
-      namespace
-    end
+      def find_namespace(nsid, element)
+        # look for the namespace in the global namespaces collection
+        namespace = @wsdl.namespaces[nsid]
 
-    def missing_namespace!(nsid)
-      raise "Unable to find the namespace for #{nsid.inspect} in:\n" +
-            @wsdl.namespaces.inspect
+        # look for the namespace declaration on the element itself
+        if element_namespace = element.namespaces["xmlns:#{nsid}"]
+          namespace = element_namespace
+          @wsdl.namespaces[nsid] = element_namespace
+        end
+
+        missing_namespace! nsid unless namespace
+        namespace
+      end
+
+      def missing_namespace!(nsid)
+        raise "Unable to find the namespace for #{nsid.inspect} in:\n" +
+              @wsdl.namespaces.inspect
+      end
+
     end
 
   end
-
 end
