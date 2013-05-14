@@ -44,18 +44,12 @@ class Wasabi
       @schema.element_children.each do |node|
         next unless CHILD_TYPES.include? node.name
 
-        type_name = node['name']
+        name = node['name']
 
         case node.name
-        when 'element'
-          type = Type::LegacyType.new(node, @wsdl)
-          @elements[type_name] = type
-        when 'complexType'
-          type = Type::LegacyType.new(node, @wsdl)
-          @complex_types[type_name] = type
-        when 'simpleType'
-          simple_type = Type::SimpleType.new(node, @wsdl)
-          @simple_types[type_name] = simple_type
+        when 'element'     then @elements[name]      = Type::Element.new(node)
+        when 'complexType' then @complex_types[name] = Type::ComplexType.new(node)
+        when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node)
         end
       end
     end

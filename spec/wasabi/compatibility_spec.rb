@@ -22,6 +22,25 @@ describe Wasabi do
       wsdl.to_hash
     end
 
+    it "knows the types for #{fixture_name}.wsdl" do
+      wsdl = Wasabi.new fixture(fixture_name).read
+      wsdl.schemas.each do |schema|
+
+        schema.elements.each do |_, type|
+          type.children
+        end
+
+        schema.complex_types.each do |_, type|
+          type.children
+        end
+
+        schema.simple_types.each do |_, type|
+          type.children
+        end
+
+      end
+    end
+
   end
 
   # fails on jruby due to: https://github.com/sparklemotion/nokogiri/issues/902
