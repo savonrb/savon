@@ -57,8 +57,8 @@ class Wasabi
     operations(service_name, port_name)[operation_name]
   end
 
-  def inspect
-    Inspector.new(self)
+  def to_hash
+    Inspector.new(self).to_hash
   end
 
 end

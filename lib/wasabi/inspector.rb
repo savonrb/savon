@@ -25,22 +25,22 @@ class Wasabi
     end
 
     def messages
-      inspect(@wsdl.documents.messages)
+      inspect_all(@wsdl.documents.messages)
     end
 
     def bindings
-      inspect(@wsdl.documents.bindings)
+      inspect_all(@wsdl.documents.bindings)
     end
 
     def port_types
-      inspect(@wsdl.documents.port_types)
+      inspect_all(@wsdl.documents.port_types)
     end
 
     def services
-      inspect(@wsdl.documents.services)
+      inspect_all(@wsdl.documents.services)
     end
 
-    def inspect(collection)
+    def inspect_all(collection)
       Hash[collection.map { |name, element| [name, element.to_hash] }]
     end
 

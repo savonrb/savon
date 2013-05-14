@@ -72,5 +72,5 @@ Inspect the service. Returns a big Hash with useful
 information about the service. Very helpful for debugging.
 
 ``` ruby
-wsdl.inspect.to_hash
+wsdl.to_hash
 ```

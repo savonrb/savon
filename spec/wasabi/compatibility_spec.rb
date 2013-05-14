@@ -19,7 +19,7 @@ describe Wasabi do
 
     it "works with #{fixture_name}.wsdl" do
       wsdl = Wasabi.new fixture(fixture_name).read
-      wsdl.inspect.to_hash
+      wsdl.to_hash
     end
 
   end
@@ -28,7 +28,7 @@ describe Wasabi do
   unless RUBY_PLATFORM =~ /java/
     it "works with geotrust.wsdl" do
       wsdl = Wasabi.new fixture(:geotrust).read
-      wsdl.inspect.to_hash
+      wsdl.to_hash
     end
   end
 
