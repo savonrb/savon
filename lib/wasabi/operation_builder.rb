@@ -21,7 +21,7 @@ class Wasabi
       port_type = find_port_type(binding)
 
       binding.operations.each do |operation_name, binding_operation|
-        port_type_operation = port_type.find_operation_by_name(operation_name)
+        port_type_operation = port_type.operations[operation_name]
 
         operation = Operation.new(operation_name, endpoint, binding_operation, port_type_operation, @wsdl)
         operations[operation_name] = operation
