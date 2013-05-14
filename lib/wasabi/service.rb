@@ -15,27 +15,6 @@ class Wasabi
       @ports ||= ports!
     end
 
-    def find_port
-      ports.each do |_, port|
-        matches = yield port
-        return port if matches
-      end
-
-      nil
-    end
-
-    def find_port_by_type(type)
-      find_port { |port| port.type == type }
-    end
-
-    def soap_1_1_port
-      find_port_by_type(Wasabi::SOAP_1_1)
-    end
-
-    def soap_1_2_port
-      find_port_by_type(Wasabi::SOAP_1_2)
-    end
-
     def to_hash
       ports_hash = Hash[ports.map { |name, port| [name, port.to_hash] }]
       { :name  => name, :ports => ports_hash }
