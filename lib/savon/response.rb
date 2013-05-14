@@ -10,10 +10,11 @@ module Savon
       @globals = globals
       @locals  = locals
 
+      build_soap_and_http_errors!
       raise_soap_and_http_errors! if @globals[:raise_errors]
     end
 
-    attr_reader :http, :globals, :locals
+    attr_reader :http, :globals, :locals, :soap_fault, :http_error
 
     def success?
       !soap_fault? && !http_error?
@@ -66,9 +67,14 @@ module Savon
 
     private
 
+    def build_soap_and_http_errors!
+      @soap_fault = SOAPFault.new(@http, nori) if soap_fault?
+      @http_error = HTTPError.new(@http) if http_error?
+    end
+
     def raise_soap_and_http_errors!
-      raise SOAPFault.new(@http, nori) if soap_fault?
-      raise HTTPError.new(@http) if http_error?
+      raise soap_fault if soap_fault?
+      raise http_error if http_error?
     end
 
     def raise_invalid_response_error!

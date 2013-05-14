@@ -1,5 +1,7 @@
 ## master
 
+* Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error
+
 * Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks that don't care about the message sent: `savon.expects(:authenticate).with(message: :any)`.
 
 * Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
