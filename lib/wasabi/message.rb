@@ -18,16 +18,14 @@ class Wasabi
     def parts!
       parts = []
 
-      @message_node.element_children.each do |part_node|
-        next unless part_node.name == 'part'
+      @message_node.element_children.each do |part|
+        next unless part.name == 'part'
 
-        part = {}
-
-        part[:name]    = part_node['name']
-        part[:type]    = part_node['type']
-        part[:element] = part_node['element']
-
-        parts << part
+        parts << {
+          :name    => part['name'],
+          :type    => part['type'],
+          :element => part['element']
+        }
       end
 
       parts
