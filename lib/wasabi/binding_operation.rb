@@ -1,12 +1,12 @@
 class Wasabi
   class BindingOperation
 
-    def initialize(operation_node)
+    def initialize(operation_node, defaults = {})
       @operation_node = operation_node
 
       if soap_operation_node = find_soap_operation_node
         @soap_action = soap_operation_node['soapAction']
-        @style = soap_operation_node['style']
+        @style = soap_operation_node['style'] || defaults[:style]
       end
     end
 
@@ -14,6 +14,22 @@ class Wasabi
 
     def name
       @operation_node['name']
+    end
+
+    def input
+      return @input if @input
+
+      input = @operation_node.element_children.find { |node| node.name == 'input' }
+      return unless input
+
+      body = input.element_children.find { |node| node.name == 'body' }
+      return unless body
+
+      @input = {
+        :encoding_style => body['encodingStyle'],
+        :namespace => body['namespace'],
+        :use => body['use']
+      }
     end
 
     private

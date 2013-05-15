@@ -22,9 +22,16 @@ describe Wasabi do
     it 'knows the operations' do
       operation = wsdl.operation('SendSms', 'SendSmsPort', 'sendsms')
 
-      expect(operation.input).to eq('sendsms')
       expect(operation.soap_action).to eq('sendsms')
-      expect(operation.nsid).to eq('tns')
+
+      expect(operation.input.count).to eq(9)
+
+      # no namespaces for rpc params yet
+      expect(operation.input.first.namespace).to be_nil
+
+      # contains the message parts, not the rpc wrapper
+      names = operation.input.map(&:local)
+      expect(names).to eq(%w[sender cellular msg smsnumgroup emailaddr udh datetime format dlrurl])
     end
 
   end

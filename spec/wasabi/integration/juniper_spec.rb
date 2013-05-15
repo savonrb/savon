@@ -23,9 +23,13 @@ describe Wasabi do
     it 'does not blow up when an extension base element is defined in an import' do
       operation = wsdl.operation('SystemService', 'System', 'GetSystemInfoRequest')
 
-      operation.input.should == 'GetSystemInfoRequest'
       operation.soap_action.should == 'urn:#GetSystemInfoRequest'
-      operation.nsid.should == 'impl'
+
+      expect(operation.input.count).to eq(1)
+      input = operation.input.first
+
+      expect(input.namespace).to eq('http://juniper.net/webproxy/systemservice')
+      expect(input.local).to eq('GetSystemInfoRequest')
     end
 
   end

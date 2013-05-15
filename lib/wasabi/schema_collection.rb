@@ -18,39 +18,21 @@ class Wasabi
       @schemas.each(&block)
     end
 
-    # TODO: find out if we can replace iterating the schemas by
-    #       finding the schema by its namespace.
-    def element(name)
-      find_type { |schema| schema.elements[name] }
+    def element(namespace, name)
+      find_by_namespace(namespace).elements[name]
     end
 
-    # TODO: find out if we can replace iterating the schemas by
-    #       finding the schema by its namespace.
-    def complex_type(name)
-      find_type { |schema| schema.complex_types[name] }
+    def complex_type(namespace, name)
+      find_by_namespace(namespace).complex_types[name]
     end
 
-    # TODO: find out if we can replace iterating the schemas by
-    #       finding the schema by its namespace.
-    def simple_type(name)
-      find_type { |schema| schema.simple_types[name] }
+    def simple_type(namespace, name)
+      find_by_namespace(namespace).simple_types[name]
     end
 
-    # TODO: change the code to use elements, complex_types and simple_types
-    #       instead of merging different kinds of elements for all schemas.
-    def types
-      @types ||= inject({}) { |memo, schema| memo.merge(schema.types) }
-    end
-
-    private
-
-    def find_type
-      each do |schema|
-        type = yield schema
-        return type if type
-      end
-
-      nil
+    # TODO: maybe store by namespace?
+    def find_by_namespace(namespace)
+      find { |schema| schema.target_namespace == namespace }
     end
 
   end

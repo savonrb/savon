@@ -7,7 +7,7 @@ class Wasabi
       @binding_node = binding_node
 
       if soap_node = find_soap_node
-        @style = soap_node['style']
+        @style = soap_node['style'] || 'document'
         @transport = soap_node['transport']
       end
     end
@@ -35,7 +35,7 @@ class Wasabi
         next unless operation_node.name == 'operation'
 
         operation_name = operation_node['name']
-        operation = BindingOperation.new(operation_node)
+        operation = BindingOperation.new(operation_node, style: @style)
 
         operations[operation_name] = operation
       end

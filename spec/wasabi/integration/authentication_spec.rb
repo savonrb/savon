@@ -39,12 +39,15 @@ describe Wasabi do
 
       operation = wsdl.operation(service, port, 'authenticate')
 
-      expect(operation.input).to eq('authenticate')
       expect(operation.soap_action).to eq('')
-      expect(operation.nsid).to eq('tns')
       expect(operation.endpoint).to eq('http://example.com/validation/1.0/AuthenticationService')
+
+      expect(operation.input.count).to eq(1)
+      input = operation.input.first
+
+      expect(input.namespace).to eq('http://v1_0.ws.auth.order.example.com/')
+      expect(input.local).to eq('authenticate')
     end
 
   end
 end
-
