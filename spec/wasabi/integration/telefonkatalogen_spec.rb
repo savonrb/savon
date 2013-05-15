@@ -26,8 +26,7 @@ describe Wasabi do
 
       expect(operation.input.count).to eq(9)
 
-      # no namespaces for rpc params yet
-      expect(operation.input.first.namespace).to be_nil
+      expect(operation.input.first.nsid).to be_nil
 
       # contains the message parts, not the rpc wrapper
       names = operation.input.map(&:local)

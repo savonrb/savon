@@ -25,19 +25,19 @@ class Wasabi
 
     def build_document_parts
       find_parts.map { |part|
-        element, namespace = find_element_and_namespace part[:element]
-        Param.new(namespace, element.name)
+        element, nsid = find_element_and_nsid part[:element]
+        Param.new(nsid, element.name)
       }
     end
 
-    def find_element_and_namespace(name)
+    def find_element_and_nsid(name)
       local, nsid = name.split(':').reverse
       namespace = @wsdl.namespaces.fetch(nsid)
 
       element = @wsdl.schemas.element(namespace, local)
       raise "Unable to find element #{name.inspect}" unless element
 
-      [element, namespace]
+      [element, nsid]
     end
 
     def find_parts

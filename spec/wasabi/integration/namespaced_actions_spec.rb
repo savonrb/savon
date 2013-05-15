@@ -49,7 +49,7 @@ describe Wasabi do
       expect(operation.input.count).to eq(1)
       input = operation.input.first
 
-      expect(input.namespace).to eq('http://api.example.com/api/')
+      expect(input.nsid).to eq('tns')
       expect(input.local).to eq('Client.Delete')
     end
 

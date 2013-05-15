@@ -28,7 +28,7 @@ describe Wasabi do
       expect(operation.input.count).to eq(1)
       input = operation.input.first
 
-      expect(input.namespace).to eq('http://juniper.net/webproxy/systemservice')
+      expect(input.nsid).to eq('impl')
       expect(input.local).to eq('GetSystemInfoRequest')
     end
 

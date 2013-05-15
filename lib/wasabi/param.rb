@@ -1,12 +1,12 @@
 class Wasabi
   class Param
 
-    def initialize(namespace, local)
-      @namespace = namespace
+    def initialize(nsid, local)
+      @nsid = nsid
       @local = local
     end
 
-    attr_reader :namespace, :local
+    attr_reader :nsid, :local
 
   end
 end

@@ -45,7 +45,7 @@ describe Wasabi do
       expect(operation.input.count).to eq(1)
       input = operation.input.first
 
-      expect(input.namespace).to eq('http://v1_0.ws.auth.order.example.com/')
+      expect(input.nsid).to eq('tns')
       expect(input.local).to eq('authenticate')
     end
 
