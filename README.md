@@ -49,8 +49,10 @@ For more examples, you should check out the [integration tests](https://github.c
 
 ## Give back
 
-If you're using Savon and making money from it, then please consider donating via
-[Gittip](https://www.gittip.com/rubiii/) so that I can continue to improve it.
+If you're using Savon and you or your company is making money from it, then please consider
+donating via [Gittip](https://www.gittip.com/rubiii/) so that I can continue to improve it.
+
+[![donate](donate.png)](https://www.gittip.com/rubiii/)
 
 
 ## Documentation
