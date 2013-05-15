@@ -65,4 +65,4 @@ Please make sure to read the documentation for your version:
 And if you find any problems with it or if you think something's missing,  
 feel free to [help out and improve the documentation](https://github.com/savonrb/savon/tree/master/docs).
 
-Donate icon from the [http://thenounproject.com/noun/donate/#icon-No285](Noun Project).
+Donate icon from the [Noun Project](http://thenounproject.com/noun/donate/#icon-No285).
