@@ -4,6 +4,9 @@
   and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
   can just call `Savon.new`. There's no need for an additional class here.
 
+* Removed `Savon::Model`. Feel free to write and open source your own abstraction.
+
+
 ## master
 
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error

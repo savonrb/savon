@@ -1,6 +1,5 @@
 require "savon/version"
 require "savon/errors"
-require "savon/model"
 
 require "savon/operation"
 require "savon/request"
