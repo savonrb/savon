@@ -45,9 +45,6 @@ class Savon
       builder = build(locals)
 
       response = call! build_request(builder)
-
-      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
-
       create_response(response)
     end
 
@@ -136,11 +133,6 @@ class Savon
 
     def log?
       @globals[:log]
-    end
-
-    def raise_expected_httpi_response!
-      raise Error, "Observers need to return an HTTPI::Response to mock " \
-                   "the request or nil to execute the request."
     end
 
   end
