@@ -8,5 +8,13 @@ class Wasabi
 
     attr_reader :nsid, :local
 
+    def singular?
+      true
+    end
+
+    def tag
+      [@nsid, @local.to_sym].compact
+    end
+
   end
 end

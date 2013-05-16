@@ -1,7 +1,7 @@
 require 'wasabi/param'
 
 class Wasabi
-  class ParamBuilder
+  class ParamFactory
 
     def initialize(operation, wsdl)
       @operation = operation
