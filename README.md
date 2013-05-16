@@ -32,7 +32,7 @@ gem 'savon', '~> 2.2.0'
 require 'savon'
 
 # create a client for the service
-client = Savon.client(wsdl: 'http://service.example.com?wsdl')
+client = Savon.new(wsdl: 'http://service.example.com?wsdl')
 
 client.operations
 # => [:find_user, :list_users]

@@ -82,7 +82,7 @@ describe Savon do
   end
 
   def new_client
-    Savon.client(
+    Savon.new(
       :endpoint  => @server.url(:repeat),
       :namespace => "http://v1.example.com",
       :log       => false

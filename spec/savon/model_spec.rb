@@ -18,7 +18,7 @@ describe Savon::Model do
         client :wsdl => Fixture.wsdl(:authentication)
       }
 
-      expect(model.client).to be_a(Savon::Client)
+      expect(model.client).to be_an_instance_of(Savon)
       expect(model.client).to equal(model.client)
     end
 

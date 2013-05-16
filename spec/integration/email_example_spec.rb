@@ -1,9 +1,9 @@
- require "spec_helper"
+require "spec_helper"
 
 describe "Email example" do
 
   it "passes Strings as they are" do
-    client = Savon.client(
+    client = Savon.new(
       # The WSDL document provided by the service.
       :wsdl => "http://ws.cdyne.com/emailverify/Emailvernotestemail.asmx?wsdl",
 

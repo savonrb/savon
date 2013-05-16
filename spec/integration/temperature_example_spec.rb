@@ -3,7 +3,7 @@
 describe "Temperature example" do
 
   it "converts 30 degrees celsius to 86 degrees fahrenheit" do
-    client = Savon.client do
+    client = Savon.new do
       # The WSDL document provided by the service.
       wsdl "http://www.webservicex.net/ConvertTemperature.asmx?WSDL"
 

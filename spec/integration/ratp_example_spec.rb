@@ -3,7 +3,7 @@
 describe "RATP example" do
 
   it "retrieves information about a specific station" do
-    client = Savon.client do
+    client = Savon.new do
       # The WSDL document provided by the service.
       wsdl "http://www.ratp.fr/wsiv/services/Wsiv?wsdl"
 

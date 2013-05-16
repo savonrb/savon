@@ -547,7 +547,7 @@ describe "Options" do
     end
 
     it "accepts a block in the block-based interface" do
-      client = Savon.client do |globals|
+      client = Savon.new do |globals|
         globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
@@ -574,7 +574,7 @@ describe "Options" do
     end
 
     it "without the option and a WSDL, Savon defaults to Gyoku to create the name" do
-      client = Savon.client(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com", :log => false)
+      client = Savon.new(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com", :log => false)
 
       response = client.call(:init_authentication)
       expect(response.http.body).to include("<wsdl:initAuthentication></wsdl:initAuthentication>")
@@ -671,12 +671,12 @@ describe "Options" do
 
   def new_client(globals = {}, &block)
     globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
-    Savon.client(globals, &block)
+    Savon.new(globals, &block)
   end
 
   def new_client_without_wsdl(globals = {}, &block)
     globals = { :log => false }.merge(globals)
-    Savon.client(globals, &block)
+    Savon.new(globals, &block)
   end
 
   def inspect_request(response)

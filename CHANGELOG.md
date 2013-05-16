@@ -1,3 +1,9 @@
+## 3.0.0 (branch)
+
+* Replaced the `Savon.client` factory method by changing the `Savon` module to a class
+  and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
+  can just call `Savon.new`. There's no need for an additional class here.
+
 ## master
 
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error

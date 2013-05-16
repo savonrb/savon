@@ -44,7 +44,7 @@ class Savon
       @class_operation_module ||= Module.new {
 
         def client(globals = {})
-          @client ||= Savon::Client.new(globals)
+          @client ||= Savon.new(globals)
         rescue InitializationError
           raise_initialization_error!
         end

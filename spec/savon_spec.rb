@@ -1,7 +1,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe Savon::Client do
+describe Savon do
 
   before :all do
     @server = IntegrationServer.run
@@ -13,7 +13,7 @@ describe Savon::Client do
 
   describe ".new" do
     it "supports a block without arguments to create a client with global options" do
-      client = Savon.client do
+      client = Savon.new do
         wsdl Fixture.wsdl(:authentication)
       end
 
@@ -21,7 +21,7 @@ describe Savon::Client do
     end
 
     it "supports a block with one argument to create a client with global options" do
-      client = Savon.client do |globals|
+      client = Savon.new do |globals|
         globals.wsdl Fixture.wsdl(:authentication)
       end
 
@@ -34,26 +34,26 @@ describe Savon::Client do
       Savon::WSDLRequest.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(wsdl_request)
 
       Wasabi::Document.any_instance.expects(:request=).with(http_request)
-      Savon.client(:wsdl => "http://example.com")
+      Savon.new(:wsdl => "http://example.com")
     end
 
     it "raises if initialized with anything other than a Hash" do
-      expect { Savon.client("http://example.com") }.
+      expect { Savon.new("http://example.com") }.
         to raise_error(Savon::InitializationError, /Some code tries to initialize Savon with the "http:\/\/example\.com" \(String\)/)
     end
 
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
-      expect { Savon.client(:endpoint => "http://example.com") }.
+      expect { Savon.new(:endpoint => "http://example.com") }.
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
 
     it "raises a when given an unknown option via the Hash syntax" do
-      expect { Savon.client(:invalid_global_option => true) }.
+      expect { Savon.new(:invalid_global_option => true) }.
         to raise_error(Savon::UnknownOptionError, "Unknown global option: :invalid_global_option")
     end
 
     it "raises a when given an unknown option via the block syntax" do
-      expect { Savon.client { another_invalid_global_option true } }.
+      expect { Savon.new { another_invalid_global_option true } }.
         to raise_error(Savon::UnknownOptionError, "Unknown global option: :another_invalid_global_option")
     end
   end
@@ -182,12 +182,12 @@ describe Savon::Client do
 
   def new_client(globals = {})
     globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
-    Savon.client(globals)
+    Savon.new(globals)
   end
 
   def new_client_without_wsdl(globals = {})
     globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :log => false }.merge(globals)
-    Savon.client(globals)
+    Savon.new(globals)
   end
 
 end

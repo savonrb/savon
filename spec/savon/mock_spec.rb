@@ -151,7 +151,7 @@ describe "Savon's mock interface" do
       :log       => false
     }
 
-    Savon.client defaults.merge(globals)
+    Savon.new defaults.merge(globals)
   end
 
 end
