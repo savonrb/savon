@@ -35,7 +35,7 @@ class Wasabi
         next unless operation_node.name == 'operation'
 
         operation_name = operation_node['name']
-        operation = BindingOperation.new(operation_node, style: @style)
+        operation = BindingOperation.new(operation_node, :style => @style)
 
         operations[operation_name] = operation
       end
