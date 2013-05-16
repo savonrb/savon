@@ -45,8 +45,7 @@ class Savon
     def call(locals = {}, &block)
       builder = build(locals, &block)
 
-      response = Savon.notify_observers(@name, builder, @globals, @locals)
-      response ||= call! build_request(builder)
+      response = call! build_request(builder)
 
       raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
 

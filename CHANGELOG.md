@@ -6,6 +6,11 @@
 
 * Removed `Savon::Model`. Feel free to write and open source your own abstraction.
 
+* Removed the test helpers and observers. Internally, observers were only used to
+  allow the test helpers to stub the request. Test helpers are removed because version
+  3.0 should be open enough to allow you to use Webmock, Fakeweb, VCR or any other http
+  mocking library.
+
 
 ## master
 

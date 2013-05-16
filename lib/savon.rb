@@ -9,16 +9,6 @@ require "wasabi"
 
 class Savon
 
-  def self.observers
-    @observers ||= []
-  end
-
-  def self.notify_observers(operation_name, builder, globals, locals)
-    observers.inject(nil) do |response, observer|
-      observer.notify(operation_name, builder, globals, locals)
-    end
-  end
-
   def initialize(globals = {}, &block)
     unless globals.kind_of? Hash
       raise_version1_initialize_error! globals
