@@ -4,17 +4,16 @@ require "savon/errors"
 require "savon/operation"
 require "savon/request"
 require "savon/options"
-require "savon/block_interface"
 require "wasabi"
 
 class Savon
 
-  def initialize(globals = {}, &block)
+  def initialize(globals = {})
     unless globals.kind_of? Hash
       raise_version1_initialize_error! globals
     end
 
-    set_globals(globals, block)
+    @globals = GlobalOptions.new(globals)
 
     unless wsdl_or_endpoint_and_namespace_specified?
       raise_initialization_error!
@@ -34,8 +33,8 @@ class Savon
     Operation.create(operation_name, @wsdl, @globals)
   end
 
-  def call(operation_name, locals = {}, &block)
-    operation(operation_name).call(locals, &block)
+  def call(operation_name, locals = {})
+    operation(operation_name).call(locals)
   end
 
   def service_name
@@ -44,13 +43,6 @@ class Savon
   end
 
   private
-
-  def set_globals(globals, block)
-    globals = GlobalOptions.new(globals)
-    BlockInterface.new(globals).evaluate(block) if block
-
-    @globals = globals
-  end
 
   def build_wsdl_document
     @wsdl = Wasabi::Document.new

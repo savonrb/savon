@@ -1,5 +1,4 @@
 require "savon/options"
-require "savon/block_interface"
 require "savon/request"
 require "savon/builder"
 require "savon/response"
@@ -37,13 +36,13 @@ class Savon
       @globals = globals
     end
 
-    def build(locals = {}, &block)
-      set_locals(locals, block)
+    def build(locals = {})
+      @locals = LocalOptions.new(locals)
       Builder.new(@name, @wsdl, @globals, @locals)
     end
 
-    def call(locals = {}, &block)
-      builder = build(locals, &block)
+    def call(locals = {})
+      builder = build(locals)
 
       response = call! build_request(builder)
 
@@ -70,13 +69,6 @@ class Savon
       else
         raise 'Unable to find Savon::Multipart. Make sure the savon-multipart gem is installed and loaded.'
       end
-    end
-
-    def set_locals(locals, block)
-      locals = LocalOptions.new(locals)
-      BlockInterface.new(locals).evaluate(block) if block
-
-      @locals = locals
     end
 
     def call!(request)

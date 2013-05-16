@@ -519,15 +519,15 @@ describe "Options" do
 
   context "global :convert_request_keys_to" do
     it "changes how Hash message key Symbols are translated to XML tags for the request" do
-      client = new_client_without_wsdl do |globals|
-        globals.endpoint @server.url(:repeat)
-        globals.namespace "http://v1.example.com"
-        globals.convert_request_keys_to :camelcase  # or one of [:lower_camelcase, :upcase, :none]
-      end
+      client = new_client_without_wsdl(
+        :endpoint  => @server.url(:repeat),
+        :namespace => "http://v1.example.com",
+        :convert_request_keys_to => :camelcase  # or one of [:lower_camelcase, :upcase, :none]
+      )
 
-      response = client.call(:find_user) do |locals|
-        locals.message(:user_name => "luke", "pass_word" => "secret")
-      end
+      response = client.call(:find_user, :message => {
+        :user_name => "luke", "pass_word" => "secret"
+      })
 
       request = response.http.body
 
@@ -542,21 +542,6 @@ describe "Options" do
     it "changes how XML tags from the SOAP response are translated into Hash keys" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
-
-      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
-    end
-
-    it "accepts a block in the block-based interface" do
-      client = Savon.new do |globals|
-        globals.log                      false
-        globals.wsdl                     Fixture.wsdl(:authentication)
-        globals.endpoint                 @server.url(:repeat)
-        globals.convert_response_tags_to { |tag| tag.snakecase.upcase }
-      end
-
-      response = client.call(:authenticate) do |locals|
-        locals.xml Fixture.response(:authentication)
-      end
 
       expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end

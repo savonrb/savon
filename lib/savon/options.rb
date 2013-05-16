@@ -244,8 +244,8 @@ class Savon
     # Tell Nori how to convert XML tags from the SOAP response into Hash keys.
     # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
     # Defaults to convert tags to snakecase Symbols.
-    def convert_response_tags_to(converter = nil, &block)
-      @options[:convert_response_tags_to] = block || converter
+    def convert_response_tags_to(converter)
+      @options[:convert_response_tags_to] = converter
     end
 
     # Instruct Savon to create a multipart response if available.

@@ -12,22 +12,6 @@ describe Savon do
   end
 
   describe ".new" do
-    it "supports a block without arguments to create a client with global options" do
-      client = Savon.new do
-        wsdl Fixture.wsdl(:authentication)
-      end
-
-      expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
-    end
-
-    it "supports a block with one argument to create a client with global options" do
-      client = Savon.new do |globals|
-        globals.wsdl Fixture.wsdl(:authentication)
-      end
-
-      expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
-    end
-
     it "builds an HTTPI request for Wasabi" do
       http_request = mock
       wsdl_request = mock(:build => http_request)
@@ -47,14 +31,9 @@ describe Savon do
         to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
 
-    it "raises a when given an unknown option via the Hash syntax" do
+    it "raises a when given an unknown option" do
       expect { Savon.new(:invalid_global_option => true) }.
         to raise_error(Savon::UnknownOptionError, "Unknown global option: :invalid_global_option")
-    end
-
-    it "raises a when given an unknown option via the block syntax" do
-      expect { Savon.new { another_invalid_global_option true } }.
-        to raise_error(Savon::UnknownOptionError, "Unknown global option: :another_invalid_global_option")
     end
   end
 
@@ -116,30 +95,7 @@ describe Savon do
       expect(response).to eq(soap_response)
     end
 
-    it "supports a block without arguments to call an operation with local options" do
-      client = new_client(:endpoint => @server.url(:repeat))
-
-      response = client.call(:authenticate) do
-        message(:symbol => "AAPL" )
-      end
-
-      expect(response.http.body).to include("<symbol>AAPL</symbol>")
-    end
-
-    it "supports a block with one argument to call an operation with local options" do
-      client = new_client(:endpoint => @server.url(:repeat))
-
-      # supports instance variables!
-      @instance_variable = { :symbol => "AAPL" }
-
-      response = client.call(:authenticate) do |locals|
-        locals.message(@instance_variable)
-      end
-
-      expect(response.http.body).to include("<symbol>AAPL</symbol>")
-    end
-
-    it "accepts arguments for the message tag" do
+    it "accepts attributes for the message tag" do
       client   = new_client(:endpoint => @server.url(:repeat))
       response = client.call(:authenticate, :attributes => { "ID" => "ABC321"})
 
@@ -154,14 +110,9 @@ describe Savon do
       )
     end
 
-    it "raises a when given an unknown option via the Hash syntax" do
+    it "raises a when given an unknown option" do
       expect { new_client.call(:authenticate, :invalid_local_option => true) }.
         to raise_error(Savon::UnknownOptionError, "Unknown local option: :invalid_local_option")
-    end
-
-    it "raises a when given an unknown option via the block syntax" do
-      expect { new_client.call(:authenticate) { another_invalid_local_option true } }.
-        to raise_error(Savon::UnknownOptionError, "Unknown local option: :another_invalid_local_option")
     end
   end
 
