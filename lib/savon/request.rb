@@ -1,6 +1,6 @@
 require "httpi"
 
-module Savon
+class Savon
   class HTTPRequest
 
     def initialize(globals, http_request = nil)

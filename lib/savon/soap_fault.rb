@@ -1,6 +1,6 @@
 require "savon"
 
-module Savon
+class Savon
   class SOAPFault < Error
 
     def self.present?(http)

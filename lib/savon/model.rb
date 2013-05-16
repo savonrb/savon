@@ -1,4 +1,4 @@
-module Savon
+class Savon
   module Model
 
     def self.extended(base)

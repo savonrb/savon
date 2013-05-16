@@ -5,7 +5,7 @@ require "savon/builder"
 require "savon/response"
 require "savon/log_message"
 
-module Savon
+class Savon
   class Operation
 
     def self.create(operation_name, wsdl, globals)

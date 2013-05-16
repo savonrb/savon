@@ -1,7 +1,7 @@
 require "logger"
 require "httpi"
 
-module Savon
+class Savon
   class Options
 
     def initialize(options = {})

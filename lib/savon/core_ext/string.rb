@@ -1,6 +1,6 @@
 require "savon/soap"
 
-module Savon
+class Savon
   module CoreExt
     module String
 

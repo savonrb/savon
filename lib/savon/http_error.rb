@@ -1,6 +1,6 @@
 require "savon"
 
-module Savon
+class Savon
   class HTTPError < Error
 
     def self.present?(http)

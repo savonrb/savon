@@ -4,7 +4,7 @@ require "savon/options"
 require "savon/block_interface"
 require "wasabi"
 
-module Savon
+class Savon
   class Client
 
     def initialize(globals = {}, &block)

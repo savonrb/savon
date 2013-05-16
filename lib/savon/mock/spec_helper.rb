@@ -1,6 +1,6 @@
 require "savon/mock"
 
-module Savon
+class Savon
   module SpecHelper
 
     class Interface

@@ -1,4 +1,4 @@
-module Savon
+class Savon
 
   VERSION = "2.2.0"
 

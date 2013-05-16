@@ -2,7 +2,7 @@ require "nori"
 require "savon/soap_fault"
 require "savon/http_error"
 
-module Savon
+class Savon
   class Response
 
     def initialize(http, globals, locals)
