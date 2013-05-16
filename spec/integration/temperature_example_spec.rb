@@ -14,8 +14,8 @@ describe "Temperature example" do
       convert_request_keys_to :camelcase
 
       # Lower timeouts so these specs don't take forever when the service is not available.
-      open_timeout 10
-      read_timeout 10
+      open_timeout $integration_test_timeout
+      read_timeout $integration_test_timeout
 
       # Disable logging for cleaner spec output.
       log false

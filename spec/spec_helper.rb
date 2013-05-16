@@ -14,6 +14,9 @@ end
 require "savon"
 require "rspec"
 
+# set global integration test timeout
+$integration_test_timeout = 2
+
 # don't have HTTPI lazy-load HTTPClient, because then
 # it can't actually be refered to inside the specs.
 require "httpclient"

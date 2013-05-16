@@ -8,8 +8,8 @@ describe "ZIP code example" do
       :wsdl => "http://www.thomas-bayer.com/axis2/services/BLZService?wsdl",
 
       # Lower timeouts so these specs don't take forever when the service is not available.
-      :open_timeout => 10,
-      :read_timeout => 10,
+      :open_timeout => $integration_test_timeout,
+      :read_timeout => $integration_test_timeout,
 
       # Disable logging for cleaner spec output.
       :log => false
