@@ -1,4 +1,4 @@
-require 'wasabi/param_factory'
+require 'wasabi/part_builder'
 
 class Wasabi
   class Operation
@@ -15,7 +15,7 @@ class Wasabi
     attr_reader :name, :endpoint, :binding_operation, :port_type_operation
 
     def input
-      ParamFactory.new(self, @wsdl).build
+      PartBuilder.new(self, @wsdl).build
     end
 
     def soap_action

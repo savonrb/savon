@@ -28,16 +28,17 @@ describe Wasabi do
 
       input = operation.input
 
-      expect(input[0].nsid).to be_nil
-      expect(input[0].local).to eq('in0')
+      # we're ignoring the third part element which we can't resolve the type for.
+      # this seems to be an invalid spec, so we're doing the same as soapUI.
+      expect(input.count).to eq(2)
 
-      expect(input[1].nsid).to be_nil
-      expect(input[1].local).to eq('in1')
+      expect(input[0].name).to eq('in0')
+      expect(input[0].nsid).to eq('soapenc')
+      expect(input[0].local).to eq('string')
 
-      # notice that soapUI ignore this part!
-      # probably because it can't find the type definition.
-      expect(input[2].nsid).to be_nil
-      expect(input[2].local).to eq('in2')
+      expect(input[1].name).to eq('in1')
+      expect(input[1].nsid).to eq('soapenc')
+      expect(input[1].local).to eq('string')
     end
 
   end
