@@ -30,15 +30,15 @@ describe Wasabi do
       wsdl.schemas.each do |schema|
 
         schema.elements.each do |_, type|
-          type.children
+          type.child_elements
         end
 
         schema.complex_types.each do |_, type|
-          type.children
+          type.child_elements
         end
 
         schema.simple_types.each do |_, type|
-          type.children
+          type.child_elements
         end
 
       end
