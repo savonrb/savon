@@ -15,7 +15,7 @@ class Wasabi
     attr_reader :name, :endpoint, :binding_operation, :port_type_operation
 
     def input
-      @input = ParamFactory.new(self, @wsdl).build
+      ParamFactory.new(self, @wsdl).build
     end
 
     def soap_action
