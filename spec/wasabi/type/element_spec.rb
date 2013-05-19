@@ -71,10 +71,10 @@ describe Wasabi::Type::Element do
 
   def new_element(xml)
     node = Nokogiri.XML(xml).root
-    schemas = mock('schemas')
+    wsdl ||= mock('wsdl')
     schema = {}
 
-    Wasabi::Type::Element.new(node, schemas, schema)
+    Wasabi::Type::Element.new(node, wsdl, schema)
   end
 
 end

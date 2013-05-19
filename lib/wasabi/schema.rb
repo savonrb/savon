@@ -36,9 +36,9 @@ class Wasabi
         name = node['name']
 
         case node.name
-        when 'element'     then @elements[name]      = Type::Element.new(node, @wsdl.schemas, schema)
-        when 'complexType' then @complex_types[name] = Type::ComplexType.new(node, @wsdl.schemas, schema)
-        when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node, @wsdl.schemas, schema)
+        when 'element'     then @elements[name]      = Type::Element.new(node, @wsdl, schema)
+        when 'complexType' then @complex_types[name] = Type::ComplexType.new(node, @wsdl, schema)
+        when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node, @wsdl, schema)
         end
       end
     end

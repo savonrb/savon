@@ -45,6 +45,9 @@ describe Wasabi::Type::ComplexType do
     schemas = mock('schemas')
     schemas.expects(:complex_type).with('http://example.com/ons', 'baseObject').returns(base_type)
 
+    wsdl = mock('wsdl')
+    wsdl.expects(:schemas).returns(schemas)
+
     complex_type = new_complex_type('
 			<complexType name="Account" xmlns="http://www.w3.org/2001/XMLSchema"
                                   xmlns:ons="http://example.com/ons"
@@ -59,7 +62,7 @@ describe Wasabi::Type::ComplexType do
 					</extension>
 				</complexContent>
       </complexType>
-    ', schemas)
+    ', wsdl)
 
     expect(complex_type).to be_a(Wasabi::Type::ComplexType)
 
@@ -183,12 +186,12 @@ describe Wasabi::Type::ComplexType do
     expect(complex_type).to be_empty
   end
 
-  def new_complex_type(xml, schemas = nil)
+  def new_complex_type(xml, wsdl = nil)
     node = Nokogiri.XML(xml).root
-    schemas ||= mock('schemas')
+    wsdl ||= mock('wsdl')
     schema = {}
 
-    Wasabi::Type::ComplexType.new(node, schemas, schema)
+    Wasabi::Type::ComplexType.new(node, wsdl, schema)
   end
 
 end

@@ -3,9 +3,9 @@ class Wasabi
 
     class BaseType
 
-      def initialize(node, schemas, schema = {})
+      def initialize(node, wsdl, schema = {})
         @node = node
-        @schemas = schemas
+        @wsdl = wsdl
         @schema = schema
       end
 
@@ -20,7 +20,7 @@ class Wasabi
       end
 
       def children
-        @children ||= @node.element_children.map { |child| Type.build(child, @schemas, @schema) }
+        @children ||= @node.element_children.map { |child| Type.build(child, @wsdl, @schema) }
       end
 
       def child_elements(memo = [])
@@ -35,7 +35,7 @@ class Wasabi
 
     class PrimaryType < BaseType
 
-      def initialize(node, schemas, schema = {})
+      def initialize(node, wsdl, schema = {})
         super
 
         @namespace = schema[:target_namespace]
@@ -85,9 +85,9 @@ class Wasabi
           local, nsid = @node['base'].split(':').reverse
           namespace = @node.namespaces["xmlns:#{nsid}"]
 
-          if complex_type = @schemas.complex_type(namespace, local)
+          if complex_type = @wsdl.schemas.complex_type(namespace, local)
             memo << complex_type
-          elsif simple_type = @schemas.simple_type(namespace, local)
+          elsif simple_type = @wsdl.schemas.simple_type(namespace, local)
             memo << simple_type
           end
         end
@@ -138,8 +138,8 @@ class Wasabi
       'annotation'     => Annotation
     }
 
-    def self.build(node, schemas, schema = {})
-      type_class(node.name).new(node, schemas, schema)
+    def self.build(node, wsdl, schema = {})
+      type_class(node.name).new(node, wsdl, schema)
     end
 
     def self.type_class(type)
