@@ -1,7 +1,7 @@
 require 'wasabi/operation'
 
 class Wasabi
-  class OperationFactory
+  class OperationBuilder
 
     def initialize(service_name, port_name, wsdl)
       @service_name = service_name

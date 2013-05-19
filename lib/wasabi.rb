@@ -2,7 +2,7 @@ require 'wasabi/version'
 require 'wasabi/document'
 require 'wasabi/resolver'
 require 'wasabi/importer'
-require 'wasabi/operation_factory'
+require 'wasabi/operation_builder'
 
 class Wasabi
 
@@ -49,7 +49,7 @@ class Wasabi
   end
 
   def operations(service_name, port_name)
-    OperationFactory.new(service_name, port_name, self).build
+    OperationBuilder.new(service_name, port_name, self).build
   end
 
   def operation(service_name, port_name, operation_name)
