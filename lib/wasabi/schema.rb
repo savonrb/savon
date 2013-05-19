@@ -10,7 +10,7 @@ class Wasabi
       @wsdl = wsdl
 
       @target_namespace     = @schema['targetNamespace']
-      @element_form_default = @schema['elementFormDefault']
+      @element_form_default = @schema['elementFormDefault'] || 'unqualified'
 
       @elements      = {}
       @complex_types = {}
@@ -25,15 +25,20 @@ class Wasabi
     private
 
     def parse_types
+      schema = {
+        :target_namespace => @target_namespace,
+        :element_form_default => @element_form_default
+      }
+
       @schema.element_children.each do |node|
         next unless SCHEMA_TYPES.include? node.name
 
         name = node['name']
 
         case node.name
-        when 'element'     then @elements[name]      = Type::Element.new(node)
-        when 'complexType' then @complex_types[name] = Type::ComplexType.new(node)
-        when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node)
+        when 'element'     then @elements[name]      = Type::Element.new(node, @wsdl.schemas, schema)
+        when 'complexType' then @complex_types[name] = Type::ComplexType.new(node, @wsdl.schemas, schema)
+        when 'simpleType'  then @simple_types[name]  = Type::SimpleType.new(node, @wsdl.schemas, schema)
         end
       end
     end

@@ -29,7 +29,11 @@ describe Wasabi::Type::SimpleType do
   end
 
   def new_simple_type(xml)
-    Wasabi::Type::SimpleType.new Nokogiri.XML(xml).root
+    node = Nokogiri.XML(xml).root
+    schemas ||= mock('schemas')
+    schema = {}
+
+    Wasabi::Type::SimpleType.new(node, schemas, schema)
   end
 
 end

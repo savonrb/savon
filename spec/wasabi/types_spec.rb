@@ -20,7 +20,7 @@ describe Wasabi do
     unit = wsdl.schemas.first.simple_types['TemperatureUnit']
 
     expect(unit).to be_a(Wasabi::Type::SimpleType)
-    expect(unit.type).to eq('xs:string')
+    expect(unit.base).to eq('xs:string')
   end
 
   def wsdl(types)

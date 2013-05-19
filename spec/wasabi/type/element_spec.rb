@@ -31,10 +31,50 @@ describe Wasabi::Type::Element do
 
     expect(elements[1]).to be_a(Wasabi::Type::Element)
     expect(elements[1].name).to eq('value')
+
+    expect(element.child_elements).to eq(elements)
+  end
+
+  specify 'element/complexType/sequence/choice/element' do
+    element = new_element('
+      <xs:element name="source">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="1">
+              <xs:element name="account" type="tns:id"/>
+              <xs:element name="linkedExternalAccountId" type="tns:id"/>
+              <xs:element name="newExternalAccount" type="tns:collectExternalAccount"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    ')
+
+    expect(element).to be_a(Wasabi::Type::Element)
+    expect(element.child_elements.count).to eq(3)
+  end
+
+  specify 'element/complexType/sequence/choice/element' do
+    element = new_element('
+      <xsd:element name="commandGroup">
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string"/>
+        </xsd:simpleType>
+      </xsd:element>
+    ')
+
+    expect(element).to be_a(Wasabi::Type::Element)
+
+    expect(element.child_elements).to be_empty
+    expect(element.type).to eq('xsd:string')
   end
 
   def new_element(xml)
-    Wasabi::Type::Element.new Nokogiri.XML(xml).root
+    node = Nokogiri.XML(xml).root
+    schemas = mock('schemas')
+    schema = {}
+
+    Wasabi::Type::Element.new(node, schemas, schema)
   end
 
 end
