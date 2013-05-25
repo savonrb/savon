@@ -1,4 +1,3 @@
-require "savon/soap"
 
 module Savon
   module CoreExt
