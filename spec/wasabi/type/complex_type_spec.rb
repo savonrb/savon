@@ -29,7 +29,7 @@ describe Wasabi::Type::ComplexType do
     element_names = elements.map(&:name)
     expect(element_names).to eq(%w[speciality firstname lastname login])
 
-    expect(complex_type.child_elements).to eq(elements)
+    expect(complex_type.collect_child_elements).to eq(elements)
   end
 
   specify 'complexContent/extension/sequence/element' do
@@ -41,7 +41,7 @@ describe Wasabi::Type::ComplexType do
       </complexType>
     ')
 
-    # mock the schemas for #child_elements
+    # mock the schemas for #collect_child_elements
     schemas = mock('schemas')
     schemas.expects(:complex_type).with('http://example.com/ons', 'baseObject').returns(base_type)
 
@@ -92,11 +92,11 @@ describe Wasabi::Type::ComplexType do
     expect(sequence_elements[2]).to be_a(Wasabi::Type::Element)
     expect(sequence_elements[2].name).to eq('CreatedDate')
 
-    # complex_type#child_elements resolves extensions
+    # complex_type#collect_child_elements resolves extensions
     extension_elements = [base_type]
     all_elements = extension_elements + sequence_elements
 
-    expect(complex_type.child_elements).to eq(all_elements)
+    expect(complex_type.collect_child_elements).to eq(all_elements)
   end
 
   specify 'complexType/simpleContent/attribute (plus annotations)' do
@@ -141,7 +141,7 @@ describe Wasabi::Type::ComplexType do
     ')
 
     expect(complex_type).to be_a(Wasabi::Type::ComplexType)
-    expect(complex_type.child_elements).to be_empty
+    expect(complex_type.collect_child_elements).to be_empty
   end
 
   specify 'complexType/sequence/element/simpleType' do
@@ -167,7 +167,7 @@ describe Wasabi::Type::ComplexType do
 
     expect(complex_type).to be_a(Wasabi::Type::ComplexType)
 
-    elements = complex_type.child_elements
+    elements = complex_type.collect_child_elements
     expect(elements.count).to eq(3)
 
     expect(elements[0].type).to eq('xsd:integer')

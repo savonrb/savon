@@ -23,12 +23,24 @@ class Wasabi
         @children ||= @node.element_children.map { |child| Type.build(child, @wsdl, @schema) }
       end
 
-      def child_elements(memo = [])
+      def collect_child_elements(memo = [])
         children.each do |child|
-          memo << child if child.kind_of? Element
-          child.child_elements(memo)
+          if child.kind_of? Element
+            memo << child
+          else
+            child.collect_child_elements(memo)
+          end
         end
+
         memo
+      end
+
+      def inspect
+        attributes = @node.attributes.
+          inject({}) { |memo, (k, attr)| memo[k.to_s] = attr.value; memo }.
+          map { |i| "%s=\"%s\"" % i }.
+          join(' ')
+        "<%s %s>" % [self.class, attributes]
       end
 
     end
@@ -42,13 +54,12 @@ class Wasabi
         @element_form_default = schema[:element_form_default]
 
         @name = node['name']
-        @type = node['type']
         @form = node['form'] || 'unqualified'
 
         @namespaces = node.namespaces
       end
 
-      attr_reader :name, :type, :namespace, :namespaces
+      attr_reader :name, :namespace, :namespaces
 
       def qualify?
         @form == 'qualified' || @element_form_default == 'qualified'
@@ -67,20 +78,30 @@ class Wasabi
 
     class Element < PrimaryType
 
-      def type
-        return @type if @type
+      def initialize(node, wsdl, schema = {})
+        super
 
-        simple_type = children.find { |child| child.kind_of? SimpleType }
-        simple_type.base if simple_type
+        @type = node['type']
+        @ref  = node['ref']
+      end
+
+      attr_reader :type, :ref
+
+      def inline_type
+        children.first
       end
 
     end
 
-    class ComplexType < PrimaryType; end
+    class ComplexType < PrimaryType
+
+      alias_method :elements, :collect_child_elements
+
+    end
 
     class Extension < BaseType
 
-      def child_elements(memo = [])
+      def collect_child_elements(memo = [])
         if @node['base']
           local, nsid = @node['base'].split(':').reverse
           namespace = @node.namespaces["xmlns:#{nsid}"]
@@ -108,7 +129,7 @@ class Wasabi
     class SimpleContent < BaseType
 
       # stop searching for child elements
-      def child_elements(memo = [])
+      def collect_child_elements(memo = [])
         memo
       end
 
@@ -117,7 +138,7 @@ class Wasabi
     class Annotation < BaseType
 
       # stop searching for child elements
-      def child_elements(memo = [])
+      def collect_child_elements(memo = [])
         memo
       end
 

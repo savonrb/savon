@@ -22,9 +22,10 @@ class Wasabi
         next unless part.name == 'part'
 
         parts << {
-          :name    => part['name'],
-          :type    => part['type'],
-          :element => part['element']
+          :name       => part['name'],
+          :type       => part['type'],
+          :element    => part['element'],
+          :namespaces => part.namespaces
         }
       end
 

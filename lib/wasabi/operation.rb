@@ -1,4 +1,4 @@
-require 'wasabi/part_builder'
+require 'wasabi/message_builder'
 
 class Wasabi
   class Operation
@@ -15,15 +15,35 @@ class Wasabi
     attr_reader :name, :endpoint, :binding_operation, :port_type_operation
 
     def input
-      PartBuilder.new(self, @wsdl).build
+      parts = parts_for_input_output @port_type_operation.input
+      MessageBuilder.new(self, @wsdl).build(parts)
+    end
+
+    def output
+      parts = parts_for_input_output @port_type_operation.output
+      MessageBuilder.new(self, @wsdl).build(parts)
     end
 
     def soap_action
       @binding_operation.soap_action
     end
 
-    def style
-      @binding_operation.style
+    def input_style
+      "#{@binding_operation.style}/#{@binding_operation.input[:use]}"
+    end
+
+    private
+
+    def parts_for_input_output(input_output)
+      message = find_message input_output[:message]
+      message.parts
+    end
+
+    def find_message(qname)
+      local = qname.split(':').last
+
+      @wsdl.documents.messages[local] or
+        raise "Unable to find message #{qname.inspect}"
     end
 
   end

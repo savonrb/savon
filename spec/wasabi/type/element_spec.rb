@@ -32,7 +32,7 @@ describe Wasabi::Type::Element do
     expect(elements[1]).to be_a(Wasabi::Type::Element)
     expect(elements[1].name).to eq('value')
 
-    expect(element.child_elements).to eq(elements)
+    expect(element.collect_child_elements).to eq(elements)
   end
 
   specify 'element/complexType/sequence/choice/element' do
@@ -51,7 +51,7 @@ describe Wasabi::Type::Element do
     ')
 
     expect(element).to be_a(Wasabi::Type::Element)
-    expect(element.child_elements.count).to eq(3)
+    expect(element.collect_child_elements.count).to eq(3)
   end
 
   specify 'element/complexType/sequence/choice/element' do
@@ -65,7 +65,7 @@ describe Wasabi::Type::Element do
 
     expect(element).to be_a(Wasabi::Type::Element)
 
-    expect(element.child_elements).to be_empty
+    expect(element.collect_child_elements).to be_empty
     expect(element.type).to eq('xsd:string')
   end
 
