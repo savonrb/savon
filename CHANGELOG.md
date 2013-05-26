@@ -1,7 +1,11 @@
-## master
+## 4.0
 
 Complete rewrite. Cleaned up a lot of old and false assertions on how this should work.
 Here's a summary of the changes:
+
+* This version requires Ruby 1.9.2 or higher. I would suggest to use Ruby 2.0.
+  Ruby 1.8.7 and REE will no longer be supported due to their end of life.
+  If you're still using Ruby 1.8 in production, you need to upgrade!
 
 * Support for **WSDL imports**. If your WSDL is split into multiple files, Wasabi will
   now resolve those imports and assemble the pieces from all documents.
@@ -18,7 +22,7 @@ Here's a summary of the changes:
   the first SOAP endpoint it could find which kind of worked, but didn't allow you to
   choose the correct set of operations for a service.
 
-* Wasabi now knows **custom simpleType elements**. Support for this can probably be improved, but it's a start.
+* Wasabi now knows **custom simpleType elements**.
 
 * Removed the `String#snakecase` core extension. Savon will probably still let you use
   snakecase names in future releases, but Wasabi doesn't have to care.
