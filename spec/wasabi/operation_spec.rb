@@ -15,9 +15,9 @@ describe Wasabi::Operation do
         # this is nothing we need to show the user, so we're handling it later.
 
         expect(input.first.to_a).to eq([
-           [['in'], {}],
-           [['in', 'data1'], {:type => 'int'}],
-           [['in', 'data2'], {:type => 'int'}]
+           [['in'], { namespace: nil }],
+           [['in', 'data1'], { namespace: nil, type: 'int' }],
+           [['in', 'data2'], { namespace: nil, type: 'int' }]
         ])
       end
 
@@ -30,17 +30,17 @@ describe Wasabi::Operation do
         data_elem = input.first
 
         expect(data_elem.to_a).to eq([
-          [['DataElem'], {}],
-          [['DataElem', 'data1'], {:type => 'int'}],
-          [['DataElem', 'data2'], {:type => 'int'}]
+          [['DataElem'], { namespace: 'http://dataNamespace.com' }],
+          [['DataElem', 'data1'], { namespace: nil, type: 'int' }],
+          [['DataElem', 'data2'], { namespace: nil, type: 'int' }]
         ])
 
         # part@element
         in2 = input.last
 
         expect(in2.to_a).to eq([
-          [['in2'], {}],
-          [['in2', 'RefDataElem'], {:type => 'int'}]
+          [['in2'], { namespace: nil }],
+          [['in2', 'RefDataElem'], { namespace: 'http://refNamespace.com', type: 'int' }]
         ])
       end
     end
@@ -54,10 +54,10 @@ describe Wasabi::Operation do
         expect(input.count).to eq(1)
 
         expect(input.first.to_a).to eq([
-          [['op1'], {}],
-          [['op1', 'in'], {}],
-          [['op1', 'in', 'data1'], {:type => 'int'}],
-          [['op1', 'in', 'data2'], {:type => 'int'}]
+          [['op1'], { namespace: 'http://apiNamespace.com' }],
+          [['op1', 'in'], { namespace: nil }],
+          [['op1', 'in', 'data1'], { namespace: nil, type: 'int' }],
+          [['op1', 'in', 'data2'], { namespace: nil, type: 'int' }]
         ])
       end
 
@@ -67,12 +67,12 @@ describe Wasabi::Operation do
         expect(input.count).to eq(1)
 
         expect(input.first.to_a).to eq([
-          [['op3'], {}],
-          [['op3', 'DataElem'], {}],
-          [['op3', 'DataElem', 'data1'], {:type => 'int'}],
-          [['op3', 'DataElem', 'data2'], {:type => 'int'}],
-          [['op3', 'in2'], {}],
-          [['op3', 'in2', 'RefDataElem'], {:type => 'int'}]
+          [['op3'], { namespace: 'http://apiNamespace.com' }],
+          [['op3', 'DataElem'],           { namespace: 'http://dataNamespace.com' }],
+          [['op3', 'DataElem', 'data1'],  { namespace: nil, type: 'int' }],
+          [['op3', 'DataElem', 'data2'],  { namespace: nil, type: 'int' }],
+          [['op3', 'in2'],                { namespace: nil }],
+          [['op3', 'in2', 'RefDataElem'], { namespace: 'http://refNamespace.com', type: 'int' }]
         ])
       end
     end

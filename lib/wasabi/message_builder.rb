@@ -3,16 +3,10 @@ class Wasabi
   module SchemaFinder
 
     def find_type_for_element(element)
-      case
-      when element.type
+      if element.type
         find_type(element.type, element.namespaces)
-
-      when element.ref
-        find_element(element.ref)
-
       else
         element.inline_type
-
       end
     end
 
@@ -70,13 +64,14 @@ class Wasabi
   class Element
     include SchemaFinder
 
-    def initialize(name, type, wsdl)
+    def initialize(name, type, namespace, wsdl)
       @name = name
       @type = type
+      @namespace = namespace
       @wsdl = wsdl
     end
 
-    attr_reader :name
+    attr_reader :name, :namespace
 
     def simple_type?
       !complex_type?
@@ -104,12 +99,14 @@ class Wasabi
 
           name = ref_element.name
           type = find_type_for_element(ref_element)
+          namespace = ref_element.namespace
         else
           name = element.name
           type = find_type_for_element(element)
+          namespace = nil
         end
 
-        Element.new(name, type, @wsdl)
+        Element.new(name, type, namespace, @wsdl)
       }
     end
 
@@ -117,10 +114,10 @@ class Wasabi
       new_stack = stack + [name]
 
       if simple_type?
-        memo << [new_stack, { type: base_type }]
+        memo << [new_stack, { namespace: namespace, type: base_type }]
 
       elsif complex_type?
-        memo << [new_stack, {}]
+        memo << [new_stack, { namespace: namespace }]
 
         children.each do |child|
           child.to_a(memo, new_stack)
@@ -171,7 +168,7 @@ class Wasabi
       name = part[:name]
       type = find_type part[:type], part[:namespaces]
 
-      Element.new(name, type, @wsdl)
+      Element.new(name, type, nil, @wsdl)
     end
 
     # Expects a part with an @element attribute, resolves the element
@@ -182,7 +179,7 @@ class Wasabi
       element = @wsdl.schemas.element(namespace, local)
       type = find_type_for_element(element)
 
-      Element.new(element.name, type, @wsdl)
+      Element.new(element.name, type, element.namespace, @wsdl)
     end
 
   end
