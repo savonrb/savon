@@ -59,10 +59,14 @@ class Wasabi
         @namespaces = node.namespaces
       end
 
-      attr_reader :name, :namespace, :namespaces
+      attr_reader :name, :form, :namespace, :namespaces
 
-      def qualify?
-        @form == 'qualified' || @element_form_default == 'qualified'
+      def form
+        if @form == 'qualified' || @element_form_default == 'qualified'
+          'qualified'
+        else
+          'unqualified'
+        end
       end
 
     end

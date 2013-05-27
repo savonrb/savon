@@ -66,7 +66,9 @@ describe Wasabi::Type::Element do
     expect(element).to be_a(Wasabi::Type::Element)
 
     expect(element.collect_child_elements).to be_empty
-    expect(element.type).to eq('xsd:string')
+    expect(element.type).to be_nil
+    expect(element.inline_type).to be_a(Wasabi::Type::SimpleType)
+    expect(element.inline_type.base).to eq('xsd:string')
   end
 
   def new_element(xml)

@@ -64,14 +64,16 @@ class Wasabi
   class Element
     include SchemaFinder
 
-    def initialize(name, type, namespace, wsdl)
-      @name = name
-      @type = type
-      @namespace = namespace
+    def initialize(wsdl, attributes)
       @wsdl = wsdl
+
+      @name = attributes[:name]
+      @type = attributes[:type]
+      @namespace = attributes[:namespace]
+      @form = attributes[:form]
     end
 
-    attr_reader :name, :namespace
+    attr_reader :name, :namespace, :form
 
     def simple_type?
       !complex_type?
@@ -100,13 +102,15 @@ class Wasabi
           name = ref_element.name
           type = find_type_for_element(ref_element)
           namespace = ref_element.namespace
+          form = 'qualified'
         else
           name = element.name
           type = find_type_for_element(element)
-          namespace = nil
+          namespace = element.namespace
+          form = element.form
         end
 
-        Element.new(name, type, namespace, @wsdl)
+        Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form)
       }
     end
 
@@ -114,10 +118,10 @@ class Wasabi
       new_stack = stack + [name]
 
       if simple_type?
-        memo << [new_stack, { namespace: namespace, type: base_type }]
+        memo << [new_stack, { namespace: namespace, form: form, type: base_type }]
 
       elsif complex_type?
-        memo << [new_stack, { namespace: namespace }]
+        memo << [new_stack, { namespace: namespace, form: form }]
 
         children.each do |child|
           child.to_a(memo, new_stack)
@@ -167,8 +171,9 @@ class Wasabi
     def build_type_element(part)
       name = part[:name]
       type = find_type part[:type], part[:namespaces]
+      form = 'unqualified'
 
-      Element.new(name, type, nil, @wsdl)
+      Element.new(@wsdl, name: name, type: type, form: form)
     end
 
     # Expects a part with an @element attribute, resolves the element
@@ -177,9 +182,12 @@ class Wasabi
       local, namespace = expand_qname(part[:element], part[:namespaces])
 
       element = @wsdl.schemas.element(namespace, local)
-      type = find_type_for_element(element)
 
-      Element.new(element.name, type, element.namespace, @wsdl)
+      name = element.name
+      type = find_type_for_element(element)
+      form = 'qualified'
+
+      Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form)
     end
 
   end

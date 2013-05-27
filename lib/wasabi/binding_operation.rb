@@ -5,12 +5,16 @@ class Wasabi
       @operation_node = operation_node
 
       if soap_operation_node = find_soap_operation_node
-        @soap_action = soap_operation_node['soapAction']
-        @style = soap_operation_node['style'] || defaults[:style]
+        namespace = soap_operation_node.first
+        node = soap_operation_node.last
+
+        @soap_namespace = namespace
+        @soap_action = node['soapAction']
+        @style = node['style'] || defaults[:style]
       end
     end
 
-    attr_reader :soap_action, :style
+    attr_reader :soap_action, :style, :soap_namespace
 
     def name
       @operation_node['name']
@@ -35,15 +39,17 @@ class Wasabi
     private
 
     def find_soap_operation_node
-      @operation_node.element_children.find { |node|
+      @operation_node.element_children.each do |node|
         namespace = node.namespace.href
 
         soap_1_1  = namespace == Wasabi::SOAP_1_1
         soap_1_2  = namespace == Wasabi::SOAP_1_2
         operation = node.name == 'operation'
 
-        (soap_1_1 || soap_1_2) && operation
-      }
+        return [namespace, node] if (soap_1_1 || soap_1_2) && operation
+      end
+
+      nil
     end
 
   end

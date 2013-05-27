@@ -43,10 +43,14 @@ describe Wasabi do
       expect(operation.endpoint).to eq('http://example.com/validation/1.0/AuthenticationService')
 
       expect(operation.input.count).to eq(1)
-      input = operation.input.first
 
-      expect(input.nsid).to eq('tns')
-      expect(input.local).to eq('authenticate')
+      namespace = 'http://v1_0.ws.auth.order.example.com/'
+
+      expect(operation.input.first.to_a).to eq([
+        [['authenticate'],             { namespace: namespace, form: 'qualified' }],
+        [['authenticate', 'user'],     { namespace: namespace, type: 'xs:string', form: 'unqualified' }],
+        [['authenticate', 'password'], { namespace: namespace, type: 'xs:string', form: 'unqualified' }]
+      ])
     end
 
   end

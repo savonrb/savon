@@ -172,7 +172,10 @@ describe Wasabi::Type::ComplexType do
 
     expect(elements[0].type).to eq('xsd:integer')
     expect(elements[1].type).to eq('xsd:string')
-    expect(elements[2].type).to eq('xsd:string')
+
+    expect(elements[2].type).to be_nil
+    expect(elements[2].inline_type).to be_a(Wasabi::Type::SimpleType)
+    expect(elements[2].inline_type.base).to eq('xsd:string')
   end
 
   specify 'complexType/sequence' do

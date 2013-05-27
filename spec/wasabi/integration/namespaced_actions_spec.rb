@@ -47,10 +47,12 @@ describe Wasabi do
       expect(operation.endpoint).to eq('https://api.example.com/api/api.asmx')
 
       expect(operation.input.count).to eq(1)
-      input = operation.input.first
 
-      expect(input.nsid).to eq('tns')
-      expect(input.local).to eq('Client.Delete')
+      expect(operation.input.first.to_a).to eq([
+        [['Client.Delete'],             { namespace: 'http://api.example.com/api/', form: 'qualified' }],
+        [['Client.Delete', 'ApiKey'],   { namespace: 'http://api.example.com/api/', form: 'qualified', type: 's:string' }],
+        [['Client.Delete', 'ClientID'], { namespace: 'http://api.example.com/api/', form: 'qualified', type: 's:string' }]
+      ])
     end
 
   end

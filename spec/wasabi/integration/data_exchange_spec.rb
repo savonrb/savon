@@ -26,19 +26,19 @@ describe Wasabi do
       expect(operation.soap_action).to eq('')
       expect(operation.endpoint).to eq('http://my.yfu.org/cgi-bin/WebObjects/WebService.woa/ws/DataExchange')
 
-      input = operation.input
+      input = operation.input.map(&:to_a)
 
-      # we're ignoring the third part element which we can't resolve the type for.
-      # this seems to be an invalid spec, so we're doing the same as soapUI.
-      expect(input.count).to eq(2)
+      # so, soapUI ignores the third part element since it can't resolve the type,
+      # but we're currently listing it, because we're not properly separating between
+      # known built-in simple types and unknown types so we can't make that choice.
 
-      expect(input[0].name).to eq('in0')
-      expect(input[0].nsid).to eq('soapenc')
-      expect(input[0].local).to eq('string')
+      expect(input).to eq([
+        [[['in0'], { namespace: nil, form: 'unqualified', type: 'soapenc:string'  }]],
+        [[['in1'], { namespace: nil, form: 'unqualified', type: 'soapenc:string'  }]],
 
-      expect(input[1].name).to eq('in1')
-      expect(input[1].nsid).to eq('soapenc')
-      expect(input[1].local).to eq('string')
+                                                          # not a built-in type
+        [[['in2'], { namespace: nil, form: 'unqualified', type: 'YFUDataExchange' }]]
+      ])
     end
 
   end

@@ -26,25 +26,25 @@ describe Wasabi do
 
       expect(operation.input.count).to eq(9)
 
-      expect(operation.input.first.nsid).to eq('xsd')
+      # notice how this contains 9 parts with one element each.
+      # it does not include the rpc wrapper.
 
-      # contains the message parts, not the rpc wrapper
-      input = operation.input
-      expect(input.count).to eq(9)
-
-
-      expect(input[0].name).to eq('sender')
-      expect(input[0].nsid).to eq('xsd')
-      expect(input[0].local).to eq('string')
-
-      expect(input[1].name).to eq('cellular')
-      expect(input[2].name).to eq('msg')
-      expect(input[3].name).to eq('smsnumgroup')
-      expect(input[4].name).to eq('emailaddr')
-      expect(input[5].name).to eq('udh')
-      expect(input[6].name).to eq('datetime')
-      expect(input[7].name).to eq('format')
-      expect(input[8].name).to eq('dlrurl')
+      input = operation.input.map(&:to_a)
+      expect(input).to eq([
+        # one part
+        [
+          # one element
+          [['sender'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }]
+        ],
+        [ [['cellular'],    { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['msg'],         { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['smsnumgroup'], { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['emailaddr'],   { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['udh'],         { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['datetime'],    { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['format'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
+        [ [['dlrurl'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ]
+      ])
     end
 
   end

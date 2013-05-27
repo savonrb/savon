@@ -15,9 +15,9 @@ describe Wasabi::Operation do
         # this is nothing we need to show the user, so we're handling it later.
 
         expect(input.first.to_a).to eq([
-           [['in'], { namespace: nil }],
-           [['in', 'data1'], { namespace: nil, type: 'int' }],
-           [['in', 'data2'], { namespace: nil, type: 'int' }]
+           [['in'],          { namespace: nil,                        form: 'unqualified' }],
+           [['in', 'data1'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }],
+           [['in', 'data2'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }]
         ])
       end
 
@@ -30,17 +30,17 @@ describe Wasabi::Operation do
         data_elem = input.first
 
         expect(data_elem.to_a).to eq([
-          [['DataElem'], { namespace: 'http://dataNamespace.com' }],
-          [['DataElem', 'data1'], { namespace: nil, type: 'int' }],
-          [['DataElem', 'data2'], { namespace: nil, type: 'int' }]
+          [['DataElem'],          { namespace: 'http://dataNamespace.com', form: 'qualified' }],
+          [['DataElem', 'data1'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }],
+          [['DataElem', 'data2'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }]
         ])
 
         # part@element
         in2 = input.last
 
         expect(in2.to_a).to eq([
-          [['in2'], { namespace: nil }],
-          [['in2', 'RefDataElem'], { namespace: 'http://refNamespace.com', type: 'int' }]
+          [['in2'], { namespace: nil, form: 'unqualified' }],
+          [['in2', 'RefDataElem'], { namespace: 'http://refNamespace.com', form: 'qualified', type: 'int' }]
         ])
       end
     end
@@ -54,10 +54,10 @@ describe Wasabi::Operation do
         expect(input.count).to eq(1)
 
         expect(input.first.to_a).to eq([
-          [['op1'], { namespace: 'http://apiNamespace.com' }],
-          [['op1', 'in'], { namespace: nil }],
-          [['op1', 'in', 'data1'], { namespace: nil, type: 'int' }],
-          [['op1', 'in', 'data2'], { namespace: nil, type: 'int' }]
+          [['op1'],                { namespace: 'http://apiNamespace.com',  form: 'qualified' }],
+          [['op1', 'in'],          { namespace: 'http://apiNamespace.com',  form: 'unqualified' }],
+          [['op1', 'in', 'data1'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }],
+          [['op1', 'in', 'data2'], { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }]
         ])
       end
 
@@ -67,12 +67,12 @@ describe Wasabi::Operation do
         expect(input.count).to eq(1)
 
         expect(input.first.to_a).to eq([
-          [['op3'], { namespace: 'http://apiNamespace.com' }],
-          [['op3', 'DataElem'],           { namespace: 'http://dataNamespace.com' }],
-          [['op3', 'DataElem', 'data1'],  { namespace: nil, type: 'int' }],
-          [['op3', 'DataElem', 'data2'],  { namespace: nil, type: 'int' }],
-          [['op3', 'in2'],                { namespace: nil }],
-          [['op3', 'in2', 'RefDataElem'], { namespace: 'http://refNamespace.com', type: 'int' }]
+          [['op3'],                       { namespace: 'http://apiNamespace.com',  form: 'qualified' }],
+          [['op3', 'DataElem'],           { namespace: 'http://dataNamespace.com', form: 'qualified' }],
+          [['op3', 'DataElem', 'data1'],  { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }],
+          [['op3', 'DataElem', 'data2'],  { namespace: 'http://dataNamespace.com', form: 'unqualified', type: 'int' }],
+          [['op3', 'in2'],                { namespace: 'http://apiNamespace.com',  form: 'unqualified' }],
+          [['op3', 'in2', 'RefDataElem'], { namespace: 'http://refNamespace.com',  form: 'qualified',   type: 'int' }]
         ])
       end
     end

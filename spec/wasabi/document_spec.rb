@@ -15,8 +15,16 @@ describe Wasabi::Document do
       message = document.messages['addReportToPageIn']
       expect(message.name).to eq('addReportToPageIn')
 
+      namespaces = {
+        'xmlns:sawsoap' => 'urn://oracle.bi.webservices/v7',
+        'xmlns:soap'    => 'http://schemas.xmlsoap.org/wsdl/soap/',
+        'xmlns:wsdl'    => 'http://schemas.xmlsoap.org/wsdl/',
+        'xmlns:xsd'     => 'http://www.w3.org/2001/XMLSchema'
+      }
+
       expect(message.parts).to eq([
-        { :name => 'parameters', :type => nil, :element => 'sawsoap:addReportToPage' }
+        { :name => 'parameters', :namespaces => namespaces,
+          :type => nil, :element => 'sawsoap:addReportToPage' }
       ])
     end
 
@@ -32,8 +40,20 @@ describe Wasabi::Document do
       message = document.messages['ptsLiesListeRequest']
       expect(message.name).to eq('ptsLiesListeRequest')
 
+      namespaces = {
+        'xmlns:apachesoap' => 'http://xml.apache.org/xml-soap',
+        'xmlns:impl'       => 'http://webservices.partner.example.de',
+        'xmlns:intf'       => 'http://webservices.partner.example.de',
+        'xmlns:soapenc'    => 'http://schemas.xmlsoap.org/soap/encoding/',
+        'xmlns:tns2'       => 'http://model.webservices.partner.example.de',
+        'xmlns:wsdl'       => 'http://schemas.xmlsoap.org/wsdl/',
+        'xmlns:wsdlsoap'   => 'http://schemas.xmlsoap.org/wsdl/soap/',
+        'xmlns:xsd'        => 'http://www.w3.org/2001/XMLSchema'
+      }
+
       expect(message.parts).to eq([
-        { :name => 'user', :type => 'tns2:DtTqEbUser', :element => nil }
+        { :name => 'user', :namespaces => namespaces,
+          :type => 'tns2:DtTqEbUser', :element => nil }
       ])
     end
 
@@ -49,16 +69,23 @@ describe Wasabi::Document do
       message = document.messages['sendsmsRequest']
       expect(message.name).to eq('sendsmsRequest')
 
+      namespaces = {
+        'xmlns:tns'  => 'http://bedrift.telefonkatalogen.no',
+        'xmlns:xsd'  => 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:soap' => 'http://schemas.xmlsoap.org/wsdl/soap/',
+        'xmlns'      => 'http://schemas.xmlsoap.org/wsdl/'
+      }
+
       expect(message.parts).to eq([
-        { :name => 'sender',      :type  => 'xsd:string', :element => nil },
-        { :name => 'cellular',    :type  => 'xsd:string', :element => nil },
-        { :name => 'msg',         :type  => 'xsd:string', :element => nil },
-        { :name => 'smsnumgroup', :type  => 'xsd:string', :element => nil },
-        { :name => 'emailaddr',   :type  => 'xsd:string', :element => nil },
-        { :name => 'udh',         :type  => 'xsd:string', :element => nil },
-        { :name => 'datetime',    :type  => 'xsd:string', :element => nil },
-        { :name => 'format',      :type  => 'xsd:string', :element => nil },
-        { :name => 'dlrurl',      :type  => 'xsd:string', :element => nil }
+        { :name => 'sender',      :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'cellular',    :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'msg',         :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'smsnumgroup', :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'emailaddr',   :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'udh',         :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'datetime',    :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'format',      :namespaces => namespaces, :type  => 'xsd:string', :element => nil },
+        { :name => 'dlrurl',      :namespaces => namespaces, :type  => 'xsd:string', :element => nil }
       ])
     end
   end
