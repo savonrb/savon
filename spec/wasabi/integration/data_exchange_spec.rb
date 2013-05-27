@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Wasabi do
   context 'with: data_exchange.wsdl' do
 
-    subject(:wsdl) { Wasabi.new fixture(:data_exchange).read }
+    subject(:wsdl) { Wasabi.new fixture('data_exchange.wsdl').read }
 
     it 'returns a map of services and ports' do
       expect(wsdl.services).to eq(

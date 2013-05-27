@@ -66,10 +66,15 @@ class Wasabi
     end
 
     def schema_nodes
-      @schema_nodes ||= begin
-        types = @document.root.at_xpath('wsdl:types', 'wsdl' => Wasabi::WSDL)
-        types ? types.element_children : []
-      end
+      @schema_nodes ||= schema_nodes! || []
+    end
+
+    def schema_nodes!
+      root = @document.root
+      return [root] if root.name == 'schema'
+
+      types = root.at_xpath('wsdl:types', 'wsdl' => Wasabi::WSDL)
+      types.element_children if types
     end
 
   end

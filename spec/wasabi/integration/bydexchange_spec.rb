@@ -9,8 +9,15 @@ describe Wasabi do
     let(:wsdl2_url) { 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc?wsdl=wsdl0' }
 
     before do
-      mock_request wsdl_url,  :bydexchange
-      mock_request wsdl2_url, :bydexchange2
+      mock_request wsdl_url,  'bydexchange/bydexchange.wsdl'
+      mock_request wsdl2_url, 'bydexchange/bydexchange2.wsdl'
+
+      # 8 schemas to import
+      schema_import_base = 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd%d'
+      (0..8).each do |i|
+        url = schema_import_base % i
+        mock_request url, "bydexchange/bydexchange#{i}.xsd"
+      end
     end
 
     it 'returns a map of services and ports' do

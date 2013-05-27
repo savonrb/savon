@@ -2,35 +2,26 @@ module SpecSupport
 
   class Fixture
 
-    def self.[](name)
-      fixtures[name]
+    def initialize(fixture)
+      @fixture = fixture
     end
 
-    def self.[]=(name, value)
-      fixtures[name] = value
-    end
-
-    def self.fixtures
-      @fixtures ||= {}
-    end
-
-    def initialize(file, ext = :wsdl)
-      self.file = file
-      self.ext = ext
-    end
-
-    attr_accessor :file, :ext
-
-    def filename
-      "#{file}.#{ext}"
-    end
+    attr_reader :fixture
 
     def path
-      File.expand_path("spec/fixtures/#{filename}")
+      absolute_path = File.expand_path("spec/fixtures/#{fixture}")
+      paths = Dir.glob("#{absolute_path}*")
+
+      raise ArgumentError, "Multiple fixtures for #{path.inspect}" if paths.count > 1
+
+      path = paths.first
+      raise ArgumentError, "Unable to find fixture #{fixture.inspect}" unless path
+
+      path
     end
 
     def read
-      Fixture[filename] ||= File.read(path)
+      File.read(path)
     end
 
   end

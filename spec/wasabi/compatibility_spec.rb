@@ -21,7 +21,7 @@ describe Wasabi do
   ].each do |fixture_name|
 
     it "works with #{fixture_name}.wsdl" do
-      wsdl = Wasabi.new fixture(fixture_name).read
+      wsdl = Wasabi.new fixture("#{fixture_name}.wsdl").read
 
       wsdl.service_name
       wsdl.target_namespace

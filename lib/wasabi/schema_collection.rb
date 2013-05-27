@@ -30,7 +30,7 @@ class Wasabi
       find_by_namespace(namespace).simple_types[name]
     end
 
-    # TODO: maybe store by namespace?
+    # TODO: store by namespace instead?
     def find_by_namespace(namespace)
       find { |schema| schema.target_namespace == namespace }
     end

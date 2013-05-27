@@ -180,8 +180,10 @@ class Wasabi
     # and its type and returns an Element with that type.
     def build_element(part)
       local, namespace = expand_qname(part[:element], part[:namespaces])
+      schema = @wsdl.schemas.find_by_namespace(namespace)
+      raise "Unable to find schema for #{namespace.inspect}" unless schema
 
-      element = @wsdl.schemas.element(namespace, local)
+      element = schema.elements.fetch(local)
 
       name = element.name
       type = find_type_for_element(element)
