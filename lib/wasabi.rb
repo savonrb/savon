@@ -30,6 +30,8 @@ class Wasabi
   end
 
   def namespaces
+    warn "Wasabi#namespaces is deprecated, cause it does not include all namespaces. caller:\n" +
+         caller.first
     @documents.namespaces
   end
 
