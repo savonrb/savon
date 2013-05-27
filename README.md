@@ -34,13 +34,6 @@ Get the target namespace of the document.
 wsdl.target_namespace
 ```
 
-Get the namespaces.
-Deprecated because it does not always return all namespaces.
-
-``` ruby
-wsdl.namespaces
-```
-
 Get a summary of the services and ports.
 
 ``` ruby

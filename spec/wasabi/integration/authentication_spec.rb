@@ -9,17 +9,6 @@ describe Wasabi do
       expect(wsdl.target_namespace).to eq('http://v1_0.ws.auth.order.example.com/')
     end
 
-    it 'knows the namespaces' do
-      expect(wsdl.namespaces).to eq(
-        'tns'  => 'http://v1_0.ws.auth.order.example.com/',
-        'xs'   => 'http://www.w3.org/2001/XMLSchema',
-        'ns1'  => 'http://cxf.apache.org/bindings/xformat',
-        'soap' => 'http://schemas.xmlsoap.org/wsdl/soap/',
-        'wsdl' => 'http://schemas.xmlsoap.org/wsdl/',
-        'xsd'  => 'http://www.w3.org/2001/XMLSchema'
-      )
-    end
-
     it 'returns a map of services and ports' do
       expect(wsdl.services).to eq(
         'AuthenticationWebServiceImplService' => {

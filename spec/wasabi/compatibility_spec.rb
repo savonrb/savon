@@ -25,7 +25,6 @@ describe Wasabi do
 
       wsdl.service_name
       wsdl.target_namespace
-      wsdl.namespaces
 
       wsdl.schemas.each do |schema|
 

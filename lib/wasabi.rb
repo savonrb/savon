@@ -29,12 +29,6 @@ class Wasabi
     @documents.target_namespace
   end
 
-  def namespaces
-    warn "Wasabi#namespaces is deprecated, cause it does not include all namespaces. caller:\n" +
-         caller.first
-    @documents.namespaces
-  end
-
   def services
     @services ||= begin
       services = {}
