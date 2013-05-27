@@ -31,10 +31,6 @@ class Wasabi
       @document.root['targetNamespace']
     end
 
-    def namespaces
-      @namespaces ||= collect_namespaces(@document, *schema_nodes)
-    end
-
     def schemas
       @schemas ||= schema_nodes.map { |node| Schema.new(node, @wsdl) }
     end
@@ -74,20 +70,6 @@ class Wasabi
         types = @document.root.at_xpath('wsdl:types', 'wsdl' => Wasabi::WSDL)
         types ? types.element_children : []
       end
-    end
-
-    def collect_namespaces(*nodes)
-      namespaces = {}
-
-      nodes.each do |node|
-        node.namespaces.each do |k, v|
-          key = k.sub(/^xmlns:/, '')
-          namespaces[key] = v
-        end
-      end
-
-      namespaces.delete('xmlns')
-      namespaces
     end
 
   end
