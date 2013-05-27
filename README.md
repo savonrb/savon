@@ -35,6 +35,7 @@ wsdl.target_namespace
 ```
 
 Get the namespaces.
+Deprecated because it does not always return all namespaces.
 
 ``` ruby
 wsdl.namespaces
@@ -62,8 +63,7 @@ Query the operation for its information.
 
 ``` ruby
 operation.name
-operation.nsid
-operation.input
 operation.soap_action
 operation.endpoint
+operation.input
 ```
