@@ -3,17 +3,6 @@ require 'httpi'
 class Wasabi
   class Resolver
 
-    class HTTPError < StandardError
-
-      def initialize(message, response = nil)
-        super(message)
-        @response = response
-      end
-
-      attr_reader :response
-
-    end
-
     URL = /^http[s]?:/
     XML = /^</
 

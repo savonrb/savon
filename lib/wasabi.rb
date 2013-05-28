@@ -1,4 +1,5 @@
 require 'wasabi/version'
+require 'wasabi/errors'
 require 'wasabi/document'
 require 'wasabi/resolver'
 require 'wasabi/importer'
