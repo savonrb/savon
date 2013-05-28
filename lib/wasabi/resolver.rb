@@ -3,8 +3,8 @@ require 'httpi'
 class Wasabi
   class Resolver
 
-    URL = /^http[s]?:/
-    XML = /^</
+    URL_PATTERN = /^http[s]?:/
+    XML_PATTERN = /^</
 
     def initialize(request = nil)
       @request = request || HTTPI::Request.new
@@ -12,9 +12,9 @@ class Wasabi
 
     def resolve(location)
       case location
-        when URL then load_from_remote(location)
-        when XML then location
-        else          load_from_disc(location)
+        when URL_PATTERN then load_from_remote(location)
+        when XML_PATTERN then location
+        else                  load_from_disc(location)
       end
     end
 

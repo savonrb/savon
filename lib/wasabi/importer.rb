@@ -48,11 +48,25 @@ class Wasabi
       schemas.each do |schema|
         schema.imports.each do |namespace, schema_location|
           next unless schema_location
+
+          unless absolute_url? schema_location
+            issue_schema_skipped_warning(schema_location)
+            next
+          end
+
           # TODO: also skip if the schema was already imported
 
           yield(schema_location)
         end
       end
+    end
+
+    def absolute_url?(location)
+      location =~ Resolver::URL_PATTERN
+    end
+
+    def issue_schema_skipped_warning(location)
+      warn "Skipping XML Schema import #{location.inspect}"
     end
 
   end
