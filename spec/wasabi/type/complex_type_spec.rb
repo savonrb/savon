@@ -93,7 +93,7 @@ describe Wasabi::Type::ComplexType do
     expect(sequence_elements[2].name).to eq('CreatedDate')
 
     # complex_type#collect_child_elements resolves extensions
-    extension_elements = [base_type]
+    extension_elements = base_type.elements
     all_elements = extension_elements + sequence_elements
 
     expect(complex_type.collect_child_elements).to eq(all_elements)

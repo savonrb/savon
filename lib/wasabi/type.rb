@@ -28,7 +28,7 @@ class Wasabi
           if child.kind_of? Element
             memo << child
           else
-            child.collect_child_elements(memo)
+            memo = child.collect_child_elements(memo)
           end
         end
 
@@ -111,9 +111,10 @@ class Wasabi
           namespace = @node.namespaces["xmlns:#{nsid}"]
 
           if complex_type = @wsdl.schemas.complex_type(namespace, local)
-            memo << complex_type
-          elsif simple_type = @wsdl.schemas.simple_type(namespace, local)
-            memo << simple_type
+            memo += complex_type.elements
+          else #if simple_type = @wsdl.schemas.simple_type(namespace, local)
+            raise 'simple type extension?!'
+            #memo << simple_type
           end
         end
 

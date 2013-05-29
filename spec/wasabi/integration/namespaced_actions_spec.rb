@@ -35,9 +35,9 @@ describe Wasabi do
       expect(operation.input.count).to eq(1)
 
       expect(operation.input.first.to_a).to eq([
-        [['Client.Delete'],             { namespace: 'http://api.example.com/api/', form: 'qualified' }],
-        [['Client.Delete', 'ApiKey'],   { namespace: 'http://api.example.com/api/', form: 'qualified', type: 's:string' }],
-        [['Client.Delete', 'ClientID'], { namespace: 'http://api.example.com/api/', form: 'qualified', type: 's:string' }]
+        [['Client.Delete'],             { namespace: 'http://api.example.com/api/', form: 'qualified', singular: true }],
+        [['Client.Delete', 'ApiKey'],   { namespace: 'http://api.example.com/api/', form: 'qualified', singular: true, type: 's:string' }],
+        [['Client.Delete', 'ClientID'], { namespace: 'http://api.example.com/api/', form: 'qualified', singular: true, type: 's:string' }]
       ])
     end
 

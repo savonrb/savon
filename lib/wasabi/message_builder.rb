@@ -71,9 +71,14 @@ class Wasabi
       @type = attributes[:type]
       @namespace = attributes[:namespace]
       @form = attributes[:form]
+      @singular = attributes[:singular]
     end
 
     attr_reader :name, :namespace, :form
+
+    def singular?
+      @singular
+    end
 
     def simple_type?
       !complex_type?
@@ -97,20 +102,20 @@ class Wasabi
       @type.elements.map { |element|
 
         if element.ref
-          ref_element = find_element(element.ref, element.namespaces)
-
-          name = ref_element.name
-          type = find_type_for_element(ref_element)
-          namespace = ref_element.namespace
+          element = find_element(element.ref, element.namespaces)
           form = 'qualified'
         else
-          name = element.name
-          type = find_type_for_element(element)
-          namespace = element.namespace
           form = element.form
         end
 
-        Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form)
+        name = element.name
+        type = find_type_for_element(element)
+        namespace = element.namespace
+
+        max_occurs = element['maxOccurs'].to_s
+        singular = max_occurs.empty? || max_occurs == '1'
+
+        Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form, singular: singular)
       }
     end
 
@@ -118,10 +123,10 @@ class Wasabi
       new_stack = stack + [name]
 
       if simple_type?
-        memo << [new_stack, { namespace: namespace, form: form, type: base_type }]
+        memo << [new_stack, { namespace: namespace, form: form, singular: singular?, type: base_type }]
 
       elsif complex_type?
-        memo << [new_stack, { namespace: namespace, form: form }]
+        memo << [new_stack, { namespace: namespace, form: form, singular: singular? }]
 
         children.each do |child|
           child.to_a(memo, new_stack)
@@ -173,7 +178,7 @@ class Wasabi
       type = find_type part[:type], part[:namespaces]
       form = 'unqualified'
 
-      Element.new(@wsdl, name: name, type: type, form: form)
+      Element.new(@wsdl, name: name, type: type, form: form, singular: true)
     end
 
     # Expects a part with an @element attribute, resolves the element
@@ -189,7 +194,7 @@ class Wasabi
       type = find_type_for_element(element)
       form = 'qualified'
 
-      Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form)
+      Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form, singular: true)
     end
 
   end

@@ -36,9 +36,9 @@ describe Wasabi do
       namespace = 'http://v1_0.ws.auth.order.example.com/'
 
       expect(operation.input.first.to_a).to eq([
-        [['authenticate'],             { namespace: namespace, form: 'qualified' }],
-        [['authenticate', 'user'],     { namespace: namespace, type: 'xs:string', form: 'unqualified' }],
-        [['authenticate', 'password'], { namespace: namespace, type: 'xs:string', form: 'unqualified' }]
+        [['authenticate'],             { namespace: namespace, form: 'qualified', singular: true }],
+        [['authenticate', 'user'],     { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }],
+        [['authenticate', 'password'], { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }]
       ])
     end
 

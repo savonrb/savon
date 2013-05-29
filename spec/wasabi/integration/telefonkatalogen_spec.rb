@@ -34,16 +34,16 @@ describe Wasabi do
         # one part
         [
           # one element
-          [['sender'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }]
+          [['sender'],      { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }]
         ],
-        [ [['cellular'],    { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['msg'],         { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['smsnumgroup'], { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['emailaddr'],   { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['udh'],         { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['datetime'],    { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['format'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ],
-        [ [['dlrurl'],      { namespace: nil, form: 'unqualified', type: 'xsd:string' }] ]
+        [ [['cellular'],    { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['msg'],         { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['smsnumgroup'], { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['emailaddr'],   { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['udh'],         { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['datetime'],    { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['format'],      { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ],
+        [ [['dlrurl'],      { namespace: nil, form: 'unqualified', singular: true, type: 'xsd:string' }] ]
       ])
     end
 

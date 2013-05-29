@@ -49,10 +49,10 @@ describe Wasabi do
       namespace = 'https://connect.bookt.com/connect'
 
       expect(input.first.to_a).to eq([
-        [['GetBooking'],                  { namespace: namespace, form: 'qualified' }],
-        [['GetBooking', 'apiKey'],        { namespace: namespace, form: 'qualified', type: 'xs:string'  }],
-        [['GetBooking', 'bookingID'],     { namespace: namespace, form: 'qualified', type: 'xs:string'  }],
-        [['GetBooking', 'useInternalID'], { namespace: namespace, form: 'qualified', type: 'xs:boolean' }]
+        [['GetBooking'],                  { namespace: namespace, form: 'qualified', singular: true }],
+        [['GetBooking', 'apiKey'],        { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string'  }],
+        [['GetBooking', 'bookingID'],     { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string'  }],
+        [['GetBooking', 'useInternalID'], { namespace: namespace, form: 'qualified', singular: true, type: 'xs:boolean' }]
       ])
     end
 

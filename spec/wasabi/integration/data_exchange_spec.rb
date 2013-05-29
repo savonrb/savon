@@ -33,11 +33,11 @@ describe Wasabi do
       # known built-in simple types and unknown types so we can't make that choice.
 
       expect(input).to eq([
-        [[['in0'], { namespace: nil, form: 'unqualified', type: 'soapenc:string'  }]],
-        [[['in1'], { namespace: nil, form: 'unqualified', type: 'soapenc:string'  }]],
+        [[['in0'], { namespace: nil, form: 'unqualified', type: 'soapenc:string', singular: true }]],
+        [[['in1'], { namespace: nil, form: 'unqualified', type: 'soapenc:string', singular: true }]],
 
                                                           # not a built-in type
-        [[['in2'], { namespace: nil, form: 'unqualified', type: 'YFUDataExchange' }]]
+        [[['in2'], { namespace: nil, form: 'unqualified', type: 'YFUDataExchange', singular: true }]]
       ])
     end
 
