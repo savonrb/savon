@@ -33,7 +33,8 @@ class MyClient
   end
 
   def get(url)
-    @client.request(:get, url, nil, "", {})
+    response = @client.request(:get, url, nil, "", {})
+    response.content
   end
 
 end
