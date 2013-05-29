@@ -20,20 +20,33 @@ class Wasabi
       @operation_node['name']
     end
 
+    # TODO: maybe use proper classes to clean this up.
     def input
       return @input if @input
+      input = { header: {}, body: {} }
 
-      input = @operation_node.element_children.find { |node| node.name == 'input' }
-      return unless input
+      input_node = @operation_node.element_children.find { |node| node.name == 'input' }
+      return unless input_node
 
-      body = input.element_children.find { |node| node.name == 'body' }
-      return unless body
+      if header_node = input_node.element_children.find { |node| node.name == 'header' }
+        input[:header] = {
+          encoding_style: header_node['encodingStyle'],
+          namespace:      header_node['namespace'],
+          use:            header_node['use'],
+          message:        header_node['message'],
+          part:           header_node['part']
+        }
+      end
 
-      @input = {
-        :encoding_style => body['encodingStyle'],
-        :namespace => body['namespace'],
-        :use => body['use']
-      }
+      if body_node = input_node.element_children.find { |node| node.name == 'body' }
+        input[:body] = {
+          encoding_style: body_node['encodingStyle'],
+          namespace:      body_node['namespace'],
+          use:            body_node['use']
+        }
+      end
+
+      input
     end
 
     private

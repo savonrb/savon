@@ -26,7 +26,7 @@ class Wasabi
     end
 
     def input_style
-      "#{@binding_operation.style}/#{@binding_operation.input[:use]}"
+      "#{@binding_operation.style}/#{@binding_operation.input[:body][:use]}"
     end
 
     def input
@@ -35,7 +35,7 @@ class Wasabi
     end
 
     def output_style
-      "#{@binding_operation.style}/#{@binding_operation.output[:use]}"
+      "#{@binding_operation.style}/#{@binding_operation.output[:body][:use]}"
     end
 
     def output
