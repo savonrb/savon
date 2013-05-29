@@ -7,6 +7,9 @@ Here's a summary of the changes:
   Ruby 1.8.7 and REE will no longer be supported due to their end of life.
   If you're still using Ruby 1.8 in production, you need to upgrade!
 
+* Removed the dependency on HTTPI. Wasabi now requires an object that responds to `#get(url)`
+  and returns the raw HTTP response as a String.
+
 * Support for **WSDL and XML Schema imports**. If your definition is split into multiple files,
   Wasabi will now resolve those imports and assemble the pieces from all documents and schemas.
 

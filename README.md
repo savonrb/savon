@@ -10,16 +10,40 @@ Wasabi is a simple WSDL parser written in Ruby and extracted from the
 
 
 Wasabi 4.0 is under active development and currently only available via GitHub.  
-To give it a try, just add it to your Gemfile.
+To give it a try, you can add it to your Gemfile.
 
 ``` ruby
 gem 'wasabi', github: 'savonrb/wasabi'
 ```
 
-Instantiate Wasabi with a URL or the path to a WSDL document.
+Since Wasabi 4.0 supports both WSDL and XML Schema imports, it needs some HTTP client to resolve these imports.
+Wasabi is not coupled to any particular HTTP client, but requires you to give an object which responds to
+`#get(url)` and returns the raw HTTP response body as a String.
+
+This allows you to use any HTTP client and easily swap it out for testing. Here's an example for the
+[HTTPClient](https://github.com/nahi/httpclient) library:
 
 ``` ruby
-wsdl = Wasabi.new('http://example.com?wsdl')
+require 'httpclient'
+
+class MyClient
+
+  def initialize
+    @client = HTTPClient.new
+  end
+
+  def get(url)
+    @client.request(:get, url, nil, "", {})
+  end
+
+end
+```
+
+With that defined, you can instantiate Wasabi with a URL or the local path to a WSDL document
+plus an instance of your HTTP object.
+
+``` ruby
+wsdl = Wasabi.new('http://example.com?wsdl', MyClient.new)
 ```
 
 Get the name of the service.
