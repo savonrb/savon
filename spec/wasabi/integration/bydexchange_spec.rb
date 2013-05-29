@@ -3,20 +3,20 @@ require 'spec_helper'
 describe Wasabi do
   context 'with: bydexchange.wsdl' do
 
-    subject(:wsdl)  { Wasabi.new(wsdl_url) }
+    subject(:wsdl)  { Wasabi.new(wsdl_url, http_mock) }
 
     let(:wsdl_url)  { 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc?wsdl' }
     let(:wsdl2_url) { 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc?wsdl=wsdl0' }
 
     before do
-      mock_request wsdl_url,  'bydexchange/bydexchange.wsdl'
-      mock_request wsdl2_url, 'bydexchange/bydexchange2.wsdl'
+      http_mock.fake_request(wsdl_url, 'bydexchange/bydexchange.wsdl')
+      http_mock.fake_request(wsdl2_url, 'bydexchange/bydexchange2.wsdl')
 
       # 8 schemas to import
       schema_import_base = 'http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd%d'
       (0..8).each do |i|
         url = schema_import_base % i
-        mock_request url, "bydexchange/bydexchange#{i}.xsd"
+        http_mock.fake_request(url, "bydexchange/bydexchange#{i}.xsd")
       end
     end
 

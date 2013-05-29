@@ -13,8 +13,8 @@ class Wasabi
   SOAP_1_1 = 'http://schemas.xmlsoap.org/wsdl/soap/'
   SOAP_1_2 = 'http://schemas.xmlsoap.org/wsdl/soap12/'
 
-  def initialize(wsdl, request = nil)
-    resolver = Resolver.new(request)
+  def initialize(wsdl, http = nil)
+    resolver = Resolver.new(http)
     importer = Importer.new(resolver, self)
 
     @documents, @schemas = importer.import(wsdl)

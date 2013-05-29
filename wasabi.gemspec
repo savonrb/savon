@@ -13,8 +13,7 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = s.name
 
-  s.add_dependency "httpi",    "~> 2.0"
-  s.add_dependency "nokogiri", ">= 1.4.0"
+  s.add_dependency "nokogiri", ">= 1.4"
 
   s.add_development_dependency "rake",  "~> 10.0"
   s.add_development_dependency "rspec", "~> 2.13"

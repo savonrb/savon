@@ -1,13 +1,11 @@
-require 'httpi'
-
 class Wasabi
   class Resolver
 
     URL_PATTERN = /^http[s]?:/
     XML_PATTERN = /^</
 
-    def initialize(request = nil)
-      @request = request || HTTPI::Request.new
+    def initialize(http)
+      @http = http
     end
 
     def resolve(location)
@@ -21,12 +19,7 @@ class Wasabi
     private
 
     def load_from_remote(location)
-      @request.url = location
-      response = HTTPI.get(@request)
-
-      raise HTTPError.new("Error: #{response.code}", response) if response.error?
-
-      response.body
+      @http.get(location)
     end
 
     def load_from_disc(location)

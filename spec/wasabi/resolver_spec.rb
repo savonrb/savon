@@ -1,40 +1,38 @@
-require "spec_helper"
+require 'spec_helper'
 
 describe Wasabi::Resolver do
 
-  describe "#resolve" do
-    it "resolves remote documents" do
-      HTTPI.expects(:get).returns HTTPI::Response.new(200, {}, "wsdl")
-      xml = Wasabi::Resolver.new.resolve("http://example.com?wsdl")
-      xml.should == "wsdl"
-    end
+  subject(:resolver) { Wasabi::Resolver.new(http_test_client) }
 
-    it "resolves local documents" do
-      xml = Wasabi::Resolver.new.resolve(fixture(:authentication).path)
-      xml.should == fixture(:authentication).read
-    end
+  let(:http_test_client) {
+    Class.new {
 
-    it "simply returns raw XML" do
-      xml = Wasabi::Resolver.new.resolve("<xml/>")
-      xml.should == "<xml/>"
-    end
+      def get(url)
+        "raw_response for #{url}"
+      end
 
-    it "raises HTTPError when #load_from_remote gets a response error" do
-      code = 404
-      headers = {
-        "content-type" => "text/html"
-      }
-      body = "<html><head><title>404 Not Found</title></head><body>Oops!</body></html>"
+    }.new
+  }
 
-      failed_response = HTTPI::Response.new(code, headers, body)
-      HTTPI.stubs(:get).returns(failed_response)
+  it 'resolves remote files using a simple HTTP client interface' do
+    url = 'http://example.com?wsdl'
 
-      expect { Wasabi::Resolver.new.resolve("http://example.com?wsdl") }.to raise_error { |error|
-        error.should be_a(Wasabi::Resolver::HTTPError)
-        error.message.should == "Error: #{code}"
-        error.response.should == failed_response
-      }
-    end
+    xml = resolver.resolve(url)
+    expect(xml).to eq("raw_response for #{url}")
+  end
+
+  it 'resolves local files' do
+    fixture = fixture(:authentication)
+
+    xml = resolver.resolve(fixture.path)
+    expect(xml).to eq(fixture.read)
+  end
+
+  it 'simply returns any raw input' do
+    string = '<xml/>'
+
+    xml = resolver.resolve(string)
+    expect(xml).to eq(string)
   end
 
 end

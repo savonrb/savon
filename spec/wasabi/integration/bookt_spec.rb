@@ -3,22 +3,22 @@ require 'spec_helper'
 describe Wasabi do
   context 'with: bookt.wsdl' do
 
-    subject(:wsdl)  { Wasabi.new(wsdl_url) }
+    subject(:wsdl)  { Wasabi.new(wsdl_url, http_mock) }
 
     let(:wsdl_url)  { 'http://connect.bookt.com/svc/connect.svc?wsdl' }
     let(:wsdl2_url) { 'http://connect.bookt.com/svc/connect.svc?wsdl=wsdl1' }
     let(:wsdl3_url) { 'http://connect.bookt.com/svc/connect.svc?wsdl=wsdl0' }
 
     before do
-      mock_request wsdl_url,  'bookt/bookt.wsdl'
-      mock_request wsdl2_url, 'bookt/bookt2.wsdl'
-      mock_request wsdl3_url, 'bookt/bookt3.wsdl'
+      http_mock.fake_request(wsdl_url,  'bookt/bookt.wsdl')
+      http_mock.fake_request(wsdl2_url, 'bookt/bookt2.wsdl')
+      http_mock.fake_request(wsdl3_url, 'bookt/bookt3.wsdl')
 
       # 16 schemas to import
       schema_import_base = 'http://connect.bookt.com/svc/connect.svc?xsd=xsd%d'
       (0..15).each do |i|
         url = schema_import_base % i
-        mock_request url, "bookt/bookt#{i}.xsd"
+        http_mock.fake_request(url, "bookt/bookt#{i}.xsd")
       end
     end
 
