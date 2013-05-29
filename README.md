@@ -17,7 +17,7 @@ gem 'wasabi', github: 'savonrb/wasabi'
 ```
 
 Since Wasabi 4.0 supports both WSDL and XML Schema imports, it needs some HTTP client to resolve these imports.
-Wasabi is not coupled to any particular HTTP client, but requires you to give an object which responds to
+Wasabi is not coupled to any particular HTTP client, but requires you to give it an object which responds to
 `#get(url)` and returns the raw HTTP response body as a String.
 
 This allows you to use any HTTP client and easily swap it out for testing. Here's an example for the
