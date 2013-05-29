@@ -7,8 +7,8 @@ Here's a summary of the changes:
   Ruby 1.8.7 and REE will no longer be supported due to their end of life.
   If you're still using Ruby 1.8 in production, you need to upgrade!
 
-* Support for **WSDL imports**. If your WSDL is split into multiple files, Wasabi will
-  now resolve those imports and assemble the pieces from all documents.
+* Support for **WSDL and XML Schema imports**. If your definition is split into multiple files,
+  Wasabi will now resolve those imports and assemble the pieces from all documents and schemas.
 
 * **Major performance improvements** to finally solve [#7](https://github.com/savonrb/wasabi/issues/7).
   Did some benchmarking and replaced a lot of slow xpath queries with walking
