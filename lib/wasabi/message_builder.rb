@@ -64,27 +64,33 @@ class Wasabi
   class Element
     include SchemaFinder
 
-    def initialize(wsdl, attributes)
+    def initialize(wsdl, parent, attributes)
       @wsdl = wsdl
+      @parent = parent
 
       @name = attributes[:name]
       @type = attributes[:type]
       @namespace = attributes[:namespace]
       @form = attributes[:form]
       @singular = attributes[:singular]
+      @recursive = attributes[:recursive] || false
     end
 
-    attr_reader :name, :namespace, :form
+    attr_reader :parent, :name, :type, :namespace, :form
+
+    def recursive?
+      @recursive
+    end
 
     def singular?
       @singular
     end
 
     def simple_type?
-      !complex_type?
+      !recursive? && !complex_type?
     end
 
-    # Returns the base type for a simpleType Element.
+    # Public: Returns the base type for a simpleType Element.
     def base_type
       if @type.kind_of? Type::SimpleType
         @type.base
@@ -97,7 +103,7 @@ class Wasabi
       @type.kind_of? Type::ComplexType
     end
 
-    # Returns the child Elements for a complexType Element.
+    # Public: Returns the child Elements for a complexType Element.
     def children
       @type.elements.map { |element|
 
@@ -109,28 +115,44 @@ class Wasabi
         end
 
         name = element.name
-        type = find_type_for_element(element)
         namespace = element.namespace
+
+        # prevent recursion
+        if recursive_child_definition? element
+          recursive = true
+          type = element.type
+        else
+          recursive = false
+          type = find_type_for_element(element)
+        end
 
         max_occurs = element['maxOccurs'].to_s
         singular = max_occurs.empty? || max_occurs == '1'
 
-        Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form, singular: singular)
+        Element.new(@wsdl, self, name: name, type: type, namespace: namespace, form: form,
+                                 singular: singular, recursive: recursive)
       }
     end
 
     def to_a(memo = [], stack = [])
       new_stack = stack + [name]
+      attributes = { namespace: namespace, form: form, singular: singular? }
 
       if simple_type?
-        memo << [new_stack, { namespace: namespace, form: form, singular: singular?, type: base_type }]
+        attributes[:type] = base_type
+        memo << [new_stack, attributes]
 
       elsif complex_type?
-        memo << [new_stack, { namespace: namespace, form: form, singular: singular? }]
+        memo << [new_stack, attributes]
 
         children.each do |child|
           child.to_a(memo, new_stack)
         end
+
+      elsif recursive?
+        attributes[:recursive_type] = type
+        memo << [new_stack, attributes]
+
       end
 
       memo
@@ -148,6 +170,29 @@ class Wasabi
       end
 
       %(<Element name="%{name}" %{type}="%{value}" />) % inflection
+    end
+
+    private
+
+    # Private: Accepts an Element and figures out if its type is already defined in this
+    # elements (self) ancestors. Used to prevent recursive child element definitions.
+    def recursive_child_definition?(element)
+      return false unless element.type
+
+      local, namespace = expand_qname(element.type, element.namespaces)
+      current_parent = parent
+
+      while current_parent
+        if current_parent.type.name == local &&
+          current_parent.type.namespace == namespace
+
+          return true
+        end
+
+        current_parent = current_parent.parent
+      end
+
+      false
     end
 
   end
@@ -171,17 +216,17 @@ class Wasabi
 
     private
 
-    # Expects a part with a @type attribute, resolves the type
+    # Private: Expects a part with a @type attribute, resolves the type
     # and returns an Element with that type.
     def build_type_element(part)
       name = part[:name]
       type = find_type part[:type], part[:namespaces]
       form = 'unqualified'
 
-      Element.new(@wsdl, name: name, type: type, form: form, singular: true)
+      Element.new(@wsdl, nil, name: name, type: type, form: form, singular: true)
     end
 
-    # Expects a part with an @element attribute, resolves the element
+    # Private: Expects a part with an @element attribute, resolves the element
     # and its type and returns an Element with that type.
     def build_element(part)
       local, namespace = expand_qname(part[:element], part[:namespaces])
@@ -194,7 +239,7 @@ class Wasabi
       type = find_type_for_element(element)
       form = 'qualified'
 
-      Element.new(@wsdl, name: name, type: type, namespace: namespace, form: form, singular: true)
+      Element.new(@wsdl, nil, name: name, type: type, namespace: namespace, form: form, singular: true)
     end
 
   end
