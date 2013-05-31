@@ -1,5 +1,7 @@
 ## 3.0.0 (branch)
 
+* Removed support for Ruby 1.8!
+
 * Replaced the `Savon.client` factory method by changing the `Savon` module to a class
   and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
   can just call `Savon.new`. There's no need for an additional class here.
