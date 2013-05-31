@@ -16,6 +16,9 @@
 * Removed the dependency on HTTPI and replaced it with a simple adapter for you to
   extend based on the HTTPClient library.
 
+* Removed the `String#snakecase` core extension. One less "feature" to explain.
+
+
 ## master
 
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error
