@@ -5,8 +5,15 @@ class Savon
   class Envelope
 
     def initialize(operation, options = {})
+      @logger = Logging.logger[self]
+
       @operation = operation
       @message = options[:message]
+
+      unless @message
+        @logger.warn("No :message Hash given for the #{operation.name.inspect} operation.")
+        @message = {}
+      end
 
       @nsid_counter = -1
       @namespaces = {}

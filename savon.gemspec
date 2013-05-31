@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'builder',  '>= 2.1.2'
   s.add_dependency 'nokogiri', '>= 1.4.0'
+  s.add_dependency 'logging',    '~> 1.1'
 
   s.add_development_dependency 'rake',  '~> 0.9'
   s.add_development_dependency 'rspec', '~> 2.10'

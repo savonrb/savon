@@ -1,8 +1,10 @@
-require "savon/version"
-require "savon/errors"
-require "savon/operation"
-require "savon/httpclient"
-require "wasabi"
+require 'logging'
+require 'wasabi'
+
+require 'savon/version'
+require 'savon/errors'
+require 'savon/operation'
+require 'savon/httpclient'
 
 class Savon
 

@@ -12,6 +12,15 @@ unless RUBY_PLATFORM =~ /java/
 end
 
 require 'savon'
+
+# $ DEBUG=root rspec         # enables all loggers
+# $ DEBUG=Savon::Body rspec  # enables a specific logger
+if logger_to_enable = ENV['DEBUG']
+  logger = Logging.logger[logger_to_enable]
+  logger.add_appenders(Logging.appenders.stdout)
+  logger.level = :debug
+end
+
 require 'rspec'
 require 'equivalent-xml'
 
