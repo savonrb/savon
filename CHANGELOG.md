@@ -11,6 +11,8 @@
   3.0 should be open enough to allow you to use Webmock, Fakeweb, VCR or any other http
   mocking library.
 
+* Removed the dependency on HTTPI and replaced it with a simple adapter for you to
+  extend based on the HTTPClient library.
 
 ## master
 
