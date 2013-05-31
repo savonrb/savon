@@ -1,8 +1,10 @@
 source 'https://rubygems.org'
 gemspec
 
-gem "httpclient", "~> 2.3.0"
-gem "simplecov", :require => false, :group => :test
-gem "coveralls", :require => false
+gem 'wasabi', path: '../wasabi'
 
-gem "wasabi", :path => "../wasabi"
+group :development do
+  gem 'simplecov', require: false
+  gem 'coveralls', require: false
+  gem 'debugger',  require: false
+end
