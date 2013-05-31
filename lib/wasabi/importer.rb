@@ -17,7 +17,7 @@ class Wasabi
       documents = DocumentCollection.new
       schemas = SchemaCollection.new
 
-      @logger.info("Resolving WSDL document #{location.inspect}")
+      @logger.info("Resolving WSDL document #{location.inspect}.")
       import_document(location) do |document|
         documents << document
         schemas.push(document.schemas)
@@ -25,7 +25,7 @@ class Wasabi
 
       # resolve xml schema imports
       import_schemas(schemas) do |schema_location|
-        @logger.info("Resolving XML schema import #{schema_location.inspect}")
+        @logger.info("Resolving XML schema import #{schema_location.inspect}.")
 
         import_document(schema_location) do |document|
           schemas.push(document.schemas)
@@ -45,7 +45,7 @@ class Wasabi
 
       # resolve wsdl imports
       document.imports.each do |import_location|
-        @logger.info("Resolving WSDL import #{import_location.inspect}")
+        @logger.info("Resolving WSDL import #{import_location.inspect}.")
         import_document(import_location, &block)
       end
     end
@@ -56,7 +56,7 @@ class Wasabi
           next unless schema_location
 
           unless absolute_url? schema_location
-            @logger.warn("Skipping XML Schema import #{schema_location.inspect}")
+            @logger.warn("Skipping XML Schema import #{schema_location.inspect}.")
             next
           end
 
