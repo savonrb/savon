@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.2.1-b01-. --><xs:schema xmlns:tns="http://ws.online.msw/" xmlns:ns1="customers.model.online.msw" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://ws.online.msw/">
+
+<xs:import namespace="customers.model.online.msw" schemaLocation="http://www3.mediaservice-wasmuth.de:80/online-ws-2.0/OnlineSync?xsd=2"></xs:import>
+
+<xs:element name="getBelegungseinheitData" type="tns:getBelegungseinheitData"></xs:element>
+
+<xs:element name="getBelegungseinheitDataResponse" type="tns:getBelegungseinheitDataResponse"></xs:element>
+
+<xs:element name="getBelegungseinheitList" type="tns:getBelegungseinheitList"></xs:element>
+
+<xs:element name="getBelegungseinheitListResponse" type="tns:getBelegungseinheitListResponse"></xs:element>
+
+<xs:element name="getDbManager" type="tns:getDbManager"></xs:element>
+
+<xs:element name="getDbManagerResponse" type="tns:getDbManagerResponse"></xs:element>
+
+<xs:element name="getOnlineResponseData" type="tns:getOnlineResponseData"></xs:element>
+
+<xs:element name="getOnlineResponseDataResponse" type="tns:getOnlineResponseDataResponse"></xs:element>
+
+<xs:element name="getStTables" type="tns:getStTables"></xs:element>
+
+<xs:element name="getStTablesResponse" type="tns:getStTablesResponse"></xs:element>
+
+<xs:element name="getVermarkterData" type="tns:getVermarkterData"></xs:element>
+
+<xs:element name="getVermarkterDataResponse" type="tns:getVermarkterDataResponse"></xs:element>
+
+<xs:element name="getVermarkterList" type="tns:getVermarkterList"></xs:element>
+
+<xs:element name="getVermarkterListResponse" type="tns:getVermarkterListResponse"></xs:element>
+
+<xs:complexType name="getBelegungseinheitData">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="objektuid" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getBelegungseinheitDataResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:belegungseinheitResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="belegungseinheitResponse">
+<xs:sequence>
+<xs:element name="adressen" type="ns1:adressen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="authenticationError" type="xs:boolean"></xs:element>
+<xs:element name="banken_NEU" type="ns1:bankenNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="belegungseinheit" type="ns1:belegungseinheit" minOccurs="0"></xs:element>
+<xs:element name="datenanlieferung_NEU" type="ns1:datenanlieferungNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="erweiterte_eigenschaften" type="ns1:erweiterteEigenschaften" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="frequencycapping_NEU" type="ns1:frequencycappingNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="newsletter_aussand" type="ns1:newsletterAussand" minOccurs="0"></xs:element>
+<xs:element name="omc_match" type="ns1:omcMatch" minOccurs="0"></xs:element>
+<xs:element name="preise_NEU" type="ns1:preiseNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="rabatte_NEU" type="ns1:rabatteNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="rabattstaffeln_NEU" type="ns1:rabattstaffelnNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="sachgruppen" type="ns1:sachgruppen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="targeting_NEU" type="ns1:targetingNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="werbeform_groessen" type="ns1:werbeformGroessen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="werbeform_kombinationen" type="ns1:werbeformKombinationen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="werbeformen" type="ns1:werbeformen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="zahlungsbedingungen_NEU" type="ns1:zahlungsbedingungenNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="zahlungsbedingungen_zuordnung" type="ns1:zahlungsbedingungenZuordnung" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getBelegungseinheitList">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="changedate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getBelegungseinheitListResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:onlineResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="onlineResponse">
+<xs:sequence>
+<xs:element name="authenticationError" type="xs:boolean"></xs:element>
+<xs:element name="belegungseinheiten" type="ns1:belegungseinheit" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="vermarkter" type="ns1:vermarkter" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVermarkterData">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="vermarkterid" type="xs:int"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVermarkterDataResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:vermarkterResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="vermarkterResponse">
+<xs:sequence>
+<xs:element name="authenticationError" type="xs:boolean"></xs:element>
+<xs:element name="belegungseinheiten" type="ns1:belegungseinheit" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="erikaAbfragen" type="ns1:erikaAbfrage" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="vermarkter" type="ns1:vermarkter" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getOnlineResponseData">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="changedate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getOnlineResponseDataResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:onlineResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVermarkterList">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="changedate" type="xs:dateTime" minOccurs="0"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getVermarkterListResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:onlineResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getStTables">
+<xs:sequence>
+<xs:element name="username" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="password" type="xs:string" minOccurs="0"></xs:element>
+<xs:element name="version" type="tns:versionTypes" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getStTablesResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:stResponse" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="stResponse">
+<xs:sequence>
+<xs:element name="authenticationError" type="xs:boolean"></xs:element>
+<xs:element name="sachgruppenpool" type="ns1:sachgruppenpool" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stAnsprechpartnertypen" type="ns1:stAnsprechpartnertypen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stAufschlagart" type="ns1:stAufschlagart" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stDateiformate" type="ns1:stDateiformate" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stEinheiten" type="ns1:stEinheiten" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stErscheinungsweisen" type="ns1:stErscheinungsweisen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stFreqcaparten" type="ns1:stFreqcaparten" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stGattungen" type="ns1:stGattungen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stLaender" type="ns1:stLaender" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stPlatzierungen" type="ns1:stPlatzierungen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stPreistypen" type="ns1:stPreistypen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stRabatttypen" type="ns1:stRabatttypen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stSachgruppen" type="ns1:stSachgruppen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stTargetingarten" type="ns1:stTargetingarten" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stTargetingmerkmale" type="ns1:stTargetingmerkmale" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stWerbeformKategorien" type="ns1:stWerbeformKategorien" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stWerbeformenNEU" type="ns1:stWerbeformenNEU" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stZahlungBasen" type="ns1:stZahlungBasen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stZahlungTypen" type="ns1:stZahlungTypen" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="stZahlungZeiten" type="ns1:stZahlungZeiten" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+<xs:element name="werbeformenpool" type="ns1:werbeformenpool" nillable="true" minOccurs="0" maxOccurs="unbounded"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getDbManager">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="getDbManagerResponse">
+<xs:sequence>
+<xs:element name="return" type="tns:dbManager" minOccurs="0"></xs:element>
+</xs:sequence>
+</xs:complexType>
+
+<xs:complexType name="dbManager">
+<xs:sequence></xs:sequence>
+</xs:complexType>
+
+<xs:simpleType name="versionTypes">
+<xs:restriction base="xs:string">
+<xs:enumeration value="Version_1"></xs:enumeration>
+<xs:enumeration value="Version_2"></xs:enumeration>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>

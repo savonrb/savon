@@ -1,0 +1,1920 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://fps.amazonaws.com/doc/2008-09-17/AmazonFPS.wsdl -->
+<wsdl:definitions 
+        targetNamespace="http://fps.amazonaws.com/doc/2008-09-17/" 
+        xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
+        xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+        xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+        xmlns:wsa="http://www.w3.org/2005/08/addressing" 
+        xmlns:tns="http://fps.amazonaws.com/doc/2008-09-17/">
+
+        <wsdl:types>
+          <xs:schema targetNamespace="http://fps.amazonaws.com/doc/2008-09-17/"
+                	 xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                     xmlns:tns="http://fps.amazonaws.com/doc/2008-09-17/"
+                     elementFormDefault="qualified">
+
+			<!-- **************************** AmazonFPS Interface *************************** -->
+			
+				<!-- Cancel Action -->
+				<xs:element name="Cancel">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="Description" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Cancel Action Response -->
+				<xs:element name="CancelResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:CancelResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- CancelToken Action -->
+				<xs:element name="CancelToken">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenId" type="xs:string" minOccurs="0" />
+							<xs:element name="ReasonText" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- CancelToken Action Response -->
+				<xs:element name="CancelTokenResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- CancelSubscriptionAndRefund Action -->
+				<xs:element name="CancelSubscriptionAndRefund">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SubscriptionId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="RefundAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CancelReason" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- CancelSubscriptionAndRefund Action Response -->
+				<xs:element name="CancelSubscriptionAndRefundResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:CancelSubscriptionAndRefundResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- FundPrepaid Action -->
+				<xs:element name="FundPrepaid">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SenderTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="PrepaidInstrumentId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="FundingAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="SenderDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="DescriptorPolicy" type="tns:DescriptorPolicy"
+								minOccurs="0" />
+							<xs:element name="TransactionTimeoutInMins" type="xs:integer"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- FundPrepaid Action Response -->
+				<xs:element name="FundPrepaidResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:FundPrepaidResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetAccountActivity Action -->
+				<xs:element name="GetAccountActivity">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="MaxBatchSize" type="xs:integer"
+								minOccurs="0" />
+							<xs:element name="StartDate" type="xs:dateTime"
+								minOccurs="0" />
+							<xs:element name="EndDate" type="xs:dateTime" minOccurs="0" />
+							<xs:element name="SortOrderByDate" type="tns:SortOrder"
+								default="Descending" minOccurs="0" />
+							<xs:element name="FPSOperation" type="tns:FPSOperation"
+								minOccurs="0" />
+							<xs:element name="PaymentMethod" type="tns:PaymentMethod"
+								minOccurs="0" />
+							<xs:element name="Role" type="tns:TransactionalRole"
+								maxOccurs="unbounded" minOccurs="0" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetAccountActivity Action Response -->
+				<xs:element name="GetAccountActivityResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetAccountActivityResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetAccountBalance Action -->
+				<xs:element name="GetAccountBalance">
+					<xs:complexType />
+				</xs:element>
+			
+				<!-- GetAccountBalance Action Response -->
+				<xs:element name="GetAccountBalanceResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetAccountBalanceResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetDebtBalance Action -->
+				<xs:element name="GetDebtBalance">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CreditInstrumentId" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetDebtBalance Action Response -->
+				<xs:element name="GetDebtBalanceResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetDebtBalanceResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetOutstandingDebtBalance Action -->
+				<xs:element name="GetOutstandingDebtBalance">
+					<xs:complexType />
+				</xs:element>
+			
+			
+				<!-- GetOutstandingDebtBalance Action Response -->
+				<xs:element name="GetOutstandingDebtBalanceResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetOutstandingDebtBalanceResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetPrepaidBalance Action -->
+				<xs:element name="GetPrepaidBalance">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="PrepaidInstrumentId" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetPrepaidBalance Action Response -->
+				<xs:element name="GetPrepaidBalanceResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetPrepaidBalanceResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTokenByCaller Action -->
+				<xs:element name="GetTokenByCaller">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenId" type="xs:string" minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokenByCaller Action Response -->
+				<xs:element name="GetTokenByCallerResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTokenByCallerResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTokenUsage Action -->
+				<xs:element name="GetTokenUsage">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenId" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokenUsage Action Response -->
+				<xs:element name="GetTokenUsageResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTokenUsageResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTokens Action -->
+				<xs:element name="GetTokens">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenStatus" type="tns:TokenStatus"
+								default="Active" minOccurs="0" />
+							<xs:element name="TokenType" type="tns:TokenType"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TokenFriendlyName" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokens Action Response -->
+				<xs:element name="GetTokensResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTokensResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTotalPrepaidLiability Action -->
+				<xs:element name="GetTotalPrepaidLiability">
+					<xs:complexType />
+				</xs:element>
+			
+			
+				<!-- GetTotalPrepaidLiability Action Response -->
+				<xs:element name="GetTotalPrepaidLiabilityResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTotalPrepaidLiabilityResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTransaction Action -->
+				<xs:element name="GetTransaction">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTransaction Action Response -->
+				<xs:element name="GetTransactionResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTransactionResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetTransactionStatus Action -->
+				<xs:element name="GetTransactionStatus">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTransactionStatus Action Response -->
+				<xs:element name="GetTransactionStatusResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetTransactionStatusResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetPaymentInstruction Action -->
+				<xs:element name="GetPaymentInstruction">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenId" type="xs:string" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetPaymentInstruction Action Response -->
+				<xs:element name="GetPaymentInstructionResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:GetPaymentInstructionResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- InstallPaymentInstruction Action -->
+				<xs:element name="InstallPaymentInstruction">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="PaymentInstruction" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TokenFriendlyName" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TokenType" type="tns:TokenType"
+								minOccurs="0" />
+							<xs:element name="PaymentReason" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- InstallPaymentInstruction Action Response -->
+				<xs:element name="InstallPaymentInstructionResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:InstallPaymentInstructionResult"
+								minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- Pay Action -->
+				<xs:element name="Pay">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SenderTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="RecipientTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TransactionAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="ChargeFeeTo" type="tns:ChargeFeeTo"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="SenderDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="DescriptorPolicy" type="tns:DescriptorPolicy"
+								minOccurs="0" />
+							<xs:element name="TransactionTimeoutInMins" type="xs:integer"
+								minOccurs="0" />
+							<xs:element name="MarketplaceFixedFee" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="MarketplaceVariableFee" type="xs:decimal"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Pay Action Response -->
+				<xs:element name="PayResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:PayResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- Refund Action -->
+				<xs:element name="Refund">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="RefundAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="MarketplaceRefundPolicy" type="tns:MarketplaceRefundPolicy"
+								default="MasterTxnOnly" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Refund Action Response -->
+				<xs:element name="RefundResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:RefundResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- Reserve Action -->
+				<xs:element name="Reserve">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SenderTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="RecipientTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TransactionAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="ChargeFeeTo" type="tns:ChargeFeeTo"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="SenderDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="DescriptorPolicy" type="tns:DescriptorPolicy"
+								minOccurs="0" />
+							<xs:element name="TransactionTimeoutInMins" type="xs:integer"
+								minOccurs="0" />
+							<xs:element name="MarketplaceFixedFee" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="MarketplaceVariableFee" type="xs:decimal"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Reserve Action Response -->
+				<xs:element name="ReserveResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:ReserveResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- Settle Action -->
+				<xs:element name="Settle">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ReserveTransactionId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TransactionAmount" type="tns:Amount"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Settle Action Response -->
+				<xs:element name="SettleResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:SettleResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- SettleDebt Action -->
+				<xs:element name="SettleDebt">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="SenderTokenId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CreditInstrumentId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="SettlementAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="SenderDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="DescriptorPolicy" type="tns:DescriptorPolicy"
+								minOccurs="0" />
+							<xs:element name="TransactionTimeoutInMins" type="xs:integer"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- SettleDebt Action Response -->
+				<xs:element name="SettleDebtResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:SettleDebtResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- WriteOffDebt Action -->
+				<xs:element name="WriteOffDebt">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="CreditInstrumentId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="AdjustmentAmount" type="tns:Amount"
+								minOccurs="0" />
+							<xs:element name="CallerReference" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="CallerDescription" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- WriteOffDebt Action Response -->
+				<xs:element name="WriteOffDebtResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:WriteOffDebtResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- VerifySignature Action -->
+				<xs:element name="VerifySignature">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="UrlEndPoint" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="HttpParameters" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- VerifySignature Action Response -->
+				<xs:element name="VerifySignatureResponse">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="tns:VerifySignatureResult" minOccurs="0" />
+							<xs:element ref="tns:ResponseMetadata" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			<!-- ******************************* AmazonFPS Types ************************* -->
+			
+			
+				<xs:simpleType name="TransactionStatus">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Reserved" />
+						<xs:enumeration value="Success" />
+						<xs:enumeration value="Failure" />
+						<xs:enumeration value="Pending" />
+						<xs:enumeration value="Cancelled" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="CurrencyCode">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="USD" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:complexType name="Amount">
+					<xs:sequence>
+						<xs:element name="CurrencyCode" type="tns:CurrencyCode" />
+						<xs:element name="Value" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:simpleType name="RelationType">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Refund" />
+						<xs:enumeration value="Parent" />
+						<xs:enumeration value="MarketplaceFee" />
+						<xs:enumeration value="RefundReversal" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="ChargeFeeTo">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Caller" />
+						<xs:enumeration value="Recipient" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="CSOwner">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Caller" />
+						<xs:enumeration value="Recipient" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="SoftDescriptorType">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Dynamic" />
+						<xs:enumeration value="Static" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:complexType name="DescriptorPolicy">
+					<xs:sequence>
+						<xs:element name="SoftDescriptorType" type="tns:SoftDescriptorType"
+							minOccurs="0" />
+						<xs:element name="CSOwner" type="tns:CSOwner" minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:simpleType name="PaymentMethod">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="ABT" />
+						<xs:enumeration value="CC" />
+						<xs:enumeration value="ACH" />
+						<xs:enumeration value="Debt" />
+						<xs:enumeration value="Prepaid" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="SortOrder">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Ascending" />
+						<xs:enumeration value="Descending" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="FPSOperation">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Pay" />
+						<xs:enumeration value="Refund" />
+						<xs:enumeration value="Settle" />
+						<xs:enumeration value="SettleDebt" />
+						<xs:enumeration value="WriteOffDebt" />
+						<xs:enumeration value="FundPrepaid" />
+						<xs:enumeration value="Reserve" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="TransactionalRole">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Sender" />
+						<xs:enumeration value="Caller" />
+						<xs:enumeration value="Recipient" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:complexType name="TransactionPart">
+					<xs:sequence>
+						<xs:element minOccurs="0" name="InstrumentId" type="xs:string" />
+						<xs:element name="Role" type="tns:TransactionalRole" />
+						<xs:element minOccurs="0" name="Name" type="xs:string" />
+						<xs:element minOccurs="0" name="Reference" type="xs:string" />
+						<xs:element minOccurs="0" name="Description" type="xs:string" />
+						<xs:element minOccurs="0" name="FeesPaid" type="tns:Amount" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="Transaction">
+					<xs:sequence>
+						<xs:element name="TransactionId" type="xs:string" />
+						<xs:element name="CallerTransactionDate" type="xs:dateTime" />
+						<xs:element name="DateReceived" type="xs:dateTime" />
+						<xs:element minOccurs="0" name="DateCompleted" type="xs:dateTime" />
+						<xs:element name="TransactionAmount" type="tns:Amount" />
+						<xs:element name="FPSOperation" type="tns:FPSOperation" />
+						<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						<xs:element minOccurs="0" name="StatusMessage" type="xs:string" />
+						<xs:element minOccurs="0" name="StatusCode" type="xs:string" />
+						<xs:element minOccurs="0" name="OriginalTransactionId"
+							type="xs:string" />
+						<xs:element maxOccurs="unbounded" name="TransactionPart"
+							type="tns:TransactionPart" />
+						<xs:element name="PaymentMethod" type="tns:PaymentMethod" />
+						<xs:element minOccurs="0" name="SenderName" type="xs:string" />
+						<xs:element name="CallerName" type="xs:string" />
+						<xs:element minOccurs="0" name="RecipientName" type="xs:string" />
+						<xs:element name="FPSFees" type="tns:Amount" />
+						<xs:element name="Balance" type="tns:Amount" />
+						<xs:element minOccurs="0" name="SenderTokenId" type="xs:string" />
+						<xs:element minOccurs="0" name="RecipientTokenId" type="xs:string" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="AvailableBalances">
+					<xs:sequence>
+						<xs:element name="DisburseBalance" type="tns:Amount" />
+						<xs:element name="RefundBalance" type="tns:Amount" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="AccountBalance">
+					<xs:sequence>
+						<xs:element name="TotalBalance" type="tns:Amount" />
+						<xs:element name="PendingInBalance" type="tns:Amount" />
+						<xs:element name="PendingOutBalance" type="tns:Amount" />
+						<xs:element name="AvailableBalances" type="tns:AvailableBalances" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="DebtBalance">
+					<xs:sequence>
+						<xs:element name="AvailableBalance" type="tns:Amount" />
+						<xs:element name="PendingOutBalance" type="tns:Amount"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="OutstandingDebtBalance">
+					<xs:sequence>
+						<xs:element name="OutstandingBalance" type="tns:Amount" />
+						<xs:element name="PendingOutBalance" type="tns:Amount"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:simpleType name="TokenStatus">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Active" />
+						<xs:enumeration value="Inactive" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:simpleType name="TokenType">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="SingleUse" />
+						<xs:enumeration value="MultiUse" />
+						<xs:enumeration value="Recurring" />
+						<xs:enumeration value="Unrestricted" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+				<xs:complexType name="Token">
+					<xs:sequence>
+						<xs:element name="TokenId" type="xs:string" />
+						<xs:element name="FriendlyName" type="xs:string" />
+						<xs:element name="TokenStatus" type="tns:TokenStatus" />
+						<xs:element name="DateInstalled" type="xs:dateTime" />
+						<xs:element name="CallerReference" type="xs:string" />
+						<xs:element name="TokenType" type="tns:TokenType" />
+						<xs:element name="OldTokenId" type="xs:string" minOccurs="0" />
+						<xs:element name="PaymentReason" type="xs:string"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="PrepaidBalance">
+					<xs:sequence>
+						<xs:element name="AvailableBalance" type="tns:Amount" />
+						<xs:element name="PendingInBalance" type="tns:Amount"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="TokenUsageLimit">
+					<xs:sequence>
+						<xs:element name="Count" type="xs:integer" minOccurs="0" />
+						<xs:element name="Amount" type="tns:Amount" minOccurs="0" />
+						<xs:element name="LastResetCount" type="xs:integer"
+							minOccurs="0" />
+						<xs:element name="LastResetAmount" type="tns:Amount"
+							minOccurs="0" />
+						<xs:element name="LastResetTimestamp" type="xs:dateTime"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="OutstandingPrepaidLiability">
+					<xs:sequence>
+						<xs:element name="OutstandingBalance" type="tns:Amount" />
+						<xs:element name="PendingInBalance" type="tns:Amount"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="RelatedTransaction">
+					<xs:sequence>
+						<xs:element name="TransactionId" type="xs:string" />
+						<xs:element name="RelationType" type="tns:RelationType"
+							minOccurs="0" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="StatusHistory">
+					<xs:sequence>
+						<xs:element name="Date" type="xs:dateTime" />
+						<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						<xs:element name="StatusCode" type="xs:string" minOccurs="0" />
+						<xs:element name="Amount" type="tns:Amount" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:complexType name="TransactionDetail">
+					<xs:sequence>
+						<xs:element name="TransactionId" type="xs:string" />
+						<xs:element name="CallerReference" type="xs:string" />
+						<xs:element name="CallerDescription" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="SenderDescription" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="DateReceived" type="xs:dateTime" />
+						<xs:element name="DateCompleted" type="xs:dateTime"
+							minOccurs="0" />
+						<xs:element name="TransactionAmount" type="tns:Amount" />
+						<xs:element name="FPSFees" type="tns:Amount" />
+						<xs:element name="MarketplaceFees" type="tns:Amount"
+							minOccurs="0" />
+						<xs:element name="FPSFeesPaidBy" type="tns:TransactionalRole" />
+						<xs:element name="SenderTokenId" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="RecipientTokenId" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="PrepaidInstrumentId" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="CreditInstrumentId" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="FPSOperation" type="tns:FPSOperation" />
+						<xs:element name="PaymentMethod" type="tns:PaymentMethod" />
+						<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						<xs:element name="StatusCode" type="xs:string" minOccurs="0" />
+						<xs:element name="StatusMessage" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="SenderName" type="xs:string" minOccurs="0" />
+						<xs:element name="SenderEmail" type="xs:string" minOccurs="0" />
+						<xs:element name="CallerName" type="xs:string" />
+						<xs:element name="RecipientName" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="RecipientEmail" type="xs:string"
+							minOccurs="0" />
+						<xs:element name="RelatedTransaction" type="tns:RelatedTransaction"
+							maxOccurs="unbounded" minOccurs="0" />
+						<xs:element name="StatusHistory" type="tns:StatusHistory"
+							maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			
+				<xs:simpleType name="MarketplaceRefundPolicy">
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="MasterTxnOnly" />
+						<xs:enumeration value="MarketplaceTxnOnly" />
+						<xs:enumeration value="MasterAndMarketplaceTxn" />
+					</xs:restriction>
+				</xs:simpleType>
+			
+                <xs:simpleType name="VerificationStatus">
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="Success" />
+                        <xs:enumeration value="Failure" />
+                    </xs:restriction>
+                </xs:simpleType>
+
+				<!-- Cancel Result Data -->
+				<xs:element name="CancelResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string"
+								minOccurs="0" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- CancelSubscriptionAndRefund Result Data -->
+				<xs:element name="CancelSubscriptionAndRefundResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="RefundTransactionId" type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- FundPrepaid Result Data -->
+				<xs:element name="FundPrepaidResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetAccountActivity Result Data -->
+				<xs:element name="GetAccountActivityResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="BatchSize" type="xs:integer" minOccurs="0" />
+							<xs:element name="Transaction" type="tns:Transaction"
+								maxOccurs="unbounded" minOccurs="0" />
+							<xs:element name="StartTimeForNextTransaction" type="xs:dateTime"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetAccountBalance Result Data -->
+				<xs:element name="GetAccountBalanceResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="AccountBalance" type="tns:AccountBalance"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetDebtBalance Result Data -->
+				<xs:element name="GetDebtBalanceResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="DebtBalance" type="tns:DebtBalance"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetOutstandingDebtBalance Result Data -->
+				<xs:element name="GetOutstandingDebtBalanceResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="OutstandingDebt" type="tns:OutstandingDebtBalance"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetPrepaidBalance Result Data -->
+				<xs:element name="GetPrepaidBalanceResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="PrepaidBalance" type="tns:PrepaidBalance"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokenByCaller Result Data -->
+				<xs:element name="GetTokenByCallerResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Token" type="tns:Token" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokenUsage Result Data -->
+				<xs:element name="GetTokenUsageResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenUsageLimits" type="tns:TokenUsageLimit"
+								maxOccurs="3" minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTokens Result Data -->
+				<xs:element name="GetTokensResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Token" type="tns:Token" maxOccurs="unbounded"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTotalPrepaidLiability Result Data -->
+				<xs:element name="GetTotalPrepaidLiabilityResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="OutstandingPrepaidLiability" type="tns:OutstandingPrepaidLiability"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTransaction Result Data -->
+				<xs:element name="GetTransactionResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Transaction" type="tns:TransactionDetail"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- GetTransactionStatus Result Data -->
+				<xs:element name="GetTransactionStatusResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+							<xs:element name="CallerReference" type="xs:string" />
+							<xs:element name="StatusCode" type="xs:string" minOccurs="0" />
+							<xs:element name="StatusMessage" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+			
+				<!-- GetPaymentInstruction Result Data -->
+				<xs:element name="GetPaymentInstructionResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Token" type="tns:Token" />
+							<xs:element name="PaymentInstruction" type="xs:string" />
+							<xs:element name="CallerReference" type="xs:string" />
+							<xs:element name="TokenFriendlyName" type="xs:string"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- InstallPaymentInstruction Result Data -->
+				<xs:element name="InstallPaymentInstructionResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TokenId" type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Pay Result Data -->
+				<xs:element name="PayResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Refund Result Data -->
+				<xs:element name="RefundResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Reserve Result Data -->
+				<xs:element name="ReserveResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- Settle Result Data -->
+				<xs:element name="SettleResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- SettleDebt Result Data -->
+				<xs:element name="SettleDebtResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- WriteOffDebt Result Data -->
+				<xs:element name="WriteOffDebtResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="TransactionId" type="xs:string" />
+							<xs:element name="TransactionStatus" type="tns:TransactionStatus" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- VerifySignature Result Data -->
+				<xs:element name="VerifySignatureResult">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="VerificationStatus" type="tns:VerificationStatus"
+								minOccurs="0" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			
+				<!-- ******************************** AWS Types *********************************** -->
+			
+				<xs:element name="ResponseMetadata">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="RequestId" type="xs:string" />
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				
+                <!-- // REST Error Response // -->
+                <xs:element name="ErrorResponse">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element ref="tns:Error" maxOccurs="unbounded"/>
+                            <xs:element name="RequestId" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Error">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Type">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:enumeration value="Receiver"/>
+                                        <xs:enumeration value="Sender"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="Code" type="xs:string"/>
+                            <xs:element name="Message" type="xs:string"/>
+                            <xs:element name="Detail" minOccurs="0">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+                                    </xs:sequence>
+                                    <xs:anyAttribute namespace="##other" processContents="lax"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+			</xs:schema>
+
+        </wsdl:types>
+			
+			
+        <!-- ******************************** Messages ********************************* -->
+        
+        <wsdl:message name="CancelTokenRequestMsg">
+            <wsdl:part name="body" element="tns:CancelToken"/>
+        </wsdl:message>
+         <wsdl:message name="CancelTokenResponseMsg">
+            <wsdl:part name="body" element="tns:CancelTokenResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="CancelRequestMsg">
+            <wsdl:part name="body" element="tns:Cancel"/>
+        </wsdl:message>
+         <wsdl:message name="CancelResponseMsg">
+            <wsdl:part name="body" element="tns:CancelResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="FundPrepaidRequestMsg">
+            <wsdl:part name="body" element="tns:FundPrepaid"/>
+        </wsdl:message>
+         <wsdl:message name="FundPrepaidResponseMsg">
+            <wsdl:part name="body" element="tns:FundPrepaidResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetAccountActivityRequestMsg">
+            <wsdl:part name="body" element="tns:GetAccountActivity"/>
+        </wsdl:message>
+         <wsdl:message name="GetAccountActivityResponseMsg">
+            <wsdl:part name="body" element="tns:GetAccountActivityResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetAccountBalanceRequestMsg">
+            <wsdl:part name="body" element="tns:GetAccountBalance"/>
+        </wsdl:message>
+         <wsdl:message name="GetAccountBalanceResponseMsg">
+            <wsdl:part name="body" element="tns:GetAccountBalanceResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetDebtBalanceRequestMsg">
+            <wsdl:part name="body" element="tns:GetDebtBalance"/>
+        </wsdl:message>
+         <wsdl:message name="GetDebtBalanceResponseMsg">
+            <wsdl:part name="body" element="tns:GetDebtBalanceResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetOutstandingDebtBalanceRequestMsg">
+            <wsdl:part name="body" element="tns:GetOutstandingDebtBalance"/>
+        </wsdl:message>
+         <wsdl:message name="GetOutstandingDebtBalanceResponseMsg">
+            <wsdl:part name="body" element="tns:GetOutstandingDebtBalanceResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetPrepaidBalanceRequestMsg">
+            <wsdl:part name="body" element="tns:GetPrepaidBalance"/>
+        </wsdl:message>
+         <wsdl:message name="GetPrepaidBalanceResponseMsg">
+            <wsdl:part name="body" element="tns:GetPrepaidBalanceResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetTokenByCallerRequestMsg">
+            <wsdl:part name="body" element="tns:GetTokenByCaller"/>
+        </wsdl:message>
+         <wsdl:message name="GetTokenByCallerResponseMsg">
+            <wsdl:part name="body" element="tns:GetTokenByCallerResponse"/>
+        </wsdl:message>
+        
+		<wsdl:message name="CancelSubscriptionAndRefundRequestMsg">
+			<wsdl:part name="body" element="tns:CancelSubscriptionAndRefund"/>
+		</wsdl:message>
+		<wsdl:message name="CancelSubscriptionAndRefundResponseMsg">
+			<wsdl:part name="body" element="tns:CancelSubscriptionAndRefundResponse"/>
+		</wsdl:message>
+        
+        <wsdl:message name="GetTokenUsageRequestMsg">
+            <wsdl:part name="body" element="tns:GetTokenUsage"/>
+        </wsdl:message>
+         <wsdl:message name="GetTokenUsageResponseMsg">
+            <wsdl:part name="body" element="tns:GetTokenUsageResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetTokensRequestMsg">
+            <wsdl:part name="body" element="tns:GetTokens"/>
+        </wsdl:message>
+         <wsdl:message name="GetTokensResponseMsg">
+            <wsdl:part name="body" element="tns:GetTokensResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetTotalPrepaidLiabilityRequestMsg">
+            <wsdl:part name="body" element="tns:GetTotalPrepaidLiability"/>
+        </wsdl:message>
+         <wsdl:message name="GetTotalPrepaidLiabilityResponseMsg">
+            <wsdl:part name="body" element="tns:GetTotalPrepaidLiabilityResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetTransactionRequestMsg">
+            <wsdl:part name="body" element="tns:GetTransaction"/>
+        </wsdl:message>
+         <wsdl:message name="GetTransactionResponseMsg">
+            <wsdl:part name="body" element="tns:GetTransactionResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetTransactionStatusRequestMsg">
+            <wsdl:part name="body" element="tns:GetTransactionStatus"/>
+        </wsdl:message>
+         <wsdl:message name="GetTransactionStatusResponseMsg">
+            <wsdl:part name="body" element="tns:GetTransactionStatusResponse"/>
+        </wsdl:message>
+        
+
+        <wsdl:message name="GetPaymentInstructionRequestMsg">
+            <wsdl:part name="body" element="tns:GetPaymentInstruction"/>
+        </wsdl:message>
+        <wsdl:message name="GetPaymentInstructionResponseMsg">
+            <wsdl:part name="body" element="tns:GetPaymentInstructionResponse"/>
+        </wsdl:message>
+
+
+        <wsdl:message name="InstallPaymentInstructionRequestMsg">
+            <wsdl:part name="body" element="tns:InstallPaymentInstruction"/>
+        </wsdl:message>
+        <wsdl:message name="InstallPaymentInstructionResponseMsg">
+            <wsdl:part name="body" element="tns:InstallPaymentInstructionResponse"/>
+        </wsdl:message>
+
+        
+        <wsdl:message name="PayRequestMsg">
+            <wsdl:part name="body" element="tns:Pay"/>
+        </wsdl:message>
+         <wsdl:message name="PayResponseMsg">
+            <wsdl:part name="body" element="tns:PayResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="RefundRequestMsg">
+            <wsdl:part name="body" element="tns:Refund"/>
+        </wsdl:message>
+         <wsdl:message name="RefundResponseMsg">
+            <wsdl:part name="body" element="tns:RefundResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="ReserveRequestMsg">
+            <wsdl:part name="body" element="tns:Reserve"/>
+        </wsdl:message>
+         <wsdl:message name="ReserveResponseMsg">
+            <wsdl:part name="body" element="tns:ReserveResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="SettleRequestMsg">
+            <wsdl:part name="body" element="tns:Settle"/>
+        </wsdl:message>
+         <wsdl:message name="SettleResponseMsg">
+            <wsdl:part name="body" element="tns:SettleResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="SettleDebtRequestMsg">
+            <wsdl:part name="body" element="tns:SettleDebt"/>
+        </wsdl:message>
+         <wsdl:message name="SettleDebtResponseMsg">
+            <wsdl:part name="body" element="tns:SettleDebtResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="WriteOffDebtRequestMsg">
+            <wsdl:part name="body" element="tns:WriteOffDebt"/>
+        </wsdl:message>
+         <wsdl:message name="WriteOffDebtResponseMsg">
+            <wsdl:part name="body" element="tns:WriteOffDebtResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="GetRecipientVerificationStatusRequestMsg">
+            <wsdl:part name="body" element="tns:GetRecipientVerificationStatus"/>
+        </wsdl:message>
+         <wsdl:message name="GetRecipientVerificationStatusResponseMsg">
+            <wsdl:part name="body" element="tns:GetRecipientVerificationStatusResponse"/>
+        </wsdl:message>
+        
+        
+        <wsdl:message name="VerifySignatureRequestMsg">
+            <wsdl:part name="body" element="tns:VerifySignature"/>
+        </wsdl:message>
+         <wsdl:message name="VerifySignatureResponseMsg">
+            <wsdl:part name="body" element="tns:VerifySignatureResponse"/>
+        </wsdl:message>
+        
+        <!-- ********************************* Ports *********************************** -->
+        
+        <wsdl:portType name="AmazonFPSPortType">
+            
+            <wsdl:operation name="CancelToken">
+                <wsdl:documentation> 
+                				Cancels any token installed by the calling application on its own account.
+                </wsdl:documentation>
+                <wsdl:input message="tns:CancelTokenRequestMsg" wsa:Action="urn:CancelToken"/>
+                <wsdl:output message="tns:CancelTokenResponseMsg" wsa:Action="urn:CancelToken:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="Cancel">
+                <wsdl:documentation> 
+                				Cancels an ongoing transaction and puts it in cancelled state.
+                </wsdl:documentation>
+                <wsdl:input message="tns:CancelRequestMsg" wsa:Action="urn:Cancel"/>
+                <wsdl:output message="tns:CancelResponseMsg" wsa:Action="urn:Cancel:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="FundPrepaid">
+                <wsdl:documentation> 
+                				Funds the prepaid balance on the given prepaid instrument.
+                </wsdl:documentation>
+                <wsdl:input message="tns:FundPrepaidRequestMsg" wsa:Action="urn:FundPrepaid"/>
+                <wsdl:output message="tns:FundPrepaidResponseMsg" wsa:Action="urn:FundPrepaid:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetAccountActivity">
+                <wsdl:documentation> 
+                				Returns transactions for a given date range.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetAccountActivityRequestMsg" wsa:Action="urn:GetAccountActivity"/>
+                <wsdl:output message="tns:GetAccountActivityResponseMsg" wsa:Action="urn:GetAccountActivity:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetAccountBalance">
+                <wsdl:documentation> 
+                				Returns the account balance for an account in real time.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetAccountBalanceRequestMsg" wsa:Action="urn:GetAccountBalance"/>
+                <wsdl:output message="tns:GetAccountBalanceResponseMsg" wsa:Action="urn:GetAccountBalance:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetDebtBalance">
+                <wsdl:documentation> 
+                				Returns the balance corresponding to the given credit instrument.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetDebtBalanceRequestMsg" wsa:Action="urn:GetDebtBalance"/>
+                <wsdl:output message="tns:GetDebtBalanceResponseMsg" wsa:Action="urn:GetDebtBalance:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetOutstandingDebtBalance">
+                <wsdl:documentation> 
+                				Returns the total outstanding balance for all the credit instruments for the given creditor account.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetOutstandingDebtBalanceRequestMsg" wsa:Action="urn:GetOutstandingDebtBalance"/>
+                <wsdl:output message="tns:GetOutstandingDebtBalanceResponseMsg" wsa:Action="urn:GetOutstandingDebtBalance:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetPrepaidBalance">
+                <wsdl:documentation> 
+                				Returns the balance available on the given prepaid instrument.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetPrepaidBalanceRequestMsg" wsa:Action="urn:GetPrepaidBalance"/>
+                <wsdl:output message="tns:GetPrepaidBalanceResponseMsg" wsa:Action="urn:GetPrepaidBalance:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetTokenByCaller">
+                <wsdl:documentation> 
+                				Returns the details of a particular token installed by this calling application using the subway co-branded UI. 
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTokenByCallerRequestMsg" wsa:Action="urn:GetTokenByCaller"/>
+                <wsdl:output message="tns:GetTokenByCallerResponseMsg" wsa:Action="urn:GetTokenByCaller:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="CancelSubscriptionAndRefund">
+            	<wsdl:documentation> 
+                				Cancels a subscription. 
+                </wsdl:documentation>
+            	<wsdl:input message="tns:CancelSubscriptionAndRefundRequestMsg" wsa:Action="urn:CancelSubscriptionAndRefund"/>
+            	<wsdl:output message="tns:CancelSubscriptionAndRefundResponseMsg" wsa:Action="urn:CancelSubscriptionAndRefund:Response"/>
+        	</wsdl:operation>
+            
+            <wsdl:operation name="GetTokenUsage">
+                <wsdl:documentation> 
+                				Returns the usage of a token.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTokenUsageRequestMsg" wsa:Action="urn:GetTokenUsage"/>
+                <wsdl:output message="tns:GetTokenUsageResponseMsg" wsa:Action="urn:GetTokenUsage:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetTokens">
+                <wsdl:documentation> 
+                				Returns a list of tokens installed on the given account.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTokensRequestMsg" wsa:Action="urn:GetTokens"/>
+                <wsdl:output message="tns:GetTokensResponseMsg" wsa:Action="urn:GetTokens:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetTotalPrepaidLiability">
+                <wsdl:documentation> 
+                				Returns the total liability held by the given account corresponding to all the prepaid instruments owned by the account.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTotalPrepaidLiabilityRequestMsg" wsa:Action="urn:GetTotalPrepaidLiability"/>
+                <wsdl:output message="tns:GetTotalPrepaidLiabilityResponseMsg" wsa:Action="urn:GetTotalPrepaidLiability:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetTransaction">
+                <wsdl:documentation> 
+                				Returns all details of a transaction.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTransactionRequestMsg" wsa:Action="urn:GetTransaction"/>
+                <wsdl:output message="tns:GetTransactionResponseMsg" wsa:Action="urn:GetTransaction:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetTransactionStatus">
+                <wsdl:documentation> 
+                				Gets the latest status of a transaction.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetTransactionStatusRequestMsg" wsa:Action="urn:GetTransactionStatus"/>
+                <wsdl:output message="tns:GetTransactionStatusResponseMsg" wsa:Action="urn:GetTransactionStatus:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="GetPaymentInstruction">
+                <wsdl:documentation> 
+                				Gets the payment instruction of a token.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetPaymentInstructionRequestMsg" wsa:Action="urn:GetPaymentInstruction"/>
+                <wsdl:output message="tns:GetPaymentInstructionResponseMsg" wsa:Action="urn:GetPaymentInstruction:Response"/>
+            </wsdl:operation>
+
+            <wsdl:operation name="InstallPaymentInstruction">
+                <wsdl:documentation>
+                				Installs a payment instruction for caller.
+                </wsdl:documentation>
+                <wsdl:input message="tns:InstallPaymentInstructionRequestMsg" wsa:Action="urn:InstallPaymentInstruction"/>
+                <wsdl:output message="tns:InstallPaymentInstructionResponseMsg" wsa:Action="urn:InstallPaymentInstruction:Response"/>
+            </wsdl:operation>
+
+            <wsdl:operation name="Pay">
+                <wsdl:documentation> 
+                				Allows calling applications to move money from a sender to a recipient.
+                </wsdl:documentation>
+                <wsdl:input message="tns:PayRequestMsg" wsa:Action="urn:Pay"/>
+                <wsdl:output message="tns:PayResponseMsg" wsa:Action="urn:Pay:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="Refund">
+                <wsdl:documentation> 
+                				Refunds a previously completed transaction.
+                </wsdl:documentation>
+                <wsdl:input message="tns:RefundRequestMsg" wsa:Action="urn:Refund"/>
+                <wsdl:output message="tns:RefundResponseMsg" wsa:Action="urn:Refund:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="Reserve">
+                <wsdl:documentation> 
+                				Reserve API is part of the Reserve and Settle API conjunction that serve the purpose of a pay where the authorization and settlement have a timing 				difference.
+                </wsdl:documentation>
+                <wsdl:input message="tns:ReserveRequestMsg" wsa:Action="urn:Reserve"/>
+                <wsdl:output message="tns:ReserveResponseMsg" wsa:Action="urn:Reserve:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="Settle">
+                <wsdl:documentation> 
+                				The Settle API is used in conjunction with the Reserve API and is used to settle previously reserved transaction.
+                </wsdl:documentation>
+                <wsdl:input message="tns:SettleRequestMsg" wsa:Action="urn:Settle"/>
+                <wsdl:output message="tns:SettleResponseMsg" wsa:Action="urn:Settle:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="SettleDebt">
+                <wsdl:documentation> 
+                				Allows a caller to initiate a transaction that atomically transfers money from a sender’s payment instrument to the recipient, while decreasing corresponding 				debt balance.
+                </wsdl:documentation>
+                <wsdl:input message="tns:SettleDebtRequestMsg" wsa:Action="urn:SettleDebt"/>
+                <wsdl:output message="tns:SettleDebtResponseMsg" wsa:Action="urn:SettleDebt:Response"/>
+            </wsdl:operation>
+            
+            <wsdl:operation name="WriteOffDebt">
+                <wsdl:documentation> 
+                				Allows a creditor to write off the debt balance accumulated partially or fully at any time.
+                </wsdl:documentation>
+                <wsdl:input message="tns:WriteOffDebtRequestMsg" wsa:Action="urn:WriteOffDebt"/>
+                <wsdl:output message="tns:WriteOffDebtResponseMsg" wsa:Action="urn:WriteOffDebt:Response"/>
+            </wsdl:operation>
+
+            <wsdl:operation name="GetRecipientVerificationStatus">
+                <wsdl:documentation> 
+					Returns the recipient status.
+                </wsdl:documentation>
+                <wsdl:input message="tns:GetRecipientVerificationStatusRequestMsg" wsa:Action="urn:GetRecipientVerificationStatus"/>
+                <wsdl:output message="tns:GetRecipientVerificationStatusResponseMsg" wsa:Action="urn:GetRecipientVerificationStatus:Response"/>
+            </wsdl:operation>
+
+             <wsdl:operation name="VerifySignature">
+                <wsdl:documentation> 
+                    Verify the signature that FPS sent in IPN or callback urls.
+                </wsdl:documentation>
+                <wsdl:input message="tns:VerifySignatureRequestMsg" wsa:Action="urn:VerifySignature"/>
+                <wsdl:output message="tns:VerifySignatureResponseMsg" wsa:Action="urn:VerifySignature:Response"/>
+            </wsdl:operation>
+              
+        </wsdl:portType>
+        
+        
+        <!-- ******************************** Bindings ********************************** -->
+        
+        <wsdl:binding name="AmazonFPSBinding" type="tns:AmazonFPSPortType">
+            
+            <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+            
+                <wsdl:operation name="CancelToken">
+                    <soap:operation soapAction="CancelToken"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+                
+                <wsdl:operation name="Cancel">
+                    <soap:operation soapAction="Cancel"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="FundPrepaid">
+                    <soap:operation soapAction="FundPrepaid"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetAccountActivity">
+                    <soap:operation soapAction="GetAccountActivity"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetAccountBalance">
+                    <soap:operation soapAction="GetAccountBalance"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetDebtBalance">
+                    <soap:operation soapAction="GetDebtBalance"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetOutstandingDebtBalance">
+                    <soap:operation soapAction="GetOutstandingDebtBalance"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetPrepaidBalance">
+                    <soap:operation soapAction="GetPrepaidBalance"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetTokenByCaller">
+                    <soap:operation soapAction="GetTokenByCaller"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+                <wsdl:operation name="CancelSubscriptionAndRefund">
+            		<soap:operation soapAction="urn:CancelSubscriptionAndRefund"/>
+            		<wsdl:input>
+                		<soap:body use="literal"/>
+            		</wsdl:input>
+            		<wsdl:output>
+                		<soap:body use="literal"/>
+            		</wsdl:output>
+        		</wsdl:operation>
+            
+                <wsdl:operation name="GetTokenUsage">
+                    <soap:operation soapAction="GetTokenUsage"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetTokens">
+                    <soap:operation soapAction="GetTokens"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetTotalPrepaidLiability">
+                    <soap:operation soapAction="GetTotalPrepaidLiability"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetTransaction">
+                    <soap:operation soapAction="GetTransaction"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetTransactionStatus">
+                    <soap:operation soapAction="GetTransactionStatus"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="GetPaymentInstruction">
+                    <soap:operation soapAction="urn:GetPaymentInstruction"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                      <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="InstallPaymentInstruction">
+                    <soap:operation soapAction="urn:InstallPaymentInstruction"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="Pay">
+                    <soap:operation soapAction="Pay"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="Refund">
+                    <soap:operation soapAction="Refund"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="Reserve">
+                    <soap:operation soapAction="Reserve"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="Settle">
+                    <soap:operation soapAction="Settle"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="SettleDebt">
+                    <soap:operation soapAction="SettleDebt"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+            
+                <wsdl:operation name="WriteOffDebt">
+                    <soap:operation soapAction="WriteOffDebt"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+                
+                
+                <wsdl:operation name="GetRecipientVerificationStatus">
+                    <soap:operation soapAction="GetRecipientVerificationStatus"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+              
+                <wsdl:operation name="VerifySignature">
+                    <soap:operation soapAction="VerifySignature"/>
+                    <wsdl:input>
+                        <soap:body use="literal"/>
+                    </wsdl:input>
+                    <wsdl:output>
+                     <soap:body use="literal"/>
+                    </wsdl:output>
+                </wsdl:operation>
+        </wsdl:binding>
+
+        <!-- ******************************** Service ********************************** -->
+        
+        <wsdl:service name="AmazonFPS">
+            <wsdl:documentation> 
+            			Amazon Flexible Payments Service
+            </wsdl:documentation>
+            <wsdl:port name="AmazonFPSPort" binding="tns:AmazonFPSBinding">
+                <soap:address location="https://fps.amazonaws.com"/>
+            </wsdl:port>
+        </wsdl:service>
+        
+    </wsdl:definitions>

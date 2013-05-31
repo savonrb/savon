@@ -1,0 +1,2137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.interhome.com/webservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.interhome.com/webservice" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Interhome WebService</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.interhome.com/webservice">
+      <s:element name="CheckServerHealth">
+        <s:complexType/>
+      </s:element>
+      <s:element name="CheckServerHealthResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckServerHealthResult" type="tns:CheckServerHealthResult"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CheckServerHealthResult">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SearchObjects" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Availability" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PriceCheck" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServerDBLoadBalancer" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="OverallServerHealth" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Messages" type="tns:Messages"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Messages">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Information" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="TimeTaken" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServerName" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CheckServerHealthV2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="type" type="s:string"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="CheckServerHealthV2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="CheckServerHealthV2Result" type="tns:CheckServerHealthResultV2"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CheckServerHealthResultV2">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="IRent" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ServerDBLoadBalancer" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Endeca" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="OverallServerHealth" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Messages" type="tns:Messages"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Newsletter">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:NewsletterInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NewsletterInputValue">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="SignUp" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerExtraCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SourceKey" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Salutation" type="tns:Salutation"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Firstname" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Lastname" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Street" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalStreet" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Fax" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EMail" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="Salutation">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Mr"/>
+          <s:enumeration value="Mrs"/>
+          <s:enumeration value="MrAndMrs"/>
+          <s:enumeration value="Company"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="NewsletterResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NewsletterResult" type="tns:NewsletterReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NewsletterReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ReturnValue">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Ok" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Errors" type="tns:ArrayOfError"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfError">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Error" nillable="true" type="tns:Error"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Error">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Number" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ExtensionData" type="tns:ExtensionDataObject"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ExtensionDataObject"/>
+      <s:element name="ServiceAuthHeader" type="tns:ServiceAuthHeader"/>
+      <s:complexType name="ServiceAuthHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+        </s:sequence>
+        <s:anyAttribute/>
+      </s:complexType>
+      <s:element name="AdditionalServices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:AdditionalServicesInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AdditionalServicesInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Adults" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Children" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Babies" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AdditionalServicesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AdditionalServicesResult" type="tns:AdditionalServicesReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AdditionalServicesReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfAdditionalServiceItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AdditionalServiceItem" nillable="true" type="tns:AdditionalServiceItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AdditionalServiceItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="AdditionalServiceType" type="tns:AdditionalServiceType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Amount" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EitherOr" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IsDefaultService" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IsIncluded" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IsInsurance" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="IsMandatory" type="s:boolean"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PaymentInfo" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PriceRule" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Text" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ValidFrom" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ValidTo" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="AdditionalServiceType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="CostsOnInvoice"/>
+          <s:enumeration value="InPriceIncluded"/>
+          <s:enumeration value="ExtracostOnPlace"/>
+          <s:enumeration value="BookableServiceOnInvoice"/>
+          <s:enumeration value="BookbaleServiceOnPlace"/>
+          <s:enumeration value="BookableOnPlacePayableOnPlace"/>
+          <s:enumeration value="SelfOrganised"/>
+          <s:enumeration value="BookableServiceNoCost"/>
+          <s:enumeration value="CommissionDiscount"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="Availability">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:AvailabilityInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AvailabilityInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AvailabilityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AvailabilityResult" type="tns:AvailabilityRetunValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AvailabilityRetunValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Change" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="MinimumStay" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="NearestBookingDate">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:NearestBookingDateInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NearestBookingDateInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccomodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Duration" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="NearestBookingDateResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="NearestBookingDateResult" type="tns:NearestBookingDateReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="NearestBookingDateReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Change" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="MinimumStay" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="PriceDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:PriceDetailInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PriceDetailInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceInputItem"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Adults" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Children" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Babies" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfAdditionalServiceInputItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AdditionalServiceInputItem" nillable="true" type="tns:AdditionalServiceInputItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AdditionalServiceInputItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PriceDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PriceDetailResult" type="tns:PriceDetailRetunValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PriceDetailRetunValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Total" type="s:decimal"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceItem"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ExpirationPrePayment" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ExpirationResidue" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Prepayment" type="s:decimal"/>
+              <s:element minOccurs="0" maxOccurs="1" name="SpecialCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="SpecialDescription" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="SpecialPrice" type="s:decimal"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="Prices">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:PricesInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PricesInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Stays" type="tns:ArrayOfStayItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfStayItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="StayItem" nillable="true" type="tns:StayItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="StayItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PricesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PricesResult" type="tns:PricesRetunValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PricesRetunValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Prices" type="tns:ArrayOfPricesPriceItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPricesPriceItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PricesPriceItem" nillable="true" type="tns:PricesPriceItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PricesPriceItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price1" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price2" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialDescription" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PriceList">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:PriceListInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PriceListInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOffice" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PriceListResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PriceListResult" type="tns:PriceListReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PriceListReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Items" type="tns:ArrayOfPriceListItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPriceListItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PriceListItem" nillable="true" type="tns:PriceListItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PriceListItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ShortbreakDays" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ShortbreakPrice" type="s:decimal"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ClientBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:ClientBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ClientBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceInputItem"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerSalutationType" type="tns:SalutationType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerFirstName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerPhone" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerFax" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerEmail" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressStreet" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressAdditionalStreet" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressZIP" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressPlace" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressState" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressCountryCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Adults" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Babies" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Children" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerExtraCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PaymentType" type="tns:PaymentType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreditCardType" type="tns:CCType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardNumber" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardCvc" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardExpiry" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardHolder" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankAccountNumber" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankAccountHolder" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="SalutationType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Mr"/>
+          <s:enumeration value="Mrs"/>
+          <s:enumeration value="MrAndMrs"/>
+          <s:enumeration value="Company"/>
+          <s:enumeration value="Blank"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="PaymentType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="CreditCard"/>
+          <s:enumeration value="DirectDebiting"/>
+          <s:enumeration value="Invoice"/>
+          <s:enumeration value="SecuredCreditCard"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="CCType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="VISA"/>
+          <s:enumeration value="MASTER"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="ClientBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ClientBookingResult" type="tns:ClientBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ClientBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="PaymentStatus" type="tns:ReturnValue"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="RetailerBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:RetailerBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetailerBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceInputItem"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Adults" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Babies" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Children" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerSalutationType" type="tns:SalutationType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerFirstName" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerExtraCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerContact" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PaymentType" type="tns:PaymentType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="CreditCardType" type="tns:CCType"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardNumber" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardCvc" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardExpiry" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CreditCardHolder" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankAccountNumber" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="BankAccountHolder" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="RetailerBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RetailerBookingResult" type="tns:RetailerBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RetailerBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="PaymentStatus" type="tns:ReturnValue"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ReadBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:ReadBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReadBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReadBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ReadBookingResult" type="tns:ReadBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ReadBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="BookingDate" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="OptionDate" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="State" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AdditionalServices" type="tns:ArrayOfAdditionalServiceItem"/>
+              <s:element minOccurs="1" maxOccurs="1" name="CustomerSalutationType" type="tns:SalutationType"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerFirstName" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerEmail" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressPlace" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerAddressCountryCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Comment" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Adults" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Babies" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Children" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="RetailerExtraCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="RetailerContact" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="PaymentType" type="tns:PaymentType"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Price" type="tns:ReadBookingPriceItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ReadBookingPriceItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Total" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ExpirationPrePayment" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ExpirationResidue" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Prepayment" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialDescription" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialPrice" type="s:decimal"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="RatifyBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:RatifyBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RatifyBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="RatifyBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="RatifyBookingResult" type="tns:RatifyBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="RatifyBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CancelBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:CancelBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CancelBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancelBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancelBookingResult" type="tns:CancelBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CancelBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue"/>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="CheckBooking">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:CheckBookingInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CheckBookingInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ToleranceDays" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CheckBookingResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CheckBookingResult" type="tns:CheckBookingReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CheckBookingReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckBookingItems" type="tns:ArrayOfCheckBookingItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCheckBookingItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CheckBookingItem" nillable="true" type="tns:CheckBookingItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CheckBookingItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialPrice" type="s:decimal"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancellationConditions">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:CancellationConditionInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CancellationConditionInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CancellationConditionsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="CancellationConditionsResult" type="tns:CancellationConditionReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="CancellationConditionReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CancellationConditions" type="tns:ArrayOfCancellationConditionItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfCancellationConditionItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CancellationConditionItem" nillable="true" type="tns:CancellationConditionItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancellationConditionItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="DaysBeforeDeparte" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Percentage" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Search">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:SearchInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SearchInputValue">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Page" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PageSize" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OrderDirection" type="tns:OrderDirection"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OrderBy" type="tns:OrderBy"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Quicksearch" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RegionCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PlaceCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Duration" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="ThemeFilter" type="tns:ThemeFilterTypes"/>
+          <s:element minOccurs="1" maxOccurs="1" name="HouseApartmentType" type="tns:HouseApartmentTypes"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Facilities" type="tns:ArrayOfFacilities"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Accessibilities" type="tns:ArrayOfAccessibilities"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Activities" type="tns:ArrayOfActivities"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Situations" type="tns:ArrayOfSituations"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PropertyTypes" type="tns:ArrayOfPropertyTypes"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialOffer" type="tns:SpecialOffers"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PaxMin" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="PaxMax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RoomsMin" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RoomsMax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BedroomsMin" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BedroomsMax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BathroomsMin" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BathroomsMax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="QualityMin" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="QualityMax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToCenter" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToGolfCourse" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToLake" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToSea" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToSeaOrLake" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="DistanceToSkiLifts" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="OrderDirection">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Ascending"/>
+          <s:enumeration value="Descending"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="OrderBy">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Favorite"/>
+          <s:enumeration value="Price"/>
+          <s:enumeration value="Place"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="ThemeFilterTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Cheepcheep"/>
+          <s:enumeration value="Countryside"/>
+          <s:enumeration value="Familyfriendly"/>
+          <s:enumeration value="HolidayVillage"/>
+          <s:enumeration value="LakesAndMountains"/>
+          <s:enumeration value="Nightlife"/>
+          <s:enumeration value="Selection"/>
+          <s:enumeration value="SomewhereQuiet"/>
+          <s:enumeration value="SummerHoliday"/>
+          <s:enumeration value="Cities"/>
+          <s:enumeration value="SuitableForSeniors"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="HouseApartmentTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Apartment"/>
+          <s:enumeration value="DetachedHouse"/>
+          <s:enumeration value="House"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfFacilities">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Facilities" type="tns:Facilities"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="Facilities">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Aircondition"/>
+          <s:enumeration value="Balcony"/>
+          <s:enumeration value="BBQ"/>
+          <s:enumeration value="Cot"/>
+          <s:enumeration value="Dishwasher"/>
+          <s:enumeration value="Fireplace"/>
+          <s:enumeration value="Internet"/>
+          <s:enumeration value="InternetWiFi"/>
+          <s:enumeration value="Jacuzzi"/>
+          <s:enumeration value="LuxuriousFurnishings"/>
+          <s:enumeration value="ModernFurnishings"/>
+          <s:enumeration value="NiceKitchen"/>
+          <s:enumeration value="NiceSourroundings"/>
+          <s:enumeration value="Parking"/>
+          <s:enumeration value="LiftsInhouse"/>
+          <s:enumeration value="NonSmoker"/>
+          <s:enumeration value="Pets1"/>
+          <s:enumeration value="Pets2"/>
+          <s:enumeration value="Pets3"/>
+          <s:enumeration value="PetsNo"/>
+          <s:enumeration value="PoolAll"/>
+          <s:enumeration value="PoolChildren"/>
+          <s:enumeration value="PoolIndoor"/>
+          <s:enumeration value="PoolPrivate"/>
+          <s:enumeration value="Sauna"/>
+          <s:enumeration value="Swimmingpool"/>
+          <s:enumeration value="TV"/>
+          <s:enumeration value="WashingMachine"/>
+          <s:enumeration value="Wheelchair"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfAccessibilities">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Accessibilities" type="tns:Accessibilities"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="Accessibilities">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="FamilyFrienldy"/>
+          <s:enumeration value="LiftsInhouse"/>
+          <s:enumeration value="NonSmoking"/>
+          <s:enumeration value="PetsWelcome"/>
+          <s:enumeration value="PetsNotAllowed"/>
+          <s:enumeration value="SuitableForSeniors"/>
+          <s:enumeration value="WheelchairAccessible"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfActivities">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Activities" type="tns:Activities"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="Activities">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Biking"/>
+          <s:enumeration value="CrossCountrySkiing"/>
+          <s:enumeration value="Golfing"/>
+          <s:enumeration value="Hiking"/>
+          <s:enumeration value="MountainBiking"/>
+          <s:enumeration value="Nightlife"/>
+          <s:enumeration value="NordicWalking"/>
+          <s:enumeration value="Riding"/>
+          <s:enumeration value="Sailing"/>
+          <s:enumeration value="Skiing"/>
+          <s:enumeration value="Snowboarding"/>
+          <s:enumeration value="Surfing"/>
+          <s:enumeration value="Tennis"/>
+          <s:enumeration value="ThemeParkNearby"/>
+          <s:enumeration value="Toboggan"/>
+          <s:enumeration value="Windsurfing"/>
+          <s:enumeration value="SkiingSnowboarding"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfSituations">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Situations" type="tns:Situations"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="Situations">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="ByTheSea"/>
+          <s:enumeration value="InAHistoricTown"/>
+          <s:enumeration value="InAMajorCity"/>
+          <s:enumeration value="InTheCountryside"/>
+          <s:enumeration value="InALakesideTown"/>
+          <s:enumeration value="SomewhereQuiet"/>
+          <s:enumeration value="OnAIsland"/>
+          <s:enumeration value="Center100"/>
+          <s:enumeration value="Center500"/>
+          <s:enumeration value="Center1000"/>
+          <s:enumeration value="Golf200"/>
+          <s:enumeration value="Golf500"/>
+          <s:enumeration value="Golf5000"/>
+          <s:enumeration value="Lake50"/>
+          <s:enumeration value="Lake1000"/>
+          <s:enumeration value="Lake10000"/>
+          <s:enumeration value="Sea50"/>
+          <s:enumeration value="Sea1000"/>
+          <s:enumeration value="Sea10000"/>
+          <s:enumeration value="Skilift50"/>
+          <s:enumeration value="Skilift500"/>
+          <s:enumeration value="Skilift10000"/>
+          <s:enumeration value="CountryView"/>
+          <s:enumeration value="LakeView"/>
+          <s:enumeration value="MountainView"/>
+          <s:enumeration value="SeaView"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfPropertyTypes">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PropertyTypes" type="tns:PropertyTypes"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="PropertyTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="Apartment"/>
+          <s:enumeration value="Bungalow"/>
+          <s:enumeration value="CastleManor"/>
+          <s:enumeration value="Chalet"/>
+          <s:enumeration value="DetachedHouse"/>
+          <s:enumeration value="Farmhouse"/>
+          <s:enumeration value="HistoricProperty"/>
+          <s:enumeration value="HolidayVillage"/>
+          <s:enumeration value="SpecialProperty"/>
+          <s:enumeration value="Villa"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="SpecialOffers">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotSet"/>
+          <s:enumeration value="AnySpecialOffer"/>
+          <s:enumeration value="EarlyBooker"/>
+          <s:enumeration value="LastMinute"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="SearchResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="SearchResult" type="tns:SearchReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="SearchReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="ResultCount" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Items" type="tns:ArrayOfSearchResultItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfSearchResultItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SearchResultItem" nillable="true" type="tns:SearchResultItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SearchResultItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CountryCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="RegionCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PlaceCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Quality" type="s:int"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Pax" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Rooms" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="BedRooms" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Pets" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Cots" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="AdditionBeds" type="s:int"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Parking" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="TV" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Dishwasher" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Washingmachine" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Aircondition" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Pool" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Tennis" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Sauna" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Wheelchair" type="s:boolean"/>
+          <s:element minOccurs="1" maxOccurs="1" name="GeoLng" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="GeoLat" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="InsideDescription" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Picture" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AccommodationDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:AccommodationDetailInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AccommodationDetailInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AccommodationDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AccommodationDetailResult" type="tns:AccommodationDetailReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AccommodationDetailReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="HouseName" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Region" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Quality" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Type" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Pax" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Rooms" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="BedRooms" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Location" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Interior" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Tranquility" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Kitchen" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AccessRoad" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Pets" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Cots" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AdditionBeds" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Parking" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="TV" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Dishwasher" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Washingmachine" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Aircondition" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Pool" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Tennis" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Sauna" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Wheelchair" type="s:boolean"/>
+              <s:element minOccurs="1" maxOccurs="1" name="GeoLng" type="s:decimal"/>
+              <s:element minOccurs="1" maxOccurs="1" name="GeoLat" type="s:decimal"/>
+              <s:element minOccurs="0" maxOccurs="1" name="PoolFrom" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="PoolTo" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="InsideDescription" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="OutsideDescription" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Pictures" type="tns:ArrayOfString"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Trips">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:TripsInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TripsInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="LanguageCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="TripsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TripsResult" type="tns:TripsReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="TripsReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Trips" type="tns:ArrayOfTripItem"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfTripItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="TripItem" nillable="true" type="tns:TripItem"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TripItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="CurrencyCode" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Price" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialPrice" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialDescription" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="OnRequest" type="s:boolean"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AffiliateDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:AffiliateDetailInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AffiliateDetailInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="AffiliateDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="AffiliateDetailResult" type="tns:AffiliateDetailReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="AffiliateDetailReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="ResultText" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="VoucherDetail">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:VoucherDetailInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="VoucherDetailInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BookingID" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="VoucherDetailResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VoucherDetailResult" type="tns:VoucherDetailReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="VoucherDetailReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AccommodationCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ReservationCode" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckIn" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CheckOut" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Duration" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="HouseName" type="s:string"/>
+              <s:element minOccurs="1" maxOccurs="1" name="PaxMax" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="PaxReservation" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Rooms" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="BedRooms" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Quality" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Pets" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="AdditionBeds" type="s:int"/>
+              <s:element minOccurs="1" maxOccurs="1" name="Cots" type="s:int"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AccommodationAddress" type="tns:VoucherDetailAddress"/>
+              <s:element minOccurs="0" maxOccurs="1" name="VoucherCharges" type="tns:VoucherDetailCharges"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ArrivalDepartureInformation" type="tns:VoucherDetailDescription"/>
+              <s:element minOccurs="0" maxOccurs="1" name="KeyHandoverInformation" type="tns:VoucherDetailKeyHandoverInformation"/>
+              <s:element minOccurs="0" maxOccurs="1" name="ContactOnSite" type="tns:VoucherDetailAddress"/>
+              <s:element minOccurs="0" maxOccurs="1" name="VoucherDescriptions" type="tns:VoucherDetailDescriptions"/>
+              <s:element minOccurs="0" maxOccurs="1" name="AdditionalInformation" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="Alert" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="VoucherDetailAddress">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Salutation" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Addr1" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Addr2" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Addr3" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Addr4" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Addr5" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Place" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Phone" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneBusiness" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="PhonePrivate" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Mobile" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Fax" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Url" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailCharges">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Charges" type="tns:ArrayOfVoucherDetailCharge"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfVoucherDetailCharge">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VoucherDetailCharge" nillable="true" type="tns:VoucherDetailCharge"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailCharge">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Costs" type="tns:ArrayOfVoucherDetailCost"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfVoucherDetailCost">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VoucherDetailCost" nillable="true" type="tns:VoucherDetailCost"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailCost">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Amount" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AdditionalText" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailDescription">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailKeyHandoverInformation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="GeoLat" type="s:decimal"/>
+          <s:element minOccurs="1" maxOccurs="1" name="GeoLng" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="GoogleMapsLink" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VoucherDetailDescriptions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="DescriptionTitle" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Descriptions" type="tns:ArrayOfVoucherDetailDescription"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfVoucherDetailDescription">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VoucherDetailDescription" nillable="true" type="tns:VoucherDetailDescription"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PaymentExtInformation">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="inputValue" type="tns:PaymentInformationInputValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PaymentInformationInputValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SalesOfficeCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ReservationCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PaymentExtInformationResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="PaymentExtInformationResult" type="tns:PaymentInformationReturnValue"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PaymentInformationReturnValue">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReturnValue">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="CreditCardType" type="tns:CCType"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CreditCardNumber" type="s:string"/>
+              <s:element minOccurs="0" maxOccurs="1" name="CreditCardExpiry" type="s:string"/>
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CheckServerHealthSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckServerHealth"/>
+  </wsdl:message>
+  <wsdl:message name="CheckServerHealthSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckServerHealthResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CheckServerHealthV2SoapIn">
+    <wsdl:part name="parameters" element="tns:CheckServerHealthV2"/>
+  </wsdl:message>
+  <wsdl:message name="CheckServerHealthV2SoapOut">
+    <wsdl:part name="parameters" element="tns:CheckServerHealthV2Response"/>
+  </wsdl:message>
+  <wsdl:message name="NewsletterSoapIn">
+    <wsdl:part name="parameters" element="tns:Newsletter"/>
+  </wsdl:message>
+  <wsdl:message name="NewsletterSoapOut">
+    <wsdl:part name="parameters" element="tns:NewsletterResponse"/>
+  </wsdl:message>
+  <wsdl:message name="NewsletterServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="AdditionalServicesSoapIn">
+    <wsdl:part name="parameters" element="tns:AdditionalServices"/>
+  </wsdl:message>
+  <wsdl:message name="AdditionalServicesSoapOut">
+    <wsdl:part name="parameters" element="tns:AdditionalServicesResponse"/>
+  </wsdl:message>
+  <wsdl:message name="AdditionalServicesServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="AvailabilitySoapIn">
+    <wsdl:part name="parameters" element="tns:Availability"/>
+  </wsdl:message>
+  <wsdl:message name="AvailabilitySoapOut">
+    <wsdl:part name="parameters" element="tns:AvailabilityResponse"/>
+  </wsdl:message>
+  <wsdl:message name="AvailabilityServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="NearestBookingDateSoapIn">
+    <wsdl:part name="parameters" element="tns:NearestBookingDate"/>
+  </wsdl:message>
+  <wsdl:message name="NearestBookingDateSoapOut">
+    <wsdl:part name="parameters" element="tns:NearestBookingDateResponse"/>
+  </wsdl:message>
+  <wsdl:message name="NearestBookingDateServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="PriceDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:PriceDetail"/>
+  </wsdl:message>
+  <wsdl:message name="PriceDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:PriceDetailResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PriceDetailServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="PricesSoapIn">
+    <wsdl:part name="parameters" element="tns:Prices"/>
+  </wsdl:message>
+  <wsdl:message name="PricesSoapOut">
+    <wsdl:part name="parameters" element="tns:PricesResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PricesServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="PriceListSoapIn">
+    <wsdl:part name="parameters" element="tns:PriceList"/>
+  </wsdl:message>
+  <wsdl:message name="PriceListSoapOut">
+    <wsdl:part name="parameters" element="tns:PriceListResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PriceListServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ClientBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:ClientBooking"/>
+  </wsdl:message>
+  <wsdl:message name="ClientBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:ClientBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ClientBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="RetailerBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:RetailerBooking"/>
+  </wsdl:message>
+  <wsdl:message name="RetailerBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:RetailerBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="RetailerBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="ReadBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:ReadBooking"/>
+  </wsdl:message>
+  <wsdl:message name="ReadBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:ReadBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="ReadBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="RatifyBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:RatifyBooking"/>
+  </wsdl:message>
+  <wsdl:message name="RatifyBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:RatifyBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="RatifyBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CancelBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:CancelBooking"/>
+  </wsdl:message>
+  <wsdl:message name="CancelBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:CancelBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CancelBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CheckBookingSoapIn">
+    <wsdl:part name="parameters" element="tns:CheckBooking"/>
+  </wsdl:message>
+  <wsdl:message name="CheckBookingSoapOut">
+    <wsdl:part name="parameters" element="tns:CheckBookingResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CheckBookingServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="CancellationConditionsSoapIn">
+    <wsdl:part name="parameters" element="tns:CancellationConditions"/>
+  </wsdl:message>
+  <wsdl:message name="CancellationConditionsSoapOut">
+    <wsdl:part name="parameters" element="tns:CancellationConditionsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="CancellationConditionsServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="SearchSoapIn">
+    <wsdl:part name="parameters" element="tns:Search"/>
+  </wsdl:message>
+  <wsdl:message name="SearchSoapOut">
+    <wsdl:part name="parameters" element="tns:SearchResponse"/>
+  </wsdl:message>
+  <wsdl:message name="SearchServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="AccommodationDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:AccommodationDetail"/>
+  </wsdl:message>
+  <wsdl:message name="AccommodationDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:AccommodationDetailResponse"/>
+  </wsdl:message>
+  <wsdl:message name="AccommodationDetailServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="TripsSoapIn">
+    <wsdl:part name="parameters" element="tns:Trips"/>
+  </wsdl:message>
+  <wsdl:message name="TripsSoapOut">
+    <wsdl:part name="parameters" element="tns:TripsResponse"/>
+  </wsdl:message>
+  <wsdl:message name="TripsServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="AffiliateDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:AffiliateDetail"/>
+  </wsdl:message>
+  <wsdl:message name="AffiliateDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:AffiliateDetailResponse"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherDetailSoapIn">
+    <wsdl:part name="parameters" element="tns:VoucherDetail"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherDetailSoapOut">
+    <wsdl:part name="parameters" element="tns:VoucherDetailResponse"/>
+  </wsdl:message>
+  <wsdl:message name="VoucherDetailServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:message name="PaymentExtInformationSoapIn">
+    <wsdl:part name="parameters" element="tns:PaymentExtInformation"/>
+  </wsdl:message>
+  <wsdl:message name="PaymentExtInformationSoapOut">
+    <wsdl:part name="parameters" element="tns:PaymentExtInformationResponse"/>
+  </wsdl:message>
+  <wsdl:message name="PaymentExtInformationServiceAuthHeader">
+    <wsdl:part name="ServiceAuthHeader" element="tns:ServiceAuthHeader"/>
+  </wsdl:message>
+  <wsdl:portType name="WebServiceSoap">
+    <wsdl:operation name="CheckServerHealth">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to Monitor if the WebService is available</wsdl:documentation>
+      <wsdl:input message="tns:CheckServerHealthSoapIn"/>
+      <wsdl:output message="tns:CheckServerHealthSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CheckServerHealthV2">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This method is used to Monitor if the WebService is available. The 'type' parameter defines what to perform.</wsdl:documentation>
+      <wsdl:input message="tns:CheckServerHealthV2SoapIn"/>
+      <wsdl:output message="tns:CheckServerHealthV2SoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Newsletter">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Newsletter Request</wsdl:documentation>
+      <wsdl:input message="tns:NewsletterSoapIn"/>
+      <wsdl:output message="tns:NewsletterSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="AdditionalServices">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">AdditionalServices Request</wsdl:documentation>
+      <wsdl:input message="tns:AdditionalServicesSoapIn"/>
+      <wsdl:output message="tns:AdditionalServicesSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Availability">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Availability Request</wsdl:documentation>
+      <wsdl:input message="tns:AvailabilitySoapIn"/>
+      <wsdl:output message="tns:AvailabilitySoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="NearestBookingDate">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">NearestBookingDate Request</wsdl:documentation>
+      <wsdl:input message="tns:NearestBookingDateSoapIn"/>
+      <wsdl:output message="tns:NearestBookingDateSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PriceDetail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">PriceDetail Request</wsdl:documentation>
+      <wsdl:input message="tns:PriceDetailSoapIn"/>
+      <wsdl:output message="tns:PriceDetailSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Prices">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Prices Request</wsdl:documentation>
+      <wsdl:input message="tns:PricesSoapIn"/>
+      <wsdl:output message="tns:PricesSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PriceList">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">PriceList Request</wsdl:documentation>
+      <wsdl:input message="tns:PriceListSoapIn"/>
+      <wsdl:output message="tns:PriceListSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ClientBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ClientBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:ClientBookingSoapIn"/>
+      <wsdl:output message="tns:ClientBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="RetailerBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">RetailerBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:RetailerBookingSoapIn"/>
+      <wsdl:output message="tns:RetailerBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="ReadBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">ReadBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:ReadBookingSoapIn"/>
+      <wsdl:output message="tns:ReadBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="RatifyBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">RatifyBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:RatifyBookingSoapIn"/>
+      <wsdl:output message="tns:RatifyBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">CancelBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:CancelBookingSoapIn"/>
+      <wsdl:output message="tns:CancelBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CheckBooking">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">CheckBooking Request</wsdl:documentation>
+      <wsdl:input message="tns:CheckBookingSoapIn"/>
+      <wsdl:output message="tns:CheckBookingSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="CancellationConditions">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">CancellationConditions Request</wsdl:documentation>
+      <wsdl:input message="tns:CancellationConditionsSoapIn"/>
+      <wsdl:output message="tns:CancellationConditionsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Search">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Search Request</wsdl:documentation>
+      <wsdl:input message="tns:SearchSoapIn"/>
+      <wsdl:output message="tns:SearchSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="AccommodationDetail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Accommodation details Request</wsdl:documentation>
+      <wsdl:input message="tns:AccommodationDetailSoapIn"/>
+      <wsdl:output message="tns:AccommodationDetailSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="Trips">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Trips Request</wsdl:documentation>
+      <wsdl:input message="tns:TripsSoapIn"/>
+      <wsdl:output message="tns:TripsSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateDetail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">AffiliateDetail Request</wsdl:documentation>
+      <wsdl:input message="tns:AffiliateDetailSoapIn"/>
+      <wsdl:output message="tns:AffiliateDetailSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherDetail">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">VoucherDetail Request</wsdl:documentation>
+      <wsdl:input message="tns:VoucherDetailSoapIn"/>
+      <wsdl:output message="tns:VoucherDetailSoapOut"/>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentExtInformation">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">PaymentExtInformation Request</wsdl:documentation>
+      <wsdl:input message="tns:PaymentExtInformationSoapIn"/>
+      <wsdl:output message="tns:PaymentExtInformationSoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="WebServiceSoap" type="tns:WebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="CheckServerHealth">
+      <soap:operation soapAction="http://www.interhome.com/webservice/CheckServerHealth" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckServerHealthV2">
+      <soap:operation soapAction="http://www.interhome.com/webservice/CheckServerHealthV2" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Newsletter">
+      <soap:operation soapAction="http://www.interhome.com/webservice/Newsletter" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:NewsletterServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdditionalServices">
+      <soap:operation soapAction="http://www.interhome.com/webservice/AdditionalServices" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:AdditionalServicesServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Availability">
+      <soap:operation soapAction="http://www.interhome.com/webservice/Availability" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:AvailabilityServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NearestBookingDate">
+      <soap:operation soapAction="http://www.interhome.com/webservice/NearestBookingDate" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:NearestBookingDateServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PriceDetail">
+      <soap:operation soapAction="http://www.interhome.com/webservice/PriceDetail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:PriceDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Prices">
+      <soap:operation soapAction="http://www.interhome.com/webservice/Prices" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:PricesServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PriceList">
+      <soap:operation soapAction="http://www.interhome.com/webservice/PriceList" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:PriceListServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClientBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/ClientBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ClientBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetailerBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/RetailerBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:RetailerBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReadBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/ReadBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:ReadBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RatifyBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/RatifyBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:RatifyBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/CancelBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CancelBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckBooking">
+      <soap:operation soapAction="http://www.interhome.com/webservice/CheckBooking" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CheckBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancellationConditions">
+      <soap:operation soapAction="http://www.interhome.com/webservice/CancellationConditions" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:CancellationConditionsServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Search">
+      <soap:operation soapAction="http://www.interhome.com/webservice/Search" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:SearchServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccommodationDetail">
+      <soap:operation soapAction="http://www.interhome.com/webservice/AccommodationDetail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:AccommodationDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Trips">
+      <soap:operation soapAction="http://www.interhome.com/webservice/Trips" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:TripsServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateDetail">
+      <soap:operation soapAction="http://www.interhome.com/webservice/AffiliateDetail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherDetail">
+      <soap:operation soapAction="http://www.interhome.com/webservice/VoucherDetail" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:VoucherDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentExtInformation">
+      <soap:operation soapAction="http://www.interhome.com/webservice/PaymentExtInformation" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <soap:header message="tns:PaymentExtInformationServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="WebServiceSoap12" type="tns:WebServiceSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="CheckServerHealth">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/CheckServerHealth" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckServerHealthV2">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/CheckServerHealthV2" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Newsletter">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/Newsletter" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:NewsletterServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AdditionalServices">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/AdditionalServices" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:AdditionalServicesServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Availability">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/Availability" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:AvailabilityServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="NearestBookingDate">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/NearestBookingDate" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:NearestBookingDateServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PriceDetail">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/PriceDetail" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:PriceDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Prices">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/Prices" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:PricesServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PriceList">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/PriceList" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:PriceListServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ClientBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/ClientBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ClientBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RetailerBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/RetailerBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:RetailerBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReadBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/ReadBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:ReadBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="RatifyBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/RatifyBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:RatifyBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/CancelBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CancelBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CheckBooking">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/CheckBooking" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CheckBookingServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancellationConditions">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/CancellationConditions" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:CancellationConditionsServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Search">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/Search" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:SearchServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AccommodationDetail">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/AccommodationDetail" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:AccommodationDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="Trips">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/Trips" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:TripsServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="AffiliateDetail">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/AffiliateDetail" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="VoucherDetail">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/VoucherDetail" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:VoucherDetailServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="PaymentExtInformation">
+      <soap12:operation soapAction="http://www.interhome.com/webservice/PaymentExtInformation" style="document"/>
+      <wsdl:input>
+        <soap12:body use="literal"/>
+        <soap12:header message="tns:PaymentExtInformationServiceAuthHeader" part="ServiceAuthHeader" use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="WebService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Interhome WebService</wsdl:documentation>
+    <wsdl:port name="WebServiceSoap" binding="tns:WebServiceSoap">
+      <soap:address location="https://webservices.interhome.com/quality/partnerV3/WebService.asmx"/>
+    </wsdl:port>
+    <wsdl:port name="WebServiceSoap12" binding="tns:WebServiceSoap12">
+      <soap12:address location="https://webservices.interhome.com/quality/partnerV3/WebService.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
