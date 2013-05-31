@@ -1,3 +1,5 @@
+require 'logging'
+
 require 'wasabi/version'
 require 'wasabi/errors'
 require 'wasabi/document'
