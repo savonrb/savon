@@ -1,7 +1,7 @@
 module SpecSupport
 
-  def call_and_fail_gracefully(client, *args)
-    client.call(*args)
+  def fail_gracefully
+    yield
   rescue Savon::SOAPFault => e
     pending e.message
   end

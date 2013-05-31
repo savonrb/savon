@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- http://www.ibm.com/developerworks/webservices/library/ws-tip-namespace/index.html -->
+<definitions
+    targetNamespace="http://apiNamespace.com"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:tns="http://apiNamespace.com"
+    xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <schema
+        targetNamespace="http://refNamespace.com"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:tns="http://refNamespace.com">
+      <element name="RefDataElem" type="int"/>
+    </schema>
+    <schema
+        targetNamespace="http://dataNamespace.com"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:ref="http://refNamespace.com"
+        xmlns:tns="http://dataNamespace.com"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://refNamespace.com"/>
+      <complexType name="Data">
+        <sequence>
+          <element name="data1" type="int"/>
+          <element name="data2" type="int"/>
+        </sequence>
+      </complexType>
+      <element name="DataElem" nillable="true" type="tns:Data"/>
+      <complexType name="Data2">
+        <sequence>
+          <element ref="ref:RefDataElem"/>
+        </sequence>
+      </complexType>
+    </schema>
+    <schema
+        targetNamespace="http://apiNamespace.com"
+        xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:data="http://dataNamespace.com"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://dataNamespace.com"/>
+      <element name="op1">
+        <complexType>
+          <sequence>
+            <element name="in" type="data:Data"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="op1Response">
+        <complexType>
+          <sequence>
+            <element name="op1Return" type="data:Data"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="op2">
+        <complexType>
+          <sequence>
+            <element name="in" type="data:Data"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="op2Response">
+        <complexType>
+          <sequence>
+            <element name="op2Return" type="data:Data"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="op3">
+        <complexType>
+          <sequence>
+            <element ref="data:DataElem"/>
+            <element name="in2" type="data:Data2"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="op3Response">
+        <complexType>
+          <sequence>
+            <element name="op3Return" type="data:Data2"/>
+          </sequence>
+        </complexType>
+      </element>
+    </schema>
+  </types>
+  <message name="op1Request">
+    <part element="tns:op1" name="parameters"/>
+  </message>
+  <message name="op1Response">
+    <part element="tns:op1Response" name="parameters"/>
+  </message>
+  <message name="op2Request">
+    <part element="tns:op2" name="parameters"/>
+  </message>
+  <message name="op2Response">
+    <part element="tns:op2Response" name="parameters"/>
+  </message>
+  <message name="op3Request">
+    <part element="tns:op3" name="parameters"/>
+  </message>
+  <message name="op3Response">
+    <part element="tns:op3Response" name="parameters"/>
+  </message>
+  <portType name="Sample">
+    <operation name="op1">
+      <input message="tns:op1Request"/>
+      <output message="tns:op1Response"/>
+    </operation>
+    <operation name="op2">
+      <input message="tns:op2Request"/>
+      <output message="tns:op2Response"/>
+    </operation>
+    <operation name="op3">
+      <input message="tns:op3Request"/>
+      <output message="tns:op3Response"/>
+    </operation>
+  </portType>
+  <binding name="SampleSoapBinding" type="tns:Sample">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="op1">
+      <wsdlsoap:operation soapAction=""/>
+      <input>
+        <wsdlsoap:body namespace="http://apiNamespace.com" use="literal"/>
+      </input>
+      <output>
+        <wsdlsoap:body namespace="http://apiNamespace.com" use="literal"/>
+      </output>
+    </operation>
+    <operation name="op2">
+      <wsdlsoap:operation soapAction=""/>
+      <input>
+        <wsdlsoap:body namespace="http://op2Namespace.com" use="literal"/>
+      </input>
+      <output>
+        <wsdlsoap:body namespace="http://op2Namespace.com" use="literal"/>
+      </output>
+    </operation>
+    <operation name="op3">
+      <wsdlsoap:operation soapAction=""/>
+      <input>
+        <wsdlsoap:body use="literal"/>
+      </input>
+      <output>
+        <wsdlsoap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="SampleService">
+    <port binding="tns:SampleSoapBinding" name="Sample">
+      <wsdlsoap:address location="http://localhost:9080/Wrapped/services/Sample"/>
+    </port>
+  </service>
+</definitions>
