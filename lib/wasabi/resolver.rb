@@ -19,7 +19,11 @@ class Wasabi
     private
 
     def load_from_remote(location)
-      @http.get(location)
+      if @http
+        @http.get(location)
+      else
+        raise Error, "HTTP adapter required to resolve #{location.inspect}"
+      end
     end
 
     def load_from_disc(location)
