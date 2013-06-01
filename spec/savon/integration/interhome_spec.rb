@@ -4,16 +4,16 @@ describe 'Integration with Interhome' do
 
   subject(:client) { Savon.new fixture('wsdl/interhome') }
 
-  let(:service) { :WebService }
-  let(:port)    { :WebServiceSoap }
+  let(:service_name) { :WebService }
+  let(:port_name)    { :WebServiceSoap }
 
-  it 'skips optional elements in the request' do
-    operation = client.operation(service, port, :Availability)
+  it 'creates an example request including optional elements' do
+    operation = client.operation(service_name, port_name, :Availability)
 
     expect(operation.example_request).to eq(
       Availability: {
 
-        # Notice that these are optional.
+        # These are optional.
         inputValue: {
           AccommodationCode: 'string',
           CheckIn: 'string',
@@ -22,6 +22,10 @@ describe 'Integration with Interhome' do
 
       }
     )
+  end
+
+  it 'skips optional elements in the request' do
+    operation = client.operation(service_name, port_name, :Availability)
 
     expect(
       Nokogiri.XML operation.build(

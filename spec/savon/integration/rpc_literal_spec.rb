@@ -1,14 +1,14 @@
 require 'spec_helper'
 
-describe 'Integration with rpc_literal.xml' do
+describe 'Integration with an RPC/Literal example' do
 
   subject(:client) { Savon.new fixture('wsdl/rpc_literal') }
 
-  let(:service) { :SampleService }
-  let(:port)    { :Sample }
+  let(:service_name) { :SampleService }
+  let(:port_name)    { :Sample }
 
   it 'works with op1' do
-    op1 = client.operation(service, port, :op1)
+    op1 = client.operation(service_name, port_name, :op1)
 
     # Check the example request.
     expect(op1.example_request).to eq(
@@ -50,7 +50,7 @@ describe 'Integration with rpc_literal.xml' do
   end
 
   it 'works with op3' do
-    op3 = client.operation(service, port, :op3)
+    op3 = client.operation(service_name, port_name, :op3)
 
     # Check the example request.
     expect(op3.example_request).to eq(

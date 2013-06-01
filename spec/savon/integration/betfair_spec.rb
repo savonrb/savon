@@ -1,19 +1,20 @@
 require 'spec_helper'
 
-describe 'Integration with betfair.xml' do
+describe 'Integration with Betfair' do
 
   subject(:client) { Savon.new fixture('wsdl/betfair') }
 
-  it 'creates a proper example request for messages with Arrays' do
-    service = port = :BFExchangeService
-    operation = client.operation(service, port, :getMUBetsLite)
+  let(:service_name) { :BFExchangeService }
+  let(:port_name)    { :BFExchangeService }
 
-    # Check the example request.
+  it 'creates a proper example request for messages with Arrays' do
+    operation = client.operation(service_name, port_name, :getMUBetsLite)
+
     expect(operation.example_request).to eq(
       getMUBetsLite: {
         request: {
 
-          # This is an extension.
+          # This is an extension
           header: {
             clientStamp: 'long',
             sessionToken: 'string'
@@ -23,7 +24,7 @@ describe 'Integration with betfair.xml' do
           marketId: 'int',
           betIds: {
 
-            # This is an Array of simpleTypes.
+            # This is an Array of simpleTypes
             betId: ['long']
 
           },
@@ -36,11 +37,13 @@ describe 'Integration with betfair.xml' do
         }
       }
     )
+  end
 
+  it 'builds a request for extensions and Arrays' do
+    operation = client.operation(service_name, port_name, :getMUBetsLite)
     datetime_value = (Time.now - 365).xmlschema
 
-    # Build a raw request.
-    actual = Nokogiri.XML operation.build(
+    request = Nokogiri.XML operation.build(
       message: {
         getMUBetsLite: {
           request: {
@@ -64,7 +67,6 @@ describe 'Integration with betfair.xml' do
       }
     )
 
-    # The expected request.
     expected = Nokogiri.XML(%{
       <env:Envelope
           xmlns:lol0="http://www.betfair.com/publicapi/v5/BFExchangeService/"
@@ -97,7 +99,7 @@ describe 'Integration with betfair.xml' do
       </env:Envelope>
     })
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(request).to be_equivalent_to(expected).respecting_element_order
   end
 
 end

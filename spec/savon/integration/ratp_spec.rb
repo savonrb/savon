@@ -1,17 +1,25 @@
  require 'spec_helper'
 
-describe 'Integration with ratp.xml' do
+describe 'Integration with RATP' do
 
   subject(:client) { Savon.new fixture('wsdl/ratp') }
 
-  let(:service) { :Wsiv }
-  let(:port)    { :WsivSOAP11port_http }
+  let(:service_name) { :Wsiv }
+  let(:port_name)    { :WsivSOAP11port_http }
 
-  it 'retrieves information about a specific station' do
-    operation = client.operation(service, port, :getStations)
+  it 'builds a request' do
+    operation = client.operation(service_name, port_name, :getStations)
 
-    message = { getStations: { station: { id: 1975 }, limit: 1 } }
-    actual = Nokogiri.XML operation.build(message: message)
+    request = Nokogiri.XML operation.build(
+      message: {
+        getStations: {
+          station: {
+            id: 1975
+          },
+          limit: 1
+        }
+      }
+    )
 
     # The expected request.
     expected = Nokogiri.XML(%{
@@ -31,7 +39,7 @@ describe 'Integration with ratp.xml' do
       </env:Envelope>
     })
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(request).to be_equivalent_to(expected).respecting_element_order
   end
 
 end

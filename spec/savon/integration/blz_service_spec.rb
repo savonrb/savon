@@ -1,26 +1,33 @@
  require 'spec_helper'
 
-describe 'Integration with blz_service.xml' do
+describe 'Integration with BLZService' do
 
   subject(:client) { Savon.new fixture('wsdl/blz_service') }
 
-  let(:service) { :BLZService }
-  let(:port)    { :BLZServiceSOAP11port_http }
+  let(:service_name) { :BLZService }
+  let(:port_name)    { :BLZServiceSOAP11port_http }
 
-  it 'works just fine' do
-    operation = client.operation(service, port, :getBank)
+  it 'creates an example request' do
+    operation = client.operation(service_name, port_name, :getBank)
 
-    # Check the example request.
     expect(operation.example_request).to eq(
       getBank: {
         blz: 'string'
       }
     )
+  end
 
-    # Build a raw request.
-    actual = Nokogiri.XML operation.build(message: { getBank: { blz: 70070010 } })
+  it 'builds a request' do
+    operation = client.operation(service_name, port_name, :getBank)
 
-    # The expected request.
+    request = Nokogiri.XML operation.build(
+      message: {
+        getBank: {
+          blz: 70070010
+        }
+      }
+    )
+
     expected = Nokogiri.XML(%{
       <env:Envelope
           xmlns:lol0="http://thomas-bayer.com/blz/"
@@ -34,7 +41,7 @@ describe 'Integration with blz_service.xml' do
       </env:Envelope>
     })
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(request).to be_equivalent_to(expected).respecting_element_order
   end
 
 end

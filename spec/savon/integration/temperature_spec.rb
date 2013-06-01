@@ -1,16 +1,15 @@
  require 'spec_helper'
 
-describe 'Integration with temperature.xml' do
+describe 'Integration with Temperature service' do
 
   subject(:client) { Savon.new fixture('wsdl/temperature') }
 
-  let(:service) { :ConvertTemperature }
-  let(:port)    { :ConvertTemperatureSoap12 }
+  let(:service_name) { :ConvertTemperature }
+  let(:port_name)    { :ConvertTemperatureSoap12 }
 
-  it 'converts 30 degrees celsius to 86 degrees fahrenheit' do
-    operation = client.operation(service, port, :ConvertTemp)
+  it 'creates an example request' do
+    operation = client.operation(service_name, port_name, :ConvertTemp)
 
-    # Check the example request.
     expect(operation.example_request).to eq(
       ConvertTemp: {
         Temperature: 'double',
@@ -18,8 +17,11 @@ describe 'Integration with temperature.xml' do
         ToUnit: 'string'
       }
     )
+  end
 
-    # Actual message to send.
+  it 'builds a request' do
+    operation = client.operation(service_name, port_name, :ConvertTemp)
+
     # For the corrent values to pass for :from_unit and :to_unit, I searched the WSDL for
     # the 'FromUnit' type which is a 'TemperatureUnit' enumeration that looks like this:
     #
@@ -42,10 +44,8 @@ describe 'Integration with temperature.xml' do
       }
     }
 
-    # Build a raw request.
-    actual = Nokogiri.XML operation.build(message: message)
+    request = Nokogiri.XML operation.build(message: message)
 
-    # The expected request.
     expected = Nokogiri.XML(%{
       <env:Envelope
           xmlns:lol0="http://www.webserviceX.NET/"
@@ -61,7 +61,7 @@ describe 'Integration with temperature.xml' do
       </env:Envelope>
     })
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(request).to be_equivalent_to(expected).respecting_element_order
   end
 
 end
