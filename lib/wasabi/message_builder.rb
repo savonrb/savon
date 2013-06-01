@@ -73,7 +73,7 @@ class Wasabi
       @namespace = attributes[:namespace]
       @form = attributes[:form]
       @singular = attributes[:singular]
-      @recursive = attributes[:recursive] || false
+      @recursive = attributes[:recursive]
     end
 
     attr_reader :parent, :name, :type, :namespace, :form
@@ -162,14 +162,14 @@ class Wasabi
       inflection = { name: @name }
 
       if simple_type?
-        inflection[:type] = 'type'
+        inflection[:key] = 'type'
         inflection[:value] = base_type
       else
-        inflection[:type] = 'children'
+        inflection[:key] = 'children'
         inflection[:value] = children.map(&:name).join(', ')
       end
 
-      %(<Element name="%{name}" %{type}="%{value}" />) % inflection
+      %(<Element name="%{name}" %{key}="%{value}" />) % inflection
     end
 
     private
