@@ -101,6 +101,10 @@ class Wasabi
 
       alias_method :elements, :collect_child_elements
 
+      def id
+        [namespace, name].join(':')
+      end
+
     end
 
     class Extension < BaseType

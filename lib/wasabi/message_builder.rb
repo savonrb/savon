@@ -1,6 +1,115 @@
-class Wasabi
+require 'wasabi/element'
 
-  module SchemaFinder
+class Wasabi
+  class MessageBuilder
+
+    def initialize(wsdl)
+      @wsdl = wsdl
+    end
+
+    def build(parts)
+      parts.map { |part|
+        case
+        when part[:type]    then build_type_element(part)
+        when part[:element] then build_element(part)
+        end
+      }.compact
+    end
+
+    private
+
+    # Private: Expects a part with a @type attribute, resolves the type
+    # and returns an Element with that type.
+    def build_type_element(part)
+      type = find_type part[:type], part[:namespaces]
+
+      element = Element.new
+      element.name = part[:name]
+      element.form = 'unqualified'
+
+      handle_type(element, type)
+      element
+    end
+
+    # Private: Expects a part with an @element attribute, resolves the element
+    # and its type and returns an Element with that type.
+    def build_element(part)
+      local, namespace = expand_qname(part[:element], part[:namespaces])
+      schema = @wsdl.schemas.find_by_namespace(namespace)
+      raise "Unable to find schema for #{namespace.inspect}" unless schema
+
+      xs_element = schema.elements.fetch(local)
+      type = find_type_for_element(xs_element)
+
+      element = Element.new
+      element.name = xs_element.name
+      element.form = 'qualified'
+      element.namespace = namespace
+
+      handle_type(element, type)
+      element
+    end
+
+    def handle_type(element, type)
+      case type
+      when Type::ComplexType
+        element.complex_type_id = type.id
+        element.children = child_elements(element, type)
+      when Type::SimpleType
+        element.base_type = type.base
+      when String
+        element.base_type = type
+      end
+    end
+
+    def child_elements(parent, type)
+      type.elements.map { |child_element|
+        el = Element.new
+        el.parent = parent
+
+        if child_element.ref
+          child_element = find_element(child_element.ref, child_element.namespaces)
+          el.form = 'qualified'
+        else
+          el.form = child_element.form
+        end
+
+        el.name = child_element.name
+        el.namespace = child_element.namespace
+
+        # prevent recursion
+        if recursive_child_definition? parent, child_element
+          el.recursive_type = child_element.type
+        else
+          el.recursive = false
+          type = find_type_for_element(child_element)
+          handle_type(el, type)
+        end
+
+        max_occurs = child_element['maxOccurs'].to_s
+        el.singular = max_occurs.empty? || max_occurs == '1'
+
+        el
+      }
+    end
+
+    # Private: Accepts an Element and figures out if its type is already defined in this
+    # elements (self) ancestors. Used to prevent recursive child element definitions.
+    def recursive_child_definition?(parent, element)
+      return false unless element.type
+
+      local, namespace = expand_qname(element.type, element.namespaces)
+      id = [namespace, local].join(':')
+
+      current_parent = parent
+
+      while current_parent
+        return true if current_parent.complex_type_id == id
+        current_parent = current_parent.parent
+      end
+
+      false
+    end
 
     def find_type_for_element(element)
       if element.type
@@ -57,189 +166,6 @@ class Wasabi
       namespace = namespaces["xmlns:#{nsid}"]
 
       [local, namespace]
-    end
-
-  end
-
-  class Element
-    include SchemaFinder
-
-    def initialize(wsdl, parent, attributes)
-      @wsdl = wsdl
-      @parent = parent
-
-      @name = attributes[:name]
-      @type = attributes[:type]
-      @namespace = attributes[:namespace]
-      @form = attributes[:form]
-      @singular = attributes[:singular]
-      @recursive = attributes[:recursive]
-    end
-
-    attr_reader :parent, :name, :type, :namespace, :form
-
-    def recursive?
-      @recursive
-    end
-
-    def singular?
-      @singular
-    end
-
-    def simple_type?
-      !recursive? && !complex_type?
-    end
-
-    # Public: Returns the base type for a simpleType Element.
-    def base_type
-      if @type.kind_of? Type::SimpleType
-        @type.base
-      elsif @type.kind_of? String
-        @type
-      end
-    end
-
-    def complex_type?
-      @type.kind_of? Type::ComplexType
-    end
-
-    # Public: Returns the child Elements for a complexType Element.
-    def children
-      @type.elements.map { |element|
-
-        if element.ref
-          element = find_element(element.ref, element.namespaces)
-          form = 'qualified'
-        else
-          form = element.form
-        end
-
-        name = element.name
-        namespace = element.namespace
-
-        # prevent recursion
-        if recursive_child_definition? element
-          recursive = true
-          type = element.type
-        else
-          recursive = false
-          type = find_type_for_element(element)
-        end
-
-        max_occurs = element['maxOccurs'].to_s
-        singular = max_occurs.empty? || max_occurs == '1'
-
-        Element.new(@wsdl, self, name: name, type: type, namespace: namespace, form: form,
-                                 singular: singular, recursive: recursive)
-      }
-    end
-
-    def to_a(memo = [], stack = [])
-      new_stack = stack + [name]
-      attributes = { namespace: namespace, form: form, singular: singular? }
-
-      if simple_type?
-        attributes[:type] = base_type
-        memo << [new_stack, attributes]
-
-      elsif complex_type?
-        memo << [new_stack, attributes]
-
-        children.each do |child|
-          child.to_a(memo, new_stack)
-        end
-
-      elsif recursive?
-        attributes[:recursive_type] = type
-        memo << [new_stack, attributes]
-
-      end
-
-      memo
-    end
-
-    def inspect
-      inflection = { name: @name }
-
-      if simple_type?
-        inflection[:key] = 'type'
-        inflection[:value] = base_type
-      else
-        inflection[:key] = 'children'
-        inflection[:value] = children.map(&:name).join(', ')
-      end
-
-      %(<Element name="%{name}" %{key}="%{value}" />) % inflection
-    end
-
-    private
-
-    # Private: Accepts an Element and figures out if its type is already defined in this
-    # elements (self) ancestors. Used to prevent recursive child element definitions.
-    def recursive_child_definition?(element)
-      return false unless element.type
-
-      local, namespace = expand_qname(element.type, element.namespaces)
-      current_parent = parent
-
-      while current_parent
-        if current_parent.type.name == local &&
-          current_parent.type.namespace == namespace
-
-          return true
-        end
-
-        current_parent = current_parent.parent
-      end
-
-      false
-    end
-
-  end
-
-  class MessageBuilder
-    include SchemaFinder
-
-    def initialize(operation, wsdl)
-      @operation = operation
-      @wsdl = wsdl
-    end
-
-    def build(parts)
-      parts.map { |part|
-        case
-        when part[:type]    then build_type_element(part)
-        when part[:element] then build_element(part)
-        end
-      }.compact
-    end
-
-    private
-
-    # Private: Expects a part with a @type attribute, resolves the type
-    # and returns an Element with that type.
-    def build_type_element(part)
-      name = part[:name]
-      type = find_type part[:type], part[:namespaces]
-      form = 'unqualified'
-
-      Element.new(@wsdl, nil, name: name, type: type, form: form, singular: true)
-    end
-
-    # Private: Expects a part with an @element attribute, resolves the element
-    # and its type and returns an Element with that type.
-    def build_element(part)
-      local, namespace = expand_qname(part[:element], part[:namespaces])
-      schema = @wsdl.schemas.find_by_namespace(namespace)
-      raise "Unable to find schema for #{namespace.inspect}" unless schema
-
-      element = schema.elements.fetch(local)
-
-      name = element.name
-      type = find_type_for_element(element)
-      form = 'qualified'
-
-      Element.new(@wsdl, nil, name: name, type: type, namespace: namespace, form: form, singular: true)
     end
 
   end

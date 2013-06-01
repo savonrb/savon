@@ -30,8 +30,7 @@ class Wasabi
     end
 
     def input
-      parts = parts_for_input_output @port_type_operation.input
-      MessageBuilder.new(self, @wsdl).build(parts)
+      @input ||= build_message(@port_type_operation.input)
     end
 
     def output_style
@@ -39,15 +38,16 @@ class Wasabi
     end
 
     def output
-      parts = parts_for_input_output @port_type_operation.output
-      MessageBuilder.new(self, @wsdl).build(parts)
+      @output ||= build_message(@port_type_operation.output)
     end
 
     private
 
-    def parts_for_input_output(input_output)
-      message = find_message input_output[:message]
-      message.parts
+    def build_message(input_output)
+      message_name = input_output[:message]
+      parts = find_message(message_name).parts
+
+      MessageBuilder.new(@wsdl).build(parts)
     end
 
     def find_message(qname)
