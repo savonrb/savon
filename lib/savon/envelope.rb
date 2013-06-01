@@ -37,10 +37,6 @@ class Savon
       "lol#{@nsid_counter}"
     end
 
-    #def build_wrapper
-      #namespace
-    #end
-
     def build_envelope(body)
       builder = Builder::XmlMarkup.new(indent: 2)
 
