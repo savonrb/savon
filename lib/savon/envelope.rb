@@ -79,8 +79,6 @@ class Savon
       end
 
       namespaces
-
-      namespaces
     end
 
   end
