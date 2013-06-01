@@ -8,7 +8,8 @@ require 'savon/httpclient'
 
 class Savon
 
-  def self.http_client
+  # Public: The default HTTP adapter to use.
+  def self.http_adapter
     HTTPClient
   end
 
@@ -17,34 +18,41 @@ class Savon
     @wsdl = Wasabi.new(wsdl, @http)
   end
 
+  # Public: Returns the Wasabi instance.
   attr_reader :wsdl
 
+  # Public: Returns the HTTP adapter‘s client instance.
   def http
     @http.client
   end
 
+  # Public: Returns the services and ports defined by the WSDL.
   def services
     @wsdl.services
   end
 
-  def operations(service, port)
-    @wsdl.operations(service.to_s, port.to_s).keys.sort
+  # Public: Returns an Array of operations for a service and port.
+  def operations(service_name, port_name)
+    @wsdl.operations(service_name.to_s, port_name.to_s).keys.sort
   end
 
-  # TODO: check if the operation exists
-  def operation(service, port, operation)
-    op = @wsdl.operation(service.to_s, port.to_s, operation.to_s)
-    Operation.new(op, @wsdl, @http)
+  # Public: Returns an Operation by service, port and operation name.
+  def operation(service_name, port_name, operation_name)
+    operation = @wsdl.operation(service_name.to_s, port_name.to_s, operation_name.to_s)
+    Operation.new(operation, @wsdl, @http)
   end
 
-  def call(service, port, operation, options = {})
-    operation(service, port, operation).call(options)
+  # Public: Calls an operation by service, port and operation name
+  # and returns a Response object. Also accepts a Hash of options.
+  def call(service_name, port_name, operation_name, options = {})
+    operation(service_name, port_name, operation_name).call(options)
   end
 
   private
 
+  # Private: Returns a new instance of the HTTP adapter to use.
   def new_http_client
-    self.class.http_client.new
+    self.class.http_adapter.new
   end
 
 end
