@@ -19,11 +19,6 @@ class Savon
       @documents.service_name
     end
 
-    # XXX: check if we can get rid of this method.
-    def target_namespace
-      @documents.target_namespace
-    end
-
     # Public: Returns a Hash of services and ports defined by the WSDL.
     def services
       @services ||= begin

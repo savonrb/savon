@@ -21,14 +21,6 @@ class Savon
         @service_name ||= first.service_name
       end
 
-      def target_namespace
-        @target_namespace ||= first.target_namespace
-      end
-
-      def target_namespace
-        @target_namespace ||= first.target_namespace
-      end
-
       def namespaces
         @namespaces ||= inject({}) { |memo, document| memo.merge(document.namespaces) }
       end
