@@ -6,15 +6,20 @@ require 'savon/importer'
 class Savon
   class WSDL
 
-    def initialize(wsdl, http = nil)
+    def initialize(wsdl, http)
       resolver = Resolver.new(http)
       importer = Importer.new(resolver, self)
 
       @documents, @schemas = importer.import(wsdl)
     end
 
-    attr_reader :documents, :schemas
+    # Public: Returns the DocumenCollection.
+    attr_reader :documents
 
+    # Public: Returns the SchemaCollection.
+    attr_reader :schemas
+
+    # Public: Returns the name of the service.
     def service_name
       @documents.service_name
     end
