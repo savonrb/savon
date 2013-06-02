@@ -10,7 +10,7 @@ describe 'Integration with BLZService' do
   it 'creates an example request' do
     operation = client.operation(service_name, port_name, :getBank)
 
-    expect(operation.example_request).to eq(
+    expect(operation.example_body).to eq(
       getBank: {
         blz: 'string'
       }
@@ -20,13 +20,11 @@ describe 'Integration with BLZService' do
   it 'builds a request' do
     operation = client.operation(service_name, port_name, :getBank)
 
-    request = Nokogiri.XML operation.build(
-      message: {
-        getBank: {
-          blz: 70070010
-        }
+    operation.body = {
+      getBank: {
+        blz: 70070010
       }
-    )
+    }
 
     expected = Nokogiri.XML(%{
       <env:Envelope
@@ -41,7 +39,8 @@ describe 'Integration with BLZService' do
       </env:Envelope>
     })
 
-    expect(request).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML operation.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

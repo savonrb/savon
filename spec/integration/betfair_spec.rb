@@ -85,7 +85,7 @@ describe 'Integration with Betfair' do
   it 'creates a proper example request for messages with Arrays' do
     operation = client.operation(service_name, port_name, :getMUBetsLite)
 
-    expect(operation.example_request).to eq(
+    expect(operation.example_body).to eq(
       getMUBetsLite: {
         request: {
 
@@ -118,29 +118,27 @@ describe 'Integration with Betfair' do
     operation = client.operation(service_name, port_name, :getMUBetsLite)
     datetime_value = (Time.now - 365).xmlschema
 
-    request = Nokogiri.XML operation.build(
-      message: {
-        getMUBetsLite: {
-          request: {
-            header: {
-              clientStamp: 'test',
-              sessionToken: 'token'
-            },
-            betStatus: 'U',
-            marketId: 1,
-            betIds: {
-              betId: [1, 2, 3]
-            },
-            orderBy: 'NONE',
-            sortOrder: 'DESC',
-            recordCount: 10,
-            startRecord: 1,
-            matchedSince: datetime_value,
-            excludeLastSecond: true
-          }
+    operation.body = {
+      getMUBetsLite: {
+        request: {
+          header: {
+            clientStamp: 'test',
+            sessionToken: 'token'
+          },
+          betStatus: 'U',
+          marketId: 1,
+          betIds: {
+            betId: [1, 2, 3]
+          },
+          orderBy: 'NONE',
+          sortOrder: 'DESC',
+          recordCount: 10,
+          startRecord: 1,
+          matchedSince: datetime_value,
+          excludeLastSecond: true
         }
       }
-    )
+    }
 
     expected = Nokogiri.XML(%{
       <env:Envelope
@@ -174,7 +172,8 @@ describe 'Integration with Betfair' do
       </env:Envelope>
     })
 
-    expect(request).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML operation.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

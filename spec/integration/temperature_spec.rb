@@ -10,7 +10,7 @@ describe 'Integration with Temperature service' do
   it 'creates an example request' do
     operation = client.operation(service_name, port_name, :ConvertTemp)
 
-    expect(operation.example_request).to eq(
+    expect(operation.example_body).to eq(
       ConvertTemp: {
         Temperature: 'double',
         FromUnit: 'string',
@@ -36,15 +36,13 @@ describe 'Integration with Temperature service' do
     # </s:simpleType>
     #
     # TODO: somehow expose the enumeration options through the example request.
-    message = {
+    operation.body = {
       ConvertTemp: {
         Temperature: 30,
         FromUnit: 'degreeCelsius',
         ToUnit: 'degreeFahrenheit'
       }
     }
-
-    request = Nokogiri.XML operation.build(message: message)
 
     expected = Nokogiri.XML(%{
       <env:Envelope
@@ -61,7 +59,8 @@ describe 'Integration with Temperature service' do
       </env:Envelope>
     })
 
-    expect(request).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML operation.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

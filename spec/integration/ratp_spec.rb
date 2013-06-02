@@ -145,18 +145,15 @@ describe 'Integration with RATP' do
   it 'builds a request' do
     operation = client.operation(service_name, port_name, :getStations)
 
-    request = Nokogiri.XML operation.build(
-      message: {
-        getStations: {
-          station: {
-            id: 1975
-          },
-          limit: 1
-        }
+    operation.body = {
+      getStations: {
+        station: {
+          id: 1975
+        },
+        limit: 1
       }
-    )
+    }
 
-    # The expected request.
     expected = Nokogiri.XML(%{
       <env:Envelope
           xmlns:lol0="http://wsiv.ratp.fr"
@@ -174,7 +171,8 @@ describe 'Integration with RATP' do
       </env:Envelope>
     })
 
-    expect(request).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML operation.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

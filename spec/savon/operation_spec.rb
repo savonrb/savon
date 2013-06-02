@@ -79,7 +79,7 @@ describe Savon::Operation do
 
   describe '#example_request' do
     it 'returns an example request Hash following Savon‘s conventions' do
-      expect(operation.example_request).to eq(
+      expect(operation.example_body).to eq(
         ConvertTemp: {
           Temperature: 'double',
           FromUnit: 'string',
@@ -91,15 +91,13 @@ describe Savon::Operation do
 
   describe '#build' do
     it 'returns an example request Hash following Savon‘s conventions' do
-      request = operation.build(
-        message: {
-          ConvertTemp: {
-            Temperature: 30,
-            FromUnit: 'degreeCelsius',
-            ToUnit: 'degreeFahrenheit'
-          }
+      operation.body = {
+        ConvertTemp: {
+          Temperature: 30,
+          FromUnit: 'degreeCelsius',
+          ToUnit: 'degreeFahrenheit'
         }
-      )
+      }
 
       expected = Nokogiri.XML(%{
         <env:Envelope
@@ -116,7 +114,8 @@ describe Savon::Operation do
         </env:Envelope>
       })
 
-      expect(request).to be_equivalent_to(expected).respecting_element_order
+      expect(operation.build).
+        to be_equivalent_to(expected).respecting_element_order
     end
   end
 
@@ -124,15 +123,15 @@ describe Savon::Operation do
     it 'calls the operation with a Hash of options and returns a Response' do
       http_mock.fake_request('http://www.webservicex.net/ConvertTemperature.asmx')
 
-      response = operation.call(
-        message: {
-          ConvertTemp: {
-            Temperature: 30,
-            FromUnit: 'degreeCelsius',
-            ToUnit: 'degreeFahrenheit'
-          }
+      operation.body = {
+        ConvertTemp: {
+          Temperature: 30,
+          FromUnit: 'degreeCelsius',
+          ToUnit: 'degreeFahrenheit'
         }
-      )
+      }
+
+      response = operation.call
 
       expect(response).to be_a(Savon::Response)
     end

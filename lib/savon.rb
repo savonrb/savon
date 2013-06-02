@@ -48,12 +48,6 @@ class Savon
     Operation.new(operation, @wsdl, @http)
   end
 
-  # Public: Calls an operation by service, port and operation name
-  # and returns a Response object. Also accepts a Hash of options.
-  def call(service_name, port_name, operation_name, options = {})
-    operation(service_name, port_name, operation_name).call(options)
-  end
-
   private
 
   # Private: Returns a new instance of the HTTP adapter to use.

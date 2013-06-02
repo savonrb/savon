@@ -49,21 +49,22 @@ class Savon
     # Public: Sets the Hash of HTTP headers.
     attr_writer :headers
 
-    # Public: Create an example request Hash.
-    def example_request
+    # Public: Sets the request body Hash.
+    attr_accessor :body
+
+    # Public: Create an example request body Hash.
+    def example_body
       ExampleMessage.new(@operation.input).to_hash
     end
 
     # Public: Build the request XML for this operation.
-    def build(options = {})
-      Envelope.new(@operation, options).to_s
+    def build
+      Envelope.new(@operation, body).to_s
     end
 
     # Public: Call the operation.
-    def call(options = {})
-      body = build(options)
-
-      raw_response = @http.post(endpoint, headers, body)
+    def call
+      raw_response = @http.post(endpoint, headers, build)
       Response.new(raw_response)
     end
 

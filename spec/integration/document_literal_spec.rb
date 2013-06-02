@@ -10,8 +10,7 @@ describe 'Integration with a Document/Literal example' do
   it 'works with op1' do
     op1 = client.operation(service_name, port_name, :op1)
 
-    # Check the example request.
-    expect(op1.example_request).to eq(
+    expect(op1.example_body).to eq(
       op1: {
         in: {
           data1: 'int',
@@ -20,17 +19,14 @@ describe 'Integration with a Document/Literal example' do
       }
     )
 
-    # Build the request.
-    actual = Nokogiri.XML op1.build(
-      message: {
-        op1: {
-          in: {
-            data1: 24,
-            data2: 36
-          }
+    op1.body = {
+      op1: {
+        in: {
+          data1: 24,
+          data2: 36
         }
       }
-    )
+    }
 
     # The expected request.
     expected = Nokogiri.XML('
@@ -49,14 +45,14 @@ describe 'Integration with a Document/Literal example' do
       </env:Envelope>
     ')
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML op1.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
   it 'works with op3' do
     op3 = client.operation(service_name, port_name, :op3)
 
-    # Check the example request.
-    expect(op3.example_request).to eq(
+    expect(op3.example_body).to eq(
       op3: {
         DataElem: {
           data1: 'int',
@@ -68,22 +64,18 @@ describe 'Integration with a Document/Literal example' do
       }
     )
 
-    # Build the request.
-    actual = Nokogiri.XML op3.build(
-      message: {
-        op3: {
-          DataElem: {
-            data1: 64,
-            data2: 128
-          },
-          in2: {
-            RefDataElem: 3
-          }
+    op3.body = {
+      op3: {
+        DataElem: {
+          data1: 64,
+          data2: 128
+        },
+        in2: {
+          RefDataElem: 3
         }
       }
-    )
+    }
 
-    # The expected request.
     expected = Nokogiri.XML('
       <env:Envelope
           xmlns:lol0="http://apiNamespace.com"
@@ -105,7 +97,8 @@ describe 'Integration with a Document/Literal example' do
       </env:Envelope>
     ')
 
-    expect(actual).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML op3.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

@@ -43,7 +43,7 @@ describe 'Integration with EmailVerification service' do
   it 'creates an example request' do
     operation = client.operation(service_name, port_name, :VerifyEmail)
 
-    expect(operation.example_request).to eq(
+    expect(operation.example_body).to eq(
       VerifyEmail: {
         email: 'string',
         LicenseKey: 'string'
@@ -54,14 +54,12 @@ describe 'Integration with EmailVerification service' do
   it 'builds a request' do
     operation = client.operation(service_name, port_name, :VerifyEmail)
 
-    request = Nokogiri.XML operation.build(
-      message: {
-        VerifyEmail: {
-          email: 'soap@example.com',
-          LicenseKey: '?'
-        }
+    operation.body = {
+      VerifyEmail: {
+        email: 'soap@example.com',
+        LicenseKey: '?'
       }
-    )
+    }
 
     expected = Nokogiri.XML(%{
       <env:Envelope
@@ -77,7 +75,8 @@ describe 'Integration with EmailVerification service' do
       </env:Envelope>
     })
 
-    expect(request).to be_equivalent_to(expected).respecting_element_order
+    expect(Nokogiri.XML operation.build).
+      to be_equivalent_to(expected).respecting_element_order
   end
 
 end

@@ -6,15 +6,15 @@ class Savon
 
     NSID = 'lol'
 
-    def initialize(operation, options = {})
+    def initialize(operation, body)
       @logger = Logging.logger[self]
 
       @operation = operation
-      @message = options[:message]
+      @body = body
 
-      unless @message
-        @logger.warn("No :message Hash given for the #{operation.name.inspect} operation.")
-        @message = {}
+      unless @body
+        @logger.warn("No request body Hash given for the #{operation.name.inspect} operation.")
+        @body = {}
       end
 
       @nsid_counter = -1
@@ -26,7 +26,7 @@ class Savon
     end
 
     def to_s
-      body = Body.new(self, @operation.input).build(@message)
+      body = Body.new(self, @operation.input).build(@body)
       body = build_rpc_wrapper(body) if rpc_call?
 
       build_envelope(body)

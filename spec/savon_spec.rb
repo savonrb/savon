@@ -109,20 +109,4 @@ describe Savon do
     end
   end
 
-  describe '#call' do
-    it 'calls an Operation by service, port and operation name plus options' do
-      http_mock.fake_request('https://fps.amazonaws.com')
-
-      options = {
-        message: {
-          Pay: { SenderTokenId: 1, RecipientTokenId: 2 }
-        }
-      }
-
-      response = client.call(service_name, port_name, operation_name, options)
-      expect(response).to be_a(Savon::Response)
-    end
-
-  end
-
 end
