@@ -67,7 +67,7 @@ class Savon
       Response.new(raw_response)
     end
 
-    # Public: Returns the input parts defined by Wasabi.
+    # Public: Returns the input parts.
     def input_parts
       @operation.input.inject([]) { |memo, part| memo + part.to_a }
     end

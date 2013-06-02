@@ -15,8 +15,8 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = s.name
 
+  # TODO: get rid of Nori.
   s.add_dependency 'nori',     '~> 2.2.0'
-  #s.add_dependency 'wasabi',   '~> 3.1.0'
 
   s.add_dependency 'nokogiri',   '>= 1.4.0'
   s.add_dependency 'builder',    '~> 2.1'

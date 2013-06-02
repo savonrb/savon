@@ -4,7 +4,7 @@ describe Savon::Operation do
 
   subject(:operation)  { Savon::Operation.new(wsdl_operation, wsdl, http_mock) }
 
-  let(:wsdl)           { Wasabi.new fixture('wsdl/temperature'), http_mock }
+  let(:wsdl)           { Savon::WSDL.new fixture('wsdl/temperature'), http_mock }
   let(:wsdl_operation) { wsdl.operation('ConvertTemperature', 'ConvertTemperatureSoap12', 'ConvertTemp') }
 
   describe '#endpoint' do

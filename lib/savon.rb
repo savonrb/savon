@@ -1,12 +1,18 @@
 require 'logging'
-require 'wasabi'
 
 require 'savon/version'
 require 'savon/errors'
+require 'savon/wsdl'
 require 'savon/operation'
 require 'savon/httpclient'
 
 class Savon
+
+  NS_XSD  = 'http://www.w3.org/2001/XMLSchema'
+  NS_WSDL = 'http://schemas.xmlsoap.org/wsdl/'
+
+  NS_SOAP_1_1 = 'http://schemas.xmlsoap.org/wsdl/soap/'
+  NS_SOAP_1_2 = 'http://schemas.xmlsoap.org/wsdl/soap12/'
 
   # Public: The default HTTP adapter to use.
   def self.http_adapter
@@ -15,7 +21,7 @@ class Savon
 
   def initialize(wsdl, http = nil)
     @http = http || new_http_client
-    @wsdl = Wasabi.new(wsdl, @http)
+    @wsdl = WSDL.new(wsdl, @http)
   end
 
   # Public: Returns the Wasabi instance.

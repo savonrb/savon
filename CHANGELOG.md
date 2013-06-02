@@ -1,6 +1,6 @@
 ## 3.0.0 (branch)
 
-* Removed support for Ruby 1.8!
+* This version requires Ruby 1.9.2 or higher. Ruby 1.8 is no longer supported!
 
 * Replaced the `Savon.client` factory method by changing the `Savon` module to a class
   and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
@@ -17,6 +17,9 @@
   extend based on the HTTPClient library.
 
 * Removed the `String#snakecase` core extension. One less "feature" to explain.
+
+* Imported Wasabi, as Savon shares a lot of code, fixtures and specs with it and we're
+  probably faster maintaing one project instead of two.
 
 
 ## master

@@ -1,0 +1,258 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator">
+   <xs:import schemaLocation="https://winteamservicestest.myteamsoftware.com/Services.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+   <xs:complexType name="Employee">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="AccrualTypeID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="BadgeID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="BenefitCategoryID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="BirthDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="City" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="ClassificationID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="ClockGroupID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="CompanyNumber" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="Deductions" nillable="true" type="tns:ArrayOfDeduction"/>
+         <xs:element minOccurs="0" name="EmailAddress" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="EmployeeNumber" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Gender" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="HireDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="LocationID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="MiddleName" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="NationalOriginID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="OtherInfo401KAmount" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="OtherInfo401KDateEligible" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfo401KDeductionType" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="OtherInfo401KParticipate" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoATM" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoDateFullTime" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoDirectDeposit" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleDependentInsurance" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleDependentInsuranceDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleHolidays" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleInsurance1" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleInsurance2" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleInsurance3" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleSick" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoEligibleVacation" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoI9ExpireDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoI9TypeID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="OtherInfoStaffEmployee" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenFri" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenFriFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenFriTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenMon" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenMonFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenMonTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSat" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSatFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSatTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSun" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSunFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenSunTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenThu" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenThuFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenThuTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenTue" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenTueFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenTueTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenWed" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenWedFrom" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="OtherInfoWhenWedTo" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="PayCheckDistributionID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="PayCheckFrequencyID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="PayInfoAcceptAltPayRates" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="PayInfoDateNextReview" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="PayInfoFTPT_ID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="PayInfoNotes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PayInfoOTMethodID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="PayInfoPayRate" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="PayInfoPrimaryCatDetailID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="PayInfoPrimaryJob" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PayInfoReasonID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="PayInfoTitleID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="PayInfoType" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="Phone1" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone1DescriptionID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="Phone1Extension" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone2" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone2DescriptionID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="Phone2Extension" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone3" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Phone3DescriptionID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="Phone3Extension" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PictureFilePath" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PortalGroupID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="PortalUserLevelID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="PrimaryJob" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Salutation" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="SecurityLevel" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="ServiceCreditDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="SocialSecurityNumber" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="State" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="StatusInfoReason" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="SupervisorID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoEIC" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="TaxInfoEICSpouse" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="TaxInfoEICType" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoFICAExempt" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="TaxInfoFederalAddWH" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoFederalAllowances" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoFederalStatusID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal1ADDWH" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal1Allowances" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal1ID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal1StatusID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal2AddWH" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal2Allowances" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal2ID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal2StatusID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal3AddWH" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal3Allowances" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal3ID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoLocal3StatusID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoMediCareExempt" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="TaxInfoStateAddWH" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoStateAddWHStateID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoStateAllowances" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="TaxInfoStateID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TaxInfoStateStatusID" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="TaxInfoStateUCID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="TypeID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UseJobLunchParameters" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="UserCodeL_1" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_10" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_11" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_12" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_13" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_14" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_15" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_16" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_17" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_18" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_19" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_2" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_20" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_21" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_22" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_23" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_24" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_25" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_26" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_3" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_4" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_5" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_6" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_7" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_8" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeL_9" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="UserCodeT_1" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_10" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_11" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_12" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_13" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_14" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_15" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_16" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_17" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_18" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_19" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_2" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_20" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_21" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_22" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_23" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_24" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_25" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_26" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_3" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_4" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_5" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_6" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_7" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_8" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UserCodeT_9" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="VacationDateFirstEligible" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="VetDisabled" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="VetOther" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="VetSeparationDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="VetVietnam" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="W2ReceiveElectronic" nillable="true" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="Zip" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Employee" nillable="true" type="tns:Employee"/>
+   <xs:complexType name="ArrayOfDeduction">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="Deduction" nillable="true" type="tns:Deduction"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfDeduction" nillable="true" type="tns:ArrayOfDeduction"/>
+   <xs:complexType name="Deduction">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="APMemoLine" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Amount" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Basis" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="Cumulative" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="DeductionID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="DeductionTypeID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="EndDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="FIPSCode" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="GLNumber" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PayCheckDescription" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PendingAdjustments" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="PrintOrder" nillable="true" type="xs:unsignedByte"/>
+         <xs:element minOccurs="0" name="RecurringLimit" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="StartDate" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="VendorNumber" nillable="true" type="xs:int"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Deduction" nillable="true" type="tns:Deduction"/>
+   <xs:complexType name="ValidationResult">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Errors" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="Success" type="xs:boolean"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ValidationResult" nillable="true" type="tns:ValidationResult"/>
+   <xs:complexType name="ArrayOfHoursRecord">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="HoursRecord" nillable="true" type="tns:HoursRecord"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfHoursRecord" nillable="true" type="tns:ArrayOfHoursRecord"/>
+   <xs:complexType name="HoursRecord">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="CategoriesDetailID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="CyCopID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+         <xs:element minOccurs="0" name="Hours" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="HoursTypeID" nillable="true" type="xs:short"/>
+         <xs:element minOccurs="0" name="InTime" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="JobPostDetailID" nillable="true" type="xs:int"/>
+         <xs:element minOccurs="0" name="Lunch" nillable="true" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="OutTime" nillable="true" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="WorkDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="WorkTicketNumber" nillable="true" type="xs:int"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="HoursRecord" nillable="true" type="tns:HoursRecord"/>
+   <xs:complexType name="ArrayOfValidationFailure">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="ValidationFailure" nillable="true" type="tns:ValidationFailure"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfValidationFailure" nillable="true" type="tns:ArrayOfValidationFailure"/>
+   <xs:complexType name="ValidationFailure">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Errors" nillable="true" type="q2:ArrayOfstring" xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ValidationFailure" nillable="true" type="tns:ValidationFailure"/>
+</xs:schema>

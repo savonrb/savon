@@ -18,21 +18,21 @@ describe Savon do
 
   describe '.new' do
     it 'expects a local or remote WSDL document' do
-      Wasabi.expects(:new).with(wsdl, instance_of(Savon.http_adapter)).returns(:wasabi)
+      Savon::WSDL.expects(:new).with(wsdl, instance_of(Savon.http_adapter)).returns(:wasabi)
       Savon.new(wsdl)
     end
 
     it 'also accepts a custom HTTP adapter to replace the default' do
       http = :my_http_adapter
-      Wasabi.expects(:new).with(wsdl, http).returns(:wasabi)
+      Savon::WSDL.expects(:new).with(wsdl, http).returns(:wasabi)
 
       Savon.new(wsdl, http)
     end
   end
 
   describe '#wsdl' do
-    it 'returns the Wasabi instance' do
-      expect(client.wsdl).to be_an_instance_of(Wasabi)
+    it 'returns the WSDL' do
+      expect(client.wsdl).to be_an_instance_of(Savon::WSDL)
     end
   end
 
