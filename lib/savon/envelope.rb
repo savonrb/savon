@@ -4,6 +4,8 @@ require 'savon/body'
 class Savon
   class Envelope
 
+    NSID = 'lol'
+
     def initialize(operation, options = {})
       @logger = Logging.logger[self]
 
@@ -34,7 +36,7 @@ class Savon
 
     def create_nsid
       @nsid_counter += 1
-      "lol#{@nsid_counter}"
+      "#{NSID}#{@nsid_counter}"
     end
 
     def build_envelope(body)
