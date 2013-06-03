@@ -36,7 +36,11 @@ describe 'Integration with Bookt' do
 
   it 'resolves WSDL imports to get the operations' do
     operations = client.operations('Connect', 'IConnect')
+
+    expect(operations).to be_an(Array)
     expect(operations.count).to eq(26)
+
+    expect(operations).to include('GetBooking')
   end
 
   it 'resolves XML Schema imports to get all elements' do
