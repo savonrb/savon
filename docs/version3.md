@@ -181,7 +181,9 @@ This returns the most beautiful SOAP you have ever seen!
 </env:Envelope>
 ```
 
-More documentation coming soon ...
+More documentation coming soon. Please follow the guide, give it a try and provide feedback!
+In case this crashes, please provide your WSDL for testing purposes.
+The ticket for this is over at [savonrb/wasabi#27](https://github.com/savonrb/wasabi/issues/27).
 
 
 What changed?
