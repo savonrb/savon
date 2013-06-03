@@ -82,41 +82,43 @@ describe 'Integration with Bronto' do
     expect(operation.example_body).to eq(
       addLogins: {
 
-        # TODO: should this be an Array?
-        accounts: {
-          username: 'string',
-          password: 'string',
-          contactInformation: {
-            organization: 'string',
-            firstName: 'string',
-            lastName: 'string',
-            email: 'string',
-            phone: 'string',
-            address: 'string',
-            address2: 'string',
-            city: 'string',
-            state: 'string',
-            zip: 'string',
-            country: 'string',
-            notes: 'string'
-          },
-          permissionAgencyAdmin: 'boolean',
-          permissionAdmin: 'boolean',
-          permissionApi: 'boolean',
-          permissionUpgrade: 'boolean',
-          permissionFatigueOverride: 'boolean',
-          permissionMessageCompose: 'boolean',
-          permissionMessageApprove: 'boolean',
-          permissionMessageDelete: 'boolean',
-          permissionAutomatorCompose: 'boolean',
-          permissionListCreateSend: 'boolean',
-          permissionListCreate: 'boolean',
-          permissionSegmentCreate: 'boolean',
-          permissionFieldCreate: 'boolean',
-          permissionFieldReorder: 'boolean',
-          permissionSubscriberCreate: 'boolean',
-          permissionSubscriberView: 'boolean'
-        }
+        # array of complex types
+        accounts: [
+          {
+            username: 'string',
+            password: 'string',
+            contactInformation: {
+              organization: 'string',
+              firstName: 'string',
+              lastName: 'string',
+              email: 'string',
+              phone: 'string',
+              address: 'string',
+              address2: 'string',
+              city: 'string',
+              state: 'string',
+              zip: 'string',
+              country: 'string',
+              notes: 'string'
+            },
+            permissionAgencyAdmin: 'boolean',
+            permissionAdmin: 'boolean',
+            permissionApi: 'boolean',
+            permissionUpgrade: 'boolean',
+            permissionFatigueOverride: 'boolean',
+            permissionMessageCompose: 'boolean',
+            permissionMessageApprove: 'boolean',
+            permissionMessageDelete: 'boolean',
+            permissionAutomatorCompose: 'boolean',
+            permissionListCreateSend: 'boolean',
+            permissionListCreate: 'boolean',
+            permissionSegmentCreate: 'boolean',
+            permissionFieldCreate: 'boolean',
+            permissionFieldReorder: 'boolean',
+            permissionSubscriberCreate: 'boolean',
+            permissionSubscriberView: 'boolean'
+          }
+        ]
       }
     )
   end

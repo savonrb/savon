@@ -24,7 +24,9 @@ class Savon
           memo[name] = base_type_local
 
         when element.complex_type?
-          memo[name] = build(element.children)
+          value = build(element.children)
+          value = [value] unless element.singular?
+          memo[name] = value
 
         end
       end
