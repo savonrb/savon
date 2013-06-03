@@ -1,7 +1,7 @@
 require 'builder'
 
 class Savon
-  class Body
+  class Message
 
     def initialize(envelope, parts)
       @logger = Logging.logger[self]

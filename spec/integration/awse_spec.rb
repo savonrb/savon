@@ -58,7 +58,7 @@ subject(:client) { Savon.new fixture('wsdl/awse') }
 
     namespace = 'http://webservices.amazon.com/AWSECommerceService/2011-08-01'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['CartAdd'],                                               { namespace: namespace, form: 'qualified', singular: true }],
       [['CartAdd', 'MarketplaceDomain'],                          { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string' }],
       [['CartAdd', 'AWSAccessKeyId'],                             { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string' }],

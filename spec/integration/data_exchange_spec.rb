@@ -29,7 +29,7 @@ describe 'Integration with DataExchange' do
     # but we're currently listing it, because we're not properly separating between
     # known built-in simple types and unknown types so we can't make that choice.
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['in0'], { namespace: nil, form: 'unqualified', type: 'soapenc:string', singular: true }],
       [['in1'], { namespace: nil, form: 'unqualified', type: 'soapenc:string', singular: true }],
 

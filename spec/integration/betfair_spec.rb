@@ -30,7 +30,7 @@ describe 'Integration with Betfair' do
     ns = 'http://www.betfair.com/publicapi/v5/BFExchangeService/'
     ns2 = 'http://www.betfair.com/publicapi/types/exchange/v5/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['getMUBetsLite'],
         { namespace: ns, form: 'qualified',   singular: true }],
 

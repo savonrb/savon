@@ -1,21 +1,17 @@
 require 'builder'
-require 'savon/body'
+require 'savon/message'
 
 class Savon
   class Envelope
 
     NSID = 'lol'
 
-    def initialize(operation, body)
+    def initialize(operation, header, body)
       @logger = Logging.logger[self]
 
       @operation = operation
-      @body = body
-
-      unless @body
-        @logger.warn("No request body Hash given for the #{operation.name.inspect} operation.")
-        @body = {}
-      end
+      @header = header || {}
+      @body = body || {}
 
       @nsid_counter = -1
       @namespaces = {}
@@ -26,10 +22,7 @@ class Savon
     end
 
     def to_s
-      body = Body.new(self, @operation.input).build(@body)
-      body = build_rpc_wrapper(body) if rpc_call?
-
-      build_envelope(body)
+      build_envelope(build_header, build_body)
     end
 
     private
@@ -39,11 +32,27 @@ class Savon
       "#{NSID}#{@nsid_counter}"
     end
 
-    def build_envelope(body)
+    def build_header
+      return "" if @header.empty?
+      Message.new(self, @operation.header_parts).build(@header)
+    end
+
+    def build_body
+      return "" if @body.empty?
+      body = Message.new(self, @operation.body_parts).build(@body)
+
+      if rpc_call?
+        build_rpc_wrapper(body)
+      else
+        body
+      end
+    end
+
+    def build_envelope(header, body)
       builder = Builder::XmlMarkup.new(indent: 2)
 
       builder.tag! :env, :Envelope, collect_namespaces do |xml|
-        xml.tag!(:env, :Header)
+        xml.tag!(:env, :Header) { |xml| xml << header }
         xml.tag!(:env, :Body) { |xml| xml << body }
       end
 
@@ -52,7 +61,7 @@ class Savon
 
     def build_rpc_wrapper(body)
       name = @operation.name
-      namespace = @operation.binding_operation.input[:body][:namespace]
+      namespace = @operation.binding_operation.input_body[:namespace]
       nsid = register_namespace(namespace) if namespace
 
       tag = [nsid, name].compact.join(':')

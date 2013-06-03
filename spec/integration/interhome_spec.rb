@@ -25,15 +25,14 @@ describe 'Integration with Interhome' do
   end
 
   it 'knows the operations' do
-    service, port = 'WebService', 'WebServiceSoap'
-    operation = client.operation(service, port, 'ClientBooking')
+    operation = client.operation(service_name, port_name, 'ClientBooking')
 
     expect(operation.soap_action).to eq('http://www.interhome.com/webservice/ClientBooking')
     expect(operation.endpoint).to eq('https://webservices.interhome.com/quality/partnerV3/WebService.asmx')
 
     namespace = 'http://www.interhome.com/webservice'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['ClientBooking'],                                    { namespace: namespace, form: 'qualified', singular: true }],
       [['ClientBooking', 'inputValue'],                      { namespace: namespace, form: 'qualified', singular: true }],
       [['ClientBooking', 'inputValue', 'SalesOfficeCode'],   { namespace: namespace, form: 'qualified', singular: true, type: 's:string' }],
@@ -82,7 +81,19 @@ describe 'Integration with Interhome' do
     ])
   end
 
-  it 'creates an example request including optional elements' do
+  # implicit headers. reference: http://www.ibm.com/developerworks/library/ws-tip-headers/index.html
+  it 'creates an example header' do
+    operation = client.operation(service_name, port_name, :Availability)
+
+    expect(operation.example_header).to eq(
+      ServiceAuthHeader: {
+        Username: 'string',
+        Password: 'string'
+      }
+    )
+  end
+
+  it 'creates an example body including optional elements' do
     operation = client.operation(service_name, port_name, :Availability)
 
     expect(operation.example_body).to eq(
@@ -102,10 +113,17 @@ describe 'Integration with Interhome' do
   it 'skips optional elements in the request' do
     operation = client.operation(service_name, port_name, :Availability)
 
+    operation.header = {
+      ServiceAuthHeader: {
+        Username: 'test',
+        Password: 'secret'
+      }
+    }
+
     operation.body = {
       Availability: {
         inputValue: {
-          # We're leaving out two elements on purpose.
+          # Leaving out two optional elements on purpose.
           AccommodationCode: 'secret'
         }
       }
@@ -115,7 +133,12 @@ describe 'Integration with Interhome' do
       <env:Envelope
           xmlns:lol0="http://www.interhome.com/webservice"
           xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
-        <env:Header/>
+        <env:Header>
+          <lol0:ServiceAuthHeader>
+            <lol0:Username>test</lol0:Username>
+            <lol0:Password>secret</lol0:Password>
+          </lol0:ServiceAuthHeader>
+        </env:Header>
         <env:Body>
           <lol0:Availability>
             <lol0:inputValue>

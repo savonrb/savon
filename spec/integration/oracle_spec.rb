@@ -42,7 +42,7 @@ describe 'Integration with Oracle' do
 
     namespace = 'urn://oracle.bi.webservices/v7'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['joinGroups'],                          { namespace: namespace, form: 'qualified', singular: true  }],
       [['joinGroups', 'group'],                 { namespace: namespace, form: 'qualified', singular: false }],
       [['joinGroups', 'group', 'name'],         { namespace: namespace, form: 'qualified', singular: true, type: 'xsd:string' }],

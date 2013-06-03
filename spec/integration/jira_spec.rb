@@ -26,7 +26,7 @@ describe 'Integration with Atlassian Jira' do
 
     namespace = 'http://beans.soap.rpc.jira.atlassian.com'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['in0'],          { namespace: nil,       form: 'unqualified', singular: true, type: 'xsd:string' }],
       [['in1'],          { namespace: nil,       form: 'unqualified', singular: true }],
       [['in1', 'name'],  { namespace: namespace, form: 'unqualified', singular: true, type: 'xsd:string' }],

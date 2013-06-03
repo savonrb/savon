@@ -22,35 +22,49 @@ class Savon
       end
 
       # TODO: maybe use proper classes to clean this up.
-      def input
-        return @input if @input
-        input = { header: {}, body: {} }
+      def input_headers
+        return @input_headers if @input_headers
+        input_headers = []
 
-        input_node = @operation_node.element_children.find { |node| node.name == 'input' }
-        return unless input_node
-
-        if header_node = input_node.element_children.find { |node| node.name == 'header' }
-          input[:header] = {
-            encoding_style: header_node['encodingStyle'],
-            namespace:      header_node['namespace'],
-            use:            header_node['use'],
-            message:        header_node['message'],
-            part:           header_node['part']
-          }
+        if header_nodes = find_input_child_nodes('header')
+          header_nodes.each do |header_node|
+            input_headers << {
+              encoding_style: header_node['encodingStyle'],
+              namespace:      header_node['namespace'],
+              use:            header_node['use'],
+              message:        header_node['message'],
+              part:           header_node['part']
+            }
+          end
         end
 
-        if body_node = input_node.element_children.find { |node| node.name == 'body' }
-          input[:body] = {
+        @input_headers = input_headers
+      end
+
+      # TODO: maybe use proper classes to clean this up.
+      def input_body
+        return @input_body if @input_body
+        input_body = {}
+
+        if body_node = find_input_child_nodes('body').first
+          input_body = {
             encoding_style: body_node['encodingStyle'],
             namespace:      body_node['namespace'],
             use:            body_node['use']
           }
         end
 
-        input
+        @input_body = input_body
       end
 
       private
+
+      def find_input_child_nodes(child_name)
+        input_node = @operation_node.element_children.find { |node| node.name == 'input' }
+        return unless input_node
+
+        input_node.element_children.select { |node| node.name == child_name }
+      end
 
       def find_soap_operation_node
         @operation_node.element_children.each do |node|

@@ -36,7 +36,7 @@ describe 'Integration with Wasmuth' do
 
     namespace = 'http://ws.online.msw/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['getStTables'],             { namespace: namespace, form: 'qualified',   singular: true }],
       [['getStTables', 'username'], { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }],
       [['getStTables', 'password'], { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }],

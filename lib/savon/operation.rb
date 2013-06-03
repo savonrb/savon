@@ -36,41 +36,49 @@ class Savon
     attr_accessor :encoding
 
     # Public: Returns a Hash of HTTP headers to send.
-    def headers
-      return @headers if @headers
+    def http_headers
+      return @http_headers if @http_headers
       headers = {}
 
       headers['SOAPAction']   = %{"#{soap_action}"} if soap_action
       headers['Content-Type'] = CONTENT_TYPE[soap_version] % encoding
 
-      @headers = headers
+      @http_headers = headers
     end
 
     # Public: Sets the Hash of HTTP headers.
-    attr_writer :headers
+    attr_writer :http_headers
+
+    # Public: Sets the request header Hash.
+    attr_accessor :header
+
+    # Public: Create an example request header Hash.
+    def example_header
+      ExampleMessage.new(@operation.header_parts).to_hash
+    end
 
     # Public: Sets the request body Hash.
     attr_accessor :body
 
     # Public: Create an example request body Hash.
     def example_body
-      ExampleMessage.new(@operation.input).to_hash
+      ExampleMessage.new(@operation.body_parts).to_hash
+    end
+
+    # Public: Returns the input body parts used to build the request body.
+    def body_parts
+      @operation.body_parts.inject([]) { |memo, part| memo + part.to_a }
     end
 
     # Public: Build the request XML for this operation.
     def build
-      Envelope.new(@operation, body).to_s
+      Envelope.new(@operation, header, body).to_s
     end
 
     # Public: Call the operation.
     def call
-      raw_response = @http.post(endpoint, headers, build)
+      raw_response = @http.post(endpoint, http_headers, build)
       Response.new(raw_response)
-    end
-
-    # Public: Returns the input parts.
-    def input_parts
-      @operation.input.inject([]) { |memo, part| memo + part.to_a }
     end
 
     # Public: Returns the input style for this operation.

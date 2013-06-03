@@ -30,7 +30,7 @@ describe 'Integration with Taxcloud' do
 
     namespace = 'http://taxcloud.net'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['VerifyAddress'],               { namespace: namespace, form: 'qualified', singular: true }],
       [['VerifyAddress', 'uspsUserID'], { namespace: namespace, form: 'qualified', singular: true, type: 's:string' }],
       [['VerifyAddress', 'address1'],   { namespace: namespace, form: 'qualified', singular: true, type: 's:string' }],

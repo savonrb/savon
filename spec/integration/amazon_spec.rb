@@ -26,7 +26,7 @@ describe 'Integration with Amazon' do
 
     namespace = 'http://fps.amazonaws.com/doc/2008-09-17/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['Pay'],                                           { namespace: namespace, form: 'qualified', singular: true }],
       [['Pay', 'SenderTokenId'],                          { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string' }],
       [['Pay', 'RecipientTokenId'],                       { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string' }],

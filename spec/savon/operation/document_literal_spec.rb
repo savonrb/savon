@@ -11,7 +11,7 @@ describe Savon::Operation do
       op1 = client.operation('SampleService', 'Sample', 'op1')
       expect(op1.input_style).to eq('document/literal')
 
-      expect(op1.input_parts).to eq([
+      expect(op1.body_parts).to eq([
         [ ['op1'],                { namespace: 'http://apiNamespace.com',  form: 'qualified',   singular: true } ],
         [ ['op1', 'in'],          { namespace: 'http://apiNamespace.com',  form: 'unqualified', singular: true } ],
         [ ['op1', 'in', 'data1'], { namespace: 'http://dataNamespace.com', form: 'unqualified', singular: true, type: 'int' } ],
@@ -25,7 +25,7 @@ describe Savon::Operation do
       op2 = client.operation('SampleService', 'Sample', 'op2')
       expect(op2.input_style).to eq('document/literal')
 
-      expect(op2.input_parts).to eq([
+      expect(op2.body_parts).to eq([
         [ ['op2'],                { namespace: 'http://apiNamespace.com',  form: 'qualified',   singular: true } ],
         [ ['op2', 'in'],          { namespace: 'http://apiNamespace.com',  form: 'unqualified', singular: true } ],
         [ ['op2', 'in', 'data1'], { namespace: 'http://dataNamespace.com', form: 'unqualified', singular: true, type: 'int' } ],
@@ -39,7 +39,7 @@ describe Savon::Operation do
       op3 = client.operation('SampleService', 'Sample', 'op3')
       expect(op3.input_style).to eq('document/literal')
 
-      expect(op3.input_parts).to eq([
+      expect(op3.body_parts).to eq([
         [ ['op3'],                       { namespace: 'http://apiNamespace.com',  form: 'qualified',   singular: true } ],
         [ ['op3', 'DataElem'],           { namespace: 'http://dataNamespace.com', form: 'qualified',   singular: true } ],
         [ ['op3', 'DataElem', 'data1'],  { namespace: 'http://dataNamespace.com', form: 'unqualified', singular: true, type: 'int' } ],

@@ -51,9 +51,9 @@ describe Savon::Operation do
     end
   end
 
-  describe '#headers' do
+  describe '#http_headers' do
     it 'returns a Hash of HTTP headers for a SOAP 1.2 operation' do
-      expect(operation.headers).to eq(
+      expect(operation.http_headers).to eq(
         'SOAPAction'   => '"http://www.webserviceX.NET/ConvertTemp"',
         'Content-Type' => 'application/soap+xml;charset=UTF-8'
       )
@@ -63,17 +63,17 @@ describe Savon::Operation do
       wsdl_operation = wsdl.operation('ConvertTemperature', 'ConvertTemperatureSoap', 'ConvertTemp')
       operation = Savon::Operation.new(wsdl_operation, wsdl, http_mock)
 
-      expect(operation.headers).to eq(
+      expect(operation.http_headers).to eq(
         'SOAPAction'   => '"http://www.webserviceX.NET/ConvertTemp"',
         'Content-Type' => 'text/xml;charset=UTF-8'
       )
     end
 
     it 'can be overwritten' do
-      header = { 'SecretToken' => 'abc'}
-      operation.headers = header
+      headers = { 'SecretToken' => 'abc'}
+      operation.http_headers = headers
 
-      expect(operation.headers).to eq(header)
+      expect(operation.http_headers).to eq(headers)
     end
   end
 

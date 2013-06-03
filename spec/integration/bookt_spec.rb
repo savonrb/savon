@@ -44,7 +44,7 @@ describe 'Integration with Bookt' do
 
     namespace = 'https://connect.bookt.com/connect'
 
-    expect(get_booking.input_parts).to eq([
+    expect(get_booking.body_parts).to eq([
       [['GetBooking'],                  { namespace: namespace, form: 'qualified', singular: true }],
       [['GetBooking', 'apiKey'],        { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string'  }],
       [['GetBooking', 'bookingID'],     { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string'  }],

@@ -42,7 +42,7 @@ describe 'Integration with TeamSoftware' do
 
     namespace = 'http://tempuri.org/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['Login'],               { namespace: namespace, form: 'qualified', singular: true }],
       [['Login', 'MappingKey'], { namespace: namespace, form: 'qualified', singular: true, type: 'xs:string' }]
     ])

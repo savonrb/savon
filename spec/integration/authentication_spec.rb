@@ -28,7 +28,7 @@ describe 'Integration with Authentication service' do
 
     namespace = 'http://v1_0.ws.auth.order.example.com/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['authenticate'],             { namespace: namespace, form: 'qualified', singular: true }],
       [['authenticate', 'user'],     { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }],
       [['authenticate', 'password'], { namespace: namespace, form: 'unqualified', singular: true, type: 'xs:string' }]

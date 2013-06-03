@@ -33,7 +33,7 @@ describe 'Integration with EmailVerification service' do
 
     namespace = 'http://ws.cdyne.com/'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['VerifyEmail'],               { namespace: namespace, form: 'qualified', singular: true }],
       [['VerifyEmail', 'email'],      { namespace: namespace, form: 'qualified', singular: true, type: 's:string' }],
       [['VerifyEmail', 'LicenseKey'], { namespace: namespace, form: 'qualified', singular: true, type: 's:string' }]

@@ -34,7 +34,7 @@ describe 'Integration with RATP' do
     ns1 = 'http://wsiv.ratp.fr'
     ns2 = 'http://wsiv.ratp.fr/xsd'
 
-    expect(operation.input_parts).to eq([
+    expect(operation.body_parts).to eq([
       [['getStations'],                                                       { namespace: ns1, form: 'qualified', singular: true }],
       [['getStations', 'station'],                                            { namespace: ns1, form: 'qualified', singular: true }],
       [['getStations', 'station', 'direction'],                               { namespace: ns2, form: 'qualified', singular: true }],
