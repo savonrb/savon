@@ -34,8 +34,8 @@ class Savon
       return @nori if @nori
 
       nori_options = {
-        :strip_namespaces => true,
-        :convert_tags_to  => -> (tag) { tag.snakecase.to_sym }
+        strip_namespaces: true,
+        convert_tags_to: lambda { |tag| tag.snakecase.to_sym }
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }
