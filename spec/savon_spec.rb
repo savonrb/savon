@@ -37,7 +37,7 @@ describe Savon do
   end
 
   describe '#http' do
-    it 'returns the HTTP adapter‘s client to configure' do
+    it 'returns the HTTP adapter\'s client to configure' do
       client = Savon.new(wsdl)
       expect(client.http).to be_an_instance_of(HTTPClient)
     end

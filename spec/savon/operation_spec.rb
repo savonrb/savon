@@ -78,7 +78,7 @@ describe Savon::Operation do
   end
 
   describe '#example_request' do
-    it 'returns an example request Hash following Savon‘s conventions' do
+    it 'returns an example request Hash following Savon\'s conventions' do
       expect(operation.example_body).to eq(
         ConvertTemp: {
           Temperature: 'double',
@@ -90,7 +90,7 @@ describe Savon::Operation do
   end
 
   describe '#build' do
-    it 'returns an example request Hash following Savon‘s conventions' do
+    it 'returns an example request Hash following Savon\'s conventions' do
       operation.body = {
         ConvertTemp: {
           Temperature: 30,

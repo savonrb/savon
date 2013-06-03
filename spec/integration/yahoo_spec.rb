@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'Integration with Yahoo‘s AccountService' do
+describe 'Integration with Yahoo\'s AccountService' do
 
   subject(:client) { Savon.new fixture('wsdl/yahoo') }
 
