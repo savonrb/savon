@@ -7,7 +7,12 @@ describe 'Integration with Temperature service' do
   let(:service_name) { :ConvertTemperature }
   let(:port_name)    { :ConvertTemperatureSoap12 }
 
-  it 'creates an example request' do
+  it 'returns an empty Hash if there are no header parts' do
+    operation = client.operation(service_name, port_name, :ConvertTemp)
+    expect(operation.example_header).to eq({})
+  end
+
+  it 'creates an example body' do
     operation = client.operation(service_name, port_name, :ConvertTemp)
 
     expect(operation.example_body).to eq(
