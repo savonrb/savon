@@ -3,7 +3,7 @@ title: Version 3
 ---
 
 
-Savon 3.0 is currently under development and [available for testing on GitHub](https://github.com/savonrb/savon/tree/version3).
+Savon 3.0 is currently under development and [available for testing on GitHub](https://github.com/savonrb/savon/tree/version3).  
 You can add it to your Gemfile right now:
 
 ``` bash
@@ -182,8 +182,11 @@ This returns the most beautiful SOAP you have ever seen!
 ```
 
 More documentation coming soon. Please follow the guide, give it a try and provide feedback!
-In case this crashes, please provide your WSDL for testing purposes.
+
+In case this crashes, please provide your WSDL for testing purposes.  
 The ticket for this is over at [savonrb/wasabi#27](https://github.com/savonrb/wasabi/issues/27).
+
+Thank you!
 
 
 What changed?
