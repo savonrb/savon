@@ -2,16 +2,25 @@ require 'spec_helper'
 
 describe Savon::Operation do
 
+  let(:add_logins) {
+    client = Savon.new fixture('wsdl/bronto')
+
+    service_name = :BrontoSoapApiImplService
+    port_name    = :BrontoSoapApiImplPort
+
+    client.operation(service_name, port_name, :addLogins)
+  }
+
+  let(:get_mu_bets_lite) {
+    client = Savon.new fixture('wsdl/betfair')
+
+    service_name = port_name = :BFExchangeService
+    client.operation(service_name, port_name, :getMUBetsLite)
+  }
+
   describe '#example_body' do
-    it 'returns an Array with one entry for Arrays of complex types' do
-      client = Savon.new fixture('wsdl/bronto')
-
-      service_name = :BrontoSoapApiImplService
-      port_name    = :BrontoSoapApiImplPort
-
-      operation = client.operation(service_name, port_name, :addLogins)
-
-      expect(operation.example_body).to eq(
+    it 'returns an Array with a single Hash for Arrays of complex types' do
+      expect(add_logins.example_body).to eq(
         addLogins: {
 
           # array of complex types
@@ -51,6 +60,33 @@ describe Savon::Operation do
               permissionSubscriberView: 'boolean'
             }
           ]
+        }
+      )
+    end
+
+    it 'returns an Array with a single simple type for Arrays of simple types' do
+      expect(get_mu_bets_lite.example_body).to eq(
+        getMUBetsLite: {
+          request: {
+            header: {
+              clientStamp: 'long',
+              sessionToken: 'string'
+            },
+            betStatus: 'string',
+            marketId: 'int',
+            betIds: {
+
+              # array of simple types
+              betId: ['long']
+
+            },
+            orderBy: 'string',
+            sortOrder: 'string',
+            recordCount: 'int',
+            startRecord: 'int',
+            matchedSince: 'dateTime',
+            excludeLastSecond: 'boolean'
+          }
         }
       )
     end
