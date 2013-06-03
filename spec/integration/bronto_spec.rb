@@ -81,8 +81,6 @@ describe 'Integration with Bronto' do
 
     expect(operation.example_body).to eq(
       addLogins: {
-
-        # array of complex types
         accounts: [
           {
             username: 'string',
@@ -134,15 +132,17 @@ describe 'Integration with Bronto' do
 
     operation.body = {
       addLogins: {
-        accounts: {
-          username: 'admin',
-          password: 'secert',
-          contactInformation: {
-            firstName: 'brew',
-            email: 'brew@example.com',
-          },
-          permissionApi: true,
-        }
+        accounts: [
+          {
+            username: 'admin',
+            password: 'secert',
+            contactInformation: {
+              firstName: 'brew',
+              email: 'brew@example.com',
+            },
+            permissionApi: true,
+          }
+        ]
       }
     }
 

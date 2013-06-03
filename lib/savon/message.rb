@@ -40,22 +40,51 @@ class Savon
 
         case
         when element.simple_type?
-          if element.singular?
-            # TODO: check for !array
-            xml.tag! *tag, value
-          else
-            # TODO: check for array
-            value.each do |val|
-              xml.tag! *tag, val
-            end
-          end
+          build_simple_type_element(element, xml, tag, value)
 
         when element.complex_type?
-          # TODO: check for arrays?!
-          xml.tag! *tag do |xml|
-            build_elements(element.children, value, xml)
-          end
+          build_complex_type_element(element, xml, tag, value)
 
+        end
+      end
+    end
+
+    def build_simple_type_element(element, xml, tag, value)
+      if element.singular?
+        if value.kind_of? Array
+          raise ArgumentError, "Unexpected Array for the #{tag.last.inspect} simple type"
+        end
+
+        xml.tag! *tag, value
+      else
+        unless value.kind_of? Array
+          raise ArgumentError, "Expected an Array of values for the #{tag.last.inspect} simple type"
+        end
+
+        value.each do |val|
+          xml.tag! *tag, val
+        end
+      end
+    end
+
+    def build_complex_type_element(element, xml, tag, value)
+      if element.singular?
+        unless value.kind_of? Hash
+          raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
+        end
+
+        xml.tag! *tag do |xml|
+          build_elements(element.children, value, xml)
+        end
+      else
+        unless value.kind_of? Array
+          raise ArgumentError, "Expected an Array of Hashes for the #{tag.last.inspect} complex type"
+        end
+
+        value.each do |val|
+          xml.tag! *tag do |xml|
+            build_elements(element.children, val, xml)
+          end
         end
       end
     end
