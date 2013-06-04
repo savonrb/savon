@@ -108,6 +108,9 @@ class Savon
           el = Element.new
           el.parent = parent
 
+          max_occurs = child_element['maxOccurs'].to_s
+          el.singular = max_occurs.empty? || max_occurs == '1'
+
           if child_element.ref
             child_element = find_element(child_element.ref, child_element.namespaces)
             el.form = 'qualified'
@@ -126,9 +129,6 @@ class Savon
             type = find_type_for_element(child_element)
             handle_type(el, type)
           end
-
-          max_occurs = child_element['maxOccurs'].to_s
-          el.singular = max_occurs.empty? || max_occurs == '1'
 
           el
         }

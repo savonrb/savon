@@ -38,7 +38,7 @@ describe 'Integration with Equifax' do
       [['InitialRequest', 'Identity', 'Name', 'LastName'],                          { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
       [['InitialRequest', 'Identity', 'Name', 'Suffix'],                            { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
 
-      [['InitialRequest', 'Identity', 'Address'],                                   { namespace: ns1, form: 'qualified', singular: true,
+      [['InitialRequest', 'Identity', 'Address'],                                   { namespace: ns1, form: 'qualified', singular: false,
                                                                                       attributes: {
                                                                                         'timeAtAddress' => { optional: true },
                                                                                         'addressType'   => { optional: false }
@@ -46,17 +46,17 @@ describe 'Integration with Equifax' do
                                                                                     }],
 
       [['InitialRequest', 'Identity', 'Address', 'FreeFormAddress'],                { namespace: ns1, form: 'qualified', singular: true }],
-      [['InitialRequest', 'Identity', 'Address', 'FreeFormAddress', 'AddressLine'], { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
+      [['InitialRequest', 'Identity', 'Address', 'FreeFormAddress', 'AddressLine'], { namespace: ns1, form: 'qualified', singular: false,  type: 'string' }],
       [['InitialRequest', 'Identity', 'Address', 'HybridAddress'],                  { namespace: ns1, form: 'qualified', singular: true }],
-      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'AddressLine'],   { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
-      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'City'],          { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
-      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'Province'],      { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
-      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'PostalCode'],    { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
-      [['InitialRequest', 'Identity', 'SIN'],                                       { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
+      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'AddressLine'],   { namespace: ns1, form: 'qualified', singular: false, type: 'string' }],
+      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'City'],          { namespace: ns1, form: 'qualified', singular: true,  type: 'string' }],
+      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'Province'],      { namespace: ns1, form: 'qualified', singular: true,  type: 'string' }],
+      [['InitialRequest', 'Identity', 'Address', 'HybridAddress', 'PostalCode'],    { namespace: ns1, form: 'qualified', singular: true,  type: 'string' }],
+      [['InitialRequest', 'Identity', 'SIN'],                                       { namespace: ns1, form: 'qualified', singular: true,  type: 'string' }],
       [['InitialRequest', 'Identity', 'DateOfBirth'],                               { namespace: ns1, form: 'qualified', singular: true }],
-      [['InitialRequest', 'Identity', 'DateOfBirth', 'Day'],                        { namespace: ns1, form: 'qualified', singular: true, type: 'positiveInteger' }],
-      [['InitialRequest', 'Identity', 'DateOfBirth', 'Month'],                      { namespace: ns1, form: 'qualified', singular: true, type: 'positiveInteger' }],
-      [['InitialRequest', 'Identity', 'DateOfBirth', 'Year'],                       { namespace: ns1, form: 'qualified', singular: true, type: 'positiveInteger' }],
+      [['InitialRequest', 'Identity', 'DateOfBirth', 'Day'],                        { namespace: ns1, form: 'qualified', singular: true,  type: 'positiveInteger' }],
+      [['InitialRequest', 'Identity', 'DateOfBirth', 'Month'],                      { namespace: ns1, form: 'qualified', singular: true,  type: 'positiveInteger' }],
+      [['InitialRequest', 'Identity', 'DateOfBirth', 'Year'],                       { namespace: ns1, form: 'qualified', singular: true,  type: 'positiveInteger' }],
 
       [['InitialRequest', 'Identity', 'DriversLicense'],                            { namespace: ns1, form: 'qualified', singular: true,
                                                                                       attributes: {
@@ -67,7 +67,7 @@ describe 'Integration with Equifax' do
       [['InitialRequest', 'Identity', 'DriversLicense', 'Number'],                  { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
       [['InitialRequest', 'Identity', 'DriversLicense', 'Province'],                { namespace: ns1, form: 'qualified', singular: true, type: 'string' }],
 
-      [['InitialRequest', 'Identity', 'PhoneNumber'],                               { namespace: ns1, form: 'qualified', singular: true,
+      [['InitialRequest', 'Identity', 'PhoneNumber'],                               { namespace: ns1, form: 'qualified', singular: false,
                                                                                       attributes: {
                                                                                         'phoneType' => { optional: true }
                                                                                       }
@@ -100,24 +100,23 @@ describe 'Integration with Equifax' do
             LastName: 'string',
             Suffix: 'string'
           },
+          Address: [
+            {
+              FreeFormAddress: {
+                AddressLine: ['string']
+              },
+              HybridAddress: {
+                AddressLine: ['string'],
+                City: 'string',
+                Province: 'string',
+                PostalCode: 'string'
+              },
 
-          # TODO: shouldn't this be an Array?!
-          Address: {
-            FreeFormAddress: {
-              AddressLine: 'string'
-            },
-            HybridAddress: {
-              AddressLine: 'string',
-              City: 'string',
-              Province: 'string',
-              PostalCode: 'string'
-            },
-
-            # attributes are prefixed with an underscore.
-            _timeAtAddress: 'nonNegativeInteger',
-            _addressType: 'string'
-
-          },
+              # attributes are prefixed with an underscore.
+              _timeAtAddress: 'nonNegativeInteger',
+              _addressType: 'string'
+            }
+          ],
           SIN: 'string',
           DateOfBirth: {
             Day: 'positiveInteger',
@@ -131,15 +130,17 @@ describe 'Integration with Equifax' do
             # another attribute
             _driversLicenseAddressType: 'string'
           },
-          PhoneNumber: {
-            AreaCode: 'string',
-            Exchange: 'string',
-            Number: 'string',
-            PhoneNumber: 'string',
+          PhoneNumber: [
+            {
+              AreaCode: 'string',
+              Exchange: 'string',
+              Number: 'string',
+              PhoneNumber: 'string',
 
-            # another attribute
-            _phoneType: 'string'
-          },
+              # another attribute
+              _phoneType: 'string'
+            }
+          ],
           Email: 'string',
           IPAddress: 'string',
           CreditCardNumber: 'string',
@@ -159,22 +160,23 @@ describe 'Integration with Equifax' do
     operation.body = {
       InitialRequest: {
         Identity: {
-          Address: {
-            FreeFormAddress: {
-              AddressLine: 'Abbey Road, London'
-            },
-            HybridAddress: {
-              AddressLine: 'Abbey Road',
-              City: 'London',
-              Province: 'Camden',
-              PostalCode: 'NW8 9BS'
-            },
+          Address: [
+            {
+              FreeFormAddress: {
+                AddressLine: ['The original', 'Abbey Road, London']
+              },
+              HybridAddress: {
+                AddressLine: ['The original', 'Abbey Road'],
+                City: 'London',
+                Province: 'Camden',
+                PostalCode: 'NW8 9BS'
+              },
 
-            # attributes are prefixed with an underscore
-            _timeAtAddress: 3,
-            _addressType: 'public'
-
-          }
+              # attributes are prefixed with an underscore
+              _timeAtAddress: 3,
+              _addressType: 'public'
+            }
+          ]
         }
       }
     }
@@ -188,11 +190,13 @@ describe 'Integration with Equifax' do
         <env:Body>
           <lol0:InitialRequest>
             <lol0:Identity>
-              <lol0:Address timeAtAddress="3" addressType="public">
+              <lol0:Address>
                 <lol0:FreeFormAddress>
+                  <lol0:AddressLine>The original</lol0:AddressLine>
                   <lol0:AddressLine>Abbey Road, London</lol0:AddressLine>
                 </lol0:FreeFormAddress>
                 <lol0:HybridAddress>
+                  <lol0:AddressLine>The original</lol0:AddressLine>
                   <lol0:AddressLine>Abbey Road</lol0:AddressLine>
                   <lol0:City>London</lol0:City>
                   <lol0:Province>Camden</lol0:Province>
