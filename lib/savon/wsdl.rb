@@ -13,7 +13,7 @@ class Savon
       @documents, @schemas = importer.import(wsdl)
     end
 
-    # Public: Returns the DocumenCollection.
+    # Public: Returns the DocumentCollection.
     attr_reader :documents
 
     # Public: Returns the SchemaCollection.
