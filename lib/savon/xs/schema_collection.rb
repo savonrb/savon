@@ -19,6 +19,14 @@ class Savon
         @schemas.each(&block)
       end
 
+      def attribute(namespace, name)
+        find_by_namespace(namespace).attributes[name]
+      end
+
+      def attribute_group(namespace, name)
+        find_by_namespace(namespace).attribute_groups[name]
+      end
+
       def element(namespace, name)
         find_by_namespace(namespace).elements[name]
       end

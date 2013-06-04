@@ -25,6 +25,11 @@ class Savon
 
         when element.complex_type?
           value = build(element.children)
+
+          unless element.attributes.empty?
+            value.merge! collect_attributes(element)
+          end
+
           value = [value] unless element.singular?
           memo[name] = value
 
@@ -32,6 +37,12 @@ class Savon
       end
 
       memo
+    end
+
+    def collect_attributes(element)
+      element.attributes.each_with_object({}) { |attribute, memo|
+        memo["_#{attribute.name}".to_sym] = attribute.base_type
+      }
     end
 
   end

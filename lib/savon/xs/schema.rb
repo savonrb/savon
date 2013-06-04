@@ -11,16 +11,18 @@ class Savon
         @target_namespace     = @schema['targetNamespace']
         @element_form_default = @schema['elementFormDefault'] || 'unqualified'
 
-        @elements      = {}
-        @complex_types = {}
-        @simple_types  = {}
-        @imports       = {}
+        @attributes       = {}
+        @attribute_groups = {}
+        @elements         = {}
+        @complex_types    = {}
+        @simple_types     = {}
+        @imports          = {}
 
         parse
       end
 
       attr_accessor :target_namespace, :element_form_default, :imports,
-                    :elements, :complex_types, :simple_types
+                    :attributes, :attribute_groups, :elements, :complex_types, :simple_types
 
       private
 
@@ -32,12 +34,22 @@ class Savon
 
         @schema.element_children.each do |node|
           case node.name
-          when 'element'     then @elements[node['name']]      = XS::Element.new(node, @wsdl, schema)
-          when 'complexType' then @complex_types[node['name']] = XS::ComplexType.new(node, @wsdl, schema)
-          when 'simpleType'  then @simple_types[node['name']]  = XS::SimpleType.new(node, @wsdl, schema)
-          when 'import'      then @imports[node['namespace']]  = node['schemaLocation']
+          when 'attribute'      then store_element(@attributes, node, schema)
+          when 'attributeGroup' then store_element(@attribute_groups, node, schema)
+          when 'element'        then store_element(@elements, node, schema)
+          when 'complexType'    then store_element(@complex_types, node, schema)
+          when 'simpleType'     then store_element(@simple_types, node, schema)
+          when 'import'         then store_import(node)
           end
         end
+      end
+
+      def store_element(collection, node, schema)
+        collection[node['name']] = XS.build(node, @wsdl, schema)
+      end
+
+      def store_import(node)
+        @imports[node['namespace']] = node['schemaLocation']
       end
 
     end

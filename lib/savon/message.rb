@@ -3,6 +3,8 @@ require 'builder'
 class Savon
   class Message
 
+    ATTRIBUTE_PREFIX = '_'
+
     def initialize(envelope, parts)
       @logger = Logging.logger[self]
 
@@ -73,7 +75,9 @@ class Savon
           raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
         end
 
-        xml.tag! *tag do |xml|
+        attributes, value = extract_attributes(value)
+
+        xml.tag! *tag, attributes do |xml|
           build_elements(element.children, value, xml)
         end
       else
@@ -99,6 +103,19 @@ class Savon
       else
         :unspecified
       end
+    end
+
+    def extract_attributes(hash)
+      attributes = {}
+
+      hash.dup.each do |k, v|
+        next unless k.to_s[0, 1] == ATTRIBUTE_PREFIX
+
+        attributes[k.to_s[1..-1]] = v
+        hash.delete(k)
+      end
+
+      [attributes, hash]
     end
 
   end

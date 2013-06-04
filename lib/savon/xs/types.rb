@@ -35,6 +35,18 @@ class Savon
         memo
       end
 
+      def collect_attributes(memo = [])
+        children.each do |child|
+          if child.kind_of? Attribute
+            memo << child
+          else
+            memo = child.collect_attributes(memo)
+          end
+        end
+
+        memo
+      end
+
       def inspect
         attributes = @node.attributes.
           inject({}) { |memo, (k, attr)| memo[k.to_s] = attr.value; memo }.
@@ -100,6 +112,7 @@ class Savon
     class ComplexType < PrimaryType
 
       alias_method :elements, :collect_child_elements
+      alias_method :attributes, :collect_attributes
 
       def id
         [namespace, name].join(':')
@@ -116,6 +129,8 @@ class Savon
 
           if complex_type = @wsdl.schemas.complex_type(namespace, local)
             memo += complex_type.elements
+
+          # TODO: can we find a testcase for this?
           else #if simple_type = @wsdl.schemas.simple_type(namespace, local)
             raise 'simple type extension?!'
             #memo << simple_type
@@ -135,7 +150,59 @@ class Savon
     class Choice         < BaseType; end
     class Enumeration    < BaseType; end
 
+    class Attribute < BaseType
+
+      def initialize(node, wsdl, schema = {})
+        super
+
+        @name = node['name']
+        @type = node['type']
+        @ref  = node['ref']
+
+        @use     = node['use'] || 'optional'
+        @default = node['default']
+        @fixed   = node['fixed']
+
+        @namespaces = node.namespaces
+      end
+
+      attr_reader :name, :type, :ref, :namespaces,
+                  :use, :default, :fixed
+
+      def inline_type
+        children.first
+      end
+
+      # stop searching for child elements
+      def collect_child_elements(memo = [])
+        memo
+      end
+
+    end
+
+    class AttributeGroup < BaseType
+
+      alias_method :attributes, :collect_attributes
+
+      def collect_attributes(memo = [])
+        if @node['ref']
+          local, nsid = @node['ref'].split(':').reverse
+          namespace = @node.namespaces["xmlns:#{nsid}"]
+
+          attribute_group = @wsdl.schemas.attribute_group(namespace, local)
+          memo += attribute_group.attributes
+        else
+          super
+        end
+      end
+    end
+
     class SimpleContent < BaseType
+
+      # stop searching for attributes
+      def collect_attributes(memo = [])
+        memo
+      end
 
       # stop searching for child elements
       def collect_child_elements(memo = [])
@@ -146,6 +213,11 @@ class Savon
 
     class Annotation < BaseType
 
+      # stop searching for attributes
+      def collect_attributes(memo = [])
+        memo
+      end
+
       # stop searching for child elements
       def collect_child_elements(memo = [])
         memo
@@ -154,6 +226,8 @@ class Savon
     end
 
     TYPE_MAPPING = {
+      'attribute'      => Attribute,
+      'attributeGroup' => AttributeGroup,
       'element'        => Element,
       'complexType'    => ComplexType,
       'simpleType'     => SimpleType,

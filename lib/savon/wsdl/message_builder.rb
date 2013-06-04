@@ -1,10 +1,12 @@
 require 'savon/element'
+require 'savon/attribute'
 
 class Savon
   class WSDL
     class MessageBuilder
 
       def initialize(wsdl)
+        @logger = Logging.logger[self]
         @wsdl = wsdl
       end
 
@@ -53,14 +55,52 @@ class Savon
 
       def handle_type(element, type)
         case type
+
         when XS::ComplexType
           element.complex_type_id = type.id
           element.children = child_elements(element, type)
+          element.attributes = element_attributes(type)
+
         when XS::SimpleType
           element.base_type = type.base
+
         when String
           element.base_type = type
+
         end
+      end
+
+      def handle_simple_type(attribute, type)
+        case type
+        when XS::SimpleType then attribute.base_type = type.base
+        when String         then attribute.base_type = type
+        end
+      end
+
+      def element_attributes(type)
+        type.attributes.map { |attribute|
+          attr = Attribute.new
+
+          if attribute.ref
+            local, namespace = expand_qname(attribute.ref, attribute.namespaces)
+            schema = find_schema(namespace)
+
+            if schema
+              attribute = schema.attributes[local]
+            else
+              @logger.debug("Unable to find schema for attribute@ref #{attribute.ref.inspect}")
+              next
+            end
+          end
+
+          type = find_type_for_attribute(attribute)
+          handle_simple_type(attr, type)
+
+          attr.name = attribute.name
+          attr.use = attribute.use
+
+          attr
+        }.compact
       end
 
       def child_elements(parent, type)
@@ -120,6 +160,8 @@ class Savon
         end
       end
 
+      alias_method :find_type_for_attribute, :find_type_for_element
+
       def find_type(qname, namespaces)
         local, namespace = expand_qname(qname, namespaces)
 
@@ -152,6 +194,11 @@ class Savon
       def find_element(qname, namespaces)
         local, namespace = expand_qname(qname, namespaces)
         @wsdl.schemas.element(namespace, local)
+      end
+
+      def find_attribute(qname, namespaces)
+        local, namespace = expand_qname(qname, namespaces)
+        @wsdl.schemas.attribute(namespace, local)
       end
 
       def find_schema(namespace)
