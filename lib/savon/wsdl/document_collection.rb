@@ -21,10 +21,6 @@ class Savon
         @service_name ||= first.service_name
       end
 
-      def namespaces
-        @namespaces ||= inject({}) { |memo, document| memo.merge(document.namespaces) }
-      end
-
       def messages
         @messages ||= collect_sections { |document| document.messages }
       end
