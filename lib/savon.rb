@@ -14,9 +14,14 @@ class Savon
   NS_SOAP_1_1 = 'http://schemas.xmlsoap.org/wsdl/soap/'
   NS_SOAP_1_2 = 'http://schemas.xmlsoap.org/wsdl/soap12/'
 
-  # Public: The default HTTP adapter to use.
+  # Public: Returns the HTTP adapter to use.
   def self.http_adapter
-    HTTPClient
+    @http_adapter ||= HTTPClient
+  end
+
+  # Public: Sets the HTTP adapter to use.
+  def self.http_adapter=(adapter)
+    @http_adapter = adapter
   end
 
   def initialize(wsdl, http = nil)

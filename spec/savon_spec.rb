@@ -11,8 +11,24 @@ describe Savon do
   let(:operation_name) { 'Pay' }
 
   describe '.http_adapter' do
-    it 'defines the default HTTP client to use' do
+    it 'returns the default HTTP client to use' do
       expect(Savon.http_adapter).to eq(Savon::HTTPClient)
+    end
+
+    it 'can be changed to use a custom adapter' do
+      adapter = mock('http-adapter')
+
+      Savon.http_adapter = adapter
+      expect(Savon.http_adapter).to eq(adapter)
+
+      adapter.expects(:new).returns(adapter)
+      adapter.expects(:client).returns('http-client')
+
+      client = Savon.new(wsdl)
+      expect(client.http).to eq('http-client')
+
+      # reset global state!
+      Savon.http_adapter = nil
     end
   end
 
