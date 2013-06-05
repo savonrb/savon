@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nori',     '~> 2.2.0'
 
   s.add_dependency 'nokogiri',   '>= 1.4.0'
-  s.add_dependency 'builder',    '>= 2.1.0'
+  s.add_dependency 'builder',    '>= 3.0.0'
   s.add_dependency 'httpclient', '~> 2.3'
   s.add_dependency 'logging',    '~> 1.8'
 
