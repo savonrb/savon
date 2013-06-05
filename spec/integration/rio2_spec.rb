@@ -32,4 +32,24 @@ describe 'Integration with Rio II' do
     )
   end
 
+  it 'knows the GetSessionState operation' do
+    service, port = :SecurityService, :BasicHttpBinding_ISecurityService
+    operation = client.operation(service, port, :GetSessionState)
+
+    expect(operation.input_style).to eq('document/literal')
+
+    expect(operation.example_body).to eq(
+      GetSessionState: {
+        session: {
+          ApplicationId: 'string',
+          CultureCode: 'string',
+          SessionId: 'string'
+        },
+        request: {
+          Context: 'string'
+        }
+      }
+    )
+  end
+
 end
