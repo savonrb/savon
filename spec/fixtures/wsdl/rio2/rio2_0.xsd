@@ -1,0 +1,58 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://www.adactus.co.uk/UISupportServices/ISecurityService/v1.0.0.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.adactus.co.uk/UISupportServices/ISecurityService/v1.0.0.0">
+   <xs:import schemaLocation="http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?xsd=xsd2" namespace="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+   <xs:element name="StartSession">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="request" nillable="true" type="q1:StartSessionRequest" xmlns:q1="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="StartSessionResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="StartSessionResult" nillable="true" type="q2:StartSessionResponse" xmlns:q2="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EndSession">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="session" nillable="true" type="q3:SessionDTO" xmlns:q3="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EndSessionResponse">
+      <xs:complexType>
+         <xs:sequence/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetSessionState">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="session" nillable="true" type="q4:SessionDTO" xmlns:q4="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+            <xs:element minOccurs="0" name="request" nillable="true" type="q5:GetSessionStateRequest" xmlns:q5="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetSessionStateResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetSessionStateResult" nillable="true" type="q6:GetSessionStateResponse" xmlns:q6="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetSessionFromToken">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="request" nillable="true" type="q7:GetSessionFromTokenRequest" xmlns:q7="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetSessionFromTokenResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetSessionFromTokenResult" nillable="true" type="q8:GetSessionFromTokenResponse" xmlns:q8="http://www.adactus.co.uk/UISupportServices/ServiceData/v1.0.0.0"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

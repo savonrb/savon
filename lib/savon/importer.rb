@@ -14,6 +14,8 @@ class Savon
     end
 
     def import(location)
+      @import_locations = []
+
       documents = WSDL::DocumentCollection.new
       schemas = XS::SchemaCollection.new
 
@@ -38,9 +40,15 @@ class Savon
     private
 
     def import_document(location, &block)
-      xml = @resolver.resolve(location)
-      document = WSDL::Document.new Nokogiri.XML(xml), @wsdl
+      if @import_locations.include? location
+        @logger.info("Skipping already imported location #{location.inspect}.")
+        return
+      end
 
+      xml = @resolver.resolve(location)
+      @import_locations << location
+
+      document = WSDL::Document.new Nokogiri.XML(xml), @wsdl
       block.call(document)
 
       # resolve wsdl imports
