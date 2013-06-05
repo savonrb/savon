@@ -1,1 +1,61 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Property.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Property.xsd"><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd4" namespace="http://connect.bookt.com/Schemas/Fee.xsd"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd5" namespace="http://connect.bookt.com/Schemas/Media.xsd"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd6" namespace="http://connect.bookt.com/Schemas/Tax.xsd"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd7" namespace="http://connect.bookt.com/Schemas/Unit.xsd"/><xs:complexType name="Property"><xs:sequence><xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="AdjLivingSpace" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Amenities" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/><xs:element minOccurs="0" name="AmenityTypes" nillable="true" type="q2:ArrayOfstring" xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/><xs:element minOccurs="0" name="AvailableOnline" type="xs:boolean"/><xs:element minOccurs="0" name="AvgReview" type="xs:decimal"/><xs:element minOccurs="0" name="Bathrooms" type="xs:decimal"/><xs:element minOccurs="0" name="Bedrooms" type="xs:int"/><xs:element minOccurs="0" name="CheckInInstructions" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="City" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Country" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="County" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Description" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Development" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Fees" nillable="true" type="q3:ArrayOfFee" xmlns:q3="http://connect.bookt.com/Schemas/Fee.xsd"/><xs:element minOccurs="0" name="Floor" type="xs:int"/><xs:element minOccurs="0" name="GarageSpaces" type="xs:int"/><xs:element minOccurs="0" name="Headline" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="ID" type="xs:int"/><xs:element minOccurs="0" name="Images" nillable="true" type="q4:ArrayOfMedia" xmlns:q4="http://connect.bookt.com/Schemas/Media.xsd"/><xs:element minOccurs="0" name="IsBookable" type="xs:boolean"/><xs:element minOccurs="0" name="Latitude" type="xs:decimal"/><xs:element minOccurs="0" name="Longitude" type="xs:decimal"/><xs:element minOccurs="0" name="LotSize" type="xs:int"/><xs:element minOccurs="0" name="ManagedBy" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="MasterID" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="MaxRate" type="xs:decimal"/><xs:element minOccurs="0" name="MaxRateCurrency" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Metro" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="MinRate" type="xs:decimal"/><xs:element minOccurs="0" name="MinRateCurrency" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Neighborhood" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="NumReviews" type="xs:int"/><xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="PrimaryImage" nillable="true" type="q5:Media" xmlns:q5="http://connect.bookt.com/Schemas/Media.xsd"/><xs:element minOccurs="0" name="Region" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Sleeps" type="xs:int"/><xs:element minOccurs="0" name="State" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Stories" type="xs:int"/><xs:element minOccurs="0" name="Summary" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Tags" nillable="true" type="q6:ArrayOfstring" xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/><xs:element minOccurs="0" name="Taxes" nillable="true" type="q7:ArrayOfTax" xmlns:q7="http://connect.bookt.com/Schemas/Tax.xsd"/><xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Units" nillable="true" type="q8:ArrayOfUnit" xmlns:q8="http://connect.bookt.com/Schemas/Unit.xsd"/><xs:element minOccurs="0" name="YearBuilt" type="xs:int"/></xs:sequence></xs:complexType><xs:element name="Property" nillable="true" type="tns:Property"/></xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Property.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Property.xsd">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd4" namespace="http://connect.bookt.com/Schemas/Fee.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd5" namespace="http://connect.bookt.com/Schemas/Media.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd6" namespace="http://connect.bookt.com/Schemas/Tax.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd7" namespace="http://connect.bookt.com/Schemas/Unit.xsd"/>
+   <xs:complexType name="Property">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="AdjLivingSpace" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Amenities" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="AmenityTypes" nillable="true" type="q2:ArrayOfstring" xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="AvailableOnline" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="AvgReview" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Bathrooms" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Bedrooms" type="xs:int"/>
+         <xs:element minOccurs="0" name="CheckInInstructions" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="City" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="County" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Development" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Fees" nillable="true" type="q3:ArrayOfFee" xmlns:q3="http://connect.bookt.com/Schemas/Fee.xsd"/>
+         <xs:element minOccurs="0" name="Floor" type="xs:int"/>
+         <xs:element minOccurs="0" name="GarageSpaces" type="xs:int"/>
+         <xs:element minOccurs="0" name="Headline" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="Images" nillable="true" type="q4:ArrayOfMedia" xmlns:q4="http://connect.bookt.com/Schemas/Media.xsd"/>
+         <xs:element minOccurs="0" name="IsBookable" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="Latitude" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Longitude" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="LotSize" type="xs:int"/>
+         <xs:element minOccurs="0" name="ManagedBy" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="MasterID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="MaxRate" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="MaxRateCurrency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Metro" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="MinRate" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="MinRateCurrency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Neighborhood" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="NumReviews" type="xs:int"/>
+         <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PrimaryImage" nillable="true" type="q5:Media" xmlns:q5="http://connect.bookt.com/Schemas/Media.xsd"/>
+         <xs:element minOccurs="0" name="Region" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Sleeps" type="xs:int"/>
+         <xs:element minOccurs="0" name="State" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Stories" type="xs:int"/>
+         <xs:element minOccurs="0" name="Summary" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Tags" nillable="true" type="q6:ArrayOfstring" xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="Taxes" nillable="true" type="q7:ArrayOfTax" xmlns:q7="http://connect.bookt.com/Schemas/Tax.xsd"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Units" nillable="true" type="q8:ArrayOfUnit" xmlns:q8="http://connect.bookt.com/Schemas/Unit.xsd"/>
+         <xs:element minOccurs="0" name="YearBuilt" type="xs:int"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Property" nillable="true" type="tns:Property"/>
+</xs:schema>

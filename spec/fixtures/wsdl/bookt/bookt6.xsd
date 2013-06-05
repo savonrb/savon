@@ -1,1 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Tax.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Tax.xsd"><xs:complexType name="ArrayOfTax"><xs:sequence><xs:element minOccurs="0" maxOccurs="unbounded" name="Tax" nillable="true" type="tns:Tax"/></xs:sequence></xs:complexType><xs:element name="ArrayOfTax" nillable="true" type="tns:ArrayOfTax"/><xs:complexType name="Tax"><xs:sequence><xs:element minOccurs="0" name="Amount" type="xs:decimal"/><xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="ID" type="xs:int"/><xs:element minOccurs="0" name="IncludeFees" type="xs:boolean"/><xs:element minOccurs="0" name="IsFlatRate" type="xs:boolean"/><xs:element minOccurs="0" name="MaxConditionValue" type="xs:decimal"/><xs:element minOccurs="0" name="MinConditionValue" type="xs:decimal"/><xs:element minOccurs="0" name="Name" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Percentage" type="xs:decimal"/><xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/></xs:sequence></xs:complexType><xs:element name="Tax" nillable="true" type="tns:Tax"/></xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Tax.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Tax.xsd">
+   <xs:complexType name="ArrayOfTax">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="Tax" nillable="true" type="tns:Tax"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfTax" nillable="true" type="tns:ArrayOfTax"/>
+   <xs:complexType name="Tax">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Amount" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="IncludeFees" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="IsFlatRate" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="MaxConditionValue" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="MinConditionValue" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Percentage" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Tax" nillable="true" type="tns:Tax"/>
+</xs:schema>

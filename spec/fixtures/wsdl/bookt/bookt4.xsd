@@ -1,1 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Fee.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Fee.xsd"><xs:complexType name="ArrayOfFee"><xs:sequence><xs:element minOccurs="0" maxOccurs="unbounded" name="Fee" nillable="true" type="tns:Fee"/></xs:sequence></xs:complexType><xs:element name="ArrayOfFee" nillable="true" type="tns:ArrayOfFee"/><xs:complexType name="Fee"><xs:sequence><xs:element minOccurs="0" name="Amount" type="xs:decimal"/><xs:element minOccurs="0" name="BoolField" type="xs:boolean"/><xs:element minOccurs="0" name="CalculatePerAdult" type="xs:boolean"/><xs:element minOccurs="0" name="CalculatePerChild" type="xs:boolean"/><xs:element minOccurs="0" name="CalculatePerNight" type="xs:boolean"/><xs:element minOccurs="0" name="CalculatePerPerson" type="xs:boolean"/><xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="DefaultQty" type="xs:int"/><xs:element minOccurs="0" name="EffectiveDate" type="xs:dateTime"/><xs:element minOccurs="0" name="EndDate" type="xs:dateTime"/><xs:element minOccurs="0" name="ID" type="xs:int"/><xs:element minOccurs="0" name="IsFlatRate" type="xs:boolean"/><xs:element minOccurs="0" name="MaxConditionValue" type="xs:decimal"/><xs:element minOccurs="0" name="MinConditionValue" type="xs:decimal"/><xs:element minOccurs="0" name="Name" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Percentage" type="xs:decimal"/><xs:element minOccurs="0" name="QtyField" type="xs:boolean"/><xs:element minOccurs="0" name="StartDate" type="xs:dateTime"/><xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/></xs:sequence></xs:complexType><xs:element name="Fee" nillable="true" type="tns:Fee"/></xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Fee.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Fee.xsd">
+   <xs:complexType name="ArrayOfFee">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="Fee" nillable="true" type="tns:Fee"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfFee" nillable="true" type="tns:ArrayOfFee"/>
+   <xs:complexType name="Fee">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Amount" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="BoolField" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="CalculatePerAdult" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="CalculatePerChild" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="CalculatePerNight" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="CalculatePerPerson" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="DefaultQty" type="xs:int"/>
+         <xs:element minOccurs="0" name="EffectiveDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="EndDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="IsFlatRate" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="MaxConditionValue" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="MinConditionValue" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Name" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Percentage" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="QtyField" type="xs:boolean"/>
+         <xs:element minOccurs="0" name="StartDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Fee" nillable="true" type="tns:Fee"/>
+</xs:schema>

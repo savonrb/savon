@@ -1,1 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Booking.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Booking.xsd"><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd10" namespace="http://connect.bookt.com/Schemas/Person.xsd"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd11" namespace="http://connect.bookt.com/Schemas/CreditCard.xsd"/><xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd12" namespace="http://connect.bookt.com/Schemas/Statement.xsd"/><xs:complexType name="Booking"><xs:sequence><xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="BookedBy" nillable="true" type="q1:Person" xmlns:q1="http://connect.bookt.com/Schemas/Person.xsd"/><xs:element minOccurs="0" name="CheckIn" type="xs:dateTime"/><xs:element minOccurs="0" name="CheckOut" type="xs:dateTime"/><xs:element minOccurs="0" name="CreditCard" nillable="true" type="q2:CreditCard" xmlns:q2="http://connect.bookt.com/Schemas/CreditCard.xsd"/><xs:element minOccurs="0" name="ID" type="xs:int"/><xs:element minOccurs="0" name="NumAdults" type="xs:int"/><xs:element minOccurs="0" name="NumChildren" type="xs:int"/><xs:element minOccurs="0" name="PaymentTerms" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="PrivateNotes" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="PropertyID" type="xs:int"/><xs:element minOccurs="0" name="PublicNotes" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Renter" nillable="true" type="q3:Person" xmlns:q3="http://connect.bookt.com/Schemas/Person.xsd"/><xs:element minOccurs="0" name="Statement" nillable="true" type="q4:Statement" xmlns:q4="http://connect.bookt.com/Schemas/Statement.xsd"/><xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="TotalDueNow" type="xs:decimal"/><xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="UnitID" type="xs:int"/></xs:sequence></xs:complexType><xs:element name="Booking" nillable="true" type="tns:Booking"/></xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Booking.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Booking.xsd">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd10" namespace="http://connect.bookt.com/Schemas/Person.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd11" namespace="http://connect.bookt.com/Schemas/CreditCard.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd12" namespace="http://connect.bookt.com/Schemas/Statement.xsd"/>
+   <xs:complexType name="Booking">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="BookedBy" nillable="true" type="q1:Person" xmlns:q1="http://connect.bookt.com/Schemas/Person.xsd"/>
+         <xs:element minOccurs="0" name="CheckIn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="CheckOut" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="CreditCard" nillable="true" type="q2:CreditCard" xmlns:q2="http://connect.bookt.com/Schemas/CreditCard.xsd"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="NumAdults" type="xs:int"/>
+         <xs:element minOccurs="0" name="NumChildren" type="xs:int"/>
+         <xs:element minOccurs="0" name="PaymentTerms" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PrivateNotes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PropertyID" type="xs:int"/>
+         <xs:element minOccurs="0" name="PublicNotes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Renter" nillable="true" type="q3:Person" xmlns:q3="http://connect.bookt.com/Schemas/Person.xsd"/>
+         <xs:element minOccurs="0" name="Statement" nillable="true" type="q4:Statement" xmlns:q4="http://connect.bookt.com/Schemas/Statement.xsd"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="TotalDueNow" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UnitID" type="xs:int"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Booking" nillable="true" type="tns:Booking"/>
+</xs:schema>

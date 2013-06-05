@@ -1,1 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?><xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Unit.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Unit.xsd"><xs:complexType name="ArrayOfUnit"><xs:sequence><xs:element minOccurs="0" maxOccurs="unbounded" name="Unit" nillable="true" type="tns:Unit"/></xs:sequence></xs:complexType><xs:element name="ArrayOfUnit" nillable="true" type="tns:ArrayOfUnit"/><xs:complexType name="Unit"><xs:sequence><xs:element minOccurs="0" name="ID" type="xs:int"/><xs:element minOccurs="0" name="PropertyUnitID" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/><xs:element minOccurs="0" name="UnitName" nillable="true" type="xs:string"/></xs:sequence></xs:complexType><xs:element name="Unit" nillable="true" type="tns:Unit"/></xs:schema>
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Unit.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Unit.xsd">
+   <xs:complexType name="ArrayOfUnit">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="Unit" nillable="true" type="tns:Unit"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfUnit" nillable="true" type="tns:ArrayOfUnit"/>
+   <xs:complexType name="Unit">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="PropertyUnitID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UnitName" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Unit" nillable="true" type="tns:Unit"/>
+</xs:schema>
