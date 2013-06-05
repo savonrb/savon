@@ -267,16 +267,17 @@ duplicated fixtures and specs. So all the code and tests for this are back in on
 is good because it removes the need for me to coordinate releases between all those libraries.
 
 
-New features
-------------
+Features
+--------
 
-* Version 3.0 requires Ruby 1.9 or higher. Yes, I'm considering this a feature!
-* It does not have any opinions on HTTP and allows you to extend it to work in your scenario.
-* It is based on specifications and validates against many real world WSDL documents.
-* It is way faster than ever before, while now parsing all elements.
-* It properly separates operations by service and port.
-* It supports WSDL and XML Schema imports.
-* It knows the input, output and fault message types, namespaces, etc.
-* It can create example requests for you.
+* Requires Ruby 1.9.2 or higher. Yes, I'm considering this a feature!
+* Allows you to completely customize HTTP requests with adapters.
+* Faster than ever before, while now parsing all elements.
+* Based on specifications and validates against many real world WSDL documents.
+* Properly separates operations by service and port.
+* Supports Document/literal and RPC/literal documents.
+* Supports WSDL and XML Schema imports.
+* Knows the input, output and fault message types, namespaces, etc.
+* Creates example requests for you.
 
 This list is probably far from complete.
