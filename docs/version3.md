@@ -189,6 +189,33 @@ The ticket for this is over at [savonrb/wasabi#27](https://github.com/savonrb/wa
 Thank you!
 
 
+HTTP
+----
+
+Savon uses a simple adapter based on the [HTTPClient](https://github.com/nahi/httpclient) gem.
+You can get access to the HTTPClient instance to configure authentication and other details.
+
+``` ruby
+client.http
+```
+
+As Savon resolves imports on instantiation, this might not work for you. So if you need to
+configure the HTTP client for those imports or if you have any other especially complicated
+HTTP configurations, you can use your own adapter which only has to support three methods as
+illustrated by this [specification](https://github.com/savonrb/savon/blob/version3/spec/savon/httpclient_spec.rb).
+You can then globally change the adapter to use.
+
+``` ruby
+Savon.http_adapter = MyAdapter
+```
+
+or you can pass an instance of your adapter to Savon to only use it per-client.
+
+``` ruby
+Savon.new(wsdl_url, MyAdapter.new)
+```
+
+
 Logging
 -------
 
@@ -196,8 +223,8 @@ Savon 3.0 uses the [Logging](https://github.com/TwP/logging) gem which allows us
 loggers and easily control them from the outside. Please make sure to read the documentation for
 this library in order to customize logging.
 
-Let me give you an example of how you would change the log level and add a STDOUT appender to the
-root logger. This basically tells all registered loggers to write everything to STDOUT.
+Let me give you an example of how you would change the log level and add a `STDOUT` appender to the
+root logger. This basically tells all registered loggers to write everything to `STDOUT`.
 
 ``` ruby
 logger = Logging.logger['root']
