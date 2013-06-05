@@ -1,0 +1,3470 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.xignite.com/services/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" targetNamespace="http://www.xignite.com/services/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This web service provides multiple security-related operations including mapping of symbol, CUSIP, CIK and name, the collection of statistical information to be used in stock growth simulations, split information, and lookup services.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.xignite.com/services/">
+      <s:element name="GetSecurity">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="IdentifierTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="Symbol" />
+          <s:enumeration value="CIK" />
+          <s:enumeration value="CUSIP" />
+          <s:enumeration value="ISIN" />
+          <s:enumeration value="Valoren" />
+          <s:enumeration value="SEDOL" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetSecurityResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecurityResult" type="tns:ArrayOfSecurity" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfSecurity">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Security" nillable="true" type="tns:Security" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Security">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="SEDOL" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Exchange" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ActiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InactiveDate" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="HomeTradingPlace" type="s:boolean" />
+              <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="AlternateSecurityIdentifiers" type="tns:ArrayOfAlternateSecurityIdentifier" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustomAttributes" type="tns:ArrayOfCustomAttribute" />
+              <s:element minOccurs="1" maxOccurs="1" name="DataProvider" type="tns:DataProviders" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="Common">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Outcome" type="tns:OutcomeTypes" />
+          <s:element minOccurs="0" maxOccurs="1" name="Message" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Identity" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Delay" type="s:double" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="OutcomeTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="Success" />
+          <s:enumeration value="SystemError" />
+          <s:enumeration value="RequestError" />
+          <s:enumeration value="RegistrationError" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfAlternateSecurityIdentifier">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="AlternateSecurityIdentifier" nillable="true" type="tns:AlternateSecurityIdentifier" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AlternateSecurityIdentifier">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="AlternateIdentifier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:AlternateIdentifierTypes" />
+          <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="AlternateIdentifierTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Symbol" />
+          <s:enumeration value="CUSIP" />
+          <s:enumeration value="CIK" />
+          <s:enumeration value="Valoren" />
+          <s:enumeration value="SEDOL" />
+          <s:enumeration value="DataSourceIdentifier" />
+          <s:enumeration value="ISIN" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfCustomAttribute">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CustomAttribute" nillable="true" type="tns:CustomAttribute" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CustomAttribute">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="DataType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Value" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="DataProviders">
+        <s:restriction base="s:string">
+          <s:enumeration value="XigniteComposite" />
+          <s:enumeration value="Telekurs" />
+          <s:enumeration value="LegacyXignite" />
+          <s:enumeration value="ExchangeWebsite" />
+          <s:enumeration value="ManualXignite" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="Header" type="tns:Header" />
+      <s:complexType name="Header">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Tracer" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="GetSecurities">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Identifiers" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetSecuritiesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetSecuritiesResult" type="tns:ArrayOfSecurity" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetInstrument">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IncludeRelated" type="tns:InstrumentRelatedTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="InstrumentRelatedTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Securities" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetInstrumentResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetInstrumentResult" type="tns:ArrayOfInstrument" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfInstrument">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Instrument" nillable="true" type="tns:Instrument" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Instrument">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="InstrumentClass" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CUSIP" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ISIN" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Valoren" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ActiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InactiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="MostLiquidExchange" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CFICode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustomAttributes" type="tns:ArrayOfCustomAttribute" />
+              <s:element minOccurs="0" maxOccurs="1" name="Securities" type="tns:ArrayOfSecurity" />
+              <s:element minOccurs="1" maxOccurs="1" name="DataProvider" type="tns:DataProviders" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetInstruments">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IncludeRelated" type="tns:InstrumentRelatedTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="Identifiers" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetInstrumentsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetInstrumentsResult" type="tns:ArrayOfInstrument" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIssuer">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IncludeRelated" type="tns:IssuerRelatedTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="IssuerRelatedTypes">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Instruments" />
+          <s:enumeration value="InstrumentsAndSecurities" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetIssuerResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIssuerResult" type="tns:ArrayOfIssuer" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfIssuer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Issuer" nillable="true" type="tns:Issuer" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Issuer">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CIK" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Industry" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Sector" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ActiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InactiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CompanyIdentifier" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Domicile" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Active" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="CustomAttributes" type="tns:ArrayOfCustomAttribute" />
+              <s:element minOccurs="0" maxOccurs="1" name="Instruments" type="tns:ArrayOfInstrument" />
+              <s:element minOccurs="1" maxOccurs="1" name="DataProvider" type="tns:DataProviders" />
+              <s:element minOccurs="0" maxOccurs="1" name="Classifications" type="tns:ArrayOfClassification" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfClassification">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Classification" nillable="true" type="tns:Classification" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Classification">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Industry" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Sector" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Scheme" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ClassificationCode" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetIssuers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IncludeRelated" type="tns:IssuerRelatedTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="Identifiers" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIssuersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIssuersResult" type="tns:ArrayOfIssuer" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIssuerByCompanyIdentifier">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="IncludeRelated" type="tns:IssuerRelatedTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetIssuerByCompanyIdentifierResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetIssuerByCompanyIdentifierResult" type="tns:Issuer" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByIdentifier">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByIdentifierResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterByIdentifierResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Record" nillable="true" type="tns:Record" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Record">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="Symbol" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CUSIP" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CIK" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Valoren" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ISIN" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="SEDOL" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="CFICode" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InstrumentClass" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ExchangeName" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Sector" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Industry" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Exchange" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Currency" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="ActiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InactiveDate" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="LastUpdateDate" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="HomeTradingPlace" type="s:boolean" />
+              <s:element minOccurs="0" maxOccurs="1" name="CompanyIdentifier" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="GetMasterByIdentifiers">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Identifiers" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByIdentifiersResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterByIdentifiersResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByExchange">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartSymbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndSymbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="Exchanges">
+        <s:restriction base="s:string">
+          <s:enumeration value="AATS" />
+          <s:enumeration value="ACEX" />
+          <s:enumeration value="AFET" />
+          <s:enumeration value="AIMX" />
+          <s:enumeration value="ALDP" />
+          <s:enumeration value="ALTX" />
+          <s:enumeration value="ALXA" />
+          <s:enumeration value="ALXB" />
+          <s:enumeration value="ALXL" />
+          <s:enumeration value="ALXP" />
+          <s:enumeration value="AMTS" />
+          <s:enumeration value="AMXO" />
+          <s:enumeration value="APXL" />
+          <s:enumeration value="AQUA" />
+          <s:enumeration value="ARCD" />
+          <s:enumeration value="ARCO" />
+          <s:enumeration value="ARCX" />
+          <s:enumeration value="ASXC" />
+          <s:enumeration value="ASXP" />
+          <s:enumeration value="ASXT" />
+          <s:enumeration value="ASXV" />
+          <s:enumeration value="ATSA" />
+          <s:enumeration value="AWBX" />
+          <s:enumeration value="AWEX" />
+          <s:enumeration value="BACE" />
+          <s:enumeration value="BAIK" />
+          <s:enumeration value="BALT" />
+          <s:enumeration value="BAML" />
+          <s:enumeration value="BAMP" />
+          <s:enumeration value="BAPX" />
+          <s:enumeration value="BARD" />
+          <s:enumeration value="BARX" />
+          <s:enumeration value="BATD" />
+          <s:enumeration value="BATE" />
+          <s:enumeration value="BATO" />
+          <s:enumeration value="BATS" />
+          <s:enumeration value="BATY" />
+          <s:enumeration value="BCFS" />
+          <s:enumeration value="BCMM" />
+          <s:enumeration value="BCSE" />
+          <s:enumeration value="BEEX" />
+          <s:enumeration value="BERA" />
+          <s:enumeration value="BERB" />
+          <s:enumeration value="BERC" />
+          <s:enumeration value="BETA" />
+          <s:enumeration value="BFEX" />
+          <s:enumeration value="BGCF" />
+          <s:enumeration value="BGCI" />
+          <s:enumeration value="BIDS" />
+          <s:enumeration value="BLKX" />
+          <s:enumeration value="BLNK" />
+          <s:enumeration value="BLOX" />
+          <s:enumeration value="BLPX" />
+          <s:enumeration value="BLTD" />
+          <s:enumeration value="BMFA" />
+          <s:enumeration value="BMFM" />
+          <s:enumeration value="BMFX" />
+          <s:enumeration value="BMTS" />
+          <s:enumeration value="BNDD" />
+          <s:enumeration value="BOAT" />
+          <s:enumeration value="BOND" />
+          <s:enumeration value="BOSC" />
+          <s:enumeration value="BOSD" />
+          <s:enumeration value="BOSP" />
+          <s:enumeration value="BOVA" />
+          <s:enumeration value="BOVM" />
+          <s:enumeration value="BRIX" />
+          <s:enumeration value="BSEX" />
+          <s:enumeration value="BSME" />
+          <s:enumeration value="BTEC" />
+          <s:enumeration value="BTEE" />
+          <s:enumeration value="BURG" />
+          <s:enumeration value="BURM" />
+          <s:enumeration value="BVCA" />
+          <s:enumeration value="BVMF" />
+          <s:enumeration value="BVUR" />
+          <s:enumeration value="C2OX" />
+          <s:enumeration value="CAES" />
+          <s:enumeration value="CANX" />
+          <s:enumeration value="CATS" />
+          <s:enumeration value="CAZE" />
+          <s:enumeration value="CBSX" />
+          <s:enumeration value="CCFE" />
+          <s:enumeration value="CCFX" />
+          <s:enumeration value="CCLX" />
+          <s:enumeration value="CCO2" />
+          <s:enumeration value="CDED" />
+          <s:enumeration value="CDEL" />
+          <s:enumeration value="CETI" />
+          <s:enumeration value="CETO" />
+          <s:enumeration value="CGME" />
+          <s:enumeration value="CGMH" />
+          <s:enumeration value="CGMI" />
+          <s:enumeration value="CGMU" />
+          <s:enumeration value="CGMX" />
+          <s:enumeration value="CHEV" />
+          <s:enumeration value="CHIA" />
+          <s:enumeration value="CHIC" />
+          <s:enumeration value="CHID" />
+          <s:enumeration value="CHIE" />
+          <s:enumeration value="CHIJ" />
+          <s:enumeration value="CHIX" />
+          <s:enumeration value="CHIY" />
+          <s:enumeration value="CICX" />
+          <s:enumeration value="CITD" />
+          <s:enumeration value="CITX" />
+          <s:enumeration value="CLMX" />
+          <s:enumeration value="CLTD" />
+          <s:enumeration value="CMEC" />
+          <s:enumeration value="CMTS" />
+          <s:enumeration value="COAL" />
+          <s:enumeration value="CRDL" />
+          <s:enumeration value="CSLP" />
+          <s:enumeration value="CSSX" />
+          <s:enumeration value="CXRT" />
+          <s:enumeration value="DAMP" />
+          <s:enumeration value="DBHK" />
+          <s:enumeration value="DBOX" />
+          <s:enumeration value="DCSX" />
+          <s:enumeration value="DEAL" />
+          <s:enumeration value="DGCX" />
+          <s:enumeration value="DIFX" />
+          <s:enumeration value="DKTC" />
+          <s:enumeration value="DSMD" />
+          <s:enumeration value="DUMX" />
+          <s:enumeration value="DUSA" />
+          <s:enumeration value="DUSB" />
+          <s:enumeration value="DUSC" />
+          <s:enumeration value="DUSD" />
+          <s:enumeration value="ECAG" />
+          <s:enumeration value="ECXE" />
+          <s:enumeration value="EDDP" />
+          <s:enumeration value="EDGA" />
+          <s:enumeration value="EDGD" />
+          <s:enumeration value="EDGX" />
+          <s:enumeration value="EESE" />
+          <s:enumeration value="EMDR" />
+          <s:enumeration value="EMID" />
+          <s:enumeration value="EMIR" />
+          <s:enumeration value="EMTF" />
+          <s:enumeration value="EMTS" />
+          <s:enumeration value="ENAX" />
+          <s:enumeration value="ENXB" />
+          <s:enumeration value="ENXL" />
+          <s:enumeration value="EOTC" />
+          <s:enumeration value="EPEX" />
+          <s:enumeration value="EQTA" />
+          <s:enumeration value="EQTB" />
+          <s:enumeration value="EQTC" />
+          <s:enumeration value="EQTD" />
+          <s:enumeration value="ERIS" />
+          <s:enumeration value="ETFP" />
+          <s:enumeration value="ETLX" />
+          <s:enumeration value="ETSC" />
+          <s:enumeration value="EUAX" />
+          <s:enumeration value="EUWX" />
+          <s:enumeration value="EWSM" />
+          <s:enumeration value="EXAA" />
+          <s:enumeration value="EXPA" />
+          <s:enumeration value="FAIR" />
+          <s:enumeration value="FAST" />
+          <s:enumeration value="FCBT" />
+          <s:enumeration value="FCME" />
+          <s:enumeration value="FINN" />
+          <s:enumeration value="FINO" />
+          <s:enumeration value="FINR" />
+          <s:enumeration value="FINY" />
+          <s:enumeration value="FISH" />
+          <s:enumeration value="FMTS" />
+          <s:enumeration value="FNEE" />
+          <s:enumeration value="FNFI" />
+          <s:enumeration value="FNLT" />
+          <s:enumeration value="FNLV" />
+          <s:enumeration value="FNSE" />
+          <s:enumeration value="FRAA" />
+          <s:enumeration value="FRAB" />
+          <s:enumeration value="FRAD" />
+          <s:enumeration value="FRRF" />
+          <s:enumeration value="FSHX" />
+          <s:enumeration value="FXAL" />
+          <s:enumeration value="FXCM" />
+          <s:enumeration value="FXMT" />
+          <s:enumeration value="GBOT" />
+          <s:enumeration value="GEMX" />
+          <s:enumeration value="GFIA" />
+          <s:enumeration value="GFIC" />
+          <s:enumeration value="GFIF" />
+          <s:enumeration value="GFIM" />
+          <s:enumeration value="GFIN" />
+          <s:enumeration value="GFIR" />
+          <s:enumeration value="GLBX" />
+          <s:enumeration value="GLLC" />
+          <s:enumeration value="GMEX" />
+          <s:enumeration value="GMTF" />
+          <s:enumeration value="GMTS" />
+          <s:enumeration value="GOVX" />
+          <s:enumeration value="GREE" />
+          <s:enumeration value="GSCI" />
+          <s:enumeration value="GTCO" />
+          <s:enumeration value="GXGF" />
+          <s:enumeration value="GXGM" />
+          <s:enumeration value="GXGR" />
+          <s:enumeration value="GXMA" />
+          <s:enumeration value="HAMA" />
+          <s:enumeration value="HAMB" />
+          <s:enumeration value="HANA" />
+          <s:enumeration value="HANB" />
+          <s:enumeration value="HDAT" />
+          <s:enumeration value="HEGX" />
+          <s:enumeration value="HKME" />
+          <s:enumeration value="HMOD" />
+          <s:enumeration value="HMTF" />
+          <s:enumeration value="HOTC" />
+          <s:enumeration value="HSFX" />
+          <s:enumeration value="HSTC" />
+          <s:enumeration value="HSXA" />
+          <s:enumeration value="HUNG" />
+          <s:enumeration value="HUPX" />
+          <s:enumeration value="IBLX" />
+          <s:enumeration value="ICAH" />
+          <s:enumeration value="ICAP" />
+          <s:enumeration value="ICAS" />
+          <s:enumeration value="ICAT" />
+          <s:enumeration value="ICBX" />
+          <s:enumeration value="ICDX" />
+          <s:enumeration value="ICEL" />
+          <s:enumeration value="ICEN" />
+          <s:enumeration value="ICEU" />
+          <s:enumeration value="ICRO" />
+          <s:enumeration value="ICSE" />
+          <s:enumeration value="ICTQ" />
+          <s:enumeration value="ICUS" />
+          <s:enumeration value="ICXL" />
+          <s:enumeration value="IEPA" />
+          <s:enumeration value="IFCA" />
+          <s:enumeration value="IFEU" />
+          <s:enumeration value="IFUS" />
+          <s:enumeration value="IIDX" />
+          <s:enumeration value="IMAG" />
+          <s:enumeration value="IMBD" />
+          <s:enumeration value="IMCO" />
+          <s:enumeration value="IMCR" />
+          <s:enumeration value="IMEN" />
+          <s:enumeration value="IMEQ" />
+          <s:enumeration value="IMEX" />
+          <s:enumeration value="IMFX" />
+          <s:enumeration value="IMIR" />
+          <s:enumeration value="IMTS" />
+          <s:enumeration value="ISEC" />
+          <s:enumeration value="ISEX" />
+          <s:enumeration value="ISWA" />
+          <s:enumeration value="ITGI" />
+          <s:enumeration value="ITSM" />
+          <s:enumeration value="IXSP" />
+          <s:enumeration value="JADX" />
+          <s:enumeration value="JASR" />
+          <s:enumeration value="JATA" />
+          <s:enumeration value="JPMX" />
+          <s:enumeration value="KABU" />
+          <s:enumeration value="KLEU" />
+          <s:enumeration value="KMTS" />
+          <s:enumeration value="KNCM" />
+          <s:enumeration value="KNEM" />
+          <s:enumeration value="KNLI" />
+          <s:enumeration value="KNMX" />
+          <s:enumeration value="KOCN" />
+          <s:enumeration value="LAFD" />
+          <s:enumeration value="LAFL" />
+          <s:enumeration value="LAFX" />
+          <s:enumeration value="LEVL" />
+          <s:enumeration value="LICA" />
+          <s:enumeration value="LIQH" />
+          <s:enumeration value="LIQU" />
+          <s:enumeration value="LMAD" />
+          <s:enumeration value="LMAE" />
+          <s:enumeration value="LMAF" />
+          <s:enumeration value="LMAO" />
+          <s:enumeration value="LMAX" />
+          <s:enumeration value="LMTS" />
+          <s:enumeration value="LPPM" />
+          <s:enumeration value="MABX" />
+          <s:enumeration value="MACX" />
+          <s:enumeration value="MAEL" />
+          <s:enumeration value="MALX" />
+          <s:enumeration value="MAQX" />
+          <s:enumeration value="MATN" />
+          <s:enumeration value="MCXX" />
+          <s:enumeration value="MCZK" />
+          <s:enumeration value="MDIP" />
+          <s:enumeration value="MEAU" />
+          <s:enumeration value="MEHK" />
+          <s:enumeration value="MESQ" />
+          <s:enumeration value="MFGL" />
+          <s:enumeration value="MFOX" />
+          <s:enumeration value="MISX" />
+          <s:enumeration value="MIVX" />
+          <s:enumeration value="MLXB" />
+          <s:enumeration value="MOTX" />
+          <s:enumeration value="MSPL" />
+          <s:enumeration value="MSRP" />
+          <s:enumeration value="MSTC" />
+          <s:enumeration value="MTAA" />
+          <s:enumeration value="MTAH" />
+          <s:enumeration value="MTAX" />
+          <s:enumeration value="MTCH" />
+          <s:enumeration value="MTSA" />
+          <s:enumeration value="MTSC" />
+          <s:enumeration value="MTSD" />
+          <s:enumeration value="MTSF" />
+          <s:enumeration value="MTSG" />
+          <s:enumeration value="MTSM" />
+          <s:enumeration value="MTSP" />
+          <s:enumeration value="MTSS" />
+          <s:enumeration value="MUNA" />
+          <s:enumeration value="MUNB" />
+          <s:enumeration value="MVCX" />
+          <s:enumeration value="MYTR" />
+          <s:enumeration value="N2EX" />
+          <s:enumeration value="NAMX" />
+          <s:enumeration value="NASB" />
+          <s:enumeration value="NASD" />
+          <s:enumeration value="NASN" />
+          <s:enumeration value="NAVE" />
+          <s:enumeration value="NBOT" />
+          <s:enumeration value="NCEL" />
+          <s:enumeration value="NDEX" />
+          <s:enumeration value="NECD" />
+          <s:enumeration value="NFSA" />
+          <s:enumeration value="NFSC" />
+          <s:enumeration value="NFSD" />
+          <s:enumeration value="NGXC" />
+          <s:enumeration value="NILX" />
+          <s:enumeration value="NLPX" />
+          <s:enumeration value="NMCE" />
+          <s:enumeration value="NMTF" />
+          <s:enumeration value="NMTS" />
+          <s:enumeration value="NNCS" />
+          <s:enumeration value="NODX" />
+          <s:enumeration value="NOFF" />
+          <s:enumeration value="NOPS" />
+          <s:enumeration value="NORX" />
+          <s:enumeration value="NOTC" />
+          <s:enumeration value="NPGA" />
+          <s:enumeration value="NSXB" />
+          <s:enumeration value="NURD" />
+          <s:enumeration value="NURO" />
+          <s:enumeration value="NXEU" />
+          <s:enumeration value="NXUS" />
+          <s:enumeration value="NYFX" />
+          <s:enumeration value="NYMX" />
+          <s:enumeration value="NYPC" />
+          <s:enumeration value="NYSD" />
+          <s:enumeration value="NZFX" />
+          <s:enumeration value="OFEX" />
+          <s:enumeration value="OILX" />
+          <s:enumeration value="OMEL" />
+          <s:enumeration value="OMGA" />
+          <s:enumeration value="OMIP" />
+          <s:enumeration value="OOTC" />
+          <s:enumeration value="OPEX" />
+          <s:enumeration value="OPRA" />
+          <s:enumeration value="OTCB" />
+          <s:enumeration value="OTCM" />
+          <s:enumeration value="OTCQ" />
+          <s:enumeration value="OTCX" />
+          <s:enumeration value="PAVE" />
+          <s:enumeration value="PCDS" />
+          <s:enumeration value="PDEX" />
+          <s:enumeration value="PDQD" />
+          <s:enumeration value="PDQX" />
+          <s:enumeration value="PFTQ" />
+          <s:enumeration value="PFTS" />
+          <s:enumeration value="PIEU" />
+          <s:enumeration value="PINC" />
+          <s:enumeration value="PINI" />
+          <s:enumeration value="PINL" />
+          <s:enumeration value="PINX" />
+          <s:enumeration value="PIPE" />
+          <s:enumeration value="PIRM" />
+          <s:enumeration value="PLDX" />
+          <s:enumeration value="PLPX" />
+          <s:enumeration value="PLSX" />
+          <s:enumeration value="PLUS" />
+          <s:enumeration value="PMTS" />
+          <s:enumeration value="POEE" />
+          <s:enumeration value="PRME" />
+          <s:enumeration value="PRSE" />
+          <s:enumeration value="PSGM" />
+          <s:enumeration value="PULX" />
+          <s:enumeration value="PURE" />
+          <s:enumeration value="PXIL" />
+          <s:enumeration value="QMTF" />
+          <s:enumeration value="QMTS" />
+          <s:enumeration value="QWIX" />
+          <s:enumeration value="RBSX" />
+          <s:enumeration value="RICD" />
+          <s:enumeration value="RICX" />
+          <s:enumeration value="RMTS" />
+          <s:enumeration value="ROCO" />
+          <s:enumeration value="ROFX" />
+          <s:enumeration value="ROTC" />
+          <s:enumeration value="RPDX" />
+          <s:enumeration value="RPWC" />
+          <s:enumeration value="RSEX" />
+          <s:enumeration value="RTSL" />
+          <s:enumeration value="RTSX" />
+          <s:enumeration value="SBIJ" />
+          <s:enumeration value="SBMF" />
+          <s:enumeration value="SECF" />
+          <s:enumeration value="SEDX" />
+          <s:enumeration value="SELC" />
+          <s:enumeration value="SEND" />
+          <s:enumeration value="SEPE" />
+          <s:enumeration value="SGEX" />
+          <s:enumeration value="SGMA" />
+          <s:enumeration value="SGMX" />
+          <s:enumeration value="SHAD" />
+          <s:enumeration value="SHAR" />
+          <s:enumeration value="SHAW" />
+          <s:enumeration value="SIGA" />
+          <s:enumeration value="SIGJ" />
+          <s:enumeration value="SIGX" />
+          <s:enumeration value="SIMV" />
+          <s:enumeration value="SMEX" />
+          <s:enumeration value="SMTS" />
+          <s:enumeration value="SPAD" />
+          <s:enumeration value="SPEC" />
+          <s:enumeration value="SPIM" />
+          <s:enumeration value="SPRZ" />
+          <s:enumeration value="SSOB" />
+          <s:enumeration value="SSTX" />
+          <s:enumeration value="STUA" />
+          <s:enumeration value="STUB" />
+          <s:enumeration value="SWAP" />
+          <s:enumeration value="TBEN" />
+          <s:enumeration value="TBLA" />
+          <s:enumeration value="TBSP" />
+          <s:enumeration value="TCDS" />
+          <s:enumeration value="TFEX" />
+          <s:enumeration value="TFSA" />
+          <s:enumeration value="TFSC" />
+          <s:enumeration value="TFSE" />
+          <s:enumeration value="TFSG" />
+          <s:enumeration value="TFSS" />
+          <s:enumeration value="TFSU" />
+          <s:enumeration value="TFSV" />
+          <s:enumeration value="THRD" />
+          <s:enumeration value="TLAB" />
+          <s:enumeration value="TMTS" />
+          <s:enumeration value="TMXS" />
+          <s:enumeration value="TNLA" />
+          <s:enumeration value="TNLB" />
+          <s:enumeration value="TOCP" />
+          <s:enumeration value="TOMD" />
+          <s:enumeration value="TOMX" />
+          <s:enumeration value="TPCD" />
+          <s:enumeration value="TPFD" />
+          <s:enumeration value="TPIE" />
+          <s:enumeration value="TPIM" />
+          <s:enumeration value="TPRE" />
+          <s:enumeration value="TPSD" />
+          <s:enumeration value="TRCK" />
+          <s:enumeration value="TRDE" />
+          <s:enumeration value="TRDP" />
+          <s:enumeration value="TRDX" />
+          <s:enumeration value="TREU" />
+          <s:enumeration value="TRFX" />
+          <s:enumeration value="TRQD" />
+          <s:enumeration value="TRQX" />
+          <s:enumeration value="TRWB" />
+          <s:enumeration value="UBSA" />
+          <s:enumeration value="UBSP" />
+          <s:enumeration value="UBSX" />
+          <s:enumeration value="UKEX" />
+          <s:enumeration value="UKGD" />
+          <s:enumeration value="UKPX" />
+          <s:enumeration value="UMTS" />
+          <s:enumeration value="URCE" />
+          <s:enumeration value="VEGA" />
+          <s:enumeration value="VKAB" />
+          <s:enumeration value="VMFX" />
+          <s:enumeration value="VMTS" />
+          <s:enumeration value="VPXB" />
+          <s:enumeration value="VRXP" />
+          <s:enumeration value="VTEX" />
+          <s:enumeration value="WBAH" />
+          <s:enumeration value="WBDM" />
+          <s:enumeration value="WBGF" />
+          <s:enumeration value="WBON" />
+          <s:enumeration value="WCLK" />
+          <s:enumeration value="WDER" />
+          <s:enumeration value="WETP" />
+          <s:enumeration value="WGAS" />
+          <s:enumeration value="WIND" />
+          <s:enumeration value="WMTF" />
+          <s:enumeration value="WQXL" />
+          <s:enumeration value="XA1X" />
+          <s:enumeration value="XABJ" />
+          <s:enumeration value="XACE" />
+          <s:enumeration value="XADE" />
+          <s:enumeration value="XADF" />
+          <s:enumeration value="XADS" />
+          <s:enumeration value="XAEX" />
+          <s:enumeration value="XAFR" />
+          <s:enumeration value="XAIM" />
+          <s:enumeration value="XALB" />
+          <s:enumeration value="XALG" />
+          <s:enumeration value="XALT" />
+          <s:enumeration value="XAMM" />
+          <s:enumeration value="XAMS" />
+          <s:enumeration value="XANT" />
+          <s:enumeration value="XAOM" />
+          <s:enumeration value="XAPI" />
+          <s:enumeration value="XAQS" />
+          <s:enumeration value="XARC" />
+          <s:enumeration value="XARM" />
+          <s:enumeration value="XASE" />
+          <s:enumeration value="XASM" />
+          <s:enumeration value="XASX" />
+          <s:enumeration value="XATH" />
+          <s:enumeration value="XATS" />
+          <s:enumeration value="XAUK" />
+          <s:enumeration value="XAZX" />
+          <s:enumeration value="XBAA" />
+          <s:enumeration value="XBAB" />
+          <s:enumeration value="XBAH" />
+          <s:enumeration value="XBAN" />
+          <s:enumeration value="XBAR" />
+          <s:enumeration value="XBAV" />
+          <s:enumeration value="XBBF" />
+          <s:enumeration value="XBBJ" />
+          <s:enumeration value="XBBK" />
+          <s:enumeration value="XBCC" />
+          <s:enumeration value="XBCE" />
+          <s:enumeration value="XBCL" />
+          <s:enumeration value="XBCM" />
+          <s:enumeration value="XBCV" />
+          <s:enumeration value="XBCX" />
+          <s:enumeration value="XBDA" />
+          <s:enumeration value="XBEL" />
+          <s:enumeration value="XBER" />
+          <s:enumeration value="XBES" />
+          <s:enumeration value="XBEY" />
+          <s:enumeration value="XBFO" />
+          <s:enumeration value="XBIL" />
+          <s:enumeration value="XBKF" />
+          <s:enumeration value="XBKK" />
+          <s:enumeration value="XBLB" />
+          <s:enumeration value="XBLN" />
+          <s:enumeration value="XBMF" />
+          <s:enumeration value="XBMK" />
+          <s:enumeration value="XBNV" />
+          <s:enumeration value="XBOG" />
+          <s:enumeration value="XBOL" />
+          <s:enumeration value="XBOM" />
+          <s:enumeration value="XBOR" />
+          <s:enumeration value="XBOS" />
+          <s:enumeration value="XBOT" />
+          <s:enumeration value="XBOX" />
+          <s:enumeration value="XBRA" />
+          <s:enumeration value="XBRD" />
+          <s:enumeration value="XBRE" />
+          <s:enumeration value="XBRM" />
+          <s:enumeration value="XBRN" />
+          <s:enumeration value="XBRT" />
+          <s:enumeration value="XBRU" />
+          <s:enumeration value="XBRV" />
+          <s:enumeration value="XBSD" />
+          <s:enumeration value="XBSE" />
+          <s:enumeration value="XBSL" />
+          <s:enumeration value="XBSP" />
+          <s:enumeration value="XBTF" />
+          <s:enumeration value="XBUD" />
+          <s:enumeration value="XBUE" />
+          <s:enumeration value="XBUL" />
+          <s:enumeration value="XBVC" />
+          <s:enumeration value="XBVP" />
+          <s:enumeration value="XBVR" />
+          <s:enumeration value="XBXO" />
+          <s:enumeration value="XCAI" />
+          <s:enumeration value="XCAL" />
+          <s:enumeration value="XCAN" />
+          <s:enumeration value="XCAR" />
+          <s:enumeration value="XCAS" />
+          <s:enumeration value="XCAY" />
+          <s:enumeration value="XCBF" />
+          <s:enumeration value="XCBO" />
+          <s:enumeration value="XCBT" />
+          <s:enumeration value="XCCE" />
+          <s:enumeration value="XCCX" />
+          <s:enumeration value="XCDE" />
+          <s:enumeration value="XCEC" />
+          <s:enumeration value="XCEG" />
+          <s:enumeration value="XCET" />
+          <s:enumeration value="XCFE" />
+          <s:enumeration value="XCFF" />
+          <s:enumeration value="XCGS" />
+          <s:enumeration value="XCHG" />
+          <s:enumeration value="XCHI" />
+          <s:enumeration value="XCIE" />
+          <s:enumeration value="XCIS" />
+          <s:enumeration value="XCME" />
+          <s:enumeration value="XCNF" />
+          <s:enumeration value="XCNQ" />
+          <s:enumeration value="XCOL" />
+          <s:enumeration value="XCOR" />
+          <s:enumeration value="XCRC" />
+          <s:enumeration value="XCSC" />
+          <s:enumeration value="XCSE" />
+          <s:enumeration value="XCSX" />
+          <s:enumeration value="XCUE" />
+          <s:enumeration value="XCUR" />
+          <s:enumeration value="XCYO" />
+          <s:enumeration value="XCYS" />
+          <s:enumeration value="XDAR" />
+          <s:enumeration value="XDBC" />
+          <s:enumeration value="XDBV" />
+          <s:enumeration value="XDBX" />
+          <s:enumeration value="XDCE" />
+          <s:enumeration value="XDES" />
+          <s:enumeration value="XDFB" />
+          <s:enumeration value="XDFM" />
+          <s:enumeration value="XDHA" />
+          <s:enumeration value="XDMI" />
+          <s:enumeration value="XDPA" />
+          <s:enumeration value="XDRF" />
+          <s:enumeration value="XDSE" />
+          <s:enumeration value="XDSX" />
+          <s:enumeration value="XDTB" />
+          <s:enumeration value="XDUB" />
+          <s:enumeration value="XDUS" />
+          <s:enumeration value="XDWZ" />
+          <s:enumeration value="XEAS" />
+          <s:enumeration value="XECC" />
+          <s:enumeration value="XECM" />
+          <s:enumeration value="XECS" />
+          <s:enumeration value="XEDX" />
+          <s:enumeration value="XEEE" />
+          <s:enumeration value="XELX" />
+          <s:enumeration value="XEMD" />
+          <s:enumeration value="XEQT" />
+          <s:enumeration value="XETA" />
+          <s:enumeration value="XETB" />
+          <s:enumeration value="XETC" />
+          <s:enumeration value="XETD" />
+          <s:enumeration value="XETI" />
+          <s:enumeration value="XETR" />
+          <s:enumeration value="XEUB" />
+          <s:enumeration value="XEUC" />
+          <s:enumeration value="XEUE" />
+          <s:enumeration value="XEUI" />
+          <s:enumeration value="XEUM" />
+          <s:enumeration value="XEUP" />
+          <s:enumeration value="XEUR" />
+          <s:enumeration value="XEUS" />
+          <s:enumeration value="XEYE" />
+          <s:enumeration value="XFCI" />
+          <s:enumeration value="XFCM" />
+          <s:enumeration value="XFFE" />
+          <s:enumeration value="XFKA" />
+          <s:enumeration value="XFMN" />
+          <s:enumeration value="XFND" />
+          <s:enumeration value="XFNX" />
+          <s:enumeration value="XFOM" />
+          <s:enumeration value="XFRA" />
+          <s:enumeration value="XFTA" />
+          <s:enumeration value="XGAT" />
+          <s:enumeration value="XGEM" />
+          <s:enumeration value="XGFI" />
+          <s:enumeration value="XGHA" />
+          <s:enumeration value="XGME" />
+          <s:enumeration value="XGRM" />
+          <s:enumeration value="XGSE" />
+          <s:enumeration value="XGTG" />
+          <s:enumeration value="XGUA" />
+          <s:enumeration value="XGVA" />
+          <s:enumeration value="XHAM" />
+          <s:enumeration value="XHAN" />
+          <s:enumeration value="XHCE" />
+          <s:enumeration value="XHEL" />
+          <s:enumeration value="XHER" />
+          <s:enumeration value="XHFT" />
+          <s:enumeration value="XHIR" />
+          <s:enumeration value="XHKF" />
+          <s:enumeration value="XHKG" />
+          <s:enumeration value="XHNX" />
+          <s:enumeration value="XHON" />
+          <s:enumeration value="XIAB" />
+          <s:enumeration value="XIBE" />
+          <s:enumeration value="XICE" />
+          <s:enumeration value="XICX" />
+          <s:enumeration value="XIDX" />
+          <s:enumeration value="XIEX" />
+          <s:enumeration value="XIHK" />
+          <s:enumeration value="XIJP" />
+          <s:enumeration value="XIMA" />
+          <s:enumeration value="XIMC" />
+          <s:enumeration value="XIME" />
+          <s:enumeration value="XIMM" />
+          <s:enumeration value="XINV" />
+          <s:enumeration value="XIOM" />
+          <s:enumeration value="XIPE" />
+          <s:enumeration value="XIQS" />
+          <s:enumeration value="XISA" />
+          <s:enumeration value="XISE" />
+          <s:enumeration value="XISL" />
+          <s:enumeration value="XIST" />
+          <s:enumeration value="XISX" />
+          <s:enumeration value="XJAM" />
+          <s:enumeration value="XJAS" />
+          <s:enumeration value="XJKT" />
+          <s:enumeration value="XJNB" />
+          <s:enumeration value="XJSE" />
+          <s:enumeration value="XJWY" />
+          <s:enumeration value="XKAC" />
+          <s:enumeration value="XKAR" />
+          <s:enumeration value="XKAZ" />
+          <s:enumeration value="XKBT" />
+          <s:enumeration value="XKCE" />
+          <s:enumeration value="XKFB" />
+          <s:enumeration value="XKFE" />
+          <s:enumeration value="XKGT" />
+          <s:enumeration value="XKHA" />
+          <s:enumeration value="XKHR" />
+          <s:enumeration value="XKIE" />
+          <s:enumeration value="XKIS" />
+          <s:enumeration value="XKKT" />
+          <s:enumeration value="XKLS" />
+          <s:enumeration value="XKOR" />
+          <s:enumeration value="XKOS" />
+          <s:enumeration value="XKRX" />
+          <s:enumeration value="XKSE" />
+          <s:enumeration value="XKST" />
+          <s:enumeration value="XKUW" />
+          <s:enumeration value="XKYO" />
+          <s:enumeration value="XLAH" />
+          <s:enumeration value="XLAO" />
+          <s:enumeration value="XLAT" />
+          <s:enumeration value="XLBM" />
+          <s:enumeration value="XLCE" />
+          <s:enumeration value="XLDN" />
+          <s:enumeration value="XLFX" />
+          <s:enumeration value="XLIF" />
+          <s:enumeration value="XLIL" />
+          <s:enumeration value="XLIM" />
+          <s:enumeration value="XLIS" />
+          <s:enumeration value="XLIT" />
+          <s:enumeration value="XLJS" />
+          <s:enumeration value="XLJU" />
+          <s:enumeration value="XLME" />
+          <s:enumeration value="XLOF" />
+          <s:enumeration value="XLON" />
+          <s:enumeration value="XLSM" />
+          <s:enumeration value="XLTO" />
+          <s:enumeration value="XLUS" />
+          <s:enumeration value="XLUX" />
+          <s:enumeration value="XLYO" />
+          <s:enumeration value="XMAB" />
+          <s:enumeration value="XMAC" />
+          <s:enumeration value="XMAD" />
+          <s:enumeration value="XMAE" />
+          <s:enumeration value="XMAI" />
+          <s:enumeration value="XMAL" />
+          <s:enumeration value="XMAN" />
+          <s:enumeration value="XMAP" />
+          <s:enumeration value="XMAR" />
+          <s:enumeration value="XMAT" />
+          <s:enumeration value="XMAU" />
+          <s:enumeration value="XMCE" />
+          <s:enumeration value="XMDG" />
+          <s:enumeration value="XMDS" />
+          <s:enumeration value="XMEF" />
+          <s:enumeration value="XMER" />
+          <s:enumeration value="XMEV" />
+          <s:enumeration value="XMEX" />
+          <s:enumeration value="XMGE" />
+          <s:enumeration value="XMIC" />
+          <s:enumeration value="XMID" />
+          <s:enumeration value="XMIF" />
+          <s:enumeration value="XMIL" />
+          <s:enumeration value="XMIO" />
+          <s:enumeration value="XMLI" />
+          <s:enumeration value="XMLX" />
+          <s:enumeration value="XMNT" />
+          <s:enumeration value="XMNX" />
+          <s:enumeration value="XMOC" />
+          <s:enumeration value="XMOD" />
+          <s:enumeration value="XMOL" />
+          <s:enumeration value="XMON" />
+          <s:enumeration value="XMOO" />
+          <s:enumeration value="XMOS" />
+          <s:enumeration value="XMOT" />
+          <s:enumeration value="XMRV" />
+          <s:enumeration value="XMSW" />
+          <s:enumeration value="XMTB" />
+          <s:enumeration value="XMUN" />
+          <s:enumeration value="XMUS" />
+          <s:enumeration value="XMVL" />
+          <s:enumeration value="XNAF" />
+          <s:enumeration value="XNAI" />
+          <s:enumeration value="XNAM" />
+          <s:enumeration value="XNAN" />
+          <s:enumeration value="XNAS" />
+          <s:enumeration value="XNAY" />
+          <s:enumeration value="XNCD" />
+          <s:enumeration value="XNCM" />
+          <s:enumeration value="XNCO" />
+          <s:enumeration value="XNDQ" />
+          <s:enumeration value="XNDX" />
+          <s:enumeration value="XNEC" />
+          <s:enumeration value="XNEE" />
+          <s:enumeration value="XNEP" />
+          <s:enumeration value="XNEW" />
+          <s:enumeration value="XNGM" />
+          <s:enumeration value="XNGO" />
+          <s:enumeration value="XNGS" />
+          <s:enumeration value="XNII" />
+          <s:enumeration value="XNIM" />
+          <s:enumeration value="XNKS" />
+          <s:enumeration value="XNLI" />
+          <s:enumeration value="XNMR" />
+          <s:enumeration value="XNMS" />
+          <s:enumeration value="XNQL" />
+          <s:enumeration value="XNSA" />
+          <s:enumeration value="XNSE" />
+          <s:enumeration value="XNST" />
+          <s:enumeration value="XNYC" />
+          <s:enumeration value="XNYE" />
+          <s:enumeration value="XNYL" />
+          <s:enumeration value="XNYM" />
+          <s:enumeration value="XNYS" />
+          <s:enumeration value="XNZE" />
+          <s:enumeration value="XOAM" />
+          <s:enumeration value="XOAS" />
+          <s:enumeration value="XOCH" />
+          <s:enumeration value="XODE" />
+          <s:enumeration value="XOME" />
+          <s:enumeration value="XOPV" />
+          <s:enumeration value="XOSE" />
+          <s:enumeration value="XOSJ" />
+          <s:enumeration value="XOSL" />
+          <s:enumeration value="XOSM" />
+          <s:enumeration value="XOST" />
+          <s:enumeration value="XOTB" />
+          <s:enumeration value="XOTC" />
+          <s:enumeration value="XPAE" />
+          <s:enumeration value="XPAR" />
+          <s:enumeration value="XPBT" />
+          <s:enumeration value="XPET" />
+          <s:enumeration value="XPHL" />
+          <s:enumeration value="XPHO" />
+          <s:enumeration value="XPHS" />
+          <s:enumeration value="XPIC" />
+          <s:enumeration value="XPIN" />
+          <s:enumeration value="XPLU" />
+          <s:enumeration value="XPOM" />
+          <s:enumeration value="XPOR" />
+          <s:enumeration value="XPOS" />
+          <s:enumeration value="XPOW" />
+          <s:enumeration value="XPRA" />
+          <s:enumeration value="XPRI" />
+          <s:enumeration value="XPSE" />
+          <s:enumeration value="XPST" />
+          <s:enumeration value="XPTY" />
+          <s:enumeration value="XPXE" />
+          <s:enumeration value="XQMH" />
+          <s:enumeration value="XQUI" />
+          <s:enumeration value="XRAS" />
+          <s:enumeration value="XRBM" />
+          <s:enumeration value="XRIO" />
+          <s:enumeration value="XRIS" />
+          <s:enumeration value="XRMO" />
+          <s:enumeration value="XRMS" />
+          <s:enumeration value="XRMZ" />
+          <s:enumeration value="XROS" />
+          <s:enumeration value="XROV" />
+          <s:enumeration value="XROX" />
+          <s:enumeration value="XRPM" />
+          <s:enumeration value="XRTR" />
+          <s:enumeration value="XRUS" />
+          <s:enumeration value="XSAF" />
+          <s:enumeration value="XSAM" />
+          <s:enumeration value="XSAP" />
+          <s:enumeration value="XSAT" />
+          <s:enumeration value="XSAU" />
+          <s:enumeration value="XSBI" />
+          <s:enumeration value="XSC1" />
+          <s:enumeration value="XSC2" />
+          <s:enumeration value="XSC3" />
+          <s:enumeration value="XSCA" />
+          <s:enumeration value="XSCE" />
+          <s:enumeration value="XSCL" />
+          <s:enumeration value="XSCO" />
+          <s:enumeration value="XSCU" />
+          <s:enumeration value="XSEF" />
+          <s:enumeration value="XSES" />
+          <s:enumeration value="XSFA" />
+          <s:enumeration value="XSFE" />
+          <s:enumeration value="XSGE" />
+          <s:enumeration value="XSGO" />
+          <s:enumeration value="XSHE" />
+          <s:enumeration value="XSHG" />
+          <s:enumeration value="XSIB" />
+          <s:enumeration value="XSIC" />
+          <s:enumeration value="XSIM" />
+          <s:enumeration value="XSME" />
+          <s:enumeration value="XSMP" />
+          <s:enumeration value="XSOM" />
+          <s:enumeration value="XSOP" />
+          <s:enumeration value="XSPS" />
+          <s:enumeration value="XSRM" />
+          <s:enumeration value="XSSE" />
+          <s:enumeration value="XSTC" />
+          <s:enumeration value="XSTE" />
+          <s:enumeration value="XSTO" />
+          <s:enumeration value="XSTU" />
+          <s:enumeration value="XSTV" />
+          <s:enumeration value="XSTX" />
+          <s:enumeration value="XSUR" />
+          <s:enumeration value="XSVA" />
+          <s:enumeration value="XSWA" />
+          <s:enumeration value="XSWB" />
+          <s:enumeration value="XSWO" />
+          <s:enumeration value="XSWX" />
+          <s:enumeration value="XTAA" />
+          <s:enumeration value="XTAD" />
+          <s:enumeration value="XTAE" />
+          <s:enumeration value="XTAF" />
+          <s:enumeration value="XTAI" />
+          <s:enumeration value="XTAL" />
+          <s:enumeration value="XTAM" />
+          <s:enumeration value="XTAR" />
+          <s:enumeration value="XTEH" />
+          <s:enumeration value="XTFE" />
+          <s:enumeration value="XTFF" />
+          <s:enumeration value="XTFN" />
+          <s:enumeration value="XTIR" />
+          <s:enumeration value="XTK1" />
+          <s:enumeration value="XTK2" />
+          <s:enumeration value="XTK3" />
+          <s:enumeration value="XTKA" />
+          <s:enumeration value="XTKO" />
+          <s:enumeration value="XTKS" />
+          <s:enumeration value="XTKT" />
+          <s:enumeration value="XTLX" />
+          <s:enumeration value="XTNX" />
+          <s:enumeration value="XTOE" />
+          <s:enumeration value="XTPE" />
+          <s:enumeration value="XTRA" />
+          <s:enumeration value="XTRN" />
+          <s:enumeration value="XTRZ" />
+          <s:enumeration value="XTSE" />
+          <s:enumeration value="XTSX" />
+          <s:enumeration value="XTUC" />
+          <s:enumeration value="XTUN" />
+          <s:enumeration value="XTUR" />
+          <s:enumeration value="XUAX" />
+          <s:enumeration value="XUBS" />
+          <s:enumeration value="XUGA" />
+          <s:enumeration value="XUKR" />
+          <s:enumeration value="XULA" />
+          <s:enumeration value="XUNI" />
+          <s:enumeration value="XUSE" />
+          <s:enumeration value="XVAL" />
+          <s:enumeration value="XVAR" />
+          <s:enumeration value="XVES" />
+          <s:enumeration value="XVIE" />
+          <s:enumeration value="XVLA" />
+          <s:enumeration value="XVPA" />
+          <s:enumeration value="XVSE" />
+          <s:enumeration value="XVTX" />
+          <s:enumeration value="XWAR" />
+          <s:enumeration value="XWBO" />
+          <s:enumeration value="XWCE" />
+          <s:enumeration value="XWEE" />
+          <s:enumeration value="XXSC" />
+          <s:enumeration value="XYIE" />
+          <s:enumeration value="XYKT" />
+          <s:enumeration value="XZAG" />
+          <s:enumeration value="XZAM" />
+          <s:enumeration value="XZCE" />
+          <s:enumeration value="XZIM" />
+          <s:enumeration value="XZRH" />
+          <s:enumeration value="YLDX" />
+          <s:enumeration value="ZKBX" />
+          <s:enumeration value="ZOBX" />
+          <s:enumeration value="_360T" />
+          <s:enumeration value="_MFQS" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="InstrumentClasses">
+        <s:restriction base="s:string">
+          <s:enumeration value="All" />
+          <s:enumeration value="Bond" />
+          <s:enumeration value="Indices" />
+          <s:enumeration value="Stock" />
+          <s:enumeration value="Other" />
+          <s:enumeration value="StructuredProduct" />
+          <s:enumeration value="Fund" />
+          <s:enumeration value="MoneyMarket" />
+          <s:enumeration value="Derivative" />
+          <s:enumeration value="Currency" />
+          <s:enumeration value="Technical" />
+          <s:enumeration value="Commodity" />
+          <s:enumeration value="CurrencyForward" />
+          <s:enumeration value="InterestRateSwaps" />
+          <s:enumeration value="DepositoryReceipt" />
+          <s:enumeration value="ExchangeTradedFund" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetMasterByExchangeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterByExchangeResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByExchangeChanges">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartSymbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndSymbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartModifiedDate" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndModifiedDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByExchangeChangesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterByExchangeChangesResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterBySector">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="1" maxOccurs="1" name="Sector" type="tns:Sectors" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartSymbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndSymbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="Sectors">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="BasicMaterials" />
+          <s:enumeration value="Conglomerates" />
+          <s:enumeration value="ConsumerGoods" />
+          <s:enumeration value="Financial" />
+          <s:enumeration value="Healthcare" />
+          <s:enumeration value="IndustrialGoods" />
+          <s:enumeration value="Services" />
+          <s:enumeration value="Technology" />
+          <s:enumeration value="Utilities" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetMasterBySectorResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterBySectorResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterByIndustry">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="1" maxOccurs="1" name="Industry" type="tns:Industries" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartSymbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndSymbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:simpleType name="Industries">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="Chemicals_MajorDiversified" />
+          <s:enumeration value="Synthetics" />
+          <s:enumeration value="AgriculturalChemicals" />
+          <s:enumeration value="SpecialtyChemicals" />
+          <s:enumeration value="MajorIntegratedOilAndGas" />
+          <s:enumeration value="IndependentOilAndGas" />
+          <s:enumeration value="OilAndGasRefiningAndMarketing" />
+          <s:enumeration value="OilAndGasDrillingAndExploration" />
+          <s:enumeration value="OilAndGasEquipmentAndServices" />
+          <s:enumeration value="OilAndGasPipelines" />
+          <s:enumeration value="SteelAndIron" />
+          <s:enumeration value="Copper" />
+          <s:enumeration value="Aluminum" />
+          <s:enumeration value="IndustrialMetalsAndMinerals" />
+          <s:enumeration value="Gold" />
+          <s:enumeration value="Silver" />
+          <s:enumeration value="NonmetallicMineralMining" />
+          <s:enumeration value="Conglomerates" />
+          <s:enumeration value="Appliances" />
+          <s:enumeration value="HomeFurnishingsAndFixtures" />
+          <s:enumeration value="HousewaresAndAccessories" />
+          <s:enumeration value="BusinessEquipment" />
+          <s:enumeration value="ElectronicEquipment" />
+          <s:enumeration value="ToysAndGames" />
+          <s:enumeration value="SportingGoods" />
+          <s:enumeration value="RecreationalGoods_Other" />
+          <s:enumeration value="PhotographicEquipmentAndSupplies" />
+          <s:enumeration value="Textile_ApparelClothing" />
+          <s:enumeration value="Textile_ApparelFootwearAndAccessories" />
+          <s:enumeration value="RubberAndPlastics" />
+          <s:enumeration value="PersonalProducts" />
+          <s:enumeration value="PaperAndPaperProducts" />
+          <s:enumeration value="PackagingAndContainers" />
+          <s:enumeration value="CleaningProducts" />
+          <s:enumeration value="OfficeSupplies" />
+          <s:enumeration value="AutoManufacturers_Major" />
+          <s:enumeration value="TrucksAndOtherVehicles" />
+          <s:enumeration value="RecreationalVehicles" />
+          <s:enumeration value="AutoParts" />
+          <s:enumeration value="Food_MajorDiversified" />
+          <s:enumeration value="FarmProducts" />
+          <s:enumeration value="ProcessedAndPackagedGoods" />
+          <s:enumeration value="MeatProducts" />
+          <s:enumeration value="DairyProducts" />
+          <s:enumeration value="Confectioners" />
+          <s:enumeration value="Beverages_Brewers" />
+          <s:enumeration value="Beverages_WineriesAndDistillers" />
+          <s:enumeration value="Beverages_SoftDrinks" />
+          <s:enumeration value="Cigarettes" />
+          <s:enumeration value="TobaccoProducts_Other" />
+          <s:enumeration value="MoneyCenterBanks" />
+          <s:enumeration value="Regional_NortheastBanks" />
+          <s:enumeration value="Regional_Mid_AtlanticBanks" />
+          <s:enumeration value="Regional_SoutheastBanks" />
+          <s:enumeration value="Regional_MidwestBanks" />
+          <s:enumeration value="Regional_SouthwestBanks" />
+          <s:enumeration value="Regional_PacificBanks" />
+          <s:enumeration value="ForeignMoneyCenterBanks" />
+          <s:enumeration value="ForeignRegionalBanks" />
+          <s:enumeration value="SavingsAndLoans" />
+          <s:enumeration value="InvestmentBrokerage_National" />
+          <s:enumeration value="InvestmentBrokerage_Regional" />
+          <s:enumeration value="AssetManagement" />
+          <s:enumeration value="DiversifiedInvestments" />
+          <s:enumeration value="CreditServices" />
+          <s:enumeration value="Closed_EndFund_Debt" />
+          <s:enumeration value="Closed_EndFund_Equity" />
+          <s:enumeration value="Closed_EndFund_Foreign" />
+          <s:enumeration value="LifeInsurance" />
+          <s:enumeration value="AccidentAndHealthInsurance" />
+          <s:enumeration value="PropertyAndCasualtyInsurance" />
+          <s:enumeration value="SuretyAndTitleInsurance" />
+          <s:enumeration value="InsuranceBrokers" />
+          <s:enumeration value="REIT_Diversified" />
+          <s:enumeration value="REIT_Office" />
+          <s:enumeration value="REIT_HealthcareFacilities" />
+          <s:enumeration value="REIT_Hotel_Motel" />
+          <s:enumeration value="REIT_Industrial" />
+          <s:enumeration value="REIT_Residential" />
+          <s:enumeration value="REIT_Retail" />
+          <s:enumeration value="MortgageInvestment" />
+          <s:enumeration value="PropertyManagement" />
+          <s:enumeration value="RealEstateDevelopment" />
+          <s:enumeration value="DrugManufacturers_Major" />
+          <s:enumeration value="DrugManufacturers_Other" />
+          <s:enumeration value="Drugs_Generic" />
+          <s:enumeration value="DrugDeliveryAndAccessories" />
+          <s:enumeration value="DrugRelatedProducts" />
+          <s:enumeration value="Biotechnology" />
+          <s:enumeration value="DiagnosticSubstances" />
+          <s:enumeration value="MedicalInstrumentsAndSupplies" />
+          <s:enumeration value="MedicalAppliancesAndEquipment" />
+          <s:enumeration value="HealthCarePlans" />
+          <s:enumeration value="Long_TermCareFacilities" />
+          <s:enumeration value="Hospitals" />
+          <s:enumeration value="MedicalLaboratoriesAndResearch" />
+          <s:enumeration value="HomeHealthCare" />
+          <s:enumeration value="MedicalPractitioners" />
+          <s:enumeration value="SpecializedHealthServices" />
+          <s:enumeration value="Aerospace_Defense_MajorDiversified" />
+          <s:enumeration value="Aerospace_DefenseProductsAndServices" />
+          <s:enumeration value="FarmAndConstructionMachinery" />
+          <s:enumeration value="IndustrialEquipmentAndComponents" />
+          <s:enumeration value="DiversifiedMachinery" />
+          <s:enumeration value="PollutionAndTreatmentControls" />
+          <s:enumeration value="MachineToolsAndAccessories" />
+          <s:enumeration value="SmallToolsAndAccessories" />
+          <s:enumeration value="MetalFabrication" />
+          <s:enumeration value="IndustrialElectricalEquipment" />
+          <s:enumeration value="TextileIndustrial" />
+          <s:enumeration value="ResidentialConstruction" />
+          <s:enumeration value="ManufacturedHousing" />
+          <s:enumeration value="Lumber_WoodProduction" />
+          <s:enumeration value="Cement" />
+          <s:enumeration value="GeneralBuildingMaterials" />
+          <s:enumeration value="HeavyConstruction" />
+          <s:enumeration value="GeneralContractors" />
+          <s:enumeration value="WasteManagement" />
+          <s:enumeration value="Lodging" />
+          <s:enumeration value="ResortsAndCasinos" />
+          <s:enumeration value="Restaurants" />
+          <s:enumeration value="SpecialtyEateries" />
+          <s:enumeration value="GamingActivities" />
+          <s:enumeration value="SportingActivities" />
+          <s:enumeration value="GeneralEntertainment" />
+          <s:enumeration value="AdvertisingAgencies" />
+          <s:enumeration value="MarketingServices" />
+          <s:enumeration value="Entertainment_Diversified" />
+          <s:enumeration value="Broadcasting_TV" />
+          <s:enumeration value="Broadcasting_Radio" />
+          <s:enumeration value="CATVSystems" />
+          <s:enumeration value="MovieProduction_Theaters" />
+          <s:enumeration value="Publishing_Newspapers" />
+          <s:enumeration value="Publishing_Periodicals" />
+          <s:enumeration value="Publishing_Books" />
+          <s:enumeration value="ApparelStores" />
+          <s:enumeration value="DepartmentStores" />
+          <s:enumeration value="Discount_VarietyStores" />
+          <s:enumeration value="DrugStores" />
+          <s:enumeration value="GroceryStores" />
+          <s:enumeration value="ElectronicsStores" />
+          <s:enumeration value="HomeImprovementStores" />
+          <s:enumeration value="HomeFurnishingStores" />
+          <s:enumeration value="AutoPartsStores" />
+          <s:enumeration value="CatalogAndMailOrderHouses" />
+          <s:enumeration value="SportingGoodsStores" />
+          <s:enumeration value="ToyAndHobbyStores" />
+          <s:enumeration value="JewelryStores" />
+          <s:enumeration value="MusicAndVideoStores" />
+          <s:enumeration value="AutoDealerships" />
+          <s:enumeration value="SpecialtyRetail_Other" />
+          <s:enumeration value="AutoPartsWholesale" />
+          <s:enumeration value="BuildingMaterialsWholesale" />
+          <s:enumeration value="IndustrialEquipmentWholesale" />
+          <s:enumeration value="ElectronicsWholesale" />
+          <s:enumeration value="MedicalEquipmentWholesale" />
+          <s:enumeration value="ComputersWholesale" />
+          <s:enumeration value="DrugsWholesale" />
+          <s:enumeration value="FoodWholesale" />
+          <s:enumeration value="BasicMaterialsWholesale" />
+          <s:enumeration value="Wholesale_Other" />
+          <s:enumeration value="BusinessServices" />
+          <s:enumeration value="RentalAndLeasingServices" />
+          <s:enumeration value="PersonalServices" />
+          <s:enumeration value="ConsumerServices" />
+          <s:enumeration value="StaffingAndOutsourcingServices" />
+          <s:enumeration value="SecurityAndProtectionServices" />
+          <s:enumeration value="EducationAndTrainingServices" />
+          <s:enumeration value="TechnicalServices" />
+          <s:enumeration value="ResearchServices" />
+          <s:enumeration value="ManagementServices" />
+          <s:enumeration value="MajorAirlines" />
+          <s:enumeration value="RegionalAirlines" />
+          <s:enumeration value="AirServices_Other" />
+          <s:enumeration value="AirDeliveryAndFreightServices" />
+          <s:enumeration value="Trucking" />
+          <s:enumeration value="Shipping" />
+          <s:enumeration value="Railroads" />
+          <s:enumeration value="DiversifiedComputerSystems" />
+          <s:enumeration value="PersonalComputers" />
+          <s:enumeration value="ComputerBasedSystems" />
+          <s:enumeration value="DataStorageDevices" />
+          <s:enumeration value="NetworkingAndCommunicationDevices" />
+          <s:enumeration value="ComputerPeripherals" />
+          <s:enumeration value="MultimediaAndGraphicsSoftware" />
+          <s:enumeration value="ApplicationSoftware" />
+          <s:enumeration value="TechnicalAndSystemSoftware" />
+          <s:enumeration value="SecuritySoftwareAndServices" />
+          <s:enumeration value="InformationTechnologyServices" />
+          <s:enumeration value="HealthcareInformationServices" />
+          <s:enumeration value="BusinessSoftwareAndServices" />
+          <s:enumeration value="InformationAndDeliveryServices" />
+          <s:enumeration value="Semiconductor_BroadLine" />
+          <s:enumeration value="Semiconductor_MemoryChips" />
+          <s:enumeration value="Semiconductor_Specialized" />
+          <s:enumeration value="Semiconductor_IntegratedCircuits" />
+          <s:enumeration value="SemiconductorEquipmentAndMaterials" />
+          <s:enumeration value="PrintedCircuitBoards" />
+          <s:enumeration value="DiversifiedElectronics" />
+          <s:enumeration value="ScientificAndTechnicalInstruments" />
+          <s:enumeration value="WirelessCommunications" />
+          <s:enumeration value="CommunicationEquipment" />
+          <s:enumeration value="ProcessingSystemsAndProducts" />
+          <s:enumeration value="TelecomServices_Domestic" />
+          <s:enumeration value="LongDistanceCarriers" />
+          <s:enumeration value="TelecomServices_Foreign" />
+          <s:enumeration value="DiversifiedCommunicationServices" />
+          <s:enumeration value="InternetServiceProviders" />
+          <s:enumeration value="InternetInformationProviders" />
+          <s:enumeration value="InternetSoftwareAndServices" />
+          <s:enumeration value="ForeignUtilities" />
+          <s:enumeration value="ElectricUtilities" />
+          <s:enumeration value="GasUtilities" />
+          <s:enumeration value="DiversifiedUtilitities" />
+          <s:enumeration value="WaterUtilities" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="GetMasterByIndustryResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterByIndustryResult" type="tns:ArrayOfRecord" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListExchanges">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListExchangesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListExchangesResult" type="tns:PossibleValues" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="PossibleValues">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:AbstractPublicWebServiceObj">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="PossibleValuesOf" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Values" type="tns:ArrayOfPossibleValue" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="AbstractPublicWebServiceObj" abstract="true">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="DataProvider" type="tns:DataProviders" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfPossibleValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PossibleValue" nillable="true" type="tns:PossibleValue" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PossibleValue">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ProviderValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="XigniteValue" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ListIndustries">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListIndustriesResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListIndustriesResult" type="tns:PossibleValues" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListSectors">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListSectorsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListSectorsResult" type="tns:PossibleValues" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListMICToLegacyExchange">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListMICToLegacyExchangeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListMICToLegacyExchangeResult" type="tns:ArrayOfLegacyExchangeMapping" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfLegacyExchangeMapping">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="LegacyExchangeMapping" nillable="true" type="tns:LegacyExchangeMapping" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="LegacyExchangeMapping">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="MIC" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="unbounded" name="LegacyValues" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ListMICToLegacySuffix">
+        <s:complexType />
+      </s:element>
+      <s:element name="ListMICToLegacySuffixResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListMICToLegacySuffixResult" type="tns:ArrayOfLegacyExchangeMapping" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListIdentifiersByExchange">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="1" maxOccurs="1" name="IdentifierType" type="tns:IdentifierTypes" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="ListIdentifiersByExchangeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ListIdentifiersByExchangeResult" type="tns:IdentifiersByExchange" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="IdentifiersByExchange">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="IdentifierType" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="Exchange" type="s:string" />
+              <s:element minOccurs="0" maxOccurs="1" name="InstrumentClass" type="s:string" />
+              <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:int" />
+              <s:element minOccurs="0" maxOccurs="1" name="ArrayOfIdentifierRecords" type="tns:ArrayOfIdentifierRecord" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfIdentifierRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="IdentifierRecord" nillable="true" type="tns:IdentifierRecord" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="IdentifierRecord">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Identifier" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="GetMasterStatisticsByExchange">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="Exchange" type="tns:Exchanges" />
+            <s:element minOccurs="0" maxOccurs="1" name="StartSymbol" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="EndSymbol" type="s:string" />
+            <s:element minOccurs="1" maxOccurs="1" name="InstrumentClass" type="tns:InstrumentClasses" />
+            <s:element minOccurs="0" maxOccurs="1" name="AsOfDate" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetMasterStatisticsByExchangeResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="GetMasterStatisticsByExchangeResult" type="tns:Statistics" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="Statistics">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Common">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="Count" type="s:long" />
+              <s:element minOccurs="0" maxOccurs="1" name="Exchange" type="s:string" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="ArrayOfSecurity" nillable="true" type="tns:ArrayOfSecurity" />
+      <s:element name="ArrayOfInstrument" nillable="true" type="tns:ArrayOfInstrument" />
+      <s:element name="ArrayOfIssuer" nillable="true" type="tns:ArrayOfIssuer" />
+      <s:element name="Issuer" nillable="true" type="tns:Issuer" />
+      <s:element name="ArrayOfRecord" nillable="true" type="tns:ArrayOfRecord" />
+      <s:element name="PossibleValues" nillable="true" type="tns:PossibleValues" />
+      <s:element name="ArrayOfLegacyExchangeMapping" nillable="true" type="tns:ArrayOfLegacyExchangeMapping" />
+      <s:element name="IdentifiersByExchange" nillable="true" type="tns:IdentifiersByExchange" />
+      <s:element name="Statistics" nillable="true" type="tns:Statistics" />
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetSecuritySoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecurity" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritySoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecurityResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetSecurities" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetSecuritiesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentSoapIn">
+    <wsdl:part name="parameters" element="tns:GetInstrument" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentSoapOut">
+    <wsdl:part name="parameters" element="tns:GetInstrumentResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetInstruments" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetInstrumentsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIssuer" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIssuerResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIssuers" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIssuersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierSoapIn">
+    <wsdl:part name="parameters" element="tns:GetIssuerByCompanyIdentifier" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierSoapOut">
+    <wsdl:part name="parameters" element="tns:GetIssuerByCompanyIdentifierResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterByIdentifier" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterByIdentifierResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterByIdentifiers" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterByIdentifiersResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterByExchange" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterByExchangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterByExchangeChanges" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterByExchangeChangesResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterBySector" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterBySectorResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustrySoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterByIndustry" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustrySoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterByIndustryResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustryHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListExchangesSoapIn">
+    <wsdl:part name="parameters" element="tns:ListExchanges" />
+  </wsdl:message>
+  <wsdl:message name="ListExchangesSoapOut">
+    <wsdl:part name="parameters" element="tns:ListExchangesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListExchangesHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListIndustriesSoapIn">
+    <wsdl:part name="parameters" element="tns:ListIndustries" />
+  </wsdl:message>
+  <wsdl:message name="ListIndustriesSoapOut">
+    <wsdl:part name="parameters" element="tns:ListIndustriesResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListIndustriesHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListSectorsSoapIn">
+    <wsdl:part name="parameters" element="tns:ListSectors" />
+  </wsdl:message>
+  <wsdl:message name="ListSectorsSoapOut">
+    <wsdl:part name="parameters" element="tns:ListSectorsResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListSectorsHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacyExchangeSoapIn">
+    <wsdl:part name="parameters" element="tns:ListMICToLegacyExchange" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacyExchangeSoapOut">
+    <wsdl:part name="parameters" element="tns:ListMICToLegacyExchangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacyExchangeHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacySuffixSoapIn">
+    <wsdl:part name="parameters" element="tns:ListMICToLegacySuffix" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacySuffixSoapOut">
+    <wsdl:part name="parameters" element="tns:ListMICToLegacySuffixResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacySuffixHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeSoapIn">
+    <wsdl:part name="parameters" element="tns:ListIdentifiersByExchange" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeSoapOut">
+    <wsdl:part name="parameters" element="tns:ListIdentifiersByExchangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeSoapIn">
+    <wsdl:part name="parameters" element="tns:GetMasterStatisticsByExchange" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeSoapOut">
+    <wsdl:part name="parameters" element="tns:GetMasterStatisticsByExchangeResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeHeader">
+    <wsdl:part name="Header" element="tns:Header" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityHttpGetIn">
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSecurity" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesHttpGetIn">
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSecurity" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentHttpGetIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfInstrument" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsHttpGetIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfInstrument" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerHttpGetIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfIssuer" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersHttpGetIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfIssuer" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierHttpGetIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierHttpGetOut">
+    <wsdl:part name="Body" element="tns:Issuer" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierHttpGetIn">
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersHttpGetIn">
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="StartModifiedDate" type="s:string" />
+    <wsdl:part name="EndModifiedDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="Sector" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustryHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="Industry" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustryHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="ListExchangesHttpGetIn" />
+  <wsdl:message name="ListExchangesHttpGetOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListIndustriesHttpGetIn" />
+  <wsdl:message name="ListIndustriesHttpGetOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListSectorsHttpGetIn" />
+  <wsdl:message name="ListSectorsHttpGetOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacyExchangeHttpGetIn" />
+  <wsdl:message name="ListMICToLegacyExchangeHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfLegacyExchangeMapping" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacySuffixHttpGetIn" />
+  <wsdl:message name="ListMICToLegacySuffixHttpGetOut">
+    <wsdl:part name="Body" element="tns:ArrayOfLegacyExchangeMapping" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeHttpGetOut">
+    <wsdl:part name="Body" element="tns:IdentifiersByExchange" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeHttpGetIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeHttpGetOut">
+    <wsdl:part name="Body" element="tns:Statistics" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityHttpPostIn">
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecurityHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSecurity" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesHttpPostIn">
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetSecuritiesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfSecurity" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentHttpPostIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfInstrument" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsHttpPostIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetInstrumentsHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfInstrument" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerHttpPostIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfIssuer" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersHttpPostIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuersHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfIssuer" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierHttpPostIn">
+    <wsdl:part name="IncludeRelated" type="s:string" />
+    <wsdl:part name="Identifier" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetIssuerByCompanyIdentifierHttpPostOut">
+    <wsdl:part name="Body" element="tns:Issuer" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierHttpPostIn">
+    <wsdl:part name="Identifier" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="StartDate" type="s:string" />
+    <wsdl:part name="EndDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifierHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersHttpPostIn">
+    <wsdl:part name="Identifiers" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIdentifiersHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="StartModifiedDate" type="s:string" />
+    <wsdl:part name="EndModifiedDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByExchangeChangesHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="Sector" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterBySectorHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustryHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="Industry" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterByIndustryHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfRecord" />
+  </wsdl:message>
+  <wsdl:message name="ListExchangesHttpPostIn" />
+  <wsdl:message name="ListExchangesHttpPostOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListIndustriesHttpPostIn" />
+  <wsdl:message name="ListIndustriesHttpPostOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListSectorsHttpPostIn" />
+  <wsdl:message name="ListSectorsHttpPostOut">
+    <wsdl:part name="Body" element="tns:PossibleValues" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacyExchangeHttpPostIn" />
+  <wsdl:message name="ListMICToLegacyExchangeHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfLegacyExchangeMapping" />
+  </wsdl:message>
+  <wsdl:message name="ListMICToLegacySuffixHttpPostIn" />
+  <wsdl:message name="ListMICToLegacySuffixHttpPostOut">
+    <wsdl:part name="Body" element="tns:ArrayOfLegacyExchangeMapping" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="IdentifierType" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="ListIdentifiersByExchangeHttpPostOut">
+    <wsdl:part name="Body" element="tns:IdentifiersByExchange" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeHttpPostIn">
+    <wsdl:part name="Exchange" type="s:string" />
+    <wsdl:part name="StartSymbol" type="s:string" />
+    <wsdl:part name="EndSymbol" type="s:string" />
+    <wsdl:part name="InstrumentClass" type="s:string" />
+    <wsdl:part name="AsOfDate" type="s:string" />
+  </wsdl:message>
+  <wsdl:message name="GetMasterStatisticsByExchangeHttpPostOut">
+    <wsdl:part name="Body" element="tns:Statistics" />
+  </wsdl:message>
+  <wsdl:portType name="XigniteGlobalMasterSoap">
+    <wsdl:operation name="GetSecurity">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecuritySoapIn" />
+      <wsdl:output message="tns:GetSecuritySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecuritiesSoapIn" />
+      <wsdl:output message="tns:GetSecuritiesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentSoapIn" />
+      <wsdl:output message="tns:GetInstrumentSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentsSoapIn" />
+      <wsdl:output message="tns:GetInstrumentsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerSoapIn" />
+      <wsdl:output message="tns:GetIssuerSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuersSoapIn" />
+      <wsdl:output message="tns:GetIssuersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a issuer by the company identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerByCompanyIdentifierSoapIn" />
+      <wsdl:output message="tns:GetIssuerByCompanyIdentifierSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifierSoapIn" />
+      <wsdl:output message="tns:GetMasterByIdentifierSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifiers.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifiersSoapIn" />
+      <wsdl:output message="tns:GetMasterByIdentifiersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by exchange.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeSoapIn" />
+      <wsdl:output message="tns:GetMasterByExchangeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by exchange and the last modified since date</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeChangesSoapIn" />
+      <wsdl:output message="tns:GetMasterByExchangeChangesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by sector.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterBySectorSoapIn" />
+      <wsdl:output message="tns:GetMasterBySectorSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by industry.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIndustrySoapIn" />
+      <wsdl:output message="tns:GetMasterByIndustrySoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListExchangesSoapIn" />
+      <wsdl:output message="tns:ListExchangesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible industries.</wsdl:documentation>
+      <wsdl:input message="tns:ListIndustriesSoapIn" />
+      <wsdl:output message="tns:ListIndustriesSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible sectors.</wsdl:documentation>
+      <wsdl:input message="tns:ListSectorsSoapIn" />
+      <wsdl:output message="tns:ListSectorsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacyExchangeSoapIn" />
+      <wsdl:output message="tns:ListMICToLegacyExchangeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchange suffix.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacySuffixSoapIn" />
+      <wsdl:output message="tns:ListMICToLegacySuffixSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all the Indetifiers and names for securities listed on an exchange.</wsdl:documentation>
+      <wsdl:input message="tns:ListIdentifiersByExchangeSoapIn" />
+      <wsdl:output message="tns:ListIdentifiersByExchangeSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get statistical information about exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterStatisticsByExchangeSoapIn" />
+      <wsdl:output message="tns:GetMasterStatisticsByExchangeSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="XigniteGlobalMasterHttpGet">
+    <wsdl:operation name="GetSecurity">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecurityHttpGetIn" />
+      <wsdl:output message="tns:GetSecurityHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecuritiesHttpGetIn" />
+      <wsdl:output message="tns:GetSecuritiesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentHttpGetIn" />
+      <wsdl:output message="tns:GetInstrumentHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentsHttpGetIn" />
+      <wsdl:output message="tns:GetInstrumentsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerHttpGetIn" />
+      <wsdl:output message="tns:GetIssuerHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuersHttpGetIn" />
+      <wsdl:output message="tns:GetIssuersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a issuer by the company identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerByCompanyIdentifierHttpGetIn" />
+      <wsdl:output message="tns:GetIssuerByCompanyIdentifierHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifierHttpGetIn" />
+      <wsdl:output message="tns:GetMasterByIdentifierHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifiers.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifiersHttpGetIn" />
+      <wsdl:output message="tns:GetMasterByIdentifiersHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by exchange.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeHttpGetIn" />
+      <wsdl:output message="tns:GetMasterByExchangeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by exchange and the last modified since date</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeChangesHttpGetIn" />
+      <wsdl:output message="tns:GetMasterByExchangeChangesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by sector.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterBySectorHttpGetIn" />
+      <wsdl:output message="tns:GetMasterBySectorHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by industry.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIndustryHttpGetIn" />
+      <wsdl:output message="tns:GetMasterByIndustryHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListExchangesHttpGetIn" />
+      <wsdl:output message="tns:ListExchangesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible industries.</wsdl:documentation>
+      <wsdl:input message="tns:ListIndustriesHttpGetIn" />
+      <wsdl:output message="tns:ListIndustriesHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible sectors.</wsdl:documentation>
+      <wsdl:input message="tns:ListSectorsHttpGetIn" />
+      <wsdl:output message="tns:ListSectorsHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacyExchangeHttpGetIn" />
+      <wsdl:output message="tns:ListMICToLegacyExchangeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchange suffix.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacySuffixHttpGetIn" />
+      <wsdl:output message="tns:ListMICToLegacySuffixHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all the Indetifiers and names for securities listed on an exchange.</wsdl:documentation>
+      <wsdl:input message="tns:ListIdentifiersByExchangeHttpGetIn" />
+      <wsdl:output message="tns:ListIdentifiersByExchangeHttpGetOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get statistical information about exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterStatisticsByExchangeHttpGetIn" />
+      <wsdl:output message="tns:GetMasterStatisticsByExchangeHttpGetOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:portType name="XigniteGlobalMasterHttpPost">
+    <wsdl:operation name="GetSecurity">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecurityHttpPostIn" />
+      <wsdl:output message="tns:GetSecurityHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of securities.</wsdl:documentation>
+      <wsdl:input message="tns:GetSecuritiesHttpPostIn" />
+      <wsdl:output message="tns:GetSecuritiesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentHttpPostIn" />
+      <wsdl:output message="tns:GetInstrumentHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of instruments.</wsdl:documentation>
+      <wsdl:input message="tns:GetInstrumentsHttpPostIn" />
+      <wsdl:output message="tns:GetInstrumentsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerHttpPostIn" />
+      <wsdl:output message="tns:GetIssuerHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a list of issuers</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuersHttpPostIn" />
+      <wsdl:output message="tns:GetIssuersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a issuer by the company identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetIssuerByCompanyIdentifierHttpPostIn" />
+      <wsdl:output message="tns:GetIssuerByCompanyIdentifierHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifier.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifierHttpPostIn" />
+      <wsdl:output message="tns:GetMasterByIdentifierHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by identifiers.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIdentifiersHttpPostIn" />
+      <wsdl:output message="tns:GetMasterByIdentifiersHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get master records by exchange.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeHttpPostIn" />
+      <wsdl:output message="tns:GetMasterByExchangeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by exchange and the last modified since date</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByExchangeChangesHttpPostIn" />
+      <wsdl:output message="tns:GetMasterByExchangeChangesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by sector.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterBySectorHttpPostIn" />
+      <wsdl:output message="tns:GetMasterBySectorHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get a master record by industry.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterByIndustryHttpPostIn" />
+      <wsdl:output message="tns:GetMasterByIndustryHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListExchangesHttpPostIn" />
+      <wsdl:output message="tns:ListExchangesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible industries.</wsdl:documentation>
+      <wsdl:input message="tns:ListIndustriesHttpPostIn" />
+      <wsdl:output message="tns:ListIndustriesHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the possible sectors.</wsdl:documentation>
+      <wsdl:input message="tns:ListSectorsHttpPostIn" />
+      <wsdl:output message="tns:ListSectorsHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacyExchangeHttpPostIn" />
+      <wsdl:output message="tns:ListMICToLegacyExchangeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get the legacy exchange suffix.</wsdl:documentation>
+      <wsdl:input message="tns:ListMICToLegacySuffixHttpPostIn" />
+      <wsdl:output message="tns:ListMICToLegacySuffixHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all the Indetifiers and names for securities listed on an exchange.</wsdl:documentation>
+      <wsdl:input message="tns:ListIdentifiersByExchangeHttpPostIn" />
+      <wsdl:output message="tns:ListIdentifiersByExchangeHttpPostOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get statistical information about exchanges.</wsdl:documentation>
+      <wsdl:input message="tns:GetMasterStatisticsByExchangeHttpPostIn" />
+      <wsdl:output message="tns:GetMasterStatisticsByExchangeHttpPostOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="XigniteGlobalMasterSoap" type="tns:XigniteGlobalMasterSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetSecurity">
+      <soap:operation soapAction="http://www.xignite.com/services/GetSecurity" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetSecurityHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <soap:operation soapAction="http://www.xignite.com/services/GetSecurities" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetSecuritiesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <soap:operation soapAction="http://www.xignite.com/services/GetInstrument" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetInstrumentHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <soap:operation soapAction="http://www.xignite.com/services/GetInstruments" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetInstrumentsHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <soap:operation soapAction="http://www.xignite.com/services/GetIssuer" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetIssuerHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <soap:operation soapAction="http://www.xignite.com/services/GetIssuers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetIssuersHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <soap:operation soapAction="http://www.xignite.com/services/GetIssuerByCompanyIdentifier" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetIssuerByCompanyIdentifierHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterByIdentifier" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterByIdentifierHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterByIdentifiers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterByIdentifiersHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterByExchange" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterByExchangeChanges" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterByExchangeChangesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterBySector" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterBySectorHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterByIndustry" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterByIndustryHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <soap:operation soapAction="http://www.xignite.com/services/ListExchanges" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListExchangesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <soap:operation soapAction="http://www.xignite.com/services/ListIndustries" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListIndustriesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <soap:operation soapAction="http://www.xignite.com/services/ListSectors" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListSectorsHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <soap:operation soapAction="http://www.xignite.com/services/ListMICToLegacyExchange" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListMICToLegacyExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <soap:operation soapAction="http://www.xignite.com/services/ListMICToLegacySuffix" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListMICToLegacySuffixHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <soap:operation soapAction="http://www.xignite.com/services/ListIdentifiersByExchange" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:ListIdentifiersByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <soap:operation soapAction="http://www.xignite.com/services/GetMasterStatisticsByExchange" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetMasterStatisticsByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="XigniteGlobalMasterSoap12" type="tns:XigniteGlobalMasterSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetSecurity">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetSecurity" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetSecurityHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetSecurities" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetSecuritiesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetInstrument" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetInstrumentHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetInstruments" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetInstrumentsHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetIssuer" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetIssuerHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetIssuers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetIssuersHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetIssuerByCompanyIdentifier" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetIssuerByCompanyIdentifierHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterByIdentifier" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterByIdentifierHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterByIdentifiers" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterByIdentifiersHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterByExchange" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterByExchangeChanges" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterByExchangeChangesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterBySector" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterBySectorHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterByIndustry" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterByIndustryHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListExchanges" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListExchangesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListIndustries" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListIndustriesHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListSectors" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListSectorsHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListMICToLegacyExchange" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListMICToLegacyExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListMICToLegacySuffix" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListMICToLegacySuffixHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <soap12:operation soapAction="http://www.xignite.com/services/ListIdentifiersByExchange" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:ListIdentifiersByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <soap12:operation soapAction="http://www.xignite.com/services/GetMasterStatisticsByExchange" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:GetMasterStatisticsByExchangeHeader" part="Header" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="XigniteGlobalMasterHttpGet" type="tns:XigniteGlobalMasterHttpGet">
+    <http:binding verb="GET" />
+    <wsdl:operation name="GetSecurity">
+      <http:operation location="/GetSecurity" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <http:operation location="/GetSecurities" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <http:operation location="/GetInstrument" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <http:operation location="/GetInstruments" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <http:operation location="/GetIssuer" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <http:operation location="/GetIssuers" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <http:operation location="/GetIssuerByCompanyIdentifier" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <http:operation location="/GetMasterByIdentifier" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <http:operation location="/GetMasterByIdentifiers" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <http:operation location="/GetMasterByExchange" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <http:operation location="/GetMasterByExchangeChanges" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <http:operation location="/GetMasterBySector" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <http:operation location="/GetMasterByIndustry" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <http:operation location="/ListExchanges" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <http:operation location="/ListIndustries" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <http:operation location="/ListSectors" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <http:operation location="/ListMICToLegacyExchange" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <http:operation location="/ListMICToLegacySuffix" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <http:operation location="/ListIdentifiersByExchange" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <http:operation location="/GetMasterStatisticsByExchange" />
+      <wsdl:input>
+        <http:urlEncoded />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="XigniteGlobalMasterHttpPost" type="tns:XigniteGlobalMasterHttpPost">
+    <http:binding verb="POST" />
+    <wsdl:operation name="GetSecurity">
+      <http:operation location="/GetSecurity" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetSecurities">
+      <http:operation location="/GetSecurities" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstrument">
+      <http:operation location="/GetInstrument" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetInstruments">
+      <http:operation location="/GetInstruments" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuer">
+      <http:operation location="/GetIssuer" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuers">
+      <http:operation location="/GetIssuers" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetIssuerByCompanyIdentifier">
+      <http:operation location="/GetIssuerByCompanyIdentifier" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifier">
+      <http:operation location="/GetMasterByIdentifier" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIdentifiers">
+      <http:operation location="/GetMasterByIdentifiers" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchange">
+      <http:operation location="/GetMasterByExchange" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByExchangeChanges">
+      <http:operation location="/GetMasterByExchangeChanges" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterBySector">
+      <http:operation location="/GetMasterBySector" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterByIndustry">
+      <http:operation location="/GetMasterByIndustry" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListExchanges">
+      <http:operation location="/ListExchanges" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIndustries">
+      <http:operation location="/ListIndustries" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListSectors">
+      <http:operation location="/ListSectors" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacyExchange">
+      <http:operation location="/ListMICToLegacyExchange" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListMICToLegacySuffix">
+      <http:operation location="/ListMICToLegacySuffix" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ListIdentifiersByExchange">
+      <http:operation location="/ListIdentifiersByExchange" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetMasterStatisticsByExchange">
+      <http:operation location="/GetMasterStatisticsByExchange" />
+      <wsdl:input>
+        <mime:content type="application/x-www-form-urlencoded" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:mimeXml part="Body" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="XigniteGlobalMaster">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This web service provides multiple security-related operations including mapping of symbol, CUSIP, CIK and name, the collection of statistical information to be used in stock growth simulations, split information, and lookup services.</wsdl:documentation>
+    <wsdl:port name="XigniteGlobalMasterSoap" binding="tns:XigniteGlobalMasterSoap">
+      <soap:address location="http://globalmaster.xignite.com/xglobalmaster.asmx" />
+    </wsdl:port>
+    <wsdl:port name="XigniteGlobalMasterSoap12" binding="tns:XigniteGlobalMasterSoap12">
+      <soap12:address location="http://globalmaster.xignite.com/xglobalmaster.asmx" />
+    </wsdl:port>
+    <wsdl:port name="XigniteGlobalMasterHttpGet" binding="tns:XigniteGlobalMasterHttpGet">
+      <http:address location="http://globalmaster.xignite.com/xglobalmaster.asmx" />
+    </wsdl:port>
+    <wsdl:port name="XigniteGlobalMasterHttpPost" binding="tns:XigniteGlobalMasterHttpPost">
+      <http:address location="http://globalmaster.xignite.com/xglobalmaster.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
