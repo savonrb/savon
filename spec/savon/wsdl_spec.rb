@@ -30,13 +30,9 @@ describe Savon::WSDL do
   end
 
   describe '#operations' do
-    it 'returns a Hash of operations' do
+    it 'returns an Array of operation names' do
       operations = wsdl.operations(service_name, port_name)
-
-      expect(operations.count).to eq(1)
-      expect(operations.keys).to eq([operation_name])
-
-      expect(operations[operation_name]).to be_a(Savon::WSDL::Operation)
+      expect(operations).to eq([operation_name])
     end
   end
 

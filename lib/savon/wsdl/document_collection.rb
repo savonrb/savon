@@ -37,6 +37,12 @@ class Savon
         @services ||= collect_sections { |document| document.services }
       end
 
+      # Public: Returns a port by service and port name.
+      def service_port(service_name, port_name)
+        service = services.fetch(service_name)
+        service.ports.fetch(port_name)
+      end
+
       private
 
       def collect_sections

@@ -7,20 +7,23 @@ class Savon
       def initialize(binding_node)
         @binding_node = binding_node
 
+        @name = binding_node['name']
+        @port_type = binding_node['type']
+
         if soap_node = find_soap_node
           @style = soap_node['style'] || 'document'
           @transport = soap_node['transport']
         end
       end
 
-      attr_reader :style, :transport
+      attr_reader :name, :port_type, :style, :transport
 
-      def name
-        @binding_node['name']
-      end
+      def fetch_port_type(documents)
+        port_type_local = @port_type.split(':').last
 
-      def port_type
-        @binding_node['type']
+        documents.port_types.fetch(port_type_local) {
+          raise "Unable to find portType #{port_type_local.inspect} for binding #{@name.inspect}"
+        }
       end
 
       def operations

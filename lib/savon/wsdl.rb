@@ -1,5 +1,5 @@
+require 'savon/wsdl/operation'
 require 'savon/wsdl/document'
-require 'savon/wsdl/operation_builder'
 require 'savon/resolver'
 require 'savon/importer'
 
@@ -34,15 +34,26 @@ class Savon
       verify_service_exists! service_name
       verify_port_exists! service_name, port_name
 
-      OperationBuilder.new(service_name, port_name, self).build
+      port = @documents.service_port(service_name, port_name)
+      binding = port.fetch_binding(@documents)
+
+      binding.operations.keys
     end
 
     # Public: Returns an Operation by service, port and operation name.
     def operation(service_name, port_name, operation_name)
-      operations = operations(service_name, port_name)
-      verify_operation_exists! operations, service_name, port_name, operation_name
+      verify_operation_exists! service_name, port_name, operation_name
 
-      operations[operation_name]
+      port = @documents.service_port(service_name, port_name)
+      endpoint = port.location
+
+      binding = port.fetch_binding(@documents)
+      binding_operation = binding.operations.fetch(operation_name)
+
+      port_type = binding.fetch_port_type(@documents)
+      port_type_operation = port_type.operations.fetch(operation_name)
+
+      Operation.new(operation_name, endpoint, binding_operation, port_type_operation, self)
     end
 
     private
@@ -61,19 +72,13 @@ class Savon
     end
 
     # Private: Raises a useful error in case the operation does not exist.
-    def verify_operation_exists!(operations, service_name, port_name, operation_name)
+    def verify_operation_exists!(service_name, port_name, operation_name)
+      operations = operations(service_name, port_name)
+
       unless operations.include? operation_name
         raise ArgumentError, "Unknown operation #{operation_name.inspect} for " \
                              "service #{service_name.inspect} and port #{port_name.inspect}.\n" \
-                             "You may want to try one of #{operations.keys.inspect}."
-      end
-    end
-
-    # Private: Raises a useful error in case the service does not exist.
-    def verify_service_exists!(service_name)
-      unless services.include? service_name
-        raise ArgumentError, "Unknown service #{service_name.inspect}.\n" \
-                             "You may want to try one of #{services.keys.inspect}."
+                             "You may want to try one of #{operations.inspect}."
       end
     end
 
@@ -84,6 +89,14 @@ class Savon
       unless ports.include? port_name
         raise ArgumentError, "Unknown port #{port_name.inspect} for service #{service_name.inspect}.\n" \
                              "You may want to try one of #{ports.keys.inspect}."
+      end
+    end
+
+    # Private: Raises a useful error in case the service does not exist.
+    def verify_service_exists!(service_name)
+      unless services.include? service_name
+        raise ArgumentError, "Unknown service #{service_name.inspect}.\n" \
+                             "You may want to try one of #{services.keys.inspect}."
       end
     end
 

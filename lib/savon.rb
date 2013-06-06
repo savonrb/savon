@@ -44,7 +44,7 @@ class Savon
 
   # Public: Returns an Array of operations for a service and port.
   def operations(service_name, port_name)
-    @wsdl.operations(service_name.to_s, port_name.to_s).keys.sort
+    @wsdl.operations(service_name.to_s, port_name.to_s)
   end
 
   # Public: Returns an Operation by service, port and operation name.
