@@ -12,4 +12,6 @@ group :development do
 
   # debugging
   #gem 'debugger',  require: false  # don't install on travis!
+
+  gem 'fuubar'
 end
