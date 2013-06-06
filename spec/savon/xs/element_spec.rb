@@ -73,10 +73,10 @@ describe Savon::XS::Element do
 
   def new_element(xml)
     node = Nokogiri.XML(xml).root
-    wsdl ||= mock('wsdl')
+    schemas ||= mock('schemas')
     schema = {}
 
-    Savon::XS::Element.new(node, wsdl, schema)
+    Savon::XS::Element.new(node, schemas, schema)
   end
 
 end

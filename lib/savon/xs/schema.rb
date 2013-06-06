@@ -4,9 +4,9 @@ class Savon
   class XS
     class Schema
 
-      def initialize(schema, wsdl)
+      def initialize(schema, schemas)
         @schema = schema
-        @wsdl = wsdl
+        @schemas = schemas
 
         @target_namespace     = @schema['targetNamespace']
         @element_form_default = @schema['elementFormDefault'] || 'unqualified'
@@ -45,7 +45,7 @@ class Savon
       end
 
       def store_element(collection, node, schema)
-        collection[node['name']] = XS.build(node, @wsdl, schema)
+        collection[node['name']] = XS.build(node, @schemas, schema)
       end
 
       def store_import(node)

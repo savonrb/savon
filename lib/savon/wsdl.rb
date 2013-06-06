@@ -1,5 +1,6 @@
 require 'savon/wsdl/operation'
-require 'savon/wsdl/document'
+require 'savon/wsdl/document_collection'
+require 'savon/xs/schema_collection'
 require 'savon/resolver'
 require 'savon/importer'
 
@@ -7,10 +8,12 @@ class Savon
   class WSDL
 
     def initialize(wsdl, http)
-      resolver = Resolver.new(http)
-      importer = Importer.new(resolver, self)
+      @documents = WSDL::DocumentCollection.new
+      @schemas = XS::SchemaCollection.new
 
-      @documents, @schemas = importer.import(wsdl)
+      resolver = Resolver.new(http)
+      importer = Importer.new(resolver, @documents, @schemas)
+      importer.import(wsdl)
     end
 
     # Public: Returns the DocumentCollection.

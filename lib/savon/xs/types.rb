@@ -3,9 +3,9 @@ class Savon
 
     class BaseType
 
-      def initialize(node, wsdl, schema = {})
+      def initialize(node, schemas, schema = {})
         @node = node
-        @wsdl = wsdl
+        @schemas = schemas
         @schema = schema
       end
 
@@ -20,7 +20,7 @@ class Savon
       end
 
       def children
-        @children ||= @node.element_children.map { |child| XS.build(child, @wsdl, @schema) }
+        @children ||= @node.element_children.map { |child| XS.build(child, @schemas, @schema) }
       end
 
       def collect_child_elements(memo = [])
@@ -59,7 +59,7 @@ class Savon
 
     class PrimaryType < BaseType
 
-      def initialize(node, wsdl, schema = {})
+      def initialize(node, schemas, schema = {})
         super
 
         @namespace = schema[:target_namespace]
@@ -94,7 +94,7 @@ class Savon
 
     class Element < PrimaryType
 
-      def initialize(node, wsdl, schema = {})
+      def initialize(node, schemas, schema = {})
         super
 
         @type = node['type']
@@ -127,11 +127,11 @@ class Savon
           local, nsid = @node['base'].split(':').reverse
           namespace = @node.namespaces["xmlns:#{nsid}"]
 
-          if complex_type = @wsdl.schemas.complex_type(namespace, local)
+          if complex_type = @schemas.complex_type(namespace, local)
             memo += complex_type.elements
 
           # TODO: can we find a testcase for this?
-          else #if simple_type = @wsdl.schemas.simple_type(namespace, local)
+          else #if simple_type = @schemas.simple_type(namespace, local)
             raise 'simple type extension?!'
             #memo << simple_type
           end
@@ -152,7 +152,7 @@ class Savon
 
     class Attribute < BaseType
 
-      def initialize(node, wsdl, schema = {})
+      def initialize(node, schemas, schema = {})
         super
 
         @name = node['name']
@@ -189,7 +189,7 @@ class Savon
           local, nsid = @node['ref'].split(':').reverse
           namespace = @node.namespaces["xmlns:#{nsid}"]
 
-          attribute_group = @wsdl.schemas.attribute_group(namespace, local)
+          attribute_group = @schemas.attribute_group(namespace, local)
           memo += attribute_group.attributes
         else
           super
@@ -242,8 +242,8 @@ class Savon
       'annotation'     => Annotation
     }
 
-    def self.build(node, wsdl, schema = {})
-      type_class(node.name).new(node, wsdl, schema)
+    def self.build(node, schemas, schema = {})
+      type_class(node.name).new(node, schemas, schema)
     end
 
     def self.type_class(type)

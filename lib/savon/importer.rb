@@ -1,40 +1,34 @@
 require 'nokogiri'
 require 'savon/wsdl/document'
-require 'savon/wsdl/document_collection'
-require 'savon/xs/schema_collection'
 
 class Savon
   class Importer
 
-    def initialize(resolver, wsdl)
+    def initialize(resolver, documents, schemas)
       @logger = Logging.logger[self]
 
       @resolver = resolver
-      @wsdl = wsdl
+      @documents = documents
+      @schemas = schemas
     end
 
     def import(location)
       @import_locations = []
 
-      documents = WSDL::DocumentCollection.new
-      schemas = XS::SchemaCollection.new
-
       @logger.info("Resolving WSDL document #{location.inspect}.")
       import_document(location) do |document|
-        documents << document
-        schemas.push(document.schemas)
+        @documents << document
+        @schemas.push(document.schemas)
       end
 
       # resolve xml schema imports
-      import_schemas(schemas) do |schema_location|
+      import_schemas do |schema_location|
         @logger.info("Resolving XML schema import #{schema_location.inspect}.")
 
         import_document(schema_location) do |document|
-          schemas.push(document.schemas)
+          @schemas.push(document.schemas)
         end
       end
-
-      [documents, schemas]
     end
 
     private
@@ -48,7 +42,7 @@ class Savon
       xml = @resolver.resolve(location)
       @import_locations << location
 
-      document = WSDL::Document.new Nokogiri.XML(xml), @wsdl
+      document = WSDL::Document.new Nokogiri.XML(xml), @schemas
       block.call(document)
 
       # resolve wsdl imports
@@ -58,8 +52,8 @@ class Savon
       end
     end
 
-    def import_schemas(schemas)
-      schemas.each do |schema|
+    def import_schemas
+      @schemas.each do |schema|
         schema.imports.each do |namespace, schema_location|
           next unless schema_location
 

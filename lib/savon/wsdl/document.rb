@@ -8,9 +8,9 @@ class Savon
   class WSDL
     class Document
 
-      def initialize(document, wsdl)
+      def initialize(document, schemas)
         @document = document
-        @wsdl = wsdl
+        @schemas = schemas
 
         @messages, @bindings, @port_types, @services = {}, {}, {}, {}
 
@@ -33,7 +33,7 @@ class Savon
       end
 
       def schemas
-        @schemas ||= schema_nodes.map { |node| XS::Schema.new(node, @wsdl) }
+        schema_nodes.map { |node| XS::Schema.new(node, @schemas) }
       end
 
       def imports

@@ -45,9 +45,6 @@ describe Savon::XS::ComplexType do
     schemas = mock('schemas')
     schemas.expects(:complex_type).with('http://example.com/ons', 'baseObject').returns(base_type)
 
-    wsdl = mock('wsdl')
-    wsdl.expects(:schemas).returns(schemas)
-
     complex_type = new_complex_type('
 			<complexType name="Account" xmlns="http://www.w3.org/2001/XMLSchema"
                                   xmlns:ons="http://example.com/ons"
@@ -62,7 +59,7 @@ describe Savon::XS::ComplexType do
 					</extension>
 				</complexContent>
       </complexType>
-    ', wsdl)
+    ', schemas)
 
     expect(complex_type).to be_a(Savon::XS::ComplexType)
 
@@ -189,12 +186,12 @@ describe Savon::XS::ComplexType do
     expect(complex_type).to be_empty
   end
 
-  def new_complex_type(xml, wsdl = nil)
+  def new_complex_type(xml, schemas = nil)
     node = Nokogiri.XML(xml).root
-    wsdl ||= mock('wsdl')
+    schemas ||= mock('schemas')
     schema = {}
 
-    Savon::XS::ComplexType.new(node, wsdl, schema)
+    Savon::XS::ComplexType.new(node, schemas, schema)
   end
 
 end

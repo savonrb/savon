@@ -30,10 +30,10 @@ describe Savon::XS::SimpleType do
 
   def new_simple_type(xml)
     node = Nokogiri.XML(xml).root
-    wsdl ||= mock('wsdl')
+    schemas ||= mock('schemas')
     schema = {}
 
-    Savon::XS::SimpleType.new(node, wsdl, schema)
+    Savon::XS::SimpleType.new(node, schemas, schema)
   end
 
 end
