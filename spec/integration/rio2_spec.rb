@@ -2,25 +2,26 @@ require 'spec_helper'
 
 describe 'Integration with Rio II' do
 
-  subject(:client) { Savon.new(wsdl_url) }
+  before :all do
+    wsdl_url  = 'http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?wsdl'
+    wsdl0_url = 'http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?wsdl=wsdl0'
 
-  let(:wsdl_url) { 'http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?wsdl' }
-  let(:wsdl0_url) { 'http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?wsdl=wsdl0' }
-
-  before do
+    # mock wsdl imports
     http_mock.fake_request(wsdl_url,  'wsdl/rio2/rio2.wsdl')
     http_mock.fake_request(wsdl0_url, 'wsdl/rio2/rio2_0.wsdl')
 
-    # 4 schemas to import
+    # mock schema imports
     schema_import_base = 'http://193.155.1.72/MyCentral-RioII-Services/SecurityService.svc?xsd=xsd%d'
     (0..3).each do |i|
       url = schema_import_base % i
       http_mock.fake_request(url, "wsdl/rio2/rio2_#{i}.xsd")
     end
+
+    @client = Savon.new(wsdl_url)
   end
 
   it 'only downloads WSDL and XML Schema imports once per location' do
-    expect(client.services).to eq(
+    expect(@client.services).to eq(
       'SecurityService' => {
         ports: {
           'BasicHttpBinding_ISecurityService' => {
@@ -34,7 +35,7 @@ describe 'Integration with Rio II' do
 
   it 'knows the GetSessionState operation' do
     service, port = :SecurityService, :BasicHttpBinding_ISecurityService
-    operation = client.operation(service, port, :GetSessionState)
+    operation = @client.operation(service, port, :GetSessionState)
 
     expect(operation.input_style).to eq('document/literal')
 

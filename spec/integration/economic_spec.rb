@@ -3,10 +3,12 @@ require 'benchmark'
 
 describe 'Integration with Economic' do
 
-  subject(:client) { Savon.new fixture('wsdl/economic') }
+  before :all do
+    @client = Savon.new fixture('wsdl/economic')
+  end
 
   it 'returns a map of services and ports' do
-    expect(client.services).to eq(
+    expect(@client.services).to eq(
       'EconomicWebService' => {
         :ports => {
           'EconomicWebServiceSoap'   => {
@@ -24,7 +26,7 @@ describe 'Integration with Economic' do
 
   it 'knows operations with Arrays' do
     service, port = 'EconomicWebService', 'EconomicWebServiceSoap'
-    operation = client.operation(service, port, 'Account_GetDataArray')
+    operation = @client.operation(service, port, 'Account_GetDataArray')
 
     expect(operation.soap_action).to eq('http://e-conomic.com/Account_GetDataArray')
     expect(operation.endpoint).to eq('https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx')
@@ -42,14 +44,14 @@ describe 'Integration with Economic' do
   it 'has an ok parse-time for huge wsdl files' do
     if RUBY_ENGINE =~ /rbx/
       parse_time = Benchmark.realtime {
-        client.operations('EconomicWebService', 'EconomicWebServiceSoap')
+        @client.operations('EconomicWebService', 'EconomicWebServiceSoap')
       }
 
       pending 'This currently takes %.2f sec on Rubinius. Investigate why!' % parse_time
     else
       #profiler = MethodProfiler.observe(Wasabi::Parser)
       parse_time = Benchmark.realtime {
-        client.operations('EconomicWebService', 'EconomicWebServiceSoap')
+        @client.operations('EconomicWebService', 'EconomicWebServiceSoap')
       }
       #puts profiler.report
 
