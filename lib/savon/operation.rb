@@ -54,7 +54,7 @@ class Savon
 
     # Public: Create an example request header Hash.
     def example_header
-      ExampleMessage.new(@operation.header_parts).to_hash
+      ExampleMessage.new(@operation.input.header_parts).to_hash
     end
 
     # Public: Sets the request body Hash.
@@ -62,12 +62,12 @@ class Savon
 
     # Public: Create an example request body Hash.
     def example_body
-      ExampleMessage.new(@operation.body_parts).to_hash
+      ExampleMessage.new(@operation.input.body_parts).to_hash
     end
 
     # Public: Returns the input body parts used to build the request body.
     def body_parts
-      @operation.body_parts.inject([]) { |memo, part| memo + part.to_a }
+      @operation.input.body_parts.inject([]) { |memo, part| memo + part.to_a }
     end
 
     # Public: Build the request XML for this operation.

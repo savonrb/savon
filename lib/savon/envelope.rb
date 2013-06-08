@@ -34,12 +34,12 @@ class Savon
 
     def build_header
       return "" if @header.empty?
-      Message.new(self, @operation.header_parts).build(@header)
+      Message.new(self, @operation.input.header_parts).build(@header)
     end
 
     def build_body
       return "" if @body.empty?
-      body = Message.new(self, @operation.body_parts).build(@body)
+      body = Message.new(self, @operation.input.body_parts).build(@body)
 
       if rpc_call?
         build_rpc_wrapper(body)
