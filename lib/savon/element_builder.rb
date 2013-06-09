@@ -4,9 +4,9 @@ require 'savon/attribute'
 class Savon
   class ElementBuilder
 
-    def initialize(wsdl)
+    def initialize(schemas)
       @logger = Logging.logger[self]
-      @wsdl = wsdl
+      @schemas = schemas
     end
 
     def build(parts)
@@ -37,7 +37,7 @@ class Savon
     # and its type and returns an Element with that type.
     def build_element(part)
       local, namespace = expand_qname(part[:element], part[:namespaces])
-      schema = @wsdl.schemas.find_by_namespace(namespace)
+      schema = @schemas.find_by_namespace(namespace)
       raise "Unable to find schema for #{namespace.inspect}" unless schema
 
       xs_element = schema.elements.fetch(local)
@@ -191,16 +191,16 @@ class Savon
 
     def find_element(qname, namespaces)
       local, namespace = expand_qname(qname, namespaces)
-      @wsdl.schemas.element(namespace, local)
+      @schemas.element(namespace, local)
     end
 
     def find_attribute(qname, namespaces)
       local, namespace = expand_qname(qname, namespaces)
-      @wsdl.schemas.attribute(namespace, local)
+      @schemas.attribute(namespace, local)
     end
 
     def find_schema(namespace)
-      @wsdl.schemas.find_by_namespace(namespace)
+      @schemas.find_by_namespace(namespace)
     end
 
     def split_qname(qname)
