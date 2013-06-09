@@ -124,7 +124,6 @@ class Savon
         if recursive_child_definition? parent, child_element
           el.recursive_type = child_element.type
         else
-          el.recursive = false
           type = find_type_for_element(child_element)
           handle_type(el, type)
         end
