@@ -10,12 +10,12 @@ class Savon
 
     attr_accessor :parent, :name, :namespace, :form
 
-    # Public: Whether this is element is a simple type.
+    # Public: Whether this element is a simple type.
     def simple_type?
       !!base_type
     end
 
-    # Public: Whether this is element is a complex type.
+    # Public: Whether this element is a complex type.
     def complex_type?
       !simple_type?
     end
