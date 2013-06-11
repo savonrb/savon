@@ -54,7 +54,7 @@ class Savon
 
     # Public: Create an example request header Hash.
     def example_header
-      ExampleMessage.new(@operation.input.header_parts).to_hash
+      ExampleMessage.build(@operation.input.header_parts)
     end
 
     # Public: Sets the request body Hash.
@@ -62,7 +62,7 @@ class Savon
 
     # Public: Create an example request body Hash.
     def example_body
-      ExampleMessage.new(@operation.input.body_parts).to_hash
+      ExampleMessage.build(@operation.input.body_parts)
     end
 
     # Public: Returns the input body parts used to build the request body.

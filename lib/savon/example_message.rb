@@ -1,20 +1,10 @@
 class Savon
   class ExampleMessage
 
-    def initialize(parts)
-      @parts = parts
-    end
-
-    def to_hash
-      build(@parts)
-    end
-
-    private
-
-    def build(elements)
+    def self.build(parts)
       memo = {}
 
-      elements.each do |element|
+      parts.each do |element|
         name = element.name.to_sym
 
         case
@@ -39,7 +29,9 @@ class Savon
       memo
     end
 
-    def collect_attributes(element)
+    private
+
+    def self.collect_attributes(element)
       element.attributes.each_with_object({}) { |attribute, memo|
         memo["_#{attribute.name}".to_sym] = attribute.base_type
       }
