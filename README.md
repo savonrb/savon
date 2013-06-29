@@ -5,15 +5,15 @@ Heavy metal SOAP client
 [Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
 
-[![Build Status](https://secure.travis-ci.org/savonrb/savon.png)](http://travis-ci.org/savonrb/savon)
+[![Build Status](https://secure.travis-ci.org/savonrb/savon.png?branch=version2)](http://travis-ci.org/savonrb/savon)
 [![Gem Version](https://badge.fury.io/rb/savon.png)](http://badge.fury.io/rb/savon)
 [![Code Climate](https://codeclimate.com/github/savonrb/savon.png)](https://codeclimate.com/github/savonrb/savon)
-[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.png?branch=master)](https://coveralls.io/r/savonrb/savon)
+[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.png?branch=version2)](https://coveralls.io/r/savonrb/savon)
 
 
-## Installation
+## Version 2
 
-Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
+Savon version 2 is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
 ```
 $ gem install savon
@@ -44,7 +44,8 @@ response.body
 # => { find_user_response: { id: 42, name: 'Hoff' } }
 ```
 
-For more examples, you should check out the [integration tests](https://github.com/savonrb/savon/tree/master/spec/integration).
+For more examples, you should check out the
+[integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
 
 
 ## Give back
@@ -57,12 +58,9 @@ donating via [Gittip](https://www.gittip.com/rubiii/) so that I can continue to 
 
 ## Documentation
 
-Please make sure to read the documentation for your version:
-
-* [Version 2](http://savonrb.com/version2.html)
-* [Version 1](http://savonrb.com)
+Please make sure to [read the documentation](http://savonrb.com/version2/).
 
 And if you find any problems with it or if you think something's missing,  
-feel free to [help out and improve the documentation](https://github.com/savonrb/savon/tree/master/docs).
+feel free to [help out and improve the documentation](https://github.com/savonrb/savonrb.com).
 
 Donate icon from the [Noun Project](http://thenounproject.com/noun/donate/#icon-No285).
