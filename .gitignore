@@ -1,13 +1,11 @@
 .rvmrc
 .DS_Store
-.yardoc
 doc
-rdox
 coverage
-tmp
-*.rbc
+pkg
 *~
+*.rbc
 *.gem
-.bundle
 .rspec
+.bundle
 Gemfile.lock

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- http://bydexchange.nbs-us.com/BYDExchangeServer.svc?wsdl=wsdl0 -->
+<wsdl:definitions targetNamespace="http://bydexchange.nbs-us.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:tns="http://bydexchange.nbs-us.com" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsap="http://schemas.xmlsoap.org/ws/2004/08/addressing/policy" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:msc="http://schemas.microsoft.com/ws/2005/12/wsdl/contract" xmlns:wsa10="http://www.w3.org/2005/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata">
+   <wsdl:types>
+      <xsd:schema targetNamespace="http://bydexchange.nbs-us.com/Imports">
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd0" namespace="http://bydexchange.nbs-us.com"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/BYDConnector.QuerySo3"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/BYDConnector.ProductAvail"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/BYDConnector.QUERYCUSTOMERIN1"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd5" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd6" namespace="http://schemas.datacontract.org/2004/07/NBSBYDLibrary"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd7" namespace="http://schemas.datacontract.org/2004/07/BYDConnector.SalesOrderin5"/>
+         <xsd:import schemaLocation="http://bydexchange.nbs-us.com/BYDExchangeServer.svc?xsd=xsd8" namespace="http://schemas.datacontract.org/2004/07/BYDConnector.CustomerIN_V1"/>
+      </xsd:schema>
+   </wsdl:types>
+   <wsdl:message name="IBYDExchangeServer_ListOrdersByCustomer_InputMessage">
+      <wsdl:part name="parameters" element="tns:ListOrdersByCustomer"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ListOrdersByCustomer_OutputMessage">
+      <wsdl:part name="parameters" element="tns:ListOrdersByCustomerResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ListOrdersByDate_InputMessage">
+      <wsdl:part name="parameters" element="tns:ListOrdersByDate"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ListOrdersByDate_OutputMessage">
+      <wsdl:part name="parameters" element="tns:ListOrdersByDateResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ProductAvail_InputMessage">
+      <wsdl:part name="parameters" element="tns:ProductAvail"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ProductAvail_OutputMessage">
+      <wsdl:part name="parameters" element="tns:ProductAvailResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_listcustomers_InputMessage">
+      <wsdl:part name="parameters" element="tns:listcustomers"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_listcustomers_OutputMessage">
+      <wsdl:part name="parameters" element="tns:listcustomersResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ParseCSV_InputMessage">
+      <wsdl:part name="parameters" element="tns:ParseCSV"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_ParseCSV_OutputMessage">
+      <wsdl:part name="parameters" element="tns:ParseCSVResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_AddOrder_InputMessage">
+      <wsdl:part name="parameters" element="tns:AddOrder"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_AddOrder_OutputMessage">
+      <wsdl:part name="parameters" element="tns:AddOrderResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_GetOrder_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetOrder"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_GetOrder_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetOrderResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_AddCustomer_InputMessage">
+      <wsdl:part name="parameters" element="tns:AddCustomer"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_AddCustomer_OutputMessage">
+      <wsdl:part name="parameters" element="tns:AddCustomerResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_GetCustomer_InputMessage">
+      <wsdl:part name="parameters" element="tns:GetCustomer"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_GetCustomer_OutputMessage">
+      <wsdl:part name="parameters" element="tns:GetCustomerResponse"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_Authenticate_InputMessage">
+      <wsdl:part name="parameters" element="tns:Authenticate"/>
+   </wsdl:message>
+   <wsdl:message name="IBYDExchangeServer_Authenticate_OutputMessage">
+      <wsdl:part name="parameters" element="tns:AuthenticateResponse"/>
+   </wsdl:message>
+   <wsdl:portType name="IBYDExchangeServer">
+      <wsdl:operation name="ListOrdersByCustomer">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ListOrdersByCustomer" message="tns:IBYDExchangeServer_ListOrdersByCustomer_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ListOrdersByCustomerResponse" message="tns:IBYDExchangeServer_ListOrdersByCustomer_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ListOrdersByDate">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ListOrdersByDate" message="tns:IBYDExchangeServer_ListOrdersByDate_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ListOrdersByDateResponse" message="tns:IBYDExchangeServer_ListOrdersByDate_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ProductAvail">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ProductAvail" message="tns:IBYDExchangeServer_ProductAvail_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ProductAvailResponse" message="tns:IBYDExchangeServer_ProductAvail_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="listcustomers">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/listcustomers" message="tns:IBYDExchangeServer_listcustomers_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/listcustomersResponse" message="tns:IBYDExchangeServer_listcustomers_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="ParseCSV">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ParseCSV" message="tns:IBYDExchangeServer_ParseCSV_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/ParseCSVResponse" message="tns:IBYDExchangeServer_ParseCSV_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="AddOrder">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/AddOrder" message="tns:IBYDExchangeServer_AddOrder_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/AddOrderResponse" message="tns:IBYDExchangeServer_AddOrder_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetOrder">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/GetOrder" message="tns:IBYDExchangeServer_GetOrder_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/GetOrderResponse" message="tns:IBYDExchangeServer_GetOrder_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="AddCustomer">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/AddCustomer" message="tns:IBYDExchangeServer_AddCustomer_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/AddCustomerResponse" message="tns:IBYDExchangeServer_AddCustomer_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="GetCustomer">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/GetCustomer" message="tns:IBYDExchangeServer_GetCustomer_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/GetCustomerResponse" message="tns:IBYDExchangeServer_GetCustomer_OutputMessage"/>
+      </wsdl:operation>
+      <wsdl:operation name="Authenticate">
+         <wsdl:input wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/Authenticate" message="tns:IBYDExchangeServer_Authenticate_InputMessage"/>
+         <wsdl:output wsaw:Action="http://bydexchange.nbs-us.com/IBYDExchangeServer/AuthenticateResponse" message="tns:IBYDExchangeServer_Authenticate_OutputMessage"/>
+      </wsdl:operation>
+   </wsdl:portType>
+</wsdl:definitions>

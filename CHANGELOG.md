@@ -1,3 +1,31 @@
+## 3.0.0 (branch)
+
+* This version requires Ruby 1.9.2 or higher. Ruby 1.8 is no longer supported!
+
+* It also requires a WSDL, because that's were we can provide the most benefit.
+
+* Gyoku is no longer used and Nori will removed as well. With the new parser,
+  we don't need to rely on these libraries any longer.
+
+* Imported Wasabi, as Savon shares a lot of code, fixtures and specs with it and we're
+  probably faster maintaing one project instead of two.
+
+* Replaced the `Savon.client` factory method by changing the `Savon` module to a class
+  and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
+  can just call `Savon.new`. There's no need for an additional class here.
+
+* Removed `Savon::Model`. Feel free to write and open source your own abstraction.
+
+* Removed the test helpers and observers. Internally, observers were only used to
+  allow the test helpers to stub the request. Test helpers are removed because version
+  3.0 should be open enough to allow you to use Webmock, Fakeweb, VCR or any other http
+  mocking library.
+
+* Removed the dependency on HTTPI and replaced it with a simple adapter for you to
+  extend based on the HTTPClient library.
+
+* Removed the `String#snakecase` core extension. Get used to the service's casing.
+
 ## master
 
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error

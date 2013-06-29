@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Person.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Person.xsd">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+   <xs:complexType name="Person">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Address1" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Address2" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="CellPhone" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="City" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Company" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Country" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="FaxNumber" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="FirstName" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Greeting" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="HomePhone" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="Initial" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="LastName" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Latitude" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="LeadSource" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Longitude" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Prefix" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PrimaryEmail" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="State" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Suffix" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Tags" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         <xs:element minOccurs="0" name="Title" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="WebSite" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="WorkPhone" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Person" nillable="true" type="tns:Person"/>
+</xs:schema>

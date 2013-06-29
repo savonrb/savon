@@ -1,6 +1,17 @@
 source 'https://rubygems.org'
 gemspec
 
-gem "httpclient", "~> 2.3.0"
-gem "simplecov", :require => false, :group => :test
-gem "coveralls", :require => false
+group :development do
+  # profiling
+  #gem 'method_profiler', require: false
+  #gem 'ruby-prof',       require: false  # does not work on jruby!
+
+  # coverage
+  gem 'simplecov', require: false
+  gem 'coveralls', require: false
+
+  # debugging
+  #gem 'debugger',  require: false  # don't install on travis!
+
+  gem 'fuubar'
+end

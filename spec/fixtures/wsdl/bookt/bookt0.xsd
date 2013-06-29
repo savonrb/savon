@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="https://connect.bookt.com/connect" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="https://connect.bookt.com/connect">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd2" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd3" namespace="http://connect.bookt.com/Schemas/Property.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd8" namespace="http://connect.bookt.com/Schemas/Rate.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd9" namespace="http://connect.bookt.com/Schemas/Booking.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd10" namespace="http://connect.bookt.com/Schemas/Person.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd14" namespace="http://connect.bookt.com/Schemas/Event.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd15" namespace="http://connect.bookt.com/Schemas/Review.xsd"/>
+   <xs:element name="GetPropertyCategories">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyCategoriesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetPropertyCategoriesResult" nillable="true" type="q1:ArrayOfstring" xmlns:q1="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyIDs">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastMod" type="xs:dateTime"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyIDsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetPropertyIDsResult" nillable="true" type="q2:ArrayOfint" xmlns:q2="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetProperty">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetPropertyResult" nillable="true" type="q3:Property" xmlns:q3="http://connect.bookt.com/Schemas/Property.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyIDsByCategory">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyCategory" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPropertyIDsByCategoryResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetPropertyIDsByCategoryResult" nillable="true" type="q4:ArrayOfint" xmlns:q4="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetRates">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="rateType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="los" type="xs:int"/>
+            <xs:element minOccurs="0" name="startDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetRatesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetRatesResult" nillable="true" type="q5:ArrayOfKeyValueOfdateTimedecimal" xmlns:q5="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPerRoomRates">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="rateType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="los" type="xs:int"/>
+            <xs:element minOccurs="0" name="startDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="nRooms" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetPerRoomRatesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetPerRoomRatesResult" nillable="true" type="q6:ArrayOfKeyValueOfdateTimedecimal" xmlns:q6="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetAvailability">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="rateType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="startDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="endDate" type="xs:dateTime"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetAvailabilityResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetAvailabilityResult" nillable="true" type="q7:ArrayOfKeyValueOfdateTimeint" xmlns:q7="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetRates">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="rateType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="los" type="xs:int"/>
+            <xs:element minOccurs="0" name="effDates" nillable="true" type="q8:ArrayOfdateTime" xmlns:q8="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="rates" nillable="true" type="q9:ArrayOfdecimal" xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetRatesResponse">
+      <xs:complexType>
+         <xs:sequence/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetPerRoomRates">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="rates" nillable="true" type="q10:ArrayOfRate" xmlns:q10="http://connect.bookt.com/Schemas/Rate.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetPerRoomRatesResponse">
+      <xs:complexType>
+         <xs:sequence/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetAvailability">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="effDates" nillable="true" type="q11:ArrayOfdateTime" xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="numAvailabile" nillable="true" type="q12:ArrayOfint" xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetAvailabilityResponse">
+      <xs:complexType>
+         <xs:sequence/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetRatesAndAvailability">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="propertyID" type="xs:int"/>
+            <xs:element minOccurs="0" name="rateType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="los" type="xs:int"/>
+            <xs:element minOccurs="0" name="effDates" nillable="true" type="q13:ArrayOfdateTime" xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="rates" nillable="true" type="q14:ArrayOfdecimal" xmlns:q14="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="currency" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="numAvailabile" nillable="true" type="q15:ArrayOfint" xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SetRatesAndAvailabilityResponse">
+      <xs:complexType>
+         <xs:sequence/>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetBooking">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bookingID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetBookingResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetBookingResult" nillable="true" type="q16:Booking" xmlns:q16="http://connect.bookt.com/Schemas/Booking.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="MakeBooking">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="booking" nillable="true" type="q17:Booking" xmlns:q17="http://connect.bookt.com/Schemas/Booking.xsd"/>
+            <xs:element minOccurs="0" name="infoOnly" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="MakeBookingResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="MakeBookingResult" nillable="true" type="q18:Booking" xmlns:q18="http://connect.bookt.com/Schemas/Booking.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CancelBooking">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="bookingID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="refundAmount" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="options" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CancelBookingResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CancelBookingResult" nillable="true" type="q19:Booking" xmlns:q19="http://connect.bookt.com/Schemas/Booking.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ModifyBooking">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="booking" nillable="true" type="q20:Booking" xmlns:q20="http://connect.bookt.com/Schemas/Booking.xsd"/>
+            <xs:element minOccurs="0" name="infoOnly" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ModifyBookingResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="ModifyBookingResult" nillable="true" type="q21:Booking" xmlns:q21="http://connect.bookt.com/Schemas/Booking.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateLead">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lead" nillable="true" type="q22:Person" xmlns:q22="http://connect.bookt.com/Schemas/Person.xsd"/>
+            <xs:element minOccurs="0" name="mode" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateLeadResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CreateLeadResult" nillable="true" type="q23:Person" xmlns:q23="http://connect.bookt.com/Schemas/Person.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateEvent">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="eventInfo" nillable="true" type="q24:Event" xmlns:q24="http://connect.bookt.com/Schemas/Event.xsd"/>
+            <xs:element minOccurs="0" name="mode" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateEventResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CreateEventResult" nillable="true" type="q25:Event" xmlns:q25="http://connect.bookt.com/Schemas/Event.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEventCategories">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEventCategoriesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetEventCategoriesResult" nillable="true" type="q26:ArrayOfstring" xmlns:q26="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetLead">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetLeadResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetLeadResult" nillable="true" type="q27:Person" xmlns:q27="http://connect.bookt.com/Schemas/Person.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEvent">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEventResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetEventResult" nillable="true" type="q28:Event" xmlns:q28="http://connect.bookt.com/Schemas/Event.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReviewIDs">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reviewType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="lastMod" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReviewIDsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetReviewIDsResult" nillable="true" type="q29:ArrayOfstring" xmlns:q29="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReview">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReviewResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetReviewResult" nillable="true" type="q30:Review" xmlns:q30="http://connect.bookt.com/Schemas/Review.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReviews">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="reviewType" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetReviewsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetReviewsResult" nillable="true" type="q31:ArrayOfReview" xmlns:q31="http://connect.bookt.com/Schemas/Review.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateReview">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="review" nillable="true" type="q32:Review" xmlns:q32="http://connect.bookt.com/Schemas/Review.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CreateReviewResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CreateReviewResult" nillable="true" type="q33:Review" xmlns:q33="http://connect.bookt.com/Schemas/Review.xsd"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeleteReview">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ID" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="useInternalID" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeleteReviewResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="DeleteReviewResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetBusinessRules">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="apiKey" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetBusinessRulesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetBusinessRulesResult" nillable="true" type="q34:ArrayOfKeyValueOfstringstring" xmlns:q34="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

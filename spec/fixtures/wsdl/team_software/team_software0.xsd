@@ -1,0 +1,448 @@
+<xs:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://tempuri.org/">
+   <xs:import schemaLocation="https://winteamservicestest.myteamsoftware.com/Services.svc?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+   <xs:import schemaLocation="https://winteamservicestest.myteamsoftware.com/Services.svc?xsd=xsd3" namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+   <xs:element name="Login">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="MappingKey" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LoginResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="LoginResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SaveEmployee">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="employee" nillable="true" type="q1:Employee" xmlns:q1="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+            <xs:element minOccurs="0" name="validateOnly" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SaveEmployeeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="SaveEmployeeResult" nillable="true" type="q2:ValidationResult" xmlns:q2="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+            <xs:element minOccurs="0" name="employee" nillable="true" type="q3:Employee" xmlns:q3="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SavePartialEmployee">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="employee" nillable="true" type="q4:Employee" xmlns:q4="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="SavePartialEmployeeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="SavePartialEmployeeResult" nillable="true" type="q5:ValidationResult" xmlns:q5="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEmployeeComboListXML">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeDataMember" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="Parameter" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetEmployeeComboListXMLResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetEmployeeComboListXMLResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="eHubValidEmployee">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="eHubPassword" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="eHubValidEmployeeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="eHubValidEmployeeResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="eHubValidCustomer">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="ContactLogin" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ContactPassword" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="eHubValidCustomerResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="eHubValidCustomerResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ValidEmployee">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="Last4SSN" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="ValidEmployeeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="ValidEmployeeResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeProfile">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeProfileResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeProfileResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodeImport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="ComplianceID" type="xs:int"/>
+            <xs:element minOccurs="0" name="DueDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="DateCompleted" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="Score" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ExternalID" nillable="true" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodeImportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeComplianceCodeImportResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodesCompletedExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="DateFrom" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="DateTo" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ShowOnlyMostRecentItemPerCode" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodesCompletedExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeComplianceCodesCompletedExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodesNotCompletedExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="DateFrom" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="DateTo" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="DefaultEmployeeClassification" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="ClassifiactionID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="DefaultEmployeeType" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="TypeID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="DefaultEmployeeJob" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="JobPostID" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="IncludeTimekeepingJobs" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="NumberOfTKWeeks" nillable="true" type="xs:unsignedByte"/>
+            <xs:element minOccurs="0" name="IncludePersonnelSchedulingJobs" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="NumberOfPSWeeks" nillable="true" type="xs:unsignedByte"/>
+            <xs:element minOccurs="0" name="ComplianceGroupID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="ComplianceID" nillable="true" type="xs:short"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="EmployeeComplianceCodesNotCompletedExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeComplianceCodesNotCompletedExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_TT_TK_Hours_Import">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="WorkDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="Hours" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="InTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="OutTime" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="Lunch" nillable="true" type="xs:decimal"/>
+            <xs:element minOccurs="0" name="CategoriesDetailID" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="HoursTypeID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="JobPostDetailID" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="WorkTicketNumber" nillable="true" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_TT_TK_Hours_ImportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="PS_TT_TK_Hours_ImportResult" nillable="true" type="q6:ValidationResult" xmlns:q6="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_TT_TK_Hours_BatchImport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="batchList" nillable="true" type="q7:ArrayOfHoursRecord" xmlns:q7="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_TT_TK_Hours_BatchImportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="PS_TT_TK_Hours_BatchImportResult" nillable="true" type="q8:ArrayOfValidationFailure" xmlns:q8="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="FromDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="FilterList" nillable="true" type="q9:ArrayOfstring" xmlns:q9="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_JobExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_EmployeeExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="FromDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_EmployeeExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_EmployeeExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_SingleEmployeeExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_SingleEmployeeExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_SingleEmployeeExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_PostExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="FilterList" nillable="true" type="q10:ArrayOfint" xmlns:q10="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_PostExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_PostExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobContactExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="FilterList" nillable="true" type="q11:ArrayOfstring" xmlns:q11="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobContactExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_JobContactExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_SchedulingExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="FromDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ToDate" nillable="true" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ChangedOnly" type="xs:boolean"/>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="FilterList" nillable="true" type="q12:ArrayOfint" xmlns:q12="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+            <xs:element minOccurs="0" name="IDColumnOnly" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_SchedulingExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_SchedulingExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobHolidayExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="FromDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="CyCopDBID" nillable="true" type="xs:short"/>
+            <xs:element minOccurs="0" name="FilterList" nillable="true" type="q13:ArrayOfstring" xmlns:q13="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="CyCop_JobHolidayExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="CyCop_JobHolidayExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetActiveDirectoryEmployees">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="LastUpdate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="EmployeeList" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="GetActiveDirectoryEmployeesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="GetActiveDirectoryEmployeesResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="UploadNewHireDocuments">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+            <xs:element minOccurs="0" name="ZipDocument" nillable="true" type="xs:base64Binary"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="UploadNewHireDocumentsResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="UploadNewHireDocumentsResult" nillable="true" type="q14:ValidationResult" xmlns:q14="http://schemas.datacontract.org/2004/07/TeamSoftware.WinTeam.Validator"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LMS_GetActiveEmployees">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="Columns" nillable="true" type="q15:ArrayOfstring" xmlns:q15="http://schemas.microsoft.com/2003/10/Serialization/Arrays"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LMS_GetActiveEmployeesResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="LMS_GetActiveEmployeesResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LMS_ProcessFile">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="uploadFile" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="LMS_ProcessFileResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="LMS_ProcessFileResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="UpdateComplianceCode">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="ID" type="xs:int"/>
+            <xs:element minOccurs="0" name="ComplianceID" type="xs:int"/>
+            <xs:element minOccurs="0" name="DueDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="DateCompleted" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="Score" nillable="true" type="xs:int"/>
+            <xs:element minOccurs="0" name="UserName" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="ExternalID" nillable="true" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="UpdateComplianceCodeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="UpdateComplianceCodeResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeleteComplianceCode">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="DeleteComplianceCodeResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="DeleteComplianceCodeResult" type="xs:boolean"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_ScheduleExport">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="FromDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="ToDate" type="xs:dateTime"/>
+            <xs:element minOccurs="0" name="JobNumber" nillable="true" type="xs:string"/>
+            <xs:element minOccurs="0" name="EmployeeNumber" type="xs:int"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+   <xs:element name="PS_ScheduleExportResponse">
+      <xs:complexType>
+         <xs:sequence>
+            <xs:element minOccurs="0" name="PS_ScheduleExportResult" nillable="true" type="xs:string"/>
+         </xs:sequence>
+      </xs:complexType>
+   </xs:element>
+</xs:schema>

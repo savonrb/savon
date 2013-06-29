@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="SystemService" targetNamespace="http://juniper.net/webproxy/systemservice" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:ns="http://schemas.xmlsoap.org/soap/encoding/" xmlns:impl="http://juniper.net/webproxy/systemservice" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:core="http://juniper.net/core" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <types>
+    <xs:schema elementFormDefault="qualified" targetNamespace="http://juniper.net/webproxy/systemservice" version="1.0" xmlns="http://juniper.net/webproxy/systemservice" xmlns:core="http://juniper.net/core" xmlns:impl="http://juniper.net/webproxy/systemservice">
+  		<xs:import namespace="http://juniper.net/core" schemaLocation="SystemService?xsd=xsd0.xsd"/>
+			<xs:simpleType name="LoginStatusCodeType">
+				<xs:restriction base="xs:token">
+					<xs:enumeration value="Success"/>
+					<xs:enumeration value="Failure"/>
+					<xs:enumeration value="Challenge"/>
+				</xs:restriction>
+			</xs:simpleType>
+			<xs:complexType name="LoginStatus">
+				<xs:sequence>
+					<xs:element name="status" type="impl:LoginStatusCodeType"/>
+					<xs:element minOccurs="0" name="challenge" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="LoginRequest">
+				<xs:annotation>
+					<xs:documentation>Login into the system
+					
+domainName: the domain to login
+userName: the user name
+password: the password
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="core:SimpleRequestType">
+							<xs:sequence>
+								<xs:element name="domainName" type="xs:string"/>
+								<xs:element name="userName" type="xs:string"/>
+								<xs:element name="password" type="xs:string"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:complexType name="LoginResponseType">
+				<xs:annotation>
+					<xs:documentation>The response of the login request
+					
+loginStatus: if the status is Success, a valid token is returned for requests followed, if the status is Challenge, the response to the challenge shall be sent
+authToken: the token used by the further requests
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:complexContent>
+					<xs:extension base="core:SimpleResponseType">
+						<xs:sequence>
+							<xs:element name="loginStatus" type="impl:LoginStatus"/>
+							<xs:element minOccurs="0" name="authToken" type="core:AuthTokenType"/>
+						</xs:sequence>
+					</xs:extension>
+				</xs:complexContent>
+			</xs:complexType>
+			<xs:element name="LoginResponse" type="impl:LoginResponseType"/>
+			<xs:element name="RespondToChallengeRequest">
+				<xs:annotation>
+					<xs:documentation>Send the response to the challenge
+                        </xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="core:SimpleRequestType">
+							<xs:sequence>
+								<xs:element name="challengeResponse" type="xs:string"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="RespondToChallengeResponse" type="impl:LoginResponseType"/>
+			<xs:element name="LogoutRequest">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="core:SimpleRequestType"/>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:complexType name="ServiceDescType">
+				<xs:sequence>
+					<xs:element name="name" type="xs:string"/>
+					<xs:element name="version" type="xs:string"/>
+					<xs:element name="definition" type="xs:string"/>
+				</xs:sequence>
+			</xs:complexType>
+			<xs:element name="GetSystemInfoRequest">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Get the system informations: the service description and all the accessible domain ids and names. If no service name is specified, return the service description of all services
+                        </xs:documentation>
+					</xs:annotation>
+					<xs:complexContent>
+						<xs:extension base="core:SimpleRequestType">
+							<xs:sequence>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="serviceName" type="xs:string"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="GetSystemInfoResponse">
+				<xs:complexType>
+					<xs:annotation>
+						<xs:documentation>Return the service list and all the accessible domain ids and names
+                    </xs:documentation>
+					</xs:annotation>
+					<xs:complexContent>
+						<xs:extension base="core:SimpleResponseType">
+							<xs:sequence>
+								<xs:element maxOccurs="unbounded" minOccurs="0" name="serviceDesc" type="impl:ServiceDescType"/>
+								<xs:element maxOccurs="unbounded" name="domainName" type="xs:string"/>
+								<xs:element maxOccurs="unbounded" name="domainId" type="xs:unsignedInt"/>
+							</xs:sequence>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+		</xs:schema>
+  </types>
+  <message name="LoginRequest">
+    <part name="LoginRequest" element="impl:LoginRequest">
+    </part>
+  </message>
+  <message name="RespondToChallengeRequest">
+    <part name="RespondToChallengeRequest" element="impl:RespondToChallengeRequest">
+    </part>
+  </message>
+  <message name="LoginResponse">
+    <part name="LoginRequest" element="impl:LoginResponse">
+    </part>
+  </message>
+  <message name="LogoutRequest">
+    <part name="LogoutRequest" element="impl:LogoutRequest">
+    </part>
+  </message>
+  <message name="RespondToChallengeResponse">
+    <part name="RespondToChallengeResponse" element="impl:RespondToChallengeResponse">
+    </part>
+  </message>
+  <message name="GetSystemInfoResponse">
+    <part name="GetSystemInfoResponse" element="impl:GetSystemInfoResponse">
+    </part>
+  </message>
+  <message name="GetSystemInfoRequest">
+    <part name="GetSystemInfoRequest" element="impl:GetSystemInfoRequest">
+    </part>
+  </message>
+  <portType name="SystemPortType">
+    <operation name="LoginRequest">
+      <input message="impl:LoginRequest">
+    </input>
+      <output message="impl:LoginResponse">
+    </output>
+    </operation>
+    <operation name="RespondToChallengeRequest">
+      <input message="impl:RespondToChallengeRequest">
+    </input>
+      <output message="impl:RespondToChallengeResponse">
+    </output>
+    </operation>
+    <operation name="LogoutRequest">
+      <input message="impl:LogoutRequest">
+    </input>
+    </operation>
+    <operation name="GetSystemInfoRequest">
+      <input message="impl:GetSystemInfoRequest">
+    </input>
+      <output message="impl:GetSystemInfoResponse">
+    </output>
+    </operation>
+  </portType>
+  <binding name="SystemSoapBinding" type="impl:SystemPortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="LoginRequest">
+      <soap:operation soapAction="urn:#LoginRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="RespondToChallengeRequest">
+      <soap:operation soapAction="urn:#RespondToChallengeRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+    <operation name="LogoutRequest">
+      <soap:operation soapAction="urn:#LogoutRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+    </operation>
+    <operation name="GetSystemInfoRequest">
+      <soap:operation soapAction="urn:#GetSystemInfoRequest"/>
+      <input>
+        <soap:body use="literal"/>
+      </input>
+      <output>
+        <soap:body use="literal"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="SystemService">
+    <port name="System" binding="impl:SystemSoapBinding">
+      <soap:address location="https://10.1.1.1:8443/axis2/services/SystemService"/>
+    </port>
+  </service>
+</definitions>

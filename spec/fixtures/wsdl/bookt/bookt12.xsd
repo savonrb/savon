@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Statement.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Statement.xsd">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd13" namespace="http://connect.bookt.com/Schemas/StatementDetail.xsd"/>
+   <xs:complexType name="Statement">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Description" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Details" nillable="true" type="q1:ArrayOfStatementDetail" xmlns:q1="http://connect.bookt.com/Schemas/StatementDetail.xsd"/>
+         <xs:element minOccurs="0" name="DueOn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="Notes" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Total" type="xs:decimal"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Statement" nillable="true" type="tns:Statement"/>
+</xs:schema>

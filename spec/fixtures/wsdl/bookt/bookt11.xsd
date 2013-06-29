@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/CreditCard.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/CreditCard.xsd">
+   <xs:complexType name="CreditCard">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Address" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="CardNumber" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="City" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="ExpiresOn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="NameOnCard" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="PostalCode" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="SecurityCode" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="State" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="CreditCard" nillable="true" type="tns:CreditCard"/>
+</xs:schema>

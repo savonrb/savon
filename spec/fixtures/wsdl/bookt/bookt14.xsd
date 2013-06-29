@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Event.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Event.xsd">
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd10" namespace="http://connect.bookt.com/Schemas/Person.xsd"/>
+   <xs:import schemaLocation="http://connect.bookt.com/svc/connect.svc?xsd=xsd12" namespace="http://connect.bookt.com/Schemas/Statement.xsd"/>
+   <xs:complexType name="Event">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="AddedOn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="AltID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="CheckIn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="CheckOut" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="CompletedOn" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="ID" type="xs:int"/>
+         <xs:element minOccurs="0" name="Lead" nillable="true" type="q1:Person" xmlns:q1="http://connect.bookt.com/Schemas/Person.xsd"/>
+         <xs:element minOccurs="0" name="Message" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="MessageFormat" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="NumAdults" type="xs:int"/>
+         <xs:element minOccurs="0" name="NumChildren" type="xs:int"/>
+         <xs:element minOccurs="0" name="PropertyID" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Statement" nillable="true" type="q2:Statement" xmlns:q2="http://connect.bookt.com/Schemas/Statement.xsd"/>
+         <xs:element minOccurs="0" name="Status" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Subject" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="Type" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="UnitID" nillable="true" type="xs:string"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Event" nillable="true" type="tns:Event"/>
+</xs:schema>

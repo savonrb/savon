@@ -1,37 +1,121 @@
-require "savon/qualified_message"
-require "gyoku"
+require 'builder'
 
-module Savon
+class Savon
   class Message
 
-    def initialize(operation_name, namespace_identifier, types, used_namespaces, message, element_form_default, key_converter)
-      @operation_name = operation_name
-      @namespace_identifier = namespace_identifier
-      @types = types
-      @used_namespaces = used_namespaces
+    ATTRIBUTE_PREFIX = '_'
 
-      @message = message
-      @element_form_default = element_form_default
-      @key_converter = key_converter
+    def initialize(envelope, parts)
+      @logger = Logging.logger[self]
+
+      @envelope = envelope
+      @parts = parts
     end
 
-    def to_s
-      return @message.to_s unless @message.kind_of? Hash
+    def build(message)
+      builder = Builder::XmlMarkup.new(indent: 2, margin: 2)
 
-      if @element_form_default == :qualified
-        translated_operation_name = Gyoku.xml_tag(@operation_name, :key_converter => @key_converter).to_s
-        # XXX: there is no `@request_key_converter` instance variable!
-        #      the third argument is therefore always `nil`. [dh, 2013-03-09]
-        @message = QualifiedMessage.new(@types, @used_namespaces, @request_key_converter).to_hash(@message, [translated_operation_name])
+      build_elements(@parts, message.dup, builder)
+      builder.target!
+    end
+
+    private
+
+    def build_elements(elements, message, xml)
+      elements.each do |element|
+        name = element.name
+        symbol_name = name.to_sym
+
+        value = extract_value(name, symbol_name, message)
+
+        if value == :unspecified
+          @logger.debug("Skipping (optional?) element #{symbol_name.inspect} with no value.")
+          next
+        end
+
+        tag = [symbol_name]
+
+        if element.form == 'qualified'
+          nsid = @envelope.register_namespace(element.namespace)
+          tag.unshift(nsid)
+        end
+
+        case
+        when element.simple_type?
+          build_simple_type_element(element, xml, tag, value)
+
+        when element.complex_type?
+          build_complex_type_element(element, xml, tag, value)
+
+        end
+      end
+    end
+
+    def build_simple_type_element(element, xml, tag, value)
+      if element.singular?
+        if value.kind_of? Array
+          raise ArgumentError, "Unexpected Array for the #{tag.last.inspect} simple type"
+        end
+
+        xml.tag! *tag, value
+      else
+        unless value.kind_of? Array
+          raise ArgumentError, "Expected an Array of values for the #{tag.last.inspect} simple type"
+        end
+
+        value.each do |val|
+          xml.tag! *tag, val
+        end
+      end
+    end
+
+    def build_complex_type_element(element, xml, tag, value)
+      if element.singular?
+        unless value.kind_of? Hash
+          raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
+        end
+
+        attributes, value = extract_attributes(value)
+
+        xml.tag! *tag, attributes do |xml|
+          build_elements(element.children, value, xml)
+        end
+      else
+        unless value.kind_of? Array
+          raise ArgumentError, "Expected an Array of Hashes for the #{tag.last.inspect} complex type"
+        end
+
+        value.each do |val|
+          xml.tag! *tag do |xml|
+            build_elements(element.children, val, xml)
+          end
+        end
+      end
+    end
+
+    # Private: extracts the value from the message by name or symbol_name.
+    # Respects nil values and returns a special symbol for actual missing values.
+    def extract_value(name, symbol_name, message)
+      if message.include? name
+        message[name]
+      elsif message.include? symbol_name
+        message[symbol_name]
+      else
+        :unspecified
+      end
+    end
+
+    def extract_attributes(hash)
+      attributes = {}
+
+      hash.dup.each do |k, v|
+        next unless k.to_s[0, 1] == ATTRIBUTE_PREFIX
+
+        attributes[k.to_s[1..-1]] = v
+        hash.delete(k)
       end
 
-      gyoku_options = {
-        :element_form_default => @element_form_default,
-        :namespace            => @namespace_identifier,
-        :key_converter        => @key_converter
-      }
-
-      Gyoku.xml(@message, gyoku_options)
+      [attributes, hash]
     end
 
   end

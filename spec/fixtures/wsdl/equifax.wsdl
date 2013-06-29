@@ -1,0 +1,794 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions targetNamespace="http://eid.equifax.com/soap/schema/canada/v2/wsdl" xmlns:ns1="http://eid.equifax.com/soap/schema/canada/v2" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://eid.equifax.com/soap/schema/canada/v2/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+<schema elementFormDefault="qualified" targetNamespace="http://eid.equifax.com/soap/schema/canada/v2" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:eid="http://eid.equifax.com/soap/schema/canada/v2" xmlns:ns1="http://eid.equifax.com/soap/schema/canada/v2" xmlns:soap11="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soap12="http://www.w3.org/2003/05/soap-envelope" xmlns:soapenc11="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenc12="http://www.w3.org/2003/05/soap-encoding" xmlns:tns="http://eid.equifax.com/soap/schema/canada/v2/wsdl" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	  <element name="InitialRequest">
+		    <complexType>
+			      <sequence>
+				        <element ref="eid:Identity"/>
+				        <element name="ProcessingOptions">
+					          <complexType>
+
+						            <sequence>
+							              <element name="Language">
+								                <simpleType>
+									                  <restriction base="string">
+										                    <enumeration value="English"/>
+										                    <enumeration value="French"/>
+									                  </restriction>
+								                </simpleType>
+							              </element>
+
+							              <element minOccurs="0" name="EnvironmentOverride">
+								                <simpleType>
+									                  <restriction base="string">
+										                    <minLength value="1"/>
+										                    <enumeration value="dev"/>
+										                    <enumeration value="qa"/>
+										                    <enumeration value="uat"/>
+										                    <enumeration value="production"/>
+										                    <enumeration value="batch"/>
+
+									                  </restriction>
+								                </simpleType>
+							              </element>
+						            </sequence>
+					          </complexType>
+				        </element>
+			      </sequence>
+		    </complexType>
+	  </element>
+
+	  <element name="InitialResponse">
+		    <complexType>
+			      <choice>
+				        <element ref="eid:FieldChecksFailed"/>
+				        <element ref="eid:ApplicationVerification"/>
+				        <element ref="eid:FraudCheckFailed"/>
+				        <element ref="eid:InteractiveQuery"/>
+				        <element ref="eid:AssesmentComplete"/>
+				        <element ref="eid:SystemProblem"/>
+
+			      </choice>
+			      <attributeGroup ref="eid:TransactionKey"/>
+		    </complexType>
+	  </element>
+	  <element name="UpdateRequest">
+		    <complexType>
+			      <sequence>
+				        <element maxOccurs="3" minOccurs="0" ref="eid:Address"/>
+				        <element minOccurs="0" ref="eid:SIN"/>
+
+				        <element minOccurs="0" ref="eid:DateOfBirth"/>
+				        <element minOccurs="0" ref="eid:DriversLicense"/>
+				        <element maxOccurs="3" minOccurs="0" ref="eid:PhoneNumber"/>
+			      </sequence>
+			      <attributeGroup ref="eid:TransactionKey"/>
+		    </complexType>
+	  </element>
+	  <element name="UpdateResponse">
+		    <complexType>
+
+			      <choice>
+				        <element ref="eid:FieldChecksFailed"/>
+				        <element ref="eid:ApplicationVerification"/>
+				        <element ref="eid:FraudCheckFailed"/>
+				        <element ref="eid:InteractiveQuery"/>
+				        <element ref="eid:AssesmentComplete"/>
+				        <element ref="eid:SystemProblem"/>
+			      </choice>
+			      <attributeGroup ref="eid:TransactionKey"/>
+
+		    </complexType>
+	  </element>
+	  <element name="IQAnswerRequest">
+		    <complexType>
+			      <choice>
+				        <element maxOccurs="6" name="Answer">
+					          <complexType>
+						            <attributeGroup ref="eid:QuestionAttributes"/>
+						            <attributeGroup ref="eid:AnswerAttributes"/>
+
+					          </complexType>
+				        </element>
+			      </choice>
+			      <attributeGroup ref="eid:TransactionKey"/>
+			      <attributeGroup ref="eid:InteractiveQueryAttributes"/>
+		    </complexType>
+	  </element>
+	  <element name="FinalResponse">
+		    <complexType>
+			      <choice>
+				        <element ref="eid:InteractiveQuery"/>
+				        <element ref="eid:AssesmentComplete"/>
+				        <element ref="eid:SystemProblem"/>
+			      </choice>
+			      <attributeGroup ref="eid:TransactionKey"/>
+		    </complexType>
+	  </element>
+	  <element name="Identity">
+		    <complexType>
+			      <sequence>
+
+				        <element name="Name">
+					          <complexType>
+						            <sequence>
+							              <element name="FirstName">
+								                <simpleType>
+									                  <restriction base="string">
+										                    <minLength value="1"/>
+										                    <pattern value="([a-zA-ZÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü](\. |[\-'\. ])?)*"/>
+									                  </restriction>
+
+								                </simpleType>
+							              </element>
+							              <choice minOccurs="0">
+								                <element name="MiddleName">
+									                  <simpleType>
+										                    <restriction base="string">
+											                      <minLength value="1"/>
+											                      <pattern value="([a-zA-ZÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü](\. |[\-'\. ])?)*"/>
+										                    </restriction>
+
+									                  </simpleType>
+								                </element>
+								                <element name="MiddleInitial">
+									                  <simpleType>
+										                    <restriction base="string">
+											                      <length value="1"/>
+											                      <pattern value="([a-zA-ZÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü](\. |[\-'\. ])?)*"/>
+										                    </restriction>
+									                  </simpleType>
+
+								                </element>
+							              </choice>
+							              <element name="LastName">
+								                <simpleType>
+									                  <restriction base="string">
+										                    <minLength value="1"/>
+										                    <pattern value="([a-zA-ZÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü](\. |[\-'\. ])?)*"/>
+									                  </restriction>
+								                </simpleType>
+
+							              </element>
+							              <element minOccurs="0" name="Suffix">
+								                <simpleType>
+									                  <restriction base="string">
+										                    <minLength value="1"/>
+										                    <enumeration value="JR"/>
+										                    <enumeration value="SR"/>
+										                    <enumeration value="I"/>
+										                    <enumeration value="II"/>
+
+										                    <enumeration value="III"/>
+										                    <enumeration value="IV"/>
+										                    <enumeration value="V"/>
+										                    <enumeration value="VI"/>
+										                    <enumeration value="VII"/>
+										                    <enumeration value="VIII"/>
+										                    <enumeration value="IX"/>
+									                  </restriction>
+								                </simpleType>
+
+							              </element>
+						            </sequence>
+					          </complexType>
+				        </element>
+				        <element maxOccurs="3" ref="eid:Address"/>
+				        <element minOccurs="0" ref="eid:SIN"/>
+				        <element minOccurs="0" ref="eid:DateOfBirth"/>
+				        <element minOccurs="0" ref="eid:DriversLicense"/>
+				        <element maxOccurs="3" minOccurs="0" ref="eid:PhoneNumber"/>
+
+				        <element minOccurs="0" ref="eid:Email"/>
+				        <element minOccurs="0" name="IPAddress">
+					          <simpleType>
+						            <restriction base="string">
+							              <maxLength value="15"/>
+							              <minLength value="7"/>
+							              <pattern value="[0-9][0-9]?[0-9]?[\.][0-9][0-9]?[0-9]?[\.][0-9][0-9]?[0-9]?[\.][0-9][0-9]?[0-9]?"/>
+						            </restriction>
+					          </simpleType>
+
+				        </element>
+				        <element minOccurs="0" name="CreditCardNumber">
+					          <simpleType>
+						            <restriction base="string">
+							              <minLength value="13"/>
+							              <maxLength value="20"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+
+				        <element minOccurs="0" name="CustomerId">
+					          <simpleType>
+						            <restriction base="string">
+							              <maxLength value="30"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+			      </sequence>
+		    </complexType>
+
+	  </element>
+	  <element name="AddressLine">
+		    <simpleType>
+			      <restriction base="string">
+				        <maxLength value="60"/>
+				        <minLength value="1"/>
+				        <pattern value="[a-zA-Z0-9#/,\- .ÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü]*"/>
+			      </restriction>
+		    </simpleType>
+
+	  </element>
+	  <element name="City">
+		    <simpleType>
+			      <restriction base="string">
+				        <minLength value="1"/>
+				        <maxLength value="25"/>
+				        <pattern value="[a-zA-Z0-9 .'\-ÀàÂâÇçÉéÈèÊêËëÎîÏïÔôÙùÛûÜü]*"/>
+			      </restriction>
+		    </simpleType>
+
+	  </element>
+	  <element name="Province">
+		    <simpleType>
+			      <restriction base="string">
+				        <length value="2"/>
+				        <pattern value="[A-Z][A-Z]"/>
+			      </restriction>
+		    </simpleType>
+	  </element>
+
+	  <element name="PostalCode">
+		    <simpleType>
+			      <restriction base="string">
+				        <minLength value="5"/>
+				        <maxLength value="6"/>
+				        <pattern value="[a-zA-Z][0-9][a-zA-Z]*[0-9][a-zA-Z][0-9]"/>
+			      </restriction>
+		    </simpleType>
+	  </element>
+
+	  <attributeGroup name="TransactionKey">
+		    <attribute name="transactionKey" use="required">
+			      <simpleType>
+				        <restriction base="string">
+					          <length value="25"/>
+					          <pattern value="[0-9]+"/>
+				        </restriction>
+			      </simpleType>
+		    </attribute>
+
+	  </attributeGroup>
+	  <attributeGroup name="AddressAttributes">
+		    <attribute name="addressType" use="required">
+			      <simpleType>
+				        <restriction base="string">
+					          <enumeration value="Current"/>
+					          <enumeration value="Former"/>
+					          <enumeration value="Other"/>
+				        </restriction>
+
+			      </simpleType>
+		    </attribute>
+	  </attributeGroup>
+	  <attributeGroup name="DLAddressAttributes">
+		    <attribute name="driversLicenseAddressType" use="optional">
+			      <simpleType>
+				        <restriction base="string">
+					          <enumeration value="Current"/>
+					          <enumeration value="Former"/>
+
+					          <enumeration value="Other"/>
+				        </restriction>
+			      </simpleType>
+		    </attribute>
+	  </attributeGroup>
+	  <element name="Address">
+		    <complexType>
+			      <choice>
+				        <element ref="eid:FreeFormAddress"/>
+
+				        <element ref="eid:HybridAddress"/>
+			      </choice>
+			      <attribute name="timeAtAddress">
+				        <simpleType>
+					          <restriction base="nonNegativeInteger">
+						            <minInclusive value="0"/>
+						            <maxInclusive value="120"/>
+					          </restriction>
+				        </simpleType>
+
+			      </attribute>
+			      <attributeGroup ref="eid:AddressAttributes"/>
+		    </complexType>
+	  </element>
+	  <element name="SIN">
+		    <simpleType>
+			      <restriction base="string">
+				        <length value="9"/>
+				        <pattern value="[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]"/>
+
+			      </restriction>
+		    </simpleType>
+	  </element>
+	  <element name="DateOfBirth">
+		    <complexType>
+			      <sequence>
+				        <element name="Day">
+					          <simpleType>
+						            <restriction base="positiveInteger">
+
+							              <minInclusive value="1"/>
+							              <maxInclusive value="31"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+				        <element name="Month">
+					          <simpleType>
+						            <restriction base="positiveInteger">
+							              <minInclusive value="1"/>
+
+							              <maxInclusive value="12"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+				        <element name="Year">
+					          <simpleType>
+						            <restriction base="positiveInteger">
+							              <minInclusive value="1890"/>
+							              <maxInclusive value="2099"/>
+
+						            </restriction>
+					          </simpleType>
+				        </element>
+			      </sequence>
+		    </complexType>
+	  </element>
+	  <element name="DriversLicense">
+		    <complexType>
+			      <sequence>
+
+				        <element name="Number">
+					          <simpleType>
+						            <restriction base="string">
+							              <maxLength value="30"/>
+							              <minLength value="1"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+				        <element ref="eid:Province"/>
+
+			      </sequence>
+			      <attributeGroup ref="eid:DLAddressAttributes"/>
+		    </complexType>
+	  </element>
+	  <element name="PhoneNumber">
+		    <complexType>
+			      <choice>
+				        <sequence>
+					          <element name="AreaCode">
+
+						            <simpleType>
+							              <restriction base="string">
+								                <length value="3"/>
+								                <pattern value="[0-9]+"/>
+							              </restriction>
+						            </simpleType>
+					          </element>
+					          <element name="Exchange">
+						            <simpleType>
+
+							              <restriction base="string">
+								                <length value="3"/>
+								                <pattern value="[0-9]+"/>
+							              </restriction>
+						            </simpleType>
+					          </element>
+					          <element name="Number">
+						            <simpleType>
+							              <restriction base="string">
+
+								                <length value="4"/>
+								                <pattern value="[0-9]+"/>
+							              </restriction>
+						            </simpleType>
+					          </element>
+				        </sequence>
+				        <element name="PhoneNumber">
+					          <simpleType>
+						            <restriction base="string">
+
+							              <length value="10"/>
+							              <pattern value="[0-9]+"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+			      </choice>
+			      <attribute name="phoneType">
+				        <simpleType>
+					          <restriction base="string">
+
+						            <enumeration value="Home"/>
+						            <enumeration value="Work"/>
+						            <enumeration value="Mobile"/>
+						            <enumeration value="Other"/>
+					          </restriction>
+				        </simpleType>
+			      </attribute>
+		    </complexType>
+	  </element>
+
+	  <element name="Email">
+		    <simpleType>
+			      <restriction base="string">
+				        <maxLength value="60"/>
+				        <minLength value="1"/>
+				        <pattern value="\S*[0-9a-zA-Z]+\S*@\S*[0-9a-zA-Z]+\S*\.\S*[0-9a-zA-Z]+\S*"/>
+			      </restriction>
+		    </simpleType>
+	  </element>
+
+	  <element name="FieldInErrorXPath" type="string"/>
+	  <element name="OutputAddress">
+		    <complexType>
+			      <choice>
+				        <element ref="eid:FreeFormAddress"/>
+				        <element ref="eid:HybridAddress"/>
+			      </choice>
+			      <attribute name="isStandardized" type="boolean" use="required"/>
+			      <attributeGroup ref="eid:AddressAttributes"/>
+
+		    </complexType>
+	  </element>
+	  <attributeGroup name="InteractiveQueryAttributes">
+		    <attribute name="interactiveQueryId" use="required">
+			      <simpleType>
+				        <restriction base="positiveInteger">
+					          <minInclusive value="1"/>
+					          <maxInclusive value="99"/>
+				        </restriction>
+			      </simpleType>
+
+		    </attribute>
+	  </attributeGroup>
+	  <attributeGroup name="QuestionAttributes">
+		    <attribute name="questionId" use="required">
+			      <simpleType>
+				        <restriction base="positiveInteger">
+					          <minInclusive value="1"/>
+					          <maxInclusive value="6"/>
+				        </restriction>
+
+			      </simpleType>
+		    </attribute>
+	  </attributeGroup>
+	  <element name="FreeFormAddress">
+		    <complexType>
+			      <choice>
+				        <element maxOccurs="6" ref="eid:AddressLine"/>
+			      </choice>
+		    </complexType>
+
+	  </element>
+	  <element name="HybridAddress">
+		    <complexType>
+			      <sequence>
+				        <element maxOccurs="6" ref="eid:AddressLine"/>
+				        <element ref="eid:City"/>
+				        <element ref="eid:Province"/>
+				        <element ref="eid:PostalCode"/>
+			      </sequence>
+
+		    </complexType>
+	  </element>
+	  <element name="ReasonCode">
+		    <complexType>
+			      <simpleContent>
+				        <extension base="string">
+					          <attribute name="description" type="string" use="optional"/>
+				        </extension>
+			      </simpleContent>
+
+		    </complexType>
+	  </element>
+	  <attributeGroup name="AnswerAttributes">
+		    <attribute name="answerId" use="required">
+			      <simpleType>
+				        <restriction base="positiveInteger">
+					          <minInclusive value="1"/>
+					          <maxInclusive value="5"/>
+				        </restriction>
+
+			      </simpleType>
+		    </attribute>
+	  </attributeGroup>
+	  <element name="FieldChecksFailed">
+		    <complexType>
+			      <choice>
+				        <element maxOccurs="unbounded" ref="eid:FieldInErrorXPath"/>
+			      </choice>
+		    </complexType>
+
+	  </element>
+	  <element name="ApplicationVerification">
+		    <complexType>
+			      <sequence>
+				        <element maxOccurs="3" ref="eid:OutputAddress"/>
+				        <element maxOccurs="50" ref="eid:ReasonCode"/>
+			      </sequence>
+			      <attribute name="retryPossible" type="boolean" use="required"/>
+		    </complexType>
+
+	  </element>
+	  <element name="FraudCheckFailed">
+		    <complexType>
+			      <sequence>
+				        <element maxOccurs="3" ref="eid:OutputAddress"/>
+				        <element maxOccurs="50" ref="eid:ReasonCode"/>
+			      </sequence>
+		    </complexType>
+	  </element>
+
+	  <element name="InteractiveQuery">
+		    <complexType>
+			      <choice>
+				        <element maxOccurs="6" name="Question">
+					          <complexType>
+						            <sequence>
+							              <element name="QuestionText" type="string"/>
+							              <element maxOccurs="5" minOccurs="5" name="AnswerChoice">
+								                <complexType>
+
+									                  <simpleContent>
+										                    <extension base="string">
+											                      <attributeGroup ref="eid:AnswerAttributes"/>
+											                      <attribute name="correctAnswer" type="boolean" use="optional"/>
+										                    </extension>
+									                  </simpleContent>
+								                </complexType>
+							              </element>
+						            </sequence>
+
+						            <attributeGroup ref="eid:QuestionAttributes"/>
+					          </complexType>
+				        </element>
+			      </choice>
+			      <attributeGroup ref="eid:InteractiveQueryAttributes"/>
+		    </complexType>
+	  </element>
+	  <element name="AssesmentComplete">
+		    <complexType>
+			      <sequence>
+
+				        <element maxOccurs="3" ref="eid:OutputAddress"/>
+				        <element maxOccurs="50" ref="eid:ReasonCode"/>
+				        <element minOccurs="0" name="Score">
+					          <simpleType>
+						            <restriction base="nonNegativeInteger">
+							              <minInclusive value="0"/>
+							              <maxInclusive value="999"/>
+						            </restriction>
+					          </simpleType>
+
+				        </element>
+				        <element minOccurs="0" name="RiskStrategyDecision">
+					          <simpleType>
+						            <restriction base="string">
+							              <length value="1"/>
+						            </restriction>
+					          </simpleType>
+				        </element>
+						<element maxOccurs="unbounded" minOccurs="0" name="RiskStrategyComponent">
+							<complexType>
+								<simpleContent>
+									<extension base="boolean">
+										<attribute name="name" type="string" use="required"/>
+									</extension>
+								</simpleContent>
+							</complexType>
+						</element>
+			      		<element minOccurs="0" name="AtomicScores">
+			      			<complexType>
+			      				<sequence>
+			      					<element minOccurs="0" name="SimpleInteractiveQueryScore">
+			      						<simpleType>
+			      							<restriction base="integer">
+			      								<minInclusive value="-1"/>
+			      								<maxInclusive value="100"/>
+			      							</restriction>
+			      						</simpleType>
+									</element>
+								</sequence>
+							</complexType>
+						</element>
+			      </sequence>
+		    </complexType>
+	  </element>
+
+	  <element name="SystemProblem">
+		    <simpleType>
+			      <restriction base="string">
+				        <maxLength value="1000"/>
+			      </restriction>
+		    </simpleType>
+	  </element>
+	  <element name="InvalidTransactionKeyFault">
+		    <complexType>
+
+			      <attributeGroup ref="eid:TransactionKey"/>
+		    </complexType>
+	  </element>
+	  <element name="ValidationErrorFault">
+		    <complexType>
+			      <sequence>
+				        <element maxOccurs="unbounded" name="ValidationError">
+					          <complexType>
+						            <sequence>
+
+							              <element name="Message" type="string"/>
+							              <element name="Line">
+								                <simpleType>
+									                  <restriction base="short">
+										                    <minInclusive value="0"/>
+									                  </restriction>
+								                </simpleType>
+							              </element>
+							              <element name="Column">
+
+								                <simpleType>
+									                  <restriction base="short">
+										                    <minInclusive value="0"/>
+									                  </restriction>
+								                </simpleType>
+							              </element>
+						            </sequence>
+					          </complexType>
+				        </element>
+
+				        <element name="OriginalXML" type="anyType"/>
+			      </sequence>
+		    </complexType>
+	  </element>
+	  <element name="CredentialsErrorFault">
+		    <complexType>
+			      <choice>
+				        <element minOccurs="0" name="Reason" type="string"/>
+			      </choice>
+
+		    </complexType>
+	  </element>
+</schema>
+  </wsdl:types>
+  <wsdl:message name="startTransactionRequest">
+    <wsdl:part element="ns1:InitialRequest" name="InitialRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="avCorrectionRequest">
+    <wsdl:part element="ns1:UpdateRequest" name="UpdateRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="ValidationErrorFault">
+    <wsdl:part element="ns1:ValidationErrorFault" name="ValidationErrorFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="startTransactionResponse">
+    <wsdl:part element="ns1:InitialResponse" name="InitialResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="avCorrectionResponse">
+    <wsdl:part element="ns1:UpdateResponse" name="UpdateResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="interactiveQueryResponseRequest">
+    <wsdl:part element="ns1:IQAnswerRequest" name="IQAnswerRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="InvalidTransactionKeyFault">
+    <wsdl:part element="ns1:InvalidTransactionKeyFault" name="InvalidTransactionKeyFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="CredentialsErrorFault">
+    <wsdl:part element="ns1:CredentialsErrorFault" name="CredentialsErrorFault">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="interactiveQueryResponseResponse">
+    <wsdl:part element="ns1:FinalResponse" name="FinalResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="canadaPortTypeV2">
+    <wsdl:operation name="startTransaction">
+      <wsdl:input message="tns:startTransactionRequest" name="startTransactionRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:startTransactionResponse" name="startTransactionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:ValidationErrorFault" name="ValidationErrorFault">
+    </wsdl:fault>
+      <wsdl:fault message="tns:CredentialsErrorFault" name="CredentialsErrorFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="interactiveQueryResponse">
+      <wsdl:input message="tns:interactiveQueryResponseRequest" name="interactiveQueryResponseRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:interactiveQueryResponseResponse" name="interactiveQueryResponseResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:InvalidTransactionKeyFault" name="InvalidTransactionKeyFault">
+    </wsdl:fault>
+      <wsdl:fault message="tns:ValidationErrorFault" name="ValidationErrorFault">
+    </wsdl:fault>
+      <wsdl:fault message="tns:CredentialsErrorFault" name="CredentialsErrorFault">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="avCorrection">
+      <wsdl:input message="tns:avCorrectionRequest" name="avCorrectionRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:avCorrectionResponse" name="avCorrectionResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:InvalidTransactionKeyFault" name="InvalidTransactionKeyFault">
+    </wsdl:fault>
+      <wsdl:fault message="tns:ValidationErrorFault" name="ValidationErrorFault">
+    </wsdl:fault>
+      <wsdl:fault message="tns:CredentialsErrorFault" name="CredentialsErrorFault">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="canadaHttpBindingV2" type="tns:canadaPortTypeV2">
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="startTransaction">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="startTransactionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="startTransactionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="ValidationErrorFault">
+        <wsdlsoap:fault name="ValidationErrorFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CredentialsErrorFault">
+        <wsdlsoap:fault name="CredentialsErrorFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="interactiveQueryResponse">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="interactiveQueryResponseRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="interactiveQueryResponseResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidTransactionKeyFault">
+        <wsdlsoap:fault name="InvalidTransactionKeyFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ValidationErrorFault">
+        <wsdlsoap:fault name="ValidationErrorFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CredentialsErrorFault">
+        <wsdlsoap:fault name="CredentialsErrorFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="avCorrection">
+      <wsdlsoap:operation soapAction=""/>
+      <wsdl:input name="avCorrectionRequest">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="avCorrectionResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="InvalidTransactionKeyFault">
+        <wsdlsoap:fault name="InvalidTransactionKeyFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="ValidationErrorFault">
+        <wsdlsoap:fault name="ValidationErrorFault" use="literal"/>
+      </wsdl:fault>
+      <wsdl:fault name="CredentialsErrorFault">
+        <wsdlsoap:fault name="CredentialsErrorFault" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="canadav2">
+    <wsdl:port binding="tns:canadaHttpBindingV2" name="canadaHttpPortV2">
+      <wsdlsoap:address location="https://pilot.eidverifier.com/uru/soap/cert/canadav2"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

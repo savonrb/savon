@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema elementFormDefault="qualified" targetNamespace="http://connect.bookt.com/Schemas/Rate.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://connect.bookt.com/Schemas/Rate.xsd">
+   <xs:complexType name="ArrayOfRate">
+      <xs:sequence>
+         <xs:element minOccurs="0" maxOccurs="unbounded" name="Rate" nillable="true" type="tns:Rate"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="ArrayOfRate" nillable="true" type="tns:ArrayOfRate"/>
+   <xs:complexType name="Rate">
+      <xs:sequence>
+         <xs:element minOccurs="0" name="Currency" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="EndDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="LengthOfStay" type="xs:int"/>
+         <xs:element minOccurs="0" name="NumRoomsOrPersons" type="xs:int"/>
+         <xs:element minOccurs="0" name="PropertyID" type="xs:int"/>
+         <xs:element minOccurs="0" name="RateType" nillable="true" type="xs:string"/>
+         <xs:element minOccurs="0" name="StartDate" type="xs:dateTime"/>
+         <xs:element minOccurs="0" name="Value" type="xs:decimal"/>
+      </xs:sequence>
+   </xs:complexType>
+   <xs:element name="Rate" nillable="true" type="tns:Rate"/>
+</xs:schema>
