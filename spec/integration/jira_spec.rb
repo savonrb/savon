@@ -17,21 +17,11 @@ describe 'Integration with Atlassian Jira' do
     )
   end
 
-  it 'knows the operations' do
+  it 'raises an error because RPC/encoded operations are not ' do
     service, port = 'JiraSoapServiceService', 'jirasoapservice-v2'
-    operation = client.operation(service, port, 'updateGroup')
 
-    expect(operation.soap_action).to eq('')
-    expect(operation.endpoint).to eq('https://jira.atlassian.com/rpc/soap/jirasoapservice-v2')
-
-    namespace = 'http://beans.soap.rpc.jira.atlassian.com'
-
-    expect(operation.body_parts).to eq([
-      [['in0'],          { namespace: nil,       form: 'unqualified', singular: true, type: 'xsd:string' }],
-      [['in1'],          { namespace: nil,       form: 'unqualified', singular: true }],
-      [['in1', 'name'],  { namespace: namespace, form: 'unqualified', singular: true, type: 'xsd:string' }],
-      [['in1', 'users'], { namespace: namespace, form: 'unqualified', singular: true }]
-    ])
+    expect { client.operation(service, port, 'updateGroup') }.
+      to raise_error(Savon::UnsupportedStyleError, /"updateGroup" is an "rpc\/encoded" style operation/)
   end
 
 end
