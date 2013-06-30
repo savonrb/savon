@@ -57,6 +57,9 @@ module Savon
       @http.body
     end
 
+    alias_method :xml,  :to_xml
+    alias_method :to_s, :to_xml
+
     def doc
       @doc ||= Nokogiri.XML(to_xml)
     end
