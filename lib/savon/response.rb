@@ -51,18 +51,18 @@ module Savon
     end
 
     def hash
-      @hash ||= nori.parse(to_xml)
+      @hash ||= nori.parse(xml)
     end
 
-    def to_xml
+    def xml
       @http.body
     end
 
-    alias_method :xml,  :to_xml
-    alias_method :to_s, :to_xml
+    alias_method :to_xml, :xml
+    alias_method :to_s,   :xml
 
     def doc
-      @doc ||= Nokogiri.XML(to_xml)
+      @doc ||= Nokogiri.XML(xml)
     end
 
     def xpath(path, namespaces = nil)
@@ -82,7 +82,7 @@ module Savon
     end
 
     def raise_invalid_response_error!
-      raise InvalidResponseError, "Unable to parse response body:\n" + to_xml.inspect
+      raise InvalidResponseError, "Unable to parse response body:\n" + xml.inspect
     end
 
     def xml_namespaces
