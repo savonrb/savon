@@ -26,6 +26,10 @@
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Added `Savon::Response#soap_fault`
   and `Savon::Response#http_error` which were present in version 1.
 
+* Fix: [#474](https://github.com/savonrb/savon/issues/474) Changed `Savon::Response#header` and
+  `Savon::Response#body` to respect the global `:convert_response_tags_to` and `:strip_namespaces`
+  options and return the expected result instead of raising a `Savon::InvalidResponseError`.
+
 ### 2.2.0 (2013-04-21)
 
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`

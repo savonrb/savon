@@ -507,11 +507,13 @@ describe "Options" do
 
   context "global :strip_namespaces" do
     it "can be changed to not strip any namespaces" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase }, :strip_namespaces => false)
-      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
+      client = new_client(
+        :endpoint => @server.url(:repeat),
+        :convert_response_tags_to => lambda { |tag| tag.snakecase },
+        :strip_namespaces => false
+      )
 
-      # the header/body convenience methods fails when conventions are not met. [dh, 2012-12-12]
-      expect { response.body }.to raise_error(Savon::InvalidResponseError)
+      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
       expect(response.hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
     end

@@ -30,13 +30,11 @@ module Savon
     end
 
     def header
-      raise_invalid_response_error! unless hash.key? :envelope
-      hash[:envelope][:header]
+      find('Header')
     end
 
     def body
-      raise_invalid_response_error! unless hash.key? :envelope
-      hash[:envelope][:body]
+      find('Body')
     end
 
     alias_method :to_hash, :body
@@ -67,6 +65,13 @@ module Savon
 
     def xpath(path, namespaces = nil)
       doc.xpath(path, namespaces || xml_namespaces)
+    end
+
+    def find(*path)
+      envelope = nori.find(hash, 'Envelope')
+      raise_invalid_response_error! unless envelope
+
+      nori.find(envelope, *path)
     end
 
     private

@@ -95,6 +95,29 @@ describe Savon::Response do
       response.header.should include(:session_number => "ABCD1234")
     end
 
+    it 'respects the global :strip_namespaces option' do
+      globals[:strip_namespaces] = false
+
+      response_with_header = soap_response(:body => Fixture.response(:header))
+      header = response_with_header.header
+
+      expect(header).to be_a(Hash)
+
+      # notice: :session_number is a snake_case Symbol without namespaces,
+      # but the Envelope and Header elements are qualified.
+      expect(header.keys).to include(:session_number)
+    end
+
+    it 'respects the global :convert_response_tags_to option' do
+      globals[:convert_response_tags_to] = lambda { |key| key.upcase }
+
+      response_with_header = soap_response(:body => Fixture.response(:header))
+      header = response_with_header.header
+
+      expect(header).to be_a(Hash)
+      expect(header.keys).to include('SESSIONNUMBER')
+    end
+
     it "should throw an exception when the response header isn't parsable" do
       lambda { invalid_soap_response.header }.should raise_error Savon::InvalidResponseError
     end
@@ -119,6 +142,24 @@ describe Savon::Response do
 
         hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
         hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+      end
+
+      it 'respects the global :strip_namespaces option' do
+        globals[:strip_namespaces] = false
+
+        body = soap_response.body
+
+        expect(body).to be_a(Hash)
+        expect(body.keys).to include(:"ns2:authenticate_response")
+      end
+
+      it 'respects the global :convert_response_tags_to option' do
+        globals[:convert_response_tags_to] = lambda { |key| key.upcase }
+
+        body = soap_response.body
+
+        expect(body).to be_a(Hash)
+        expect(body.keys).to include('AUTHENTICATERESPONSE')
       end
     end
   end
@@ -172,6 +213,15 @@ describe Savon::Response do
     it "permits XPath access to elements in the request" do
       soap_response.xpath("//client").first.inner_text.should == "radclient"
       soap_response.xpath("//ns2:authenticateResponse/return/success").first.inner_text.should == "true"
+    end
+  end
+
+  describe '#find' do
+    it 'delegates to Nori#find to find child elements inside the Envelope' do
+      result = soap_response.find('Body', 'authenticateResponse', 'return')
+
+      expect(result).to be_a(Hash)
+      expect(result.keys).to include(:authentication_value)
     end
   end
 
