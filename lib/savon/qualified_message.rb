@@ -15,17 +15,21 @@ module Savon
       return hash.to_s unless hash.kind_of? Hash
 
       hash.inject({}) do |newhash, (key, value)|
-        translated_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
-        newpath = path + [translated_key]
-
-        if @used_namespaces[newpath]
-          newhash.merge(
-            "#{@used_namespaces[newpath]}:#{translated_key}" =>
-              to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
-          )
-        else
-          add_namespaces_to_values(value, path) if key == :order!
+        if key == :order!
+          add_namespaces_to_values(value, path)
           newhash.merge(key => value)
+        else
+          translated_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
+          newpath = path + [translated_key]
+
+          if @used_namespaces[newpath]
+            newhash.merge(
+              "#{@used_namespaces[newpath]}:#{translated_key}" =>
+                to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
+            )
+          else
+            newhash.merge(translated_key => value)
+          end
         end
       end
     end
