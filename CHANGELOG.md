@@ -1,24 +1,30 @@
-## master
+### 2.3.0 (UPCOMING)
 
-* Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error
+* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks
+  that don't care about the message sent by using `:any` for the `:message` option.
 
-* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks that don't care about the message sent: `savon.expects(:authenticate).with(message: :any)`.
+    ``` ruby
+    savon.expects(:authenticate).with(message: :any)
+    ```
 
 * Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
   through the updated [savon-multipart](https://github.com/savonrb/savon-multipart) gem. You can now
-  specify the `multipart: true` either as a global or local option. Please make sure you have the
+  specify `multipart: true` either as a global or local option. Please make sure you have the
   updated `savon-multipart` gem installed and loaded, as it is not a direct dependency of Savon.
 
-    ```
+    ``` ruby
     require 'savon'
     require 'savon-multipart'
 
     # expect multipart responses for every operation
     client = Savon.client(wsdl: wsdl, multipart: true)
-    
+
     # only expect a multipart response for this operation
     client.call(:my_operation, multipart: true)
     ```
+
+* Fix: [#450](https://github.com/savonrb/savon/pull/450) Added `Savon::Response#soap_fault`
+  and `Savon::Response#http_error` which were present in version 1.
 
 ### 2.2.0 (2013-04-21)
 
@@ -32,14 +38,14 @@
   This is because regardless of whether you're using the Hash or block syntax to pass global
   or local options, both are just method calls on some options object.
 
-    ```
+    ``` ruby
     NoMethodError: undefined method 'wsdk' for #<Savon::GlobalOptions:0x007fed95a55228>
     ```
 
   As of this change, Savon now catches those errors and raise a `Savon::UnknownOptionError`
   with a slightly more helpful error message instead.
 
-    ```
+    ``` ruby
     Savon::UnknownOptionError:
        Unknown global option: :wsdk
     ```
