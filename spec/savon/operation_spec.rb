@@ -77,7 +77,7 @@ describe Savon::Operation do
 
       # stub the actual request
       http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call!).returns(http_response)
+      operation.expects(:call_with_logging).returns(http_response)
 
       operation.call
     end
@@ -90,7 +90,7 @@ describe Savon::Operation do
 
       # stub the actual request
       http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call!).returns(http_response)
+      operation.expects(:call_with_logging).returns(http_response)
 
       operation.call
     end
