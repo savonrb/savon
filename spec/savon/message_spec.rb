@@ -16,6 +16,7 @@ describe Savon::Message do
       client = Savon.client(
         :endpoint => @server.url(:repeat),
         :namespace => 'http://example.com',
+        :log => false,
 
         :element_form_default => :qualified,
         :convert_request_keys_to => :camelcase,
