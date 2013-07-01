@@ -14,7 +14,7 @@ problems and make sure they don't come back.
 
 So if you can reproduce your problem in a spec, that would be awesome! If you can't, please
 let us know how we could make this easier for you. Also, provide code and the WSDL of the
-service your working with so others can try to come up with a spec for your problem.
+service you're working with so others can try to come up with a spec for your problem.
 
 After we have a failing spec, it obviously needs to be fixed. Make sure your new spec is the
 only failing one under the `spec` directory. Travis only runs the "unit tests" at `spec/savon`,
