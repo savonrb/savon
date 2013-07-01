@@ -3,7 +3,7 @@ require "savon/block_interface"
 require "savon/request"
 require "savon/builder"
 require "savon/response"
-require "savon/log_message"
+require "savon/request_logger"
 
 module Savon
   class Operation
@@ -35,6 +35,8 @@ module Savon
       @name = name
       @wsdl = wsdl
       @globals = globals
+
+      @logger = RequestLogger.new(globals)
     end
 
     def build(locals = {}, &block)
@@ -46,7 +48,7 @@ module Savon
       builder = build(locals, &block)
 
       response = Savon.notify_observers(@name, builder, @globals, @locals)
-      response ||= call! build_request(builder)
+      response ||= call_with_logging build_request(builder)
 
       raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
 
@@ -80,12 +82,8 @@ module Savon
       @locals = locals
     end
 
-    def call!(request)
-      log_request(request) if log?
-      response = HTTPI.post(request)
-      log_response(response) if log?
-
-      response
+    def call_with_logging(request)
+      @logger.log(request) { HTTPI.post(request) }
     end
 
     def build_request(builder)
@@ -118,33 +116,6 @@ module Savon
 
     def endpoint
       @globals[:endpoint] || @wsdl.endpoint
-    end
-
-    def log_request(request)
-      logger.info  "SOAP request: #{request.url}"
-      logger.info  headers_to_log(request.headers)
-      logger.debug body_to_log(request.body)
-    end
-
-    def log_response(response)
-      logger.info  "SOAP response (status #{response.code})"
-      logger.debug body_to_log(response.body)
-    end
-
-    def headers_to_log(headers)
-      headers.map { |key, value| "#{key}: #{value}" }.join(", ")
-    end
-
-    def body_to_log(body)
-      LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
-    end
-
-    def logger
-      @globals[:logger]
-    end
-
-    def log?
-      @globals[:log]
     end
 
     def raise_expected_httpi_response!
