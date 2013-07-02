@@ -101,12 +101,13 @@ module Savon
     end
 
     def namespaced_message_tag
+      tag_name = message_tag
       if namespace_identifier == nil
-        [message_tag, message_attributes]
-      elsif @used_namespaces[[@operation_name.to_s]]
-        [@used_namespaces[[@operation_name.to_s]], message_tag, message_attributes]
+        [tag_name, message_attributes]
+      elsif @used_namespaces[[tag_name.to_s]]
+        [@used_namespaces[[tag_name.to_s]], tag_name, message_attributes]
       else
-        [namespace_identifier, message_tag, message_attributes]
+        [namespace_identifier, tag_name, message_attributes]
       end
     end
 
