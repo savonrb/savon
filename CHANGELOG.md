@@ -30,6 +30,9 @@
   `Savon::Response#body` to respect the global `:convert_response_tags_to` and `:strip_namespaces`
   options and return the expected result instead of raising a `Savon::InvalidResponseError`.
 
+* Fix: [#476](https://github.com/savonrb/savon/issues/476) fixes a problem where the namespace
+  for the message tag was not correctly determined from the WSDL.
+
 ### 2.2.0 (2013-04-21)
 
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
