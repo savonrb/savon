@@ -80,7 +80,7 @@ describe "Options" do
 
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
-      non_routable_ip = "http://10.255.255.1"
+      non_routable_ip = "http://192.0.2.0"
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
 
       expect { client.call(:authenticate) }.to raise_error { |error|
