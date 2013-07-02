@@ -27,6 +27,11 @@ describe Savon do
     expect(message_tag).to eq(['http://www.betfair.com/publicapi/v5/BFExchangeService/', 'getBet'])
   end
 
+  it 'knows the message tag for :vies' do
+    message_tag = message_tag_for(:vies, :check_vat)
+    expect(message_tag).to eq(['urn:ec.europa.eu:taxud:vies:services:checkVat:types', 'checkVat'])
+  end
+
   it 'knows the message tag for :wasmuth' do
     message_tag = message_tag_for(:wasmuth, :get_st_tables)
     expect(message_tag).to eq(['http://ws.online.msw/', 'getStTables'])
