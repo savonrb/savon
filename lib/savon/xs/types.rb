@@ -87,7 +87,9 @@ class Savon
 
       def base
         child = @node.element_children.first
-        child['base'] if child.name == 'restriction'
+        local = child.name.split(':').last
+
+        child['base'] if local == 'restriction'
       end
 
     end
@@ -243,11 +245,22 @@ class Savon
     }
 
     def self.build(node, schemas, schema = {})
-      type_class(node.name).new(node, schemas, schema)
+      type_class(node).new(node, schemas, schema)
     end
 
-    def self.type_class(type)
-      TYPE_MAPPING.fetch(type, AnyType)
+    def self.type_class(node)
+      type = node.name.split(':').last
+
+      if TYPE_MAPPING.include? type
+        TYPE_MAPPING[type]
+      else
+        logger.debug("No type mapping for #{type.inspect}. ")
+        AnyType
+      end
+    end
+
+    def self.logger
+      @logger ||= Logging.logger[self]
     end
 
   end
