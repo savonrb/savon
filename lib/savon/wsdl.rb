@@ -29,7 +29,7 @@ class Savon
 
     # Public: Returns a Hash of services and ports defined by the WSDL.
     def services
-      @services ||= services!
+      @documents.services.values.inject({}) { |memo, service| memo.merge service.to_hash }
     end
 
     # Public: Returns an Hash of operation names to Operations by service and port name.
@@ -59,19 +59,6 @@ class Savon
     end
 
     private
-
-    def services!
-      services = {}
-
-      @documents.services.each do |service_name, service|
-        ports = service.ports.map { |port_name, port|
-          [port_name, { type: port.type, location: port.location }]
-        }
-        services[service_name] = { ports: Hash[ports] }
-      end
-
-      services
-    end
 
     # Private: Raises a useful error in case the operation does not exist.
     def verify_operation_exists!(service_name, port_name, operation_name)

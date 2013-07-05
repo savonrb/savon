@@ -16,6 +16,11 @@ class Savon
         @ports ||= ports!
       end
 
+      def to_hash
+        port_hash = ports.values.inject({}) { |memo, port| memo.merge port.to_hash }
+        { name => { ports: port_hash } }
+      end
+
       private
 
       def ports!

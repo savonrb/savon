@@ -20,6 +20,10 @@ class Savon
         }
       end
 
+      def to_hash
+        { name => { type: type, location: location } }
+      end
+
     end
   end
 end
