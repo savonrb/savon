@@ -94,7 +94,7 @@ describe Savon do
 
     it 'raises if the port could not be found' do
       expect { client.operations(service_name, :UnknownPort) }.
-        to raise_error(ArgumentError, /Unknown port "UnknownPort" for service "AmazonFPS"/)
+        to raise_error(ArgumentError, /Unknown service "AmazonFPS" or port "UnknownPort"/)
     end
   end
 
@@ -116,7 +116,7 @@ describe Savon do
 
     it 'raises if the port could not be found' do
       expect { client.operation(service_name, :UnknownPort, :UnknownOperation) }.
-        to raise_error(ArgumentError, /Unknown port "UnknownPort" for service "AmazonFPS"/)
+        to raise_error(ArgumentError, /Unknown service "AmazonFPS" or port "UnknownPort"/)
     end
 
     it 'raises if the operation could not be found' do

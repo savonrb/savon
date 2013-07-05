@@ -34,8 +34,7 @@ class Savon
 
     # Public: Returns an Hash of operation names to Operations by service and port name.
     def operations(service_name, port_name)
-      verify_service_exists! service_name
-      verify_port_exists! service_name, port_name
+      verify_service_and_port_exist! service_name, port_name
 
       port = @documents.service_port(service_name, port_name)
       binding = port.fetch_binding(@documents)
@@ -85,21 +84,14 @@ class Savon
       end
     end
 
-    # Private: Raises a useful error in case the port does not exist.
-    def verify_port_exists!(service_name, port_name)
-      ports = services.fetch(service_name)[:ports]
+    # Private: Raises a useful error in case the service or port does not exist.
+    def verify_service_and_port_exist!(service_name, port_name)
+      service = services[service_name]
+      port = service[:ports][port_name] if service
 
-      unless ports.include? port_name
-        raise ArgumentError, "Unknown port #{port_name.inspect} for service #{service_name.inspect}.\n" \
-                             "You may want to try one of #{ports.keys.inspect}."
-      end
-    end
-
-    # Private: Raises a useful error in case the service does not exist.
-    def verify_service_exists!(service_name)
-      unless services.include? service_name
-        raise ArgumentError, "Unknown service #{service_name.inspect}.\n" \
-                             "You may want to try one of #{services.keys.inspect}."
+      unless port
+        raise ArgumentError, "Unknown service #{service_name.inspect} or port #{port_name.inspect}.\n" \
+                             "Here is a list of known services and port:\n" + services.inspect
       end
     end
 
