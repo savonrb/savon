@@ -76,9 +76,14 @@ class Savon
         end
 
         attributes, value = extract_attributes(value)
+        children = element.children
 
-        xml.tag! *tag, attributes do |xml|
-          build_elements(element.children, value, xml)
+        if children.count > 0
+          xml.tag! *tag, attributes do |xml|
+            build_elements(children, value, xml)
+          end
+        else
+          xml.tag! *tag, attributes
         end
       else
         unless value.kind_of? Array
