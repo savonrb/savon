@@ -10,7 +10,7 @@ gem 'simplecov', require: false
 gem 'coveralls', require: false
 
 # dependencies
-gem 'rubydeps',  require: false
+#gem 'rubydeps',  require: false  # uses c extensions
 
 # debugging
 #gem 'debugger',  require: false  # don't install on travis!
