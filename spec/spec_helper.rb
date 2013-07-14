@@ -19,6 +19,11 @@ if logger_to_enable = ENV['DEBUG']
   logger.level = :debug
 end
 
+if ENV['GRAPH']
+  require 'rubydeps'
+  Rubydeps.start
+end
+
 require 'equivalent-xml'
 
 support_files = File.expand_path('spec/support/**/*.rb')
