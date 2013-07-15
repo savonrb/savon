@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = 'me@rubiii.com'
   s.homepage    = 'http://savonrb.com'
   s.summary     = 'Heavy metal SOAP client'
-  s.description = s.summary
+  s.description = 'Savon is a SOAP client for the Ruby community.'
 
   s.rubyforge_project = s.name
 
@@ -23,9 +23,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'httpclient', '~> 2.3'
   s.add_dependency 'logging',    '~> 1.8'
 
-  s.add_development_dependency 'rake',  '~> 0.9'
-  s.add_development_dependency 'rspec', '~> 2.10'
-  s.add_development_dependency 'mocha', '~> 0.11'
+  s.add_development_dependency 'rake',  '~> 10.1'
+  s.add_development_dependency 'rspec', '~> 2.14'
+  s.add_development_dependency 'mocha', '~> 0.14'
   s.add_development_dependency 'equivalent-xml', '~> 0.3'
 
   ignores  = File.readlines('.gitignore').grep(/\S+/).map(&:chomp)
