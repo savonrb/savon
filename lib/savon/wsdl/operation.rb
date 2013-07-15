@@ -1,5 +1,5 @@
 require 'savon/wsdl/input_output'
-require 'savon/element_builder'
+require 'savon/xml/element_builder'
 
 class Savon
   class WSDL

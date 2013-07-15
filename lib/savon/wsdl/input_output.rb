@@ -27,8 +27,8 @@ class Savon
         header_part_names = header_parts.map { |part| part[:name] }
         body_parts.reject! { |part| header_part_names.include? part[:name] }
 
-        @header_parts = ElementBuilder.new(@wsdl.schemas).build(header_parts)
-        @body_parts = ElementBuilder.new(@wsdl.schemas).build(body_parts)
+        @header_parts = XML::ElementBuilder.new(@wsdl.schemas).build(header_parts)
+        @body_parts = XML::ElementBuilder.new(@wsdl.schemas).build(body_parts)
       end
 
       def collect_body_parts
