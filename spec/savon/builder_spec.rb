@@ -90,7 +90,15 @@ describe Savon::Builder do
       expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
       expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
     end
-    
+
+    it "ignores characters not found in the target encoding" do
+      globals[:encoding] = "ISO-8859-1"
+      globals[:encode_message] = true
+      locals[:message] = { :username => "lüke\u2122", :password => "secret" }
+      expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
+      expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
+    end
+
     context "with encode_message unset" do
       before :each do
         globals[:encoding] = "ISO-8859-1"
