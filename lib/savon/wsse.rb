@@ -1,162 +1,204 @@
+require "base64"
+require "digest/sha1"
+require "akami/core_ext/hash"
+require "akami/xpath_helper"
+require "akami/c14n_helper"
+require "time"
+require "gyoku"
+
+require "akami/wsse/verify_signature"
+require "akami/wsse/signature"
+
 module Savon
 
-  # = Savon::WSSE
+    # = Akami::WSSE
   #
-  # Savon::WSSE represents WSSE authentication. Pass a block to your SOAP call and the WSSE object
-  # is passed to it as the second argument. The object allows setting the WSSE username, password
-  # and whether to use digest authentication.
-  #
-  # == Credentials
-  #
-  # By default, Savon does not use WSSE authentication. Simply specify a username and password to
-  # change this.
-  #
-  #   response = client.get_all_users do |soap, wsse|
-  #     wsse.username = "eve"
-  #     wsse.password = "secret"
-  #   end
-  #
-  # == Digest
-  #
-  # To use WSSE digest authentication, just use the digest method and set it to +true+.
-  #
-  #   response = client.get_all_users do |soap, wsse|
-  #     wsse.username = "eve"
-  #     wsse.password = "secret"
-  #     wsse.digest = true
-  #   end
-  #
-  # == Default to WSSE
-  #
-  # In case all you're services require WSSE authentication, you can set your credentials and whether
-  # to use WSSE digest for every request:
-  #
-  #   Savon::WSSE.username = "eve"
-  #   Savon::WSSE.password = "secret"
-  #   Savon::WSSE.digest = true
+  # Building Web Service Security.
   class WSSE
 
-    # Base address for WSSE docs.
-    BaseAddress = "http://docs.oasis-open.org/wss/2004/01"
-
     # Namespace for WS Security Secext.
-    WSENamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    WSE_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
 
     # Namespace for WS Security Utility.
-    WSUNamespace = "#{BaseAddress}/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+    WSU_NAMESPACE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
 
-    # URI for "wsse:Password/@Type" #PasswordText.
-    PasswordTextURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+    # PasswordText URI.
+    PASSWORD_TEXT_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
 
-    # URI for "wsse:Password/@Type" #PasswordDigest.
-    PasswordDigestURI = "#{BaseAddress}/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+    # PasswordDigest URI.
+    PASSWORD_DIGEST_URI = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
 
-    # Global WSSE username.
-    @@username = nil
-
-    # Returns the global WSSE username.
-    def self.username
-      @@username
+    # Returns a value from the WSSE Hash.
+    def [](key)
+      hash[key]
     end
 
-    # Sets the global WSSE username.
-    def self.username=(username)
-      @@username = username.nil? ? nil : username.to_s
+    # Sets a value on the WSSE Hash.
+    def []=(key, value)
+      hash[key] = value
     end
 
-    # Global WSSE password.
-    @@password = nil
-
-    # Returns the global WSSE password.
-    def self.password
-      @@password
+    # Sets authentication credentials for a wsse:UsernameToken header.
+    # Also accepts whether to use WSSE digest authentication.
+    def credentials(username, password, digest = false)
+      self.username = username
+      self.password = password
+      self.digest = digest
     end
 
-    # Sets the global WSSE password.
-    def self.password=(password)
-      @@password = password.nil? ? nil : password.to_s
+    attr_accessor :username, :password, :created_at, :expires_at, :signature, :verify_response
+
+    def sign_with=(klass)
+      @signature = klass
     end
 
-    # Global setting of whether to use WSSE digest.
-    @@digest = false
-
-    # Returns the global setting of whether to use WSSE digest.
-    def self.digest?
-      @@digest
+    def signature?
+      !!@signature
     end
 
-    # Global setting of whether to use WSSE digest.
-    def self.digest=(digest)
-      @@digest = digest
+    # Returns whether to use WSSE digest. Defaults to +false+.
+    def digest?
+      !!@digest
     end
 
-    # Sets the WSSE username per request.
-    def username=(username)
-      @username = username.nil? ? nil : username.to_s
-    end
-
-    # Returns the WSSE username. Defaults to the global setting.
-    def username
-      @username || self.class.username
-    end
-
-    # Sets the WSSE password per request.
-    def password=(password)
-      @password = password.nil? ? nil : password.to_s
-    end
-
-    # Returns the WSSE password. Defaults to the global setting.
-    def password
-      @password || self.class.password
-    end
-
-    # Sets whether to use WSSE digest per request.
     attr_writer :digest
 
-    # Returns whether to use WSSE digest. Defaults to the global setting.
-    def digest?
-      @digest || self.class.digest?
+    # Returns whether to generate a wsse:UsernameToken header.
+    def username_token?
+      username && password
     end
 
-    # Returns the XML for a WSSE header or an empty String unless both username and password
-    # were specified.
-    def header
-      return "" unless username && password
+    # Returns whether to generate a wsu:Timestamp header.
+    def timestamp?
+      created_at || expires_at || @wsu_timestamp
+    end
 
-      builder = Builder::XmlMarkup.new
-      builder.wsse :Security, "xmlns:wsse" => WSENamespace do |xml|
-        xml.wsse :UsernameToken, "xmlns:wsu" => WSUNamespace do
-          xml.wsse :Username, username
-          xml.wsse :Nonce, nonce
-          xml.wsu :Created, timestamp
-          xml.wsse :Password, password_node, :Type => password_type
-        end
+    # Sets whether to generate a wsu:Timestamp header.
+    def timestamp=(timestamp)
+      @wsu_timestamp = timestamp
+    end
+
+    # Hook for Soap::XML that allows us to add attributes to the env:Body tag
+    def body_attributes
+      if signature?
+        signature.body_attributes
+      else
+        {}
+      end
+    end
+
+    # Returns the XML for a WSSE header.
+    def to_xml
+      if signature? and signature.have_document?
+        Gyoku.xml wsse_signature.merge!(hash)
+      elsif username_token? && timestamp?
+        Gyoku.xml wsse_username_token.merge!(wsu_timestamp) {
+          |key, v1, v2| v1.merge!(v2) {
+            |key, v1, v2| v1.merge!(v2)
+          }
+        }
+      elsif username_token?
+        Gyoku.xml wsse_username_token.merge!(hash)
+      elsif timestamp?
+        Gyoku.xml wsu_timestamp.merge!(hash)
+      else
+        ""
       end
     end
 
   private
 
-    # Returns the WSSE password. Encrypts the password for digest authentication.
-    def password_node
-      return password unless digest?
-
-      token = nonce + timestamp + password
-      Base64.encode64(Digest::SHA1.hexdigest(token)).chomp!
+    # Returns a Hash containing wsse:UsernameToken details.
+    def wsse_username_token
+      if digest?
+        token = security_hash :wsse, "UsernameToken",
+          "wsse:Username" => username,
+          "wsse:Nonce" => Base64.encode64(nonce),
+          "wsu:Created" => timestamp,
+          "wsse:Password" => digest_password,
+          :attributes! => { "wsse:Password" => { "Type" => PASSWORD_DIGEST_URI } }
+        # clear the nonce after each use
+        @nonce = nil
+      else
+        token = security_hash :wsse, "UsernameToken",
+          "wsse:Username" => username,
+          "wsse:Password" => password,
+          :attributes! => { "wsse:Password" => { "Type" => PASSWORD_TEXT_URI } }
+      end
+      token
     end
 
-    # Returns the URI for the "wsse:Password/@Type" attribute.
-    def password_type
-      digest? ? PasswordDigestURI : PasswordTextURI
+    def wsse_signature
+      signature_hash = signature.to_token
+
+      # First key/value is tag/hash
+      tag, hash = signature_hash.shift
+
+      security_hash nil, tag, hash, signature_hash
+    end
+
+    # Returns a Hash containing wsu:Timestamp details.
+    def wsu_timestamp
+      security_hash :wsu, "Timestamp",
+        "wsu:Created" => (created_at || Time.now).utc.xmlschema,
+        "wsu:Expires" => (expires_at || (created_at || Time.now) + 60).utc.xmlschema
+    end
+
+    # Returns a Hash containing wsse/wsu Security details for a given
+    # +namespace+, +tag+ and +hash+.
+    def security_hash(namespace, tag, hash, extra_info = {})
+      key = [namespace, tag].compact.join(":")
+
+      sec_hash = {
+        "wsse:Security" => {
+          key => hash
+        },
+        :attributes! => { "wsse:Security" => { "xmlns:wsse" => WSE_NAMESPACE } }
+      }
+
+      unless extra_info.empty?
+        sec_hash["wsse:Security"].merge!(extra_info)
+      end
+
+      if signature?
+        sec_hash[:attributes!].merge!("soapenv:mustUnderstand" => "1")
+      else
+        sec_hash["wsse:Security"].merge!(:attributes! => { key => { "wsu:Id" => "#{tag}-#{count}", "xmlns:wsu" => WSU_NAMESPACE } })
+      end
+
+      sec_hash
+    end
+
+    # Returns the WSSE password, encrypted for digest authentication.
+    def digest_password
+      token = nonce + timestamp + password
+      Base64.encode64(Digest::SHA1.digest(token)).chomp!
     end
 
     # Returns a WSSE nonce.
     def nonce
-      @nonce ||= Digest::SHA1.hexdigest String.random + timestamp
+      @nonce ||= Digest::SHA1.hexdigest random_string + timestamp
+    end
+
+    # Returns a random String of 100 characters.
+    def random_string
+      (0...100).map { ("a".."z").to_a[rand(26)] }.join
     end
 
     # Returns a WSSE timestamp.
     def timestamp
-      @timestamp ||= Time.now.strftime Savon::SOAP::DateTimeFormat
+      @timestamp ||= Time.now.utc.xmlschema
+    end
+
+    # Returns a new number with every call.
+    def count
+      @count ||= 0
+      @count += 1
+    end
+
+    # Returns a memoized and autovivificating Hash.
+    def hash
+      @hash ||= Hash.new { |h, k| h[k] = Hash.new(&h.default_proc) }
     end
 
   end
