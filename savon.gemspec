@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.description = 'Savon is a SOAP client for the Ruby community.'
 
   s.rubyforge_project = s.name
+  s.license = 'MIT'
 
   # TODO: get rid of Nori.
   s.add_dependency 'nori',     '~> 2.2.0'
