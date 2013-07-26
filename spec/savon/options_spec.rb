@@ -122,17 +122,6 @@ describe "Options" do
     end
   end
 
-  context "global :encode_message" do
-    it "allows to switch on the encoding of messages" do
-      client = new_client(:encode_message => :true)
-      expect(client.globals[:encode_message]).to be_true
-    end
-
-    it "disables the encoding of messages by default" do
-      expect(new_client.globals[:encode_message]).to be_false
-    end
-  end
-
   context "global :soap_header" do
     it "accepts a Hash of SOAP header information" do
       client = new_client(:endpoint => @server.url(:repeat), :soap_header => { :auth_token => "secret" })

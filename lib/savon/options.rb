@@ -45,7 +45,6 @@ module Savon
 
       defaults = {
         :encoding                  => "UTF-8",
-        :encode_message            => false,
         :soap_version              => 1,
         :namespaces                => {},
         :logger                    => Logger.new($stdout),
@@ -118,12 +117,6 @@ module Savon
     def encoding(encoding)
       @options[:encoding] = encoding
     end
-    
-    # Whether to encode messages or not. Defaults to false
-    def encode_message(encode_message)
-      @options[:encode_message] = encode_message
-    end
-    
 
     # The global SOAP header. Expected to be a Hash.
     def soap_header(header)
