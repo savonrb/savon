@@ -125,9 +125,22 @@ describe "Options" do
   context "global :soap_header" do
     it "accepts a Hash of SOAP header information" do
       client = new_client(:endpoint => @server.url(:repeat), :soap_header => { :auth_token => "secret" })
-
       response = client.call(:authenticate)
+
       expect(response.http.body).to include("<env:Header><authToken>secret</authToken></env:Header>")
+    end
+
+    it "accepts anything other than a String and calls #to_s on it" do
+      to_s_header = Class.new {
+        def to_s
+          "to_s_header"
+        end
+      }.new
+
+      client = new_client(:endpoint => @server.url(:repeat), :soap_header => to_s_header)
+      response = client.call(:authenticate)
+
+      expect(response.http.body).to include("<env:Header>to_s_header</env:Header>")
     end
   end
 
@@ -574,6 +587,63 @@ describe "Options" do
       end
 
       expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+    end
+  end
+
+  context "global and request :soap_header" do
+    it "merges the headers if both were provided as Hashes" do
+      global_soap_header = {
+        :global_header => { :auth_token => "secret" },
+        :merged => { :global => true }
+      }
+
+      request_soap_header = {
+        :request_header => { :auth_token => "secret" },
+        :merged => { :request => true }
+      }
+
+      client = new_client(:endpoint => @server.url(:repeat), :soap_header => global_soap_header)
+
+      response = client.call(:authenticate, :soap_header => request_soap_header)
+      request_body = response.http.body
+
+      expect(request_body).to include("<globalHeader><authToken>secret</authToken></globalHeader>")
+      expect(request_body).to include("<requestHeader><authToken>secret</authToken></requestHeader>")
+      expect(request_body).to include("<merged><request>true</request></merged>")
+    end
+
+    it "prefers the request over the global option if at least one of them is not a Hash" do
+      global_soap_header  = "<global>header</global>"
+      request_soap_header = "<request>header</request>"
+
+      client = new_client(:endpoint => @server.url(:repeat), :soap_header => global_soap_header)
+
+      response = client.call(:authenticate, :soap_header => request_soap_header)
+      request_body = response.http.body
+
+      expect(request_body).to include("<env:Header><request>header</request></env:Header>")
+    end
+  end
+
+  context "request :soap_header" do
+    it "accepts a Hash of SOAP header information" do
+      client = new_client(:endpoint => @server.url(:repeat))
+
+      response = client.call(:authenticate, :soap_header => { :auth_token => "secret" })
+      expect(response.http.body).to include("<env:Header><authToken>secret</authToken></env:Header>")
+    end
+
+    it "accepts anything other than a String and calls #to_s on it" do
+      to_s_header = Class.new {
+        def to_s
+          "to_s_header"
+        end
+      }.new
+
+      client = new_client(:endpoint => @server.url(:repeat))
+
+      response = client.call(:authenticate, :soap_header => to_s_header)
+      expect(response.http.body).to include("<env:Header>to_s_header</env:Header>")
     end
   end
 

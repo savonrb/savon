@@ -5,37 +5,65 @@ module Savon
   class Header
 
     def initialize(globals, locals)
-      @globals = globals
-      @locals = locals
-      @wsse = create_wsse
+      @gyoku_options  = { :key_converter => globals[:convert_request_keys_to] }
+
+      @wsse_auth      = globals[:wsse_auth]
+      @wsse_timestamp = globals[:wsse_timestamp]
+
+      @global_header  = globals[:soap_header]
+      @local_header   = locals[:soap_header]
+
+      @header = build
     end
 
+    attr_reader :local_header, :global_header, :gyoku_options,
+                :wsse_auth, :wsse_timestamp
+
     def empty?
-      to_s.empty?
+      @header.empty?
     end
 
     def to_s
-      return @header if @header
-
-      gyoku_options = { :key_converter => @globals[:convert_request_keys_to] }
-      @header = (Hash === header ? Gyoku.xml(header, gyoku_options) : header) + wsse_header
+      @header
     end
 
     private
 
-    def create_wsse
+    def build
+      build_header + build_wsse_header
+    end
+
+    def build_header
+      header =
+        if global_header.kind_of?(Hash) && local_header.kind_of?(Hash)
+          global_header.merge(local_header)
+        elsif local_header
+          local_header
+        else
+          global_header
+        end
+
+      convert_to_xml(header)
+    end
+
+    def build_wsse_header
+      wsse_header = akami
+      wsse_header.respond_to?(:to_xml) ? wsse_header.to_xml : ""
+    end
+
+    def convert_to_xml(hash_or_string)
+      if hash_or_string.kind_of? Hash
+        Gyoku.xml(hash_or_string, gyoku_options)
+      else
+        hash_or_string.to_s
+      end
+    end
+
+    def akami
       wsse = Akami.wsse
-      wsse.credentials(*@globals[:wsse_auth]) if @globals.include? :wsse_auth
-      wsse.timestamp = @globals[:wsse_timestamp] if @globals.include? :wsse_timestamp
+      wsse.credentials(*wsse_auth) if wsse_auth
+      wsse.timestamp = wsse_timestamp if wsse_timestamp
       wsse
-    end
-
-    def header
-      @header ||= @globals.include?(:soap_header) ? @globals[:soap_header] : {}
-    end
-
-    def wsse_header
-      @wsse.respond_to?(:to_xml) ? @wsse.to_xml : ""
     end
 
   end

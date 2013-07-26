@@ -118,7 +118,7 @@ module Savon
       @options[:encoding] = encoding
     end
 
-    # The global SOAP header. Expected to be a Hash.
+    # The global SOAP header. Expected to be a Hash or responding to #to_s.
     def soap_header(header)
       @options[:soap_header] = header
     end
@@ -271,6 +271,13 @@ module Savon
       }
 
       super defaults.merge(options)
+    end
+
+    # The local SOAP header. Expected to be a Hash or respond to #to_s.
+    # Will be merged with the global SOAP header if both are Hashes.
+    # Otherwise the local option will be prefered.
+    def soap_header(header)
+      @options[:soap_header] = header
     end
 
     # The SOAP message to send. Expected to be a Hash or a String.
