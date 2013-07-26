@@ -390,7 +390,8 @@ describe "Options" do
       credentials = ["admin", "secret"]
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
-      # TODO: find a way to integration test this. including an entire ntlm server implementation seems a bit over the top though.
+      # TODO: find a way to integration test this. including an entire ntlm
+      # server implementation seems a bit over the top though.
       HTTPI::Auth::Config.any_instance.expects(:ntlm).with(*credentials)
 
       response = client.call(:authenticate)

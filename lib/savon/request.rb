@@ -35,9 +35,9 @@ module Savon
     end
 
     def configure_auth
-      @http_request.auth.basic(*@globals[:basic_auth])    if @globals.include? :basic_auth
-      @http_request.auth.digest(*@globals[:digest_auth])  if @globals.include? :digest_auth
-      @http_request.auth.ntlm(*@globals[:ntlm])           if @globals.include?(:ntlm)
+      @http_request.auth.basic(*@globals[:basic_auth])   if @globals.include? :basic_auth
+      @http_request.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
+      @http_request.auth.ntlm(*@globals[:ntlm])          if @globals.include? :ntlm
     end
 
   end
