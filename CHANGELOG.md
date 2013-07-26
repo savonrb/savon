@@ -1,11 +1,6 @@
 ### 2.3.0 (UPCOMING)
 
-* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks
-  that don't care about the message sent by using `:any` for the `:message` option.
-
-    ``` ruby
-    savon.expects(:authenticate).with(message: :any)
-    ```
+* Feature: [#405](https://github.com/savonrb/savon/issues/405) Improved NTLM support based on HTTPI v2.1.0.
 
 * Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
   through the updated [savon-multipart](https://github.com/savonrb/savon-multipart) gem. You can now
@@ -23,6 +18,19 @@
     client.call(:my_operation, multipart: true)
     ```
 
+* Feature: [#470](https://github.com/savonrb/savon/issues/470) Added a local `:soap_header` option
+  to allow setting the SOAP header per request.
+
+* Feature: [#431](https://github.com/savonrb/savon/issues/431) Added a global `:encode_message`
+  message option which actually encodes the request XML String on Ruby >= 1.9.
+
+* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks
+  that don't care about the message sent by using `:any` for the `:message` option.
+
+    ``` ruby
+    savon.expects(:authenticate).with(message: :any)
+    ```
+
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Added `Savon::Response#soap_fault`
   and `Savon::Response#http_error` which were present in version 1.
 
@@ -30,8 +38,14 @@
   `Savon::Response#body` to respect the global `:convert_response_tags_to` and `:strip_namespaces`
   options and return the expected result instead of raising a `Savon::InvalidResponseError`.
 
+* Fix: [#461](https://github.com/savonrb/savon/issues/461) Fixed two problems related to namespace
+  qualified messages and the element `:order!`.
+
 * Fix: [#476](https://github.com/savonrb/savon/issues/476) fixes a problem where the namespace
   for the message tag was not correctly determined from the WSDL.
+
+* Fix: [#468](https://github.com/savonrb/savon/issues/468) Changed the dependency on Nokogiri
+  to < 1.6, because Nokogiri 1.6 dropped support for Ruby 1.8.
 
 ### 2.2.0 (2013-04-21)
 
