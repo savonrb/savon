@@ -207,6 +207,20 @@ describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
+
+    describe "ntlm auth" do
+      it "is set when specified" do
+        globals.ntlm("han", "super-secret")
+        http_request.auth.expects(:ntlm).with("han", "super-secret")
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.expects(:ntlm).never
+        new_wsdl_request.build
+      end
+    end
   end
 
 end
@@ -457,6 +471,20 @@ describe Savon::SOAPRequest do
 
       it "is not set otherwise" do
         http_request.auth.expects(:digest).never
+        new_soap_request.build
+      end
+    end
+
+    describe "ntlm auth" do
+      it "is set when specified" do
+        globals.ntlm("han", "super-secret")
+        http_request.auth.expects(:ntlm).with("han", "super-secret")
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.expects(:ntlm).never
         new_soap_request.build
       end
     end
