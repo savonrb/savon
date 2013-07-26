@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "nori",     "~> 2.2.0"
-  s.add_dependency "httpi",    "~> 2.0.2"
-  s.add_dependency "wasabi",   "~> 3.1.0"
+  s.add_dependency "httpi",    "~> 2.1.0"
+  s.add_dependency "wasabi",   "~> 3.2.0"
   s.add_dependency "akami",    "~> 1.2.0"
-  s.add_dependency "gyoku",    "~> 1.0.0"
+  s.add_dependency "gyoku",    "~> 1.1.0"
 
   s.add_dependency "builder",  ">= 2.1.2"
   s.add_dependency "nokogiri", ">= 1.4.0", "< 1.6"
@@ -28,9 +28,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rack"
   s.add_development_dependency "puma",  "2.0.0.b4"
 
-  s.add_development_dependency "rake",  "~> 0.9"
-  s.add_development_dependency "rspec", "~> 2.10"
-  s.add_development_dependency "mocha", "~> 0.11"
+  s.add_development_dependency "rake",  "~> 10.1"
+  s.add_development_dependency "rspec", "~> 2.14"
+  s.add_development_dependency "mocha", "~> 0.14"
   s.add_development_dependency "json",  "~> 1.7"
 
   ignores  = File.readlines(".gitignore").grep(/\S+/).map(&:chomp)
