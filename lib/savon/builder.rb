@@ -35,10 +35,15 @@ module Savon
     def to_s
       return @locals[:xml] if @locals.include? :xml
 
-      tag(builder, :Envelope, namespaces_with_globals) do |xml|
+      string = tag(builder, :Envelope, namespaces_with_globals) do |xml|
         tag(xml, :Header) { xml << header.to_s } unless header.empty?
         tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
       end
+
+      if @globals[:encoding] && @globals[:encode_message]
+        string.encode!(@globals[:encoding], undef: :replace, replace:'')
+      end
+      string
     end
 
     private

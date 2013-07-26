@@ -121,6 +121,18 @@ describe "Options" do
       expect(content_type).to eq("text/xml;charset=ISO-8859-1")
     end
   end
+  
+  context "global :encode_message" do
+    it "allows to switch on the encoding of messages" do
+      client = new_client(:encode_message => :true)
+      expect(client.globals[:encode_message]).to be_true
+    end
+
+    it "disables the encoding of messages by default" do
+      client = new_client()
+      expect(client.globals[:encode_message]).to be_false
+    end
+  end
 
   context "global :soap_header" do
     it "accepts a Hash of SOAP header information" do
