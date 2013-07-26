@@ -21,9 +21,6 @@
 * Feature: [#470](https://github.com/savonrb/savon/issues/470) Added a local `:soap_header` option
   to allow setting the SOAP header per request.
 
-* Feature: [#431](https://github.com/savonrb/savon/issues/431) Added a global `:encode_message`
-  message option which actually encodes the request XML String on Ruby >= 1.9.
-
 * Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks
   that don't care about the message sent by using `:any` for the `:message` option.
 
