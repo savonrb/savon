@@ -391,7 +391,7 @@ describe "Options" do
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
       # TODO: find a way to integration test this. including an entire ntlm server implementation seems a bit over the top though.
-      HTTPI::Auth::Config.any_instance.expects(:ntlm).with(credentials)
+      HTTPI::Auth::Config.any_instance.expects(:ntlm).with(*credentials)
 
       response = client.call(:authenticate)
     end
