@@ -35,25 +35,32 @@ module Savon
     def to_s
       return @locals[:xml] if @locals.include? :xml
 
-      xml = tag(builder, :Envelope, namespaces_with_globals) do |xml|
-        tag(xml, :Header) { xml << header.to_s } unless header.empty?
-        tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
-      end
-
-      if @globals[:encoding] && @globals[:encode_message]
-
-        if xml.respond_to? :encode!
-          xml.encode!(@globals[:encoding], :undef => :replace, :replace => '')
-        else
-          raise "String encoding does not seem to be supported by your Ruby. Are you still running 1.8?"
-        end
-
-      end
+      xml = build
+      encode! xml if encode?
 
       xml
     end
 
     private
+
+    def build
+      tag(builder, :Envelope, namespaces_with_globals) do |xml|
+        tag(xml, :Header) { xml << header.to_s } unless header.empty?
+        tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+      end
+    end
+
+    def encode?
+      @globals[:encoding] && @globals[:encode_message]
+    end
+
+    def encode!(xml)
+      if xml.respond_to? :encode!
+        xml.encode!(@globals[:encoding], :undef => :replace, :replace => '')
+      else
+        raise "String encoding does not seem to be supported by your Ruby. Are you still running 1.8?"
+      end
+    end
 
     def convert_type_definitions_to_hash
       @wsdl.type_definitions.inject({}) do |memo, (path, type)|
