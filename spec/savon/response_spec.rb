@@ -12,7 +12,7 @@ describe Savon::Response do
 
     it "should not raise a Savon::Fault in case the default is turned off" do
       globals[:raise_errors] = false
-      lambda { soap_fault_response }.should_not raise_error(Savon::SOAPFault)
+      lambda { soap_fault_response }.should_not raise_error
     end
 
     it "should raise a Savon::HTTP::Error in case of an HTTP error" do
