@@ -83,55 +83,58 @@ describe Savon::Builder do
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
     end
 
-    it "converts the message to the configured encoding if encode_message" do
-      globals[:encoding] = "ISO-8859-1"
-      globals[:encode_message] = true
-
-      locals[:message] = { :username => "lüke", :password => "secret" }
-
-      expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
-      expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
-    end
-
-    it "ignores characters not found in the target encoding" do
-      globals[:encoding] = "ISO-8859-1"
-      globals[:encode_message] = true
-
-      locals[:message] = { :username => "lüke\u2122", :password => "secret" }
-
-      expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
-      expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
-    end
-
-    context "with encode_message unset" do
-      before :each do
+    # excluded from 1.8 and other versions not supporting string encoding.
+    if "".respond_to? :encode!
+      it "converts the message to the configured encoding if encode_message" do
         globals[:encoding] = "ISO-8859-1"
-        locals[:message] = { :username => "lüke", :password => "secret" }
-      end
-
-      it "does not convert the message" do
-        expect(builder.to_s).to include("<username>lüke</username>")
-      end
-
-      it "keeps the encoding of utf-8" do
-        expect(builder.to_s.encoding.name).to eq "UTF-8"
-      end
-    end
-
-    context "with encode_message set to false" do
-      before :each do
-        globals[:encoding] = "ISO-8859-1"
-        globals[:encode_message] = false
+        globals[:encode_message] = true
 
         locals[:message] = { :username => "lüke", :password => "secret" }
+
+        expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
+        expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
       end
 
-      it "does not convert the message to the configured encoding" do
-        expect(builder.to_s).to include("<username>lüke</username>")
+      it "ignores characters not found in the target encoding" do
+        globals[:encoding] = "ISO-8859-1"
+        globals[:encode_message] = true
+
+        locals[:message] = { :username => "lüke\u2122", :password => "secret" }
+
+        expect(builder.to_s.encoding.name).to eq "ISO-8859-1"
+        expect(builder.to_s).to include("<username>lüke</username>".encode("ISO-8859-1"))
       end
 
-      it "keeps the encoding of utf-8" do
-        expect(builder.to_s.encoding.name).to eq "UTF-8"
+      context "with encode_message unset" do
+        before :each do
+          globals[:encoding] = "ISO-8859-1"
+          locals[:message] = { :username => "lüke", :password => "secret" }
+        end
+
+        it "does not convert the message" do
+          expect(builder.to_s).to include("<username>lüke</username>")
+        end
+
+        it "keeps the encoding of utf-8" do
+          expect(builder.to_s.encoding.name).to eq "UTF-8"
+        end
+      end
+
+      context "with encode_message set to false" do
+        before :each do
+          globals[:encoding] = "ISO-8859-1"
+          globals[:encode_message] = false
+
+          locals[:message] = { :username => "lüke", :password => "secret" }
+        end
+
+        it "does not convert the message to the configured encoding" do
+          expect(builder.to_s).to include("<username>lüke</username>")
+        end
+
+        it "keeps the encoding of utf-8" do
+          expect(builder.to_s.encoding.name).to eq "UTF-8"
+        end
       end
     end
   end

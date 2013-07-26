@@ -41,7 +41,13 @@ module Savon
       end
 
       if @globals[:encoding] && @globals[:encode_message]
-        xml.encode!(@globals[:encoding], :undef => :replace, :replace => '')
+
+        if xml.respond_to? :encode!
+          xml.encode!(@globals[:encoding], :undef => :replace, :replace => '')
+        else
+          raise "String encoding does not seem to be supported by your Ruby. Are you still running 1.8?"
+        end
+
       end
 
       xml
