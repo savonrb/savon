@@ -1,4 +1,6 @@
-### 2.3.0 (UPCOMING)
+### 2.3.0 (2013-07-27)
+
+Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Feature: [#405](https://github.com/savonrb/savon/issues/405) Improved NTLM support based on HTTPI v2.1.0.
 
