@@ -16,6 +16,13 @@ Gem::Specification.new do |s|
   s.rubyforge_project = s.name
   s.license = 'MIT'
 
+  s.post_install_message = %q{
+  When using Savon for Ruby 1.8, be sure to lock these dependencies your
+  Gemfile, or else install a compatible version manually:
+
+  gem "nokogiri", ">= 1.4", "< 1.6"
+  }
+
   s.add_dependency "nori",     "~> 2.3.0"
   s.add_dependency "httpi",    "~> 2.1.0"
   s.add_dependency "wasabi",   "~> 3.2.0"
@@ -23,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency "gyoku",    "~> 1.1.0"
 
   s.add_dependency "builder",  ">= 2.1.2"
-  s.add_dependency "nokogiri", ">= 1.4.0", "< 1.6"
+  s.add_dependency "nokogiri", ">= 1.4.0"
 
   s.add_development_dependency "rack"
   s.add_development_dependency "puma",  "2.0.0.b4"
