@@ -126,7 +126,11 @@ module Savon
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
       # TODO: clean this up! [dh, 2012-12-17]
-      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message],
+      types = {}
+      @wsdl.parser.instance_variable_get(:@messages)["#{@operation_name.to_s.camelcase(:lower)}Request"].children.each do |t|
+        types[t['name'].snakecase.to_sym] = { 'xsi:type' => t['type']} if t['name'].present?
+      end
+      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message].merge(:attributes! => types),
                   element_form_default, @globals[:convert_request_keys_to])
     end
 
