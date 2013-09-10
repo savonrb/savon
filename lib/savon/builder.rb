@@ -133,7 +133,7 @@ module Savon
       message_components = nil
       message_components = @wsdl.parser.instance_variable_get(:@messages)["#{LOWER_CAMELCASE.call(@operation_name.to_s)}Request"] unless @wsdl.document.nil?
       message_components.children.each do |t|
-        types[t['name'].snakecase.to_sym] = { 'xsi:type' => t['type']} if t['name'].present?
+        types[t['name'].snakecase.to_sym] = { 'xsi:type' => t['type']} unless t['name'].nil?
       end unless (message_components.nil?)
       msg = (@locals[:message].nil? or types.empty?) ? @locals[:message] : @locals[:message].merge(:attributes! => types)
       Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, msg,
