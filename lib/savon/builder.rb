@@ -7,6 +7,9 @@ require "gyoku"
 module Savon
   class Builder
 
+    CAMELCASE       = lambda { |key| key.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase } }
+    LOWER_CAMELCASE = lambda { |key| key[0].chr.downcase + CAMELCASE.call(key)[1..-1] }
+
     SCHEMA_TYPES = {
       "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
@@ -127,10 +130,13 @@ module Savon
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
       # TODO: clean this up! [dh, 2012-12-17]
       types = {}
-      @wsdl.parser.instance_variable_get(:@messages)["#{@operation_name.to_s.camelcase(:lower)}Request"].children.each do |t|
+      message_components = nil
+      message_components = @wsdl.parser.instance_variable_get(:@messages)["#{LOWER_CAMELCASE.call(@operation_name.to_s)}Request"] unless @wsdl.document.nil?
+      message_components.children.each do |t|
         types[t['name'].snakecase.to_sym] = { 'xsi:type' => t['type']} if t['name'].present?
-      end
-      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message].merge(:attributes! => types),
+      end unless (message_components.nil?)
+      msg = (@locals[:message].nil? or types.empty?) ? @locals[:message] : @locals[:message].merge(:attributes! => types)
+      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, msg,
                   element_form_default, @globals[:convert_request_keys_to])
     end
 
