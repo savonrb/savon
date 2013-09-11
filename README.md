@@ -26,13 +26,13 @@ There's also a [version1 branch](https://github.com/savonrb/savon/tree/version2)
 
 ## Maintainer needed
 
-So I've been maintaining Savon and its dependant projects for the last four years and it's become quite
+So I've been maintaining Savon and its dependant projects for the last four years and it's become quite  
 apparent now with my schedule I do not have the time to keep this project going single-handed.
 
-Luckily there are numerous people helping out from time to time, but maintaining this project is pretty
+Luckily there are numerous people helping out from time to time, but maintaining this project is pretty  
 much a full-time job and it keeps me from working on the next major version.
 
-I'll be able to contribute on a small scale going forward, and will do my best in the meantime to catch
+I'll be able to contribute on a small scale going forward, and will do my best in the meantime to catch  
 up with everything I am behind on.
 
 If you are interested, please email me at [me at rubiii dot com].  
