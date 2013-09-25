@@ -86,7 +86,7 @@ module Savon
       @http_request.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
       if @globals.include? :basic_auth
         authentication_string = @globals[:basic_auth].join ':'
-        @http_request.headers["Authorization"] ||= "Basic #{Base64.encode64(authentication_string).strip}"
+        @http_request.headers["Authorization"] ||= "Basic #{Base64.strict_encode64 authentication_string}"
       end
     end
 
