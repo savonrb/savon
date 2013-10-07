@@ -41,11 +41,11 @@ class Savon
         end
 
         case
-        when element.simple_type?
-          build_simple_type_element(element, xml, tag, value)
+          when element.simple_type?
+            build_simple_type_element(element, xml, tag, value)
 
-        when element.complex_type?
-          build_complex_type_element(element, xml, tag, value)
+          when element.complex_type?
+            build_complex_type_element(element, xml, tag, value)
 
         end
       end
@@ -75,26 +75,28 @@ class Savon
           raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
         end
 
-        attributes, value = extract_attributes(value)
-        children = element.children
-
-        if children.count > 0
-          xml.tag! *tag, attributes do |xml|
-            build_elements(children, value, xml)
-          end
-        else
-          xml.tag! *tag, attributes
-        end
+        build_complex_tag(element, tag, value, xml)
       else
         unless value.kind_of? Array
           raise ArgumentError, "Expected an Array of Hashes for the #{tag.last.inspect} complex type"
         end
 
         value.each do |val|
-          xml.tag! *tag do |xml|
-            build_elements(element.children, val, xml)
-          end
+          build_complex_tag(element, tag, val, xml)
         end
+      end
+    end
+
+    def build_complex_tag(element, tag, value, xml)
+      attributes, value = extract_attributes(value)
+      children = element.children
+
+      if children.count > 0
+        xml.tag! *tag, attributes do |xml|
+          build_elements(children, value, xml)
+        end
+      else
+        xml.tag! *tag, attributes
       end
     end
 
