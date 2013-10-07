@@ -190,7 +190,7 @@ describe 'Integration with Equifax' do
         <env:Body>
           <lol0:InitialRequest>
             <lol0:Identity>
-              <lol0:Address>
+              <lol0:Address timeAtAddress="3" addressType="public">
                 <lol0:FreeFormAddress>
                   <lol0:AddressLine>The original</lol0:AddressLine>
                   <lol0:AddressLine>Abbey Road, London</lol0:AddressLine>
