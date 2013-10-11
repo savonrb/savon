@@ -155,6 +155,7 @@ module Savon
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
+      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
