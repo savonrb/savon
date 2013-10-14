@@ -25,6 +25,14 @@ or add it to your Gemfile like this:
 gem 'savon', '~> 2.3.0'
 ```
 
+Savon versions >= 2.3 depend on a recent version of Nokogiri. If you are
+installing Savon for Ruby 1.8, you will need to install a 1.8-compatible
+version of Nokogiri manually, or specify the latest compatible version
+in your Gemfile:
+
+```ruby
+gem 'nokogiri', '>= 1.4', '< 1.6'
+```
 
 ## Maintainer needed
 
