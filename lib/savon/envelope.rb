@@ -6,7 +6,7 @@ class Savon
 
     NSID = 'lol'
 
-    def initialize(operation, header, body)
+    def initialize(operation, header, body, use_output = false)
       @logger = Logging.logger[self]
 
       @operation = operation
@@ -15,6 +15,7 @@ class Savon
 
       @nsid_counter = -1
       @namespaces = {}
+      @use_output = use_output
     end
 
     def register_namespace(namespace)
@@ -34,12 +35,16 @@ class Savon
 
     def build_header
       return "" if @header.empty?
-      Message.new(self, @operation.input.header_parts).build(@header)
+
+      header_parts = (@use_output ? @operation.output : @operation.input).header_parts
+      Message.new(self, header_parts).build(@header)
     end
 
     def build_body
       return "" if @body.empty?
-      body = Message.new(self, @operation.input.body_parts).build(@body)
+
+      parts = (@use_output ? @operation.output : @operation.input).body_parts
+      body = Message.new(self, parts).build(@body)
 
       if rpc_call?
         build_rpc_wrapper(body)

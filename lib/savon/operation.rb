@@ -60,6 +60,9 @@ class Savon
     # Public: Sets the request body Hash.
     attr_accessor :body
 
+    # Public: Sets the response body and header
+    attr_accessor :response_body, :response_header
+
     # Public: Create an example request body Hash.
     def example_body
       ExampleMessage.build(@operation.input.body_parts)
@@ -75,10 +78,18 @@ class Savon
       Envelope.new(@operation, header, body).to_s
     end
 
+    def example_response_body
+      ExampleMessage.build(@operation.output.body_parts)
+    end
+
     # Public: Call the operation.
     def call
       raw_response = @http.post(endpoint, http_headers, build)
       Response.new(raw_response)
+    end
+
+    def build_response
+      Envelope.new(@operation, response_header, response_body, true).to_s
     end
 
     # Public: Returns the input style for this operation.

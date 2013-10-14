@@ -23,44 +23,63 @@ class Savon
 
       # TODO: maybe use proper classes to clean this up.
       def input_headers
-        return @input_headers if @input_headers
+        return get_header('input')
+      end
+
+      def output_headers
+        return get_header('output')
+      end
+
+
+      # TODO: maybe use proper classes to clean this up.
+      def input_body
+        return get_body('input')
+      end
+
+      def output_body
+        return get_body('output')
+      end
+
+      def get_header(input_or_output)
+        headers = input_or_output == "output" ? @input_headers : @output_headers
+        return headers if headers
         input_headers = []
 
-        if header_nodes = find_input_child_nodes('header')
+        if header_nodes = find_child_nodes('header', input_or_output)
           header_nodes.each do |header_node|
             input_headers << {
-              encoding_style: header_node['encodingStyle'],
-              namespace:      header_node['namespace'],
-              use:            header_node['use'],
-              message:        header_node['message'],
-              part:           header_node['part']
+                encoding_style: header_node['encodingStyle'],
+                namespace: header_node['namespace'],
+                use: header_node['use'],
+                message: header_node['message'],
+                part: header_node['part']
             }
           end
         end
 
-        @input_headers = input_headers
+        input_headers
       end
 
-      # TODO: maybe use proper classes to clean this up.
-      def input_body
-        return @input_body if @input_body
+      def get_body(input_or_output)
+        body = input_or_output == "output" ? @output_body : @input_body
+        return body if body
         input_body = {}
 
-        if body_node = find_input_child_nodes('body').first
+        if body_node = find_child_nodes('body', input_or_output).first
           input_body = {
-            encoding_style: body_node['encodingStyle'],
-            namespace:      body_node['namespace'],
-            use:            body_node['use']
+              encoding_style: body_node['encodingStyle'],
+              namespace: body_node['namespace'],
+              use: body_node['use']
           }
         end
 
-        @input_body = input_body
+        input_body
       end
 
       private
 
-      def find_input_child_nodes(child_name)
-        input_node = @operation_node.element_children.find { |node| node.name == 'input' }
+      def find_child_nodes(child_name, type)
+        input_node = @operation_node.element_children.find { |node| node.name == type }
         return unless input_node
 
         input_node.element_children.select { |node| node.name == child_name }
