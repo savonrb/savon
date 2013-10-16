@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                  xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/"
+                  xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                  xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/"
+                  xmlns:tns="http://e-conomic.com"
+                  xmlns:s="http://www.w3.org/2001/XMLSchema"
+                  xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/"
+                  xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
+                  xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://e-conomic.com">
+      <s:element name="VatAccount_UpdateFromDataArray">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="dataArray" type="tns:ArrayOfVatAccountData"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVatAccountData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VatAccountData" nillable="true"
+                     type="tns:VatAccountData"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VatAccountData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Handle" type="tns:VatAccountHandle"/>
+          <s:element minOccurs="0" maxOccurs="1" name="VatCode" type="s:string"/>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string"/>
+          <s:element minOccurs="1" maxOccurs="1" name="Type" type="tns:VatAccountType"/>
+          <s:element minOccurs="1" maxOccurs="1" name="RateAsPercent" type="s:decimal"/>
+          <s:element minOccurs="0" maxOccurs="1" name="AccountHandle" type="tns:AccountHandle"/>
+          <s:element minOccurs="0" maxOccurs="1" name="ContraAccountHandle" type="tns:AccountHandle"/>
+          <attribute name="Thac0" required="true"/>
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="VatAccountHandle">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="VatCode" type="s:string"/>
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="VatAccountType">
+        <s:restriction base="s:string">
+          <s:enumeration value="OutputSales"/>
+          <s:enumeration value="InputPurchase"/>
+          <s:enumeration value="PurchasedProductsAbroad"/>
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="AccountHandle">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="Number" type="s:int"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="VatAccount_UpdateFromDataArrayResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VatAccount_UpdateFromDataArrayResult"
+                       type="tns:ArrayOfVatAccountHandle"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:complexType name="ArrayOfVatAccountHandle">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="VatAccountHandle" nillable="true"
+                     type="tns:VatAccountHandle"/>
+        </s:sequence>
+      </s:complexType>
+      <s:element name="VatAccount_UpdateFromData">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="data" type="tns:VatAccountData"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="VatAccount_UpdateFromDataResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="VatAccount_UpdateFromDataResult" type="tns:VatAccountHandle"/>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>s
+  </wsdl:types>
+  <wsdl:message name="VatAccount_UpdateFromDataArraySoapIn">
+    <wsdl:part name="parameters" element="tns:VatAccount_UpdateFromDataArray"/>
+  </wsdl:message>
+  <wsdl:message name="VatAccount_UpdateFromDataArraySoapOut">
+    <wsdl:part name="parameters" element="tns:VatAccount_UpdateFromDataArrayResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="EconomicWebServiceSoap">
+    <wsdl:operation name="VatAccount_UpdateFromDataArray">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update VAT accounts from data objects.&lt;br /&gt;Parameters:
+        dataArray: The array of data objects.
+      </wsdl:documentation>
+      <wsdl:input message="tns:VatAccount_UpdateFromDataArraySoapIn"/>
+      <wsdl:output message="tns:VatAccount_UpdateFromDataArraySoapOut"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="EconomicWebServiceSoap" type="tns:EconomicWebServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="VatAccount_UpdateFromDataArray">
+      <soap:operation soapAction="http://e-conomic.com/VatAccount_UpdateFromDataArray" style="document"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="EconomicWebService">
+    <wsdl:port name="EconomicWebServiceSoap" binding="tns:EconomicWebServiceSoap">
+      <soap:address location="https://api.e-conomic.com/secure/api1/EconomicWebservice.asmx"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
