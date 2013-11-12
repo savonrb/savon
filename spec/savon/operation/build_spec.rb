@@ -186,7 +186,7 @@ describe Savon::Operation do
                   :VatAccountData => [
                       {
                           :Handle => {:VatCode => "VAT123"},
-                          :VatCode => "VAT123",
+                          :VatCode => {:_attribute => 'test', :VatCode => "VAT123"},
                           :Name => "ITS",
                           :Type => "Ltd",
                           :RateAsPercent => 17.5,
@@ -218,7 +218,7 @@ describe Savon::Operation do
                   <lol0:Handle>
                     <lol0:VatCode>VAT123</lol0:VatCode>
                   </lol0:Handle>
-                  <lol0:VatCode>VAT123</lol0:VatCode>
+                  <lol0:VatCode attribute='test'>VAT123</lol0:VatCode>
                   <lol0:Name>ITS</lol0:Name>
                   <lol0:Type>Ltd</lol0:Type>
                   <lol0:RateAsPercent>17.5</lol0:RateAsPercent>

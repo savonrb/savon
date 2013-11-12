@@ -57,7 +57,12 @@ class Savon
           raise ArgumentError, "Unexpected Array for the #{tag.last.inspect} simple type"
         end
 
-        xml.tag! *tag, value
+        if value.is_a? Hash
+          attributes, value = extract_attributes(value)
+          xml.tag! *tag, value[tag[1]], attributes
+        else
+          xml.tag! *tag, value
+        end
       else
         unless value.kind_of? Array
           raise ArgumentError, "Expected an Array of values for the #{tag.last.inspect} simple type"
@@ -95,7 +100,12 @@ class Savon
         xml.tag! *tag, attributes do |xml|
           build_elements(children, value, xml)
         end
-      else
+      elsif value[tag]
+        p '-'*100
+        p value[tag]
+        p '-'*100
+        xml.tag! *tag, value[tag], attributes
+      else  
         xml.tag! *tag, attributes
       end
     end
