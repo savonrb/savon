@@ -26,6 +26,14 @@ describe Savon::Operation do
     client.operation(service, port, 'VatAccount_UpdateFromDataArray')
   }
 
+  let(:zanox_export_service){ 
+    client = Savon.new fixture('wsdl/zanox_export_service')
+
+    service, port = "ExportService", "ExportServiceSoap"
+
+    client.operation(service, port, 'GetPps')
+  }
+
   describe '#build' do
     it 'expects Arrays of complex types as Arrays of Hashes' do
       add_logins.body = {
@@ -179,6 +187,49 @@ describe Savon::Operation do
         to raise_error(ArgumentError, "Expected an Array of values for the :betId simple type")
     end
 
+    it 'test' do
+      zanox_export_service.header = {
+        zanox: {
+          ticket: 'EFB745D691DBFF2DFA9F8B10A4D7A7B1AEA850CD'
+        }
+      }
+      zanox_export_service.body = {
+        :GetPps => {
+          programid: 5574,
+          ppsfilter: {
+              period: {
+                :_from => '2013-10-01T00:00:00+02:00', 
+                :_to   => '2013-11-12T00:00:00+02:00'
+              },
+              :reviewstate => {reviewstate: 0, :_negate => 1},
+              :categoryid => {}
+          }
+        }
+      }
+
+      expected = Nokogiri.XML(%{
+        <env:Envelope xmlns:lol0="http://services.zanox.com/erp" xmlns:lol1="http://services.zanox.com/erp/Export" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+          <env:Header>
+            <lol0:zanox>
+              <lol0:ticket>EFB745D691DBFF2DFA9F8B10A4D7A7B1AEA850CD</lol0:ticket>
+            </lol0:zanox>
+          </env:Header>
+          <env:Body>
+            <lol0:GetPps>
+              <lol0:programid>5574</lol0:programid>
+              <lol1:ppsfilter>
+                <lol1:period from="2013-10-01T00:00:00+02:00" to="2013-11-12T00:00:00+02:00"/>
+                <lol1:reviewstate negate='1'>0</lol1:reviewstate>
+                <lol1:categoryid/>
+              </lol1:ppsfilter>
+            </lol0:GetPps>
+          </env:Body>
+        </env:Envelope>})
+
+      expect(Nokogiri.XML zanox_export_service.build).
+          to be_equivalent_to(expected).respecting_element_order      
+    end
+
     it 'expects Array of Hashes with attributes to return Array of complex types with attributes' do
       vatAccount_update_from_data_array.body = {
           :VatAccount_UpdateFromDataArray => {
@@ -186,7 +237,7 @@ describe Savon::Operation do
                   :VatAccountData => [
                       {
                           :Handle => {:VatCode => "VAT123"},
-                          :VatCode => {:_attribute => 'test', :VatCode => "VAT123"},
+                          :VatCode => {:_attribute => 'test', :_foo => 11, :VatCode => "VAT123"},
                           :Name => "ITS",
                           :Type => "Ltd",
                           :RateAsPercent => 17.5,
@@ -218,7 +269,7 @@ describe Savon::Operation do
                   <lol0:Handle>
                     <lol0:VatCode>VAT123</lol0:VatCode>
                   </lol0:Handle>
-                  <lol0:VatCode attribute='test'>VAT123</lol0:VatCode>
+                  <lol0:VatCode attribute='test' foo='11'>VAT123</lol0:VatCode>
                   <lol0:Name>ITS</lol0:Name>
                   <lol0:Type>Ltd</lol0:Type>
                   <lol0:RateAsPercent>17.5</lol0:RateAsPercent>
