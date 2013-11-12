@@ -101,9 +101,6 @@ class Savon
           build_elements(children, value, xml)
         end
       elsif value[tag]
-        p '-'*100
-        p value[tag]
-        p '-'*100
         xml.tag! *tag, value[tag], attributes
       else  
         xml.tag! *tag, attributes
