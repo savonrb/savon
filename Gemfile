@@ -15,4 +15,6 @@ gem 'coveralls', require: false
 # debugging
 #gem 'debugger',  require: false  # don't install on travis!
 
-gem 'fuubar'
+group :development do
+  gem 'fuubar'
+end
