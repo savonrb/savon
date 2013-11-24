@@ -7,6 +7,5 @@ rvm:
   - 2.0
   - jruby-19mode
   - rbx
-  - rbx2
 notifications:
   irc: "irc.freenode.org#savon"
