@@ -1,0 +1,520 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://services.zanox.com/erp" xmlns:s1="http://services.zanox.com/erp/Export" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://services.zanox.com/erp" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This Webservice is used to export ERP data.</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.zanox.com/erp">
+      <s:import namespace="http://services.zanox.com/erp/Export" />
+      <s:element name="GetHistoryExport">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="programid" type="s:int" />
+            <s:element minOccurs="1" maxOccurs="1" name="trackingtype" type="s:unsignedByte" />
+            <s:element minOccurs="1" maxOccurs="1" name="rowCount" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetHistoryExportResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="historydata" type="s1:GetHistory" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="zanox" type="tns:TicketHeader" />
+      <s:complexType name="TicketHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ticket" type="s:normalizedString" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:element name="GetHistoryForId">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="historyid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetHistoryForIdResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="historydata" type="s1:GetHistory" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPps">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="programid" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:ppsfilter" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPpsResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ppsdata" type="s1:GetPps" />
+            <s:element minOccurs="1" maxOccurs="1" name="historyid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPpl">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="programid" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:pplfilter" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetPplResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="ppldata" type="s1:GetPpl" />
+            <s:element minOccurs="1" maxOccurs="1" name="historyid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBasket">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="1" maxOccurs="1" name="programid" type="s:int" />
+            <s:element minOccurs="0" maxOccurs="1" ref="s1:basketfilter" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="GetBasketResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="basketdata" type="s1:GetBasket" />
+            <s:element minOccurs="1" maxOccurs="1" name="historyid" type="s:int" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://services.zanox.com/erp/Export">
+      <s:complexType name="GetHistory">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="history" type="s1:HistoryType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="HistoryType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="created" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="records" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="filteredby" type="s1:FilteredByType" />
+        </s:sequence>
+        <s:attribute name="id" type="s:int" use="required" />
+        <s:attribute name="trackingtype" type="s:unsignedByte" use="required" />
+        <s:attribute name="programid" type="s:int" use="required" />
+      </s:complexType>
+      <s:complexType name="FilteredByType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="period" type="s1:FilteredByTypePeriod" />
+          <s:element minOccurs="0" maxOccurs="1" name="reviewstate" type="s1:FilteredByTypeReviewstate" />
+          <s:element minOccurs="0" maxOccurs="1" name="categoryid" type="s1:FilteredByTypeCategoryid" />
+          <s:element minOccurs="0" maxOccurs="1" name="orderid" type="s1:FilteredByTypeOrderid" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FilteredByTypePeriod">
+        <s:attribute name="from" type="s:dateTime" use="required" />
+        <s:attribute name="to" type="s:dateTime" use="required" />
+      </s:complexType>
+      <s:complexType name="FilteredByTypeReviewstate">
+        <s:simpleContent>
+          <s:extension base="s:unsignedByte">
+            <s:attribute name="negated" type="s:boolean" use="required" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="FilteredByTypeCategoryid">
+        <s:simpleContent>
+          <s:extension base="s:normalizedString">
+            <s:attribute name="negated" type="s:boolean" use="required" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="FilteredByTypeOrderid">
+        <s:simpleContent>
+          <s:extension base="s:normalizedString">
+            <s:attribute name="negated" type="s:boolean" use="required" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:element name="ppsfilter" type="s1:PpsFilterType" />
+      <s:complexType name="PpsFilterType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:BaseFilterType">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="categoryid" type="s1:PpsFilterTypeCategoryid" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseFilterType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="period" type="s1:BaseFilterTypePeriod" />
+          <s:element minOccurs="0" maxOccurs="1" name="reviewstate" type="s1:BaseFilterTypeReviewstate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BaseFilterTypePeriod">
+        <s:attribute name="from" type="s:dateTime" use="required" />
+        <s:attribute name="to" type="s:dateTime" use="required" />
+      </s:complexType>
+      <s:complexType name="BaseFilterTypeReviewstate">
+        <s:simpleContent>
+          <s:extension base="s:unsignedByte">
+            <s:attribute name="negate" type="s:boolean" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="BasketFilterType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:BaseFilterType">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="orderid" type="s1:BasketFilterTypeOrderid" />
+              <s:element minOccurs="0" maxOccurs="1" name="category" type="s1:BasketFilterTypeCategory" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BasketFilterTypeOrderid">
+        <s:simpleContent>
+          <s:extension base="s:normalizedString">
+            <s:attribute name="negate" type="s:boolean" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="BasketFilterTypeCategory">
+        <s:attribute name="status" type="s:unsignedByte" />
+      </s:complexType>
+      <s:complexType name="PplFilterType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:BaseFilterType">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="categoryid" type="s1:PplFilterTypeCategoryid" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="PplFilterTypeCategoryid">
+        <s:simpleContent>
+          <s:extension base="s:normalizedString">
+            <s:attribute name="negate" type="s:boolean" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="PpsFilterTypeCategoryid">
+        <s:simpleContent>
+          <s:extension base="s:normalizedString">
+            <s:attribute name="negate" type="s:boolean" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="GetPps">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="pps" type="s1:PpsType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PpsType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:BaseTypePplPps">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="suborder" type="s1:SuborderType" />
+              <s:element minOccurs="0" maxOccurs="1" name="amount" type="s1:AmountType" />
+              <s:element minOccurs="0" maxOccurs="1" name="commission" type="s1:CommissionPercentType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="BaseTypePplPps">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="click" type="s1:ClickTimestampType" />
+          <s:element minOccurs="0" maxOccurs="1" name="request" type="s1:RequestIpAddressType" />
+          <s:element minOccurs="0" maxOccurs="1" name="program" type="s1:ProgramType" />
+          <s:element minOccurs="0" maxOccurs="1" name="order" type="s1:OrderType" />
+          <s:element minOccurs="0" maxOccurs="1" name="customer" type="s1:CustomerType" />
+          <s:element minOccurs="0" maxOccurs="1" name="category" type="s1:CategoryType" />
+          <s:element minOccurs="0" maxOccurs="1" name="session" type="s1:SessionType" />
+          <s:element minOccurs="0" maxOccurs="1" name="expiration" type="s1:ExpirationType" />
+          <s:element minOccurs="0" maxOccurs="1" name="affiliate" type="s1:AffiliateFullType" />
+          <s:element minOccurs="0" maxOccurs="1" name="subaffiliate" type="s1:SubAffiliateType" />
+          <s:element minOccurs="0" maxOccurs="1" name="review" type="s1:ReviewType" />
+        </s:sequence>
+        <s:attribute name="id" type="s:normalizedString" />
+        <s:attribute name="trackingtype" type="s:unsignedByte" use="required" />
+        <s:attribute name="cookie_id" type="s:long" use="required" />
+      </s:complexType>
+      <s:complexType name="ClickTimestampType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:ClickType">
+            <s:attribute name="timestamp" type="s:dateTime" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ClickType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ulp" type="s:normalizedString" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="RequestIpAddressType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:RequestType">
+            <s:attribute name="ipaddress" type="s:normalizedString" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="RequestType">
+        <s:attribute name="timestamp" type="s:dateTime" />
+      </s:complexType>
+      <s:complexType name="ProgramType">
+        <s:attribute name="id" type="s:int" use="required" />
+      </s:complexType>
+      <s:complexType name="OrderType">
+        <s:attribute name="id" type="s:normalizedString" />
+      </s:complexType>
+      <s:complexType name="CustomerType">
+        <s:attribute name="id" type="s:normalizedString" />
+      </s:complexType>
+      <s:complexType name="CategoryType">
+        <s:attribute name="id" type="s:normalizedString" />
+      </s:complexType>
+      <s:complexType name="SessionType">
+        <s:attribute name="id" type="s:normalizedString" />
+      </s:complexType>
+      <s:complexType name="ExpirationType">
+        <s:attribute name="date" type="s:dateTime" use="required" />
+      </s:complexType>
+      <s:complexType name="AffiliateFullType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:AffiliateType">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="username" type="s:normalizedString" />
+              <s:element minOccurs="0" maxOccurs="1" name="website" type="s:normalizedString" />
+            </s:sequence>
+            <s:attribute name="code" type="s:normalizedString" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="AffiliateType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="commission" type="s1:MoneyType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="MoneyType">
+        <s:simpleContent>
+          <s:extension base="s:decimal">
+            <s:attribute name="currency" type="s:string" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="SubAffiliateType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="commission" type="s1:MoneyType" />
+        </s:sequence>
+        <s:attribute name="id" type="s:int" />
+      </s:complexType>
+      <s:complexType name="ReviewType">
+        <s:simpleContent>
+          <s:extension base="s:string">
+            <s:attribute name="state" type="s:int" />
+            <s:attribute name="date" type="s:dateTime" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="PplType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:BaseTypePplPps">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="commission" type="s1:CommissionType" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="CommissionType">
+        <s:attribute name="fix" type="s:decimal" />
+      </s:complexType>
+      <s:complexType name="CommissionPercentType">
+        <s:complexContent mixed="false">
+          <s:extension base="s1:CommissionType">
+            <s:attribute name="percent" type="s:decimal" />
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="SuborderType">
+        <s:attribute name="id" type="s:normalizedString" />
+      </s:complexType>
+      <s:complexType name="AmountType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="price" type="s1:MoneyType" />
+          <s:element minOccurs="0" maxOccurs="1" name="tracked" type="s1:MoneyType" />
+          <s:element minOccurs="0" maxOccurs="1" name="intern" type="s1:MoneyType" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="pplfilter" type="s1:PplFilterType" />
+      <s:complexType name="GetPpl">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ppl" type="s1:PplType" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="basketfilter" type="s1:BasketFilterType" />
+      <s:complexType name="GetBasket">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="basket" type="s1:BasketType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="BasketType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="click" type="s1:ClickType" />
+          <s:element minOccurs="0" maxOccurs="1" name="request" type="s1:RequestType" />
+          <s:element minOccurs="0" maxOccurs="1" name="program" type="s1:ProgramType" />
+          <s:element minOccurs="0" maxOccurs="1" name="order" type="s1:OrderType" />
+          <s:element minOccurs="0" maxOccurs="1" name="category" type="s1:CategoryType" />
+          <s:element minOccurs="0" maxOccurs="1" name="affiliate" type="s1:AffiliateType" />
+          <s:element minOccurs="0" maxOccurs="1" name="product" type="s1:ProductType" />
+          <s:element minOccurs="0" maxOccurs="1" name="commission" type="s1:CommissionPercentType" />
+        </s:sequence>
+        <s:attribute name="id" type="s:normalizedString" />
+        <s:attribute name="trackingtype" type="s:unsignedByte" use="required" />
+      </s:complexType>
+      <s:complexType name="ProductType">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="name" type="s:normalizedString" />
+          <s:element minOccurs="0" maxOccurs="1" name="price" type="s1:MoneyType" />
+        </s:sequence>
+        <s:attribute name="number" type="s:normalizedString" />
+        <s:attribute name="quantity" type="s:short" />
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="GetHistoryExportSoapIn">
+    <wsdl:part name="parameters" element="tns:GetHistoryExport" />
+  </wsdl:message>
+  <wsdl:message name="GetHistoryExportSoapOut">
+    <wsdl:part name="parameters" element="tns:GetHistoryExportResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetHistoryExportzanox">
+    <wsdl:part name="zanox" element="tns:zanox" />
+  </wsdl:message>
+  <wsdl:message name="GetHistoryForIdSoapIn">
+    <wsdl:part name="parameters" element="tns:GetHistoryForId" />
+  </wsdl:message>
+  <wsdl:message name="GetHistoryForIdSoapOut">
+    <wsdl:part name="parameters" element="tns:GetHistoryForIdResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetHistoryForIdzanox">
+    <wsdl:part name="zanox" element="tns:zanox" />
+  </wsdl:message>
+  <wsdl:message name="GetPpsSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPps" />
+  </wsdl:message>
+  <wsdl:message name="GetPpsSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPpsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPpszanox">
+    <wsdl:part name="zanox" element="tns:zanox" />
+  </wsdl:message>
+  <wsdl:message name="GetPplSoapIn">
+    <wsdl:part name="parameters" element="tns:GetPpl" />
+  </wsdl:message>
+  <wsdl:message name="GetPplSoapOut">
+    <wsdl:part name="parameters" element="tns:GetPplResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPplzanox">
+    <wsdl:part name="zanox" element="tns:zanox" />
+  </wsdl:message>
+  <wsdl:message name="GetBasketSoapIn">
+    <wsdl:part name="parameters" element="tns:GetBasket" />
+  </wsdl:message>
+  <wsdl:message name="GetBasketSoapOut">
+    <wsdl:part name="parameters" element="tns:GetBasketResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetBasketzanox">
+    <wsdl:part name="zanox" element="tns:zanox" />
+  </wsdl:message>
+  <wsdl:portType name="ExportServiceSoap">
+    <wsdl:operation name="GetHistoryExport">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns all export history entries for the specified program id and tracking type.</wsdl:documentation>
+      <wsdl:input message="tns:GetHistoryExportSoapIn" />
+      <wsdl:output message="tns:GetHistoryExportSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetHistoryForId">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns the import history entry for the specified history id.</wsdl:documentation>
+      <wsdl:input message="tns:GetHistoryForIdSoapIn" />
+      <wsdl:output message="tns:GetHistoryForIdSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPps">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns PPS entries for the specfied program id that matches the applied filter.</wsdl:documentation>
+      <wsdl:input message="tns:GetPpsSoapIn" />
+      <wsdl:output message="tns:GetPpsSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPpl">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns PPL entries for the specfied program id that matches the applied filter.</wsdl:documentation>
+      <wsdl:input message="tns:GetPplSoapIn" />
+      <wsdl:output message="tns:GetPplSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="GetBasket">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Returns basket entries for the specfied program id that matches the applied filter.</wsdl:documentation>
+      <wsdl:input message="tns:GetBasketSoapIn" />
+      <wsdl:output message="tns:GetBasketSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ExportServiceSoap" type="tns:ExportServiceSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetHistoryExport">
+      <soap:operation soapAction="http://services.zanox.com/erp/GetHistoryExport" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetHistoryExportzanox" part="zanox" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetHistoryForId">
+      <soap:operation soapAction="http://services.zanox.com/erp/GetHistoryForId" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetHistoryForIdzanox" part="zanox" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPps">
+      <soap:operation soapAction="http://services.zanox.com/erp/GetPps" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPpszanox" part="zanox" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetPpl">
+      <soap:operation soapAction="http://services.zanox.com/erp/GetPpl" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetPplzanox" part="zanox" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetBasket">
+      <soap:operation soapAction="http://services.zanox.com/erp/GetBasket" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:GetBasketzanox" part="zanox" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ExportService">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">This Webservice is used to export ERP data.</wsdl:documentation>
+    <wsdl:port name="ExportServiceSoap" binding="tns:ExportServiceSoap">
+      <soap:address location="http://services.zanox.com/erp/v2/ExportService.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

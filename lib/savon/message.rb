@@ -56,8 +56,12 @@ class Savon
         if value.kind_of? Array
           raise ArgumentError, "Unexpected Array for the #{tag.last.inspect} simple type"
         end
-
-        xml.tag! *tag, value
+        if value.is_a? Hash
+          attributes, value = extract_attributes(value)
+          xml.tag! *tag, value[tag[1]], attributes
+        else
+          xml.tag! *tag, value
+        end
       else
         unless value.kind_of? Array
           raise ArgumentError, "Expected an Array of values for the #{tag.last.inspect} simple type"
@@ -69,7 +73,7 @@ class Savon
       end
     end
 
-    def build_complex_type_element(element, xml, tag, value)
+    def build_complex_type_element(element, xml, tag, value)      
       if element.singular?
         unless value.kind_of? Hash
           raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
@@ -95,7 +99,9 @@ class Savon
         xml.tag! *tag, attributes do |xml|
           build_elements(children, value, xml)
         end
-      else
+      elsif value && value[tag[1]]
+        xml.tag! *tag, value[tag[1]], attributes
+      else  
         xml.tag! *tag, attributes
       end
     end
