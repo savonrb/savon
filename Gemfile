@@ -15,6 +15,13 @@ gem 'coveralls', require: false
 # debugging
 #gem 'debugger',  require: false  # don't install on travis!
 
+platform :rbx do
+  gem 'json'
+  gem 'racc'
+  gem 'rubysl'
+  gem 'rubinius-coverage'
+end
+
 group :development do
   gem 'fuubar'
 end
