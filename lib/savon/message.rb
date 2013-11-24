@@ -73,7 +73,7 @@ class Savon
       end
     end
 
-    def build_complex_type_element(element, xml, tag, value)      
+    def build_complex_type_element(element, xml, tag, value)
       if element.singular?
         unless value.kind_of? Hash
           raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
@@ -101,7 +101,7 @@ class Savon
         end
       elsif value && value[tag[1]]
         xml.tag! *tag, value[tag[1]], attributes
-      else  
+      else
         xml.tag! *tag, attributes
       end
     end
