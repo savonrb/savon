@@ -1,3 +1,8 @@
+### 2.3.1 (2013-12-05)
+
+* Removed dependency on Nokogiri <= 1.4 -- This improves support for ruby 1.9.3 and 2.0.0 and officially begins the end of support for ruby 1.8.7
+  See [issue #487](https://github.com/savonrb/savon/issues/487)
+
 ### 2.3.0 (2013-07-27)
 
 Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
@@ -240,10 +245,10 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     in the document:
 
     ``` xml
-    <env:Envelope 
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xmlns:tns="http://v1_0.ws.auth.order.example.com/" 
+    <env:Envelope
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tns="http://v1_0.ws.auth.order.example.com/"
         xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
 
         <tns:authenticate>
@@ -261,7 +266,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
   The global config is cloned when a new client is initialized and gets used instead of the global one.
   In addition, for `Savon::Model` classes, the config is cloned per class.
 
-    Closes [#84](https://github.com/savonrb/savon/issues/84) by allowing one logger per client and 
+    Closes [#84](https://github.com/savonrb/savon/issues/84) by allowing one logger per client and
     [#270](https://github.com/savonrb/savon/issues/270) by allowing to specify error handling per client.
 
 * Feature: Added an option to pretty print XML in log messages. Closes [#256](https://github.com/savonrb/savon/issues/256)
@@ -951,7 +956,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
       Benchmarks (1000 SOAP calls):
-    
+
              user        system     total       real
       0.6.4  72.180000   8.280000   80.460000   (750.799011)
       0.6.3  192.900000  19.630000  212.530000  (914.031865)
@@ -965,7 +970,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
     Benchmarks (1000 SOAP calls):
-    
+
                    user        system     total       real
     WSDL           192.900000  19.630000  212.530000  (914.031865)
     disabled WSDL  5.680000    1.340000   7.020000    (298.265318)
@@ -975,7 +980,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
     Benchmarks (1000 SOAP calls):
-    
+
            user        system     total       real
     0.6.3  192.900000  19.630000  212.530000  (914.031865)
     0.6.2  574.720000  78.380000  653.100000  (1387.778539)
