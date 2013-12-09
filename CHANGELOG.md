@@ -1,3 +1,7 @@
+### 2.3.2 (2013-12-09)
+
+* Fix: [#520](https://github.com/savonrb/savon/issues/520) Fixes a regression in message tags in requests and responses.
+
 ### 2.3.1 (2013-12-05)
 
 * Removed dependency on Nokogiri <= 1.4 -- This improves support for ruby 1.9.3 and 2.0.0 and officially begins the end of support for ruby 1.8.7
