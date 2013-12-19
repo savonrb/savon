@@ -12,3 +12,7 @@ platform :rbx do
   gem 'rubysl'
   gem 'rubinius-coverage'
 end
+
+platform :jruby do
+  gem 'json'
+end
