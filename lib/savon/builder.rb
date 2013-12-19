@@ -7,6 +7,9 @@ require "gyoku"
 module Savon
   class Builder
 
+    CAMELCASE       = lambda { |key| key.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase } }
+    LOWER_CAMELCASE = lambda { |key| key[0].chr.downcase + CAMELCASE.call(key)[1..-1] }
+
     SCHEMA_TYPES = {
       "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
@@ -126,7 +129,25 @@ module Savon
     def message
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
       # TODO: clean this up! [dh, 2012-12-17]
-      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, @locals[:message],
+      types = {}
+      message_components = nil
+      message_components = @wsdl.parser.instance_variable_get(:@messages)["#{LOWER_CAMELCASE.call(@operation_name.to_s)}Request"] unless @wsdl.document.nil?
+      message_components.children.each do |t|
+        unless t['name'].nil?
+          type = t['name'].snakecase.to_sym
+          types[type] = {'xsi:type' => t['type']}
+          typeC = CAMELCASE.call(t['name'])
+          unless @wsdl.parser.types[typeC].nil?
+            first_level_attributes = {}
+            @wsdl.parser.types[typeC].each do |element, attr|
+              first_level_attributes[element.snakecase.to_sym] = {'xsi:type'=> attr[:type]} unless element.is_a?(Symbol)
+            end
+            @locals[:message][type].merge!(:attributes! => first_level_attributes) unless (@locals[:message].nil? or @locals[:message][type].nil?)
+          end
+        end
+      end unless (message_components.nil?)
+      msg = (@locals[:message].nil? or types.empty?) ? @locals[:message] : @locals[:message].merge(:attributes! => types)
+      Message.new(@operation_name, namespace_identifier, @types, @used_namespaces, msg,
                   element_form_default, @globals[:convert_request_keys_to])
     end
 
