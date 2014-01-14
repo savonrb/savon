@@ -10,7 +10,9 @@ class Savon
 
     def resolve(location)
       case location
-        when URL_PATTERN then @http.get(location)
+        when URL_PATTERN then
+          result = @http.get(location)
+          result.is_a?(HTTP::Message) ? result.body : result
         when XML_PATTERN then location
         else                  File.read(location)
       end
