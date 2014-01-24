@@ -99,18 +99,13 @@ describe 'Integration with Jetairways\'s SessionCreate Service' do
           Username: 'example_user',
           Password: 'my_secret',
           Organization: 'example_organization'}
-
        }
     }
     operation.body =
     {Logon:{}}
 
     expected = Nokogiri.XML('
-      <env:Envelope
-       xmlns:lol0="http://www.ebxml.org/namespaces/messageHeader"
-       xmlns:lol1="http://schemas.xmlsoap.org/ws/2002/12/secext"
-       xmlns:lol2="http://www.vedaleon.com/webservices"
-       xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+        <env:Envelope xmlns:lol0="http://www.ebxml.org/namespaces/messageHeader" xmlns:lol1="http://schemas.xmlsoap.org/ws/2002/12/secext" xmlns:lol2="http://www.vedaleon.com/webservices" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
         <env:Header>
           <lol0:MessageHeader>
             <lol0:CPAId>9W</lol0:CPAId>
@@ -126,7 +121,7 @@ describe 'Integration with Jetairways\'s SessionCreate Service' do
             <lol1:UsernameToken>
               <lol1:Username>example_user</lol1:Username>
               <lol1:Password>my_secret</lol1:Password>
-              <Organization>example_organization<Organization>
+              <lol1:Organization>example_organization</lol1:Organization>
             </lol1:UsernameToken>
           </lol1:Security>
         </env:Header>
