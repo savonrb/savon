@@ -66,7 +66,10 @@ class Savon
         @element_form_default = schema[:element_form_default]
 
         @name = node['name']
-        @form = node['form'] || 'unqualified'
+        # Because you've overriden the form method, you don't need to set
+        # unqualified as the default when no form is specified.
+        #@form = node['form'] || 'unqualified'
+        @form = node['form']
 
         @namespaces = node.namespaces
       end
@@ -74,7 +77,10 @@ class Savon
       attr_reader :name, :form, :namespace, :namespaces
 
       def form
-        if @form == 'qualified' || @element_form_default == 'qualified'
+
+        if @form
+            @form
+        elsif @element_form_default == 'qualified'
           'qualified'
         else
           'unqualified'
