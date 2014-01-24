@@ -32,7 +32,7 @@ describe 'Integration with Jetairways\'s SessionCreate Service' do
     operation = client.operation(service_name, port_name, :Logon)
 
     expect(operation.soap_action).to eq('http://www.vedaleon.com/webservices/Logon')
-    expect(operation.endpoint).to eq('https://USE_ADDRESS_RETURNED_BY_LOCATION_SERVICE/jettaobeapi/SessionCreate.asmx')
+    expect(operation.endpoint).to eq('http://USE_ADDRESS_RETURNED_BY_LOCATION_SERVICE/jettaobeapi/SessionCreate.asmx')
 
     namespace = 'http://www.vedaleon.com/webservices'
 
@@ -73,7 +73,7 @@ describe 'Integration with Jetairways\'s SessionCreate Service' do
   end
 
   it 'creates an example body' do
-    operation = client.operation(service_name, port_name, :updateStatusForManagedPublisher)
+    operation = client.operation(service_name, port_name, :Logon)
 
     expect(operation.example_body).to eq(
                     Logon:{}
