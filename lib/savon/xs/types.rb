@@ -77,7 +77,6 @@ class Savon
       attr_reader :name, :form, :namespace, :namespaces
 
       def form
-
         if @form
             @form
         elsif @element_form_default == 'qualified'
