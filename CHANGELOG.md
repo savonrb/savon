@@ -1,4 +1,5 @@
 ## 3.0.0 (branch)
+* Fix: [#539] (https://github.com/savonrb/savon/issues/539) Implement element form 'qualified' or 'unqualified' correctly
 
 * This version requires Ruby 1.9.2 or higher. Ruby 1.8 is no longer supported!
 
