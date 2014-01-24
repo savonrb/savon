@@ -126,7 +126,7 @@ describe 'Integration with Jetairways\'s SessionCreate Service' do
             <lol1:UsernameToken>
               <lol1:Username>example_user</lol1:Username>
               <lol1:Password>my_secret</lol1:Password>
-              <lol1:Organization>example_organization</lol1:Organization>
+              <Organization>example_organization<Organization>
             </lol1:UsernameToken>
           </lol1:Security>
         </env:Header>
