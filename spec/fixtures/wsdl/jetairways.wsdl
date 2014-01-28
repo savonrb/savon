@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.vedaleon.com/webservices" xmlns:s1="http://www.ebxml.org/namespaces/messageHeader" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:s2="http://schemas.xmlsoap.org/ws/2002/12/secext" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.vedaleon.com/webservices" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Vedaleon Web Services</wsdl:documentation>
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.vedaleon.com/webservices">
+      <s:element name="Logon">
+        <s:complexType />
+      </s:element>
+      <s:element name="LogonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LogonResult" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.ebxml.org/namespaces/messageHeader">
+      <s:import namespace="http://www.w3.org/XML/1998/namespace" />
+      <s:element name="MessageHeader" type="s1:MessageHeader" />
+      <s:complexType name="MessageHeader">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="From" type="s1:From" />
+          <s:element minOccurs="0" maxOccurs="1" name="To" type="s1:To" />
+          <s:element minOccurs="0" maxOccurs="1" name="CPAId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ConversationId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Service" type="s1:Service" />
+          <s:element minOccurs="0" maxOccurs="1" name="Action" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MessageData" type="s1:MessageData" />
+          <s:element minOccurs="0" maxOccurs="1" name="DuplicateElimination" />
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Description" type="s1:Description" />
+        </s:sequence>
+        <s:attribute form="qualified" name="id" type="s:ID" />
+        <s:attribute form="qualified" name="version" type="s:string" />
+        <s:anyAttribute />
+      </s:complexType>
+      <s:complexType name="From">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PartyId" type="s1:PartyId" />
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PartyId">
+        <s:simpleContent>
+          <s:extension base="s:string">
+            <s:attribute form="qualified" name="type" type="s:string" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="To">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PartyId" type="s1:PartyId" />
+          <s:element minOccurs="0" maxOccurs="1" name="Role" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Service">
+        <s:simpleContent>
+          <s:extension base="s:string">
+            <s:attribute form="qualified" name="type" type="s:string" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+      <s:complexType name="MessageData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="MessageId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Timestamp" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RefToMessageId" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TimeToLive" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Description">
+        <s:simpleContent>
+          <s:extension base="s:string">
+            <s:attribute ref="xml:lang" use="optional" />
+          </s:extension>
+        </s:simpleContent>
+      </s:complexType>
+    </s:schema>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://schemas.xmlsoap.org/ws/2002/12/secext">
+      <s:element name="Security" type="s2:Security" />
+      <s:complexType name="Security">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="UsernameToken" type="s2:SecurityUsernameToken" />
+          <s:element minOccurs="0" maxOccurs="1" name="BinarySecurityToken" type="s:string" />
+        </s:sequence>
+        <s:anyAttribute />
+      </s:complexType>
+      <s:complexType name="SecurityUsernameToken">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Username" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Organization" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" form="unqualified" name="Domain" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="LogonSoapIn">
+    <wsdl:part name="parameters" element="tns:Logon" />
+  </wsdl:message>
+  <wsdl:message name="LogonSoapOut">
+    <wsdl:part name="parameters" element="tns:LogonResponse" />
+  </wsdl:message>
+  <wsdl:message name="LogonMessageHeader">
+    <wsdl:part name="MessageHeader" element="s1:MessageHeader" />
+  </wsdl:message>
+  <wsdl:message name="LogonSecurity">
+    <wsdl:part name="Security" element="s2:Security" />
+  </wsdl:message>
+  <wsdl:portType name="SessionCreateSoap">
+    <wsdl:operation name="Logon">
+      <wsdl:input message="tns:LogonSoapIn" />
+      <wsdl:output message="tns:LogonSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="SessionCreateSoap" type="tns:SessionCreateSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Logon">
+      <soap:operation soapAction="http://www.vedaleon.com/webservices/Logon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:LogonMessageHeader" part="MessageHeader" use="literal" />
+        <soap:header message="tns:LogonSecurity" part="Security" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:LogonMessageHeader" part="MessageHeader" use="literal" />
+        <soap:header message="tns:LogonSecurity" part="Security" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="SessionCreateSoap12" type="tns:SessionCreateSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="Logon">
+      <soap12:operation soapAction="http://www.vedaleon.com/webservices/Logon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:LogonMessageHeader" part="MessageHeader" use="literal" />
+        <soap12:header message="tns:LogonSecurity" part="Security" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+        <soap12:header message="tns:LogonMessageHeader" part="MessageHeader" use="literal" />
+        <soap12:header message="tns:LogonSecurity" part="Security" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="SessionCreate">
+    <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Vedaleon Web Services</wsdl:documentation>
+    <wsdl:port name="SessionCreateSoap" binding="tns:SessionCreateSoap">
+      <soap:address location="http://USE_ADDRESS_RETURNED_BY_LOCATION_SERVICE/jettaobeapi/SessionCreate.asmx" />
+    </wsdl:port>
+    <wsdl:port name="SessionCreateSoap12" binding="tns:SessionCreateSoap12">
+      <soap12:address location="http://USE_ADDRESS_RETURNED_BY_LOCATION_SERVICE/jettaobeapi/SessionCreate.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
