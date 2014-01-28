@@ -16,6 +16,10 @@ class Savon
     end
     alias to_hash body
 
+    def header
+      hash[:envelope][:header]
+    end
+
     def hash
       @hash ||= nori.parse(raw)
     end
