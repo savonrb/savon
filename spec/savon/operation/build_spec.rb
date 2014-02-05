@@ -26,7 +26,7 @@ describe Savon::Operation do
     client.operation(service, port, 'VatAccount_UpdateFromDataArray')
   }
 
-  let(:zanox_export_service){ 
+  let(:zanox_export_service){
     client = Savon.new fixture('wsdl/zanox_export_service')
 
     service, port = "ExportService", "ExportServiceSoap"
@@ -35,6 +35,34 @@ describe Savon::Operation do
   }
 
   describe '#build' do
+    describe 'multiple calls' do
+      let(:body) do
+        {
+          addLogins: {
+            accounts: [
+              {
+                username: 'first',
+                password: 'secret',
+                contactInformation: {
+                  email: 'first@example.com',
+                  _type: 'any'
+                }
+              }
+            ]
+          }
+        }
+      end
+
+      it 'cached on next call' do
+        add_logins.body = body
+
+        first_call  = add_logins.build
+        second_call = add_logins.build
+
+        expect(first_call).to eq(second_call)
+      end
+    end
+
     it 'expects Arrays of complex types as Arrays of Hashes' do
       add_logins.body = {
         addLogins: {
@@ -46,7 +74,7 @@ describe Savon::Operation do
               username: 'first',
               password: 'secret',
               contactInformation: {
-                email: 'first@example.com',
+                email: 'first@example.com'
               }
             },
             {
@@ -187,7 +215,7 @@ describe Savon::Operation do
         to raise_error(ArgumentError, "Expected an Array of values for the :betId simple type")
     end
 
-    it 'test' do
+    it 'expects elements of Hashes containing attributes and key with same to return corresponding xml with attributes and text inside' do
       zanox_export_service.header = {
         zanox: {
           ticket: 'EFB745D691DBFF2DFA9F8B10A4D7A7B1AEA850CD'
@@ -198,7 +226,7 @@ describe Savon::Operation do
           programid: 5574,
           ppsfilter: {
               period: {
-                :_from => '2013-10-01T00:00:00+02:00', 
+                :_from => '2013-10-01T00:00:00+02:00',
                 :_to   => '2013-11-12T00:00:00+02:00'
               },
               :reviewstate => {reviewstate: 0, :_negate => 1},
@@ -227,7 +255,7 @@ describe Savon::Operation do
         </env:Envelope>})
 
       expect(Nokogiri.XML zanox_export_service.build).
-          to be_equivalent_to(expected).respecting_element_order      
+          to be_equivalent_to(expected).respecting_element_order
     end
 
     it 'expects Array of Hashes with attributes to return Array of complex types with attributes' do

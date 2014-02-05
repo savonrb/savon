@@ -72,7 +72,7 @@ class Savon
 
     # Public: Build the request XML for this operation.
     def build
-      Envelope.new(@operation, header, body).to_s
+      @build ||= Envelope.new(@operation, header, body).to_s
     end
 
     # Public: Call the operation.
