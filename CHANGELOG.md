@@ -31,6 +31,8 @@
 
 * Fix: [#509](https://github.com/savonrb/savon/issues/402) Attributes now added to array of hashes.
 
+* Added methods to the Operation class to build a response envelope and return an example response.
+
 ## master
 
 * Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error
