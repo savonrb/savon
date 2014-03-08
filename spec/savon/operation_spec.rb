@@ -119,6 +119,35 @@ describe Savon::Operation do
     end
   end
 
+  describe '#xml_envelope' do
+    let(:xml) do
+      '<?xml version="1.0" encoding="UTF-8"?>
+    <Envelope>
+      <Body>
+        <VerifySignature>
+          <UrlEndPoint></UrlEndPoint>
+          <HttpParameters></HttpParameters>
+        </VerifySignature>
+      </Body>
+    </Envelope>'
+    end
+
+    it 'returns the xml request' do
+      http_mock.fake_request('http://www.webservicex.net/ConvertTemperature.asmx')
+      operation.xml_envelope = xml
+
+      expect(operation.xml_envelope).to eq(xml)
+    end
+
+    it 'returns a Savon response object' do
+      http_mock.fake_request('http://www.webservicex.net/ConvertTemperature.asmx')
+      operation.xml_envelope = xml
+
+      response = operation.call
+      expect(response).to be_a(Savon::Response)
+    end
+  end
+
   describe '#call' do
     it 'calls the operation with a Hash of options and returns a Response' do
       http_mock.fake_request('http://www.webservicex.net/ConvertTemperature.asmx')
