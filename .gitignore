@@ -10,3 +10,4 @@ pkg
 .rspec
 .bundle
 Gemfile.lock
+bin/

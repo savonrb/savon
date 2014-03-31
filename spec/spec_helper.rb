@@ -25,6 +25,7 @@ if ENV['GRAPH']
 end
 
 require 'equivalent-xml'
+require 'equivalent-xml/rspec_matchers'
 
 support_files = File.expand_path('spec/support/**/*.rb')
 Dir[support_files].each { |file| require file }
