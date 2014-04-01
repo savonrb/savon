@@ -48,7 +48,7 @@ module Savon
         :soap_version              => 1,
         :namespaces                => {},
         :logger                    => Logger.new($stdout),
-        :log                       => true,
+        :log                       => false,
         :filters                   => [],
         :pretty_print_xml          => false,
         :raise_errors              => true,

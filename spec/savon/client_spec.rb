@@ -62,6 +62,11 @@ describe Savon::Client do
     it "returns the current set of global options" do
       expect(new_client.globals).to be_an_instance_of(Savon::GlobalOptions)
     end
+
+    fit "defaults :log to false" do
+      client = Savon.client(:wsdl => Fixture.wsdl(:authentication))
+      expect(client.globals[:log]).to be_false
+    end
   end
 
   describe "#service_name" do
