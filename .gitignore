@@ -11,3 +11,4 @@ tmp
 .bundle
 .rspec
 Gemfile.lock
+bin/
