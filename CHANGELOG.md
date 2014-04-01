@@ -1,3 +1,12 @@
+## 2.4.0 (2014-03-31)
+
+* Logging is off by default. To enable this behavior, set the :log option to true
+
+    ``` ruby
+    client = Savon.client(wsdl: "http://example.com/service.wsdl")
+    client.options[:log] = true
+    ```
+
 ### 2.3.2 (2013-12-09)
 
 * Fix: [#520](https://github.com/savonrb/savon/issues/520) Fixes a regression in message tags in requests and responses.
