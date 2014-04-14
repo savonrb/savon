@@ -1,99 +1,126 @@
-require 'savon/response'
-require 'savon/envelope'
-require 'savon/example_message'
+require "savon/options"
+require "savon/block_interface"
+require "savon/request"
+require "savon/builder"
+require "savon/response"
+require "savon/request_logger"
 
-class Savon
+module Savon
   class Operation
 
-    ENCODING = 'UTF-8'
+    def self.create(operation_name, wsdl, globals)
+      if wsdl.document?
+        ensure_name_is_symbol! operation_name
+        ensure_exists! operation_name, wsdl
+      end
 
-    CONTENT_TYPE = {
-      '1.1' => 'text/xml;charset=%s',
-      '1.2' => 'application/soap+xml;charset=%s'
-    }
+      new(operation_name, wsdl, globals)
+    end
 
-    def initialize(operation, wsdl, http)
-      @operation = operation
+    def self.ensure_exists!(operation_name, wsdl)
+      unless wsdl.soap_actions.include? operation_name
+        raise UnknownOperationError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
+                                     "Operations provided by your service: #{wsdl.soap_actions.inspect}"
+      end
+    end
+
+    def self.ensure_name_is_symbol!(operation_name)
+      unless operation_name.kind_of? Symbol
+        raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
+                             "Actual: #{operation_name.inspect} (#{operation_name.class})"
+      end
+    end
+
+    def initialize(name, wsdl, globals)
+      @name = name
       @wsdl = wsdl
-      @http = http
+      @globals = globals
 
-      @endpoint = operation.endpoint
-      @soap_version = operation.soap_version
-      @soap_action = operation.soap_action
-      @encoding = ENCODING
+      @logger = RequestLogger.new(globals)
     end
 
-    # Public: Accessor for the SOAP endpoint.
-    attr_accessor :endpoint
-
-    # Public: Accessor for the SOAP version.
-    attr_accessor :soap_version
-
-    # Public: Accessor for the SOAPAction HTTP header.
-    attr_accessor :soap_action
-
-    # Public: Accessor for the encoding. Defaults to 'UTF-8'.
-    attr_accessor :encoding
-
-    # Public: Returns a Hash of HTTP headers to send.
-    def http_headers
-      return @http_headers if @http_headers
-      headers = {}
-
-      headers['SOAPAction']   = %{"#{soap_action}"} if soap_action
-      headers['Content-Type'] = CONTENT_TYPE[soap_version] % encoding
-
-      @http_headers = headers
+    def build(locals = {}, &block)
+      set_locals(locals, block)
+      Builder.new(@name, @wsdl, @globals, @locals)
     end
 
-    # Public: Sets the Hash of HTTP headers.
-    attr_writer :http_headers
+    def call(locals = {}, &block)
+      builder = build(locals, &block)
 
-    # Public: Sets the request header Hash.
-    attr_accessor :header
+      response = Savon.notify_observers(@name, builder, @globals, @locals)
+      response ||= call_with_logging build_request(builder)
 
-    # Public: Create an example request header Hash.
-    def example_header
-      ExampleMessage.build(@operation.input.header_parts)
+      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
+
+      create_response(response)
     end
 
-    # Public: Sets the request body Hash.
-    attr_accessor :body
+    private
 
-    # Public: Create an example request body Hash.
-    def example_body
-      ExampleMessage.build(@operation.input.body_parts)
+    def create_response(response)
+      if multipart_supported?
+        Multipart::Response.new(response, @globals, @locals)
+      else
+        Response.new(response, @globals, @locals)
+      end
     end
 
-    # Public: Returns the input body parts used to build the request body.
-    def body_parts
-      @operation.input.body_parts.inject([]) { |memo, part| memo + part.to_a }
+    def multipart_supported?
+      return false unless @globals[:multipart] || @locals[:multipart]
+
+      if Savon.const_defined? :Multipart
+        true
+      else
+        raise 'Unable to find Savon::Multipart. Make sure the savon-multipart gem is installed and loaded.'
+      end
     end
 
-    # Public: Build the request XML for this operation.
-    def build
-      Envelope.new(@operation, header, body).to_s
+    def set_locals(locals, block)
+      locals = LocalOptions.new(locals)
+      BlockInterface.new(locals).evaluate(block) if block
+
+      @locals = locals
     end
 
-    # Public: Sets the request envelope XML. Use in place of body().
-    attr_accessor :xml_envelope
-
-    # Public: Call the operation.
-    def call
-      message = (xml_envelope != nil ? xml_envelope : build)
-
-      raw_response = @http.post(endpoint, http_headers, message)
-      Response.new(raw_response)
+    def call_with_logging(request)
+      @logger.log(request) { HTTPI.post(request) }
     end
 
-    # Public: Returns the input style for this operation.
-    def input_style
-      @input_style ||= @operation.input_style
+    def build_request(builder)
+      request = SOAPRequest.new(@globals).build(
+        :soap_action => soap_action,
+        :cookies     => @locals[:cookies]
+      )
+
+      request.url = endpoint
+      request.body = builder.to_s
+
+      # TODO: could HTTPI do this automatically in case the header
+      #       was not specified manually? [dh, 2013-01-04]
+      request.headers["Content-Length"] = request.body.bytesize.to_s
+
+      request
     end
 
-    # Public: Returns the output style for this operation.
-    def output_style
-      @output_style ||= @operation.output_style
+    def soap_action
+      # soap_action explicitly set to something falsy
+      return if @locals.include?(:soap_action) && !@locals[:soap_action]
+
+      # get the soap_action from local options
+      soap_action = @locals[:soap_action]
+      # with no local option, but a wsdl, ask it for the soap_action
+      soap_action ||= @wsdl.soap_action(@name.to_sym) if @wsdl.document?
+      # if there is no soap_action up to this point, fallback to a simple default
+      soap_action ||= Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
+    end
+
+    def endpoint
+      @globals[:endpoint] || @wsdl.endpoint
+    end
+
+    def raise_expected_httpi_response!
+      raise Error, "Observers need to return an HTTPI::Response to mock " \
+                   "the request or nil to execute the request."
     end
 
   end

@@ -1,21 +1,14 @@
-require 'bundler/gem_tasks'
-require 'rspec/core/rake_task'
+require "bundler/gem_tasks"
+require "rspec/core/rake_task"
 
-RSpec::Core::RakeTask.new
-
-desc 'Generate a dependency graph'
-task :graph do
-  system <<-BASH
-    rm -rf graph
-    mkdir graph
-    GRAPH=true rspec
-    mv rubydeps.dump graph
-    cd graph
-    rubydeps --path_filter='lib/savon'
-    dot -Tsvg rubydeps.dot > rubydeps.svg
-    open -a 'Google Chrome' rubydeps.svg
-  BASH
+RSpec::Core::RakeTask.new do |t|
+  t.pattern = "spec/savon/**/*_spec.rb"
 end
 
-task default: :spec
-task test: :spec
+desc "Run RSpec integration examples"
+RSpec::Core::RakeTask.new "spec:integration" do |t|
+  t.pattern = "spec/integration/**/*_spec.rb"
+end
+
+task :default => :spec
+task :test => :spec

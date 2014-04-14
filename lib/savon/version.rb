@@ -1,5 +1,3 @@
-class Savon
-
-  VERSION = "3.0.0"
-
+module Savon
+  VERSION = '2.4.0'
 end

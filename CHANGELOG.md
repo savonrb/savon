@@ -1,50 +1,33 @@
-## 3.0.0 (branch)
-* Fix: [#546] (https://github.com/savonrb/savon/issues/546) Making request with raw xml, shortcutting the build method: `operation.xml_envelope`
+## 2.4.0 (2014-03-31)
 
-* Fix: [#539] (https://github.com/savonrb/savon/issues/539) Implement element form 'qualified' or 'unqualified' correctly
+* Logging is off by default. To enable this behavior, set the :log option to true
 
-* This version requires Ruby 1.9.2 or higher. Ruby 1.8 is no longer supported!
+    ``` ruby
+    client = Savon.client(wsdl: "http://example.com/service.wsdl")
+    client.options[:log] = true
+    ```
 
-* It also requires a WSDL, because that's were we can provide the most benefit.
+### 2.3.2 (2013-12-09)
 
-* Tags can now receive a value and attributes: [issue #519](http://github.com/savonrb/savon/pull/519)
+* Fix: [#520](https://github.com/savonrb/savon/issues/520) Fixes a regression in message tags in requests and responses.
 
-* Gyoku is no longer used and Nori will removed as well. With the new parser,
-  we don't need to rely on these libraries any longer.
+### 2.3.1 (2013-12-05)
 
-* Imported Wasabi, as Savon shares a lot of code, fixtures and specs with it and we're
-  probably faster maintaing one project instead of two.
+* Removed dependency on Nokogiri <= 1.4 -- This improves support for ruby 1.9.3 and 2.0.0 and officially begins the end of support for ruby 1.8.7
+  See [issue #487](https://github.com/savonrb/savon/issues/487)
 
-* Replaced the `Savon.client` factory method by changing the `Savon` module to a class
-  and moving everything from `Savon::Client` (dead) to the new `Savon` class. Now you
-  can just call `Savon.new`. There's no need for an additional class here.
+### 2.3.0 (2013-07-27)
 
-* Removed `Savon::Model`. Feel free to write and open source your own abstraction.
+Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
-* Removed the test helpers and observers. Internally, observers were only used to
-  allow the test helpers to stub the request. Test helpers are removed because version
-  3.0 should be open enough to allow you to use Webmock, Fakeweb, VCR or any other http
-  mocking library.
-
-* Removed the dependency on HTTPI and replaced it with a simple adapter for you to
-  extend based on the HTTPClient library.
-
-* Removed the `String#snakecase` core extension. Get used to the service's casing.
-
-* Fix: [#509](https://github.com/savonrb/savon/issues/402) Attributes now added to array of hashes.
-
-## master
-
-* Fix: [#450](https://github.com/savonrb/savon/pull/450) Add back attr_readers Response#soap_fault and Response#http_error
-
-* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks that don't care about the message sent: `savon.expects(:authenticate).with(message: :any)`.
+* Feature: [#405](https://github.com/savonrb/savon/issues/405) Improved NTLM support based on HTTPI v2.1.0.
 
 * Feature: [#424](https://github.com/savonrb/savon/issues/424) Adds support for multipart responses
   through the updated [savon-multipart](https://github.com/savonrb/savon-multipart) gem. You can now
-  specify the `multipart: true` either as a global or local option. Please make sure you have the
+  specify `multipart: true` either as a global or local option. Please make sure you have the
   updated `savon-multipart` gem installed and loaded, as it is not a direct dependency of Savon.
 
-    ```
+    ``` ruby
     require 'savon'
     require 'savon-multipart'
 
@@ -54,6 +37,32 @@
     # only expect a multipart response for this operation
     client.call(:my_operation, multipart: true)
     ```
+
+* Feature: [#470](https://github.com/savonrb/savon/issues/470) Added a local `:soap_header` option
+  to allow setting the SOAP header per request.
+
+* Feature: [#402](https://github.com/savonrb/savon/issues/402) Makes it possible to create mocks
+  that don't care about the message sent by using `:any` for the `:message` option.
+
+    ``` ruby
+    savon.expects(:authenticate).with(message: :any)
+    ```
+
+* Fix: [#450](https://github.com/savonrb/savon/pull/450) Added `Savon::Response#soap_fault`
+  and `Savon::Response#http_error` which were present in version 1.
+
+* Fix: [#474](https://github.com/savonrb/savon/issues/474) Changed `Savon::Response#header` and
+  `Savon::Response#body` to respect the global `:convert_response_tags_to` and `:strip_namespaces`
+  options and return the expected result instead of raising a `Savon::InvalidResponseError`.
+
+* Fix: [#461](https://github.com/savonrb/savon/issues/461) Fixed two problems related to namespace
+  qualified messages and the element `:order!`.
+
+* Fix: [#476](https://github.com/savonrb/savon/issues/476) fixes a problem where the namespace
+  for the message tag was not correctly determined from the WSDL.
+
+* Fix: [#468](https://github.com/savonrb/savon/issues/468) Changed the dependency on Nokogiri
+  to < 1.6, because Nokogiri 1.6 dropped support for Ruby 1.8.
 
 ### 2.2.0 (2013-04-21)
 
@@ -67,14 +76,14 @@
   This is because regardless of whether you're using the Hash or block syntax to pass global
   or local options, both are just method calls on some options object.
 
-    ```
+    ``` ruby
     NoMethodError: undefined method 'wsdk' for #<Savon::GlobalOptions:0x007fed95a55228>
     ```
 
   As of this change, Savon now catches those errors and raise a `Savon::UnknownOptionError`
   with a slightly more helpful error message instead.
 
-    ```
+    ``` ruby
     Savon::UnknownOptionError:
        Unknown global option: :wsdk
     ```

@@ -1,19 +1,10 @@
 source 'https://rubygems.org'
 gemspec
 
-# profiling
-#gem 'method_profiler', require: false
-#gem 'ruby-prof',       require: false  # does not work on jruby!
+gem "httpclient", "~> 2.3.4"
 
-# coverage
-gem 'simplecov', require: false
-gem 'coveralls', require: false
-
-# dependencies
-#gem 'rubydeps',  require: false  # uses c extensions
-
-# debugging
-#gem 'debugger',  require: false  # don't install on travis!
+gem "simplecov", :require => false
+gem "coveralls", :require => false
 
 platform :rbx do
   gem 'json'
@@ -22,6 +13,6 @@ platform :rbx do
   gem 'rubinius-coverage'
 end
 
-group :development do
-  gem 'fuubar'
+platform :jruby do
+  gem 'json'
 end

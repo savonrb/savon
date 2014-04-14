@@ -1,134 +1,34 @@
-require 'builder'
+require "savon/qualified_message"
+require "gyoku"
 
-class Savon
+module Savon
   class Message
 
-    ATTRIBUTE_PREFIX = '_'
+    def initialize(message_tag, namespace_identifier, types, used_namespaces, message, element_form_default, key_converter)
+      @message_tag = message_tag
+      @namespace_identifier = namespace_identifier
+      @types = types
+      @used_namespaces = used_namespaces
 
-    def initialize(envelope, parts)
-      @logger = Logging.logger[self]
-
-      @envelope = envelope
-      @parts = parts
+      @message = message
+      @element_form_default = element_form_default
+      @key_converter = key_converter
     end
 
-    def build(message)
-      builder = Builder::XmlMarkup.new(indent: 2, margin: 2)
+    def to_s
+      return @message.to_s unless @message.kind_of? Hash
 
-      build_elements(@parts, message.dup, builder)
-      builder.target!
-    end
-
-    private
-
-    def build_elements(elements, message, xml)
-      elements.each do |element|
-        name = element.name
-        symbol_name = name.to_sym
-
-        value = extract_value(name, symbol_name, message)
-
-        if value == :unspecified
-          @logger.debug("Skipping (optional?) element #{symbol_name.inspect} with no value.")
-          next
-        end
-
-        tag = [symbol_name]
-
-        if element.form == 'qualified'
-          nsid = @envelope.register_namespace(element.namespace)
-          tag.unshift(nsid)
-        end
-
-        case
-          when element.simple_type?
-            build_simple_type_element(element, xml, tag, value)
-
-          when element.complex_type?
-            build_complex_type_element(element, xml, tag, value)
-
-        end
-      end
-    end
-
-    def build_simple_type_element(element, xml, tag, value)
-      if element.singular?
-        if value.kind_of? Array
-          raise ArgumentError, "Unexpected Array for the #{tag.last.inspect} simple type"
-        end
-        if value.is_a? Hash
-          attributes, value = extract_attributes(value)
-          xml.tag! *tag, value[tag[1]], attributes
-        else
-          xml.tag! *tag, value
-        end
-      else
-        unless value.kind_of? Array
-          raise ArgumentError, "Expected an Array of values for the #{tag.last.inspect} simple type"
-        end
-
-        value.each do |val|
-          xml.tag! *tag, val
-        end
-      end
-    end
-
-    def build_complex_type_element(element, xml, tag, value)
-      if element.singular?
-        unless value.kind_of? Hash
-          raise ArgumentError, "Expected a Hash for the #{tag.last.inspect} complex type"
-        end
-
-        build_complex_tag(element, tag, value, xml)
-      else
-        unless value.kind_of? Array
-          raise ArgumentError, "Expected an Array of Hashes for the #{tag.last.inspect} complex type"
-        end
-
-        value.each do |val|
-          build_complex_tag(element, tag, val, xml)
-        end
-      end
-    end
-
-    def build_complex_tag(element, tag, value, xml)
-      attributes, value = extract_attributes(value)
-      children = element.children
-
-      if children.count > 0
-        xml.tag! *tag, attributes do |xml|
-          build_elements(children, value, xml)
-        end
-      elsif value && value[tag[1]]
-        xml.tag! *tag, value[tag[1]], attributes
-      else
-        xml.tag! *tag, attributes
-      end
-    end
-
-    # Private: extracts the value from the message by name or symbol_name.
-    # Respects nil values and returns a special symbol for actual missing values.
-    def extract_value(name, symbol_name, message)
-      if message.include? name
-        message[name]
-      elsif message.include? symbol_name
-        message[symbol_name]
-      else
-        :unspecified
-      end
-    end
-
-    def extract_attributes(hash)
-      attributes = {}
-
-      hash.dup.each do |k, v|
-        next unless k.to_s[0, 1] == ATTRIBUTE_PREFIX
-
-        attributes[k.to_s[1..-1]] = v
-        hash.delete(k)
+      if @element_form_default == :qualified
+        @message = QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(@message, [@message_tag.to_s])
       end
 
-      [attributes, hash]
+      gyoku_options = {
+        :element_form_default => @element_form_default,
+        :namespace            => @namespace_identifier,
+        :key_converter        => @key_converter
+      }
+
+      Gyoku.xml(@message, gyoku_options)
     end
 
   end
