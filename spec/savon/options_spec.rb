@@ -592,6 +592,35 @@ describe "Options" do
     end
   end
 
+  context "global :convert_attributes_to" do
+    it "changes how XML tag attributes from the SOAP response are translated into Hash keys" do
+      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda {|k,v| [k,v]})
+      response = client.call(:authenticate, :xml => Fixture.response(:f5))
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({:"@s:type"=>"y:string"})
+    end
+
+    it "strips the attributes if an appropriate lambda is set" do
+      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda {|k,v| []})
+      response = client.call(:authenticate, :xml => Fixture.response(:f5))
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq(nil)
+    end
+
+    it "accepts a block in the block-based interface" do
+      client = Savon.client do |globals|
+        globals.log                      false
+        globals.wsdl                     Fixture.wsdl(:authentication)
+        globals.endpoint                 @server.url(:repeat)
+        globals.convert_attributes_to    {|k,v| [k,v]}
+      end
+
+      response = client.call(:authenticate) do |locals|
+        locals.xml Fixture.response(:f5)
+      end
+
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({:"@s:type"=>"y:string"})
+    end
+  end
+
   context "global and request :soap_header" do
     it "merges the headers if both were provided as Hashes" do
       global_soap_header = {

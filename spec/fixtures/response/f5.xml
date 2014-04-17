@@ -1,0 +1,39 @@
+<E:Envelope
+        xmlns:E="http://schemas.xmlsoap.org/soap/envelope/"
+        xmlns:A="http://schemas.xmlsoap.org/soap/encoding/"
+        xmlns:s="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:y="http://www.w3.org/2001/XMLSchema"
+        xmlns:iControl="urn:iControl"
+        E:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+<E:Body>
+<m:get_agent_listen_addressResponse
+        xmlns:m="urn:iControl:Management/SNMPConfiguration">
+<return
+        s:type="A:Array"
+        A:arrayType="iControl:Management.SNMPConfiguration.AgentListenAddressPort[2]">
+<item>
+<transport
+        s:type="iControl:Management.SNMPConfiguration.TransportType">TRANSPORT_TCP6</transport>
+<ipport
+        s:type="iControl:Common.IPPortDefinition">
+<address
+        s:type="y:string"></address>
+<port
+        s:type="y:long">161</port>
+</ipport>
+</item>
+<item>
+<transport
+        s:type="iControl:Management.SNMPConfiguration.TransportType">TRANSPORT_UDP6</transport>
+<ipport
+        s:type="iControl:Common.IPPortDefinition">
+<address
+        s:type="y:string"></address>
+<port
+        s:type="y:long">161</port>
+</ipport>
+</item>
+</return>
+</m:get_agent_listen_addressResponse>
+</E:Body>
+</E:Envelope>

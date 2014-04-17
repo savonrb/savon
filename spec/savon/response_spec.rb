@@ -118,6 +118,16 @@ describe Savon::Response do
       expect(header.keys).to include('SESSIONNUMBER')
     end
 
+    it 'respects the global :convert_attributes_to option' do
+      globals[:convert_attributes_to] = lambda { |k,v| [] }
+
+      response_with_header = soap_response(:body => Fixture.response(:header))
+      header = response_with_header.header
+
+      expect(header).to be_a(Hash)
+      expect(header.keys).to include(:session_number)
+    end
+
     it "should throw an exception when the response header isn't parsable" do
       lambda { invalid_soap_response.header }.should raise_error Savon::InvalidResponseError
     end
