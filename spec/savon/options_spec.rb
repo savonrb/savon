@@ -84,7 +84,9 @@ describe "Options" do
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
 
       expect { client.call(:authenticate) }.to raise_error { |error|
-        if error.kind_of? Errno::EHOSTUNREACH
+        host_unreachable = error.kind_of? Errno::EHOSTUNREACH
+        net_unreachable = error.kind_of? Errno::ENETUNREACH
+        if host_unreachable || net_unreachable
           warn "Warning: looks like your network may be down?!\n" +
                "-> skipping spec at #{__FILE__}:#{__LINE__}"
         else
