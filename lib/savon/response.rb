@@ -98,10 +98,11 @@ module Savon
       return @nori if @nori
 
       nori_options = {
-        :strip_namespaces     => @globals[:strip_namespaces],
-        :convert_tags_to      => @globals[:convert_response_tags_to],
-        :advanced_typecasting => @locals[:advanced_typecasting],
-        :parser               => @locals[:response_parser]
+        :strip_namespaces      => @globals[:strip_namespaces],
+        :convert_tags_to       => @globals[:convert_response_tags_to],
+        :convert_attributes_to => @globals[:convert_attributes_to],
+        :advanced_typecasting  => @locals[:advanced_typecasting],
+        :parser                => @locals[:response_parser]
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }

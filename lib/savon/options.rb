@@ -54,6 +54,7 @@ module Savon
         :raise_errors              => true,
         :strip_namespaces          => true,
         :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym},
+        :convert_attributes_to     => lambda { |k,v| [k,v] },
         :multipart                 => false,
       }
 
@@ -251,6 +252,13 @@ module Savon
     # Defaults to convert tags to snakecase Symbols.
     def convert_response_tags_to(converter = nil, &block)
       @options[:convert_response_tags_to] = block || converter
+    end
+
+    # Tell Nori how to convert XML attributes on tags from the SOAP response into Hash keys.
+    # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
+    # Defaults to doing nothing
+    def convert_attributes_to(converter = nil, &block)
+      @options[:convert_attributes_to] = block || converter
     end
 
     # Instruct Savon to create a multipart response if available.
