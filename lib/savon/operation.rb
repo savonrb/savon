@@ -75,9 +75,14 @@ class Savon
       @build ||= Envelope.new(@operation, header, body).to_s
     end
 
+    # Public: Sets the request envelope XML. Use in place of body().
+    attr_accessor :xml_envelope
+
     # Public: Call the operation.
     def call
-      raw_response = @http.post(endpoint, http_headers, build)
+      message = (xml_envelope != nil ? xml_envelope : build)
+
+      raw_response = @http.post(endpoint, http_headers, message)
       Response.new(raw_response)
     end
 

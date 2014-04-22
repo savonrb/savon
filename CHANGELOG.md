@@ -1,8 +1,13 @@
 ## 3.0.0 (branch)
+* Fix: [#546] (https://github.com/savonrb/savon/issues/546) Making request with raw xml, shortcutting the build method: `operation.xml_envelope`
+
+* Fix: [#539] (https://github.com/savonrb/savon/issues/539) Implement element form 'qualified' or 'unqualified' correctly
 
 * This version requires Ruby 1.9.2 or higher. Ruby 1.8 is no longer supported!
 
 * It also requires a WSDL, because that's were we can provide the most benefit.
+
+* Tags can now receive a value and attributes: [issue #519](http://github.com/savonrb/savon/pull/519)
 
 * Gyoku is no longer used and Nori will removed as well. With the new parser,
   we don't need to rely on these libraries any longer.
@@ -45,7 +50,7 @@
 
     # expect multipart responses for every operation
     client = Savon.client(wsdl: wsdl, multipart: true)
-    
+
     # only expect a multipart response for this operation
     client.call(:my_operation, multipart: true)
     ```
@@ -244,10 +249,10 @@
     in the document:
 
     ``` xml
-    <env:Envelope 
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xmlns:tns="http://v1_0.ws.auth.order.example.com/" 
+    <env:Envelope
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:tns="http://v1_0.ws.auth.order.example.com/"
         xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
 
         <tns:authenticate>
@@ -265,7 +270,7 @@
   The global config is cloned when a new client is initialized and gets used instead of the global one.
   In addition, for `Savon::Model` classes, the config is cloned per class.
 
-    Closes [#84](https://github.com/savonrb/savon/issues/84) by allowing one logger per client and 
+    Closes [#84](https://github.com/savonrb/savon/issues/84) by allowing one logger per client and
     [#270](https://github.com/savonrb/savon/issues/270) by allowing to specify error handling per client.
 
 * Feature: Added an option to pretty print XML in log messages. Closes [#256](https://github.com/savonrb/savon/issues/256)
@@ -955,7 +960,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
       Benchmarks (1000 SOAP calls):
-    
+
              user        system     total       real
       0.6.4  72.180000   8.280000   80.460000   (750.799011)
       0.6.3  192.900000  19.630000  212.530000  (914.031865)
@@ -969,7 +974,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
     Benchmarks (1000 SOAP calls):
-    
+
                    user        system     total       real
     WSDL           192.900000  19.630000  212.530000  (914.031865)
     disabled WSDL  5.680000    1.340000   7.020000    (298.265318)
@@ -979,7 +984,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
     ```
     Benchmarks (1000 SOAP calls):
-    
+
            user        system     total       real
     0.6.3  192.900000  19.630000  212.530000  (914.031865)
     0.6.2  574.720000  78.380000  653.100000  (1387.778539)
