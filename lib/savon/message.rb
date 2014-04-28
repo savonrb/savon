@@ -58,8 +58,10 @@ class Savon
         end
         if value.is_a? Hash
           attributes, value = extract_attributes(value)
-          if attributes.empty?
-            xml.tag! *tag, value
+          if attributes.empty? && tag[1].nil?
+            t = xml.tag! *tag, {} do |b|
+              build_from_hash(b, value, xml)
+            end
           else
             xml.tag! *tag, value[tag[1]], attributes
           end
@@ -74,6 +76,22 @@ class Savon
         value.each do |val|
           xml.tag! *tag, val
         end
+      end
+    end
+
+    # build_from_hash 'foo', {a: {b: c: 123}}, xml
+    #
+    # => <foo><a><b><c>123</c></b></a></foo>
+    #
+    def build_from_hash(b, value, xml)
+      if value.is_a? Hash
+        value.each do |k, v|
+          b.tag! k, {} do |_b|
+            build_from_hash(_b, v, xml)
+          end
+        end
+      else
+        b.text! value.to_s
       end
     end
 
@@ -103,8 +121,8 @@ class Savon
         xml.tag! *tag, attributes do |xml|
           build_elements(children, value, xml)
         end
-      elsif value && value[tag[1]]
-        xml.tag! *tag, value[tag[1]], attributes
+      elsif value
+        xml.tag! *tag, tag[1] ? value[tag[1]] : value, attributes
       else
         xml.tag! *tag, attributes
       end
