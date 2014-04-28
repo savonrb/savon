@@ -58,7 +58,11 @@ class Savon
         end
         if value.is_a? Hash
           attributes, value = extract_attributes(value)
-          xml.tag! *tag, value[tag[1]], attributes
+          if attributes.empty?
+            xml.tag! *tag, value
+          else
+            xml.tag! *tag, value[tag[1]], attributes
+          end
         else
           xml.tag! *tag, value
         end

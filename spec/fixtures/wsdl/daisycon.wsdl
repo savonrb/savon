@@ -1,0 +1,403 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="http://api.daisycon.com/wsdlviewer.xsl" ?>
+<definitions name="transaction" targetNamespace="http://api.daisycon.com/advertiser/soap//transaction/"
+xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/"
+xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+xmlns:tns="http://api.daisycon.com/advertiser/soap//transaction/"
+>
+<types>
+<xsd:schema targetNamespace="http://api.daisycon.com/advertiser/soap//transaction/">
+<xsd:simpleType name="orderFieldsDirection">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="ASCENDING" />
+<xsd:enumeration value="DESCENDING" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="orderFields">
+<xsd:all>
+<xsd:element name="field" type="xsd:string" />
+<xsd:element name="direction" type="tns:orderFieldsDirection" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfOrderfields">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:orderFields[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfString">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="xsd:string[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfInt">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="xsd:int[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="transactionsFilterGender">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="male" />
+<xsd:enumeration value="female" />
+<xsd:enumeration value="unknown" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionsFilterGender">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionsFilterGender[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="transactionsFilterMediatype">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="website" />
+<xsd:enumeration value="keyword_marketing" />
+<xsd:enumeration value="email_marketing" />
+<xsd:enumeration value="socialmedia" />
+<xsd:enumeration value="cashback" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionsFilterMediatype">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionsFilterMediatype[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="transactionsFilterProvince">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="unknown" />
+<xsd:enumeration value="DR" />
+<xsd:enumeration value="FL" />
+<xsd:enumeration value="FR" />
+<xsd:enumeration value="GE" />
+<xsd:enumeration value="GR" />
+<xsd:enumeration value="LI" />
+<xsd:enumeration value="NH" />
+<xsd:enumeration value="NB" />
+<xsd:enumeration value="OV" />
+<xsd:enumeration value="UT" />
+<xsd:enumeration value="ZE" />
+<xsd:enumeration value="ZH" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionsFilterProvince">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionsFilterProvince[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="transactionsFilterStatus">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="open" />
+<xsd:enumeration value="approved" />
+<xsd:enumeration value="disapproved" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionsFilterStatus">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionsFilterStatus[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="transactionsFilter">
+<xsd:all>
+<xsd:element name="offset" type="xsd:int" nillable="true" />
+<xsd:element name="limitCount" type="xsd:int" nillable="true" />
+<xsd:element name="orderBy" type="tns:ArrayOfOrderfields" nillable="true" />
+<xsd:element name="affiliatemarketing_id" type="tns:ArrayOfString" nillable="true" />
+<xsd:element name="selection_start" type="xsd:date" maxOccurs="1" minOccurs="1" />
+<xsd:element name="selection_end" type="xsd:date" maxOccurs="1" minOccurs="1" />
+<xsd:element name="by_mutation" type="xsd:boolean" nillable="true" />
+<xsd:element name="program_ids" type="tns:ArrayOfInt" nillable="true" />
+<xsd:element name="advertiser_ids" type="tns:ArrayOfInt" />
+<xsd:element name="media_ids" type="tns:ArrayOfInt" nillable="true" />
+<xsd:element name="gender" type="tns:ArrayOfTransactionsFilterGender" nillable="true" />
+<xsd:element name="description" type="xsd:string" nillable="true" />
+<xsd:element name="mediatype" type="tns:ArrayOfTransactionsFilterMediatype" nillable="true" />
+<xsd:element name="extra1" type="xsd:string" nillable="true" />
+<xsd:element name="extra2" type="xsd:string" nillable="true" />
+<xsd:element name="extra3" type="xsd:string" nillable="true" />
+<xsd:element name="extra4" type="xsd:string" nillable="true" />
+<xsd:element name="extra5" type="xsd:string" nillable="true" />
+<xsd:element name="program_tag" type="xsd:string" nillable="true" />
+<xsd:element name="province" type="tns:ArrayOfTransactionsFilterProvince" nillable="true" />
+<xsd:element name="status" type="tns:ArrayOfTransactionsFilterStatus" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:simpleType name="transactionCurrency">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="EUR" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="transactionStatus">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="open" />
+<xsd:enumeration value="approved" />
+<xsd:enumeration value="disapproved" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="transactionProvince">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="unknown" />
+<xsd:enumeration value="DR" />
+<xsd:enumeration value="FL" />
+<xsd:enumeration value="FR" />
+<xsd:enumeration value="GE" />
+<xsd:enumeration value="GR" />
+<xsd:enumeration value="LI" />
+<xsd:enumeration value="NH" />
+<xsd:enumeration value="NB" />
+<xsd:enumeration value="OV" />
+<xsd:enumeration value="UT" />
+<xsd:enumeration value="ZE" />
+<xsd:enumeration value="ZH" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionProvince">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionProvince[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="transactionGender">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="male" />
+<xsd:enumeration value="female" />
+<xsd:enumeration value="unknown" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="ArrayOfTransactionGender">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transactionGender[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="transaction">
+<xsd:all>
+<xsd:element name="affiliatemarketing_id" type="xsd:string" nillable="true" />
+<xsd:element name="date_transaction" type="xsd:dateTime" maxOccurs="1" minOccurs="1" />
+<xsd:element name="date_click" type="xsd:dateTime" maxOccurs="1" minOccurs="1" />
+<xsd:element name="advertiser_id" type="xsd:int" nillable="true" />
+<xsd:element name="publisher_id" type="xsd:int" nillable="true" />
+<xsd:element name="media_id" type="xsd:int" nillable="true" />
+<xsd:element name="media_name" type="xsd:string" nillable="true" />
+<xsd:element name="program_id" type="xsd:int" nillable="true" />
+<xsd:element name="program_name" type="xsd:string" nillable="true" />
+<xsd:element name="adgroup_id" type="xsd:int" nillable="true" />
+<xsd:element name="ad_id" type="xsd:int" nillable="true" />
+<xsd:element name="commission" type="xsd:float" nillable="true" />
+<xsd:element name="currency" type="tns:transactionCurrency" />
+<xsd:element name="program_description" type="xsd:string" nillable="true" />
+<xsd:element name="program_tag" type="xsd:string" nillable="true" />
+<xsd:element name="ip" type="xsd:string" nillable="true" />
+<xsd:element name="referer" type="xsd:string" nillable="true" />
+<xsd:element name="status" type="tns:transactionStatus" nillable="true" />
+<xsd:element name="disapprove_reason" type="xsd:string" nillable="true" />
+<xsd:element name="approval_date" type="xsd:dateTime" maxOccurs="1" nillable="true" />
+<xsd:element name="last_modified" type="xsd:dateTime" maxOccurs="1" nillable="true" />
+<xsd:element name="country_id" type="xsd:int" nillable="true" />
+<xsd:element name="country_code" type="xsd:string" nillable="true" />
+<xsd:element name="province" type="tns:ArrayOfTransactionProvince" nillable="true" />
+<xsd:element name="gender" type="tns:ArrayOfTransactionGender" nillable="true" />
+<xsd:element name="birthday" type="xsd:dateTime" maxOccurs="1" nillable="true" />
+<xsd:element name="revenue" type="xsd:float" nillable="true" />
+<xsd:element name="extra1" type="xsd:string" nillable="true" />
+<xsd:element name="extra2" type="xsd:string" nillable="true" />
+<xsd:element name="extra3" type="xsd:string" nillable="true" />
+<xsd:element name="extra4" type="xsd:string" nillable="true" />
+<xsd:element name="extra5" type="xsd:string" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfTransaction">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:transaction[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="validate_transactionStatus">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="open" />
+<xsd:enumeration value="approved" />
+<xsd:enumeration value="disapproved" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="validate_transactionDisapprove_reason">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="invalid" />
+<xsd:enumeration value="duplicate" />
+<xsd:enumeration value="cancelled" />
+<xsd:enumeration value="nopayment" />
+<xsd:enumeration value="refunded" />
+<xsd:enumeration value="testorder" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="validate_transaction">
+<xsd:all>
+<xsd:element name="program_id" type="xsd:int" />
+<xsd:element name="affiliatemarketing_id" type="xsd:string" nillable="true" />
+<xsd:element name="program_tag" type="xsd:string" nillable="true" />
+<xsd:element name="commission" type="xsd:float" nillable="true" />
+<xsd:element name="status" type="tns:validate_transactionStatus" nillable="true" />
+<xsd:element name="disapprove_reason" type="tns:validate_transactionDisapprove_reason" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfValidate_transaction">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:validate_transaction[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="successesStatus">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="open" />
+<xsd:enumeration value="approved" />
+<xsd:enumeration value="disapproved" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="successesDisapprove_reason">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="invalid" />
+<xsd:enumeration value="duplicate" />
+<xsd:enumeration value="cancelled" />
+<xsd:enumeration value="nopayment" />
+<xsd:enumeration value="refunded" />
+<xsd:enumeration value="testorder" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="successes">
+<xsd:all>
+<xsd:element name="program_id" type="xsd:int" />
+<xsd:element name="affiliatemarketing_id" type="xsd:string" nillable="true" />
+<xsd:element name="program_tag" type="xsd:string" nillable="true" />
+<xsd:element name="commission" type="xsd:float" nillable="true" />
+<xsd:element name="status" type="tns:successesStatus" nillable="true" />
+<xsd:element name="disapprove_reason" type="tns:successesDisapprove_reason" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfSuccesses">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:successes[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:simpleType name="failuresStatus">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="open" />
+<xsd:enumeration value="approved" />
+<xsd:enumeration value="disapproved" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:simpleType name="failuresDisapprove_reason">
+<xsd:restriction base="xsd:string">
+<xsd:enumeration value="invalid" />
+<xsd:enumeration value="duplicate" />
+<xsd:enumeration value="cancelled" />
+<xsd:enumeration value="nopayment" />
+<xsd:enumeration value="refunded" />
+<xsd:enumeration value="testorder" />
+</xsd:restriction>
+</xsd:simpleType>
+<xsd:complexType name="failures">
+<xsd:all>
+<xsd:element name="program_id" type="xsd:int" />
+<xsd:element name="affiliatemarketing_id" type="xsd:string" nillable="true" />
+<xsd:element name="program_tag" type="xsd:string" nillable="true" />
+<xsd:element name="commission" type="xsd:float" nillable="true" />
+<xsd:element name="status" type="tns:failuresStatus" nillable="true" />
+<xsd:element name="disapprove_reason" type="tns:failuresDisapprove_reason" nillable="true" />
+<xsd:element name="error" type="xsd:string" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="ArrayOfFailures">
+<xsd:complexContent>
+<xsd:restriction base="soap-enc:Array">
+<xsd:attribute ref="soap-enc:arrayType" wsdl:arrayType="tns:failures[]" />
+</xsd:restriction>
+</xsd:complexContent>
+</xsd:complexType>
+<xsd:complexType name="validatedTransactionReturn">
+<xsd:all>
+<xsd:element name="success" type="tns:ArrayOfSuccesses" nillable="true" />
+<xsd:element name="failures" type="tns:ArrayOfFailures" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+<xsd:complexType name="responseInfo">
+<xsd:all>
+<xsd:element name="totalResults" type="xsd:int" nillable="true" />
+<xsd:element name="startOffset" type="xsd:int" nillable="true" />
+<xsd:element name="endOffset" type="xsd:int" nillable="true" />
+<xsd:element name="requestTime" type="xsd:int" nillable="true" />
+<xsd:element name="message" type="xsd:string" nillable="true" />
+</xsd:all>
+</xsd:complexType>
+</xsd:schema>
+</types>
+<portType name="transactionPort">
+<operation name="getTransactions">
+<documentation>Get transactions</documentation>
+<input message="tns:getTransactionsIn" />
+<output message="tns:getTransactionsOut" />
+</operation>
+<operation name="validateTransaction">
+<documentation>Validate transaction by affiliatemarketing_id or by program_tag | max 5000 per request</documentation>
+<input message="tns:validateTransactionIn" />
+<output message="tns:validateTransactionOut" />
+</operation>
+</portType>
+<binding name="transactionBinding" type="tns:transactionPort">
+<soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http" />
+<operation name="getTransactions">
+<soap:operation soapAction="http://api.daisycon.com/advertiser/soap//transaction/#getTransactions" />
+<input>
+<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://api.daisycon.com/advertiser/soap//transaction/" />
+</input>
+<output>
+<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://api.daisycon.com/advertiser/soap//transaction/" />
+</output>
+</operation>
+<operation name="validateTransaction">
+<soap:operation soapAction="http://api.daisycon.com/advertiser/soap//transaction/#validateTransaction" />
+<input>
+<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://api.daisycon.com/advertiser/soap//transaction/" />
+</input>
+<output>
+<soap:body use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://api.daisycon.com/advertiser/soap//transaction/" />
+</output>
+</operation>
+</binding>
+<service name="transactionService">
+<port name="transactionPort" binding="tns:transactionBinding">
+<soap:address location="http://api.daisycon.com/advertiser/soap//transaction/" />
+</port>
+</service>
+<message name="getTransactionsIn">
+<part name="filter" type="tns:transactionsFilter" />
+</message>
+<message name="getTransactionsOut">
+<part name="return" type="tns:ArrayOfTransaction" />
+<part name="responseInfo" type="tns:responseInfo" />
+</message>
+<message name="validateTransactionIn">
+<part name="transactions" type="tns:ArrayOfValidate_transaction" />
+</message>
+<message name="validateTransactionOut">
+<part name="return" type="tns:validatedTransactionReturn" />
+<part name="responseInfo" type="tns:responseInfo" />
+</message>
+</definitions>

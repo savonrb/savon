@@ -65,9 +65,9 @@ class Savon
   # Private: Raises if the operation style is not supported.
   def verify_operation_style!(operation)
     if operation.input_style == 'rpc/encoded'
-      raise UnsupportedStyleError,
-            "#{operation.name.inspect} is an #{operation.input_style.inspect} style operation.\n" \
-            "Currently this style is not supported."
+     raise UnsupportedStyleError,
+           "#{operation.name.inspect} is an #{operation.input_style.inspect} style operation.\n" \
+           "Currently this style is not supported."
     end
   end
 

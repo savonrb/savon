@@ -331,6 +331,47 @@ describe Savon::Operation do
       expect(Nokogiri.XML vatAccount_update_from_data_array.build).
           to be_equivalent_to(expected).respecting_element_order
     end
+
+    # TODO: Finish me
+
+    # let(:test_body) do
+    #   client = Savon.new fixture('wsdl/daisycon.wsdl')
+
+    #   service, port = "transactionService", "transactionPort"
+
+    #   client.operation(service, port, 'validateTransaction')
+    # end
+    # it 'test' do
+    #   test_body.body = {
+    #     transactions: {
+    #       "validate_transaction" => {
+    #         "program_id" => 5623,
+    #         "affiliatemarketing_id" => "WQACE273RVA8YF49YQ",
+    #         "status" => "disapproved",
+    #         "disapprove_reason" => "testorder"
+    #       }
+    #     }
+    #   }
+
+    #   expected = Nokogiri.XML(%{
+    #     <env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://api.daisycon.com/advertiser/soap//transaction/" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/">
+    #     <env:Body>
+    #       <tns:validateTransaction>
+    #         <transactions>
+    #           <validate_transaction>
+    #             <program_id>5623</program_id>
+    #             <affiliatemarketing_id>WQACE273RVA8YF49YQ</affiliatemarketing_id>
+    #             <status>disapproved</status>
+    #             <disapprove_reason>testorder</disapprove_reason>
+    #           </validate_transaction>
+    #         </transactions>
+    #       </tns:validateTransaction>
+    #     </env:Body>
+    #     </env:Envelope>
+    #   })
+
+    #   expect( Nokogiri.XML test_body.build ).to be_equivalent_to(expected).respecting_element_order
+    # end
   end
 
 end
