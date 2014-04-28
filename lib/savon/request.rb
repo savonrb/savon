@@ -2,6 +2,7 @@ require "httpi"
 
 module Savon
   class HTTPRequest
+    attr_reader :http_request
 
     def initialize(globals, http_request = nil)
       @globals = globals
@@ -83,6 +84,10 @@ module Savon
       @http_request.headers = @globals[:headers] if @globals.include? :headers
       @http_request.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
       @http_request.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
+      if @globals.include? :basic_auth
+        authentication_string = @globals[:basic_auth].join ':'
+        @http_request.headers["Authorization"] ||= "Basic #{Base64.strict_encode64 authentication_string}"
+      end
     end
 
   end

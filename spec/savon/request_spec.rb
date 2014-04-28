@@ -453,6 +453,7 @@ describe Savon::SOAPRequest do
         http_request.auth.expects(:basic).with("luke", "secret")
 
         new_soap_request.build
+        new_soap_request.http_request.headers['Authorization'].should == "Basic #{Base64.strict_encode64('luke:secret')}"
       end
 
       it "is not set otherwise" do
