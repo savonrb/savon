@@ -50,16 +50,16 @@ For more examples, you should check out the
 ## Give back
 
 If you're using Savon and you or your company is making money from it, then please consider
-donating via [Gittip](https://www.gittip.com/rubiii/) so that I can continue to improve it.
+donating via [Gittip](https://www.gittip.com/tjarratt/) so that I can continue to improve it.
 
-[![donate](donate.png)](https://www.gittip.com/rubiii/)
+[![donate](donate.png)](https://www.gittip.com/tjarratt/)
 
 
 ## Documentation
 
 Please make sure to [read the documentation](http://savonrb.com/version2/).
 
-And if you find any problems with it or if you think something's missing,  
+And if you find any problems with it or if you think something's missing,
 feel free to [help out and improve the documentation](https://github.com/savonrb/savonrb.com).
 
 Donate icon from the [Noun Project](http://thenounproject.com/noun/donate/#icon-No285).
