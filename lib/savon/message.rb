@@ -83,15 +83,15 @@ class Savon
     #
     # => <foo><a><b><c>123</c></b></a></foo>
     #
-    def build_from_hash(b, value, xml)
-      if value.is_a? Hash
-        value.each do |k, v|
-          b.tag! k, {} do |_b|
-            build_from_hash(_b, v, xml)
+    def build_from_hash(key, value, xml)
+      value.each do |k, v|
+        if v.is_a? Hash
+          key.tag!(k) do |nested|
+            build_from_hash(nested, v, xml)
           end
+        else
+          key.tag! k, v
         end
-      else
-        b.text! value.to_s
       end
     end
 
@@ -124,7 +124,7 @@ class Savon
       elsif value
         if value.is_a? Hash
           if attributes.empty? && tag[1].nil?
-            xml.tag! *tag, {} do |b|
+            t=xml.tag!(*tag) do |b|
               build_from_hash(b, value, xml)
             end
           else
