@@ -122,7 +122,17 @@ class Savon
           build_elements(children, value, xml)
         end
       elsif value
-        xml.tag! *tag, tag[1] ? value[tag[1]] : value, attributes
+        if value.is_a? Hash
+          if attributes.empty? && tag[1].nil?
+            xml.tag! *tag, {} do |b|
+              build_from_hash(b, value, xml)
+            end
+          else
+            xml.tag! *tag, tag[1] ? value[tag[1]] : value, attributes
+          end
+        else
+          xml.tag! *tag, value
+        end
       else
         xml.tag! *tag, attributes
       end
