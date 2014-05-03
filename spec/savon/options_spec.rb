@@ -590,6 +590,39 @@ describe "Options" do
     end
   end
 
+  context 'global: :adapter' do
+    it 'passes option to Wasabi initializer for WSDL fetching' do
+      ## I want to use there something similar to the next mock expectation, but I can't
+      ## as due to how Savon sets up Wasabi::Document and Wasabi::Document initialize itself
+      ## adapter= method is called first time with nil and second time with adapter. [Envek, 2014-05-03]
+      # Wasabi::Document.any_instance.expects(:adapter=).with(:fake_adapter_for_test)
+      client = Savon.client(
+          :log => false,
+          :wsdl => @server.url(:authentication),
+          :adapter => :fake_adapter_for_test,
+      )
+      operations = client.operations
+      expect(operations).to eq([:authenticate])
+      expect(FakeAdapterForTest.class_variable_get(:@@requests).size).to eq(1)
+      expect(FakeAdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:authentication)))
+      expect(FakeAdapterForTest.class_variable_get(:@@methods)).to eq([:get])
+    end
+
+    it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
+      client = new_client_without_wsdl(
+          :endpoint => @server.url(:repeat),
+          :namespace => "http://v1.example.com",
+          :adapter => :adapter_for_test,
+      )
+      response = client.call(:authenticate)
+      expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
+      expect(response.http.body).to include('<wsdl:authenticate>')
+      expect(AdapterForTest.class_variable_get(:@@requests).size).to eq(1)
+      expect(AdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:repeat)))
+      expect(AdapterForTest.class_variable_get(:@@methods)).to eq([:post])
+    end
+  end
+
   context "global and request :soap_header" do
     it "merges the headers if both were provided as Hashes" do
       global_soap_header = {

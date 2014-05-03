@@ -55,6 +55,7 @@ module Savon
         :strip_namespaces          => true,
         :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym},
         :multipart                 => false,
+        :adapter                   => nil,
       }
 
       options = defaults.merge(options)
@@ -256,6 +257,11 @@ module Savon
     # Instruct Savon to create a multipart response if available.
     def multipart(multipart)
       @options[:multipart] = multipart
+    end
+
+    # Instruct Savon what HTTPI adapter it should use instead of default
+    def adapter(adapter)
+      @options[:adapter] = adapter
     end
   end
 
