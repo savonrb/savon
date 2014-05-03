@@ -17,6 +17,8 @@ module Savon
       2 => "http://www.w3.org/2003/05/soap-envelope"
     }
 
+    WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
+
     def initialize(operation_name, wsdl, globals, locals)
       @operation_name = operation_name
 
@@ -32,13 +34,23 @@ module Savon
       Nokogiri.XML(to_s).to_xml(:indent => 2)
     end
 
+    def build_document
+      tag(builder, :Envelope, namespaces_with_globals) do |xml|
+        tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
+        tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+      end
+    end
+
+    def header_attributes
+       { 'xmlns:wsa' => WSA_NAMESPACE } if @globals[:use_wsa_headers]
+    end
+
+    def body_attributes
+    end
+
     def to_s
       return @locals[:xml] if @locals.include? :xml
-
-      tag(builder, :Envelope, namespaces_with_globals) do |xml|
-        tag(xml, :Header) { xml << header.to_s } unless header.empty?
-        tag(xml, :Body)   { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
-      end
+      build_document
     end
 
     private
