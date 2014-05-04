@@ -1,10 +1,18 @@
+# 2.5.0 (2014-05-03)
+
+* Feature: [#566](https://github.com/savonrb/savon/pull/566) Allow specifying HTTPI adapter per client.
+
+```ruby
+    curb_client = Savon.client(wsdl: "http://example.com/service.wsdl", adapter: :curb)
+    http_client = Savon.client(wsdl: "http://example.com/service.wsdl", adapter: :httpclient)
+```
+
 ## 2.4.0 (2014-03-31)
 
 * Logging is off by default. To enable this behavior, set the :log option to true
 
     ``` ruby
-    client = Savon.client(wsdl: "http://example.com/service.wsdl")
-    client.options[:log] = true
+    client = Savon.client(wsdl: "http://example.com/service.wsdl", log: true)
     ```
 
 ### 2.3.2 (2013-12-09)
