@@ -87,6 +87,9 @@ module Savon
     end
 
     def build_request(builder)
+      @locals[:soap_action] ||= soap_action
+      @globals[:endpoint] ||= endpoint
+
       request = SOAPRequest.new(@globals).build(
         :soap_action => soap_action,
         :cookies     => @locals[:cookies]

@@ -57,6 +57,7 @@ module Savon
         :convert_attributes_to     => lambda { |k,v| [k,v] },
         :multipart                 => false,
         :adapter                   => nil,
+        :use_wsa_headers           => false,
       }
 
       options = defaults.merge(options)
@@ -270,6 +271,11 @@ module Savon
     # Instruct Savon what HTTPI adapter it should use instead of default
     def adapter(adapter)
       @options[:adapter] = adapter
+    end
+
+    # Enable inclusion of WS-Addressing headers.
+    def use_wsa_headers(use)
+      @options[:use_wsa_headers] = use
     end
   end
 

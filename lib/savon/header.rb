@@ -1,5 +1,6 @@
 require "akami"
 require "gyoku"
+require "uuid"
 
 module Savon
   class Header
@@ -12,6 +13,9 @@ module Savon
 
       @global_header  = globals[:soap_header]
       @local_header   = locals[:soap_header]
+
+      @globals        = globals
+      @locals         = locals
 
       @header = build
     end
@@ -30,7 +34,7 @@ module Savon
     private
 
     def build
-      build_header + build_wsse_header
+      build_header + build_wsa_header + build_wsse_header
     end
 
     def build_header
@@ -49,6 +53,15 @@ module Savon
     def build_wsse_header
       wsse_header = akami
       wsse_header.respond_to?(:to_xml) ? wsse_header.to_xml : ""
+    end
+
+    def build_wsa_header
+       return '' unless @globals[:use_wsa_headers]
+       convert_to_xml({
+         'wsa:Action' => @locals[:soap_action],
+         'wsa:To' => @globals[:endpoint],
+         'wsa:MessageID' => "urn:uuid:#{UUID.new.generate}"
+       })
     end
 
     def convert_to_xml(hash_or_string)
