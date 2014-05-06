@@ -5,10 +5,10 @@ rvm:
   - 1.9.2
   - 1.9.3
   - 2.0
-  - jruby-19mode
-  - rbx
+  - jruby
+  - rbx-2
 notifications:
   irc: "irc.freenode.org#savon"
 matrix:
   allow_failures:
-    - rvm: jruby-19mode
+    - rvm: jruby
