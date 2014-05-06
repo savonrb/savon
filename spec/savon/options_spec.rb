@@ -86,7 +86,8 @@ describe "Options" do
       expect { client.call(:authenticate) }.to raise_error { |error|
         host_unreachable = error.kind_of? Errno::EHOSTUNREACH
         net_unreachable = error.kind_of? Errno::ENETUNREACH
-        if host_unreachable || net_unreachable
+        socket_err = error.kind_of? SocketError
+        if host_unreachable || net_unreachable || socket_err
           warn "Warning: looks like your network may be down?!\n" +
                "-> skipping spec at #{__FILE__}:#{__LINE__}"
         else
