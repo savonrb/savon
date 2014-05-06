@@ -9,6 +9,3 @@ rvm:
   - rbx-2
 notifications:
   irc: "irc.freenode.org#savon"
-matrix:
-  allow_failures:
-    - rvm: jruby
