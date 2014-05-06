@@ -4,6 +4,7 @@
 
 ```ruby
     curb_client = Savon.client(wsdl: "http://example.com/service.wsdl", adapter: :curb)
+
     http_client = Savon.client(wsdl: "http://example.com/service.wsdl", adapter: :httpclient)
 ```
 
