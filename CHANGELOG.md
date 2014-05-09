@@ -1,5 +1,7 @@
 # 2.5.0 (2014-05-03)
 
+* Feature: [#573](https://github.com/savonrb/savon/pull/573) Add an `all_operations` method to `Savon::Model` that automatically adds all available operations to the model.
+
 * Feature: [#566](https://github.com/savonrb/savon/pull/566) Allow specifying HTTPI adapter per client.
 
 ```ruby

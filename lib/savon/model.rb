@@ -19,6 +19,10 @@ module Savon
       end
     end
 
+    def all_operations
+      operations(*client.operations)
+    end
+
     private
 
     # Defines a class-level SOAP operation.
