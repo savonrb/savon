@@ -22,7 +22,7 @@ describe "Stockquote example" do
     nori_options = { :convert_tags_to => lambda { |tag| tag.snakecase.to_sym } }
     result = Nori.new(nori_options).parse(cdata)
 
-    result[:stock_quotes][:stock][:symbol].should == "AAPL"
+    expect(result[:stock_quotes][:stock][:symbol]).to eq("AAPL")
   end
 
 end

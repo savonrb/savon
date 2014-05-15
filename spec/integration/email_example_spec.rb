@@ -25,7 +25,7 @@ describe "Email example" do
       pending "API limit exceeded"
     else
       # The expected result. We unfortunately don't have a license key for this service.
-      response_text.should == "Email Domain Not Found"
+      expect(response_text).to eq("Email Domain Not Found")
     end
   end
 
