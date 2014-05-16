@@ -4,33 +4,33 @@ describe String do
 
   describe "snakecase" do
     it "lowercases one word CamelCase" do
-      "Merb".snakecase.should == "merb"
+      expect("Merb".snakecase).to eq("merb")
     end
 
     it "makes one underscore snakecase two word CamelCase" do
-      "MerbCore".snakecase.should == "merb_core"
+      expect("MerbCore".snakecase).to eq("merb_core")
     end
 
     it "handles CamelCase with more than 2 words" do
-      "SoYouWantContributeToMerbCore".snakecase.should == "so_you_want_contribute_to_merb_core"
+      expect("SoYouWantContributeToMerbCore".snakecase).to eq("so_you_want_contribute_to_merb_core")
     end
 
     it "handles CamelCase with more than 2 capital letter in a row" do
-      "CNN".snakecase.should == "cnn"
-      "CNNNews".snakecase.should == "cnn_news"
-      "HeadlineCNNNews".snakecase.should == "headline_cnn_news"
+      expect("CNN".snakecase).to eq("cnn")
+      expect("CNNNews".snakecase).to eq("cnn_news")
+      expect("HeadlineCNNNews".snakecase).to eq("headline_cnn_news")
     end
 
     it "does NOT change one word lowercase" do
-      "merb".snakecase.should == "merb"
+      expect("merb".snakecase).to eq("merb")
     end
 
     it "leaves snake_case as is" do
-      "merb_core".snakecase.should == "merb_core"
+      expect("merb_core".snakecase).to eq("merb_core")
     end
 
     it "converts period characters to underscores" do
-      "User.GetEmail".snakecase.should == "user_get_email"
+      expect("User.GetEmail".snakecase).to eq("user_get_email")
     end
   end
 

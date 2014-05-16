@@ -7,16 +7,16 @@ describe Savon::Response do
 
   describe ".new" do
     it "should raise a Savon::Fault in case of a SOAP fault" do
-      lambda { soap_fault_response }.should raise_error(Savon::SOAPFault)
+      expect { soap_fault_response }.to raise_error(Savon::SOAPFault)
     end
 
     it "should not raise a Savon::Fault in case the default is turned off" do
       globals[:raise_errors] = false
-      lambda { soap_fault_response }.should_not raise_error
+      expect { soap_fault_response }.not_to raise_error
     end
 
     it "should raise a Savon::HTTP::Error in case of an HTTP error" do
-      lambda { soap_response :code => 500 }.should raise_error(Savon::HTTPError)
+      expect { soap_response :code => 500 }.to raise_error(Savon::HTTPError)
     end
 
     it "should not raise a Savon::HTTP::Error in case the default is turned off" do
@@ -29,15 +29,15 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should return true if the request was successful" do
-      soap_response.should be_a_success
+      expect(soap_response).to be_a_success
     end
 
     it "should return false if there was a SOAP fault" do
-      soap_fault_response.should_not be_a_success
+      expect(soap_fault_response).not_to be_a_success
     end
 
     it "should return false if there was an HTTP error" do
-      http_error_response.should_not be_a_success
+      expect(http_error_response).not_to be_a_success
     end
   end
 
@@ -45,11 +45,11 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
-      soap_response.soap_fault?.should be_false
+      expect(soap_response.soap_fault?).to be_false
     end
 
     it "should return true in case of a SOAP fault" do
-      soap_fault_response.soap_fault?.should be_true
+      expect(soap_fault_response.soap_fault?).to be_true
     end
   end
 
@@ -57,11 +57,11 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should return nil in case the response seems to be ok" do
-      soap_response.soap_fault.should be_nil
+      expect(soap_response.soap_fault).to be_nil
     end
 
     it "should return a SOAPFault in case of a SOAP fault" do
-      soap_fault_response.soap_fault.should be_a(Savon::SOAPFault)
+      expect(soap_fault_response.soap_fault).to be_a(Savon::SOAPFault)
     end
   end
 
@@ -69,11 +69,11 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
-      soap_response.http_error?.should_not be_true
+      expect(soap_response.http_error?).not_to be_true
     end
 
     it "should return true in case of an HTTP error" do
-      soap_response(:code => 500).http_error?.should be_true
+      expect(soap_response(:code => 500).http_error?).to be_true
     end
   end
 
@@ -81,18 +81,18 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should return nil in case the response seems to be ok" do
-      soap_response.http_error.should be_nil
+      expect(soap_response.http_error).to be_nil
     end
 
     it "should return a HTTPError in case of an HTTP error" do
-      soap_response(:code => 500).http_error.should be_a(Savon::HTTPError)
+      expect(soap_response(:code => 500).http_error).to be_a(Savon::HTTPError)
     end
   end
 
   describe "#header" do
     it "should return the SOAP response header as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      response.header.should include(:session_number => "ABCD1234")
+      expect(response.header).to include(:session_number => "ABCD1234")
     end
 
     it 'respects the global :strip_namespaces option' do
@@ -129,29 +129,30 @@ describe Savon::Response do
     end
 
     it "should throw an exception when the response header isn't parsable" do
-      lambda { invalid_soap_response.header }.should raise_error Savon::InvalidResponseError
+      expect { invalid_soap_response.header }.to raise_error Savon::InvalidResponseError
     end
   end
 
   %w(body to_hash).each do |method|
     describe "##{method}" do
       it "should return the SOAP response body as a Hash" do
-        soap_response.send(method)[:authenticate_response][:return].should ==
+        expect(soap_response.send(method)[:authenticate_response][:return]).to eq(
           Fixture.response_hash(:authentication)[:authenticate_response][:return]
+        )
       end
 
       it "should return a Hash for a SOAP multiRef response" do
         hash = soap_response(:body => Fixture.response(:multi_ref)).send(method)
 
-        hash[:list_response].should be_a(Hash)
-        hash[:multi_ref].should be_an(Array)
+        expect(hash[:list_response]).to be_a(Hash)
+        expect(hash[:multi_ref]).to be_an(Array)
       end
 
       it "should add existing namespaced elements as an array" do
         hash = soap_response(:body => Fixture.response(:list)).send(method)
 
-        hash[:multi_namespaced_entry_response][:history].should be_a(Hash)
-        hash[:multi_namespaced_entry_response][:history][:case].should be_an(Array)
+        expect(hash[:multi_namespaced_entry_response][:history]).to be_a(Hash)
+        expect(hash[:multi_namespaced_entry_response][:history][:case]).to be_an(Array)
       end
 
       it 'respects the global :strip_namespaces option' do
@@ -177,25 +178,26 @@ describe Savon::Response do
   describe "#to_array" do
     context "when the given path exists" do
       it "should return an Array containing the path value" do
-        soap_response.to_array(:authenticate_response, :return).should ==
+        expect(soap_response.to_array(:authenticate_response, :return)).to eq(
           [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
+        )
       end
 
       it "should properly return FalseClass values [#327]" do
         body = Gyoku.xml(:envelope => { :body => { :return => { :success => false } } })
-        soap_response(:body => body).to_array(:return, :success).should == [false]
+        expect(soap_response(:body => body).to_array(:return, :success)).to eq([false])
       end
     end
 
     context "when the given path returns nil" do
       it "should return an empty Array" do
-        soap_response.to_array(:authenticate_response, :undefined).should == []
+        expect(soap_response.to_array(:authenticate_response, :undefined)).to eq([])
       end
     end
 
     context "when the given path does not exist at all" do
       it "should return an empty Array" do
-        soap_response.to_array(:authenticate_response, :some, :undefined, :path).should == []
+        expect(soap_response.to_array(:authenticate_response, :some, :undefined, :path)).to eq([])
       end
     end
   end
@@ -203,26 +205,26 @@ describe Savon::Response do
   describe "#hash" do
     it "should return the complete SOAP response XML as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      response.hash[:envelope][:header][:session_number].should == "ABCD1234"
+      expect(response.hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
   end
 
   describe "#to_xml" do
     it "should return the raw SOAP response body" do
-      soap_response.to_xml.should == Fixture.response(:authentication)
+      expect(soap_response.to_xml).to eq(Fixture.response(:authentication))
     end
   end
 
   describe "#doc" do
     it "returns a Nokogiri::XML::Document for the SOAP response XML" do
-      soap_response.doc.should be_a(Nokogiri::XML::Document)
+      expect(soap_response.doc).to be_a(Nokogiri::XML::Document)
     end
   end
 
   describe "#xpath" do
     it "permits XPath access to elements in the request" do
-      soap_response.xpath("//client").first.inner_text.should == "radclient"
-      soap_response.xpath("//ns2:authenticateResponse/return/success").first.inner_text.should == "true"
+      expect(soap_response.xpath("//client").first.inner_text).to eq("radclient")
+      expect(soap_response.xpath("//ns2:authenticateResponse/return/success").first.inner_text).to eq("true")
     end
   end
 
@@ -237,7 +239,7 @@ describe Savon::Response do
 
   describe "#http" do
     it "should return the HTTPI::Response" do
-      soap_response.http.should be_an(HTTPI::Response)
+      expect(soap_response.http).to be_an(HTTPI::Response)
     end
   end
 

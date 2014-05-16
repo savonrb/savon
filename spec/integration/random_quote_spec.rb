@@ -15,8 +15,8 @@ describe 'rpc/encoded binding test' do
     rescue Savon::SOAPFault => e
       $stderr.puts e.to_hash.inspect
       f_c = e.to_hash[:fault][:faultstring]
-      f_c.should_not  == 'No such operation \'getQuoteRequest\''
-      f_c.should == 'soapenv:Server.userException'
+      expect(f_c).not_to  eq('No such operation \'getQuoteRequest\'')
+      expect(f_c).to eq('soapenv:Server.userException')
       pending e
     end
   end

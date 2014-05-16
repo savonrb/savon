@@ -145,7 +145,7 @@ describe Savon::WSDLRequest do
 
           new_wsdl_request.build
 
-          http_request.auth.ssl.cert_key.to_s.should =~ /BEGIN RSA PRIVATE KEY/
+          expect(http_request.auth.ssl.cert_key.to_s).to match(/BEGIN RSA PRIVATE KEY/)
         end
       end
     end

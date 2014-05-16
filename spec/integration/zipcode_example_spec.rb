@@ -36,7 +36,7 @@ describe "ZIP code example" do
     threads.each(&:kill)
     values = threads.map { |thr| thr[:value] }.compact
 
-    values.uniq.size.should == values.size
+    expect(values.uniq.size).to eq(values.size)
   end
 
 end
