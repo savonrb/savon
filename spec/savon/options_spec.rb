@@ -457,80 +457,129 @@ describe "Options" do
     end
   end
 
-  context "global :wsse_auth" do
-    it "adds WSSE basic auth information to the request" do
-      client = new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["luke", "secret"])
-      response = client.call(:authenticate)
+  context ":wsse_auth" do
+    let(:username) { "luke" }
+    let(:password) { "secret" }
+    let(:request) { response.http.body }
 
-      request = response.http.body
+    context "without digest" do
+      shared_examples "WSSE basic auth" do
+        it "adds WSSE basic auth information to the request" do
+          # the header and wsse security node
+          wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+          expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
 
-      # the header and wsse security node
-      wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-      expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+          # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+          expect(request).to include("<wsse:UsernameToken")
+          expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+          expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
-      # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
-      expect(request).to include("<wsse:UsernameToken")
-      expect(request).to include("wsu:Id=\"UsernameToken-1\"")
-      expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+          # the username and password node with type attribute
+          expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
+          password_text = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+          expect(request).to include("<wsse:Password Type=\"#{password_text}\">#{password}</wsse:Password>")
+        end
+      end
 
-      # the username and password node with type attribute
-      expect(request).to include("<wsse:Username>luke</wsse:Username>")
-      password_text = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
-      expect(request).to include("<wsse:Password Type=\"#{password_text}\">secret</wsse:Password>")
+      context "global" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password]) }
+        let(:response) { client.call(:authenticate) }
+        include_examples "WSSE basic auth"
+      end
+
+      context "local" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+        let(:response) do
+          client.call(:authenticate) do |locals|
+            locals.wsse_auth(username, password)
+          end
+        end
+        include_examples "WSSE basic auth"
+      end
     end
 
-    it "adds WSSE digest auth information to the request" do
-      client = new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["lea", "top-secret", :digest])
-      response = client.call(:authenticate)
+    context "with digest" do
+      shared_examples "WSSE digest auth" do
+        it "adds WSSE digest auth information to the request" do
+          # the header and wsse security node
+          wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+          expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
 
-      request = response.http.body
+          # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+          expect(request).to include("<wsse:UsernameToken")
+          expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+          expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
-      # the header and wsse security node
-      wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-      expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+          # the username node
+          expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
 
-      # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
-      expect(request).to include("<wsse:UsernameToken")
-      expect(request).to include("wsu:Id=\"UsernameToken-1\"")
-      expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+          # the nonce node
+          expect(request).to match(/<wsse:Nonce.*>.+\n<\/wsse:Nonce>/)
 
-      # the username node
-      expect(request).to include("<wsse:Username>lea</wsse:Username>")
+          # the created node with a timestamp
+          expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
 
-      # the nonce node
-      expect(request).to match(/<wsse:Nonce.*>.+\n<\/wsse:Nonce>/)
+          # the password node contains the encrypted value
+          password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+          expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
+          expect(request).to_not include(password)
+        end
+      end
 
-      # the created node with a timestamp
-      expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+      context "global" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
+        let(:response) { client.call(:authenticate) }
+        include_examples "WSSE digest auth"
+      end
 
-      # the password node contains the encrypted value
-      password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
-      expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
-      expect(request).to_not include("top-secret")
+      context "local" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+        let(:response) do
+          client.call(:authenticate) do |locals|
+            locals.wsse_auth(username, password, :digest)
+          end
+        end
+        include_examples "WSSE digest auth"
+      end
     end
   end
 
-  context "global :wsse_timestamp" do
-    it "adds WSSE timestamp auth information to the request" do
-      client = new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true)
-      response = client.call(:authenticate)
+  context ":wsse_timestamp" do
+    let(:request) { response.http.body }
 
-      request = response.http.body
+    shared_examples "WSSE timestamp" do
+      it "adds WSSE timestamp auth information to the request" do
+        # the header and wsse security node
+        wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
 
-      # the header and wsse security node
-      wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-      expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+        # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+        expect(request).to include("<wsu:Timestamp")
+        expect(request).to include("wsu:Id=\"Timestamp-1\"")
+        expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
-      # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
-      expect(request).to include("<wsu:Timestamp")
-      expect(request).to include("wsu:Id=\"Timestamp-1\"")
-      expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+        # the created node with a timestamp
+        expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
 
-      # the created node with a timestamp
-      expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+        # the expires node with a timestamp
+        expect(request).to match(/<wsu:Expires>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Expires>/)
+      end
+    end
 
-      # the expires node with a timestamp
-      expect(request).to match(/<wsu:Expires>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Expires>/)
+    context "global" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+        let(:response) { client.call(:authenticate) }
+        include_examples "WSSE timestamp"
+    end
+
+    context "local" do
+      let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+      let(:response) do
+        client.call(:authenticate) do |locals|
+          locals.wsse_timestamp(true)
+        end
+      end
+      include_examples "WSSE timestamp"
     end
   end
 

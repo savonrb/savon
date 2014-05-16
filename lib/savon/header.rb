@@ -8,8 +8,8 @@ module Savon
     def initialize(globals, locals)
       @gyoku_options  = { :key_converter => globals[:convert_request_keys_to] }
 
-      @wsse_auth      = globals[:wsse_auth]
-      @wsse_timestamp = globals[:wsse_timestamp]
+      @wsse_auth      = locals[:wsse_auth] || globals[:wsse_auth]
+      @wsse_timestamp = locals[:wsse_timestamp] || globals[:wsse_timestamp]
 
       @global_header  = globals[:soap_header]
       @local_header   = locals[:soap_header]
