@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "puma",  "2.0.0.b4"
 
   s.add_development_dependency "rake",  "~> 10.1"
+  s.add_development_dependency "transpec"
   s.add_development_dependency "rspec", "~> 2.14"
   s.add_development_dependency "mocha", "~> 0.14"
   s.add_development_dependency "json",  "~> 1.7"
