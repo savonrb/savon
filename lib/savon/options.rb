@@ -346,5 +346,15 @@ module Savon
       @options[:multipart] = multipart
     end
 
+    # WSSE auth credentials for Akami.
+    def wsse_auth(*credentials)
+      @options[:wsse_auth] = credentials.flatten
+    end
+
+    # Instruct Akami to enable wsu:Timestamp headers.
+    def wsse_timestamp(*timestamp)
+      @options[:wsse_timestamp] = timestamp.flatten
+    end
+
   end
 end
