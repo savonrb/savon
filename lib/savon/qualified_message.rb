@@ -21,6 +21,8 @@ module Savon
         else
           translated_key = Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
           newpath = path + [translated_key]
+          
+          translated_key << key.to_s[-1, 1] if ["!", "/"].include?(key.to_s[-1, 1])
 
           if @used_namespaces[newpath]
             newhash.merge(

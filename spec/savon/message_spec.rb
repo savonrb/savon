@@ -3,17 +3,17 @@ require "integration/support/server"
 
 describe Savon::Message do
 
-  before do
+  before(:all) do
     @server = IntegrationServer.run
   end
 
-  after do
+  after(:all) do
     @server.stop
   end
 
   context "with a qualified message" do
-    it "converts request Hash keys for which there is not namespace" do
-      client = Savon.client(
+    before(:each) do
+      @client = Savon.client(
         :endpoint => @server.url(:repeat),
         :namespace => 'http://example.com',
         :log => false,
@@ -23,17 +23,29 @@ describe Savon::Message do
 
         :convert_response_tags_to => nil
       )
+    end
 
+    it "converts request Hash keys for which there is not namespace" do
       message = {
        :email_count => 3,
        :user_name   => 'josh',
        :order!      => [:user_name, :email_count]
       }
 
-      response = client.call(:something, :message => message)
-      body = response.hash['Envelope']['Body']
+      response = @client.call(:something, :message => message)
 
       expect(response.xml).to include('<wsdl:UserName>josh</wsdl:UserName><wsdl:EmailCount>3</wsdl:EmailCount>')
+    end
+
+    it "does not escape messages for Hash keys that end with a bang (!)" do
+      message = {
+        :escaped => '<![CDATA[ escaped data ]]>',
+        :not_escaped! => '<![CDATA[ not escaped data ]]>',
+      }
+
+      response = @client.call(:something, :message => message)
+
+      expect(response.xml).to include('<wsdl:Escaped>&lt;![CDATA[ escaped data ]]&gt;</wsdl:Escaped><wsdl:NotEscaped><![CDATA[ not escaped data ]]></wsdl:NotEscaped>')
     end
   end
 
