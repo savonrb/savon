@@ -38,7 +38,33 @@ module Savon
 
   end
 
+  module SharedOptions
+    # WSSE auth credentials for Akami.
+    # Local will override the global wsse_auth value, e.g.
+    #   global == [user, pass] && local == [user2, pass2] => [user2, pass2]
+    #   global == [user, pass] && local == false => false
+    #   global == [user, pass] && local == nil   => [user, pass]
+    def wsse_auth(*credentials)
+      credentials.flatten!
+      if credentials.size == 1
+        @options[:wsse_auth] = credentials.first
+      else
+        @options[:wsse_auth] = credentials
+      end
+    end
+
+    # Instruct Akami to enable wsu:Timestamp headers.
+    # Local will override the global wsse_timestamp value, e.g.
+    #   global == true && local == true  => true
+    #   global == true && local == false => false
+    #   global == true && local == nil   => true
+    def wsse_timestamp(timestamp = true)
+      @options[:wsse_timestamp] = timestamp
+    end
+  end
+
   class GlobalOptions < Options
+    include SharedOptions
 
     def initialize(options = {})
       @option_type = :global
@@ -228,16 +254,6 @@ module Savon
       @options[:ntlm] = credentials.flatten
     end
 
-    # WSSE auth credentials for Akami.
-    def wsse_auth(*credentials)
-      @options[:wsse_auth] = credentials.flatten
-    end
-
-    # Instruct Akami to enable wsu:Timestamp headers.
-    def wsse_timestamp(*timestamp)
-      @options[:wsse_timestamp] = timestamp.flatten
-    end
-
     # Instruct Nori whether to strip namespaces from XML nodes.
     def strip_namespaces(strip_namespaces)
       @options[:strip_namespaces] = strip_namespaces
@@ -280,6 +296,7 @@ module Savon
   end
 
   class LocalOptions < Options
+    include SharedOptions
 
     def initialize(options = {})
       @option_type = :local
@@ -345,16 +362,5 @@ module Savon
     def multipart(multipart)
       @options[:multipart] = multipart
     end
-
-    # WSSE auth credentials for Akami.
-    def wsse_auth(*credentials)
-      @options[:wsse_auth] = credentials.flatten
-    end
-
-    # Instruct Akami to enable wsu:Timestamp headers.
-    def wsse_timestamp(*timestamp)
-      @options[:wsse_timestamp] = timestamp.flatten
-    end
-
   end
 end
