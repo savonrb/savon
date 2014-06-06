@@ -58,6 +58,7 @@ module Savon
         :multipart                 => false,
         :adapter                   => nil,
         :use_wsa_headers           => false,
+        :no_message_tag            => false
       }
 
       options = defaults.merge(options)
@@ -276,6 +277,10 @@ module Savon
     # Enable inclusion of WS-Addressing headers.
     def use_wsa_headers(use)
       @options[:use_wsa_headers] = use
+    end
+    
+    def no_message_tag(bool)
+      @options[:no_message_tag] = bool
     end
   end
 
