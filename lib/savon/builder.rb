@@ -37,7 +37,11 @@ module Savon
     def build_document
       tag(builder, :Envelope, namespaces_with_globals) do |xml|
         tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
-        tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+        if @globals[:no_message_tag]
+          tag(xml, :Body, body_attributes) { xml << message.to_s }
+        else
+          tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+        end
       end
     end
 
