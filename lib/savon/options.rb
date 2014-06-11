@@ -84,7 +84,8 @@ module Savon
         :multipart                 => false,
         :adapter                   => nil,
         :use_wsa_headers           => false,
-        :no_message_tag            => false
+        :no_message_tag            => false,
+        :follow_redirects          => false,
       }
 
       options = defaults.merge(options)
@@ -294,9 +295,14 @@ module Savon
     def use_wsa_headers(use)
       @options[:use_wsa_headers] = use
     end
-    
+
     def no_message_tag(bool)
       @options[:no_message_tag] = bool
+    end
+
+    # Instruct requests to follow HTTP redirects.
+    def follow_redirects(follow_redirects)
+      @options[:follow_redirects] = follow_redirects
     end
   end
 

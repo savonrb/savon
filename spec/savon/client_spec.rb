@@ -65,7 +65,7 @@ describe Savon::Client do
 
     fit "defaults :log to false" do
       client = Savon.client(:wsdl => Fixture.wsdl(:authentication))
-      expect(client.globals[:log]).to be_false
+      expect(client.globals[:log]).to be_falsey
     end
   end
 

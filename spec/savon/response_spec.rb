@@ -45,11 +45,11 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
-      expect(soap_response.soap_fault?).to be_false
+      expect(soap_response.soap_fault?).to be_falsey
     end
 
     it "should return true in case of a SOAP fault" do
-      expect(soap_fault_response.soap_fault?).to be_true
+      expect(soap_fault_response.soap_fault?).to be_truthy
     end
   end
 
@@ -69,11 +69,11 @@ describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "should not return true in case the response seems to be ok" do
-      expect(soap_response.http_error?).not_to be_true
+      expect(soap_response.http_error?).not_to be_truthy
     end
 
     it "should return true in case of an HTTP error" do
-      expect(soap_response(:code => 500).http_error?).to be_true
+      expect(soap_response(:code => 500).http_error?).to be_truthy
     end
   end
 

@@ -11,11 +11,11 @@ describe Savon::HTTPError do
   describe ".present?" do
     it "returns true if there was an HTTP error" do
       http = new_response(:code => 404, :body => "Not Found")
-      expect(Savon::HTTPError.present? http).to be_true
+      expect(Savon::HTTPError.present? http).to be_truthy
     end
 
     it "returns false unless there was an HTTP error" do
-      expect(Savon::HTTPError.present? new_response).to be_false
+      expect(Savon::HTTPError.present? new_response).to be_falsey
     end
   end
 
