@@ -45,6 +45,35 @@ describe "Options" do
     end
   end
 
+  context "global: :no_message_tag" do
+    it "omits the 'message tag' encapsulation step" do
+      client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => true,
+                          :wsdl => Fixture.wsdl(:no_message_tag))
+      msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
+               'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
+             'Items' => ['Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}]}
+      response = client.call(:create_items, :message => msg)
+
+      expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(1)
+    end
+
+    it "includes the 'message tag' encapsulation step" do
+      # This test is probably just exposing a bug while the previous
+      # test is using a workaround fix.
+      # That is just a guess though. I don't really have to properly debug the WSDL parser.
+      client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => false,
+                          :wsdl => Fixture.wsdl(:no_message_tag))
+      msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
+               'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
+             'Items' => ['Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}]}
+      response = client.call(:create_items, :message => msg)
+
+      expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(2)
+    end
+  end
+
   context "global :namespaces" do
     it "adds additional namespaces to the SOAP envelope" do
       namespaces = { "xmlns:whatever" => "http://whatever.example.com" }
@@ -525,6 +554,7 @@ describe "Options" do
           expect(request).to_not include(password)
         end
       end
+
 
       context "global" do
         let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
