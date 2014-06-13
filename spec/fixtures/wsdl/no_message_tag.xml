@@ -1,0 +1,1267 @@
+
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://www.JOI.com/schemas/ViaSub.WMS/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://www.JOI.com/schemas/ViaSub.WMS/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://www.JOI.com/schemas/ViaSub.WMS/">
+      <s:element name="extLoginData" type="tns:ExternalLoginData" />
+      <s:complexType name="ExternalLoginData">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ThreePLKey" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FacilityID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="orders" type="tns:ArrayOfOrder" />
+      <s:complexType name="ArrayOfOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Order" nillable="true" type="tns:Order" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Order">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="TransInfo" type="tns:TransactionInfoExt" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="tns:ContactInfoExt" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShippingInstructions" type="tns:ShippingInstructionsExt" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipmentInfo" type="tns:ShipmentInfoExt" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PalletCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderLineItems" type="tns:ArrayOfOrderLineItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="SavedElements" type="tns:ArrayOfCodeDescrPair" />
+          <s:element minOccurs="0" maxOccurs="1" name="FulfillmentInfo" type="tns:FulfillInvInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="SoldTo" type="tns:ContactInfoExt" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TransactionInfoExt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceNum" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpectedDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="EarliestShipDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShipCancelDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="PONum" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ContactInfoExt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="tns:AddressExt" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneNumber1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmailAddress1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Vendor" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Dept" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RetailerID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="AddressExt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ShippingInstructionsExt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Carrier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BillingCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Account" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShippingNotes" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ShipmentInfoExt">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits1" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits1TypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits1TypeDesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits2" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits2TypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits2TypeDesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalWeight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalVolume" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderLineItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderLineItem" type="tns:OrderLineItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderLineItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Qualifier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Packed" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CuFtPerCarton" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="LotNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpirationDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillmentSalePrice" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillmentDiscountPercentage" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillmentDiscountAmount" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCodeDescrPair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CodeDescrPair" type="tns:CodeDescrPair" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CodeDescrPair">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="FulfillInvInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvShippingAndHandling" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvTax" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="FulfillInvDiscountCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvDiscountAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="FulfillInvGiftMessage" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="warnings" type="s:string" />
+      <s:element name="Int32" type="s:int" />
+      <s:element name="updateOrders" type="tns:ArrayOfUpdateOrder" />
+      <s:complexType name="ArrayOfUpdateOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="UpdateOrder" nillable="true" type="tns:UpdateOrder" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UpdateOrder">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="BillOfLading" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrackingNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ConfirmationDate" type="s:dateTime" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="cancelOrders" type="tns:ArrayOfCancelOrder" />
+      <s:complexType name="ArrayOfCancelOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CancelOrder" nillable="true" type="tns:CancelOrder" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CancelOrder">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Reason" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Charge" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="userLoginData" nillable="true" type="tns:UserLoginData" />
+      <s:complexType name="UserLoginData">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ThreePLID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="ReportRetailersResult" type="tns:ArrayOfRetailer" />
+      <s:complexType name="ArrayOfRetailer">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Retailer" nillable="true" type="tns:Retailer" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Retailer">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="RetailerID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="RetailerNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelUID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="focr" nillable="true" type="tns:FindOrderCriteria" />
+      <s:complexType name="FindOrderCriteria">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="FacilityID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="RetailerID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MarkForListID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderFtpID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="NoteContains" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="RefNumberContains" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="OverAlloc" type="tns:FindTriStateType" />
+          <s:element minOccurs="1" maxOccurs="1" name="Closed" type="tns:FindTriStateType" />
+          <s:element minOccurs="1" maxOccurs="1" name="ASNSent" type="tns:FindTriStateType" />
+          <s:element minOccurs="1" maxOccurs="1" name="RouteSent" type="tns:FindTriStateType" />
+          <s:element minOccurs="1" maxOccurs="1" name="Stage" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="BeginDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="EndDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="DateRangeType" type="tns:FindOrderDateRangeType" />
+          <s:element minOccurs="1" maxOccurs="1" name="BeginTrans" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="EndTrans" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MasterBOLID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceNum" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PoList" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKUList" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AddressStatus" type="tns:AddressStatusType" />
+          <s:element minOccurs="1" maxOccurs="1" name="BatchID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="FindTriStateType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Exclude" />
+          <s:enumeration value="IncludeOnly" />
+          <s:enumeration value="Any" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="I18nDateTime">
+        <s:simpleContent>
+          <s:extension base="s:dateTime" />
+        </s:simpleContent>
+      </s:complexType>
+      <s:simpleType name="FindOrderDateRangeType">
+        <s:restriction base="s:string">
+          <s:enumeration value="None" />
+          <s:enumeration value="Create" />
+          <s:enumeration value="Confirm" />
+          <s:enumeration value="ASNSent" />
+          <s:enumeration value="Pickup" />
+          <s:enumeration value="PickDone" />
+          <s:enumeration value="PackDone" />
+          <s:enumeration value="LoadOutDone" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="AddressStatusType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Any" />
+          <s:enumeration value="Unconfirmed" />
+          <s:enumeration value="Confirmed" />
+          <s:enumeration value="UserAccepted" />
+        </s:restriction>
+      </s:simpleType>
+      <s:element name="limitCount" type="s:int" />
+      <s:element name="FindOrders" type="s:string" />
+      <s:element name="totalOrders" type="s:int" />
+      <s:element name="string" type="s:string" />
+      <s:element name="SmallParcelOrdersResult" type="tns:ArrayOfSmallParcel" />
+      <s:complexType name="ArrayOfSmallParcel">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SmallParcel" nillable="true" type="tns:SmallParcel" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SmallParcel">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="WarehouseTransaction" type="tns:WarehouseTransaction" />
+          <s:element minOccurs="0" maxOccurs="1" name="Facility" type="tns:Facility" />
+          <s:element minOccurs="0" maxOccurs="1" name="Retailer" type="tns:Retailer" />
+          <s:element minOccurs="0" maxOccurs="1" name="ThirdPartyBilling" type="tns:ContactInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="Packages" type="tns:ArrayOfPackage" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderItem" type="tns:ArrayOfSmallParcelOrderItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="WarehouseTransaction">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionTypeID" type="tns:WarehouseTransactionType" />
+          <s:element minOccurs="0" maxOccurs="1" name="WarehouseTransactionTypeDesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerDesc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreationDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastModifiedDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransInfo" type="tns:TransactionInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreatedBy" type="tns:UserLogin" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipTo" type="tns:ContactInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="SoldTo" type="tns:ContactInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="CostInfo" type="tns:CostInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShippingInstructions" type="tns:ShippingInstructions" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrackingInfo" type="tns:TrackingInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipmentInfo" type="tns:ShipmentInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="FulfillInvInfo" type="tns:FulfillInvInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ProcessDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="PickTicketPrintDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="Status" type="tns:WarehouseTransactionStatus" />
+          <s:element minOccurs="1" maxOccurs="1" name="FacilityID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UnderAllocated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsCOD" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsInsurance" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="UPSServiceOptionCharge" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="UPSTransportationCharge" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="AddFreightToCOD" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="UPSIsResidential" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="ASNSent" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ASNSentDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="RouteSent" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="RoutePickupDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PkgsExported" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="StorageChargePeriodTypeID" type="tns:StorageChargePeriodType" />
+          <s:element minOccurs="1" maxOccurs="1" name="ImportModuleID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExportModuleIDs" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderFtpID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelsExported" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="BatchOrderID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsStageSet" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="Stage" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="InvoiceDeliveredDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="CapacityType" type="tns:CapacityType" />
+          <s:element minOccurs="0" maxOccurs="1" name="TransactionEntryType" type="tns:TransactionEntryType" />
+          <s:element minOccurs="1" maxOccurs="1" name="PurchaseOrderID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoadedState" type="tns:LoadOutLogState" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoadOutPercentage" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiresDeliveryConf" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="RequiresReturnReceipt" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="PickDoneDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="PackDoneDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoadOutDoneDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpectedDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReallocatedAfterPickTicketDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ShipDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="EndOfDayDate" type="s:dateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="SavedElements" type="tns:ArrayOfCodeDescrPair1" />
+          <s:element minOccurs="0" maxOccurs="1" name="orderItems" type="tns:ArrayOfOrderItem" />
+          <s:element minOccurs="1" maxOccurs="1" name="FreightRateStatus" type="tns:WarehouseTransactionFreightRateStatus" />
+          <s:element minOccurs="0" maxOccurs="1" name="BillTo" type="tns:ContactInfo" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionSourceID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionSourceSetupID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="WarehouseTransactionSourceDisplay" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="WarehouseTransactionType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Default" />
+          <s:enumeration value="Inbound" />
+          <s:enumeration value="Order" />
+          <s:enumeration value="Adjust" />
+          <s:enumeration value="Assembly" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="TransactionInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReferenceNum" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PONum" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExpectedDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="EarliestShipDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipCancelDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="ASNNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UserLogin">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="UserLoginID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Login" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Password" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Salt" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="UserRole" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HintPhrase" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerDescr" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CustomerIDs" type="tns:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerGroupId" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="FacilityIDs" type="tns:ArrayOfInt" />
+          <s:element minOccurs="1" maxOccurs="1" name="Deactivated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="PrefSelOrdFromList" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="CreationDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Email" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CellPhone" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CellCarrierId" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfInt">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="int" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ContactInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ContactID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Name" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Title" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CompanyName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address" type="tns:Address" />
+          <s:element minOccurs="0" maxOccurs="1" name="PhoneNumber1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Fax" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="EmailAddress1" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="RetailerID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Dept" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsShipToQuickLookup" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="ContactType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Bill3rdPartyAccount" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="AddressStatus" type="tns:AddressStatusType" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Address">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Address1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Address2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="City" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="State" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Zip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Country" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CostInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="hasValueNumberFields" type="tns:ArrayOfString" />
+          <s:element minOccurs="1" maxOccurs="1" name="AutoCalcHandling" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="AutoCalcHandlingDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="Handling" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="HandlingDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="AutoCalcStorage" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="AutoCalcStorageDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="Storage" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="StorageDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="FreightPP" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="FreightPPDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="Materials" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="MaterialsDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="SpecialCharges" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="SpecialChargesDetail" type="tns:ArrayOfCostInfoDetail" />
+          <s:element minOccurs="1" maxOccurs="1" name="Freight3" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="Freight3Detail" type="tns:ArrayOfCostInfoDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfString">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="string" nillable="true" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfCostInfoDetail">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CostInfoDetail" nillable="true" type="tns:CostInfoDetail" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="CostInfoDetail">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="ChargeLabel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="UnitDescription" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ChargePerUnit" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="GLAcctNum" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PTItem" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PTItemDescription" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PTARAcct" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionPriceCalcID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ShippingInstructions">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SCACCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Carrier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CarrierDesc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Mode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipService" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="BillingCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Account" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShipPointZip" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ShippingNotes" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TrackingInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="BillOfLading" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="MasterBillOfLadingID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrackingNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrailerNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SealNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LoadNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PickupDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="DoorNumber" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ShipmentInfo">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits1" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits1Type" type="tns:UnitOfMeasure" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits1TypeDesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="NumUnits2" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits2Type" type="tns:UnitOfMeasure" />
+          <s:element minOccurs="0" maxOccurs="1" name="NumUnits2TypeDesc" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalWeight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TotalVolume" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="UnitOfMeasure">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="unitOfMeasureID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="uomDescription" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="isUomIntegral" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="pluralUomDescription" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="WarehouseTransactionStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Default" />
+          <s:enumeration value="NotVerified" />
+          <s:enumeration value="Verified" />
+          <s:enumeration value="Canceled" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="StorageChargePeriodType">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotApplicable" />
+          <s:enumeration value="Monthly" />
+          <s:enumeration value="SemiMonthly" />
+          <s:enumeration value="Weekly" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="CapacityType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="CapacityTypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TransactionEntryType">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="TransactionEntryTypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="LoadOutLogState">
+        <s:restriction base="s:string">
+          <s:enumeration value="NotLoaded" />
+          <s:enumeration value="Loaded" />
+          <s:enumeration value="LoadedIncomplete" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfCodeDescrPair1">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="CodeDescrPair" nillable="true" type="tns:CodeDescrPair" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderItem" nillable="true" type="tns:OrderItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ItemID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Qualifier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="PrimaryInvQty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsPrimaryEstimate" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsSecondaryEstimate" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SecondaryInvQty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderQty" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderUnitOfMeasureType" type="tns:UnitOfMeasure" />
+          <s:element minOccurs="0" maxOccurs="1" name="UPC" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Weight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Length" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Available" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="LotNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExpirationDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="Notes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvSalePrice" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvDiscountPct" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="FulfillInvDiscountAmt" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="OrderItemReceiveItems" type="tns:ArrayOfOrderItemReceiveItem" />
+          <s:element minOccurs="0" maxOccurs="1" name="SavedElements" type="tns:ArrayOfCodeDescrPair1" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfOrderItemReceiveItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="OrderItemReceiveItem" nillable="true" type="tns:OrderItemReceiveItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderItemReceiveItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="ReceiveItem" type="tns:ReceiveItem" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReceiveItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ProperlyPickedPrimary" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="ProperlyPickedSecondary" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MarkedForDeletion" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="LoadedOut" type="s:boolean" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ReceiveItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="ReceiveItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ReceivedDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="ItemID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Qualifier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrigQtyPrimary" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrigQtySecondary" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OnHand" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Quarantined" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Allocated" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Weight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Length" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Cost" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="LotNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExpirationDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="LocationID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="LocDesc" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Field1" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Field2" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Field3" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Field4" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Display" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="LocationTypeID" type="tns:LocationType" />
+          <s:element minOccurs="1" maxOccurs="1" name="SplitPeriodStorageCharged" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="SupplierContactID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="MovableUnitLabel" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Supplier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpectedQty" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="FullyShippedDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="SavedElements" type="tns:ArrayOfCodeDescrPair1" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="LocationType">
+        <s:restriction base="s:string">
+          <s:enumeration value="Null" />
+          <s:enumeration value="StorageLocation" />
+          <s:enumeration value="StagingArea" />
+          <s:enumeration value="PutAwayVehicle" />
+          <s:enumeration value="Quarantine" />
+          <s:enumeration value="PickLine" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ReceiveItemWithAllocations">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:ReceiveItem">
+            <s:sequence>
+              <s:element minOccurs="1" maxOccurs="1" name="AllocatePriority" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="InventoryMethodID" type="s:int" />
+              <s:element minOccurs="1" maxOccurs="1" name="InventoryUnitsPerLabelingUnit" type="s:decimal" />
+              <s:element minOccurs="0" maxOccurs="1" name="Allocations" type="tns:ArrayOfAllocation" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:complexType name="ArrayOfAllocation">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Allocation" nillable="true" type="tns:Allocation" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Allocation">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Allocated" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Shipped" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="OrderItemReceiveItemNotYetPacked">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:OrderItemReceiveItem">
+            <s:sequence>
+              <s:element minOccurs="0" maxOccurs="1" name="InventoryUnitOfMeasureType" type="tns:UnitOfMeasure" />
+              <s:element minOccurs="1" maxOccurs="1" name="QtyPacked" type="s:decimal" />
+              <s:element minOccurs="1" maxOccurs="1" name="QtyToBePacked" type="s:decimal" />
+            </s:sequence>
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:simpleType name="WarehouseTransactionFreightRateStatus">
+        <s:restriction base="s:string">
+          <s:enumeration value="Unknown" />
+          <s:enumeration value="None" />
+          <s:enumeration value="Saved" />
+          <s:enumeration value="Booked" />
+          <s:enumeration value="BookConfirmed" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="Facility">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="FacilityID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Contact" type="tns:ContactInfo" />
+          <s:element minOccurs="0" maxOccurs="1" name="UPSAccount" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="FedExAccount" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="TimeOffset" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UsesDaylightSavings" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="TimeZoneID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="UsePredefinedLocations" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="LocationFieldCount" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="LastCloseDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="Deactivated" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="MeasurementSystemDefault" type="tns:MeasurementSystemType" />
+          <s:element minOccurs="0" maxOccurs="1" name="Code" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="FuelSurcharge" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="MeasurementSystemType">
+        <s:restriction base="s:string">
+          <s:enumeration value="USImperial" />
+          <s:enumeration value="Metric" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfPackage">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Package" nillable="true" type="tns:Package" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Package">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PackageID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PackageTypeID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PackageType" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="PackageTypeDescription" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Length" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Width" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Height" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Oversize" type="s:unsignedByte" />
+          <s:element minOccurs="1" maxOccurs="1" name="Weight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="COD" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="CODAmount" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="InsuredAmount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="Label" type="s:base64Binary" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrackingNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="UCC128" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="PackageContents" type="tns:ArrayOfPackageContent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfPackageContent">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="PackageContent" nillable="true" type="tns:PackageContent" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="PackageContent">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="PackageContentID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="PackageID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReceiveItemID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemPickExceptionID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryUnitOfMeasureType" type="tns:UnitOfMeasure" />
+          <s:element minOccurs="0" maxOccurs="1" name="LotNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ExpirationDate" type="tns:I18nDateTime" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Qualifier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Supplier" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Cost" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfSmallParcelOrderItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SmallParcelOrderItem" nillable="true" type="tns:SmallParcelOrderItem" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SmallParcelOrderItem">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrderItemId" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Location" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemDescription" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemDescription2" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ItemCost" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="ItemPrice" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="LotNumber" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SerialNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="ExpirationDate" type="s:dateTime" />
+          <s:element minOccurs="1" maxOccurs="1" name="LandedCost" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="notUpdated" type="tns:ArrayOfInt" />
+      <s:element name="spUpdateOrders" type="tns:ArrayOfSmallParcelUpdateOrder" />
+      <s:complexType name="ArrayOfSmallParcelUpdateOrder">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="SmallParcelUpdateOrder" nillable="true" type="tns:SmallParcelUpdateOrder" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="SmallParcelUpdateOrder">
+        <s:sequence>
+          <s:element minOccurs="1" maxOccurs="1" name="WarehouseTransactionID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="TrackingNumber" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Freight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Weight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="PkgCount" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="Carrier" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Service" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="SCACCode" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Packages" type="tns:ArrayOfPackage" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="Items" type="tns:ArrayOfItem" />
+      <s:complexType name="ArrayOfItem">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="Item" nillable="true" type="tns:Item" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="Item">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="Description2" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="CustomerID" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="Min" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="Max" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="ReorderQty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="CycleCount" type="s:int" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryMethod" type="tns:InventoryMethod" />
+          <s:element minOccurs="1" maxOccurs="1" name="Cost" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="UPC" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Temperature" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="TempAllowZero" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackLotNumber" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackLotNumberRequired" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackSerialNumber" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackSerialNumberRequired" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackSerialNumberUnique" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackExpirationDate" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackExpirationDateRequired" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackCost" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsTrackCostRequired" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="MaterialNotes" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Deactivated" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="NMFC" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="InventoryUnitOfMeasure" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="LabelingUnitOfMeasure" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryUnitsPerLabelingUnit" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MeasurementSystem" type="tns:MeasurementSystemType" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelingUnitLength" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelingUnitWidth" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelingUnitHeight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="LabelingUnitWeight" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="SecondaryUnitOfMeasure" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsSecondaryUOMInventoryAlso" type="s:boolean" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryUnitsPerSecondUnit" type="s:decimal" />
+          <s:element minOccurs="0" maxOccurs="1" name="MovableUnitType" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitLength" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitWidth" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitHeight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitWeight" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitTie" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitHigh" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="MovableUnitQty" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="IsHazMat" type="s:boolean" />
+          <s:element minOccurs="0" maxOccurs="1" name="HazMatID" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HazMatShippingName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HazMatHazardClass" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HazMatPackingGroup" type="tns:HazMatPackingGroup" />
+          <s:element minOccurs="0" maxOccurs="1" name="HazMatFlashPoint" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="HazMatLabelCode" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="HazMatFlag" type="tns:HazMatFlag" />
+          <s:element minOccurs="0" maxOccurs="1" name="ImageUrl" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StorageUnitOfMeasure" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryUnitsPerStorageUnit" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="StorageCountScriptTemplateID" type="s:int" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemQualifiers" type="tns:ArrayOfString" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemMaterials" type="tns:ArrayOfItemMaterial" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemFacilitys" type="tns:ArrayOfItemFacility" />
+          <s:element minOccurs="0" maxOccurs="1" name="ItemFacilityStorageRates" type="tns:ArrayOfItemFacilityStorageRate" />
+        </s:sequence>
+      </s:complexType>
+      <s:simpleType name="InventoryMethod">
+        <s:restriction base="s:string">
+          <s:enumeration value="LIFO" />
+          <s:enumeration value="FIFO" />
+          <s:enumeration value="FEFO" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="HazMatPackingGroup">
+        <s:restriction base="s:string">
+          <s:enumeration value="Default" />
+          <s:enumeration value="I" />
+          <s:enumeration value="II" />
+          <s:enumeration value="III" />
+        </s:restriction>
+      </s:simpleType>
+      <s:simpleType name="HazMatFlag">
+        <s:restriction base="s:string">
+          <s:enumeration value="Default" />
+          <s:enumeration value="X" />
+          <s:enumeration value="RQ" />
+        </s:restriction>
+      </s:simpleType>
+      <s:complexType name="ArrayOfItemMaterial">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ItemMaterial" nillable="true" type="tns:ItemMaterial" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ItemMaterial">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="SKU" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="NonSKUMaterial" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Qty" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfItemFacility">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ItemFacility" nillable="true" type="tns:ItemFacility" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ItemFacility">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FacilityIdOrName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="StorageUnitOfMeasure" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="InventoryUnitsPerStorageUnit" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="RcvHandlingRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="OrdHandlingRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="StorageSplitHalfRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="StorageSplitFullRate" type="s:decimal" />
+          <s:element minOccurs="1" maxOccurs="1" name="StorageFreeDays" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ArrayOfItemFacilityStorageRate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ItemFacilityStorageRate" nillable="true" type="tns:ItemFacilityStorageRate" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="ItemFacilityStorageRate">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="FacilityIdOrName" type="s:string" />
+          <s:element minOccurs="0" maxOccurs="1" name="CountUnit" type="s:string" />
+          <s:element minOccurs="1" maxOccurs="1" name="Rate" type="s:decimal" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="CreateItemsResult" type="tns:ArrayOfInt1" />
+      <s:complexType name="ArrayOfInt1">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="unbounded" name="ItemID" type="s:int" />
+        </s:sequence>
+      </s:complexType>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="CreateOrdersSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="orders" element="tns:orders" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:message name="CreateOrdersSoapOut">
+    <wsdl:part name="CreateOrdersResult" element="tns:Int32" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrdersSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="updateOrders" element="tns:updateOrders" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:message name="UpdateOrdersSoapOut">
+    <wsdl:part name="UpdateOrdersResult" element="tns:Int32" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrdersSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="cancelOrders" element="tns:cancelOrders" />
+  </wsdl:message>
+  <wsdl:message name="CancelOrdersSoapOut">
+    <wsdl:part name="CancelOrdersResult" element="tns:Int32" />
+  </wsdl:message>
+  <wsdl:message name="ReportRetailersSoapIn">
+    <wsdl:part name="userLoginData" element="tns:userLoginData" />
+  </wsdl:message>
+  <wsdl:message name="ReportRetailersSoapOut">
+    <wsdl:part name="ReportRetailersResult" element="tns:ReportRetailersResult" />
+  </wsdl:message>
+  <wsdl:message name="FindOrdersSoapIn">
+    <wsdl:part name="userLoginData" element="tns:userLoginData" />
+    <wsdl:part name="focr" element="tns:focr" />
+    <wsdl:part name="limitCount" element="tns:limitCount" />
+  </wsdl:message>
+  <wsdl:message name="FindOrdersSoapOut">
+    <wsdl:part name="FindOrdersResult" element="tns:FindOrders" />
+    <wsdl:part name="totalOrders" element="tns:totalOrders" />
+  </wsdl:message>
+  <wsdl:message name="ReportStockStatusSoapIn">
+    <wsdl:part name="userLoginData" element="tns:userLoginData" />
+  </wsdl:message>
+  <wsdl:message name="ReportStockStatusSoapOut">
+    <wsdl:part name="ReportStockStatusResult" element="tns:string" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelOrdersSoapIn">
+    <wsdl:part name="userLoginData" element="tns:userLoginData" />
+    <wsdl:part name="focr" element="tns:focr" />
+    <wsdl:part name="limitCount" element="tns:limitCount" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelOrdersSoapOut">
+    <wsdl:part name="SmallParcelOrdersResult" element="tns:SmallParcelOrdersResult" />
+    <wsdl:part name="totalOrders" element="tns:totalOrders" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelUpdateTrackingNumbersSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="updateOrders" element="tns:updateOrders" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelUpdateTrackingNumbersSoapOut">
+    <wsdl:part name="SmallParcelUpdateTrackingNumbersResult" element="tns:Int32" />
+    <wsdl:part name="notUpdated" element="tns:notUpdated" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelUpdateOrdersSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="spUpdateOrders" element="tns:spUpdateOrders" />
+  </wsdl:message>
+  <wsdl:message name="SmallParcelUpdateOrdersSoapOut">
+    <wsdl:part name="SmallParcelUpdateOrdersResult" element="tns:Int32" />
+    <wsdl:part name="notUpdated" element="tns:notUpdated" />
+  </wsdl:message>
+  <wsdl:message name="CreateItemsSoapIn">
+    <wsdl:part name="extLoginData" element="tns:extLoginData" />
+    <wsdl:part name="Items" element="tns:Items" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:message name="CreateItemsSoapOut">
+    <wsdl:part name="CreateItemsResult" element="tns:CreateItemsResult" />
+    <wsdl:part name="warnings" element="tns:warnings" />
+  </wsdl:message>
+  <wsdl:portType name="ServiceExternalSoap">
+    <wsdl:operation name="CreateOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create Orders</wsdl:documentation>
+      <wsdl:input message="tns:CreateOrdersSoapIn" />
+      <wsdl:output message="tns:CreateOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Orders</wsdl:documentation>
+      <wsdl:input message="tns:UpdateOrdersSoapIn" />
+      <wsdl:output message="tns:UpdateOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Cancel Orders</wsdl:documentation>
+      <wsdl:input message="tns:CancelOrdersSoapIn" />
+      <wsdl:output message="tns:CancelOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportRetailers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Report all Retailers for a customer</wsdl:documentation>
+      <wsdl:input message="tns:ReportRetailersSoapIn" />
+      <wsdl:output message="tns:ReportRetailersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="FindOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Find Order records for given 'find' parameters</wsdl:documentation>
+      <wsdl:input message="tns:FindOrdersSoapIn" />
+      <wsdl:output message="tns:FindOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="ReportStockStatus">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Report stockstatus for a customer</wsdl:documentation>
+      <wsdl:input message="tns:ReportStockStatusSoapIn" />
+      <wsdl:output message="tns:ReportStockStatusSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Get Small Parcel Order records for given 'find' parameters</wsdl:documentation>
+      <wsdl:input message="tns:SmallParcelOrdersSoapIn" />
+      <wsdl:output message="tns:SmallParcelOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateTrackingNumbers">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Tracking Numbers</wsdl:documentation>
+      <wsdl:input message="tns:SmallParcelUpdateTrackingNumbersSoapIn" />
+      <wsdl:output message="tns:SmallParcelUpdateTrackingNumbersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateOrders">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Update Tracking Numbers</wsdl:documentation>
+      <wsdl:input message="tns:SmallParcelUpdateOrdersSoapIn" />
+      <wsdl:output message="tns:SmallParcelUpdateOrdersSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="CreateItems">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">Create Items</wsdl:documentation>
+      <wsdl:input message="tns:CreateItemsSoapIn" />
+      <wsdl:output message="tns:CreateItemsSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ServiceExternalSoap" type="tns:ServiceExternalSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CreateOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/UpdateOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CancelOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportRetailers">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/ReportRetailers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/FindOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportStockStatus">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/ReportStockStatus" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateTrackingNumbers">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelUpdateTrackingNumbers" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateOrders">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelUpdateOrders" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateItems">
+      <soap:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CreateItems" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ServiceExternalSoap12" type="tns:ServiceExternalSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="CreateOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CreateOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="UpdateOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/UpdateOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CancelOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CancelOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportRetailers">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/ReportRetailers" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="FindOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/FindOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="ReportStockStatus">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/ReportStockStatus" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateTrackingNumbers">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelUpdateTrackingNumbers" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="SmallParcelUpdateOrders">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/SmallParcelUpdateOrders" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="CreateItems">
+      <soap12:operation soapAction="http://www.JOI.com/schemas/ViaSub.WMS/CreateItems" style="document" soapActionRequired="true" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ServiceExternal">
+    <wsdl:port name="ServiceExternalSoap" binding="tns:ServiceExternalSoap">
+      <soap:address location="https://secure-wms.com/webserviceexternal/contracts.asmx" />
+    </wsdl:port>
+    <wsdl:port name="ServiceExternalSoap12" binding="tns:ServiceExternalSoap12">
+      <soap12:address location="https://secure-wms.com/webserviceexternal/contracts.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
