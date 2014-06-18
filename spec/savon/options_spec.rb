@@ -462,84 +462,120 @@ describe "Options" do
     let(:password) { "secret" }
     let(:request) { response.http.body }
 
-    context "without digest" do
-      shared_examples "WSSE basic auth" do
-        it "adds WSSE basic auth information to the request" do
-          # the header and wsse security node
-          wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-          expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+    shared_examples "WSSE basic auth" do
+      it "adds WSSE basic auth information to the request" do
+        # the header and wsse security node
+        wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
 
-          # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
-          expect(request).to include("<wsse:UsernameToken")
-          expect(request).to include("wsu:Id=\"UsernameToken-1\"")
-          expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+        # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+        expect(request).to include("<wsse:UsernameToken")
+        expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+        expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
-          # the username and password node with type attribute
-          expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
-          password_text = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
-          expect(request).to include("<wsse:Password Type=\"#{password_text}\">#{password}</wsse:Password>")
-        end
-      end
-
-      context "global" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password]) }
-        let(:response) { client.call(:authenticate) }
-        include_examples "WSSE basic auth"
-      end
-
-      context "local" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
-        let(:response) do
-          client.call(:authenticate) do |locals|
-            locals.wsse_auth(username, password)
-          end
-        end
-        include_examples "WSSE basic auth"
+        # the username and password node with type attribute
+        expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
+        password_text = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText"
+        expect(request).to include("<wsse:Password Type=\"#{password_text}\">#{password}</wsse:Password>")
       end
     end
 
-    context "with digest" do
-      shared_examples "WSSE digest auth" do
-        it "adds WSSE digest auth information to the request" do
-          # the header and wsse security node
-          wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-          expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
+    shared_examples "WSSE digest auth" do
+      it "adds WSSE digest auth information to the request" do
+        # the header and wsse security node
+        wsse_namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+        expect(request).to include("<env:Header><wsse:Security xmlns:wsse=\"#{wsse_namespace}\">")
 
-          # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
-          expect(request).to include("<wsse:UsernameToken")
-          expect(request).to include("wsu:Id=\"UsernameToken-1\"")
-          expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
+        # split up to prevent problems with unordered Hash attributes in 1.8 [dh, 2012-12-13]
+        expect(request).to include("<wsse:UsernameToken")
+        expect(request).to include("wsu:Id=\"UsernameToken-1\"")
+        expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
-          # the username node
-          expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
+        # the username node
+        expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
 
-          # the nonce node
-          expect(request).to match(/<wsse:Nonce.*>.+\n<\/wsse:Nonce>/)
+        # the nonce node
+        expect(request).to match(/<wsse:Nonce.*>.+\n<\/wsse:Nonce>/)
 
-          # the created node with a timestamp
-          expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+        # the created node with a timestamp
+        expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
 
-          # the password node contains the encrypted value
-          password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
-          expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
-          expect(request).to_not include(password)
+        # the password node contains the encrypted value
+        password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
+        expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
+        expect(request).to_not include(password)
+      end
+    end
+
+    shared_examples "no WSSE auth" do
+      it "does not add WSSE auth to the request" do
+        expect(request).not_to include("<wsse:UsernameToken")
+      end
+    end
+
+    describe "global" do
+      context "enabled" do
+        context "without digest" do
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password]) }
+          let(:response) { client.call(:authenticate) }
+          include_examples "WSSE basic auth"
         end
-      end
 
-      context "global" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
-        let(:response) { client.call(:authenticate) }
-        include_examples "WSSE digest auth"
-      end
+        context "with digest" do
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
+          let(:response) { client.call(:authenticate) }
+          include_examples "WSSE digest auth"
+        end
 
-      context "local" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
-        let(:response) do
-          client.call(:authenticate) do |locals|
-            locals.wsse_auth(username, password, :digest)
+        context "local override" do
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["luke", "secret"]) }
+
+          context "enabled" do
+            let(:username) { "lea" }
+            let(:password) { "top-secret" }
+
+            context "without digest" do
+              let(:response) { client.call(:authenticate) {|locals| locals.wsse_auth(username, password)} }
+              include_examples "WSSE basic auth"
+            end
+
+            context "with digest" do
+              let(:response) { client.call(:authenticate) {|locals| locals.wsse_auth(username, password, :digest)} }
+              include_examples "WSSE digest auth"
+            end
+          end
+
+          context "disabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_auth(false)} }
+            include_examples "no WSSE auth"
+          end
+
+          context "set to nil" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_auth(nil)} }
+            include_examples "WSSE basic auth"
           end
         end
-        include_examples "WSSE digest auth"
+      end
+
+      context "not enabled" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+
+        describe "local" do
+          context "enabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_auth(username, password, :digest)} }
+            include_examples "WSSE digest auth"
+          end
+
+          context "disabled" do
+            let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(false)} }
+            include_examples "no WSSE auth"
+          end
+
+          context "set to nil" do
+            let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(nil)} }
+            include_examples "no WSSE auth"
+          end
+        end
       end
     end
   end
@@ -566,20 +602,64 @@ describe "Options" do
       end
     end
 
-    context "global" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
-        let(:response) { client.call(:authenticate) }
-        include_examples "WSSE timestamp"
+    shared_examples "no WSSE timestamp" do
+      it "does not add WSSE timestamp to the request" do
+        expect(request).not_to include("<wsu:Timestamp")
+      end
     end
 
-    context "local" do
-      let(:client) { new_client(:endpoint => @server.url(:repeat)) }
-      let(:response) do
-        client.call(:authenticate) do |locals|
-          locals.wsse_timestamp(true)
+    describe "global" do
+      context "enabled" do
+        context "through block without arguments" do
+          let(:client) do
+            new_client(:endpoint => @server.url(:repeat)) do |globals|
+              globals.wsse_timestamp
+            end
+          end
+          let(:response) { client.call(:authenticate) }
+          include_examples "WSSE timestamp"
+        end
+
+        context "through initializer options" do
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+          let(:response) { client.call(:authenticate) }
+          include_examples "WSSE timestamp"
+        end
+
+        context "with local override" do
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+          context "enabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp} }
+            include_examples "WSSE timestamp"
+          end
+          context "disabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp(false) } }
+            include_examples "no WSSE timestamp"
+          end
+          context "set to nil" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp(nil) } }
+            include_examples "WSSE timestamp"
+          end
         end
       end
-      include_examples "WSSE timestamp"
+
+      context "not enabled" do
+        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+        describe "local" do
+          context "enabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp} }
+            include_examples "WSSE timestamp"
+          end
+          context "disabled" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp(false) } }
+            include_examples "no WSSE timestamp"
+          end
+          context "set to nil" do
+            let(:response) { client.call(:authenticate) {|locals| locals.wsse_timestamp(nil) } }
+            include_examples "no WSSE timestamp"
+          end
+        end
+      end
     end
   end
 
