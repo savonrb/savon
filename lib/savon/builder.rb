@@ -50,6 +50,7 @@ module Savon
     end
 
     def body_attributes
+      {}
     end
 
     def to_s

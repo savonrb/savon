@@ -83,4 +83,9 @@ describe Savon::Builder do
     end
   end
 
+  describe '#body_attributes' do
+    it 'should not be nil' do
+      expect(builder.body_attributes).to eq({})
+    end
+  end
 end
