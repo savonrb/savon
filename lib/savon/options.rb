@@ -35,7 +35,6 @@ module Savon
     def method_missing(option, _)
       raise UnknownOptionError, "Unknown #{option_type} option: #{option.inspect}"
     end
-
   end
 
   module SharedOptions

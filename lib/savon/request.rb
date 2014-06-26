@@ -41,9 +41,10 @@ module Savon
     end
 
     def configure_redirect_handling
-      @http_request.follow_redirect = @globals[:follow_redirects] if @globals.include? :follow_redirects
+      if @globals.include? :follow_redirects
+        @http_request.follow_redirect = @globals[:follow_redirects]
+      end
     end
-
   end
 
   class WSDLRequest < HTTPRequest
@@ -57,7 +58,6 @@ module Savon
 
       @http_request
     end
-
   end
 
   class SOAPRequest < HTTPRequest
@@ -90,6 +90,5 @@ module Savon
       @http_request.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
       @http_request.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
     end
-
   end
 end
