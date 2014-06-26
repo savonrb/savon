@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "nori",     "~> 2.4.0"
-  s.add_dependency "httpi",    "~> 2.2.0"
+  s.add_dependency "httpi",    "~> 2.2.3"
   s.add_dependency "wasabi",   "~> 3.3.0"
   s.add_dependency "akami",    "~> 1.2.0"
   s.add_dependency "gyoku",    "~> 1.1.0"
