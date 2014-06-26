@@ -84,6 +84,24 @@ describe "Options" do
     end
   end
 
+  context 'global :follow_redirects' do
+    it 'sets whether or not request should follow redirects' do
+      client = new_client(:endpoint => @server.url, :follow_redirects => true)
+
+      HTTPI::Request.any_instance.expects(:follow_redirect=).with(true)
+
+      response = client.call(:authenticate)
+    end
+
+    it 'defaults to false' do
+      client = new_client(:endpoint => @server.url)
+
+      HTTPI::Request.any_instance.expects(:follow_redirect=).with(false)
+
+      response = client.call(:authenticate)
+    end
+  end
+
   context "global :proxy" do
     it "sets the proxy server to use" do
       proxy_url = "http://example.com"

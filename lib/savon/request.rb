@@ -40,6 +40,10 @@ module Savon
       @http_request.auth.ntlm(*@globals[:ntlm])          if @globals.include? :ntlm
     end
 
+    def configure_redirect_handling
+      @http_request.follow_redirect = @globals[:follow_redirects] if @globals.include? :follow_redirects
+    end
+
   end
 
   class WSDLRequest < HTTPRequest
@@ -49,6 +53,7 @@ module Savon
       configure_timeouts
       configure_ssl
       configure_auth
+      configure_redirect_handling
 
       @http_request
     end
@@ -69,6 +74,7 @@ module Savon
       configure_headers options[:soap_action]
       configure_ssl
       configure_auth
+      configure_redirect_handling
 
       @http_request
     end

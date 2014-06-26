@@ -24,21 +24,21 @@ describe Savon::SOAPFault do
   describe ".present?" do
     it "returns true if the HTTP response contains a SOAP 1.1 fault" do
       http = new_response(:body => Fixture.response(:soap_fault))
-      expect(Savon::SOAPFault.present? http).to be_true
+      expect(Savon::SOAPFault.present? http).to be_truthy
     end
 
     it "returns true if the HTTP response contains a SOAP 1.2 fault" do
       http = new_response(:body => Fixture.response(:soap_fault12))
-      expect(Savon::SOAPFault.present? http).to be_true
+      expect(Savon::SOAPFault.present? http).to be_truthy
     end
 
     it "returns true if the HTTP response contains a SOAP fault with different namespaces" do
       http = new_response(:body => Fixture.response(:another_soap_fault))
-      expect(Savon::SOAPFault.present? http).to be_true
+      expect(Savon::SOAPFault.present? http).to be_truthy
     end
 
     it "returns false unless the HTTP response contains a SOAP fault" do
-      expect(Savon::SOAPFault.present? new_response).to be_false
+      expect(Savon::SOAPFault.present? new_response).to be_falsey
     end
   end
 
@@ -68,7 +68,7 @@ describe Savon::SOAPFault do
 
   describe "#to_hash" do
     it "returns the SOAP response as a Hash unless a SOAP fault is present" do
-      expect(no_fault.to_hash[:authenticate_response][:return][:success]).to be_true
+      expect(no_fault.to_hash[:authenticate_response][:return][:success]).to be_truthy
     end
 
     it "returns a SOAP 1.1 fault as a Hash" do
