@@ -46,6 +46,10 @@ response.body
 For more examples, you should check out the
 [integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
 
+## FAQ
+
+* URI::InvalidURIError -- if you see this error, then it is likely that the http client you are using cannot parse the URI for your WSDL. Try `gem install httpclient` or add it to your `Gemfile`.
+  - See https://github.com/savonrb/savon/issues/488 for more info
 
 ## Give back
 
