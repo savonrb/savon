@@ -106,7 +106,6 @@ describe Savon::Builder do
       end
 
       it "signature should be valid" do
-        include Akami::C14nHelper
         certs = Akami::WSSE::Certs.new(:cert_file => cert, :private_key_file => private_key)
         signature_value = signed_message_nn.xpath('//SignatureValue').text
         signed_info_fragment = signed_message.xpath('//default:SignedInfo', default: "http://www.w3.org/2000/09/xmldsig#").to_xml
