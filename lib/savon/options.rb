@@ -60,6 +60,10 @@ module Savon
     def wsse_timestamp(timestamp = true)
       @options[:wsse_timestamp] = timestamp
     end
+
+    def wsse_signature(signature)
+      @options[:wsse_signature] = signature
+    end
   end
 
   class GlobalOptions < Options
