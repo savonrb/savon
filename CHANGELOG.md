@@ -1,3 +1,9 @@
+# 2.5.2
+
+* Fix: [#484](https://github.com/savonrb/savon/issues/484) Don't escape qualified messages for Hash keys that end with a bang (!)
+
+# 2.5.1 (2014-05-08)
+
 # 2.5.0 (2014-05-03)
 
 * Feature: [#573](https://github.com/savonrb/savon/pull/573) Add an `all_operations` method to `Savon::Model` that automatically adds all available operations to the model.
