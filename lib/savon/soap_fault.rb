@@ -3,20 +3,22 @@ require "savon"
 module Savon
   class SOAPFault < Error
 
-    def self.present?(http)
-      fault_node  = http.body.include?("Fault>")
-      soap1_fault = http.body.include?("faultcode>") && http.body.include?("faultstring>")
-      soap2_fault = http.body.include?("Code>") && http.body.include?("Reason>")
+    def self.present?(http, xml = nil)
+      xml ||= http.body
+      fault_node  = xml.include?("Fault>")
+      soap1_fault = xml.include?("faultcode>") && xml.include?("faultstring>")
+      soap2_fault = xml.include?("Code>") && xml.include?("Reason>")
 
       fault_node && (soap1_fault || soap2_fault)
     end
 
-    def initialize(http, nori)
+    def initialize(http, nori, xml = nil)
+      @xml = xml
       @http = http
       @nori = nori
     end
 
-    attr_reader :http, :nori
+    attr_reader :http, :nori, :xml
 
     def to_s
       fault = nori.find(to_hash, 'Fault')
@@ -24,7 +26,7 @@ module Savon
     end
 
     def to_hash
-      parsed = nori.parse(@http.body)
+      parsed = nori.parse(xml || http.body)
       nori.find(parsed, 'Envelope', 'Body')
     end
 
