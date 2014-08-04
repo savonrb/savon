@@ -153,7 +153,7 @@ module Savon
       @options[:soap_header] = header
     end
 
-    # Sets whether elements should be :qualified or unqualified.
+    # Sets whether elements should be :qualified or :unqualified.
     # If you need to use this option, please open an issue and make
     # sure to add your WSDL document for debugging.
     def element_form_default(element_form_default)
