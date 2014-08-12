@@ -397,6 +397,17 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_cert_key" do
+    it "sets the cert key to use" do
+      cert_key = File.open(File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)).read
+      HTTPI::Auth::SSL.any_instance.expects(:cert_key=).with(cert_key).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_key => cert_key)
+      client.call(:authenticate)
+    end
+  end
+
+
   context "global :ssl_cert_key_password" do
     it "sets the encrypted cert key file password to use" do
       cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
@@ -420,6 +431,16 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_cert" do
+    it "sets the cert to use" do
+      cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
+      HTTPI::Auth::SSL.any_instance.expects(:cert=).with(cert).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_cert => cert)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :ssl_ca_cert_file" do
     it "sets the ca cert file to use" do
       ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
@@ -429,6 +450,17 @@ describe "Options" do
       client.call(:authenticate)
     end
   end
+
+  context "global :ssl_ca_cert" do
+    it "sets the ca cert file to use" do
+      ca_cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
+      HTTPI::Auth::SSL.any_instance.expects(:ca_cert=).with(ca_cert).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ca_cert => ca_cert)
+      client.call(:authenticate)
+    end
+  end
+
 
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
