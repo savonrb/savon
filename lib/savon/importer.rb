@@ -21,14 +21,6 @@ class Savon
         @schemas.push(document.schemas)
       end
 
-      # resolve xml schema imports
-      import_schemas do |schema_location|
-        @logger.info("Resolving XML schema import #{schema_location.inspect}.")
-
-        import_document(schema_location) do |document|
-          @schemas.push(document.schemas)
-        end
-      end
     end
 
     private
@@ -45,6 +37,10 @@ class Savon
       document = WSDL::Document.new Nokogiri.XML(xml), @schemas
       block.call(document)
 
+      document.schemas.each do |schema|
+        import_schema(schema)
+      end
+
       # resolve wsdl imports
       document.imports.each do |import_location|
         @logger.info("Resolving WSDL import #{import_location.inspect}.")
@@ -52,14 +48,15 @@ class Savon
       end
     end
 
-    def import_schemas
-      @schemas.each do |schema|
-        schema.imports.each do |namespace, schema_location|
-          next unless schema_location
+    def import_schema(schema)
+      schema.imports.each do |namespace, schema_location|
+        next unless schema_location
+        next if @schemas.include?(namespace)
 
-          # TODO: also skip if the schema was already imported
+        @logger.info("Resolving XML schema import #{schema_location.inspect}.")
 
-          yield(schema_location)
+        import_document(schema_location) do |document|
+          @schemas.push(document.schemas)
         end
       end
     end
