@@ -170,6 +170,79 @@ describe Savon::Client do
     end
   end
 
+  describe "#build_request" do
+    it "returns the request without making an actual call" do
+      expected_request = mock('request')
+      wsdl = Wasabi::Document.new('http://example.com')
+
+      operation = Savon::Operation.new(
+        :authenticate,
+        wsdl,
+        Savon::GlobalOptions.new
+      )
+      operation.expects(:request).returns(expected_request)
+
+      Savon::Operation.expects(:create).with(
+        :authenticate,
+        instance_of(Wasabi::Document),
+        instance_of(Savon::GlobalOptions)
+      ).returns(operation)
+
+      operation.expects(:call).never
+
+      client = new_client(:endpoint => @server.url(:repeat))
+      request = client.build_request(:authenticate) do
+        message(:symbol => "AAPL" )
+      end
+
+      expect(request).to eq expected_request
+    end
+
+    it "accepts a block without arguments" do
+      client = new_client(:endpoint => @server.url(:repeat))
+      request = client.build_request(:authenticate) do
+        message(:symbol => "AAPL" )
+      end
+
+      expect(request.body).
+        to include('<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>')
+    end
+
+    it "accepts a block with one argument" do
+      client = new_client(:endpoint => @server.url(:repeat))
+
+      # supports instance variables!
+      @instance_variable = { :symbol => "AAPL" }
+
+      request = client.build_request(:authenticate) do |locals|
+        locals.message(@instance_variable)
+      end
+
+      expect(request.body).
+        to include("<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>")
+    end
+
+    it "accepts argument for the message tag" do
+      client = new_client(:endpoint => @server.url(:repeat))
+      request = client.build_request(:authenticate, :attributes => { "ID" => "ABC321" })
+
+      expect(request.body).
+        to include("<tns:authenticate ID=\"ABC321\"></tns:authenticate>")
+    end
+
+    it "raises when the operation name is not a symbol" do
+      expect { new_client.build_request("not a symbol") }.to raise_error
+    end
+
+    it "raises when given an unknown option via the Hash syntax" do
+      expect { new_client.build_request(:authenticate, :invalid_local_option => true) }.to raise_error
+    end
+
+    it "raises when given an unknown option via the block syntax" do
+      expect { new_client.build_request(:authenticate) { another_invalid_local_option true } }.to raise_error
+    end
+  end
+
   def new_http_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
