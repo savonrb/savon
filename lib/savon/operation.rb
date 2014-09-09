@@ -55,6 +55,11 @@ module Savon
       create_response(response)
     end
 
+    def request(locals = {}, &block)
+      builder = build(locals, &block)
+      build_request(builder)
+    end
+
     private
 
     def create_response(response)

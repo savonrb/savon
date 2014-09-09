@@ -192,6 +192,15 @@ describe Savon::Operation do
     end
   end
 
+  describe "#request" do
+    it "returns the request" do
+      operation = new_operation(:verify_address, wsdl, globals)
+      request = operation.request
+
+      expect(request.body).to include('<tns:VerifyAddress></tns:VerifyAddress>')
+    end
+  end
+
   def with_multipart_mocked
     multipart_response = Class.new { def initialize(*args); end }
     multipart_mock = Module.new
