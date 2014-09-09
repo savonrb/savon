@@ -35,8 +35,12 @@ module Savon
     end
 
     def apply_filter!(document, filter)
-      document.xpath("//*[local-name()='#{filter}']").each do |node|
-        node.content = "***FILTERED***"
+      if filter.instance_of? Proc
+        filter.call document
+      else
+        document.xpath("//*[local-name()='#{filter}']").each do |node|
+          node.content = "***FILTERED***"
+        end
       end
     end
 

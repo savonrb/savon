@@ -26,6 +26,17 @@ describe Savon::LogMessage do
     expect(message).to include("<password>***FILTERED***</password>")
   end
 
+  it "properly applies Proc filter" do
+    filter = Proc.new do |document|
+      document.xpath('//password').each do |node|
+        node.content = "FILTERED"
+      end
+    end
+
+    message = log_message("<root><password>secret</password></root>", [filter], false).to_s
+    expect(message).to include("<password>FILTERED</password>")
+  end
+
   def log_message(*args)
     Savon::LogMessage.new(*args)
   end
