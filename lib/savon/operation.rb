@@ -13,6 +13,7 @@ class Savon
     }
 
     def initialize(operation, wsdl, http)
+      @logger = Logging.logger[self]
       @operation = operation
       @wsdl = wsdl
       @http = http
@@ -81,8 +82,10 @@ class Savon
     # Public: Call the operation.
     def call
       message = (xml_envelope != nil ? xml_envelope : build)
+      @logger.debug('Request: ' + message)
 
       raw_response = @http.post(endpoint, http_headers, message)
+      @logger.debug('Response: ' + raw_response)
       Response.new(raw_response)
     end
 
