@@ -22,7 +22,7 @@ module Savon
     alias_method :successful?, :success?
 
     def soap_fault?
-      SOAPFault.present? @http
+      SOAPFault.present?(@http, xml)
     end
 
     def http_error?
@@ -77,7 +77,7 @@ module Savon
     private
 
     def build_soap_and_http_errors!
-      @soap_fault = SOAPFault.new(@http, nori) if soap_fault?
+      @soap_fault = SOAPFault.new(@http, nori, xml) if soap_fault?
       @http_error = HTTPError.new(@http) if http_error?
     end
 
