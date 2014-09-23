@@ -229,6 +229,11 @@ module Savon
       @options[:ssl_cert_key_file] = file
     end
 
+    # Sets the cert key to use.
+    def ssl_cert_key(key)
+      @options[:ssl_cert_key] = key
+    end
+
     # Sets the cert key password to use.
     def ssl_cert_key_password(password)
       @options[:ssl_cert_key_password] = password
@@ -239,10 +244,21 @@ module Savon
       @options[:ssl_cert_file] = file
     end
 
+    # Sets the cert to use.
+    def ssl_cert(cert)
+      @options[:ssl_cert] = cert
+    end
+
     # Sets the ca cert file to use.
     def ssl_ca_cert_file(file)
       @options[:ssl_ca_cert_file] = file
     end
+
+    # Sets the ca cert to use.
+    def ssl_ca_cert(cert)
+      @options[:ssl_ca_cert] = cert
+    end
+
 
     # HTTP basic auth credentials.
     def basic_auth(*credentials)
