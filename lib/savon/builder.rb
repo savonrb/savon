@@ -68,7 +68,7 @@ module Savon
     end
 
     def header_attributes
-       { 'xmlns:wsa' => WSA_NAMESPACE } if @globals[:use_wsa_headers]
+      @globals[:use_wsa_headers] ? { 'xmlns:wsa' => WSA_NAMESPACE } : {}
     end
 
     def body_attributes
