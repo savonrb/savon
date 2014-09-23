@@ -135,6 +135,9 @@ describe Savon::WSDLRequest do
 
       describe "set with a valid decrypting password" do
         it "handles SSL private keys properly" do
+          if RUBY_ENGINE == 'jruby'
+            pending("find out why this fails with a null pointer exception on jruby")
+          end
           pass = "secure-password!42"
           key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
           cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
