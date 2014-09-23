@@ -22,9 +22,10 @@ module Savon
     def initialize(operation_name, wsdl, globals, locals)
       @operation_name = operation_name
 
-      @wsdl    = wsdl
-      @globals = globals
-      @locals  = locals
+      @wsdl      = wsdl
+      @globals   = globals
+      @locals    = locals
+      @signature = @locals[:wsse_signature] || @globals[:wsse_signature]
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
@@ -35,7 +36,7 @@ module Savon
     end
 
     def build_document
-      tag(builder, :Envelope, namespaces_with_globals) do |xml|
+      xml = tag(builder, :Envelope, namespaces_with_globals) do |xml|
         tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
         if @globals[:no_message_tag]
           tag(xml, :Body, body_attributes) { xml << message.to_s }
@@ -43,6 +44,27 @@ module Savon
           tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
         end
       end
+
+      # if we have a signature sign the document
+      if @signature
+        @signature.document = xml
+
+        2.times do
+          @header = nil
+          @signature.document = tag(builder, :Envelope, namespaces_with_globals) do |xml|
+            tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
+            if @globals[:no_message_tag]
+              tag(xml, :Body, body_attributes) { xml << message.to_s }
+            else
+              tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+            end
+          end
+        end
+
+        xml = @signature.document
+      end
+
+      xml
     end
 
     def header_attributes
@@ -50,7 +72,7 @@ module Savon
     end
 
     def body_attributes
-      {}
+      @body_attributes ||= @signature.nil? ? {} : @signature.body_attributes
     end
 
     def to_s

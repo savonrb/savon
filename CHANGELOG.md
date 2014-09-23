@@ -1,3 +1,12 @@
+# 2.6.0
+
+* Feature: Signing requests. Added wsse_signature.
+```ruby
+    client = Savon.client(wsdl: 'http://service.example.com?wsdl') do
+        wsse_signature Akami::WSSE::Signature.new(Akami::WSSE::Certs.new(:cert_file => 'c.pem', :private_key_file => 'p.pem')) 
+    end
+```
+
 # 2.5.0 (2014-05-03)
 
 * Feature: [#573](https://github.com/savonrb/savon/pull/573) Add an `all_operations` method to `Savon::Model` that automatically adds all available operations to the model.

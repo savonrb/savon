@@ -81,6 +81,43 @@ describe Savon::Builder do
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
     end
+
+    describe "#wsse_signature" do
+      let(:private_key) { "spec/fixtures/ssl/client_key.pem" }
+      let(:cert)        { "spec/fixtures/ssl/client_cert.pem" }
+      let(:signature)   { Akami::WSSE::Signature.new(Akami::WSSE::Certs.new(:cert_file => cert, :private_key_file => private_key))}
+      let(:globals)     { Savon::GlobalOptions.new(wsse_signature: signature) }
+
+      subject(:signed_message_nn) {Nokogiri::XML(builder.to_s).remove_namespaces!}
+      subject(:signed_message) {Nokogiri::XML(builder.to_s)}
+
+      it "should contain a header" do
+        expect(signed_message_nn.xpath('/Envelope/Header').size).to eq(1)
+      end
+
+      it "should contain a wsse:Security" do
+        expect(signed_message_nn.xpath('/Envelope/Header/Security').size).to eq(1)
+      end
+
+      it "should have a Body[@wsu:Id]" do
+        #must investigate: acts funny in mri ruby
+        #expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
+        expect(signed_message_nn.xpath('//Body').attr('Id').value).to include('Body-')
+      end
+
+      it "signature should be valid" do
+        certs = Akami::WSSE::Certs.new(:cert_file => cert, :private_key_file => private_key)
+        signature_value = signed_message_nn.xpath('//SignatureValue').text
+        signed_info_fragment = signed_message.xpath('//default:SignedInfo', default: "http://www.w3.org/2000/09/xmldsig#").to_xml
+        data = Nokogiri::XML(signed_info_fragment){|config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS}
+        data.root.default_namespace='http://www.w3.org/2000/09/xmldsig#'
+
+        signed_info = data.canonicalize Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
+
+        signature = certs.private_key.sign(OpenSSL::Digest::SHA1.new, signed_info)
+        expect(Base64.encode64(signature).gsub("\n", '')).to eq(signature_value)
+      end
+    end
   end
 
   describe '#body_attributes' do
