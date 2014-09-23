@@ -1,9 +1,9 @@
-# 2.6.0
+# 2.7.0 (2014-09-23)
 
 * Feature: Signing requests. Added wsse_signature.
 ```ruby
     client = Savon.client(wsdl: 'http://service.example.com?wsdl') do
-        wsse_signature Akami::WSSE::Signature.new(Akami::WSSE::Certs.new(:cert_file => 'c.pem', :private_key_file => 'p.pem')) 
+        wsse_signature Akami::WSSE::Signature.new(Akami::WSSE::Certs.new(:cert_file => 'c.pem', :private_key_file => 'p.pem'))
     end
 ```
 
