@@ -1,3 +1,7 @@
+# 2.7.2 (2014-09-23)
+
+Fix : Preserve false values (https://github.com/savonrb/savon/issues/321)
+
 # 2.7.1 (2014-09-23)
 
 * Fix : Fix a crash in builder when request headers do not contain WSA headers
