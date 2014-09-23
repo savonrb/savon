@@ -1,3 +1,7 @@
+# 2.7.1 (2014-09-23)
+
+* Fix : Fix a crash in builder when request headers do not contain WSA headers
+
 # 2.7.0 (2014-09-23)
 
 * Feature: Signing requests. Added wsse_signature.
