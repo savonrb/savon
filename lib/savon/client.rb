@@ -41,6 +41,10 @@ module Savon
       @wsdl.service_name
     end
 
+    def build_request(operation_name, locals = {}, &block)
+      operation(operation_name).request(locals, &block)
+    end
+
     private
 
     def set_globals(globals, block)
