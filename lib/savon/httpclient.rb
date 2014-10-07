@@ -3,8 +3,8 @@ require 'httpclient'
 class Savon
   class HTTPClient
 
-    def initialize
-      @client = ::HTTPClient.new
+    def initialize(*args)
+      @client = ::HTTPClient.new(*args)
     end
 
     # Public: Returns the HTTPClient instance to configure.
