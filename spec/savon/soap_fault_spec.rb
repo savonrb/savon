@@ -3,6 +3,7 @@ require "spec_helper"
 describe Savon::SOAPFault do
   let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
   let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
+  let(:soap_fault_funky) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault_funky)), nori }
   let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
   let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
   let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
@@ -62,6 +63,10 @@ describe Savon::SOAPFault do
 
       it "works even if the keys are different in a SOAP 1.2 fault message" do
         expect(soap_fault_nc2.send method).to eq("(soap:Sender) Sender Timeout")
+      end
+
+      it "works even if the keys are different in a funky SOAP fault message" do
+        expect(soap_fault_funky.send method).to eq("(42) The Answer to Life The Universe And Everything")
       end
     end
   end

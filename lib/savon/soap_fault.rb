@@ -21,7 +21,7 @@ module Savon
     attr_reader :http, :nori, :xml
 
     def to_s
-      fault = nori.find(to_hash, 'Fault')
+      fault = nori.find(to_hash, 'Fault') || nori.find(to_hash, 'ServiceFault')
       message_by_version(fault)
     end
 
@@ -33,6 +33,7 @@ module Savon
     private
 
     def message_by_version(fault)
+      puts fault
       if nori.find(fault, 'faultcode')
         code = nori.find(fault, 'faultcode')
         text = nori.find(fault, 'faultstring')

@@ -7,6 +7,8 @@ gem "simplecov", :require => false
 gem "coveralls", :require => false
 gem "uuid"
 
+gem 'json'
+
 platform :rbx do
   gem 'json'
   gem 'racc'
