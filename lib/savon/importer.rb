@@ -12,8 +12,9 @@ class Savon
       @schemas = schemas
     end
 
-    def import(location)
+    def import(location, root_relative = false)
       @import_locations = []
+      @root_dir = File.dirname(location) if root_relative
 
       @logger.info("Resolving WSDL document #{location.inspect}.")
       import_document(location) do |document|
@@ -53,9 +54,10 @@ class Savon
         next unless schema_location
         next if @schemas.include?(namespace)
 
-        @logger.info("Resolving XML schema import #{schema_location.inspect}.")
+        location = relative_to_root(schema_location)
+        @logger.info("Resolving XML schema import #{location.inspect}.")
 
-        import_document(schema_location) do |document|
+        import_document(location) do |document|
           @schemas.push(document.schemas)
         end
       end
@@ -65,5 +67,9 @@ class Savon
       location =~ Resolver::URL_PATTERN
     end
 
+    def relative_to_root(location)
+      return location unless @root_dir
+      File.join(@root_dir, location)
+    end
   end
 end
