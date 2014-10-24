@@ -502,6 +502,7 @@ describe "Options" do
 
         # filter out logs we're not interested in
         client.globals[:logger].expects(:info).at_least_once
+        client.globals[:logger].expects(:debug).at_least_once
 
         # check whether the password is filtered
         client.globals[:logger].expects(:debug).with { |message|
@@ -521,6 +522,7 @@ describe "Options" do
 
         # filter out logs we're not interested in
         client.globals[:logger].expects(:info).at_least_once
+        client.globals[:logger].expects(:debug).at_least_once
 
         # check whether the message is pretty printed
         client.globals[:logger].expects(:debug).with { |message|
