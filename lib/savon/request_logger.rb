@@ -26,14 +26,14 @@ module Savon
     private
 
     def log_request(request)
-      logger.info  "SOAP request: #{request.url}"
-      logger.info  headers_to_log(request.headers)
-      logger.debug body_to_log(request.body)
+      logger.info  { "SOAP request: #{request.url}" }
+      logger.info  { headers_to_log(request.headers) }
+      logger.debug { body_to_log(request.body) }
     end
 
     def log_response(response)
-      logger.info  "SOAP response (status #{response.code})"
-      logger.debug body_to_log(response.body)
+      logger.info  { "SOAP response (status #{response.code})" }
+      logger.debug { body_to_log(response.body) }
     end
 
     def headers_to_log(headers)
