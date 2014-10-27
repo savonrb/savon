@@ -24,6 +24,16 @@ class Savon
       attr_accessor :target_namespace, :element_form_default, :imports,
                     :attributes, :attribute_groups, :elements, :complex_types, :simple_types
 
+      def merge!(schema)
+        return unless self.target_namespace == schema.target_namespace
+        self.imports.update(schema.imports)
+        self.attributes.update(schema.attributes)
+        self.attribute_groups.update(schema.attribute_groups)
+        self.elements.update(schema.elements)
+        self.complex_types.update(schema.complex_types)
+        self.simple_types.update(schema.simple_types)
+      end
+
       private
 
       def parse
