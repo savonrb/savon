@@ -75,6 +75,8 @@ class Savon
         return [root] if root.name == 'schema'
 
         types = root.at_xpath('wsdl:types', 'wsdl' => Savon::NS_WSDL)
+        return types.element_children if types
+        types = root.at_xpath('//xs:include')
         types.element_children if types
       end
 

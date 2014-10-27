@@ -40,6 +40,7 @@ class Savon
           when 'complexType'    then store_element(@complex_types, node, schema)
           when 'simpleType'     then store_element(@simple_types, node, schema)
           when 'import'         then store_import(node)
+          when 'include'        then store_import(node)
           end
         end
       end
@@ -49,7 +50,11 @@ class Savon
       end
 
       def store_import(node)
-        @imports[node['namespace']] = node['schemaLocation']
+        unless node['namespace'].nil?
+          @imports[node['namespace']] = node['schemaLocation']
+        else
+          @imports[node.namespace] = node['schemaLocation']
+        end
       end
 
     end
