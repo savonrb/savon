@@ -7,13 +7,13 @@ require 'savon/importer'
 class Savon
   class WSDL
 
-    def initialize(wsdl, http)
+    def initialize(wsdl, http, opts = {})
       @documents = WSDL::DocumentCollection.new
       @schemas = XS::SchemaCollection.new
 
       resolver = Resolver.new(http)
       importer = Importer.new(resolver, @documents, @schemas)
-      importer.import(wsdl)
+      importer.import(wsdl, opts[:root_relative] || false)
     end
 
     # Public: Returns the DocumentCollection.

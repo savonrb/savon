@@ -8,11 +8,18 @@ class Savon
       end
 
       def <<(schema)
-        @schemas << schema
+        current_schema = find_by_namespace(schema.target_namespace)
+        if current_schema.nil?
+          @schemas << schema
+        else
+          current_schema.merge!(schema)
+        end
       end
 
       def push(schemas)
-        @schemas += schemas
+        schemas.each do |schema|
+          self << schema
+        end
       end
 
       def each(&block)

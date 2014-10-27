@@ -24,9 +24,9 @@ class Savon
     @http_adapter = adapter
   end
 
-  def initialize(wsdl, http = nil)
+  def initialize(wsdl, http = nil, opts = {})
     @http = http || new_http_client
-    @wsdl = WSDL.new(wsdl, @http)
+    @wsdl = WSDL.new(wsdl, @http, opts)
   end
 
   # Public: Returns the Wasabi instance.
