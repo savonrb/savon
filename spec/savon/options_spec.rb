@@ -325,6 +325,15 @@ describe "Options" do
 
       expect(logger).to eq(custom_logger)
     end
+
+    it "sets the logger of HTTPI as well" do
+      custom_logger = Logger.new($stdout)
+
+      client = new_client(:logger => custom_logger, :log => true)
+
+      expect(HTTPI.logger).to be custom_logger
+    end
+
   end
 
   context "global :log_level" do
