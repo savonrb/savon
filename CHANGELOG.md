@@ -1,3 +1,10 @@
+# 2.8.0 (2014-11-12)
+
+* Feature : [#620](https://github.com/savonrb/savon/pull/620) add #build_request method that builds the actual XML request body, but does not submit it. Useful for debugging, possibly.
+* Fix : Loosened dependencies on Gyoku, Nori, Akami, and other Savon-dependency gems
+* Feature: [#636](https://github.com/savonrb/savon/pull/636) Set HTTPI.logger when Savon's logger is configured.
+* Feature: [#639](https://github.com/savonrb/savon/issues/639) Allow setting any SSL version that OpenSSL provides. See [the relevant HTTPI issue](https://github.com/savonrb/httpi/pull/136) for more information.
+
 # 2.7.2 (2014-09-23)
 
 Fix : Preserve false values (https://github.com/savonrb/savon/issues/321)
