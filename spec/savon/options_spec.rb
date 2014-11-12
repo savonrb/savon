@@ -325,6 +325,15 @@ describe "Options" do
 
       expect(logger).to eq(custom_logger)
     end
+
+    it "sets the logger of HTTPI as well" do
+      custom_logger = Logger.new($stdout)
+
+      client = new_client(:logger => custom_logger, :log => true)
+
+      expect(HTTPI.logger).to be custom_logger
+    end
+
   end
 
   context "global :log_level" do
@@ -502,6 +511,7 @@ describe "Options" do
 
         # filter out logs we're not interested in
         client.globals[:logger].expects(:info).at_least_once
+        client.globals[:logger].expects(:debug).at_least_once
 
         # check whether the password is filtered
         client.globals[:logger].expects(:debug).with { |message|
@@ -521,6 +531,7 @@ describe "Options" do
 
         # filter out logs we're not interested in
         client.globals[:logger].expects(:info).at_least_once
+        client.globals[:logger].expects(:debug).at_least_once
 
         # check whether the message is pretty printed
         client.globals[:logger].expects(:debug).with { |message|
