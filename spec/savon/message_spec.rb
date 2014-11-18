@@ -11,29 +11,59 @@ describe Savon::Message do
     @server.stop
   end
 
+  let(:client_config) {
+    {
+      :endpoint => @server.url(:repeat),
+      :namespace => 'http://example.com',
+      :log => false,
+
+      :element_form_default => :qualified,
+      :convert_request_keys_to => :camelcase,
+
+      :convert_response_tags_to => nil
+    }
+  }
+
+  let(:client) { Savon.client(client_config) }
+
   context "with a qualified message" do
-    it "converts request Hash keys for which there is not namespace" do
-      client = Savon.client(
-        :endpoint => @server.url(:repeat),
-        :namespace => 'http://example.com',
-        :log => false,
-
-        :element_form_default => :qualified,
-        :convert_request_keys_to => :camelcase,
-
-        :convert_response_tags_to => nil
-      )
-
-      message = {
+    let(:message) {
+      {
        :email_count => 3,
        :user_name   => 'josh',
        :order!      => [:user_name, :email_count]
       }
+    }
 
+    let(:converted_keys) {
+      '<wsdl:UserName>josh</wsdl:UserName><wsdl:EmailCount>3</wsdl:EmailCount>'
+    }
+    it "converts request Hash keys for which there is not namespace" do
       response = client.call(:something, :message => message)
-      body = response.hash['Envelope']['Body']
+      expect(response.xml).to include(converted_keys)
+    end
+  end
 
-      expect(response.xml).to include('<wsdl:UserName>josh</wsdl:UserName><wsdl:EmailCount>3</wsdl:EmailCount>')
+  context 'use_wsa_headers' do
+    let(:client_config) { super().merge(use_wsa_headers: true) }
+
+    context 'headers' do
+      [ 'wsa:Action', 'wsa:To', 'wsa:MessageID' ].each do |header|
+        it "should include #{header} header" do
+          response = client.call(:something, message: {})
+          expect(response.xml).to include(header)
+        end
+      end
+    end
+
+    context 'wsa:MessageID' do
+      let(:message_id_tag) {
+        '<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">'
+      }
+      it 'should include xmlns:wsa attribute' do
+        response = client.call(:something, message: {})
+        expect(response.xml).to include(message_id_tag)
+      end
     end
   end
 
