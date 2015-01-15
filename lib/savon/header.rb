@@ -61,7 +61,12 @@ module Savon
        convert_to_xml({
          'wsa:Action' => @locals[:soap_action],
          'wsa:To' => @globals[:endpoint],
-         'wsa:MessageID' => "urn:uuid:#{UUID.new.generate}"
+         'wsa:MessageID' => "urn:uuid:#{UUID.new.generate}",
+         attributes!: {
+          'wsa:MessageID' => {
+            "xmlns:wsa" => "http://schemas.xmlsoap.org/ws/2004/08/addressing"
+          }
+         }
        })
     end
 
