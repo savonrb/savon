@@ -19,18 +19,12 @@ module Savon
     end
 
     def self.ensure_exists!(operation_name, wsdl)
-      begin
-        actions = wsdl.soap_actions
-      rescue Wasabi::Resolver::HTTPError => e
-        raise HTTPError.new(e.response)
-      rescue => e
-        raise Error, e.to_s
-      end
-
-      unless actions.include? operation_name
+      unless wsdl.soap_actions.include? operation_name
         raise UnknownOperationError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
                                      "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
+    rescue Wasabi::Resolver::HTTPError => e
+      raise HTTPError.new(e.response)
     end
 
     def self.ensure_name_is_symbol!(operation_name)

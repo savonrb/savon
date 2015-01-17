@@ -44,6 +44,12 @@ describe Savon::Operation do
       expect { new_operation(:no_such_operation, wsdl, globals) }.
         to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
     end
+
+    it "raises if the endpoint cannot be reached" do
+      options = Savon::GlobalOptions.new(:endpoint => @server.url(:timeout), :log => false)
+      expect { new_operation(:verify_address, wsdl, options) }.
+        to raise_error(Savon::HTTPError)
+    end
   end
 
   describe ".create without a WSDL" do
