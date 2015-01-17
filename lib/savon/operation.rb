@@ -4,6 +4,7 @@ require "savon/request"
 require "savon/builder"
 require "savon/response"
 require "savon/request_logger"
+require "savon/http_error"
 
 module Savon
   class Operation
@@ -18,7 +19,15 @@ module Savon
     end
 
     def self.ensure_exists!(operation_name, wsdl)
-      unless wsdl.soap_actions.include? operation_name
+      begin
+        actions = wsdl.soap_actions
+      rescue Wasabi::Resolver::HTTPError => e
+        raise HTTPError.new(e.response)
+      rescue => e
+        raise Error, e.to_s
+      end
+
+      unless actions.include? operation_name
         raise UnknownOperationError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
                                      "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
