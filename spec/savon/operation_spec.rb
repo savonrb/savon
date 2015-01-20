@@ -46,9 +46,13 @@ describe Savon::Operation do
     end
 
     it "raises if the endpoint cannot be reached" do
-      options = Savon::GlobalOptions.new(:endpoint => @server.url(:timeout), :log => false)
-      expect { new_operation(:verify_address, wsdl, options) }.
-        to raise_error(Savon::HTTPError)
+      message = "Error!"
+      response = HTTPI::Response.new(500, {}, message)
+      error = Wasabi::Resolver::HTTPError.new(message, response)
+      Wasabi::Document.any_instance.stubs(:soap_actions).raises(error)
+
+      expect { new_operation(:verify_address, wsdl, globals) }.
+        to raise_error(Savon::HTTPError, /#{message}/)
     end
   end
 
