@@ -44,6 +44,16 @@ describe Savon::Operation do
       expect { new_operation(:no_such_operation, wsdl, globals) }.
         to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
     end
+
+    it "raises if the endpoint cannot be reached" do
+      message = "Error!"
+      response = HTTPI::Response.new(500, {}, message)
+      error = Wasabi::Resolver::HTTPError.new(message, response)
+      Wasabi::Document.any_instance.stubs(:soap_actions).raises(error)
+
+      expect { new_operation(:verify_address, wsdl, globals) }.
+        to raise_error(Savon::HTTPError, /#{message}/)
+    end
   end
 
   describe ".create without a WSDL" do
