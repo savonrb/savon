@@ -45,6 +45,10 @@ module Savon
         end
       end
 
+      if @globals[:encoding] && @globals[:encode_message]
+        xml.encode!(@globals[:encoding], undef: :replace, replace:'')
+      end
+
       # if we have a signature sign the document
       if @signature
         @signature.document = xml
