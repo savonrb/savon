@@ -1,0 +1,8 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <soap:ServiceFault>
+         <faultcode>42</faultcode>
+         <faultstring>The Answer to Life The Universe And Everything</faultstring>
+      </soap:ServiceFault>
+   </soap:Body>
+</soap:Envelope>
