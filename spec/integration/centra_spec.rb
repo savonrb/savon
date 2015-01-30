@@ -40,12 +40,9 @@ describe 'Correct translation of attributes to XML' do
     xml_doc.remove_namespaces!
 
     attributes_element_not_present = xml_doc.xpath("//AddNewUser/attributes").blank?
-
-    puts "new syntax: attributes element not present: " + attributes_element_not_present.to_s
-
     expect(attributes_element_not_present).to eq true
   end
-  
+
   it "old :attributes! syntax: correctly maps a Ruby Hash to XML attributes" do
     LogInterceptor.reset_intercepted_request
 
@@ -64,9 +61,6 @@ describe 'Correct translation of attributes to XML' do
     xml_doc.remove_namespaces!
 
     attributes_element_not_present = xml_doc.xpath("//AddNewUser/attributes").blank?
-
-    puts "new syntax: attributes element not present: " + attributes_element_not_present.to_s
-
     expect(attributes_element_not_present).to eq true
   end
 end
