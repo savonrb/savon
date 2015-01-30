@@ -1,3 +1,8 @@
+# 2.9.0 (2015-01-29)
+
+* Feature: [#655] Wasabi exceptions should be rethrown as Savon errors. This should make it easier to catch errors thrown by Savon::Client.
+* Feature: [#630] ServiceFaults are correctly identified as Soap Faults.
+
 # 2.8.0 (2014-11-12)
 
 * Feature : [#620](https://github.com/savonrb/savon/pull/620) add #build_request method that builds the actual XML request body, but does not submit it. Useful for debugging, possibly.
