@@ -127,6 +127,12 @@ describe "Savon's mock interface" do
     expect { new_client.call(:find_user) }.to_not raise_error
   end
 
+  it "matchers can be used to specify the message" do
+    savon.expects(:find_user).with(:message => include(:username)).returns("<fixture/>")
+    message = { :username => "Han Solo", password: "querty"}
+
+    expect { new_client.call(:find_user, :message => message) }.to_not raise_error
+  end
 
   it "allows code to rescue Savon::Error and still report test failures" do
     message = { :username => "luke" }
