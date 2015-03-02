@@ -1,3 +1,7 @@
+* 2.10.0 (2015-03-02)
+
+* Fix: This reverts a purported "fix" to operation names.
+
 # 2.9.0 (2015-01-29)
 
 * Feature: [#655] Wasabi exceptions should be rethrown as Savon errors. This should make it easier to catch errors thrown by Savon::Client.
