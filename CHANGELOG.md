@@ -1,4 +1,4 @@
-* 2.10.0 (2015-03-02)
+# 2.10.0 (2015-03-02)
 
 * Fix: This reverts a purported "fix" to operation names.
 
