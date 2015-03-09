@@ -166,7 +166,7 @@ module Savon
       element_form_default = @globals[:element_form_default] || @wsdl.element_form_default
       # TODO: clean this up! [dh, 2012-12-17]
       Message.new(message_tag, namespace_identifier, @types, @used_namespaces, @locals[:message],
-                  element_form_default, @globals[:convert_request_keys_to])
+                  element_form_default, @globals[:convert_request_keys_to], @globals[:unwrap])
     end
 
     def namespace_identifier
