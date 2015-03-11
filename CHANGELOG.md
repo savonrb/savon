@@ -1,3 +1,7 @@
+* 2.10.1 (2015-03-15)
+
+* Feature: [#673](https://github.com/savonrb/savon/pull/673) Adds an :unwrap option that is passed to Gyoku.
+
 * 2.10.0 (2015-03-02)
 
 * Fix: This reverts a purported "fix" to operation names.
