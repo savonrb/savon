@@ -1,3 +1,7 @@
+# 2.10.2 (2015-03-31)
+
+* Formally drop support for 1.8.7. 
+
 # 2.10.1 (2015-03-15)
 
 * Feature: [#673](https://github.com/savonrb/savon/pull/673) Adds an :unwrap option that is passed to Gyoku.
