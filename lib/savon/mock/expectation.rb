@@ -54,8 +54,18 @@ module Savon
     end
 
     def verify_message!
+      def equals_except_any(msg_expected, msg_real)
+        return true if msg_expected == msg_real
+        return false if (msg_expected.nil? || msg_real.nil?) # If both are nil has returned true
+        msg_expected.each do |key, expected_value|
+          next if (expected_value == :any &&  msg_real.include?(key))
+          return false if expected_value != msg_real[key]
+        end
+        return true
+      end
+      
       return if @expected[:message] == :any
-      unless @expected[:message] == @actual[:message]
+      unless equals_except_any(@expected[:message], @actual[:message])
         expected_message = "  with this message: #{@expected[:message].inspect}" if @expected[:message]
         expected_message ||= "  with no message."
 
