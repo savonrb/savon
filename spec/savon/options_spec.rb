@@ -114,6 +114,15 @@ describe "Options" do
     end
   end
 
+  context "global :host" do
+    it "overrides the WSDL endpoint host" do
+      client = new_client(:wsdl => Fixture.wsdl(:no_message_tag), host: "https://example.com:8080")
+
+      request = client.build_request(:update_orders)
+      expect(request.url.to_s).to eq "https://example.com:8080/webserviceexternal/contracts.asmx"
+    end
+  end
+
   context "global :headers" do
     it "sets the HTTP headers for the next request" do
       client = new_client(:endpoint => @server.url(:inspect_request), :headers => { "X-Token" => "secret" })
