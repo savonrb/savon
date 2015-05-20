@@ -126,7 +126,13 @@ module Savon
     end
 
     def endpoint
-      @globals[:endpoint] || @wsdl.endpoint
+      @globals[:endpoint] || @wsdl.endpoint.tap do |url|
+        if @globals[:host]
+          host_url = URI.parse(@globals[:host])
+          url.host = host_url.host
+          url.port = host_url.port
+        end
+      end
     end
 
     def raise_expected_httpi_response!

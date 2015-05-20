@@ -89,7 +89,8 @@ module Savon
         :use_wsa_headers           => false,
         :no_message_tag            => false,
         :follow_redirects          => false,
-        :unwrap                    => false
+        :unwrap                    => false,
+        :host                      => nil
       }
 
       options = defaults.merge(options)
@@ -106,6 +107,11 @@ module Savon
     # Location of the local or remote WSDL document.
     def wsdl(wsdl_address)
       @options[:wsdl] = wsdl_address
+    end
+
+    # set different host for actions in WSDL
+    def host(host)
+      @options[:host] = host
     end
 
     # SOAP endpoint.
