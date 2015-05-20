@@ -587,7 +587,7 @@ describe "Options" do
         expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
 
         # the nonce node
-        expect(request).to match(/<wsse:Nonce.*>.+\n<\/wsse:Nonce>/)
+        expect(request).to match(/<wsse:Nonce.*>.+\n?<\/wsse:Nonce>/)
 
         # the created node with a timestamp
         expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
