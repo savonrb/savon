@@ -1,6 +1,6 @@
 require "akami"
 require "gyoku"
-require "uuid"
+require "securerandom"
 
 module Savon
   class Header
@@ -61,7 +61,7 @@ module Savon
        convert_to_xml({
          'wsa:Action' => @locals[:soap_action],
          'wsa:To' => @globals[:endpoint],
-         'wsa:MessageID' => "urn:uuid:#{UUID.new.generate}",
+         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}",
          attributes!: {
           'wsa:MessageID' => {
             "xmlns:wsa" => "http://schemas.xmlsoap.org/ws/2004/08/addressing"
