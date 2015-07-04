@@ -73,24 +73,25 @@ module Savon
       @option_type = :global
 
       defaults = {
-        :encoding                  => "UTF-8",
-        :soap_version              => 1,
-        :namespaces                => {},
-        :logger                    => Logger.new($stdout),
-        :log                       => false,
-        :filters                   => [],
-        :pretty_print_xml          => false,
-        :raise_errors              => true,
-        :strip_namespaces          => true,
-        :convert_response_tags_to  => lambda { |tag| tag.snakecase.to_sym},
-        :convert_attributes_to     => lambda { |k,v| [k,v] },
-        :multipart                 => false,
-        :adapter                   => nil,
-        :use_wsa_headers           => false,
-        :no_message_tag            => false,
-        :follow_redirects          => false,
-        :unwrap                    => false,
-        :host                      => nil
+        :encoding                    => "UTF-8",
+        :soap_version                => 1,
+        :namespaces                  => {},
+        :logger                      => Logger.new($stdout),
+        :log                         => false,
+        :filters                     => [],
+        :pretty_print_xml            => false,
+        :raise_errors                => true,
+        :strip_namespaces            => true,
+        :delete_namespace_attributes => false,
+        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym},
+        :convert_attributes_to       => lambda { |k,v| [k,v] },
+        :multipart                   => false,
+        :adapter                     => nil,
+        :use_wsa_headers             => false,
+        :no_message_tag              => false,
+        :follow_redirects            => false,
+        :unwrap                      => false,
+        :host                        => nil
       }
 
       options = defaults.merge(options)
@@ -286,6 +287,11 @@ module Savon
     # Instruct Nori whether to strip namespaces from XML nodes.
     def strip_namespaces(strip_namespaces)
       @options[:strip_namespaces] = strip_namespaces
+    end
+
+    # Instruct Nori whether to delete namespace attributes from XML nodes.
+    def delete_namespace_attributes(delete_namespace_attributes)
+      @options[:delete_namespace_attributes] = delete_namespace_attributes
     end
 
     # Tell Gyoku how to convert Hash key Symbols to XML tags.
