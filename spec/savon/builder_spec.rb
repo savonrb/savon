@@ -34,6 +34,11 @@ describe Savon::Builder do
       expect(builder.to_s).to include('xmlns:tns="http://v1.example.com"')
     end
 
+    it "includes the target namespace in SOAP body from the global :body_namespace if it's available" do
+      globals[:body_namespace] = "http://v1.example.com/body_namespace"
+      expect(builder.to_s).to include('xmlns="http://v1.example.com/body_namespace"')
+    end
+
     it "includes the local :message_tag if available" do
       locals[:message_tag] = "doAuthenticate"
       expect(builder.to_s).to include("<tns:doAuthenticate>")
