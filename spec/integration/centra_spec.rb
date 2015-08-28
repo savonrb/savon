@@ -54,10 +54,7 @@ describe 'Correct translation of attributes to XML' do
     )
 
     response = nil
-    begin
-      response = call_and_fail_gracefully(client, :add_new_user, :message => { :user => {}, :attributes! => { :user => { :userID => "test" } } })
-    rescue
-    end
+    response = call_and_fail_gracefully(client, :add_new_user, :message => { :user => {}, :attributes! => { :user => { :userID => "test" } } })
 
     xml_doc = Nokogiri::XML(LogInterceptor.get_intercepted_request)
     xml_doc.remove_namespaces!
