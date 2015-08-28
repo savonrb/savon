@@ -2,14 +2,16 @@ require 'spec_helper'
 
 module LogInterceptor
   @@intercepted_request = ""
-  def self.debug(message)
+  def self.debug(message = nil)
+    message ||= yield if block_given?
+
     # save only the first XMLly message
     if message.include? "xml version"
       @@intercepted_request = message if @@intercepted_request == ""
     end
   end
 
-  def self.info(message)
+  def self.info(message = nil)
   end
 
   def self.get_intercepted_request
