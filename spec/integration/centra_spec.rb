@@ -27,6 +27,7 @@ describe 'Correct translation of attributes to XML' do
 
     client = Savon.client(
       :wsdl => "http://mt205.sabameeting.com/CWS/CWS.asmx?WSDL",
+      :log => true,
       :logger => LogInterceptor
     )
 
@@ -48,6 +49,7 @@ describe 'Correct translation of attributes to XML' do
 
     client = Savon.client(
       :wsdl => "http://mt205.sabameeting.com/CWS/CWS.asmx?WSDL",
+      :log => true,
       :logger => LogInterceptor
     )
 
