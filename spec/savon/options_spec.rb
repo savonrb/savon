@@ -398,9 +398,9 @@ describe "Options" do
 
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none).twice
+      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :none)
+      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :peer)
       client.call(:authenticate)
     end
   end
