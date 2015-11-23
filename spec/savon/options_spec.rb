@@ -389,9 +389,9 @@ describe "Options" do
 
   context "global :ssl_version" do
     it "sets the SSL version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:SSLv3).twice
+      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_version => :SSLv3)
+      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
       client.call(:authenticate)
     end
   end

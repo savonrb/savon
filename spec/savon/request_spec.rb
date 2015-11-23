@@ -60,8 +60,8 @@ describe Savon::WSDLRequest do
 
     describe "ssl version" do
       it "is set when specified" do
-        globals.ssl_version(:SSLv3)
-        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+        globals.ssl_version(:TLSv1)
+        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
 
         new_wsdl_request.build
       end
@@ -364,8 +364,8 @@ describe Savon::SOAPRequest do
 
     describe "ssl version" do
       it "is set when specified" do
-        globals.ssl_version(:SSLv3)
-        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+        globals.ssl_version(:TLSv1)
+        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
 
         new_soap_request.build
       end
