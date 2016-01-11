@@ -260,6 +260,15 @@ module Savon
       @options[:ssl_ca_cert] = cert
     end
 
+    # Sets the ca cert path
+    def ssl_ca_cert_path(path)
+      @options[:ssl_ca_cert_path] = path
+    end
+
+    # Sets the ssl cert store
+    def ssl_cert_store(store)
+      @options[:ssl_cert_store] = store
+    end
 
     # HTTP basic auth credentials.
     def basic_auth(*credentials)
