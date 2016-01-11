@@ -28,11 +28,13 @@ module Savon
       @http_request.auth.ssl.verify_mode   = @globals[:ssl_verify_mode]   if @globals.include? :ssl_verify_mode
 
       @http_request.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
-      @http_request.auth.ssl.cert_key      = @globals[:ssl_cert_key] if @globals.include? :ssl_cert_key
+      @http_request.auth.ssl.cert_key      = @globals[:ssl_cert_key]      if @globals.include? :ssl_cert_key
       @http_request.auth.ssl.cert_file     = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
-      @http_request.auth.ssl.cert          = @globals[:ssl_cert]     if @globals.include? :ssl_cert
+      @http_request.auth.ssl.cert          = @globals[:ssl_cert]          if @globals.include? :ssl_cert
       @http_request.auth.ssl.ca_cert_file  = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
-      @http_request.auth.ssl.ca_cert       = @globals[:ssl_ca_cert]  if @globals.include? :ssl_ca_cert
+      @http_request.auth.ssl.ca_cert_path  = @globals[:ssl_ca_cert_path]  if @globals.include? :ssl_ca_cert_path
+      @http_request.auth.ssl.ca_cert       = @globals[:ssl_ca_cert]       if @globals.include? :ssl_ca_cert
+      @http_request.auth.ssl.cert_store    = @globals[:ssl_cert_store]    if @globals.include? :ssl_cert_store
 
       @http_request.auth.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
     end
