@@ -1,5 +1,6 @@
 # https://github.com/travis-ci/travis-ci/wiki/.travis.yml-options
 language: "ruby"
+sudo: false
 before_install:
   - gem install bundler
 script: "bundle exec rake --trace"
