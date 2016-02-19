@@ -74,7 +74,7 @@ module Savon
       configure_proxy
       configure_cookies options[:cookies]
       configure_timeouts
-      configure_headers options[:soap_action]
+      configure_headers options[:soap_action], options[:headers]
       configure_ssl
       configure_auth
       configure_redirect_handling
@@ -88,8 +88,9 @@ module Savon
       @http_request.set_cookies(cookies) if cookies
     end
 
-    def configure_headers(soap_action)
+    def configure_headers(soap_action, headers)
       @http_request.headers = @globals[:headers] if @globals.include? :headers
+      @http_request.headers.merge!(headers) if headers
       @http_request.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
       @http_request.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
     end
