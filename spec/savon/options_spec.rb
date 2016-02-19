@@ -1046,6 +1046,17 @@ describe "Options" do
     end
   end
 
+  context "request :headers" do
+    it "sets headers" do
+      client = new_client(:endpoint => @server.url(:inspect_request))
+
+      response = client.call(:authenticate, :headers => { "X-Token" => "secret" })
+      x_token  = inspect_request(response).x_token
+
+      expect(x_token).to eq("secret")
+    end
+  end
+
   def new_client(globals = {}, &block)
     globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
     Savon.client(globals, &block)

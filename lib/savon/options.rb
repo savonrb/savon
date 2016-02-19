@@ -406,5 +406,9 @@ module Savon
     def multipart(multipart)
       @options[:multipart] = multipart
     end
+
+    def headers(headers)
+      @options[:headers] = headers
+    end
   end
 end
