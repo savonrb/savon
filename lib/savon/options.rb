@@ -76,6 +76,7 @@ module Savon
         :encoding                  => "UTF-8",
         :soap_version              => 1,
         :namespaces                => {},
+        :body_namespace            => nil,
         :logger                    => Logger.new($stdout),
         :log                       => false,
         :filters                   => [],
@@ -92,7 +93,6 @@ module Savon
         :unwrap                    => false,
         :host                      => nil
       }
-
       options = defaults.merge(options)
 
       # this option is a shortcut on the logger which needs to be set
@@ -122,6 +122,10 @@ module Savon
     # Target namespace.
     def namespace(namespace)
       @options[:namespace] = namespace
+    end
+
+    def body_namespace(body_namespace)
+      @options[:body_namespace] = body_namespace
     end
 
     # The namespace identifer.

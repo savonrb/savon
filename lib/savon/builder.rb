@@ -29,6 +29,7 @@ module Savon
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
+      @body_namespace = @locals[:body_namespace] || @globals[:body_namespace]
     end
 
     def pretty
@@ -73,6 +74,8 @@ module Savon
 
     def body_attributes
       @body_attributes ||= @signature.nil? ? {} : @signature.body_attributes
+      @body_attributes.merge!(xmlns: @body_namespace) if @body_namespace
+      @body_attributes
     end
 
     def to_s
