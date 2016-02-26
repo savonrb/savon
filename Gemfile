@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 gemspec
 
-gem "httpclient", "~> 2.3.4"
+gem "httpclient", "~> 2.7.1"
 
 gem "simplecov", :require => false
 gem "coveralls", :require => false
