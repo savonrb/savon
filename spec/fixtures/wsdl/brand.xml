@@ -1,0 +1,624 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://api.service.softlayer.com/soap/v3/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap-enc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" name="slApi" targetNamespace="http://api.service.softlayer.com/soap/v3/">
+  <types>
+    <xsd:schema targetNamespace="http://api.service.softlayer.com/soap/v3/">
+      <xsd:include namespace="http://api.service.softlayer.com/soap/v3/" schemaLocation="https://api.softlayer.com/soap/v3/SoftLayer_Brand?xsd"/>
+    </xsd:schema>
+    <xsd:schema targetNamespace="http://api.service.softlayer.com/soap/v3/">
+      <xsd:complexType name="SoftLayer_BrandInitParameters">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="id" type="xsd:int"/>
+          <xsd:element minOccurs="0" maxOccurs="1" name="globalIdentifier" type="xsd:string"/>
+        </xsd:sequence>
+      </xsd:complexType>
+      <xsd:complexType name="SoftLayer_BrandObjectMask">
+        <xsd:sequence>
+          <xsd:element minOccurs="1" maxOccurs="1" name="mask" type="tns:SoftLayer_Brand"/>
+        </xsd:sequence>
+      </xsd:complexType>
+    </xsd:schema>
+  </types>
+  <message name="SoftLayer_BrandInitParametersHeader">
+    <part name="SoftLayer_BrandInitParameters" type="tns:SoftLayer_BrandInitParameters"/>
+  </message>
+  <message name="createCustomerAccount">
+    <part name="account" type="tns:SoftLayer_Account"/>
+    <part name="bypassDuplicateAccountCheck" type="xsd:boolean"/>
+  </message>
+  <message name="createCustomerAccountResponse">
+    <part name="createCustomerAccountReturn" type="tns:SoftLayer_Account"/>
+  </message>
+  <message name="createObject">
+    <part name="templateObject" type="tns:SoftLayer_Brand"/>
+  </message>
+  <message name="createObjectResponse">
+    <part name="createObjectReturn" type="tns:SoftLayer_Brand"/>
+  </message>
+  <message name="getAccount"/>
+  <message name="getAccountResponse">
+    <part name="getAccountReturn" type="tns:SoftLayer_Account"/>
+  </message>
+  <message name="getAllOwnedAccounts"/>
+  <message name="getAllOwnedAccountsResponse">
+    <part name="getAllOwnedAccountsReturn" type="tns:SoftLayer_AccountArray"/>
+  </message>
+  <message name="getAllTicketSubjects">
+    <part name="account" type="tns:SoftLayer_Account"/>
+  </message>
+  <message name="getAllTicketSubjectsResponse">
+    <part name="getAllTicketSubjectsReturn" type="tns:SoftLayer_Ticket_SubjectArray"/>
+  </message>
+  <message name="getAllowAccountCreationFlag"/>
+  <message name="getAllowAccountCreationFlagResponse">
+    <part name="getAllowAccountCreationFlagReturn" type="xsd:boolean"/>
+  </message>
+  <message name="getCatalog"/>
+  <message name="getCatalogResponse">
+    <part name="getCatalogReturn" type="tns:SoftLayer_Product_Catalog"/>
+  </message>
+  <message name="getContactInformation"/>
+  <message name="getContactInformationResponse">
+    <part name="getContactInformationReturn" type="tns:SoftLayer_Brand_ContactArray"/>
+  </message>
+  <message name="getContacts"/>
+  <message name="getContactsResponse">
+    <part name="getContactsReturn" type="tns:SoftLayer_Brand_ContactArray"/>
+  </message>
+  <message name="getCustomerCountryLocationRestrictions"/>
+  <message name="getCustomerCountryLocationRestrictionsResponse">
+    <part name="getCustomerCountryLocationRestrictionsReturn" type="tns:SoftLayer_Brand_Restriction_Location_CustomerCountryArray"/>
+  </message>
+  <message name="getDistributor"/>
+  <message name="getDistributorResponse">
+    <part name="getDistributorReturn" type="tns:SoftLayer_Brand"/>
+  </message>
+  <message name="getDistributorChildFlag"/>
+  <message name="getDistributorChildFlagResponse">
+    <part name="getDistributorChildFlagReturn" type="xsd:boolean"/>
+  </message>
+  <message name="getDistributorFlag"/>
+  <message name="getDistributorFlagResponse">
+    <part name="getDistributorFlagReturn" type="xsd:string"/>
+  </message>
+  <message name="getHardware"/>
+  <message name="getHardwareResponse">
+    <part name="getHardwareReturn" type="tns:SoftLayer_HardwareArray"/>
+  </message>
+  <message name="getHasAgentSupportFlag"/>
+  <message name="getHasAgentSupportFlagResponse">
+    <part name="getHasAgentSupportFlagReturn" type="xsd:boolean"/>
+  </message>
+  <message name="getMerchantName"/>
+  <message name="getMerchantNameResponse">
+    <part name="getMerchantNameReturn" type="xsd:string"/>
+  </message>
+  <message name="getObject"/>
+  <message name="getObjectResponse">
+    <part name="getObjectReturn" type="tns:SoftLayer_Brand"/>
+  </message>
+  <message name="getOpenTickets"/>
+  <message name="getOpenTicketsResponse">
+    <part name="getOpenTicketsReturn" type="tns:SoftLayer_TicketArray"/>
+  </message>
+  <message name="getOwnedAccounts"/>
+  <message name="getOwnedAccountsResponse">
+    <part name="getOwnedAccountsReturn" type="tns:SoftLayer_AccountArray"/>
+  </message>
+  <message name="getTicketGroups"/>
+  <message name="getTicketGroupsResponse">
+    <part name="getTicketGroupsReturn" type="tns:SoftLayer_Ticket_GroupArray"/>
+  </message>
+  <message name="getTickets"/>
+  <message name="getTicketsResponse">
+    <part name="getTicketsReturn" type="tns:SoftLayer_TicketArray"/>
+  </message>
+  <message name="getToken">
+    <part name="userId" type="xsd:int"/>
+  </message>
+  <message name="getTokenResponse">
+    <part name="getTokenReturn" type="xsd:string"/>
+  </message>
+  <message name="getUsers"/>
+  <message name="getUsersResponse">
+    <part name="getUsersReturn" type="tns:SoftLayer_User_CustomerArray"/>
+  </message>
+  <message name="getVirtualGuests"/>
+  <message name="getVirtualGuestsResponse">
+    <part name="getVirtualGuestsReturn" type="tns:SoftLayer_Virtual_GuestArray"/>
+  </message>
+  <message name="authenticateHeader">
+    <part name="authenticate" type="tns:authenticate"/>
+  </message>
+  <message name="resultLimitHeader">
+    <part name="resultLimit" type="tns:resultLimit"/>
+  </message>
+  <message name="totalItemsHeader">
+    <part name="totalItems" type="tns:totalItems"/>
+  </message>
+  <message name="SoftLayer_BrandObjectMaskHeader">
+    <part name="SoftLayer_BrandObjectMask" type="tns:SoftLayer_BrandObjectMask"/>
+  </message>
+  <message name="SoftLayer_BrandObjectFilterHeader">
+    <part name="SoftLayer_BrandObjectFilter" type="tns:SoftLayer_BrandObjectFilter"/>
+  </message>
+  <message name="SoftLayer_ObjectMaskHeader">
+    <part name="SoftLayer_ObjectMask" type="tns:SoftLayer_ObjectMask"/>
+  </message>
+  <portType name="SoftLayer_BrandPortType">
+    <documentation>Every SoftLayer customer account is associated to a brand 
+
+SoftLayer customers are unable to change their brand information in the portal or the API. </documentation>
+    <operation name="createCustomerAccount">
+      <documentation>Create a new customer account record. </documentation>
+      <input message="tns:createCustomerAccount"/>
+      <output message="tns:createCustomerAccountResponse"/>
+    </operation>
+    <operation name="createObject">
+      <documentation>Create a new brand record. </documentation>
+      <input message="tns:createObject"/>
+      <output message="tns:createObjectResponse"/>
+    </operation>
+    <operation name="getAccount">
+      <documentation></documentation>
+      <input message="tns:getAccount"/>
+      <output message="tns:getAccountResponse"/>
+    </operation>
+    <operation name="getAllOwnedAccounts">
+      <documentation>Retrieve all accounts owned by the brand.</documentation>
+      <input message="tns:getAllOwnedAccounts"/>
+      <output message="tns:getAllOwnedAccountsResponse"/>
+    </operation>
+    <operation name="getAllTicketSubjects">
+      <documentation></documentation>
+      <input message="tns:getAllTicketSubjects"/>
+      <output message="tns:getAllTicketSubjectsResponse"/>
+    </operation>
+    <operation name="getAllowAccountCreationFlag">
+      <documentation>Retrieve this flag indicates if creation of accounts is allowed.</documentation>
+      <input message="tns:getAllowAccountCreationFlag"/>
+      <output message="tns:getAllowAccountCreationFlagResponse"/>
+    </operation>
+    <operation name="getCatalog">
+      <documentation>Retrieve the Product Catalog for the Brand</documentation>
+      <input message="tns:getCatalog"/>
+      <output message="tns:getCatalogResponse"/>
+    </operation>
+    <operation name="getContactInformation">
+      <documentation>Retrieve the contact information for the brand such as the corporate or support contact.  This will include the contact name, telephone number, fax number, email address, and mailing address of the contact. </documentation>
+      <input message="tns:getContactInformation"/>
+      <output message="tns:getContactInformationResponse"/>
+    </operation>
+    <operation name="getContacts">
+      <documentation>Retrieve the contacts for the brand.</documentation>
+      <input message="tns:getContacts"/>
+      <output message="tns:getContactsResponse"/>
+    </operation>
+    <operation name="getCustomerCountryLocationRestrictions">
+      <documentation>Retrieve this references relationship between brands, locations and countries associated with a user's account that are ineligible when ordering products. For example, the India datacenter may not be available on this brand for customers that live in Great Britain.</documentation>
+      <input message="tns:getCustomerCountryLocationRestrictions"/>
+      <output message="tns:getCustomerCountryLocationRestrictionsResponse"/>
+    </operation>
+    <operation name="getDistributor">
+      <documentation></documentation>
+      <input message="tns:getDistributor"/>
+      <output message="tns:getDistributorResponse"/>
+    </operation>
+    <operation name="getDistributorChildFlag">
+      <documentation></documentation>
+      <input message="tns:getDistributorChildFlag"/>
+      <output message="tns:getDistributorChildFlagResponse"/>
+    </operation>
+    <operation name="getDistributorFlag">
+      <documentation></documentation>
+      <input message="tns:getDistributorFlag"/>
+      <output message="tns:getDistributorFlagResponse"/>
+    </operation>
+    <operation name="getHardware">
+      <documentation>Retrieve an account's associated hardware objects.</documentation>
+      <input message="tns:getHardware"/>
+      <output message="tns:getHardwareResponse"/>
+    </operation>
+    <operation name="getHasAgentSupportFlag">
+      <documentation></documentation>
+      <input message="tns:getHasAgentSupportFlag"/>
+      <output message="tns:getHasAgentSupportFlagResponse"/>
+    </operation>
+    <operation name="getMerchantName">
+      <documentation>Get the payment processor merchant name.</documentation>
+      <input message="tns:getMerchantName"/>
+      <output message="tns:getMerchantNameResponse"/>
+    </operation>
+    <operation name="getObject">
+      <documentation></documentation>
+      <input message="tns:getObject"/>
+      <output message="tns:getObjectResponse"/>
+    </operation>
+    <operation name="getOpenTickets">
+      <documentation></documentation>
+      <input message="tns:getOpenTickets"/>
+      <output message="tns:getOpenTicketsResponse"/>
+    </operation>
+    <operation name="getOwnedAccounts">
+      <documentation>Retrieve active accounts owned by the brand.</documentation>
+      <input message="tns:getOwnedAccounts"/>
+      <output message="tns:getOwnedAccountsResponse"/>
+    </operation>
+    <operation name="getTicketGroups">
+      <documentation></documentation>
+      <input message="tns:getTicketGroups"/>
+      <output message="tns:getTicketGroupsResponse"/>
+    </operation>
+    <operation name="getTickets">
+      <documentation></documentation>
+      <input message="tns:getTickets"/>
+      <output message="tns:getTicketsResponse"/>
+    </operation>
+    <operation name="getToken">
+      <documentation></documentation>
+      <input message="tns:getToken"/>
+      <output message="tns:getTokenResponse"/>
+    </operation>
+    <operation name="getUsers">
+      <documentation></documentation>
+      <input message="tns:getUsers"/>
+      <output message="tns:getUsersResponse"/>
+    </operation>
+    <operation name="getVirtualGuests">
+      <documentation>Retrieve an account's associated virtual guest objects.</documentation>
+      <input message="tns:getVirtualGuests"/>
+      <output message="tns:getVirtualGuestsResponse"/>
+    </operation>
+  </portType>
+  <binding name="SoftLayer_BrandBinding" type="tns:SoftLayer_BrandPortType">
+    <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="createCustomerAccount">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="createObject">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getAccount">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getAllOwnedAccounts">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getAllTicketSubjects">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getAllowAccountCreationFlag">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getCatalog">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getContactInformation">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getContacts">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getCustomerCountryLocationRestrictions">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getDistributor">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getDistributorChildFlag">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getDistributorFlag">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getHardware">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getHasAgentSupportFlag">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getMerchantName">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getObject">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getOpenTickets">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getOwnedAccounts">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getTicketGroups">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getTickets">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getToken">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getUsers">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+    <operation name="getVirtualGuests">
+      <soap:operation soapAction="http://api.service.softlayer.com/soap/v3/SoftLayer_BrandAction"/>
+      <input>
+        <soap:header message="tns:SoftLayer_BrandObjectMaskHeader" part="SoftLayer_BrandObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandObjectFilterHeader" part="SoftLayer_BrandObjectFilter" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:resultLimitHeader" part="resultLimit" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_ObjectMaskHeader" part="SoftLayer_ObjectMask" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:SoftLayer_BrandInitParametersHeader" part="SoftLayer_BrandInitParameters" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:header message="tns:authenticateHeader" part="authenticate" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </input>
+      <output>
+        <soap:header message="tns:totalItemsHeader" part="totalItems" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+        <soap:body namespace="http://api.service.softlayer.com/soap/v3/" use="encoded" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
+      </output>
+    </operation>
+  </binding>
+  <service name="SoftLayer_BrandService">
+    <port name="SoftLayer_BrandPort" binding="tns:SoftLayer_BrandBinding">
+      <soap:address location="https://api.softlayer.com/soap/v3/SoftLayer_Brand"/>
+    </port>
+  </service>
+</definitions>

@@ -41,7 +41,7 @@ module Savon
         if @globals[:no_message_tag]
           tag(xml, :Body, body_attributes) { xml << message.to_s }
         else
-          tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+          tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << body_message } }
         end
       end
 
@@ -141,6 +141,7 @@ module Savon
 
     def namespaced_message_tag
       tag_name = message_tag
+      return [tag_name] if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
       if namespace_identifier == nil
         [tag_name, message_attributes]
       elsif @used_namespaces[[tag_name.to_s]]
@@ -150,8 +151,25 @@ module Savon
       end
     end
 
+    def serialized_message_tag
+      [:wsdl, @wsdl.soap_input(@operation_name.to_sym).keys.first, {}]
+    end
+
+    def serialized_messages
+      messages = ""
+      message_tag = serialized_message_tag[1]
+      @wsdl.soap_input(@operation_name.to_sym)[message_tag].each_pair do |message, type|
+        break if @locals[:message].nil?
+        message_locals = @locals[:message][message.snakecase.to_sym]
+        message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
+        messages << "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
+      end
+      messages
+    end
+
     def message_tag
-      message_tag = @locals[:message_tag]
+      message_tag = @wsdl.soap_input(@operation_name.to_sym).keys.first if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+      message_tag ||= @locals[:message_tag]
       message_tag ||= @wsdl.soap_input(@operation_name.to_sym) if @wsdl.document?
       message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
 
@@ -160,6 +178,14 @@ module Savon
 
     def message_attributes
       @locals[:attributes] || {}
+    end
+
+    def body_message
+      if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+        serialized_messages
+      else
+        message.to_s
+      end
     end
 
     def message
