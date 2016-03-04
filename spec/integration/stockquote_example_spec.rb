@@ -19,6 +19,12 @@ describe "Stockquote example" do
 
     cdata = response.body[:get_quote_response][:get_quote_result]
 
+    if cdata == "exception"
+      # Fallback to not fail the specs when the service's API limit is reached,
+      # but to mark the spec as pending instead.
+      pending "Exception on API"
+    end
+
     nori_options = { :convert_tags_to => lambda { |tag| tag.snakecase.to_sym } }
     result = Nori.new(nori_options).parse(cdata)
 
