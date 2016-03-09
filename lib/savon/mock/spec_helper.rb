@@ -19,12 +19,22 @@ module Savon
         expectation
       end
 
+      def allow(operation_name)
+        allow = MockExpectation.new(operation_name)
+        allows << allow
+        allow
+      end
+
       def expectations
         @expectations ||= []
       end
 
+      def allows
+        @allows ||= []
+      end
+
       def notify(operation_name, builder, globals, locals)
-        expectation = expectations.shift
+        expectation = find_allow(operation_name, builder, globals, locals) || expectations.shift
 
         if expectation
           expectation.actual(operation_name, builder, globals, locals)
@@ -37,6 +47,18 @@ module Savon
       rescue ExpectationError
         @expectations.clear
         raise
+      end
+
+      def find_allow operation_name, builder, globals, locals
+        allows.find do |expectation|
+          begin
+            expectation.actual(operation_name, builder, globals, locals)
+            expectation.verify!
+            true
+          rescue ExpectationError
+            false
+          end
+        end
       end
 
       def verify!
