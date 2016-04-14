@@ -45,7 +45,7 @@ module Savon
     end
 
     def nokogiri_options
-      @pretty_print ? { :indent => 2 } : {}
+      @pretty_print ? { :indent => 2 } : { :save_with => Nokogiri::XML::Node::SaveOptions::AS_XML }
     end
 
   end
