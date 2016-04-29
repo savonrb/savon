@@ -6,6 +6,7 @@ require "gyoku"
 
 module Savon
   class Builder
+    attr_reader :multipart
 
     SCHEMA_TYPES = {
       "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
@@ -64,7 +65,44 @@ module Savon
         xml_result = @signature.document
       end
 
-      xml_result
+      # if there are attachments for the request, we should build a multipart message according to
+      # https://www.w3.org/TR/SOAP-attachments
+      if @locals[:attachments]
+        message = Mail.new
+        xml_part = Mail::Part.new do
+          content_type 'text/xml'
+          body xml_result
+          # in Content-Type the start parameter is recommended (RFC 2387)
+          content_id '<soap-request-body@soap>'
+        end
+        message.add_part xml_part
+
+        if @locals[:attachments].is_a? Hash
+          @locals[:attachments].each do |content_location, file|
+            message.add_file file.clone
+            message.parts.last.content_location = content_location.to_s
+          end
+        elsif @locals[:attachments].is_a? Array
+          @locals[:attachments].each do |file|
+            message.add_file file.clone
+            message.parts.last.content_location = file.is_a?(String) ? File.basename(file) : file[:filename]
+          end
+        end
+        message.ready_to_send!
+
+        # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
+        # should redefine the sort order, because the soap request xml should be the first
+        message.body.set_sort_order [ "text/xml" ]
+
+        #request.headers["Content-Type"] = "Multipart/Related; boundary=#{message.body.boundary}; type=text/xml; start=\"#{xml_part.content_id}\""
+        @multipart = {
+          multipart_boundary: message.body.boundary,
+          start: xml_part.content_id,
+        }
+        message.body.encoded(message.content_transfer_encoding)
+      else
+        xml_result
+      end
     end
 
     def header_attributes

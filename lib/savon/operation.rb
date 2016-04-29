@@ -5,6 +5,7 @@ require "savon/builder"
 require "savon/response"
 require "savon/request_logger"
 require "savon/http_error"
+require "mail"
 
 module Savon
   class Operation
@@ -110,6 +111,11 @@ module Savon
       # TODO: could HTTPI do this automatically in case the header
       #       was not specified manually? [dh, 2013-01-04]
       request.headers["Content-Length"] = request.body.bytesize.to_s
+
+      if builder.multipart
+        request.headers["Content-Type"] = "Multipart/Related; boundary=#{builder.multipart[:multipart_boundary]}; " +
+          "type=text/xml; start=\"#{builder.multipart[:start]}\""
+      end
 
       request
     end
