@@ -1,3 +1,7 @@
+# 2.12.0 (2016-04-29)
+
+* Add multipart request sending option (https://www.w3.org/TR/SOAP-attachments)
+
 # 2.11.1 (2015-05-27)
 
 * Replace dependency on [uuid](https://rubygems.org/gems/uuid), using SecureRandom.uuid instead.
