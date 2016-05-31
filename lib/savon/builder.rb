@@ -81,11 +81,13 @@ module Savon
           @locals[:attachments].each do |content_location, file|
             message.add_file file.clone
             message.parts.last.content_location = content_location.to_s
+            message.parts.last.content_id = message.parts.last.content_location
           end
         elsif @locals[:attachments].is_a? Array
           @locals[:attachments].each do |file|
             message.add_file file.clone
             message.parts.last.content_location = file.is_a?(String) ? File.basename(file) : file[:filename]
+            message.parts.last.content_id = message.parts.last.content_location
           end
         end
         message.ready_to_send!
