@@ -96,7 +96,7 @@ module Savon
         # should redefine the sort order, because the soap request xml should be the first
         message.body.set_sort_order [ "text/xml" ]
 
-        #request.headers["Content-Type"] = "Multipart/Related; boundary=#{message.body.boundary}; type=text/xml; start=\"#{xml_part.content_id}\""
+        #request.headers["Content-Type"] = "multipart/related; boundary=\"#{message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
         @multipart = {
           multipart_boundary: message.body.boundary,
           start: xml_part.content_id,

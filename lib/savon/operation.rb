@@ -113,8 +113,8 @@ module Savon
       request.headers["Content-Length"] = request.body.bytesize.to_s
 
       if builder.multipart
-        request.headers["Content-Type"] = "Multipart/Related; boundary=#{builder.multipart[:multipart_boundary]}; " +
-          "type=text/xml; start=\"#{builder.multipart[:start]}\""
+        request.headers["Content-Type"] = "multipart/related; boundary=\"#{builder.multipart[:multipart_boundary]}\"; " +
+          "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
       end
 
       request
