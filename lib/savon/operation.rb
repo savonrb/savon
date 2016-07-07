@@ -67,21 +67,11 @@ module Savon
     private
 
     def create_response(response)
-      if multipart_supported?
-        Multipart::Response.new(response, @globals, @locals)
-      else
-        Response.new(response, @globals, @locals)
-      end
+      Response.new(response, @globals, @locals)
     end
 
     def multipart_supported?
-      return false unless @globals[:multipart] || @locals[:multipart]
-
-      if Savon.const_defined? :Multipart
-        true
-      else
-        raise 'Unable to find Savon::Multipart. Make sure the savon-multipart gem is installed and loaded.'
-      end
+      @globals[:multipart] || @locals[:multipart]
     end
 
     def set_locals(locals, block)
