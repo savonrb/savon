@@ -60,7 +60,6 @@ module Savon
       @wsdl.document    = @globals[:wsdl]        if @globals.include? :wsdl
       @wsdl.endpoint    = @globals[:endpoint]    if @globals.include? :endpoint
       @wsdl.namespace   = @globals[:namespace]   if @globals.include? :namespace
-      @wsdl.servicename = @globals[:servicename] if @globals.include? :servicename
       @wsdl.adapter     = @globals[:adapter]     if @globals.include? :adapter
 
       @wsdl.request = WSDLRequest.new(@globals).build
