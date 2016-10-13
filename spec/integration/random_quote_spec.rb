@@ -16,7 +16,7 @@ describe 'rpc/encoded binding test' do
       $stderr.puts e.to_hash.inspect
       f_c = e.to_hash[:fault][:faultstring]
       expect(f_c).not_to  eq('No such operation \'getQuoteRequest\'')
-      expect(f_c).to eq('soapenv:Server.userException')
+      expect(f_c).to eq('lucee.runtime.exp.DatabaseException: ')
       pending e
     end
   end
