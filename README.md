@@ -1,13 +1,3 @@
-# NOTICE: This is a fork of savonrb/savon
-
-It's forked because savonrb has a bug when headers and sessions are combined, and even though we have opened a pull request for a fix on the official repo, it seems that:
-
-![Nobody cares](https://cdn.meme.am/instances/500x/22118345.jpg)
-
-Because of that, we are using this fork. Hopefully not for long, as the savon/rconomic duo should be retired from our systems in favor of using E-conomic's shiny new JSON/REST API.
-
----
-
 # Savon
 
 Heavy metal SOAP client
