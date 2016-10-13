@@ -72,9 +72,9 @@ module Savon
 
     def build(options = {})
       configure_proxy
-      configure_cookies options[:cookies]
       configure_timeouts
       configure_headers options[:soap_action], options[:headers]
+      configure_cookies options[:cookies]
       configure_ssl
       configure_auth
       configure_redirect_handling
