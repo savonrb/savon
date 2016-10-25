@@ -36,12 +36,12 @@ module Savon
     end
 
     def build_document
-      xml = tag(builder, :Envelope, namespaces_with_globals) do |xml|
-        tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
+      xml = tag(builder, :Envelope, namespaces_with_globals) do |x|
+        tag(x, :Header, header_attributes) { x << header.to_s } unless header.empty?
         if @globals[:no_message_tag]
-          tag(xml, :Body, body_attributes) { xml << message.to_s }
+          tag(x, :Body, body_attributes) { x << message.to_s }
         else
-          tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << body_message } }
+          tag(x, :Body, body_attributes) { x.tag!(*namespaced_message_tag) { x << body_message } }
         end
       end
 
@@ -51,12 +51,12 @@ module Savon
 
         2.times do
           @header = nil
-          @signature.document = tag(builder, :Envelope, namespaces_with_globals) do |xml|
-            tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
+          @signature.document = tag(builder, :Envelope, namespaces_with_globals) do |x|
+            tag(x, :Header, header_attributes) { x << header.to_s } unless header.empty?
             if @globals[:no_message_tag]
-              tag(xml, :Body, body_attributes) { xml << message.to_s }
+              tag(x, :Body, body_attributes) { x << message.to_s }
             else
-              tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
+              tag(x, :Body, body_attributes) { x.tag!(*namespaced_message_tag) { x << message.to_s } }
             end
           end
         end
