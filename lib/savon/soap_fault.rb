@@ -33,6 +33,7 @@ module Savon
     private
 
     def message_by_version(fault)
+      puts fault
       if nori.find(fault, 'faultcode')
         code = nori.find(fault, 'faultcode')
         text = nori.find(fault, 'faultstring')
