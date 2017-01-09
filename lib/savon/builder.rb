@@ -106,7 +106,15 @@ module Savon
         @internal_namespace_count += 1
       end
 
-      [path, identifier]
+      # The paths should be in snake case to match @operation_name.  We iterate
+      # through each item in path and convert to snake case and return the new
+      # array.
+      new_path = []
+      path.each do |p|
+        new_path << p.snakecase
+      end
+
+      [new_path, identifier]
     end
 
     def namespaces_with_globals
