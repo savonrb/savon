@@ -5,6 +5,7 @@ describe Savon::WSDLRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
   let(:http_request) { HTTPI::Request.new }
+  let(:ciphers)      { OpenSSL::Cipher.ciphers }
 
   def new_wsdl_request
     Savon::WSDLRequest.new(globals, http_request)
@@ -82,6 +83,20 @@ describe Savon::WSDLRequest do
 
       it "is not set otherwise" do
         http_request.auth.ssl.expects(:verify_mode=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl ciphers" do
+      it "is set when specified" do
+        globals.ssl_ciphers(ciphers)
+        http_request.auth.ssl.expects(:ciphers=).with(ciphers)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ciphers=).never
         new_wsdl_request.build
       end
     end
@@ -232,6 +247,7 @@ describe Savon::SOAPRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
   let(:http_request) { HTTPI::Request.new }
+  let(:ciphers)      { OpenSSL::Cipher.ciphers }
 
   def new_soap_request
     Savon::SOAPRequest.new(globals, http_request)
@@ -386,6 +402,20 @@ describe Savon::SOAPRequest do
 
       it "is not set otherwise" do
         http_request.auth.ssl.expects(:verify_mode=).never
+        new_soap_request.build
+      end
+    end
+
+    describe "ssl ciphers" do
+      it "is set when specified" do
+        globals.ssl_ciphers(ciphers)
+        http_request.auth.ssl.expects(:ciphers=).with(ciphers)
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:ciphers=).never
         new_soap_request.build
       end
     end

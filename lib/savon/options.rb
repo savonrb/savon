@@ -268,6 +268,10 @@ module Savon
       @options[:ssl_ca_cert] = cert
     end
 
+    def ssl_ciphers(ciphers)
+      @options[:ssl_ciphers] = ciphers
+    end
+
 
     # HTTP basic auth credentials.
     def basic_auth(*credentials)

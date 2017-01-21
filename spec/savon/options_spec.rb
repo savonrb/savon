@@ -405,6 +405,15 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_ciphers" do
+    it "sets the ciphers to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:ciphers=).with(:none).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :ssl_cert_key_file" do
     it "sets the cert key file to use" do
       cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
