@@ -27,7 +27,7 @@ module Savon
 
     def to_hash
       parsed = nori.parse(xml || http.body)
-      nori.find(parsed, 'Envelope', 'Body')
+      nori.find(parsed, 'Envelope', 'Body') || {}
     end
 
     private

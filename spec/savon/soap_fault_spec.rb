@@ -7,6 +7,7 @@ describe Savon::SOAPFault do
   let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
   let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
   let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
+  let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
   let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }) }
@@ -118,6 +119,10 @@ describe Savon::SOAPFault do
       }
 
       expect(soap_fault_nc2.to_hash).to eq(expected)
+    end
+
+    it "returns empty hash" do
+      expect(soap_fault_no_body.to_hash).to eq({})
     end
   end
 
