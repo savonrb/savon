@@ -1,3 +1,6 @@
+# 2.11.2 (2017-03-13)
+* Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix a problem when http.body is empty
+
 # 2.11.1 (2015-05-27)
 
 * Replace dependency on [uuid](https://rubygems.org/gems/uuid), using SecureRandom.uuid instead.
