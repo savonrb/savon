@@ -91,10 +91,10 @@ class Savon
     class SimpleType < PrimaryType
 
       def base
-        child = @node.element_children.first
-        local = child.name.split(':').last
-
-        child['base'] if local == 'restriction'
+        @node.element_children.each { |child|
+          local = child.name.split(':').last
+          return child['base'] if local == 'restriction'
+        }
       end
 
     end
