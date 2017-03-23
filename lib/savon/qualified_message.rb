@@ -14,7 +14,13 @@ module Savon
       return hash.map { |value| to_hash(value, array_path(path)) } if hash.kind_of?(Array)
       return hash.to_s unless hash.kind_of? Hash
 
-      order(path, hash.inject({}) do |newhash, (key, value)|
+      if hash[:order!] == :use_schema || @order_with_schema
+        @order_with_schema = true
+        ordered_keys = @used_namespaces.select { |t| t.first == path.first && t.length == 2 }.keys.collect { |k| k.last }
+        hash[:order!] = ordered_keys
+      end
+
+      result = hash.inject({}) do |newhash, (key, value)|
         if key == :order!
           add_namespaces_to_values(value, path)
           newhash.merge(key => value)
@@ -32,7 +38,9 @@ module Savon
             newhash.merge(translated_key => value)
           end
         end
-      end)
+      end
+
+      update_order_keys(result)
     end
 
     private
@@ -51,19 +59,13 @@ module Savon
       item_paths.length == 1 ? [item_paths.values.first] : path
     end
 
-    def order(path, hash)
-      result = {}
-      @types.select{|t| t.first == path.first}.keys.collect{|k| k.last}.each do |key|
-        ns = @used_namespaces[[path.first, key]]
-        ns_key = ns + ":" + key
-        next unless hash.key?(ns_key)
+    def update_order_keys(hash)
+      return hash unless @order_with_schema
 
-        result[ns_key] = hash.delete(ns_key)
-      end
-
-      hash.each_pair{|k,v| result[k] = v}
-      result
+      order_keys = hash.delete(:order!)
+      present_order_keys = order_keys & hash.keys
+      hash[:order!] = present_order_keys + (hash.keys - present_order_keys)
+      hash
     end
-
   end
 end
