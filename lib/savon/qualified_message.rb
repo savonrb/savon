@@ -11,10 +11,10 @@ module Savon
 
     def to_hash(hash, path)
       return hash unless hash
-      return hash.map { |value| to_hash(value, path) } if hash.kind_of?(Array)
+      return hash.map { |value| to_hash(value, array_path(path)) } if hash.kind_of?(Array)
       return hash.to_s unless hash.kind_of? Hash
 
-      hash.inject({}) do |newhash, (key, value)|
+      order(path, hash.inject({}) do |newhash, (key, value)|
         if key == :order!
           add_namespaces_to_values(value, path)
           newhash.merge(key => value)
@@ -32,7 +32,7 @@ module Savon
             newhash.merge(translated_key => value)
           end
         end
-      end
+      end)
     end
 
     private
@@ -44,6 +44,25 @@ module Savon
         namespace = @used_namespaces[namespace_path]
         "#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"
       }
+    end
+
+    def array_path(path)
+      item_paths = @types.select{|t| t.first == path.first}
+      item_paths.length == 1 ? [item_paths.values.first] : path
+    end
+
+    def order(path, hash)
+      result = {}
+      @types.select{|t| t.first == path.first}.keys.collect{|k| k.last}.each do |key|
+        ns = @used_namespaces[[path.first, key]]
+        ns_key = ns + ":" + key
+        next unless hash.key?(ns_key)
+
+        result[ns_key] = hash.delete(ns_key)
+      end
+
+      hash.each_pair{|k,v| result[k] = v}
+      result
     end
 
   end
