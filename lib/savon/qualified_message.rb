@@ -11,7 +11,7 @@ module Savon
 
     def to_hash(hash, path)
       return hash unless hash
-      return hash.map { |value| to_hash(value, array_path(path)) } if hash.kind_of?(Array)
+      return hash.map { |value| to_hash(value, path) } if hash.kind_of?(Array)
       return hash.to_s unless hash.kind_of? Hash
 
       if hash[:order!] == :use_schema || @order_with_schema
@@ -52,11 +52,6 @@ module Savon
         namespace = @used_namespaces[namespace_path]
         "#{namespace.blank? ? '' : namespace + ":"}#{camelcased_value}"
       }
-    end
-
-    def array_path(path)
-      item_paths = @types.select{|t| t.first == path.first}
-      item_paths.length == 1 ? [item_paths.values.first] : path
     end
 
     def update_order_keys(hash)
