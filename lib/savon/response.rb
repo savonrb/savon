@@ -4,7 +4,8 @@ require "savon/http_error"
 
 module Savon
   class Response
-    include Mail::Patterns
+    CRLF = /\r\n/
+    WSP  = /[#{%Q|\x9\x20|}]/
 
     def initialize(http, globals, locals)
       @http    = http
