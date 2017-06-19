@@ -1,5 +1,3 @@
-require "savon"
-
 module Savon
   class SOAPFault < Error
 
