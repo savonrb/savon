@@ -6,7 +6,7 @@ class IntegrationServer
   def self.respond_with(options = {})
     code = options.fetch(:code, 200)
     body = options.fetch(:body, "")
-    headers = { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }
+    headers = { "Content-Type" => "text/plain", "Content-Length" => body.size.to_s }.merge options.fetch(:headers, {})
 
     [code, headers, [body]]
   end
@@ -76,6 +76,37 @@ class IntegrationServer
       app.passwords_hashed = true
 
       run app
+    end
+
+    map "/multipart" do
+      run lambda { |env|
+        boundary = 'mimepart_boundary'
+        message = Mail.new
+        xml_part = Mail::Part.new do
+          content_type 'text/xml'
+          body %{<?xml version='1.0' encoding='UTF-8'?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+  <soapenv:Header>response header</soapenv:Header>
+  <soapenv:Body>response body</soapenv:Body>
+</soapenv:Envelope>}
+          # in Content-Type the start parameter is recommended (RFC 2387)
+          content_id '<soap-request-body@soap>'
+        end
+        message.add_part xml_part
+
+        message.add_file File.expand_path("../../../fixtures/gzip/message.gz", __FILE__)
+        message.parts.last.content_location = 'message.gz'
+        message.parts.last.content_id = 'attachment1'
+
+        message.ready_to_send!
+        message.body.set_sort_order [ "text/xml" ]
+        message.body.encoded(message.content_transfer_encoding)
+
+        IntegrationServer.respond_with({
+          headers: { "Content-Type" => "multipart/related; boundary=\"#{message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\"" },
+          body: message.body.encoded(message.content_transfer_encoding)
+        })
+      }
     end
 
   end

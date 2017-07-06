@@ -70,10 +70,6 @@ module Savon
       Response.new(response, @globals, @locals)
     end
 
-    def multipart_supported?
-      @globals[:multipart] || @locals[:multipart]
-    end
-
     def set_locals(locals, block)
       locals = LocalOptions.new(locals)
       BlockInterface.new(locals).evaluate(block) if block

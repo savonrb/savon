@@ -93,11 +93,11 @@ module Savon
       end
     end
 
-    private
-
     def multipart?
       !(http.headers['content-type'] =~ /^multipart/im).nil?
     end
+
+    private
 
     def boundary
       return unless multipart?
