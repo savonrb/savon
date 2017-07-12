@@ -311,7 +311,7 @@ describe "Options" do
         client.call(:authenticate)
       end
 
-      expect(stdout.string).to include("INFO -- : SOAP request")
+      expect(stdout.string).to include("SOAP request")
     end
 
     it "turns HTTPI logging back on as well" do
