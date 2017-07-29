@@ -21,9 +21,15 @@ describe Savon::LogMessage do
     expect(message).to include("\n  <body>")
   end
 
-  it "filters tags in a given message" do
+  it "filters tags in a given message without pretty printing" do
     message = log_message("<root><password>secret</password></root>", [:password], false).to_s
     expect(message).to include("<password>***FILTERED***</password>")
+    expect(message).to_not include("\n  <password>***FILTERED***</password>") # no pretty printing
+  end
+
+  it "filters tags in a given message with pretty printing" do
+    message = log_message("<root><password>secret</password></root>", [:password], true).to_s
+    expect(message).to include("\n  <password>***FILTERED***</password>")
   end
 
   it "properly applies Proc filter" do
