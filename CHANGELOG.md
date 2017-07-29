@@ -1,10 +1,14 @@
+# 2.11.2 (2016-03-09)
+
+* add allow method to spec_helper in addition to expects method
+
 # 2.11.1 (2015-05-27)
 
 * Replace dependency on [uuid](https://rubygems.org/gems/uuid), using SecureRandom.uuid instead.
 
 # 2.11.0 (2015-03-31)
 
-* Formally drop support for 1.8.7. 
+* Formally drop support for 1.8.7.
 
 # 2.10.1 (2015-03-15)
 
