@@ -1,5 +1,10 @@
-# 2.11.2 (2017-03-13)
-* Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix a problem when http.body is empty
+# 2.11.2 (Unreleased)
+* Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix exception calling `SOAPFault#to_s` when http.body is empty
+* Fix: [#757](https://github.com/savonrb/savon/pull/757) Logging: Use filter without automatic pretty printing
+* Fix: [#771](https://github.com/savonrb/savon/pull/771) Restore support for cookies when using custom headers
+* Feature: [#744](https://github.com/savonrb/savon/pull/744) Add support for rpc encoded wsdl
+* Feature: [#742](https://github.com/savonrb/savon/pull/742) Add support for local request headers
+* Feature: [#704](https://github.com/savonrb/savon/pull/704) Add possibility to pass attribute delete_namespace_attributes to Nori
 
 # 2.11.1 (2015-05-27)
 
