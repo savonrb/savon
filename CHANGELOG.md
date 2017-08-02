@@ -1,3 +1,7 @@
+# 2.12.0 (Unreleased)
+
+* Drop support for ruby 2.1 and below.
+
 # 2.11.2 (Unreleased)
 * Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix exception calling `SOAPFault#to_s` when http.body is empty
 * Fix: [#757](https://github.com/savonrb/savon/pull/757) Logging: Use filter without automatic pretty printing
