@@ -3,6 +3,7 @@
 * Drop support for ruby 2.1 and below.
 
 # 2.11.2 (Unreleased)
+* Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`
 * Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix exception calling `SOAPFault#to_s` when http.body is empty
 * Fix: [#757](https://github.com/savonrb/savon/pull/757) Logging: Use filter without automatic pretty printing
 * Fix: [#771](https://github.com/savonrb/savon/pull/771) Restore support for cookies when using custom headers
