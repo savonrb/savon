@@ -21,7 +21,7 @@ module Savon
       build_wsdl_document
     end
 
-    attr_reader :globals
+    attr_reader :globals, :wsdl
 
     def operations
       raise_missing_wsdl_error! unless @wsdl.document?
