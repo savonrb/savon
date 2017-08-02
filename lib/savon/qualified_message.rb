@@ -23,7 +23,7 @@ module Savon
           translated_key << "!" if key[-1] == "!"
           newpath = path + [translated_key]
 
-          if @used_namespaces[newpath]
+          if @used_namespaces[newpath] and @key_converter != :none
             newhash.merge(
               "#{@used_namespaces[newpath]}:#{translated_key}" =>
                 to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
