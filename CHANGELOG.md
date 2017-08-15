@@ -2,7 +2,7 @@
 
 * Drop support for ruby 2.1 and below.
 
-# 2.11.2 (Unreleased)
+# 2.11.2 (2017-08-03)
 * Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`
 * Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix exception calling `SOAPFault#to_s` when http.body is empty
 * Fix: [#757](https://github.com/savonrb/savon/pull/757) Logging: Use filter without automatic pretty printing
