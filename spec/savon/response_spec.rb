@@ -235,6 +235,11 @@ describe Savon::Response do
       expect(result).to be_a(Hash)
       expect(result.keys).to include(:authentication_value)
     end
+
+    it 'fails correctly when envelope contains only string' do
+      response = soap_response({ :body => Fixture.response(:no_body) })
+      expect { response.find('Body') }.to raise_error Savon::InvalidResponseError
+    end
   end
 
   describe "#http" do
