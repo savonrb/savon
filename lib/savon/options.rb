@@ -137,7 +137,7 @@ module Savon
 
     # Proxy server to use for all requests.
     def proxy(proxy)
-      @options[:proxy] = proxy
+      @options[:proxy] = proxy unless proxy.nil?
     end
 
     # A Hash of HTTP headers.
