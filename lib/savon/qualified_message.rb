@@ -9,7 +9,7 @@ module Savon
     end
 
     def to_hash(hash, path)
-      return unless hash
+      return hash unless hash
       return hash.map { |value| to_hash(value, path) } if hash.is_a?(Array)
       return hash.to_s unless hash.is_a?(Hash)
 

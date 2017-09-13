@@ -62,6 +62,39 @@ module Savon
         expect(resulting_hash).to eq good_result
         expect(xml).to eq good_xml
       end
+
+      it "properly handles boolean false" do
+        used_namespaces = {
+          %w(tns Foo) => 'ns'
+        }
+
+        hash = {
+          :foo => {
+            :falsey => {
+              :@attr1 => false,
+              :content! => false
+            }
+          }
+        }
+
+        good_result = {
+          "ns:Foo" => {
+            :falsey => {
+              :@attr1 => false,
+              :content! => false
+            }
+          }
+        }
+
+        good_xml = %(<ns:Foo><Falsey attr1="false">false</Falsey></ns:Foo>)
+
+        message = described_class.new(types, used_namespaces, key_converter)
+        resulting_hash = message.to_hash(hash, ['tns'])
+        xml = Gyoku.xml(resulting_hash, key_converter: key_converter)
+
+        expect(resulting_hash).to eq good_result
+        expect(xml).to eq good_xml
+      end
     end
 
   end
