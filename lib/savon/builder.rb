@@ -37,14 +37,7 @@ module Savon
     end
 
     def build_document
-      xml_result = tag(builder, :Envelope, namespaces_with_globals) do |xml|
-        tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
-        if @globals[:no_message_tag]
-          tag(xml, :Body, body_attributes) { xml << message.to_s }
-        else
-          tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << body_message } }
-        end
-      end
+      xml_result = build_xml
 
       # if we have a signature sign the document
       if @signature
@@ -52,14 +45,7 @@ module Savon
 
         2.times do
           @header = nil
-          @signature.document = tag(builder, :Envelope, namespaces_with_globals) do |xml|
-            tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
-            if @globals[:no_message_tag]
-              tag(xml, :Body, body_attributes) { xml << message.to_s }
-            else
-              tag(xml, :Body, body_attributes) { xml.tag!(*namespaced_message_tag) { xml << message.to_s } }
-            end
-          end
+          @signature.document = build_xml
         end
 
         xml_result = @signature.document
@@ -68,38 +54,7 @@ module Savon
       # if there are attachments for the request, we should build a multipart message according to
       # https://www.w3.org/TR/SOAP-attachments
       if @locals[:attachments]
-        message = Mail.new
-        xml_part = Mail::Part.new do
-          content_type 'text/xml'
-          body xml_result
-          # in Content-Type the start parameter is recommended (RFC 2387)
-          content_id '<soap-request-body@soap>'
-        end
-        message.add_part xml_part
-
-        if @locals[:attachments].is_a? Hash
-          @locals[:attachments].each do |content_location, file|
-            message.add_file file.clone
-            message.parts.last.content_id = message.parts.last.content_location = content_location.to_s
-          end
-        elsif @locals[:attachments].is_a? Array
-          @locals[:attachments].each do |file|
-            message.add_file file.clone
-            message.parts.last.content_id = message.parts.last.content_location = file.is_a?(String) ? File.basename(file) : file[:filename]
-          end
-        end
-        message.ready_to_send!
-
-        # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
-        # should redefine the sort order, because the soap request xml should be the first
-        message.body.set_sort_order [ "text/xml" ]
-
-        #request.headers["Content-Type"] = "multipart/related; boundary=\"#{message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
-        @multipart = {
-          multipart_boundary: message.body.boundary,
-          start: xml_part.content_id,
-        }
-        message.body.encoded(message.content_transfer_encoding)
+        build_multipart_message(xml_result)
       else
         xml_result
       end
@@ -155,15 +110,13 @@ module Savon
       @namespaces ||= begin
         namespaces = SCHEMA_TYPES.dup
 
-        if namespace_identifier == nil
-          namespaces["xmlns"] = @globals[:namespace] || @wsdl.namespace
-        else
-          namespaces["xmlns:#{namespace_identifier}"] = @globals[:namespace] || @wsdl.namespace
-        end
+        # check namespace_identifier
+        namespaces["xmlns#{namespace_identifier.nil? ? '' : ":#{namespace_identifier}"}"] =
+          @globals[:namespace] || @wsdl.namespace
 
-        key = ["xmlns"]
-        key << env_namespace if env_namespace && env_namespace != ""
-        namespaces[key.join(":")] = SOAP_NAMESPACE[@globals[:soap_version]]
+        # check env_namespace
+        namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
+          SOAP_NAMESPACE[@globals[:soap_version]]
 
         namespaces
       end
@@ -206,12 +159,14 @@ module Savon
     end
 
     def message_tag
-      message_tag = @wsdl.soap_input(@operation_name.to_sym).keys.first if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+      wsdl_tag_name = @wsdl.document? && @wsdl.soap_input(@operation_name.to_sym)
+
+      message_tag = wsdl_tag_name.keys.first if wsdl_tag_name.is_a?(Hash)
       message_tag ||= @locals[:message_tag]
-      message_tag ||= @wsdl.soap_input(@operation_name.to_sym) if @wsdl.document?
+      message_tag ||= wsdl_tag_name
       message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
 
-      @message_tag = message_tag.to_sym
+      message_tag.to_sym
     end
 
     def message_attributes
@@ -265,5 +220,69 @@ module Savon
       end
     end
 
+    def build_xml
+      tag(builder, :Envelope, namespaces_with_globals) do |xml|
+        tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
+        tag(xml, :Body, body_attributes) do
+          if @globals[:no_message_tag]
+            xml << message.to_s
+          else
+            xml.tag!(*namespaced_message_tag) { xml << body_message }
+          end
+        end
+      end
+    end
+
+    def build_multipart_message(message_xml)
+      multipart_message = init_multipart_message(message_xml)
+      add_attachments_to_multipart_message(multipart_message)
+
+      multipart_message.ready_to_send!
+
+      # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
+      # should redefine the sort order, because the soap request xml should be the first
+      multipart_message.body.set_sort_order [ "text/xml" ]
+
+      multipart_message.body.encoded(multipart_message.content_transfer_encoding)
+    end
+
+    def init_multipart_message(message_xml)
+      multipart_message = Mail.new
+      xml_part = Mail::Part.new do
+        content_type 'text/xml'
+        body message_xml
+        # in Content-Type the start parameter is recommended (RFC 2387)
+        content_id '<soap-request-body@soap>'
+      end
+      multipart_message.add_part xml_part
+
+      #request.headers["Content-Type"] = "multipart/related; boundary=\"#{multipart_message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
+      @multipart = {
+        multipart_boundary: multipart_message.body.boundary,
+        start: xml_part.content_id,
+      }
+
+      multipart_message
+    end
+
+    def add_attachments_to_multipart_message(multipart_message)
+      if @locals[:attachments].is_a? Hash
+        # hash example: { 'att1' => '/path/to/att1', 'att2' => '/path/to/att2' }
+        @locals[:attachments].each do |identifier, attachment|
+          add_attachment_to_multipart_message(multipart_message, attachment, identifier)
+        end
+      elsif @locals[:attachments].is_a? Array
+        # array example: [ '/path/to/att1', '/path/to/att2' ]
+        # array example: [ { filename: 'att1.xml', content: '<x/>' }, { filename: 'att2.xml', content: '<y/>' } ]
+        @locals[:attachments].each do |attachment|
+          add_attachment_to_multipart_message(multipart_message, attachment, attachment.is_a?(String) ? File.basename(attachment) : attachment[:filename])
+        end
+      end
+    end
+
+    def add_attachment_to_multipart_message(multipart_message, attachment, identifier)
+      multipart_message.add_file attachment.clone
+      multipart_message.parts.last.content_id = multipart_message.parts.last.content_location = identifier.to_s
+    end
   end
 end

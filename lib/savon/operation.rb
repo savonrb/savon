@@ -99,7 +99,8 @@ module Savon
       request.headers["Content-Length"] = request.body.bytesize.to_s
 
       if builder.multipart
-        request.headers["Content-Type"] = "multipart/related; boundary=\"#{builder.multipart[:multipart_boundary]}\"; " +
+        request.headers["Content-Type"] = "multipart/related; " \
+          "boundary=\"#{builder.multipart[:multipart_boundary]}\"; " \
           "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
       end
 
@@ -111,11 +112,11 @@ module Savon
       return if @locals.include?(:soap_action) && !@locals[:soap_action]
 
       # get the soap_action from local options
-      soap_action = @locals[:soap_action]
+      @locals[:soap_action] ||
       # with no local option, but a wsdl, ask it for the soap_action
-      soap_action ||= @wsdl.soap_action(@name.to_sym) if @wsdl.document?
+      @wsdl.document? && @wsdl.soap_action(@name.to_sym) ||
       # if there is no soap_action up to this point, fallback to a simple default
-      soap_action ||= Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
+      Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
     end
 
     def endpoint
