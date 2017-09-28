@@ -469,6 +469,26 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_ca_cert_path" do
+    it "sets the ca cert path to use" do
+      ca_cert_path = "../../fixtures/ssl"
+      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_path=).with(ca_cert_path).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ca_cert_path => ca_cert_path)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_ca_cert_store" do
+    it "sets the cert store to use" do
+      cert_store = OpenSSL::X509::Store.new
+      HTTPI::Auth::SSL.any_instance.expects(:cert_store=).with(cert_store).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_store => cert_store)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :ssl_ca_cert" do
     it "sets the ca cert file to use" do
       ca_cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
@@ -1071,5 +1091,4 @@ describe "Options" do
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
-
 end
