@@ -155,14 +155,27 @@ describe Savon::Operation do
       expect(actual_soap_action).to eq('"http://taxcloud.net/VerifyAddress"')
     end
 
-    it "falls back to Gyoku if both option and WSDL are not available" do
-      globals.endpoint @server.url(:inspect_request)
+    context "when both option and WSDL are not available" do
+      it "falls back to Gyoku" do
+        globals.endpoint @server.url(:inspect_request)
 
-      operation = new_operation(:authenticate, no_wsdl, globals)
-      response  = operation.call
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        response  = operation.call
 
-      actual_soap_action = inspect_request(response).soap_action
-      expect(actual_soap_action).to eq(%("authenticate"))
+        actual_soap_action = inspect_request(response).soap_action
+        expect(actual_soap_action).to eq(%("authenticate"))
+      end
+
+      it "prefixes the SOAP action with the soap_action_prefix" do
+        globals.endpoint @server.url(:inspect_request)
+        globals.soap_action_prefix "http://example.com/"
+
+        operation = new_operation(:authenticate, no_wsdl, globals)
+        response  = operation.call
+
+        actual_soap_action = inspect_request(response).soap_action
+        expect(actual_soap_action).to eq(%("http://example.com/authenticate"))
+      end
     end
 
     it "returns a Savon::Multipart::Response if available and requested globally" do
