@@ -1,6 +1,6 @@
 # 2.12.0
 
-* Freature: [#794](https://github.com/savonrb/savon/pull/794), add global option ssl_ciphers.
+* Feature: [#794](https://github.com/savonrb/savon/pull/794), add global option ssl_ciphers.
 
 # 2.11.1 (2015-05-27)
 
