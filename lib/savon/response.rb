@@ -69,7 +69,7 @@ module Savon
 
     def find(*path)
       envelope = nori.find(hash, 'Envelope')
-      raise_invalid_response_error! unless envelope
+      raise_invalid_response_error! unless envelope.is_a?(Hash)
 
       nori.find(envelope, *path)
     end

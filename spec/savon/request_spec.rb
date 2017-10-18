@@ -17,6 +17,20 @@ describe Savon::WSDLRequest do
       expect(wsdl_request.build).to be_an(HTTPI::Request)
     end
 
+    describe "headers" do
+      it "are set when specified" do
+        globals.headers("Proxy-Authorization" => "Basic auth")
+        configured_http_request = new_wsdl_request.build
+
+        expect(configured_http_request.headers["Proxy-Authorization"]).to eq("Basic auth")
+      end
+
+      it "are not set otherwise" do
+        configured_http_request = new_wsdl_request.build
+        expect(configured_http_request.headers).to_not include("Proxy-Authorization")
+      end
+    end
+
     describe "proxy" do
       it "is set when specified" do
         globals.proxy("http://proxy.example.com")

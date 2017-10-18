@@ -5,10 +5,10 @@ Heavy metal SOAP client
 [Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
 
-[![Build Status](https://secure.travis-ci.org/savonrb/savon.png?branch=master)](http://travis-ci.org/savonrb/savon)
-[![Gem Version](https://badge.fury.io/rb/savon.png)](http://badge.fury.io/rb/savon)
-[![Code Climate](https://codeclimate.com/github/savonrb/savon.png)](https://codeclimate.com/github/savonrb/savon)
-[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.png?branch=version2)](https://coveralls.io/r/savonrb/savon)
+[![Build Status](https://secure.travis-ci.org/savonrb/savon.svg?branch=master)](http://travis-ci.org/savonrb/savon)
+[![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
+[![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
+[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg?branch=version2)](https://coveralls.io/r/savonrb/savon)
 
 
 ## Version 2
@@ -22,7 +22,7 @@ $ gem install savon
 or add it to your Gemfile like this:
 
 ```
-gem 'savon', '~> 2.11.0'
+gem 'savon', '~> 2.11.1'
 ```
 
 ## Usage example
@@ -45,6 +45,19 @@ response.body
 
 For more examples, you should check out the
 [integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
+
+## Ruby version support
+* 2.12.x - MRI 2.2, 2.3, 2.4
+* 2.11.x - MRI 2.0, 2.1, 2.2, and 2.3
+
+If you are running MRI 1.8.7, try the 2.6.x branch.
+
+## Running tests
+
+```bash
+$ bundle install
+$ bundle exec rspec
+```
 
 ## FAQ
 

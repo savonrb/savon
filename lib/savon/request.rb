@@ -56,11 +56,18 @@ module Savon
     def build
       configure_proxy
       configure_timeouts
+      configure_headers
       configure_ssl
       configure_auth
       configure_redirect_handling
 
       @http_request
+    end
+
+    private
+
+    def configure_headers
+      @http_request.headers = @globals[:headers] if @globals.include? :headers
     end
   end
 

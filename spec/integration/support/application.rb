@@ -1,4 +1,4 @@
-require "rack/builder"
+require "rack"
 require "json"
 
 class IntegrationServer

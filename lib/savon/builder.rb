@@ -36,7 +36,7 @@ module Savon
     end
 
     def build_document
-      xml = tag(builder, :Envelope, namespaces_with_globals) do |xml|
+      xml_result = tag(builder, :Envelope, namespaces_with_globals) do |xml|
         tag(xml, :Header, header_attributes) { xml << header.to_s } unless header.empty?
         if @globals[:no_message_tag]
           tag(xml, :Body, body_attributes) { xml << message.to_s }
@@ -47,7 +47,7 @@ module Savon
 
       # if we have a signature sign the document
       if @signature
-        @signature.document = xml
+        @signature.document = xml_result
 
         2.times do
           @header = nil
@@ -61,10 +61,10 @@ module Savon
           end
         end
 
-        xml = @signature.document
+        xml_result = @signature.document
       end
 
-      xml
+      xml_result
     end
 
     def header_attributes

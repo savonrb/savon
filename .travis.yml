@@ -5,11 +5,10 @@ before_install:
   - gem install bundler
 script: "bundle exec rake --trace"
 rvm:
-  - 2.0.0
-  - 2.1.8
   - 2.2.4
   - 2.3.0
-  - jruby
+  - 2.4.1
+  - jruby-9.1.13.0
   - rbx-2
 matrix:
   allow_failures:
