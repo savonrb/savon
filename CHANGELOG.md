@@ -1,6 +1,7 @@
 # 2.12.0 (Unreleased)
 
 * Drop support for ruby 2.1 and below.
+* Feature: [#794](https://github.com/savonrb/savon/pull/794), add global option ssl_ciphers.
 
 # 2.11.2 (2017-08-03)
 * Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`
