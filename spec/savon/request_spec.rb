@@ -75,8 +75,8 @@ describe Savon::WSDLRequest do
 
     describe "ssl version" do
       it "is set when specified" do
-        globals.ssl_version(:SSLv3)
-        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+        globals.ssl_version(:TLSv1)
+        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
 
         new_wsdl_request.build
       end
@@ -89,8 +89,8 @@ describe Savon::WSDLRequest do
 
     describe "ssl verify mode" do
       it "is set when specified" do
-        globals.ssl_verify_mode(:none)
-        http_request.auth.ssl.expects(:verify_mode=).with(:none)
+        globals.ssl_verify_mode(:peer)
+        http_request.auth.ssl.expects(:verify_mode=).with(:peer)
 
         new_wsdl_request.build
       end
@@ -394,8 +394,8 @@ describe Savon::SOAPRequest do
 
     describe "ssl version" do
       it "is set when specified" do
-        globals.ssl_version(:SSLv3)
-        http_request.auth.ssl.expects(:ssl_version=).with(:SSLv3)
+        globals.ssl_version(:TLSv1)
+        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
 
         new_soap_request.build
       end
@@ -408,8 +408,8 @@ describe Savon::SOAPRequest do
 
     describe "ssl verify mode" do
       it "is set when specified" do
-        globals.ssl_verify_mode(:none)
-        http_request.auth.ssl.expects(:verify_mode=).with(:none)
+        globals.ssl_verify_mode(:peer)
+        http_request.auth.ssl.expects(:verify_mode=).with(:peer)
 
         new_soap_request.build
       end

@@ -389,18 +389,18 @@ describe "Options" do
 
   context "global :ssl_version" do
     it "sets the SSL version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:SSLv3).twice
+      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_version => :SSLv3)
+      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
       client.call(:authenticate)
     end
   end
 
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none).twice
+      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :none)
+      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :peer)
       client.call(:authenticate)
     end
   end
