@@ -2,14 +2,16 @@ require 'spec_helper'
 
 module LogInterceptor
   @@intercepted_request = ""
-  def self.debug(message)
+  def self.debug(message = nil)
+    message ||= yield if block_given?
+
     # save only the first XMLly message
     if message.include? "xml version"
       @@intercepted_request = message if @@intercepted_request == ""
     end
   end
 
-  def self.info(message)
+  def self.info(message = nil)
   end
 
   def self.get_intercepted_request
@@ -27,6 +29,7 @@ describe 'Correct translation of attributes to XML' do
 
     client = Savon.client(
       :wsdl => "http://mt205.sabameeting.com/CWS/CWS.asmx?WSDL",
+      :log => true,
       :logger => LogInterceptor
     )
 
@@ -48,14 +51,12 @@ describe 'Correct translation of attributes to XML' do
 
     client = Savon.client(
       :wsdl => "http://mt205.sabameeting.com/CWS/CWS.asmx?WSDL",
+      :log => true,
       :logger => LogInterceptor
     )
 
     response = nil
-    begin
-      response = call_and_fail_gracefully(client, :add_new_user, :message => { :user => {}, :attributes! => { :user => { :userID => "test" } } })
-    rescue
-    end
+    response = call_and_fail_gracefully(client, :add_new_user, :message => { :user => {}, :attributes! => { :user => { :userID => "test" } } })
 
     xml_doc = Nokogiri::XML(LogInterceptor.get_intercepted_request)
     xml_doc.remove_namespaces!
