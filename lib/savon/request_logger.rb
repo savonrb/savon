@@ -8,9 +8,9 @@ module Savon
     end
 
     def log(request, &http_request)
-      log_request(request) if log?
+      log_request(request) if request_log?
       response = http_request.call
-      log_response(response) if log?
+      log_response(response) if response_log?
 
       response
     end
@@ -21,6 +21,14 @@ module Savon
 
     def log?
       @globals[:log]
+    end
+
+    def request_log?
+      @globals[:log]
+    end
+
+    def response_log?
+      @globals[:log] && !@globals[:log_request_only]
     end
 
     private

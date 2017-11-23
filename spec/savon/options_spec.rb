@@ -318,6 +318,16 @@ describe "Options" do
       HTTPI.expects(:log=).with(true)
       new_client(:log => true)
     end
+
+    it "instructs Savon to log SOAP requests only" do
+      stdout = mock_stdout do
+        client = new_client(:endpoint => @server.url, :log => true, :log_request_only => true)
+        client.call(:authenticate)
+      end
+
+      expect(stdout.string).to include("INFO -- : SOAP request")
+      expect(stdout.string).not_to include("INFO -- : SOAP response")
+    end
   end
 
   context "global :logger" do
