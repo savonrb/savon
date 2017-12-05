@@ -1,0 +1,14 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <topLevelNode>
+         <nestedNode></nestedNode>
+         <nestedNode></nestedNode>
+         <nestedNode>
+            <soap:ServiceFault>
+              <faultcode>soap:Server</faultcode>
+              <faultstring>Fault occurred while processing.</faultstring>
+            </soap:ServiceFault>
+         </nestedNode>
+      </topLevelNode>
+   </soap:Body>
+</soap:Envelope>
