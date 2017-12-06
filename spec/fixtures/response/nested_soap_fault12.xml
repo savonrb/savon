@@ -1,0 +1,24 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:m="http://www.example.org/timeouts">
+  <soap:Body>
+    <topLevelNode>
+      <nestedNode></nestedNode>
+      <nestedNode></nestedNode>
+      <nestedNode>
+        <soap:Fault>
+          <Code>
+            <Value>soap:Sender</Value>
+            <Subcode>
+              <Value>m:MessageTimeout</Value>
+            </Subcode>
+          </Code>
+          <Reason>
+            <Text xml:lang="en">Sender Timeout</Text>
+          </Reason>
+          <Detail>
+            <m:MaxTime>P5M</m:MaxTime>
+          </Detail>
+        </soap:Fault>
+      </nestedNode>
+    </topLevelNode>
+  </soap:Body>
+</soap:Envelope>

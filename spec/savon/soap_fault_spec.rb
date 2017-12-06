@@ -7,6 +7,7 @@ describe Savon::SOAPFault do
   let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
   let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
   let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
+  let(:nested_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:nested_soap_fault)), nori }
   let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
@@ -39,8 +40,23 @@ describe Savon::SOAPFault do
       expect(Savon::SOAPFault.present? http).to be_truthy
     end
 
+    it "returns true if the HTTP response contains a funky SOAP fault" do
+      http = new_response(:body => Fixture.response(:soap_fault_funky))
+      expect(Savon::SOAPFault.present? http).to be_truthy
+    end
+
     it "returns false unless the HTTP response contains a SOAP fault" do
       expect(Savon::SOAPFault.present? new_response).to be_falsey
+    end
+
+    it "returns false if the HTTP response contains a nested SOAP 1.1 fault" do
+      http = new_response(:body => Fixture.response(:nested_soap_fault))
+      expect(Savon::SOAPFault.present? http).to be_falsey
+    end
+
+    it "returns false if the HTTP response contains a nested SOAP 1.2 fault" do
+      http = new_response(:body => Fixture.response(:nested_soap_fault12))
+      expect(Savon::SOAPFault.present? http).to be_falsey
     end
   end
 
@@ -68,6 +84,10 @@ describe Savon::SOAPFault do
 
       it "works even if the keys are different in a funky SOAP fault message" do
         expect(soap_fault_funky.send method).to eq("(42) The Answer to Life The Universe And Everything")
+      end
+
+      it "raises NoMethodError when parsing nested fault nodes" do
+        expect{nested_soap_fault.send method}.to raise_error(NoMethodError)
       end
     end
   end
