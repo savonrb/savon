@@ -11,7 +11,7 @@ module Savon
       @locals  = locals
 
       build_soap_and_http_errors!
-      raise_soap_and_http_errors! if @globals[:raise_errors]
+      raise_soap_and_http_errors!
     end
 
     attr_reader :http, :globals, :locals, :soap_fault, :http_error
@@ -69,7 +69,9 @@ module Savon
 
     def find(*path)
       envelope = nori.find(hash, 'Envelope')
-      raise_invalid_response_error! unless envelope.is_a?(Hash)
+      unless envelope.is_a?(Hash)
+        raise_invalid_response_error! || envelope = {}
+      end
 
       nori.find(envelope, *path)
     end
@@ -82,11 +84,13 @@ module Savon
     end
 
     def raise_soap_and_http_errors!
+      return unless @globals[:raise_errors]
       raise soap_fault if soap_fault?
       raise http_error if http_error?
     end
 
     def raise_invalid_response_error!
+      return unless @globals[:raise_errors]
       raise InvalidResponseError, "Unable to parse response body:\n" + xml.inspect
     end
 
