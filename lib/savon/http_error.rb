@@ -15,9 +15,7 @@ module Savon
     attr_reader :http
 
     def to_s
-      message = "HTTP error (#{@http.code})"
-      message << ": #{@http.body}" unless @http.body.empty?
-      message
+      "HTTP error (#{@http.code}): #{@http.body}" unless @http.body.empty?
     end
 
     def to_hash
