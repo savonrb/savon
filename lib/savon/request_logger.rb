@@ -1,3 +1,4 @@
+require 'securerandom'
 require "savon/log_message"
 
 module Savon
@@ -8,9 +9,10 @@ module Savon
     end
 
     def log(request, &http_request)
-      log_request(request) if log?
+      uuid = SecureRandom.uuid.to_s
+      log_request(uuid, request) if log?
       response = http_request.call
-      log_response(response) if log?
+      log_response(uuid, response) if log?
 
       response
     end
@@ -25,15 +27,15 @@ module Savon
 
     private
 
-    def log_request(request)
-      logger.info  { "SOAP request: #{request.url}" }
-      logger.info  { headers_to_log(request.headers) }
-      logger.debug { body_to_log(request.body) }
+    def log_request(uuid, request)
+      logger.info  { "SOAP Id: #{uuid}, SOAP request: #{request.url}" }
+      logger.info  { "SOAP Id: #{uuid}, #{headers_to_log(request.headers)}" }
+      logger.debug { "SOAP Id: #{uuid}, #{body_to_log(request.body)}" }
     end
 
-    def log_response(response)
-      logger.info  { "SOAP response (status #{response.code})" }
-      logger.debug { body_to_log(response.body) }
+    def log_response(uuid, response)
+      logger.info  { "SOAP Id: #{uuid}, SOAP response (status #{response.code})" }
+      logger.debug { "SOAP Id: #{uuid}, #{body_to_log(response.body)}" }
     end
 
     def headers_to_log(headers)
