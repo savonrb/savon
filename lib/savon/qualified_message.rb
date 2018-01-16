@@ -52,7 +52,8 @@ module Savon
       type = nil
       for i in 1..(path.length-1)
         return @used_namespaces[path] unless @used_namespaces[path].nil?
-        type = @types[path[0..i]]
+        type_path = path[0..i]
+        type = @types[type_path]
         if type.nil?
           return get_closest_parent_namespace(path)
         else
