@@ -49,31 +49,34 @@ module Savon
     end
 
     def namespace_look(path)
-      buf_path = path.dup
-
+      buf_path = path
+      type = nil
       for i in 1..(path.length-1)
         namespace = @used_namespaces[buf_path]
-        return namespace if !namespace.nil?
+        return namespace unless namespace.nil?
+        previous_type = type unless i == 1
         type = @types[path[0..i]]
-        break if type.nil?
-        buf_path[0..1] = type
+        if type.nil?
+          return nil if previous_type.nil?
+          buf_path = [previous_type] + path[i..(path.length-1)]
+          return get_closest_parent_namespace(buf_path)
+        else
+          buf_path = [type] + path[i + 1..(path.length-1)]
+        end
       end
-
-      up_path = path.dup
-      up_path.pop
-      get_closest_parent_namespace(up_path)
     end
 
     def get_closest_parent_namespace(path)
       return if path.empty?
-      namespace = namespace_look(path)
-      return namespace if !namespace.nil?
+      namespace = @used_namespaces[path]
+      return namespace unless namespace.nil?
       path.pop
       get_closest_parent_namespace(path)
     end
 
   end
 end
+
 
 
 
