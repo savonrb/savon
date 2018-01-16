@@ -43,17 +43,21 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace        = namespace_deep_look(namespace_path)
+        namespace = namespace_deep_look(namespace_path)
         namespace.blank? ? value : "#{namespace}:#{translated_value}"
       end
     end
 
     def namespace_deep_look(path)
-      down_path = path.dup
-      while !down_path.empty?
-        namespace = namespace_by_path(down_path)
+      type_index = 0
+      type = path
+      buf_path = path
+      while !type.nil?
+        namespace = namespace_by_path(buf_path)
         return namespace if !namespace.nil?
-        down_path.shift
+        type_index += 1
+        type = @types[path[0..type_index]]
+        buf_path[0..1] = type if !type.nil?
       end
       up_path = path.dup
       while !up_path.empty?
@@ -63,10 +67,11 @@ module Savon
       end
     end
 
+
     def namespace_by_path(namespace_path)
-      namespace_path_type = @types.find{|key,val| key.map{|e| e.to_s.underscore}  == namespace_path.map{|e| e.to_s.underscore}}
-      namespace_path_type.nil? ? nil : @used_namespaces[namespace_path_type[0]]
+       @used_namespaces[namespace_path]
     end
   end
 end
+
 
