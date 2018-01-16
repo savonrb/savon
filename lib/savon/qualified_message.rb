@@ -43,35 +43,37 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace = namespace_deep_look(namespace_path)
+        namespace        = namespace_look(namespace_path)
         namespace.blank? ? value : "#{namespace}:#{translated_value}"
       end
     end
 
-    def namespace_deep_look(path)
-      type_index = 0
-      type = path
-      buf_path = path
-      while !type.nil?
-        namespace = namespace_by_path(buf_path)
+    def namespace_look(path)
+      buf_path = path.dup
+
+      for i in 1..(path.length-1)
+        namespace = @used_namespaces[buf_path]
         return namespace if !namespace.nil?
-        type_index += 1
-        type = @types[path[0..type_index]]
-        buf_path[0..1] = type if !type.nil?
+        type = @types[path[0..i]]
+        break if type.nil?
+        buf_path[0..1] = type
       end
+
       up_path = path.dup
-      while !up_path.empty?
-        up_path.pop
-        namespace = namespace_deep_look(up_path) if !up_path.empty?
-        return namespace if !namespace.nil?
-      end
+      up_path.pop
+      get_closest_parent_namespace(up_path)
     end
 
-
-    def namespace_by_path(namespace_path)
-       @used_namespaces[namespace_path]
+    def get_closest_parent_namespace(path)
+      return if path.empty?
+      namespace = namespace_look(path)
+      return namespace if !namespace.nil?
+      path.pop
+      get_closest_parent_namespace(path)
     end
+
   end
 end
+
 
 
