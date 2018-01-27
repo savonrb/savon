@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "savon/header"
 require "savon/message"
 require "nokogiri"

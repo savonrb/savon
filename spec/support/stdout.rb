@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SpecSupport
 
   def mock_stdout
