@@ -79,6 +79,7 @@ module Savon
         :namespaces                  => {},
         :logger                      => Logger.new($stdout),
         :log                         => false,
+        :log_request_only            => false,
         :filters                     => [],
         :pretty_print_xml            => false,
         :raise_errors                => true,
@@ -194,6 +195,10 @@ module Savon
     def log(log)
       HTTPI.log = log
       @options[:log] = log
+    end
+
+    def log_request_only(log_request_only)
+      @options[:log_request_only] = log_request_only
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
