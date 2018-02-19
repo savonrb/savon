@@ -124,7 +124,9 @@ module Savon
       # with no local option, but a wsdl, ask it for the soap_action
       soap_action ||= @wsdl.soap_action(@name.to_sym) if @wsdl.document?
       # if there is no soap_action up to this point, fallback to a simple default
-      soap_action ||= Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
+      action_name = Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
+      prefix = @globals[:soap_action_prefix] if @globals[:soap_action_prefix]
+      soap_action || "#{prefix}#{action_name}"
     end
 
     def endpoint
