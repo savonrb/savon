@@ -16,19 +16,19 @@ module Savon
 
       hash.each_with_object({}) do |(key, value), newhash|
         case key
-        when :order!
-          newhash[key] = add_namespaces_to_values(value, path)
-        when :attributes!, :content!
-          newhash[key] = to_hash(value, path)
-        else
-          if key.to_s =~ /!$/
-            newhash[key] = value
+          when :order!
+            newhash[key] = add_namespaces_to_values(value, path)
+          when :attributes!, :content!
+            newhash[key] = to_hash(value, path)
           else
-            translated_key  = translate_tag(key)
-            newkey          = add_namespaces_to_values(key, path).first
-            newpath         = path + [translated_key]
-            newhash[newkey] = to_hash(value, newpath)
-          end
+            if key.to_s =~ /!$/
+              newhash[key] = value
+            else
+              translated_key  = translate_tag(key)
+              newkey          = add_namespaces_to_values(key, path).first
+              newpath         = path + [translated_key]
+              newhash[newkey] = to_hash(value, newpath)
+            end
         end
         newhash
       end
@@ -44,9 +44,37 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace        = @used_namespaces[namespace_path]
+        namespace        = namespace_look(namespace_path)
         namespace.blank? ? value : "#{namespace}:#{translated_value}"
       end
     end
+
+    def namespace_look(path)
+      type = nil
+      for i in 1..(path.length-1)
+        return @used_namespaces[path] unless @used_namespaces[path].nil?
+        type_path = path[0..i]
+        type = @types[type_path]
+        if type.nil?
+          return get_closest_parent_namespace(path)
+        else
+          path[0..1] = type
+        end
+      end
+    end
+
+    def get_closest_parent_namespace(path)
+      return if path.empty?
+      return @used_namespaces[path] unless @used_namespaces[path].nil?
+      path.pop
+      get_closest_parent_namespace(path)
+    end
+
   end
 end
+
+
+
+
+
+
