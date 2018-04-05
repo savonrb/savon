@@ -10,6 +10,8 @@ require "mail"
 
 module Savon
   class Operation
+    CERT          = ''
+    WS_CLIENT_KEY = ''
 
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
@@ -105,7 +107,8 @@ module Savon
           "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
       end
 
-      request
+      signer(request)
+
     end
 
     def soap_action
@@ -133,6 +136,48 @@ module Savon
     def raise_expected_httpi_response!
       raise Error, "Observers need to return an HTTPI::Response to mock " \
                    "the request or nil to execute the request."
+    end
+
+    def signer(request)
+      signer = Signer.new(request.body)
+      signer.cert = OpenSSL::X509::Certificate.new(File.read(CERT))
+      signer.private_key = OpenSSL::PKey::RSA.new(File.read(WS_CLIENT_KEY))
+
+      signer.digest_algorithm           = :sha256 # Set algorithm for node digesting
+      signer.signature_digest_algorithm = :sha256 # Set algorithm for message digesting for signing
+
+      signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+
+      header_node = Nokogiri::XML::Node.new "soapenv:Header", signer.document
+      soapBody = signer.document.xpath("//soapenv:Body").first
+      soapBody.add_previous_sibling(header_node)
+
+      security_node = Nokogiri::XML::Node.new "Security", signer.document
+      security_node["xmlns:wsse"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      security_node["xmlns:wsu"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      security_node["soap:mustUnderstand"] = "1"
+      security_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="wsse"}
+      header_node.add_child(security_node)
+
+      node = signer.document.xpath("//soapenv:Body").first
+      node.add_namespace_definition("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd")
+
+
+      signer.digest!(node)
+
+      signer.sign!
+
+      signature_node = signer.document.xpath("//wsse:Security").first.children.first
+
+      signer.document.root.add_namespace 'ds', 'http://www.w3.org/2000/09/xmldsig#'
+
+      signature_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="ds"}
+
+      signer.digest!(signature_node)
+
+      request.body = signer.document.to_s
+      
+      request
     end
 
   end
