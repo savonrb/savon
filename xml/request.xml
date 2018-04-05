@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<soapenv:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="urn:com:ecmhp" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <soapenv:Header>
+    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1">
+      <ds:Signature xmlns="http://www.w3.org/2000/09/xmldsig#" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="_dbbde727f0757790b265489a1d7751edfd29da7d">
+        <SignedInfo>
+          <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+          <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+          <Reference URI="#_35c2ed286ad34cca41e5bb62f203aee76e885176">
+            <Transforms>
+              <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <DigestValue>1FjZ45BNIIP8mJxlJWH/VPak/k13vDWZYBzaXYJAoWA=</DigestValue>
+          </Reference>
+          <Reference URI="#_dbbde727f0757790b265489a1d7751edfd29da7d">
+            <Transforms>
+              <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+            </Transforms>
+            <DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+            <DigestValue>L2fKaFhuDEwqBeHajlRm6+eX8WFpgqQMCealO8WWBD4=</DigestValue>
+          </Reference>
+        </SignedInfo>
+        <SignatureValue>TmLAhN5bZIpmK0xMsfm58uJOGPw3KYZSPIX6udQlxauucB4KZL7mYuAOK9H18uCd2g9c61giQDmv3cviaq4vOReiLX6lhpygyX73On56SZGjH6mLogIcPCmf57uYKCVEpIgoXTbFpX7/Q4bI4ncKybIdsi8KnZJVQV+Ycm0dM9QjPbJUuhS1Run4Y1rCkk/jaRzZ3voyzewPAWkM3wAnnwZ15BUnXZi78//v4Jn025K4STkCxf0XOnwh2hf2+mVMlyK2zjHsIDKXMlcUnpS1tBEocsIMB3XTwtAIL5r1o/AOiG2m8LrcSqU0Gmkjghg8HkYs+qnyCPqR0WqpKXrNQg==</SignatureValue>
+      </ds:Signature>
+    </wsse:Security>
+  </soapenv:Header>
+  <soapenv:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="_35c2ed286ad34cca41e5bb62f203aee76e885176">
+    <wsdl:getEcdRequest>
+      <wsdl:ecdHeader/>
+      <wsdl:ecd>
+        <wsdl:countryID>PH</wsdl:countryID>
+        <wsdl:ecdID>ph_rcbc</wsdl:ecdID>
+        <wsdl:partitionID/>
+      </wsdl:ecd>
+      <wsdl:vaultType>ECDMST</wsdl:vaultType>
+    </wsdl:getEcdRequest>
+  </soapenv:Body>
+</soapenv:Envelope>
