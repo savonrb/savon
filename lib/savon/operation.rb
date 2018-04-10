@@ -151,8 +151,10 @@ module Savon
 
       signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
 
-      header_node = Nokogiri::XML::Node.new "soapenv:Header", signer.document
-      soapBody = signer.document.xpath("//soapenv:Body").first
+      signer.ds_namespace_prefix = 'ds'
+
+      header_node = Nokogiri::XML::Node.new "soap:Header", signer.document
+      soapBody = signer.document.xpath("//soap:Body").first
       soapBody.add_previous_sibling(header_node)
 
       security_node = Nokogiri::XML::Node.new "Security", signer.document
@@ -162,9 +164,18 @@ module Savon
       security_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="wsse"}
       header_node.add_child(security_node)
 
-      node = signer.document.xpath("//soapenv:Body").first
+      node = signer.document.xpath("//soap:Body").first
       node.add_namespace_definition("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd")
 
+      # signer.digest!(signature_node)
+
+      # signer.digest!(signer.binary_security_token_node)
+
+      # signer.document.root.add_namespace 'ds', 'http://www.w3.org/2000/09/xmldsig#'
+
+      # key_info_node = signer.document.xpath("//ds:KeyInfo").first
+
+      # signer.digest!(key_info_node)
 
       signer.digest!(node)
 
