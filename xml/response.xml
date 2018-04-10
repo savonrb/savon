@@ -1,10 +1,8 @@
-<?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
-  <soap:Body>
-    <soap:Fault>
-      <faultcode>soap:Client</faultcode>
-      <faultstring>Error reading XMLStreamReader: Unexpected EOF in attribute value
- at [row,col {unknown-source}]: [4,170]</faultstring>
-    </soap:Fault>
-  </soap:Body>
+    <soap:Body>
+        <soap:Fault>
+            <faultcode xmlns:ns1="http://ws.apache.org/wss4j">ns1:SecurityError</faultcode>
+            <faultstring>A security error was encountered when verifying the message</faultstring>
+        </soap:Fault>
+    </soap:Body>
 </soap:Envelope>
