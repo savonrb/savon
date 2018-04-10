@@ -179,18 +179,20 @@ module Savon
 
       signer.digest!(node)
 
-      signer.sign!
+      signer.sign!(inclusive_namespaces: ['soap'], prefix_list: 'soap', :security_token => true, id: 'Id')
 
-      signature_node = signer.document.xpath("//wsse:Security").first.children.first
+      security_token_ref_node = signer.document.xpath("//wsse:SecurityTokenReference").first
 
-      signer.document.root.add_namespace 'ds', 'http://www.w3.org/2000/09/xmldsig#'
+      security_token_ref_node.set_attribute('xmlns:wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd')
 
-      signature_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="ds"}
+      signer.digest!(security_token_ref_node)
 
-      signer.digest!(signature_node)
+      security_binary_node = signer.document.at_xpath('//wsse:BinarySecurityToken')
+
+      security_binary_node.remove
 
       request.body = signer.document.to_s
-      
+
       request
     end
 
