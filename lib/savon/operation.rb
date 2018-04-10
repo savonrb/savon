@@ -147,6 +147,8 @@ module Savon
       signer.digest_algorithm           = :sha256 # Set algorithm for node digesting
       signer.signature_digest_algorithm = :sha256 # Set algorithm for message digesting for signing
 
+      # signer.signature_algorithm_id     = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
+
       signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
 
       header_node = Nokogiri::XML::Node.new "soapenv:Header", signer.document
