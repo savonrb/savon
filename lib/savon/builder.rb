@@ -139,7 +139,8 @@ module Savon
       elsif @used_namespaces[[tag_name.to_s]]
         [@used_namespaces[[tag_name.to_s]], tag_name, message_attributes]
       else
-        [namespace_identifier, tag_name, message_attributes]
+        # removed namespace
+        [tag_name, message_attributes]
       end
     end
 
