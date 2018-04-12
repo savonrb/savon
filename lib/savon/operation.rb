@@ -142,12 +142,7 @@ module Savon
     def signer(request)
       signer = Signer.new(request.body)
       signer.cert = OpenSSL::X509::Certificate.new(File.read(CERT))
-      signer.private_key = OpenSSL::PKey::RSA.new(File.read(WS_CLIENT_KEY))
-
-      signer.digest_algorithm           = :sha256 # Set algorithm for node digesting
-      signer.signature_digest_algorithm = :sha256 # Set algorithm for message digesting for signing
-
-      # signer.signature_algorithm_id     = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256'
+      signer.private_key = OpenSSL::PKey::RSA.new(File.read(WS_CLIENT_KEY), '')
 
       signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
 
@@ -159,39 +154,21 @@ module Savon
 
       security_node = Nokogiri::XML::Node.new "Security", signer.document
       security_node["xmlns:wsse"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
-      security_node["xmlns:wsu"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
       security_node["soap:mustUnderstand"] = "1"
+      
       security_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="wsse"}
       header_node.add_child(security_node)
 
       node = signer.document.xpath("//soap:Body").first
       node.add_namespace_definition("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd")
 
-      # signer.digest!(signature_node)
-
-      # signer.digest!(signer.binary_security_token_node)
-
-      # signer.document.root.add_namespace 'ds', 'http://www.w3.org/2000/09/xmldsig#'
-
-      # key_info_node = signer.document.xpath("//ds:KeyInfo").first
-
-      # signer.digest!(key_info_node)
-
       signer.digest!(node)
 
-      signer.sign!(inclusive_namespaces: ['soap'], prefix_list: 'soap', :security_token => true, id: 'Id')
+      signer.sign!(:security_token => true)
 
-      security_token_ref_node = signer.document.xpath("//wsse:SecurityTokenReference").first
+      request.body = signer.document.root.serialize(save_with: 0)
 
-      security_token_ref_node.set_attribute('xmlns:wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd')
-
-      signer.digest!(security_token_ref_node)
-
-      security_binary_node = signer.document.at_xpath('//wsse:BinarySecurityToken')
-
-      security_binary_node.remove
-
-      request.body = signer.document.to_s
+      request.headers["Content-Length"] = request.body.bytesize.to_s
 
       request
     end
