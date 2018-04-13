@@ -11,9 +11,6 @@ require "mail"
 
 module Savon
   class Operation
-    CERT          = ''
-    WS_CLIENT_KEY = ''
-
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
@@ -141,8 +138,8 @@ module Savon
 
     def signer(request)
       signer = Signer.new(request.body)
-      signer.cert = OpenSSL::X509::Certificate.new(File.read(CERT))
-      signer.private_key = OpenSSL::PKey::RSA.new(File.read(WS_CLIENT_KEY), '')
+      signer.cert = OpenSSL::X509::Certificate.new(File.read(@globals[:certificate]))
+      signer.private_key = OpenSSL::PKey::RSA.new(File.read(@globals[:private_key]), '')
 
       signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
 
