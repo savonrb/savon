@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "savon"
 
 module Savon
@@ -14,9 +15,9 @@ module Savon
     attr_reader :http
 
     def to_s
-      message = "HTTP error (#{@http.code})"
-      message << ": #{@http.body}" unless @http.body.empty?
-      message
+      String.new("HTTP error (#{@http.code})").tap do |str_error|
+        str_error << ": #{@http.body}" unless @http.body.empty?
+      end
     end
 
     def to_hash

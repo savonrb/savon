@@ -8,7 +8,7 @@ Heavy metal SOAP client
 [![Build Status](https://secure.travis-ci.org/savonrb/savon.svg?branch=master)](http://travis-ci.org/savonrb/savon)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
 [![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
-[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg?branch=version2)](https://coveralls.io/r/savonrb/savon)
+[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
 
 ## Version 2
@@ -22,7 +22,7 @@ $ gem install savon
 or add it to your Gemfile like this:
 
 ```
-gem 'savon', '~> 2.11.1'
+gem 'savon', '~> 2.12.0'
 ```
 
 ## Usage example

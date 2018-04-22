@@ -1,7 +1,9 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 describe Savon::HTTPError do
   let(:http_error) { Savon::HTTPError.new new_response(:code => 404, :body => "Not Found") }
+  let(:http_error_with_empty_body) { Savon::HTTPError.new new_response(:code => 404, :body => "") }
   let(:no_error) { Savon::HTTPError.new new_response }
 
   it "inherits from Savon::Error" do
@@ -29,6 +31,12 @@ describe Savon::HTTPError do
     describe "##{method}" do
       it "returns the HTTP error message" do
         expect(http_error.send method).to eq("HTTP error (404): Not Found")
+      end
+
+      context "when the body is empty" do
+        it "returns the HTTP error without the body message" do
+          expect(http_error_with_empty_body.send method).to eq("HTTP error (404)")
+        end
       end
     end
   end

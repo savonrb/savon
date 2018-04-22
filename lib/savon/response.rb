@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "nori"
 require "savon/soap_fault"
 require "savon/http_error"

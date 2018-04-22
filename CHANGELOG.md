@@ -1,6 +1,14 @@
-# 2.12.0 (Unreleased)
+# 2.12.0 (2018-01-16)
 
 * Drop support for ruby 2.1 and below.
+* Fix: [#822](https://github.com/savonrb/savon/pull/822) Raise correct error when SOAP envelope only contains a string
+* Fix: [#833](https://github.com/savonrb/savon/pull/833) Fixes boolean handling regression introduced in 2.11.2
+* Feature: [#794](https://github.com/savonrb/savon/pull/794), add global option ssl_ciphers.
+* Feature: [#753](https://github.com/savonrb/savon/pull/753) Add headers configuration to WSDLRequest#build
+* Feature: [#812](https://github.com/savonrb/savon/pull/812) Allow `proxy` option to be `nil`.
+* Feature: [#838](https://github.com/savonrb/savon/pull/838) Added ssl_ca_path and ssl_cert_store to globals
+* Feature: [#794](https://github.com/savonrb/savon/pull/794) Add global option ssl_ciphers
+
 
 # 2.11.2 (2017-08-03)
 * Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`

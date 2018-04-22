@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "spec_helper"
 require "integration/support/server"
 require "json"
@@ -389,18 +390,27 @@ describe "Options" do
 
   context "global :ssl_version" do
     it "sets the SSL version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:SSLv3).twice
+      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_version => :SSLv3)
+      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
       client.call(:authenticate)
     end
   end
 
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:none).twice
+      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :none)
+      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :peer)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_ciphers" do
+    it "sets the ciphers to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:ciphers=).with(:none).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
       client.call(:authenticate)
     end
   end
@@ -465,6 +475,26 @@ describe "Options" do
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_ca_cert_path" do
+    it "sets the ca cert path to use" do
+      ca_cert_path = "../../fixtures/ssl"
+      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_path=).with(ca_cert_path).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ca_cert_path => ca_cert_path)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_ca_cert_store" do
+    it "sets the cert store to use" do
+      cert_store = OpenSSL::X509::Store.new
+      HTTPI::Auth::SSL.any_instance.expects(:cert_store=).with(cert_store).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_cert_store => cert_store)
       client.call(:authenticate)
     end
   end
