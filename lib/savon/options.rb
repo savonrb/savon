@@ -397,6 +397,40 @@ module Savon
       @options[:attributes] = attributes
     end
 
+    # Attachments for the SOAP message (https://www.w3.org/TR/SOAP-attachments)
+    #
+    # should pass an Array or a Hash; items should be path strings or
+    #  { filename: 'file.name', content: 'content' } objects
+    # The Content-ID in multipart message sections will be the filename or the key if Hash is given
+    #
+    # usage examples:
+    #
+    #    response = client.call :operation1 do
+    #      message param1: 'value'
+    #      attachments [
+    #        { filename: 'x1.xml', content: '<xml>abc</xml>'},
+    #        { filename: 'x2.xml', content: '<xml>abc</xml>'}
+    #      ]
+    #    end
+    #    # Content-ID will be x1.xml and x2.xml
+    #
+    #    response = client.call :operation1 do
+    #      message param1: 'value'
+    #      attachments 'x1.xml' => '/tmp/1281ab7d7d.xml', 'x2.xml' => '/tmp/4c5v8e833a.xml'
+    #    end
+    #    # Content-ID will be x1.xml and x2.xml
+    #
+    #    response = client.call :operation1 do
+    #      message param1: 'value'
+    #      attachments [ '/tmp/1281ab7d7d.xml', '/tmp/4c5v8e833a.xml']
+    #    end
+    #    # Content-ID will be 1281ab7d7d.xml and 4c5v8e833a.xml
+    #
+    # The Content-ID is important if you want to refer to the attachments from the SOAP request
+    def attachments(attachments)
+      @options[:attachments] = attachments
+    end
+
     # Value of the SOAPAction HTTP header.
     def soap_action(soap_action)
       @options[:soap_action] = soap_action

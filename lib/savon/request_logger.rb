@@ -34,11 +34,12 @@ module Savon
 
     def log_response(response)
       logger.info  { "SOAP response (status #{response.code})" }
+      logger.debug { headers_to_log(response.headers) }
       logger.debug { body_to_log(response.body) }
     end
 
     def headers_to_log(headers)
-      headers.map { |key, value| "#{key}: #{value}" }.join(", ")
+      headers.map { |key, value| "#{key}: #{value}" }.join("\n")
     end
 
     def body_to_log(body)
