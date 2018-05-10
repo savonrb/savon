@@ -47,10 +47,10 @@ For more examples, you should check out the
 [integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
 
 ## Ruby version support
-* 2.12.x - MRI 2.2, 2.3, 2.4
+* 2.12.x - MRI 2.2, 2.3, 2.4, 2.5
 * 2.11.x - MRI 2.0, 2.1, 2.2, and 2.3
 
-If you are running MRI 1.8.7, try the 2.6.x branch.
+If you are running MRI 1.8.7, try a 2.6.x release.
 
 ## Running tests
 
@@ -64,19 +64,9 @@ $ bundle exec rspec
 * URI::InvalidURIError -- if you see this error, then it is likely that the http client you are using cannot parse the URI for your WSDL. Try `gem install httpclient` or add it to your `Gemfile`.
   - See https://github.com/savonrb/savon/issues/488 for more info
 
-## Give back
-
-If you're using Savon and you or your company is making money from it, then please consider
-donating via [Gittip](https://www.gittip.com/tjarratt/) so that I can continue to improve it.
-
-[![donate](donate.png)](https://www.gittip.com/tjarratt/)
-
 
 ## Documentation
 
-Please make sure to [read the documentation](http://savonrb.com/version2/).
+Please be sure to [read the documentation](http://savonrb.com/version2/).
 
-And if you find any problems with it or if you think something's missing,
-feel free to [help out and improve the documentation](https://github.com/savonrb/savonrb.com).
 
-Donate icon from the [Noun Project](http://thenounproject.com/noun/donate/#icon-No285).
