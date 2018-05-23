@@ -62,13 +62,8 @@ module Savon
        convert_to_xml({
          'wsa:Action' => @locals[:soap_action],
          'wsa:To' => @globals[:endpoint],
-         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}",
-         attributes!: {
-          'wsa:MessageID' => {
-            "xmlns:wsa" => "http://schemas.xmlsoap.org/ws/2004/08/addressing"
-          }
-         }
-       })
+         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
+                      })
     end
 
     def convert_to_xml(hash_or_string)
