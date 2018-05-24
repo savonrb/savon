@@ -95,15 +95,18 @@ module Savon
       request.url = endpoint
       request.body = builder.to_s
 
+      if builder.multipart
+        request.gzip
+        request.headers["Content-Type"] = ["multipart/related",
+                                           "type=\"application/soap+xml\"",
+                                           "start=\"#{builder.multipart[:start]}\"",
+                                           "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
+        request.headers["MIME-Version"] = "1.0"
+      end
+
       # TODO: could HTTPI do this automatically in case the header
       #       was not specified manually? [dh, 2013-01-04]
       request.headers["Content-Length"] = request.body.bytesize.to_s
-
-      if builder.multipart
-        request.headers["Content-Type"] = "multipart/related; " \
-          "boundary=\"#{builder.multipart[:multipart_boundary]}\"; " \
-          "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
-      end
 
       request
     end
