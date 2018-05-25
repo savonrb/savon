@@ -11,6 +11,11 @@ require "mail"
 module Savon
   class Operation
 
+    SOAP_REQUEST_TYPE = {
+      1 => "text/xml",
+      2 => "application/soap+xml"
+    }
+
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
@@ -98,7 +103,7 @@ module Savon
       if builder.multipart
         request.gzip
         request.headers["Content-Type"] = ["multipart/related",
-                                           "type=\"application/soap+xml\"",
+                                           "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
                                            "start=\"#{builder.multipart[:start]}\"",
                                            "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
         request.headers["MIME-Version"] = "1.0"
