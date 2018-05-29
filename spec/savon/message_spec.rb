@@ -56,16 +56,6 @@ describe Savon::Message do
         end
       end
     end
-
-    context 'wsa:MessageID' do
-      let(:message_id_tag) {
-        '<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">'
-      }
-      it 'should include xmlns:wsa attribute' do
-        response = client.call(:something, message: {})
-        expect(response.xml).to include(message_id_tag)
-      end
-    end
   end
 
 end
