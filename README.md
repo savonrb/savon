@@ -2,7 +2,7 @@
 
 Heavy metal SOAP client
 
-[Documentation](http://savonrb.com) | [RDoc](http://rubydoc.info/gems/savon) |
+[Documentation](https://www.rubydoc.info/gems/savon/) | [Support](https://stackoverflow.com/questions/tagged/savon) | 
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
 
 [![Build Status](https://secure.travis-ci.org/savonrb/savon.svg?branch=master)](http://travis-ci.org/savonrb/savon)
@@ -67,6 +67,6 @@ $ bundle exec rspec
 
 ## Documentation
 
-Please be sure to [read the documentation](http://savonrb.com/version2/).
+Please be sure to [read the documentation](https://www.rubydoc.info/github/savonrb/savon/).
 
 
