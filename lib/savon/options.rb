@@ -94,7 +94,8 @@ module Savon
         :unwrap                      => false,
         :host                        => nil,
         :private_key                 => nil,
-        :certificate                 => nil
+        :certificate                 => nil,
+        :soap_default                => false
       }
 
       options = defaults.merge(options)
@@ -366,6 +367,10 @@ module Savon
     # Instruct requests to follow HTTP redirects.
     def follow_redirects(follow_redirects)
       @options[:follow_redirects] = follow_redirects
+    end
+
+    def soap_default(soap_default)
+      @options[:soap_default] = soap_default
     end
   end
 
