@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require "signer"
 require "savon/options"
 require "savon/block_interface"
 require "savon/request"
@@ -10,7 +11,6 @@ require "mail"
 
 module Savon
   class Operation
-
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
@@ -105,7 +105,11 @@ module Savon
           "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
       end
 
-      request
+      if @globals[:soap_default]
+        request
+      else
+        signer(request)
+      end
     end
 
     def soap_action
@@ -133,6 +137,40 @@ module Savon
     def raise_expected_httpi_response!
       raise Error, "Observers need to return an HTTPI::Response to mock " \
                    "the request or nil to execute the request."
+    end
+
+    def signer(request)
+      signer = Signer.new(request.body)
+      signer.cert = OpenSSL::X509::Certificate.new(File.read(@globals[:certificate]))
+      signer.private_key = OpenSSL::PKey::RSA.new(File.read(@globals[:private_key]), '')
+
+      signer.document.root.add_namespace 'wsse', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd'
+
+      signer.ds_namespace_prefix = 'ds'
+
+      header_node = Nokogiri::XML::Node.new "soap:Header", signer.document
+      soapBody = signer.document.xpath("//soap:Body").first
+      soapBody.add_previous_sibling(header_node)
+
+      security_node = Nokogiri::XML::Node.new "Security", signer.document
+      security_node["xmlns:wsse"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      security_node["soap:mustUnderstand"] = "1"
+
+      security_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="wsse"}
+      header_node.add_child(security_node)
+
+      node = signer.document.xpath("//soap:Body").first
+      node.add_namespace_definition("wsu", "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd")
+
+      signer.digest!(node)
+
+      signer.sign!(:security_token => true)
+
+      request.body = signer.document.root.serialize(save_with: 0)
+
+      request.headers["Content-Length"] = request.body.bytesize.to_s
+
+      request
     end
 
   end

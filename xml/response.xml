@@ -1,0 +1,8 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+    <soap:Body>
+        <soap:Fault>
+            <faultcode xmlns:ns1="http://ws.apache.org/wss4j">ns1:SecurityError</faultcode>
+            <faultstring>A security error was encountered when verifying the message</faultstring>
+        </soap:Fault>
+    </soap:Body>
+</soap:Envelope>

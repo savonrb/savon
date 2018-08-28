@@ -1,0 +1,37 @@
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+	<soap:Header>
+		<wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" soap:mustUnderstand="1">
+			<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Id="SIG-ad8f4a51-dfd7-4b6e-ad72-5d0cba4f1728">
+				<ds:SignedInfo>
+					<ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+						<ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="soap"/>
+					</ds:CanonicalizationMethod>
+					<ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+					<ds:Reference URI="#_37c88445-1b3b-46e3-92e9-6c0f50d6d5fd">
+						<ds:Transforms>
+							<ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+						</ds:Transforms>
+						<ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+						<ds:DigestValue>UDmYBc6zXu7rkkO0DtEQYGUWXW0ZoCdg6EU1wAjATXo=</ds:DigestValue>
+						</ds:Reference>
+					</ds:SignedInfo>
+					<ds:SignatureValue>X3+BYM+OE2JobOzJvu6AnI5wPQpBAG1KIINiTYrz0l7euhemOubTUT4faGI0r3K72WLG/8sZ2DwuoZBFSRn+W6E73LDtfeOOnc7HqgRr09b0QHcn7lR8FyUWimnY27fiKlm6hRya1LRTo3yJEv9U9xWRvCN7OdBA3mu0a9DK7GM=</ds:SignatureValue>
+					<ds:KeyInfo Id="KI-ac102f1c-18a4-4ef7-bf10-f68919a5af4f">
+						<wsse:SecurityTokenReference xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="STR-d2412eeb-1863-4836-a2df-dbe76fc98617">
+							<wsse:KeyIdentifier EncodingType="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary" ValueType="http://docs.oasis-open.org/wss/oasis-wss-soap-message-security-1.1#ThumbprintSHA1">bDVFzZL6jJmHlqiVlCR0slQesQs=</wsse:KeyIdentifier></wsse:SecurityTokenReference>
+					</ds:KeyInfo>
+			</ds:Signature>
+		</wsse:Security>
+	</soap:Header>
+	<soap:Body xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" wsu:Id="_37c88445-1b3b-46e3-92e9-6c0f50d6d5fd"><getSubscriberRequest xmlns="urn:com:ecmhp">
+		<ecdHeader>EcdHeader1780773222</ecdHeader>
+		<subscriber>
+			<ecd>
+				<cbID>CbID-529007580</cbID>
+				<commercialBankID>CommercialBankID1628986020</commercialBankID>
+				<countryID>PH</countryID>
+				<ecdID>ph_rcbc</ecdID>
+				<partitionID>PartitionID-42582324</partitionID>
+			</ecd><subscriberID>subscr-2</subscriberID><subscriberType>M</subscriberType><subscriberState>active</subscriberState></subscriber></getSubscriberRequest>
+	</soap:Body>
+</soap:Envelope>

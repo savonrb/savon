@@ -92,7 +92,10 @@ module Savon
         :no_message_tag              => false,
         :follow_redirects            => false,
         :unwrap                      => false,
-        :host                        => nil
+        :host                        => nil,
+        :private_key                 => nil,
+        :certificate                 => nil,
+        :soap_default                => false
       }
 
       options = defaults.merge(options)
@@ -104,6 +107,14 @@ module Savon
       super(options)
 
       log_level(delayed_level) unless delayed_level.nil?
+    end
+
+    def private_key(private_key)
+      @options[:private_key] = private_key
+    end
+
+    def certificate(certificate)
+      @options[:certificate] = certificate
     end
 
     # Location of the local or remote WSDL document.
@@ -356,6 +367,10 @@ module Savon
     # Instruct requests to follow HTTP redirects.
     def follow_redirects(follow_redirects)
       @options[:follow_redirects] = follow_redirects
+    end
+
+    def soap_default(soap_default)
+      @options[:soap_default] = soap_default
     end
   end
 
