@@ -105,8 +105,11 @@ module Savon
           "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
       end
 
-      signer(request)
-
+      if @globals[:soap_default]
+        request
+      else
+        signer(request)
+      end
     end
 
     def soap_action
@@ -152,7 +155,7 @@ module Savon
       security_node = Nokogiri::XML::Node.new "Security", signer.document
       security_node["xmlns:wsse"] = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
       security_node["soap:mustUnderstand"] = "1"
-      
+
       security_node.namespace = signer.document.root.namespace_definitions.find{|ns| ns.prefix=="wsse"}
       header_node.add_child(security_node)
 
