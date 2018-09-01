@@ -130,7 +130,11 @@ describe Savon::Response do
     end
 
     it "should throw an exception when the response header isn't parsable" do
-      expect { invalid_soap_response.header }.to raise_error Savon::InvalidResponseError
+      expect { invalid_soap_response.header }.to raise_error { |error|
+        expect(error).to be_a(Savon::InvalidResponseError)
+        expect(error.http).to be_a(HTTPI::Response)
+        expect(error.xml).to eq(invalid_soap_response.xml)
+      }
     end
   end
 
@@ -239,7 +243,11 @@ describe Savon::Response do
 
     it 'fails correctly when envelope contains only string' do
       response = soap_response({ :body => Fixture.response(:no_body) })
-      expect { response.find('Body') }.to raise_error Savon::InvalidResponseError
+      expect { response.find('Body') }.to raise_error { |error|
+        expect(error).to be_a(Savon::InvalidResponseError)
+        expect(error.http).to be_a(HTTPI::Response)
+        expect(error.xml).to eq(response.xml)
+      }
     end
   end
 

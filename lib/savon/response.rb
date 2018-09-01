@@ -2,6 +2,7 @@
 require "nori"
 require "savon/soap_fault"
 require "savon/http_error"
+require "savon/invalid_response_error"
 
 module Savon
   class Response
@@ -134,7 +135,7 @@ module Savon
     end
 
     def raise_invalid_response_error!
-      raise InvalidResponseError, "Unable to parse response body:\n" + xml.inspect
+      raise InvalidResponseError.new(@http, xml)
     end
 
     def xml_namespaces
