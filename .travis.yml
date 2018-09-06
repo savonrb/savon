@@ -5,7 +5,6 @@ before_install:
   - gem install bundler
 script: "bundle exec rake --trace"
 rvm:
-  - 2.2.4
   - 2.3.0
   - 2.4.1
   - jruby-9.1.15.0
