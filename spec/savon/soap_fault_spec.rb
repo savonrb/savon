@@ -3,6 +3,7 @@ require "spec_helper"
 
 describe Savon::SOAPFault do
   let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
+  let(:empty_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
   let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
   let(:soap_fault_funky) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault_funky)), nori }
   let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
@@ -30,6 +31,11 @@ describe Savon::SOAPFault do
       expect(Savon::SOAPFault.present? http).to be_truthy
     end
 
+    it "returns true if the HTTP response contains a SOAP 1.1 fault with empty fault tags" do
+      http = new_response(:body => Fixture.response(:empty_soap_fault))
+      expect(Savon::SOAPFault.present? http).to be_truthy
+    end
+
     it "returns true if the HTTP response contains a SOAP 1.2 fault" do
       http = new_response(:body => Fixture.response(:soap_fault12))
       expect(Savon::SOAPFault.present? http).to be_truthy
@@ -49,6 +55,10 @@ describe Savon::SOAPFault do
     describe "##{method}" do
       it "returns a SOAP 1.1 fault message" do
         expect(soap_fault.send method).to eq("(soap:Server) Fault occurred while processing.")
+      end
+
+      it "returns an empty fault message" do
+        expect(empty_soap_fault.send method).to eq(nil)
       end
 
       it "returns a SOAP 1.2 fault message" do
