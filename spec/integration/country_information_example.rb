@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe "Country Information Example" do
-  it "retrieves information about all countries using streamed response" do
+  it "supports a streamed response where chunks are passed in a block" do
     client = Savon.client(
       :wsdl => "http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL",
       :read_timeout => 10,
@@ -9,13 +9,14 @@ describe "Country Information Example" do
       :log => false
     )
 
-    response = ""
+    body = ""
     chunk_counter = 0
-    result = client.streamed_call(:full_country_info_all_countries) do |data|
+    response = client.streamed_call(:full_country_info_all_countries) do |data|
       chunk_counter += 1
-      response += data
+      body += data
     end
-    expect(response.size).to_not eql(0)
+    expect(body.size).to_not eql(0)
     expect(chunk_counter).to_not eql(0)
+    expect(response.http.body).to eql("")
   end
 end
