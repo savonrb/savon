@@ -37,6 +37,10 @@ module Savon
       operation(operation_name).call(locals, &block)
     end
 
+    def streamed_call(operation_name, locals = {}, &block)
+      operation(operation_name).streamed_call(locals, &block)
+    end
+
     def service_name
       raise_missing_wsdl_error! unless @wsdl.document?
       @wsdl.service_name

@@ -60,6 +60,19 @@ module Savon
       create_response(response)
     end
 
+    def streamed_call(locals = {}, &block)
+      builder = build(locals)
+
+      response = Savon.notify_observers(@name, builder, @globals, @locals)
+      request = build_request(builder)
+      request.on_body(&block) # block is used for on_body callback
+      response ||= call_with_logging request
+
+      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
+
+      create_response(response)
+    end
+
     def request(locals = {}, &block)
       builder = build(locals, &block)
       build_request(builder)
