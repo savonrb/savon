@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'rpc/encoded binding test' do
 
-  it 'should should work with WSDLs that have rpc/encoded SOAP binding' do
+  it 'should work with WSDLs that have rpc/encoded SOAP binding' do
     client = Savon.client(
         :wsdl => "http://www.boyzoid.com/comp/randomQuote.cfc?wsdl",
         :open_timeout => 10,
