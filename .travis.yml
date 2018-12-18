@@ -7,6 +7,7 @@ script: "bundle exec rake --trace"
 rvm:
   - 2.3.0
   - 2.4.1
+  - 2.5.3
   - jruby-9.1.15.0
   - rbx-2
 matrix:
