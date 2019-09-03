@@ -14,5 +14,8 @@ matrix:
   allow_failures:
     - rvm: rbx-2
   fast_finish: true
+  include:
+    - rvm: jruby-9.2.8.0
+      env: JRUBY_OPTS="--debug" JAVA_OPTS="--add-opens java.base/sun.nio.ch=org.jruby.dist --add-opens java.base/java.io=org.jruby.dist --add-opens java.base/java.util.zip=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.security.cert=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED"
 notifications:
   irc: "irc.freenode.org#savon"
