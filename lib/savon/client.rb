@@ -93,6 +93,35 @@ module Savon
       response
     end
 
+    # Manually override http body before sending the request
+    # Technically you can modify the body too,
+    # but if you use authentication you'll have to update that too
+    #
+    # Usage:
+    # only_request = Savon::Client.new(wsdl).only_request(:ping)
+    # only_request.http.body = xml_with_correct_header
+    # only_request.response
+    def only_request(*args, &block)
+      raise ArgumentError, "Savon::Client#request requires at least one argument" if args.empty?
+      options = extract_options(args)
+      request_builder = SOAP::RequestBuilder.new(options.delete(:input), options)
+      request_builder.wsdl = wsdl
+      request_builder.http = http.dup
+      request_builder.wsse = wsse.dup
+      request_builder.config = config.dup
+      post_configuration = lambda { process(0, request_builder, &block) if block }
+      @only_request = request_builder.request(&post_configuration)
+    end
+
+    def only_response
+      response = only_request.response
+      http.set_cookies(response.http)
+      if wsse.verify_response
+        WSSE::VerifySignature.new(response.http.body).verify!
+      end
+      response
+    end
+
     private
 
     # Expects an Array of +args+ and returns a Hash containing the SOAP input,
