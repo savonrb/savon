@@ -27,7 +27,7 @@ module Savon
             translated_key  = translate_tag(key)
             newkey          = add_namespaces_to_values(key, path).first
             newpath         = path + [translated_key]
-            newhash[newkey] = to_hash(value, newpath)
+            newhash[newkey] = to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
           end
         end
         newhash
