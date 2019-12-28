@@ -156,6 +156,11 @@ module Savon
       @options[:read_timeout] = read_timeout
     end
 
+    # Write timeout in seconds.
+    def write_timeout(write_timeout)
+      @options[:write_timeout] = write_timeout
+    end
+
     # The encoding to use. Defaults to "UTF-8".
     def encoding(encoding)
       @options[:encoding] = encoding

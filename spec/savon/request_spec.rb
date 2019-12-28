@@ -74,6 +74,20 @@ describe Savon::WSDLRequest do
       end
     end
 
+    describe "write timeout" do
+      it "is set when specified" do
+        globals.write_timeout(44)
+        http_request.expects(:write_timeout=).with(44)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.expects(:read_timeout=).never
+        new_wsdl_request.build
+      end
+    end
+
     describe "ssl version" do
       it "is set when specified" do
         globals.ssl_version(:TLSv1)
