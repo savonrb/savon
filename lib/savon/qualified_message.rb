@@ -45,7 +45,16 @@ module Savon
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
         namespace        = @used_namespaces[namespace_path]
-        namespace.blank? ? value : "#{namespace}:#{translated_value}"
+
+        if namespace.blank?
+          if path.size > 0
+            add_namespaces_to_values(values, path[1..-1]).first
+          else
+            value
+          end
+        else
+          "#{namespace}:#{translated_value}"
+        end
       end
     end
   end
