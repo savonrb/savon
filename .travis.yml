@@ -16,6 +16,7 @@ matrix:
       jdk: openjdk8
     - rvm: jruby-9.2.11.1
       jdk: openjdk11
+      env: JAVA_OPTS="--add-opens java.base/java.security.cert=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED"
     - rvm: rbx-4
       dist: trusty
   allow_failures:
