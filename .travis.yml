@@ -9,7 +9,6 @@ rvm:
   - 2.3.0
   - 2.4.1
   - 2.5.3
-  - rbx-4
 
 matrix:
   include:
@@ -17,6 +16,8 @@ matrix:
       jdk: openjdk8
     - rvm: jruby-9.2.11.1
       jdk: openjdk11
+    - rvm: rbx-4
+      dist: trusty
   allow_failures:
     - rvm: rbx-4
   fast_finish: true
