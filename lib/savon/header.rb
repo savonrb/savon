@@ -63,7 +63,7 @@ module Savon
          'wsa:Action' => @locals[:soap_action],
          'wsa:To' => @globals[:endpoint],
          'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
-                      })
+       })
     end
 
     def convert_to_xml(hash_or_string)
