@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="www.example.com/XML" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s1="http://microsoft.com/wsdl/types/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="www.example.com/XML" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="www.example.com/XML">
+      <s:complexType name="Transaction" abstract="true">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="Qualified" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:complexType name="TopLevelTransaction">
+        <s:complexContent mixed="false">
+          <s:extension base="tns:Transaction">
+          </s:extension>
+        </s:complexContent>
+      </s:complexType>
+      <s:element name="TopLevelTransaction">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="TopLevelTransaction" type="tns:TopLevelTransaction" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="TopLevelTransactionSoapIn">
+    <wsdl:part name="parameters" element="tns:TopLevelTransaction" />
+  </wsdl:message>
+  <wsdl:portType name="XMLTESoap">
+    <wsdl:operation name="TopLevelTransaction">
+      <wsdl:documentation xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">TopLevelTransaction.</wsdl:documentation>
+      <wsdl:input message="tns:TopLevelTransactionSoapIn" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="XMLTESoap12" type="tns:XMLTESoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="TopLevelTransaction">
+      <soap12:operation soapAction="www.example.com/XML/TopLevelTransaction" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+</wsdl:definitions>
