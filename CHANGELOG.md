@@ -1,3 +1,9 @@
+
+## 2.12.1 (2020-07-05)
+
+* Fix: [#917](https://github.com/savonrb/savon/pull/917) elementFormDefault="qualified" regression
+* Fix: [#875](https://github.com/savonrb/savon/pull/875) Fix detecting Soap 1.1 Fault when faultcode and faultstring are empty
+
 # 2.12.0 (2018-01-16)
 
 * Drop support for ruby 2.1 and below.
@@ -7,8 +13,6 @@
 * Feature: [#753](https://github.com/savonrb/savon/pull/753) Add headers configuration to WSDLRequest#build
 * Feature: [#812](https://github.com/savonrb/savon/pull/812) Allow `proxy` option to be `nil`.
 * Feature: [#838](https://github.com/savonrb/savon/pull/838) Added ssl_ca_path and ssl_cert_store to globals
-* Feature: [#794](https://github.com/savonrb/savon/pull/794) Add global option ssl_ciphers
-
 
 # 2.11.2 (2017-08-03)
 * Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`
@@ -25,7 +29,7 @@
 
 # 2.11.0 (2015-03-31)
 
-* Formally drop support for 1.8.7. 
+* Formally drop support for 1.8.7.
 
 # 2.10.1 (2015-03-15)
 
