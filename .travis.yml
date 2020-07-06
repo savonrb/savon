@@ -14,11 +14,7 @@ matrix:
       rvm: jruby-9.2.12.0
       jdk: openjdk11
       env: JAVA_OPTS="--add-opens java.base/java.security.cert=ALL-UNNAMED --add-opens java.base/java.security=ALL-UNNAMED"
-    - name: Rubinius
-      rvm: rbx-4
-      dist: trusty
   allow_failures:
-    - name: Rubinius
     - name: "JRuby 9.2"
   fast_finish: true
 
