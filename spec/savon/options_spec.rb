@@ -408,6 +408,24 @@ describe "Options" do
     end
   end
 
+  context "global :ssl_min_version" do
+    it "sets the SSL min_version to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:min_version=).with(:TLS1_2).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_min_version => :TLS1_2)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_max_version" do
+    it "sets the SSL max_version to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:max_version=).with(:TLS1_2).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_max_version => :TLS1_2)
+      client.call(:authenticate)
+    end
+  end
+
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
       HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice

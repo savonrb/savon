@@ -88,6 +88,34 @@ describe Savon::WSDLRequest do
       end
     end
 
+    describe "ssl min_version" do
+      it "is set when specified" do
+        globals.ssl_min_version(:TLS1_2)
+        http_request.auth.ssl.expects(:min_version=).with(:TLS1_2)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:min_version=).never
+        new_wsdl_request.build
+      end
+    end
+
+    describe "ssl max_version" do
+      it "is set when specified" do
+        globals.ssl_max_version(:TLS1_2)
+        http_request.auth.ssl.expects(:max_version=).with(:TLS1_2)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_request.auth.ssl.expects(:max_version=).never
+        new_wsdl_request.build
+      end
+    end
+
     describe "ssl verify mode" do
       it "is set when specified" do
         globals.ssl_verify_mode(:peer)

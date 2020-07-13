@@ -229,6 +229,16 @@ module Savon
       @options[:ssl_version] = version
     end
 
+    # Specifies the SSL version to use.
+    def ssl_min_version(version)
+      @options[:ssl_min_version] = version
+    end
+
+    # Specifies the SSL version to use.
+    def ssl_max_version(version)
+      @options[:ssl_max_version] = version
+    end
+
     # Whether and how to to verify the connection.
     def ssl_verify_mode(verify_mode)
       @options[:ssl_verify_mode] = verify_mode

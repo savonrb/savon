@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Feature: [#930](https://github.com/savonrb/savon/pull/930) Add options for SSL min_version/max_version support 
 * Fix: [#868](https://github.com/savonrb/savon/pull/868) Remove `xmlns:wsa`'s already added elsewhere; select Content-Type HTTP header based on SOAP version.
 * Add your PR changelog line here
 
