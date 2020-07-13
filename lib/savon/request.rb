@@ -26,6 +26,9 @@ module Savon
 
     def configure_ssl
       @http_request.auth.ssl.ssl_version   = @globals[:ssl_version]       if @globals.include? :ssl_version
+      @http_request.auth.ssl.min_version   = @globals[:ssl_min_version]   if @globals.include? :ssl_min_version
+      @http_request.auth.ssl.max_version   = @globals[:ssl_max_version]   if @globals.include? :ssl_max_version
+
       @http_request.auth.ssl.verify_mode   = @globals[:ssl_verify_mode]   if @globals.include? :ssl_verify_mode
       @http_request.auth.ssl.ciphers       = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
 
