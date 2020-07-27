@@ -11,6 +11,7 @@ module Savon
 
     def with(locals)
       @expected[:message] = locals[:message]
+      @expected[:xml] = locals[:xml]
       self
     end
 
@@ -23,11 +24,24 @@ module Savon
     def actual(operation_name, builder, globals, locals)
       @actual = {
         :operation_name => operation_name,
-        :message        => locals[:message]
+        :message        => locals[:message],
+        :xml            => locals[:xml]
       }
     end
 
+
+    def never
+      @expected.merge!(never: true)
+      self
+    end
+
+
     def verify!
+      if @expected[:never]
+        raise ExpectationError, "expected #{@expected[:operation_name]} never to be called, but it was!" if @actual
+        return
+      end
+
       unless @actual
         raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation, " \
                                 "but no request was executed."
@@ -35,6 +49,7 @@ module Savon
 
       verify_operation_name!
       verify_message!
+      verify_xml!
     end
 
     def response!
@@ -65,6 +80,20 @@ module Savon
 
         raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation\n#{expected_message}\n" \
         "Received a request to the #{@actual[:operation_name].inspect} operation\n#{actual_message}"
+      end
+    end
+
+    def verify_xml!
+      return if @expected[:xml].eql? :any
+      unless @expected[:xml] == @actual[:xml]
+        expected_xml = "  with this xml: #{@expected[:xml].inspect}" if @expected[:xml]
+        expected_xml ||= "  with no xml."
+
+        actual_xml = "  with this xml: #{@actual[:xml].inspect}" if @actual[:xml]
+        actual_xml ||= "  with no xml."
+
+        raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation\n#{expected_xml}\n" \
+        "Received a request to the #{@actual[:operation_name].inspect} operation\n#{actual_xml}"
       end
     end
 

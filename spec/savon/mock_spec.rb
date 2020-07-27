@@ -162,6 +162,53 @@ describe "Savon's mock interface" do
                                               "  with no message.")
   end
 
+
+  it "can verify a request with XML and return a fixture response" do
+    xml = '<auth><username>Luke</username><password>secret</password></auth>'
+    savon.expects(:authenticate).with(:xml => xml).returns("<fixture/>")
+
+    response = new_client.call(:authenticate) do
+      xml('<auth><username>Luke</username><password>secret</password></auth>')
+    end
+
+    expect(response.http.body).to eq("<fixture/>")
+  end
+
+  it "fails when there is no actual XML to match" do
+    xml = "<username>Luke</username>"
+    savon.expects(:find_user).with(:xml => xml).returns('fixture/>')
+
+    expect { new_client.call(:find_user) }.
+      to raise_error(Savon::ExpectationError, "Expected a request to the :find_user operation\n" \
+                                              "  with this xml: #{xml.inspect}\n" \
+                                              "Received a request to the :find_user operation\n" \
+                                              "  with no xml.")
+  end
+
+  it "fails when there is no expect but an actual XML" do
+    savon.expects(:find_user).returns("<fixture/>")
+    xml = '<username>Luke</username>'
+
+    expect { new_client.call(:find_user, :xml => xml) }.
+      to raise_error(Savon::ExpectationError, "Expected a request to the :find_user operation\n" \
+                                              "  with no xml.\n" \
+                                              "Received a request to the :find_user operation\n" \
+                                              "  with this xml: #{xml.inspect}")
+  end
+
+  it "does not fail when any xml is expected and an actual xml" do
+    savon.expects(:find_user).with(:xml => :any).returns("<fixture/>")
+    xml = '<username>Luke</username>'
+
+    expect { new_client.call(:find_user, :xml => xml) }.to_not raise_error
+  end
+
+  it "does not fail when any xml is expected and no actual xml" do
+    savon.expects(:find_user).with(:xml => :any).returns("<fixture/>")
+
+    expect { new_client.call(:find_user) }.to_not raise_error
+  end
+
   def new_client(globals = {})
     defaults = {
       :endpoint  => "http://example.com",
