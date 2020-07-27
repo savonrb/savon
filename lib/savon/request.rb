@@ -22,6 +22,7 @@ module Savon
     def configure_timeouts
       @http_request.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
       @http_request.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
+      @http_request.write_timeout = @globals[:write_timeout] if @globals.include? :write_timeout
     end
 
     def configure_ssl
