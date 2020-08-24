@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake",  ">= 12.3.3"
   s.add_development_dependency "rspec", "~> 3.9"
   s.add_development_dependency "mocha", "~> 0.14"
-  s.add_development_dependency "json",  "~> 1.7"
+  s.add_development_dependency "json",  ">= 2.3.0"
 
   ignores  = File.readlines(".gitignore").grep(/\S+/).map(&:chomp)
   dotfiles = %w[.gitignore .travis.yml .yardopts]
