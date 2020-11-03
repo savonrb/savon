@@ -101,9 +101,10 @@ module Savon
       request.body = builder.to_s
 
       if builder.multipart
-        request.gzip
+        type = @locals[:mtom] ? 'application/xop+xml"; start-info="text/xml' : SOAP_REQUEST_TYPE[@globals[:soap_version]]
+        request.gzip unless @locals[:mtom]
         request.headers["Content-Type"] = ["multipart/related",
-                                           "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
+                                           "type=\"#{type}\"",
                                            "start=\"#{builder.multipart[:start]}\"",
                                            "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
         request.headers["MIME-Version"] = "1.0"

@@ -383,7 +383,8 @@ module Savon
       defaults = {
         :advanced_typecasting => true,
         :response_parser      => :nokogiri,
-        :multipart            => false
+        :multipart            => false,
+        :mtom                 => false
       }
 
       super defaults.merge(options)
@@ -444,6 +445,11 @@ module Savon
     # The Content-ID is important if you want to refer to the attachments from the SOAP request
     def attachments(attachments)
       @options[:attachments] = attachments
+    end
+
+    # Instruct Savon to send attachments using MTOM https://www.w3.org/TR/soap12-mtom/
+    def mtom(mtom)
+      @options[:mtom] = mtom
     end
 
     # Value of the SOAPAction HTTP header.
