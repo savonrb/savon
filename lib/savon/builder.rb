@@ -38,18 +38,23 @@ module Savon
     end
 
     def build_document
-      xml_result = build_xml
+      # check if xml was already provided
+      if @locals.include? :xml
+        xml_result = @locals[:xml]
+      else
+        xml_result = build_xml
 
-      # if we have a signature sign the document
-      if @signature
-        @signature.document = xml_result
+        # if we have a signature sign the document
+        if @signature
+          @signature.document = xml_result
 
-        2.times do
-          @header = nil
-          @signature.document = build_xml
+          2.times do
+            @header             = nil
+            @signature.document = build_xml
+          end
+
+          xml_result = @signature.document
         end
-
-        xml_result = @signature.document
       end
 
       # if there are attachments for the request, we should build a multipart message according to
@@ -70,7 +75,6 @@ module Savon
     end
 
     def to_s
-      return @locals[:xml] if @locals.include? :xml
       build_document
     end
 
@@ -254,15 +258,28 @@ module Savon
 
       # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
       # should redefine the sort order, because the soap request xml should be the first
-      multipart_message.body.set_sort_order [ "text/xml" ]
+      multipart_message.body.set_sort_order ['application/xop+xml', 'text/xml']
 
       multipart_message.body.encoded(multipart_message.content_transfer_encoding)
     end
 
     def init_multipart_message(message_xml)
       multipart_message = Mail.new
+
+      # MTOM differs from general SOAP attachments:
+      # 1. binary encoding
+      # 2. application/xop+xml mime type
+      if @locals[:mtom]
+        type = "application/xop+xml; charset=#{@globals[:encoding]}; type=\"text/xml\""
+
+        multipart_message.transport_encoding = 'binary'
+        message_xml.force_encoding('BINARY')
+      else
+        type = 'text/xml'
+      end
+
       xml_part = Mail::Part.new do
-        content_type 'text/xml'
+        content_type type
         body message_xml
         # in Content-Type the start parameter is recommended (RFC 2387)
         content_id '<soap-request-body@soap>'
