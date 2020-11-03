@@ -29,6 +29,7 @@ module Savon
       1 => "text/xml",
       2 => "application/soap+xml"
     }.freeze
+    SOAP_REQUEST_TYPE_MTOM = "application/xop+xml".freeze
 
     def self.create(operation_name, wsdl, globals, transport)
       if wsdl.document?
@@ -128,9 +129,16 @@ module Savon
 
       if builder.multipart
         # RFC 2387 §3 (multipart/related) - SOAP envelope is the root body part
+        content_type = ["multipart/related"]
+        if @locals[:mtom]
+          content_type << "type=\"#{SOAP_REQUEST_TYPE_MTOM}\""
+          content_type << "start-info=\"text/xml\""
+        else
+          content_type << "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\""
+        end
+
         headers["Content-Type"] = [
-          "multipart/related",
-          "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
+          *content_type,
           "start=\"#{builder.multipart[:start]}\"",
           "boundary=\"#{builder.multipart[:multipart_boundary]}\""
         ].join("; ")
