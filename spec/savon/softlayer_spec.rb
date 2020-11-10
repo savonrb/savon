@@ -22,7 +22,7 @@ describe Savon::Builder do
 
       locals = Savon::LocalOptions.new(message)
       builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
-      expect(builder.to_s).to eq('<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://api.service.softlayer.com/soap/v3/" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><tns:createObject><templateObject><longName>Zertico LLC Reseller</longName></templateObject></tns:createObject></env:Body></env:Envelope>')
+      expect(builder.to_s).to eq('<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://api.service.softlayer.com/soap/v3/" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><createObject><templateObject xsi:type="tns:SoftLayer_Brand"><longName>Zertico LLC Reseller</longName></templateObject></createObject></env:Body></env:Envelope>')
     end
   end
 end

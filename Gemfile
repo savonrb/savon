@@ -4,4 +4,3 @@ gemspec
 gem "httpclient", "~> 2.7.1"
 
 gem "simplecov", :require => false
-gem "coveralls", :require => false

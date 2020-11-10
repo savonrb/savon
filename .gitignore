@@ -1,4 +1,5 @@
 .rvmrc
+.byebug_history
 .DS_Store
 .yardoc
 doc

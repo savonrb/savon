@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rack"
   s.add_development_dependency "puma",  "~> 3.0"
 
+  s.add_development_dependency "byebug"
   s.add_development_dependency "rake",  ">= 12.3.3"
   s.add_development_dependency "rspec", "~> 3.9"
   s.add_development_dependency "mocha", "~> 0.14"
