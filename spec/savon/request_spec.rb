@@ -202,7 +202,7 @@ describe Savon::WSDLRequest do
 
           new_wsdl_request.build
 
-          expect { http_request.auth.ssl.cert_key }.to raise_error
+          expect { http_request.auth.ssl.cert_key }.to raise_error OpenSSL::PKey::PKeyError
         end
       end
 
