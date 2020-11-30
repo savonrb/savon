@@ -4,6 +4,7 @@ module Savon
 
     def self.present?(http, xml = nil)
       xml ||= http.body
+      xml.encode!('UTF-8', invalid: :replace, replace: '')
       fault_node  = xml.include?("Fault>")
       soap1_fault = xml.match(/faultcode\/?\>/) && xml.match(/faultstring\/?\>/)
       soap2_fault = xml.include?("Code>") && xml.include?("Reason>")
