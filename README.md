@@ -5,7 +5,7 @@ Heavy metal SOAP client
 [Documentation](https://www.rubydoc.info/gems/savon/) | [Support](https://stackoverflow.com/questions/tagged/savon) | 
 [Mailing list](https://groups.google.com/forum/#!forum/savonrb) | [Twitter](http://twitter.com/savonrb)
 
-[![Build Status](https://secure.travis-ci.org/savonrb/savon.svg?branch=master)](http://travis-ci.org/savonrb/savon)
+![Ruby](https://github.com/savonrb/savon/workflows/Ruby/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
 [![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)

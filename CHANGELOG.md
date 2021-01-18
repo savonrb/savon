@@ -1,4 +1,18 @@
-# 2.12.0 (2018-01-16)
+# Savon changelog
+
+## Unreleased
+
+* Fix: [#868](https://github.com/savonrb/savon/pull/868) Remove `xmlns:wsa`'s already added elsewhere; select Content-Type HTTP header based on SOAP version.
+* Feature: [#920](https://github.com/savonrb/savon/pull/920) Add a `write_timeout` setter for HTTP requests
+* Feature: [#930](https://github.com/savonrb/savon/pull/930) Add options for SSL min_version/max_version support
+* Add your PR changelog line here
+
+## 2.12.1 (2020-07-05)
+
+* Fix: [#917](https://github.com/savonrb/savon/pull/917) elementFormDefault="qualified" regression
+* Fix: [#875](https://github.com/savonrb/savon/pull/875) Fix detecting Soap 1.1 Fault when faultcode and faultstring are empty
+
+## 2.12.0 (2018-01-16)
 
 * Drop support for ruby 2.1 and below.
 * Fix: [#822](https://github.com/savonrb/savon/pull/822) Raise correct error when SOAP envelope only contains a string
@@ -7,10 +21,8 @@
 * Feature: [#753](https://github.com/savonrb/savon/pull/753) Add headers configuration to WSDLRequest#build
 * Feature: [#812](https://github.com/savonrb/savon/pull/812) Allow `proxy` option to be `nil`.
 * Feature: [#838](https://github.com/savonrb/savon/pull/838) Added ssl_ca_path and ssl_cert_store to globals
-* Feature: [#794](https://github.com/savonrb/savon/pull/794) Add global option ssl_ciphers
 
-
-# 2.11.2 (2017-08-03)
+## 2.11.2 (2017-08-03)
 * Fix: [#676](https://github.com/savonrb/savon/pull/676) Fixes handling of `content!` and `attributes!`
 * Fix: [#800](https://github.com/savonrb/savon/pull/800) Fix exception calling `SOAPFault#to_s` when http.body is empty
 * Fix: [#757](https://github.com/savonrb/savon/pull/757) Logging: Use filter without automatic pretty printing
@@ -19,43 +31,43 @@
 * Feature: [#742](https://github.com/savonrb/savon/pull/742) Add support for local request headers
 * Feature: [#704](https://github.com/savonrb/savon/pull/704) Add possibility to pass attribute delete_namespace_attributes to Nori
 
-# 2.11.1 (2015-05-27)
+## 2.11.1 (2015-05-27)
 
 * Replace dependency on [uuid](https://rubygems.org/gems/uuid), using SecureRandom.uuid instead.
 
-# 2.11.0 (2015-03-31)
+## 2.11.0 (2015-03-31)
 
-* Formally drop support for 1.8.7. 
+* Formally drop support for 1.8.7.
 
-# 2.10.1 (2015-03-15)
+## 2.10.1 (2015-03-15)
 
 * Feature: [#673](https://github.com/savonrb/savon/pull/673) Adds an :unwrap option that is passed to Gyoku.
 
-# 2.10.0 (2015-03-02)
+## 2.10.0 (2015-03-02)
 
 * Fix: This reverts a purported "fix" to operation names.
 
-# 2.9.0 (2015-01-29)
+## 2.9.0 (2015-01-29)
 
 * Feature: [#655] Wasabi exceptions should be rethrown as Savon errors. This should make it easier to catch errors thrown by Savon::Client.
 * Feature: [#630] ServiceFaults are correctly identified as Soap Faults.
 
-# 2.8.0 (2014-11-12)
+## 2.8.0 (2014-11-12)
 
 * Feature : [#620](https://github.com/savonrb/savon/pull/620) add #build_request method that builds the actual XML request body, but does not submit it. Useful for debugging, possibly.
 * Fix : Loosened dependencies on Gyoku, Nori, Akami, and other Savon-dependency gems
 * Feature: [#636](https://github.com/savonrb/savon/pull/636) Set HTTPI.logger when Savon's logger is configured.
 * Feature: [#639](https://github.com/savonrb/savon/issues/639) Allow setting any SSL version that OpenSSL provides. See [the relevant HTTPI issue](https://github.com/savonrb/httpi/pull/136) for more information.
 
-# 2.7.2 (2014-09-23)
+## 2.7.2 (2014-09-23)
 
 Fix : Preserve false values (https://github.com/savonrb/savon/issues/321)
 
-# 2.7.1 (2014-09-23)
+## 2.7.1 (2014-09-23)
 
 * Fix : Fix a crash in builder when request headers do not contain WSA headers
 
-# 2.7.0 (2014-09-23)
+## 2.7.0 (2014-09-23)
 
 * Feature: Signing requests. Added wsse_signature.
 ```ruby
@@ -64,7 +76,7 @@ Fix : Preserve false values (https://github.com/savonrb/savon/issues/321)
     end
 ```
 
-# 2.5.0 (2014-05-03)
+## 2.5.0 (2014-05-03)
 
 * Feature: [#573](https://github.com/savonrb/savon/pull/573) Add an `all_operations` method to `Savon::Model` that automatically adds all available operations to the model.
 
@@ -84,16 +96,16 @@ Fix : Preserve false values (https://github.com/savonrb/savon/issues/321)
     client = Savon.client(wsdl: "http://example.com/service.wsdl", log: true)
     ```
 
-### 2.3.2 (2013-12-09)
+## 2.3.2 (2013-12-09)
 
 * Fix: [#520](https://github.com/savonrb/savon/issues/520) Fixes a regression in message tags in requests and responses.
 
-### 2.3.1 (2013-12-05)
+## 2.3.1 (2013-12-05)
 
 * Removed dependency on Nokogiri <= 1.4 -- This improves support for ruby 1.9.3 and 2.0.0 and officially begins the end of support for ruby 1.8.7
   See [issue #487](https://github.com/savonrb/savon/issues/487)
 
-### 2.3.0 (2013-07-27)
+## 2.3.0 (2013-07-27)
 
 Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
@@ -141,7 +153,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [#468](https://github.com/savonrb/savon/issues/468) Changed the dependency on Nokogiri
   to < 1.6, because Nokogiri 1.6 dropped support for Ruby 1.8.
 
-### 2.2.0 (2013-04-21)
+## 2.2.0 (2013-04-21)
 
 * Feature: [#416](https://github.com/savonrb/savon/pull/416) The global `namespace_identifier`
   option can now be set to `nil` to not add a namespace identifier to the message tag.
@@ -179,7 +191,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [#423](https://github.com/savonrb/savon/issues/423) fixes a problem where Wasabi was
   not able to find extension base elements defined in imports it didn't follow.
 
-### 2.1.0 (2013-02-03)
+## 2.1.0 (2013-02-03)
 
 * Feature: [#372](https://github.com/savonrb/savon/pull/372) added global `ssl_cert_key_password` option.
 
@@ -211,12 +223,12 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [#376](https://github.com/savonrb/savon/issues/376) added a global `namespaces` option
   for adding namespaces to the SOAP envelope.
 
-### 2.0.3 (2013-01-19)
+## 2.0.3 (2013-01-19)
 
 * Upgraded Nori dependency to prevent people from using a version that is vulnerable to
   the recent [remote code execution bug](https://gist.github.com/4532291).
 
-### 2.0.2 (2012-12-20)
+## 2.0.2 (2012-12-20)
 
 * Fix: [#297](https://github.com/savonrb/savon/issues/297#issuecomment-11536517) added the global
   `:ssl_verify_mode` and `:ssl_version` options which were missing.
@@ -224,13 +236,13 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [#344](https://github.com/savonrb/savon/issues/344) added missing global ssl cert options
   `:ssl_cert_file`, `:ssl_cert_key_file` and `:ssl_ca_cert_file`.
 
-### 2.0.1 (2012-12-19)
+## 2.0.1 (2012-12-19)
 
 * Fix [#342](https://github.com/savonrb/savon/issues/342) fixes an issue where namespaces could
   not be resolved if the actual operation name to call did not match the operation name passed
   to the client's `#call` method. For example: `:get_stations` for a `getStations` operation.
 
-### 2.0.0 (2012-12-18)
+## 2.0.0 (2012-12-18)
 
 * Read about all the changes in the [updated documentation](http://savonrb.com/version2.html).
 
@@ -245,7 +257,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Fix: [321](https://github.com/savonrb/savon/issues/321) preserve `[false]` values in Hashes.
 
-### 1.2.0 (2012-09-15)
+## 1.2.0 (2012-09-15)
 
 * Fix: [#312](https://github.com/savonrb/savon/pull/312) recursively determines the proper namespaces
   for SOAP body Hashes with nested Arrays of Hashes.
@@ -255,7 +267,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Refactoring: Use the `Wasabi::Document` with resolver instead of the custom `Savon::Wasabi::Document`.
 
-### 1.1.0 (2012-06-28)
+## 1.1.0 (2012-06-28)
 
 * Improvement: Changed Savon's core dependencies to be more strict and only allow bug fix changes.
   Major or minor releases of these dependencies now need a release of Savon so they can be used.
@@ -282,7 +294,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Refactoring: Moved code that sets the cookies from the last response for the
   next request to `HTTPI::Request#set_cookies`.
 
-### 1.0.0 (2012-06-09)
+## 1.0.0 (2012-06-09)
 
 * Fix: `Savon.client` didn't pass the optional block.
 
@@ -293,15 +305,15 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
     As this change affects `savon_spec`, you need to update `savon_spec` to v1.3.0.
 
-### 0.9.14 (2012-06-07)
+## 0.9.14 (2012-06-07)
 
 * Fix: [#292](https://github.com/savonrb/savon/issues/292) again
 
-### 0.9.13 (2012-06-07)
+## 0.9.13 (2012-06-07)
 
 * Fix: [#292](https://github.com/savonrb/savon/issues/292)
 
-### 0.9.12 (2012-06-07)
+## 0.9.12 (2012-06-07)
 
 * Re-added the log method setters to the new config object for backwards compatibility.
   You should be able to configure the logger as you used to do.
@@ -314,7 +326,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     end
     ```
 
-### 0.9.11 (2012-06-06)
+## 0.9.11 (2012-06-06)
 
 * Feature: [#264](https://github.com/savonrb/savon/pull/264) - Thanks to @hoverlover, Savon and Akami now support
   signed messages through WSSE.
@@ -348,7 +360,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     </env:Envelope>
     ```
 
-### 0.9.10 (2012-06-06)
+## 0.9.10 (2012-06-06)
 
 * Feature: [#289](https://github.com/savonrb/savon/pull/289) - Allow the SOAP envelope header to be set as a String.
 
@@ -378,7 +390,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
   * Moved logging to the new `Savon::Logger` object.
   * Removed the `blank?` extension from `Object`.
 
-### 0.9.9 (2012-02-17)
+## 0.9.9 (2012-02-17)
 
 * Improvement: [pull request 255](https://github.com/savonrb/savon/pull/255) - Raise an error if fetching
   a remote WSDL fails. Possible fix for [issue 236](https://github.com/savonrb/savon/issues/236).
@@ -402,7 +414,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [pull request 265](https://github.com/savonrb/savon/pull/265) - Fixes gemspec problems when bundling
   under JRuby 1.6.5. Also fixes [issue 267](https://github.com/savonrb/savon/issues/267).
 
-### 0.9.8 (2012-02-15)
+## 0.9.8 (2012-02-15)
 
 * Feature: Savon now ships with [Savon::Model](http://rubygems.org/gems/savon_model).
   Savon::Model is a lightweight DSL to be used inside your domain models. It's been refactored
@@ -436,7 +448,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix: [pull request 250](https://github.com/savonrb/savon/pull/250) - The Content-Length header should
   be the size in bytes.
 
-### 0.9.7 (2011-08-25)
+## 0.9.7 (2011-08-25)
 
 * Feature: Merged [pull request 210](https://github.com/savonrb/savon/pull/210) by
   [mboeh](https://github.com/mboeh) to add `Savon::SOAP::Response#doc` and
@@ -465,7 +477,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Improvement: [issue 222](https://github.com/savonrb/savon/issues/222) - Set the Content-Length header.
 
-### 0.9.6 (2011-07-07)
+## 0.9.6 (2011-07-07)
 
 * Improvement/Fix: Updated Savon to use the latest version of [Wasabi](http://rubygems.org/gems/wasabi).
   This should fix [issue 155](https://github.com/savonrb/savon/issues/155) - Savon can automatically add namespaces
@@ -476,16 +488,16 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Fix: [issue 143](https://github.com/savonrb/savon/issues/143) - Updating Wasabi should solve this issue.
 
-### 0.9.5 (2011-07-03)
+## 0.9.5 (2011-07-03)
 
 * Refactoring: Extracted WSSE authentication out into the [akami](http://rubygems.org/gems/akami) gem.
 
-### 0.9.4 (2011-07-03)
+## 0.9.4 (2011-07-03)
 
 * Refactoring: Extracted the WSDL parser out into the [wasabi](http://rubygems.org/gems/wasabi) gem.
   This should isolate upcoming improvements to the parser.
 
-### 0.9.3 (2011-06-30)
+## 0.9.3 (2011-06-30)
 
 * Fix: [issue 138](https://github.com/savonrb/savon/issues/138) -
   Savon now supports setting a global SOAP header via `Savon.soap_header=`.
@@ -520,7 +532,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
   * `Savon::SOAP::Response#basic_hash` is now `Savon::SOAP::Response#hash`.
 
-### 0.9.2 (2011-04-30)
+## 0.9.2 (2011-04-30)
 
 * Fix: [issue 154](https://github.com/savonrb/savon/pull/154) -
   Timezone format used by Savon now matches the XML schema spec.
@@ -538,7 +550,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Improvement: WSDL parsing now uses Nokogiri instead of REXML.
 
-### 0.9.1 (2011-04-06)
+## 0.9.1 (2011-04-06)
 
 * Improvement: if you're only setting the local or remote address of your wsdl document, you can
   now pass an (optional) String to `Savon::Client.new` to set `wsdl.document`.
@@ -554,7 +566,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     response[:authenticate_response][:return]
     ```
 
-### 0.9.0 (2011-04-05)
+## 0.9.0 (2011-04-05)
 
 * Feature: issues [#158](https://github.com/savonrb/savon/issues/158),
   [#169](https://github.com/savonrb/savon/issues/169) and [#172](https://github.com/savonrb/savon/issues/172)
@@ -606,18 +618,18 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * And if you haven't already seen the new documentation: [savonrb.com](http://savonrb.com)
 
-### 0.8.6 (2011-02-15)
+## 0.8.6 (2011-02-15)
 
 * Fix for issues [issue #147](https://github.com/savonrb/savon/issues/147) and [#151](https://github.com/savonrb/savon/issues/151)
   ([771194](https://github.com/savonrb/savon/commit/771194)).
 
-### 0.8.5 (2011-01-28)
+## 0.8.5 (2011-01-28)
 
 * Fix for [issue #146](https://github.com/savonrb/savon/issues/146) ([98655c](https://github.com/savonrb/savon/commit/98655c)).
 
 * Fix for [issue #147](https://github.com/savonrb/savon/issues/147) ([252670](https://github.com/savonrb/savon/commit/252670)).
 
-### 0.8.4 (2011-01-26)
+## 0.8.4 (2011-01-26)
 
 * Fix for issues [issue #130](https://github.com/savonrb/savon/issues/130) and [#134](https://github.com/savonrb/savon/issues/134)
   ([4f9847](https://github.com/savonrb/savon/commit/4f9847)).
@@ -626,14 +638,14 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Fix for [issue #135](https://github.com/savonrb/savon/issues/135) ([c9261d](https://github.com/savonrb/savon/commit/c9261d)).
 
-### 0.8.3 (2011-01-11)
+## 0.8.3 (2011-01-11)
 
 * Moved implementation of `Savon::SOAP::Response#to_array` to a class method at `Savon::SOAP::XML.to_array`
   ([05a7d3](https://github.com/savonrb/savon/commit/05a7d3)).
 
 * Fix for [issue #131](https://github.com/savonrb/savon/issues/131) ([4e57b3](https://github.com/savonrb/savon/commit/4e57b3)).
 
-### 0.8.2 (2011-01-04)
+## 0.8.2 (2011-01-04)
 
 * Fix for [issue #127](https://github.com/savonrb/savon/issues/127) ([0eb3da](https://github.com/savonrb/savon/commit/0eb3da4)).
 
@@ -665,7 +677,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     end
     ```
 
-### 0.8.1 (2010-12-22)
+## 0.8.1 (2010-12-22)
 
 * Update to depend on HTTPI v0.7.5 which comes with a fallback to use Net::HTTP when no other adapter could be required.
 
@@ -673,7 +685,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Loosen dependency on builder. Should be quite stable.
 
-### 0.8.0 (2010-12-20)
+## 0.8.0 (2010-12-20)
 
 * Added `Savon::SOAP::XML#env_namespace` ([51fa0e](https://github.com/savonrb/savon/commit/51fa0e)) to configure
   the SOAP envelope namespace. It defaults to :env but can also be set to an empty String for SOAP envelope
@@ -682,7 +694,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Replaced quite a lot of core extensions by moving the Hash to XML translation into a new gem called
   [Gyoku](http://rubygems.org/gems/gyoku) ([bac4b4](https://github.com/savonrb/savon/commit/bac4b4)).
 
-### 0.8.0.beta.4 (2010-11-20)
+## 0.8.0.beta.4 (2010-11-20)
 
 * Fix for [issue #107](https://github.com/savonrb/savon/issues/107) ([1d6eda](https://github.com/savonrb/savon/commit/1d6eda)).
 
@@ -698,12 +710,12 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
     # => [{ :id => 1, :name => "foo"}, { :id => 2, :name => "bar"}]
     ```
 
-### 0.8.0.beta.3 (2010-11-06)
+## 0.8.0.beta.3 (2010-11-06)
 
 * Fix for [savon_spec](http://rubygems.org/gems/savon_spec) to not send nil to `Savon::SOAP::XML#body`
   ([c34b42](https://github.com/savonrb/savon/commit/c34b42)).
 
-### 0.8.0.beta.2 (2010-11-05)
+## 0.8.0.beta.2 (2010-11-05)
 
 * Added `Savon.response_pattern` ([0a12fb](https://github.com/savonrb/savon/commit/0a12fb)) to automatically walk deeper into
   the SOAP response Hash when a pattern (specified as an Array of Regexps and Symbols) matches the response. If for example
@@ -746,7 +758,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Added `Savon::SOAP::Response#to_array` (which also uses the response pattern).
 
-### 0.8.0.beta.1 (2010-10-29)
+## 0.8.0.beta.1 (2010-10-29)
 
 * Changed `Savon::Client.new` to accept a block instead of multiple Hash arguments. You can access the
   wsdl, http and wsse objects inside the block to configure your client for a particular service.
@@ -839,15 +851,15 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Started to remove quite a few core extensions.
 
-### 0.7.9 (2010-06-14)
+## 0.7.9 (2010-06-14)
 
 * Fix for [issue #53](https://github.com/savonrb/savon/issues/53).
 
-### 0.7.8 (2010-05-09)
+## 0.7.8 (2010-05-09)
 
 * Fixed gemspec to include missing files in the gem.
 
-### 0.7.7 (2010-05-09)
+## 0.7.7 (2010-05-09)
 
 * SOAP requests now start with a proper XML declaration.
 
@@ -870,7 +882,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
   in SOAP request Hash values, but you can now append an exclamation mark to Hash keys specifying that
   it's value should not be escaped.
 
-### 0.7.6 (2010-03-21)
+## 0.7.6 (2010-03-21)
 
 * Moved documentation from the Github Wiki to the actual class files and established a much nicer
   documentation combining examples and implementation (using Hanna) at: http://savon.rubiii.com
@@ -886,7 +898,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 * Fix for issues [#39](https://github.com/savonrb/savon/issues/39) and [#49](https://github.com/savonrb/savon/issues/49).
   Added `Savon::SOAP#xml` which let's you specify completely custom SOAP request XML.
 
-### 0.7.5 (2010-02-19)
+## 0.7.5 (2010-02-19)
 
 * Fix for [issue #34](https://github.com/savonrb/savon/issues/34).
 
@@ -896,11 +908,11 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Changed the key for specifying the order of tags from :@inorder to :order!
 
-### 0.7.4 (2010-02-02)
+## 0.7.4 (2010-02-02)
 
 * Fix for [issue #33](https://github.com/savonrb/savon/issues/33).
 
-### 0.7.3 (2010-01-31)
+## 0.7.3 (2010-01-31)
 
 * Added support for Geotrust-style WSDL documents (Julian Kornberger <github.corny@digineo.de>).
 
@@ -921,7 +933,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Fix for [issue #25](https://github.com/savonrb/savon/issues/25).
 
-### 0.7.2 (2010-01-17)
+## 0.7.2 (2010-01-17)
 
 * Exposed the `Net::HTTP` response (added by Kevin Ingolfsland). Use the `http` accessor (`response.http`)
   on your `Savon::Response` to access the `Net::HTTP` response object.
@@ -934,12 +946,12 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
 * Added support for global header and namespaces. See [issue #9](https://github.com/savonrb/savon/issues/9).
 
-### 0.7.1 (2010-01-10)
+## 0.7.1 (2010-01-10)
 
 * The Hash of HTTP headers for SOAP calls is now public via `Savon::Request#headers`.
   Patch for [issue #8](https://github.com/savonrb/savon/issues/8).
 
-### 0.7.0 (2010-01-09)
+## 0.7.0 (2010-01-09)
 
 This version comes with several changes to the public API!
 Pay attention to the following list and read the updated Wiki: http://wiki.github.com/savonrb/savon
@@ -997,7 +1009,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
     soap.namespace = "http://example.com"
     ```
 
-### 0.6.8 (2010-01-01)
+## 0.6.8 (2010-01-01)
 
 * Improved specifications for various kinds of WSDL documents.
 
@@ -1014,7 +1026,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
       client.get_api_key { |soap| soap.input = "User.GetApiKey" }
     ```
 
-### 0.6.7 (2009-12-18)
+## 0.6.7 (2009-12-18)
 
 * Implemented support for a proxy server. The proxy URI can be set through an optional Hash of options passed
   to instantiating `Savon::Client` (Dave Woodward <dave@futuremint.com>)
@@ -1024,17 +1036,17 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Patch for [issue #10](https://github.com/savonrb/savon/issues/10).
 
-### 0.6.6 (2009-12-14)
+## 0.6.6 (2009-12-14)
 
 * Default to use the name of the SOAP action (the method called in a client) in lowerCamelCase for SOAP action
   and input when Savon::WSDL is disabled. You still need to specify soap.action and maybe soap.input in case
   your SOAP actions are named any different.
 
-### 0.6.5 (2009-12-13)
+## 0.6.5 (2009-12-13)
 
 * Added an `open_timeout` method to `Savon::Request`.
 
-### 0.6.4 (2009-12-13)
+## 0.6.4 (2009-12-13)
 
 * Refactored specs to be less unit-like.
 
@@ -1052,7 +1064,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
       0.6.3  192.900000  19.630000  212.530000  (914.031865)
     ```
 
-### 0.6.3 (2009-12-11)
+## 0.6.3 (2009-12-11)
 
 * Removing 2 ruby deprecation warnings for parenthesized arguments. (Dave Woodward <dave@futuremint.com>)
 
@@ -1076,17 +1088,17 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
     0.6.2  574.720000  78.380000  653.100000  (1387.778539)
     ```
 
-### 0.6.2 (2009-12-06)
+## 0.6.2 (2009-12-06)
 
 * Added support for changing the name of the SOAP input node.
 
 * Added a CHANGELOG.
 
-### 0.6.1 (2009-12-06)
+## 0.6.1 (2009-12-06)
 
 * Fixed a problem with WSSE credentials, where every request contained a WSSE authentication header.
 
-### 0.6.0 (2009-12-06)
+## 0.6.0 (2009-12-06)
 
 * `method_missing` now yields the SOAP and WSSE objects to a given block.
 
@@ -1094,15 +1106,15 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Improved SOAP action handling (another problem that came up with issue #1).
 
-### 0.5.3 (2009-11-30)
+## 0.5.3 (2009-11-30)
 
 * Patch for [issue #2](https://github.com/savonrb/savon/issues/2).
 
-### 0.5.2 (2009-11-30)
+## 0.5.2 (2009-11-30)
 
 * Patch for [issue #1](https://github.com/savonrb/savon/issues/1).
 
-### 0.5.1 (2009-11-29)
+## 0.5.1 (2009-11-29)
 
 * Optimized default response process.
 
@@ -1114,6 +1126,6 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Added specs
 
-### 0.5.0 (2009-11-29)
+## 0.5.0 (2009-11-29)
 
 * Complete rewrite and public release.
