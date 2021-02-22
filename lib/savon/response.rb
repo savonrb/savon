@@ -150,7 +150,8 @@ module Savon
         :convert_tags_to             => @globals[:convert_response_tags_to],
         :convert_attributes_to       => @globals[:convert_attributes_to],
         :advanced_typecasting        => @locals[:advanced_typecasting],
-        :parser                      => @locals[:response_parser]
+        :parser                      => @locals[:response_parser],
+        :empty_tag_value             => @locals[:empty_tag_value]
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }

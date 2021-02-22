@@ -495,6 +495,11 @@ module Savon
       @options[:response_parser] = parser
     end
 
+    # Instruct Nori how to convert empty tags.
+    def empty_tag_value(empty_tag_value)
+      @options[:empty_tag_value] = empty_tag_value
+    end
+
     # Instruct Savon to create a multipart response if available.
     def multipart(multipart)
       @options[:multipart] = multipart
