@@ -84,8 +84,8 @@ module Savon
         :raise_errors                => true,
         :strip_namespaces            => true,
         :delete_namespace_attributes => false,
-        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym},
-        :convert_attributes_to       => lambda { |k,v| [k,v] },
+        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym },
+        :convert_attributes_to       => lambda { |k, v| [k, v] },
         :multipart                   => false,
         :adapter                     => nil,
         :use_wsa_headers             => false,
@@ -197,13 +197,13 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log = log
+      HTTPI.log      = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
-      HTTPI.logger = logger
+      HTTPI.logger      = logger
       @options[:logger] = logger
     end
 
@@ -475,6 +475,11 @@ module Savon
     # Instruct Nori to use :rexml or :nokogiri to parse the response.
     def response_parser(parser)
       @options[:response_parser] = parser
+    end
+
+    # Instruct Nori how to convert empty tags.
+    def empty_tag_value(empty_tag_value)
+      @options[:empty_tag_value] = empty_tag_value
     end
 
     # Instruct Savon to create a multipart response if available.

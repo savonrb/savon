@@ -1,6 +1,7 @@
 .rvmrc
 .DS_Store
 .yardoc
+.ruby-version
 doc
 rdox
 coverage
