@@ -129,10 +129,6 @@ module Savon
           end
           connection.headers["Content-Type"] = (ctype_headers + ["start=\"#{builder.multipart[:start]}\"",
                                                   "boundary=\"#{builder.multipart[:multipart_boundary]}\""]).join("; ")
-          # request.headers["Content-Type"] = ["multipart/related",
-          #                                  "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
-          #                                  "start=\"#{builder.multipart[:start]}\"",
-          #                                  "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
           connection.headers["MIME-Version"] = "1.0"
         end
 
