@@ -79,6 +79,7 @@ module Savon
         :namespaces                  => {},
         :logger                      => Logger.new($stdout),
         :log                         => false,
+        :log_headers                 => true,
         :filters                     => [],
         :pretty_print_xml            => false,
         :raise_errors                => true,
@@ -217,6 +218,11 @@ module Savon
       end
 
       @options[:logger].level = levels[level]
+    end
+
+    # To log headers or not.
+    def log_headers(log_headers)
+      @options[:log_headers] = log_headers
     end
 
     # A list of XML tags to filter from logged SOAP messages.
