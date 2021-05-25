@@ -84,8 +84,8 @@ module Savon
         :raise_errors                => true,
         :strip_namespaces            => true,
         :delete_namespace_attributes => false,
-        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym},
-        :convert_attributes_to       => lambda { |k,v| [k,v] },
+        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym },
+        :convert_attributes_to       => lambda { |k, v| [k, v] },
         :multipart                   => false,
         :adapter                     => nil,
         :use_wsa_headers             => false,
@@ -197,13 +197,13 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log = log
+      HTTPI.log      = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
-      HTTPI.logger = logger
+      HTTPI.logger      = logger
       @options[:logger] = logger
     end
 
@@ -383,7 +383,8 @@ module Savon
       defaults = {
         :advanced_typecasting => true,
         :response_parser      => :nokogiri,
-        :multipart            => false
+        :multipart            => false,
+        :mtom                 => false
       }
 
       super defaults.merge(options)
@@ -446,6 +447,11 @@ module Savon
       @options[:attachments] = attachments
     end
 
+    # Instruct Savon to send attachments using MTOM https://www.w3.org/TR/soap12-mtom/
+    def mtom(mtom)
+      @options[:mtom] = mtom
+    end
+
     # Value of the SOAPAction HTTP header.
     def soap_action(soap_action)
       @options[:soap_action] = soap_action
@@ -469,6 +475,11 @@ module Savon
     # Instruct Nori to use :rexml or :nokogiri to parse the response.
     def response_parser(parser)
       @options[:response_parser] = parser
+    end
+
+    # Pass already configured Nori instance.
+    def nori(nori)
+      @options[:nori] = nori
     end
 
     # Instruct Savon to create a multipart response if available.
