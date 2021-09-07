@@ -10,7 +10,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: [2.5, 2.6, 2.7, "3.0", head, truffleruby-head]
+        ruby: [2.5, 2.6, 2.7, "3.0", head]
+        include:
+          - ruby: truffleruby-head
+            needs: "test (2.5)" # It takes a long time to run this test, so let's run it after a passing 2.5
     env:
       RAILS_ENV: test
     steps:
