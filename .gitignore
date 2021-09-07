@@ -13,3 +13,4 @@ tmp
 .rspec
 Gemfile.lock
 bin/
+.rspec_status
