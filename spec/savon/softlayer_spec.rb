@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::Builder do
+RSpec.describe Savon::Builder do
 
   subject(:builder) { Savon::Builder.new(:create_object, wsdl, globals, locals) }
 

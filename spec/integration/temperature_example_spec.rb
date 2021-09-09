@@ -1,7 +1,7 @@
 # frozen_string_literal: true
  require "spec_helper"
 
-describe "Temperature example" do
+RSpec.describe "Temperature example" do
 
   it "converts 30 degrees celsius to 86 degrees fahrenheit" do
     client = Savon.client do

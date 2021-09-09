@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe Savon do
+RSpec.describe Savon do
 
   it 'knows the message tag for :authentication' do
     message_tag = message_tag_for(:authentication, :authenticate)

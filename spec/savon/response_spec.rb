@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::Response do
+RSpec.describe Savon::Response do
 
   let(:globals) { Savon::GlobalOptions.new }
   let(:locals)  { Savon::LocalOptions.new }

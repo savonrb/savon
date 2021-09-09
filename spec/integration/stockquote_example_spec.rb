@@ -1,7 +1,7 @@
 # frozen_string_literal: true
  require "spec_helper"
 
-describe "Stockquote example" do
+RSpec.describe "Stockquote example" do
 
   it "returns the result in a CDATA tag" do
     client = Savon.client(

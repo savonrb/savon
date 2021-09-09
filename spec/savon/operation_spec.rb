@@ -4,7 +4,7 @@ require "integration/support/server"
 require "json"
 require "ostruct"
 
-describe Savon::Operation do
+RSpec.describe Savon::Operation do
 
   let(:globals) { Savon::GlobalOptions.new(:endpoint => @server.url(:repeat), :log => false) }
   let(:wsdl)    { Wasabi::Document.new Fixture.wsdl(:taxcloud) }

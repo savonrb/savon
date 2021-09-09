@@ -5,7 +5,7 @@ require "json"
 require "ostruct"
 require "logger"
 
-describe "Options" do
+RSpec.describe "Options" do
 
   before :all do
     @server = IntegrationServer.run

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
  require "spec_helper"
 
-describe "RATP example" do
+RSpec.describe "RATP example" do
 
   it "retrieves information about a specific station" do
     client = Savon.client do

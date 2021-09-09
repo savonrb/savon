@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require 'spec_helper'
 
-describe 'rpc/encoded binding test' do
+RSpec.describe 'rpc/encoded binding test' do
 
   it 'should should work with WSDLs that have rpc/encoded SOAP binding' do
     client = Savon.client(

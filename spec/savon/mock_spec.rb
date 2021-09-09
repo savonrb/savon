@@ -2,7 +2,7 @@
 require "spec_helper"
 require "savon/mock/spec_helper"
 
-describe "Savon's mock interface" do
+RSpec.describe "Savon's mock interface" do
   include Savon::SpecHelper
 
   before :all do

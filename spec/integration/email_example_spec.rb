@@ -1,7 +1,7 @@
 # frozen_string_literal: true
  require "spec_helper"
 
-describe "Email example" do
+RSpec.describe "Email example" do
 
   it "passes Strings as they are" do
     client = Savon.client(
