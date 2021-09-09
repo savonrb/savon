@@ -1,7 +1,7 @@
 # frozen_string_literal: true
  require "spec_helper"
 
-describe "ZIP code example" do
+RSpec.describe "ZIP code example" do
 
   it "supports threads making requests simultaneously" do
     client = Savon.client(

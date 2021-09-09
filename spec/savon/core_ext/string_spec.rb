@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe String do
+RSpec.describe String do
 
   describe "snakecase" do
     it "lowercases one word CamelCase" do

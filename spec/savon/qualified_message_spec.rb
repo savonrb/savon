@@ -2,7 +2,7 @@
 require "spec_helper"
 
 module Savon
-  describe QualifiedMessage, "#to_hash" do
+  RSpec.describe QualifiedMessage, "#to_hash" do
 
     context "if a key ends with !" do
       let(:used_namespaces) { {} }

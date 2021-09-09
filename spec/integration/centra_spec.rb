@@ -24,7 +24,7 @@ module LogInterceptor
   end
 end
 
-describe 'Correct translation of attributes to XML' do
+RSpec.describe 'Correct translation of attributes to XML' do
   it "new :@attr syntax: correctly maps a Ruby Hash to XML attributes" do
     LogInterceptor.reset_intercepted_request
 

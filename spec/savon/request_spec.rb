@@ -2,7 +2,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe Savon::WSDLRequest do
+RSpec.describe Savon::WSDLRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
   let(:http_request) { HTTPI::Request.new }
@@ -298,7 +298,7 @@ describe Savon::WSDLRequest do
 
 end
 
-describe Savon::SOAPRequest do
+RSpec.describe Savon::SOAPRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
   let(:http_request) { HTTPI::Request.new }
