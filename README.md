@@ -33,6 +33,12 @@ require 'savon'
 # create a client for the service
 client = Savon.client(wsdl: 'http://service.example.com?wsdl')
 
+# or: create a client with a wsdl provided as a string
+client = Savon.client do |config|
+  wsdl_content = File.read("/path/to/wsdl")
+  config.wsdl wsdl_content
+end
+
 client.operations
 # => [:find_user, :list_users]
 
