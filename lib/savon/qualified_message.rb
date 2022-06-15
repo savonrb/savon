@@ -44,8 +44,8 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace        = @used_namespaces[namespace_path]
-        namespace.blank? ? value : "#{namespace}:#{translated_value}"
+        namespace        = @used_namespaces[namespace_path] || ''
+        namespace.empty? ? value : "#{namespace}:#{translated_value}"
       end
     end
   end
