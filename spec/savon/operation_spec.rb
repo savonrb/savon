@@ -109,7 +109,7 @@ RSpec.describe Savon::Operation do
     it "sets the Content-Length header" do
       # XXX: probably the worst spec ever written. refactor! [dh, 2013-01-05]
       http_request = HTTPI::Request.new
-      http_request.headers.expects(:[]=).with("Content-Length", "312")
+      http_request.headers.expects(:[]=).with("Content-Length", "723")
       Savon::SOAPRequest.any_instance.expects(:build).returns(http_request)
 
       new_operation(:verify_address, wsdl, globals).call

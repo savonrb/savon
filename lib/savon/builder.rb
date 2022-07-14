@@ -119,6 +119,14 @@ module Savon
         namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
 
+        if @wsdl&.document
+          @wsdl.parser.namespaces.each do |identifier, path|
+            next if namespaces.key?("xmlns:#{identifier}")
+
+            namespaces["xmlns:#{identifier}"] = path
+          end
+        end
+
         namespaces
       end
     end
