@@ -11,6 +11,11 @@ require "mail"
 module Savon
   class Operation
 
+    SOAP_REQUEST_TYPE = {
+      1 => "text/xml",
+      2 => "application/soap+xml"
+    }
+
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
@@ -95,15 +100,18 @@ module Savon
       request.url = endpoint
       request.body = builder.to_s
 
+      if builder.multipart
+        request.gzip
+        request.headers["Content-Type"] = ["multipart/related",
+                                           "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
+                                           "start=\"#{builder.multipart[:start]}\"",
+                                           "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
+        request.headers["MIME-Version"] = "1.0"
+      end
+
       # TODO: could HTTPI do this automatically in case the header
       #       was not specified manually? [dh, 2013-01-04]
       request.headers["Content-Length"] = request.body.bytesize.to_s
-
-      if builder.multipart
-        request.headers["Content-Type"] = "multipart/related; " \
-          "boundary=\"#{builder.multipart[:multipart_boundary]}\"; " \
-          "type=\"text/xml\"; start=\"#{builder.multipart[:start]}\""
-      end
 
       request
     end

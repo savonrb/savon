@@ -5,7 +5,7 @@ require "json"
 require "ostruct"
 require "logger"
 
-describe "Options" do
+RSpec.describe "Options" do
 
   before :all do
     @server = IntegrationServer.run
@@ -220,6 +220,17 @@ describe "Options" do
       expect(response.http.body).to include("<user>lea</user>")
       expect(response.http.body).to include("<password>top-secret</password>")
     end
+
+    it "qualifies elements embedded in complex types" do
+      client = new_client(:endpoint => @server.url(:repeat),
+                          :wsdl => Fixture.wsdl(:elements_in_types))
+      msg = {":TopLevelTransaction"=>{":Qualified"=>"A Value"}}
+
+      response = client.call(:top_level_transaction, :message => msg)
+
+      expect(response.http.body.scan(/<tns:Qualified>/).count).to eq(1)
+    end
+
   end
 
   context "global :env_namespace" do
@@ -393,6 +404,24 @@ describe "Options" do
       HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
 
       client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_min_version" do
+    it "sets the SSL min_version to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:min_version=).with(:TLS1_2).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_min_version => :TLS1_2)
+      client.call(:authenticate)
+    end
+  end
+
+  context "global :ssl_max_version" do
+    it "sets the SSL max_version to use" do
+      HTTPI::Auth::SSL.any_instance.expects(:max_version=).with(:TLS1_2).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_max_version => :TLS1_2)
       client.call(:authenticate)
     end
   end

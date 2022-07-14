@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::HTTPError do
+RSpec.describe Savon::HTTPError do
   let(:http_error) { Savon::HTTPError.new new_response(:code => 404, :body => "Not Found") }
   let(:http_error_with_empty_body) { Savon::HTTPError.new new_response(:code => 404, :body => "") }
   let(:no_error) { Savon::HTTPError.new new_response }

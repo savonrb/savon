@@ -28,7 +28,7 @@ module Savon
             newkey          = add_namespaces_to_values(key, path).first
             newpath         = path + [translated_key]
             newpath         = @types[newpath].nil? ? newpath : [@types[newpath]]
-            newhash[newkey] = to_hash(value, newpath)
+            newhash[newkey] = to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
           end
         end
         newhash
@@ -45,8 +45,8 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace        = @used_namespaces[namespace_path]
-        namespace.blank? ? value : "#{namespace}:#{translated_value}"
+        namespace        = @used_namespaces[namespace_path] || ''
+        namespace.empty? ? value : "#{namespace}:#{translated_value}"
       end
     end
   end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::RequestLogger do
+RSpec.describe Savon::RequestLogger do
 
   subject            { described_class.new(globals) }
   let(:globals)      { Savon::GlobalOptions.new(:log => true, :pretty_print_xml => true) }

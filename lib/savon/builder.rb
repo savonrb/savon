@@ -119,6 +119,14 @@ module Savon
         namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
 
+        if @wsdl&.document
+          @wsdl.parser.namespaces.each do |identifier, path|
+            next if namespaces.key?("xmlns:#{identifier}")
+
+            namespaces["xmlns:#{identifier}"] = path
+          end
+        end
+
         namespaces
       end
     end
@@ -154,7 +162,7 @@ module Savon
         break if @locals[:message].nil?
         message_locals = @locals[:message][message.snakecase.to_sym]
         message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
-        messages << "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
+        messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
       end
       messages
     end

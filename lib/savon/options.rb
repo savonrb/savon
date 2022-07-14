@@ -156,6 +156,11 @@ module Savon
       @options[:read_timeout] = read_timeout
     end
 
+    # Write timeout in seconds.
+    def write_timeout(write_timeout)
+      @options[:write_timeout] = write_timeout
+    end
+
     # The encoding to use. Defaults to "UTF-8".
     def encoding(encoding)
       @options[:encoding] = encoding
@@ -227,6 +232,16 @@ module Savon
     # Specifies the SSL version to use.
     def ssl_version(version)
       @options[:ssl_version] = version
+    end
+
+    # Specifies the SSL version to use.
+    def ssl_min_version(version)
+      @options[:ssl_min_version] = version
+    end
+
+    # Specifies the SSL version to use.
+    def ssl_max_version(version)
+      @options[:ssl_max_version] = version
     end
 
     # Whether and how to to verify the connection.

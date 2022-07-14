@@ -2,7 +2,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe Savon do
+RSpec.describe Savon do
 
   before :all do
     @server = IntegrationServer.run

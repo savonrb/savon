@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::SOAPFault do
+RSpec.describe Savon::SOAPFault do
   let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
   let(:empty_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
   let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }

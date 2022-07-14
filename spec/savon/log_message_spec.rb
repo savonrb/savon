@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::LogMessage do
+RSpec.describe Savon::LogMessage do
 
   it "returns the message if it's not XML" do
     message = log_message("hello", [:password], :pretty_print).to_s
