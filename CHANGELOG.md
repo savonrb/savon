@@ -2,9 +2,12 @@
 
 ## Unreleased
 
+* Drop support for ruby 2.6 and below. Added Ruby 3.0 and 3.1 to test matrix.
 * Fix: [#868](https://github.com/savonrb/savon/pull/868) Remove `xmlns:wsa`'s already added elsewhere; select Content-Type HTTP header based on SOAP version.
+* Fix: [#943](https://github.com/savonrb/savon/pull/943) Read all namespaces from wsdl definition if document exists
 * Feature: [#920](https://github.com/savonrb/savon/pull/920) Add a `write_timeout` setter for HTTP requests
 * Feature: [#930](https://github.com/savonrb/savon/pull/930) Add options for SSL min_version/max_version support
+* Feature: [#931](https://github.com/savonrb/savon/pull/931) Add log_headers option
 * Add your PR changelog line here
 
 ## 2.12.1 (2020-07-05)
