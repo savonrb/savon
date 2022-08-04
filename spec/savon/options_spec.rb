@@ -399,6 +399,26 @@ RSpec.describe "Options" do
     end
   end
 
+  context "global :log_headers" do
+    it "instructs Savon to log SOAP requests and responses headers" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => true)
+        client.call(:authenticate)
+      }
+      soap_header = stdout.string.include? "Content-Type"
+      expect(soap_header).to be true
+    end
+
+    it "stops Savon from logging SOAP requests and responses headers" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => true, :log_headers => false)
+        client.call(:authenticate)
+      }
+      soap_header = stdout.string.include? "Content-Type"
+      expect(soap_header).to be false
+    end
+  end
+
   context "global :ssl_version" do
     it "sets the SSL version to use" do
       HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
