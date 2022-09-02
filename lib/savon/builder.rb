@@ -121,9 +121,12 @@ module Savon
 
         if @wsdl&.document
           @wsdl.parser.namespaces.each do |identifier, path|
-            next if namespaces.key?("xmlns:#{identifier}")
+            prefixed_identifier = identifier
+            prefixed_identifier = "xmlns:#{prefixed_identifier}" unless prefixed_identifier == 'xmlns'
 
-            namespaces["xmlns:#{identifier}"] = path
+            next if namespaces.key?(prefixed_identifier)
+
+            namespaces[prefixed_identifier] = path
           end
         end
 
