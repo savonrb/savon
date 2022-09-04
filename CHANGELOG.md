@@ -4,6 +4,10 @@
 
 * Add your PR changelog line here
 
+## 2.13.1 (2022-09-04)
+
+* Fix: [#977](https://github.com/savonrb/savon/pull/977) Prevent "xmlns:xmlns" namespace but allow "xmlns" namespace.
+
 ## 2.13.0 (2022-08-03)
 
 * Drop support for ruby 2.6 and below. Added Ruby 3.0 and 3.1 to test matrix.
