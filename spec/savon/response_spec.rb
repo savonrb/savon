@@ -206,7 +206,7 @@ RSpec.describe Savon::Response do
   describe "#hash" do
     it "should return the complete SOAP response XML as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      expect(response.hash[:envelope][:header][:session_number]).to eq("ABCD1234")
+      expect(response.response_hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
   end
 
