@@ -51,7 +51,7 @@ RSpec.describe Savon do
 
         def notify(*)
           # return a response to mock the request
-          HTTPI::Response.new(201, { "X-Result" => "valid" }, "valid!")
+          HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
 
       }.new
@@ -61,7 +61,7 @@ RSpec.describe Savon do
       response = new_client.call(:authenticate)
 
       expect(response.http.code).to eq(201)
-      expect(response.http.headers).to eq("X-Result" => "valid")
+      expect(response.http.headers).to eq("x-result" => "valid")
       expect(response.http.body).to eq("valid!")
     end
 
