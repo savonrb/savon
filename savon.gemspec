@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency "mail",     "~> 2.5"
 
   s.add_development_dependency "rack"
-  s.add_development_dependency "puma",  ">= 4.3.8"
+  s.add_development_dependency "puma",  ">= 4.3.8", "< 6"
 
   s.add_development_dependency "byebug"
   s.add_development_dependency "rake",  ">= 12.3.3"
