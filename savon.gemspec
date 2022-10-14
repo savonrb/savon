@@ -34,14 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha", "~> 0.14"
   s.add_development_dependency "json",  ">= 2.3.0"
 
-  ignores  = File.readlines(".gitignore").grep(/\S+/).map(&:chomp)
-  dotfiles = %w[.gitignore .yardopts]
-
-  all_files_without_ignores = Dir["**/*"].reject { |f|
-    File.directory?(f) || ignores.any? { |i| File.fnmatch(i, f) }
-  }
-
-  s.files = (all_files_without_ignores + dotfiles).sort
+  s.files = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'Rakefile', 'lib/**/*.rb']
 
   s.require_path = "lib"
 end
