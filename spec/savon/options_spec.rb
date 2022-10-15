@@ -405,7 +405,7 @@ RSpec.describe "Options" do
         client = new_client(:endpoint => @server.url, :log => true)
         client.call(:authenticate)
       }
-      soap_header = stdout.string.include? "Content-Type"
+      soap_header = stdout.string.include? "content-type"
       expect(soap_header).to be true
     end
 
