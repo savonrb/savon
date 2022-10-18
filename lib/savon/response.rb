@@ -55,7 +55,7 @@ module Savon
     end
 
     def response_hash
-      @hash ||= nori.parse(xml)
+      @response_hash ||= nori.parse(xml)
     end
 
     def xml
