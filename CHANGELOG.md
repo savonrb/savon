@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* BC BREAKING Fix: [#985](https://github.com/savonrb/savon/pull/985) Renamed `Savon::Response#hash` to `Savon::Response#full_hash`
 * Add your PR changelog line here
 
 ## 2.13.1 (2022-09-04)
