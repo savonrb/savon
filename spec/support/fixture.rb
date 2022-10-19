@@ -9,9 +9,9 @@ class Fixture
       fixtures(type)[fixture] ||= read_file type, fixture
     end
 
-    def response_hash(fixture)
-      @response_hash ||= {}
-      @response_hash[fixture] ||= nori.parse(response(fixture))[:envelope][:body]
+    def full_hash(fixture)
+      @full_hash ||= {}
+      @full_hash[fixture] ||= nori.parse(response(fixture))[:envelope][:body]
     end
 
     TYPES.each do |type, ext|

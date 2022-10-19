@@ -405,7 +405,7 @@ RSpec.describe "Options" do
         client = new_client(:endpoint => @server.url, :log => true)
         client.call(:authenticate)
       }
-      soap_header = stdout.string.include? "content-type"
+      soap_header = stdout.string.downcase.include? "content-type"
       expect(soap_header).to be true
     end
 
@@ -850,7 +850,7 @@ RSpec.describe "Options" do
 
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
-      expect(response.hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
+      expect(response.full_hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
     end
   end
 
@@ -880,7 +880,7 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
-      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+      expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
 
     it "accepts a block in the block-based interface" do
@@ -895,7 +895,7 @@ RSpec.describe "Options" do
         locals.xml Fixture.response(:authentication)
       end
 
-      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+      expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
   end
 

@@ -37,7 +37,7 @@ RSpec.describe "Savon's mock interface" do
 
   it "accepts a Hash to specify the response code, headers and body" do
     soap_fault = Fixture.response(:soap_fault)
-    response = { :code => 500, :headers => { "X-Result" => "invalid" }, :body => soap_fault }
+    response = { :code => 500, :headers => { "x-result" => "invalid" }, :body => soap_fault }
 
     savon.expects(:authenticate).returns(response)
     response = new_client(:raise_errors => false).call(:authenticate)

@@ -54,8 +54,8 @@ module Savon
       result.kind_of?(Array) ? result.compact : [result].compact
     end
 
-    def hash
-      @hash ||= nori.parse(xml)
+    def full_hash
+      @full_hash ||= nori.parse(xml)
     end
 
     def xml
@@ -79,7 +79,7 @@ module Savon
     end
 
     def find(*path)
-      envelope = nori.find(hash, 'Envelope')
+      envelope = nori.find(full_hash, 'Envelope')
       raise_invalid_response_error! unless envelope.is_a?(Hash)
 
       nori.find(envelope, *path)
