@@ -85,7 +85,7 @@ module Savon
         :raise_errors                => true,
         :strip_namespaces            => true,
         :delete_namespace_attributes => false,
-        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym},
+        :convert_response_tags_to    => lambda { |tag| StringUtils.snakecase(tag).to_sym},
         :convert_attributes_to       => lambda { |k,v| [k,v] },
         :multipart                   => false,
         :adapter                     => nil,

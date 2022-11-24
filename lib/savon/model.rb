@@ -29,7 +29,7 @@ module Savon
     # Defines a class-level SOAP operation.
     def define_class_operation(operation)
       class_operation_module.module_eval %{
-        def #{operation.to_s.snakecase}(locals = {})
+        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
           client.call #{operation.inspect}, locals
         end
       }
@@ -38,8 +38,8 @@ module Savon
     # Defines an instance-level SOAP operation.
     def define_instance_operation(operation)
       instance_operation_module.module_eval %{
-        def #{operation.to_s.snakecase}(locals = {})
-          self.class.#{operation.to_s.snakecase} locals
+        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
+          self.class.#{StringUtils.snakecase(operation.to_s)} locals
         end
       }
     end

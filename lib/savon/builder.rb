@@ -163,7 +163,7 @@ module Savon
       message_tag = serialized_message_tag[1]
       @wsdl.soap_input(@operation_name.to_sym)[message_tag].each_pair do |message, type|
         break if @locals[:message].nil?
-        message_locals = @locals[:message][message.snakecase.to_sym]
+        message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
         message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
         messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
       end

@@ -12,7 +12,7 @@ RSpec.describe Savon::SOAPFault do
   let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
-  let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }) }
+  let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym }) }
   let(:nori_no_convert) { Nori.new(:strip_namespaces => true, :convert_tags_to => nil) }
 
   it "inherits from Savon::Error" do
