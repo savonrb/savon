@@ -844,7 +844,7 @@ RSpec.describe "Options" do
     it "can be changed to not strip any namespaces" do
       client = new_client(
         :endpoint => @server.url(:repeat),
-        :convert_response_tags_to => lambda { |tag| tag.snakecase },
+        :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag) },
         :strip_namespaces => false
       )
 
@@ -877,7 +877,7 @@ RSpec.describe "Options" do
 
   context "global :convert_response_tags_to" do
     it "changes how XML tags from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
       expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
@@ -888,7 +888,7 @@ RSpec.describe "Options" do
         globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
-        globals.convert_response_tags_to { |tag| tag.snakecase.upcase }
+        globals.convert_response_tags_to { |tag| Savon::StringUtils.snakecase(tag).upcase }
       end
 
       response = client.call(:authenticate) do |locals|
@@ -1115,7 +1115,7 @@ RSpec.describe "Options" do
 
   context "request :response_parser" do
     it "instructs Nori to change the response parser" do
-      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
+      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym })
       Nori.expects(:new).with { |options| options[:parser] == :nokogiri }.returns(nori)
 
       client = new_client(:endpoint => @server.url(:repeat))
