@@ -121,8 +121,9 @@ module Savon
 
         if @wsdl&.document
           @wsdl.parser.namespaces.each do |identifier, path|
-            prefixed_identifier = identifier
-            prefixed_identifier = "xmlns:#{prefixed_identifier}" unless prefixed_identifier == 'xmlns'
+            next if identifier == 'xmlns' # Do not include xmlns namespace as this causes issues for some servers (https://github.com/savonrb/savon/issues/986)
+
+            prefixed_identifier = "xmlns:#{identifier}"
 
             next if namespaces.key?(prefixed_identifier)
 

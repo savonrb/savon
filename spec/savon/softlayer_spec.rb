@@ -21,7 +21,6 @@ RSpec.describe Savon::Builder do
       }
 
       expected_namespaces = {
-        'xmlns'           => "http://schemas.xmlsoap.org/wsdl/",
         'xmlns:xsd'       => "http://www.w3.org/2001/XMLSchema",
         'xmlns:xsi'       => "http://www.w3.org/2001/XMLSchema-instance",
         'xmlns:tns'       => "http://api.service.softlayer.com/soap/v3/",
@@ -34,7 +33,10 @@ RSpec.describe Savon::Builder do
       locals = Savon::LocalOptions.new(message)
       builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
 
-      envelope = Nokogiri::XML(builder.to_s).xpath('./env:Envelope').first
+      parsed_doc = Nokogiri::XML(builder.to_s) do |config|
+        config.norecover.strict
+      end
+      envelope = parsed_doc.xpath('./env:Envelope').first
 
       expect(envelope.namespaces).to match(expected_namespaces)
     end
