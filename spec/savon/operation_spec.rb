@@ -179,7 +179,7 @@ RSpec.describe Savon::Operation do
       expect(response.multipart?).to be true
       expect(response.header).to eq 'response header'
       expect(response.body).to eq 'response body'
-      expect(response.attachments.first.content_id).to eq 'attachment1'
+      expect(response.attachments.first.content_id).to include('attachment1')
     end
 
     it "simple request is not multipart" do
