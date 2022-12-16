@@ -1,11 +1,13 @@
 # Savon changelog
 
 ## Unreleased
+* Add your PR changelog line here
+
+## 2.14.0 (2022-12-16)
 
 * BC BREAKING Fix: [#985](https://github.com/savonrb/savon/pull/985) Renamed `Savon::Response#hash` to `Savon::Response#full_hash`
 * BC BREAKING Fix: [#988](https://github.com/savonrb/savon/pull/988) Savon no longer monkeypatches `String#snakecase`
 * Fix: [#989](https://github.com/savonrb/savon/pull/989) Do not include xmlns from WSDL, which breaks some servers
-* Add your PR changelog line here
 
 ## 2.13.1 (2022-09-04)
 
