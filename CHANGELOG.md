@@ -1,11 +1,26 @@
 # Savon changelog
 
 ## Unreleased
+* Add your PR changelog line here
 
+## 2.14.0 (2022-12-16)
+
+* BC BREAKING Fix: [#985](https://github.com/savonrb/savon/pull/985) Renamed `Savon::Response#hash` to `Savon::Response#full_hash`
+* BC BREAKING Fix: [#988](https://github.com/savonrb/savon/pull/988) Savon no longer monkeypatches `String#snakecase`
+* Fix: [#989](https://github.com/savonrb/savon/pull/989) Do not include xmlns from WSDL, which breaks some servers
+
+## 2.13.1 (2022-09-04)
+
+* Fix: [#977](https://github.com/savonrb/savon/pull/977) Prevent "xmlns:xmlns" namespace but allow "xmlns" namespace.
+
+## 2.13.0 (2022-08-03)
+
+* Drop support for ruby 2.6 and below. Added Ruby 3.0 and 3.1 to test matrix.
 * Fix: [#868](https://github.com/savonrb/savon/pull/868) Remove `xmlns:wsa`'s already added elsewhere; select Content-Type HTTP header based on SOAP version.
+* Fix: [#943](https://github.com/savonrb/savon/pull/943) Read all namespaces from wsdl definition if document exists
 * Feature: [#920](https://github.com/savonrb/savon/pull/920) Add a `write_timeout` setter for HTTP requests
 * Feature: [#930](https://github.com/savonrb/savon/pull/930) Add options for SSL min_version/max_version support
-* Add your PR changelog line here
+* Feature: [#931](https://github.com/savonrb/savon/pull/931) Add `log_headers` option
 
 ## 2.12.1 (2020-07-05)
 

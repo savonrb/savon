@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::Response do
+RSpec.describe Savon::Response do
 
   let(:globals) { Savon::GlobalOptions.new }
   let(:locals)  { Savon::LocalOptions.new }
@@ -138,7 +138,7 @@ describe Savon::Response do
     describe "##{method}" do
       it "should return the SOAP response body as a Hash" do
         expect(soap_response.send(method)[:authenticate_response][:return]).to eq(
-          Fixture.response_hash(:authentication)[:authenticate_response][:return]
+          Fixture.full_hash(:authentication)[:authenticate_response][:return]
         )
       end
 
@@ -180,7 +180,7 @@ describe Savon::Response do
     context "when the given path exists" do
       it "should return an Array containing the path value" do
         expect(soap_response.to_array(:authenticate_response, :return)).to eq(
-          [Fixture.response_hash(:authentication)[:authenticate_response][:return]]
+          [Fixture.full_hash(:authentication)[:authenticate_response][:return]]
         )
       end
 
@@ -206,7 +206,7 @@ describe Savon::Response do
   describe "#hash" do
     it "should return the complete SOAP response XML as a Hash" do
       response = soap_response :body => Fixture.response(:header)
-      expect(response.hash[:envelope][:header][:session_number]).to eq("ABCD1234")
+      expect(response.full_hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
   end
 

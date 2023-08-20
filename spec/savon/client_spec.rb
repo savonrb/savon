@@ -2,7 +2,7 @@
 require "spec_helper"
 require "integration/support/server"
 
-describe Savon::Client do
+RSpec.describe Savon::Client do
 
   before :all do
     @server = IntegrationServer.run
@@ -232,15 +232,15 @@ describe Savon::Client do
     end
 
     it "raises when the operation name is not a symbol" do
-      expect { new_client.build_request("not a symbol") }.to raise_error
+      expect { new_client.build_request("not a symbol") }.to raise_error ArgumentError
     end
 
     it "raises when given an unknown option via the Hash syntax" do
-      expect { new_client.build_request(:authenticate, :invalid_local_option => true) }.to raise_error
+      expect { new_client.build_request(:authenticate, :invalid_local_option => true) }.to raise_error Savon::UnknownOptionError
     end
 
     it "raises when given an unknown option via the block syntax" do
-      expect { new_client.build_request(:authenticate) { another_invalid_local_option true } }.to raise_error
+      expect { new_client.build_request(:authenticate) { another_invalid_local_option true } }.to raise_error Savon::UnknownOptionError
     end
   end
 

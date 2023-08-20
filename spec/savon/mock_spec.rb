@@ -2,7 +2,7 @@
 require "spec_helper"
 require "savon/mock/spec_helper"
 
-describe "Savon's mock interface" do
+RSpec.describe "Savon's mock interface" do
   include Savon::SpecHelper
 
   before :all do
@@ -37,7 +37,7 @@ describe "Savon's mock interface" do
 
   it "accepts a Hash to specify the response code, headers and body" do
     soap_fault = Fixture.response(:soap_fault)
-    response = { :code => 500, :headers => { "X-Result" => "invalid" }, :body => soap_fault }
+    response = { :code => 500, :headers => { "x-result" => "invalid" }, :body => soap_fault }
 
     savon.expects(:authenticate).returns(response)
     response = new_client(:raise_errors => false).call(:authenticate)
@@ -46,7 +46,7 @@ describe "Savon's mock interface" do
     expect(response).to be_a_soap_fault
 
     expect(response.http.code).to eq(500)
-    expect(response.http.headers).to eq("X-Result" => "invalid")
+    expect(response.http.headers).to eq("x-result" => "invalid")
     expect(response.http.body).to eq(soap_fault)
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::Builder do
+RSpec.describe Savon::Builder do
 
   subject(:builder) { Savon::Builder.new(:create_object, wsdl, globals, locals) }
 
@@ -20,9 +20,25 @@ describe Savon::Builder do
         }
       }
 
+      expected_namespaces = {
+        'xmlns:xsd'       => "http://www.w3.org/2001/XMLSchema",
+        'xmlns:xsi'       => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:tns'       => "http://api.service.softlayer.com/soap/v3/",
+        'xmlns:env'       => "http://schemas.xmlsoap.org/soap/envelope/",
+        'xmlns:soap'      => "http://schemas.xmlsoap.org/wsdl/soap/",
+        'xmlns:soap-enc'  => "http://schemas.xmlsoap.org/soap/encoding/",
+        'xmlns:wsdl'      => "http://schemas.xmlsoap.org/wsdl/"
+      }
+
       locals = Savon::LocalOptions.new(message)
       builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
-      expect(builder.to_s).to eq('<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tns="http://api.service.softlayer.com/soap/v3/" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Body><tns:createObject><templateObject><longName>Zertico LLC Reseller</longName></templateObject></tns:createObject></env:Body></env:Envelope>')
+
+      parsed_doc = Nokogiri::XML(builder.to_s) do |config|
+        config.norecover.strict
+      end
+      envelope = parsed_doc.xpath('./env:Envelope').first
+
+      expect(envelope.namespaces).to match(expected_namespaces)
     end
   end
 end

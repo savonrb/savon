@@ -123,6 +123,18 @@ module Savon
         namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
 
+        if @wsdl&.document
+          @wsdl.parser.namespaces.each do |identifier, path|
+            next if identifier == 'xmlns' # Do not include xmlns namespace as this causes issues for some servers (https://github.com/savonrb/savon/issues/986)
+
+            prefixed_identifier = "xmlns:#{identifier}"
+
+            next if namespaces.key?(prefixed_identifier)
+
+            namespaces[prefixed_identifier] = path
+          end
+        end
+
         namespaces
       end
     end
@@ -156,9 +168,9 @@ module Savon
       message_tag = serialized_message_tag[1]
       @wsdl.soap_input(@operation_name.to_sym)[message_tag].each_pair do |message, type|
         break if @locals[:message].nil?
-        message_locals = @locals[:message][message.snakecase.to_sym]
+        message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
         message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
-        messages << "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
+        messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
       end
       messages
     end

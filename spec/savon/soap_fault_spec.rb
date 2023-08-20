@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-describe Savon::SOAPFault do
+RSpec.describe Savon::SOAPFault do
   let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
   let(:empty_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
   let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
@@ -12,7 +12,7 @@ describe Savon::SOAPFault do
   let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
-  let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym }) }
+  let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym }) }
   let(:nori_no_convert) { Nori.new(:strip_namespaces => true, :convert_tags_to => nil) }
 
   it "inherits from Savon::Error" do

@@ -5,7 +5,7 @@ require "json"
 require "ostruct"
 require "logger"
 
-describe "Options" do
+RSpec.describe "Options" do
 
   before :all do
     @server = IntegrationServer.run
@@ -396,6 +396,26 @@ describe "Options" do
     it "raises when the given level is not valid" do
       expect { new_client(:log_level => :invalid) }.
         to raise_error(ArgumentError, /Invalid log level: :invalid/)
+    end
+  end
+
+  context "global :log_headers" do
+    it "instructs Savon to log SOAP requests and responses headers" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => true)
+        client.call(:authenticate)
+      }
+      soap_header = stdout.string.downcase.include? "content-type"
+      expect(soap_header).to be true
+    end
+
+    it "stops Savon from logging SOAP requests and responses headers" do
+      stdout = mock_stdout {
+        client = new_client(:endpoint => @server.url, :log => true, :log_headers => false)
+        client.call(:authenticate)
+      }
+      soap_header = stdout.string.include? "Content-Type"
+      expect(soap_header).to be false
     end
   end
 
@@ -824,13 +844,13 @@ describe "Options" do
     it "can be changed to not strip any namespaces" do
       client = new_client(
         :endpoint => @server.url(:repeat),
-        :convert_response_tags_to => lambda { |tag| tag.snakecase },
+        :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag) },
         :strip_namespaces => false
       )
 
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
-      expect(response.hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
+      expect(response.full_hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
     end
   end
 
@@ -857,10 +877,10 @@ describe "Options" do
 
   context "global :convert_response_tags_to" do
     it "changes how XML tags from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| tag.snakecase.upcase })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
-      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+      expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
 
     it "accepts a block in the block-based interface" do
@@ -868,14 +888,14 @@ describe "Options" do
         globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
-        globals.convert_response_tags_to { |tag| tag.snakecase.upcase }
+        globals.convert_response_tags_to { |tag| Savon::StringUtils.snakecase(tag).upcase }
       end
 
       response = client.call(:authenticate) do |locals|
         locals.xml Fixture.response(:authentication)
       end
 
-      expect(response.hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
+      expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
   end
 
@@ -1095,7 +1115,7 @@ describe "Options" do
 
   context "request :response_parser" do
     it "instructs Nori to change the response parser" do
-      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| tag.snakecase.to_sym })
+      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym })
       Nori.expects(:new).with { |options| options[:parser] == :nokogiri }.returns(nori)
 
       client = new_client(:endpoint => @server.url(:repeat))

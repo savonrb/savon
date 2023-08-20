@@ -26,3 +26,4 @@ end
 require "savon/version"
 require "savon/client"
 require "savon/model"
+require "savon/string_utils"

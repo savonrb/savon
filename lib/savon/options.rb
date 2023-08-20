@@ -79,13 +79,14 @@ module Savon
         :namespaces                  => {},
         :logger                      => Logger.new($stdout),
         :log                         => false,
+        :log_headers                 => true,
         :filters                     => [],
         :pretty_print_xml            => false,
         :raise_errors                => true,
         :strip_namespaces            => true,
         :delete_namespace_attributes => false,
-        :convert_response_tags_to    => lambda { |tag| tag.snakecase.to_sym },
-        :convert_attributes_to       => lambda { |k, v| [k, v] },
+        :convert_response_tags_to    => lambda { |tag| StringUtils.snakecase(tag).to_sym},
+        :convert_attributes_to       => lambda { |k,v| [k,v] },
         :multipart                   => false,
         :adapter                     => nil,
         :use_wsa_headers             => false,
@@ -197,13 +198,13 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log      = log
+      HTTPI.log = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
-      HTTPI.logger      = logger
+      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
@@ -217,6 +218,11 @@ module Savon
       end
 
       @options[:logger].level = levels[level]
+    end
+
+    # To log headers or not.
+    def log_headers(log_headers)
+      @options[:log_headers] = log_headers
     end
 
     # A list of XML tags to filter from logged SOAP messages.

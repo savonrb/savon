@@ -28,7 +28,7 @@ class IntegrationServer
     @port = options.fetch(:port, 17172)
     @ssl  = options.fetch(:ssl, false)
 
-    @server = Puma::Server.new(app, events)
+    @server = Puma::Server.new(app, Puma::Events.new)
 
     if ssl?
       add_ssl_listener
@@ -57,10 +57,6 @@ class IntegrationServer
   end
 
   private
-
-  def events
-    Puma::Events.new($stdout, $stderr)
-  end
 
   def add_tcp_listener
     server.add_tcp_listener(host, port)
