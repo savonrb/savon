@@ -1,59 +1,78 @@
 # frozen_string_literal: true
-require "httpi"
+require "faraday"
 
 module Savon
   class HTTPRequest
 
-    def initialize(globals, http_request = nil)
+    def initialize(globals, connection = nil)
       @globals = globals
-      @http_request = http_request || HTTPI::Request.new
-    end
-
-    def build
-      @http_request
+      @connection = connection || Faraday::Connection.new
     end
 
     private
 
-    def configure_proxy
-      @http_request.proxy = @globals[:proxy] if @globals.include? :proxy
+    def configure_proxy(connection)
+      connection.proxy = @globals[:proxy] if @globals.include? :proxy
     end
 
-    def configure_timeouts
-      @http_request.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
-      @http_request.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
-      @http_request.write_timeout = @globals[:write_timeout] if @globals.include? :write_timeout
+    def configure_timeouts(connection)
+      connection.options.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
+      connection.options.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
+      connection.options.write_timeout = @globals[:write_timeout] if @globals.include? :write_timeout
     end
 
-    def configure_ssl
-      @http_request.auth.ssl.ssl_version   = @globals[:ssl_version]       if @globals.include? :ssl_version
-      @http_request.auth.ssl.min_version   = @globals[:ssl_min_version]   if @globals.include? :ssl_min_version
-      @http_request.auth.ssl.max_version   = @globals[:ssl_max_version]   if @globals.include? :ssl_max_version
+    def configure_ssl(connection)
+      connection.ssl.verify          = @globals[:ssl_verify]        if @globals.include? :ssl_verify
+      connection.ssl.ca_file         = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
+      connection.ssl.verify_hostname = @globals[:verify_hostname]   if @globals.include? :verify_hostname
+      connection.ssl.ca_path         = @globals[:ssl_ca_cert_path]  if @globals.include? :ssl_ca_cert_path
+      connection.ssl.verify_mode     = @globals[:ssl_verify_mode]   if @globals.include? :ssl_verify_mode
+      connection.ssl.cert_store      = @globals[:ssl_cert_store]    if @globals.include? :ssl_cert_store
+      connection.ssl.client_cert     = @globals[:ssl_cert]          if @globals.include? :ssl_cert
+      connection.ssl.client_key      = @globals[:ssl_cert_key]      if @globals.include? :ssl_cert_key
+      connection.ssl.certificate     = @globals[:ssl_certificate]   if @globals.include? :ssl_certificate
+      connection.ssl.private_key     = @globals[:ssl_private_key]   if @globals.include? :ssl_private_key
+      connection.ssl.verify_depth    = @globals[:verify_depth]      if @globals.include? :verify_depth
+      connection.ssl.version         = @globals[:ssl_version]       if @globals.include? :ssl_version
+      connection.ssl.min_version     = @globals[:ssl_min_version]   if @globals.include? :ssl_min_version
+      connection.ssl.max_version     = @globals[:ssl_max_version]   if @globals.include? :ssl_max_version
 
-      @http_request.auth.ssl.verify_mode   = @globals[:ssl_verify_mode]   if @globals.include? :ssl_verify_mode
-      @http_request.auth.ssl.ciphers       = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
+      # No Faraday Equivalent out of box, see: https://lostisland.github.io/faraday/#/customization/ssl-options
+      # connection.ssl.cert_file       = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
+      # connection.ssl.cert_key_file   = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
+      # connection.ssl.ca_cert         = @globals[:ssl_ca_cert]       if @globals.include? :ssl_ca_cert
+      # connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
+      # connection.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
 
-      @http_request.auth.ssl.cert_key_file = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
-      @http_request.auth.ssl.cert_key      = @globals[:ssl_cert_key]      if @globals.include? :ssl_cert_key
-      @http_request.auth.ssl.cert_file     = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
-      @http_request.auth.ssl.cert          = @globals[:ssl_cert]          if @globals.include? :ssl_cert
-      @http_request.auth.ssl.ca_cert_file  = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
-      @http_request.auth.ssl.ca_cert_path  = @globals[:ssl_ca_cert_path]  if @globals.include? :ssl_ca_cert_path
-      @http_request.auth.ssl.ca_cert       = @globals[:ssl_ca_cert]       if @globals.include? :ssl_ca_cert
-      @http_request.auth.ssl.cert_store    = @globals[:ssl_cert_store]    if @globals.include? :ssl_cert_store
-
-      @http_request.auth.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
+      # deprecated and seems to break faraday via infinite stack recursion... Expected to use max_version and min_version
+      # see: https://ruby-doc.org/3.2.2/exts/openssl/OpenSSL/SSL/SSLContext.html#method-i-ssl_version-3D
     end
 
-    def configure_auth
-      @http_request.auth.basic(*@globals[:basic_auth])   if @globals.include? :basic_auth
-      @http_request.auth.digest(*@globals[:digest_auth]) if @globals.include? :digest_auth
-      @http_request.auth.ntlm(*@globals[:ntlm])          if @globals.include? :ntlm
+    def configure_auth(connection)
+      connection.request :authorization, :basic, *@globals[:basic_auth]  if @globals.include? :basic_auth
+      if @globals.include? :digest_auth
+        begin
+          require 'faraday/digestauth'
+          connection.request :digest, *@globals[:digest_auth]
+        rescue LoadError => e
+          raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
+        end
+      end
+      if @globals.include?(:ntlm)
+        begin
+          require 'rubyntlm'
+          require 'faraday/net_http_persistent'
+          connection.adapter :net_http_persistent, pool_size: 5
+        rescue LoadError => e
+          raise LoadError, 'Using NTLM Auth requires both `rubyntlm` and `faraday-net_http_persistent` to be installed.'
+        end
+      end
     end
 
-    def configure_redirect_handling
-      if @globals.include? :follow_redirects
-        @http_request.follow_redirect = @globals[:follow_redirects]
+    def configure_redirect_handling(connection)
+      if @globals[:follow_redirects]
+        require 'faraday/follow_redirects'
+        connection.response :follow_redirects
       end
     end
   end
@@ -61,20 +80,22 @@ module Savon
   class WSDLRequest < HTTPRequest
 
     def build
-      configure_proxy
-      configure_timeouts
-      configure_headers
-      configure_ssl
-      configure_auth
-      configure_redirect_handling
-
-      @http_request
+      @connection.yield_self do |connection|
+        configure_proxy(connection)
+        configure_timeouts(connection)
+        configure_ssl(connection)
+        configure_auth(connection)
+        connection.adapter *@globals[:adapter] if !@globals[:adapter].nil?
+        connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
+        configure_headers(connection)
+      end
+      @connection
     end
 
     private
 
-    def configure_headers
-      @http_request.headers = @globals[:headers] if @globals.include? :headers
+    def configure_headers(connection)
+      connection.headers = @globals[:headers] if @globals.include? :headers
     end
   end
 
@@ -85,29 +106,41 @@ module Savon
       2 => "application/soap+xml;charset=%s"
     }
 
-    def build(options = {})
-      configure_proxy
-      configure_timeouts
-      configure_headers options[:soap_action], options[:headers]
-      configure_cookies options[:cookies]
-      configure_ssl
-      configure_auth
-      configure_redirect_handling
 
-      @http_request
+
+    def build(options = {})
+      @connection.yield_self do |connection|
+        configure_proxy(connection)
+        configure_timeouts(connection)
+        configure_ssl(connection)
+        configure_auth(connection)
+        configure_headers(connection, options[:soap_action], options[:headers])
+        configure_cookies(connection, options[:cookies])
+        connection.adapter *@globals[:adapter] unless @globals[:adapter].nil?
+        connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
+        configure_redirect_handling(connection)
+        yield(connection) if block_given?
+      end
+      @connection
     end
 
     private
 
-    def configure_cookies(cookies)
-      @http_request.set_cookies(cookies) if cookies
+    def configure_cookies(connection, cookies)
+      connection.headers['Cookie'] = cookies.map do |key, value|
+        if key == :_
+          value.join('; ')
+        else
+          "#{key}=#{value}"
+        end
+      end.join('; ') if cookies
     end
 
-    def configure_headers(soap_action, headers)
-      @http_request.headers = @globals[:headers] if @globals.include? :headers
-      @http_request.headers.merge!(headers) if headers
-      @http_request.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
-      @http_request.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
+    def configure_headers(connection, soap_action, headers)
+      connection.headers = @globals[:headers] if @globals.include? :headers
+      connection.headers.merge!(headers) if headers
+      connection.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
+      connection.headers["Content-Type"] ||= CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
     end
   end
 end

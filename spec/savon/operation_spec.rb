@@ -48,7 +48,7 @@ RSpec.describe Savon::Operation do
 
     it "raises if the endpoint cannot be reached" do
       message = "Error!"
-      response = HTTPI::Response.new(500, {}, message)
+      response = Responses.mock_faraday(500, {}, message)
       error = Wasabi::Resolver::HTTPError.new(message, response)
       Wasabi::Document.any_instance.stubs(:soap_actions).raises(error)
 
@@ -64,7 +64,7 @@ RSpec.describe Savon::Operation do
     end
   end
 
-  describe "#build" do
+  describe "build" do
     it "returns the Builder" do
       operation = new_operation(:verify_address, wsdl, globals)
       builder = operation.build(:message => { :test => 'message' })
@@ -74,7 +74,7 @@ RSpec.describe Savon::Operation do
     end
   end
 
-  describe "#call" do
+  describe "call" do
     it "returns a response object" do
       operation = new_operation(:verify_address, wsdl, globals)
       expect(operation.call).to be_a(Savon::Response)
@@ -82,35 +82,32 @@ RSpec.describe Savon::Operation do
 
     it "uses the global :endpoint option for the request" do
       globals.endpoint("http://v1.example.com")
-      HTTPI::Request.any_instance.expects(:url=).with("http://v1.example.com")
 
       operation = new_operation(:verify_address, wsdl, globals)
-
-      # stub the actual request
-      http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call_with_logging).returns(http_response)
-
+      http_response = Responses.mock_faraday(200, {}, "")
+      Faraday::Connection.any_instance.expects(:post).with(globals[:endpoint]).returns(http_response)
       operation.call
     end
 
     it "falls back to use the WSDL's endpoint if the :endpoint option was not set" do
       globals_without_endpoint = Savon::GlobalOptions.new(:log => false)
-      HTTPI::Request.any_instance.expects(:url=).with(wsdl.endpoint)
 
       operation = new_operation(:verify_address, wsdl, globals_without_endpoint)
 
       # stub the actual request
-      http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call_with_logging).returns(http_response)
+      http_response = Responses.mock_faraday(200, {}, "")
+      Faraday::Connection.any_instance.expects(:post).with(wsdl.endpoint).returns(http_response)
 
       operation.call
     end
 
     it "sets the Content-Length header" do
       # XXX: probably the worst spec ever written. refactor! [dh, 2013-01-05]
-      http_request = HTTPI::Request.new
-      http_request.headers.expects(:[]=).with("Content-Length", "723")
-      Savon::SOAPRequest.any_instance.expects(:build).returns(http_request)
+      http_response = Responses.mock_faraday(200, {}, "")
+
+      Faraday::Utils::Headers.any_instance.expects(:[]=).at_least_once
+      Faraday::Utils::Headers.any_instance.expects(:[]=).with('Content-Length', "723")
+      Faraday::Connection.any_instance.expects(:post).returns(http_response)
 
       new_operation(:verify_address, wsdl, globals).call
     end
@@ -128,10 +125,10 @@ RSpec.describe Savon::Operation do
 
     it "uses the local :cookies option" do
       globals.endpoint @server.url(:inspect_request)
-      cookies = [HTTPI::Cookie.new("some-cookie=choc-chip")]
+      cookies = {'some-cookie': 'choc-chip'}
 
-      HTTPI::Request.any_instance.expects(:set_cookies).with(cookies)
-
+      Faraday::Utils::Headers.any_instance.expects(:[]=).at_least_once
+      Faraday::Utils::Headers.any_instance.expects(:[]=).with('Cookie', 'some-cookie=choc-chip').at_least_once
       operation = new_operation(:verify_address, wsdl, globals)
       operation.call(:cookies => cookies)
     end
@@ -191,7 +188,7 @@ RSpec.describe Savon::Operation do
     end
   end
 
-  describe "#request" do
+  describe "request" do
     it "returns the request" do
       operation = new_operation(:verify_address, wsdl, globals)
       request = operation.request
