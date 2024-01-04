@@ -244,15 +244,16 @@ RSpec.describe Savon::Response do
   end
 
   describe "#http" do
-    it "should return the HTTPI::Response" do
-      expect(soap_response.http).to be_an(HTTPI::Response)
+    it "should return the Faraday::Response" do
+      expect(soap_response.http).to be_an(Faraday::Response)
     end
   end
 
   def soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-    http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
+    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
+    http_response = Faraday::Response.new(env)
 
     Savon::Response.new(http_response, globals, locals)
   end
@@ -268,7 +269,8 @@ RSpec.describe Savon::Response do
   def invalid_soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" }
     response = defaults.merge options
-    http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
+    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
+    http_response = Faraday::Response.new(env)
 
     Savon::Response.new(http_response, globals, locals)
   end
