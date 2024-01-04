@@ -23,7 +23,7 @@ RSpec.describe Savon::HTTPError do
 
   describe "#http" do
     it "returns the HTTPI::Response" do
-      expect(http_error.http).to be_a(HTTPI::Response)
+      expect(http_error.http).to be_a(Faraday::Response)
     end
   end
 
@@ -51,7 +51,8 @@ RSpec.describe Savon::HTTPError do
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
 
-    HTTPI::Response.new response[:code], response[:headers], response[:body]
+    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
+    Faraday::Response.new(env)
   end
 
 end
