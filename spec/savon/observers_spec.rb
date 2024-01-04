@@ -51,7 +51,7 @@ RSpec.describe Savon do
 
         def notify(*)
           # return a response to mock the request
-          HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
+          Responses.mock_faraday(201, { "x-result" => "valid" }, "valid!")
         end
 
       }.new
@@ -60,7 +60,7 @@ RSpec.describe Savon do
 
       response = new_client.call(:authenticate)
 
-      expect(response.http.code).to eq(201)
+      expect(response.http.status).to eq(201)
       expect(response.http.headers).to eq("x-result" => "valid")
       expect(response.http.body).to eq("valid!")
     end
@@ -77,7 +77,7 @@ RSpec.describe Savon do
       Savon.observers << observer
 
       expect { new_client.call(:authenticate) }.
-        to raise_error(Savon::Error, "Observers need to return an HTTPI::Response " \
+        to raise_error(Savon::Error, "Observers need to return an Faraday::Response " \
                                      "to mock the request or nil to execute the request.")
     end
   end
