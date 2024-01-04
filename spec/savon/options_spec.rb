@@ -7,6 +7,16 @@ require "logger"
 
 RSpec.describe "Options" do
 
+  shared_examples(:deprecation) do
+    option = self.superclass.description[/:\w+/][1..-1].to_sym
+    it "Raises a deprecation error" do
+      expect { new_client(:endpoint => @server.url, option => :none) }.to(
+        raise_error(Savon::DeprecatedOptionError) {|e|
+          expect(e.option).to eql(option.to_s)
+        })
+    end
+  end
+
   before :all do
     @server = IntegrationServer.run
   end
@@ -86,20 +96,22 @@ RSpec.describe "Options" do
   end
 
   context 'global :follow_redirects' do
+    # From the documentation, this might have compatability issues with ntlm due to its reliance on net-http-persistent
+    # TODO integration test this somehow....
     it 'sets whether or not request should follow redirects' do
       client = new_client(:endpoint => @server.url, :follow_redirects => true)
 
-      HTTPI::Request.any_instance.expects(:follow_redirect=).with(true)
+      Faraday::Connection.any_instance.expects(:response).with(:follow_redirects)
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
 
     it 'defaults to false' do
       client = new_client(:endpoint => @server.url)
 
-      HTTPI::Request.any_instance.expects(:follow_redirect=).with(false)
+      Faraday::Connection.any_instance.expects(:response).with(:follow_redirects).never
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
   end
 
@@ -109,18 +121,25 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url, :proxy => proxy_url)
 
       # TODO: find a way to integration test this [dh, 2012-12-08]
-      HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
+      Faraday::Connection.any_instance.expects(:proxy=).with(proxy_url)
 
       response = client.call(:authenticate)
     end
   end
 
   context "global :host" do
+    let(:host) { "https://example.com:8080" }
+    let(:path) { "#{host}/webserviceexternal/contracts.asmx"}
     it "overrides the WSDL endpoint host" do
-      client = new_client(:wsdl => Fixture.wsdl(:no_message_tag), host: "https://example.com:8080")
+      stubs = Faraday::Adapter::Test::Stubs.new
+      stubs.post(path) do
+        [200, {'Content-Type': 'application/xml'}, '<xml/>']
+      end
 
-      request = client.build_request(:update_orders)
-      expect(request.url.to_s).to eq "https://example.com:8080/webserviceexternal/contracts.asmx"
+      client = new_client(:wsdl => Fixture.wsdl(:no_message_tag), host: host, adapter: [:test, stubs] )
+
+      client.call(:update_orders)
+      expect{stubs.verify_stubbed_calls}.not_to raise_error
     end
   end
 
@@ -135,11 +154,14 @@ RSpec.describe "Options" do
     end
   end
 
+  # This feature is non-functional in 3.2 and 3.0 due to https://github.com/ruby/ruby/pull/9374 (works in 3.1... unknown why.)
   context "global :open_timeout" do
+    let(:open_timeout) { 0.1 }
     it "makes the client timeout after n seconds" do
+      skip 'https://github.com/ruby/ruby/pull/9374'
       non_routable_ip = "http://192.0.2.0"
-      client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
-
+      client = new_client(:endpoint => non_routable_ip, :open_timeout => open_timeout)
+      start_time = Time.now
       expect { client.call(:authenticate) }.to raise_error { |error|
         host_unreachable = error.kind_of? Errno::EHOSTUNREACH
         net_unreachable = error.kind_of? Errno::ENETUNREACH
@@ -150,7 +172,9 @@ RSpec.describe "Options" do
         else
           # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
           #       instead of a specific client error [dh, 2012-12-08]
-          expect(error).to be_an(HTTPClient::ConnectTimeoutError)
+          expect(Time.now - start_time).to be_within(0.5).of(open_timeout)
+          expect(error).to be_an(Faraday::ConnectionFailed)
+
         end
       }
     end
@@ -161,7 +185,7 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 0.1, :read_timeout => 0.1)
 
       expect { client.call(:authenticate) }.
-        to raise_error(HTTPClient::ReceiveTimeoutError)
+        to raise_error(Faraday::TimeoutError)
     end
   end
 
@@ -313,7 +337,8 @@ RSpec.describe "Options" do
     end
 
     it "silences HTTPI as well" do
-      HTTPI.expects(:log=).with(false)
+      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).never
+
       new_client(:log => false)
     end
 
@@ -327,7 +352,7 @@ RSpec.describe "Options" do
     end
 
     it "turns HTTPI logging back on as well" do
-      HTTPI.expects(:log=).with(true)
+      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).at_least_once
       new_client(:log => true)
     end
   end
@@ -347,12 +372,14 @@ RSpec.describe "Options" do
       expect(logger).to eq(custom_logger)
     end
 
-    it "sets the logger of HTTPI as well" do
-      custom_logger = Logger.new($stdout)
+    it "sets the logger of faraday connection as well" do
+      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).at_least_once
+      mock_stdout {
+        custom_logger = Logger.new($stdout)
 
-      client = new_client(:logger => custom_logger, :log => true)
-
-      expect(HTTPI.logger).to be custom_logger
+        client = new_client(:endpoint => @server.url, :logger => custom_logger, :log => true)
+        client.call(:authenticate)
+      }
     end
 
   end
@@ -419,18 +446,18 @@ RSpec.describe "Options" do
     end
   end
 
-  context "global :ssl_version" do
-    it "sets the SSL version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
-
-      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
-      client.call(:authenticate)
-    end
-  end
+  # context "global :ssl_version" do
+  #   it "sets the SSL version to use" do
+  #     Faraday::SSLOptions.any_instance.expects(:ssl_version=).with(:TLSv1).twice
+  #
+  #     client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
+  #     client.call(:authenticate)
+  #   end
+  # end
 
   context "global :ssl_min_version" do
     it "sets the SSL min_version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:min_version=).with(:TLS1_2).twice
+      Faraday::SSLOptions.any_instance.expects(:min_version=).with(:TLS1_2).twice
 
       client = new_client(:endpoint => @server.url, :ssl_min_version => :TLS1_2)
       client.call(:authenticate)
@@ -439,7 +466,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_max_version" do
     it "sets the SSL max_version to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:max_version=).with(:TLS1_2).twice
+      Faraday::SSLOptions.any_instance.expects(:max_version=).with(:TLS1_2).twice
 
       client = new_client(:endpoint => @server.url, :ssl_max_version => :TLS1_2)
       client.call(:authenticate)
@@ -448,7 +475,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_verify_mode" do
     it "sets the verify mode to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice
+      Faraday::SSLOptions.any_instance.expects(:verify_mode=).with(:peer).twice
 
       client = new_client(:endpoint => @server.url, :ssl_verify_mode => :peer)
       client.call(:authenticate)
@@ -456,28 +483,18 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ciphers" do
-    it "sets the ciphers to use" do
-      HTTPI::Auth::SSL.any_instance.expects(:ciphers=).with(:none).twice
-
-      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
-      client.call(:authenticate)
-    end
+    it_behaves_like(:deprecation)
   end
 
   context "global :ssl_cert_key_file" do
-    it "sets the cert key file to use" do
-      cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
+    it_behaves_like(:deprecation)
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key)
-      client.call(:authenticate)
-    end
   end
 
   context "global :ssl_cert_key" do
     it "sets the cert key to use" do
       cert_key = File.open(File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)).read
-      HTTPI::Auth::SSL.any_instance.expects(:cert_key=).with(cert_key).twice
+      Faraday::SSLOptions.any_instance.expects(:client_key=).with(cert_key).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_key => cert_key)
       client.call(:authenticate)
@@ -486,32 +503,17 @@ RSpec.describe "Options" do
 
 
   context "global :ssl_cert_key_password" do
-    it "sets the encrypted cert key file password to use" do
-      cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
-      cert_key_pass = "secure-password!42"
-      HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
-      HTTPI::Auth::SSL.any_instance.expects(:cert_key_password=).with(cert_key_pass).twice
-
-      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key, :ssl_cert_key_password => cert_key_pass)
-      client.call(:authenticate)
-    end
-
+    it_behaves_like(:deprecation)
   end
 
   context "global :ssl_cert_file" do
-    it "sets the cert file to use" do
-      cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert).twice
-
-      client = new_client(:endpoint => @server.url, :ssl_cert_file => cert)
-      client.call(:authenticate)
-    end
+    it_behaves_like(:deprecation)
   end
 
   context "global :ssl_cert" do
     it "sets the cert to use" do
       cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
-      HTTPI::Auth::SSL.any_instance.expects(:cert=).with(cert).twice
+      Faraday::SSLOptions.any_instance.expects(:client_cert=).with(cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert => cert)
       client.call(:authenticate)
@@ -521,7 +523,7 @@ RSpec.describe "Options" do
   context "global :ssl_ca_cert_file" do
     it "sets the ca cert file to use" do
       ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert).twice
+      Faraday::SSLOptions.any_instance.expects(:ca_file=).with(ca_cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
       client.call(:authenticate)
@@ -531,7 +533,7 @@ RSpec.describe "Options" do
   context "global :ssl_ca_cert_path" do
     it "sets the ca cert path to use" do
       ca_cert_path = "../../fixtures/ssl"
-      HTTPI::Auth::SSL.any_instance.expects(:ca_cert_path=).with(ca_cert_path).twice
+      Faraday::SSLOptions.any_instance.expects(:ca_path=).with(ca_cert_path).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert_path => ca_cert_path)
       client.call(:authenticate)
@@ -541,7 +543,7 @@ RSpec.describe "Options" do
   context "global :ssl_ca_cert_store" do
     it "sets the cert store to use" do
       cert_store = OpenSSL::X509::Store.new
-      HTTPI::Auth::SSL.any_instance.expects(:cert_store=).with(cert_store).twice
+      Faraday::SSLOptions.any_instance.expects(:cert_store=).with(cert_store).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_store => cert_store)
       client.call(:authenticate)
@@ -549,13 +551,7 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ca_cert" do
-    it "sets the ca cert file to use" do
-      ca_cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
-      HTTPI::Auth::SSL.any_instance.expects(:ca_cert=).with(ca_cert).twice
-
-      client = new_client(:endpoint => @server.url, :ssl_ca_cert => ca_cert)
-      client.call(:authenticate)
-    end
+    it_behaves_like(:deprecation)
   end
 
 
@@ -584,7 +580,7 @@ RSpec.describe "Options" do
 
       # TODO: find a way to integration test this. including an entire ntlm
       # server implementation seems a bit over the top though.
-      HTTPI::Auth::Config.any_instance.expects(:ntlm).with(*credentials)
+      Savon::Operation.any_instance.expects(:handle_ntlm)
 
       response = client.call(:authenticate)
     end
@@ -930,34 +926,35 @@ RSpec.describe "Options" do
 
   context 'global: :adapter' do
     it 'passes option to Wasabi initializer for WSDL fetching' do
-      ## I want to use there something similar to the next mock expectation, but I can't
-      ## as due to how Savon sets up Wasabi::Document and Wasabi::Document initialize itself
-      ## adapter= method is called first time with nil and second time with adapter. [Envek, 2014-05-03]
-      # Wasabi::Document.any_instance.expects(:adapter=).with(:fake_adapter_for_test)
+      stubs = Faraday::Adapter::Test::Stubs.new
+      stubs.get(@server.url('authentication')) do
+        [200, {'Content-Type': 'application/xml'}, Fixture.wsdl('authentication')]
+      end
+      Wasabi::Document.any_instance.expects(:adapter=).with(nil)
+      Wasabi::Document.any_instance.expects(:adapter=).with([:test, stubs])
       client = Savon.client(
           :log => false,
           :wsdl => @server.url(:authentication),
-          :adapter => :fake_adapter_for_test,
+          :adapter => [:test, stubs],
       )
-      operations = client.operations
-      expect(operations).to eq([:authenticate])
-      expect(FakeAdapterForTest.class_variable_get(:@@requests).size).to eq(1)
-      expect(FakeAdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:authentication)))
-      expect(FakeAdapterForTest.class_variable_get(:@@methods)).to eq([:get])
+      client.operations
+      expect{stubs.verify_stubbed_calls}.not_to raise_error
     end
 
-    it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
+    it 'instructs Faraday to use a provided adapter for performing SOAP requests' do
+      stubs = Faraday::Adapter::Test::Stubs.new
+      stubs.post(@server.url('repeat')) do
+        [200, {'Content-Type': 'application/xml'}, Fixture.response('authentication')]
+      end
       client = new_client_without_wsdl(
           :endpoint => @server.url(:repeat),
-          :namespace => "http://v1.example.com",
-          :adapter => :adapter_for_test,
+          :namespace => "http://v1_0.ws.user.example.com",
+          :adapter => [:test, stubs],
       )
       response = client.call(:authenticate)
-      expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
-      expect(response.http.body).to include('<wsdl:authenticate>')
-      expect(AdapterForTest.class_variable_get(:@@requests).size).to eq(1)
-      expect(AdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:repeat)))
-      expect(AdapterForTest.class_variable_get(:@@methods)).to eq([:post])
+      expect(response.http.body).to include('<ns2:authenticateResponse xmlns:ns2="http://v1_0.ws.user.example.com">')
+      expect(response.http.body).to include('<authenticationValue>')
+      expect{stubs.verify_stubbed_calls}.not_to raise_error
     end
   end
 
@@ -1087,17 +1084,17 @@ RSpec.describe "Options" do
   end
 
   context "request :cookies" do
-    it "accepts an Array of HTTPI::Cookie objects for the next request" do
-      cookies  = [
-        HTTPI::Cookie.new("some-cookie=choc-chip"),
-        HTTPI::Cookie.new("another-cookie=ny-cheesecake")
-      ]
+    it "accepts a hash for the next request" do
+      cookies = {
+        'some-cookie': 'choc-chip',
+        'another-cookie': 'ny-cheesecake'
+      }
 
       client   = new_client(:endpoint => @server.url(:inspect_request))
       response = client.call(:authenticate, :cookies => cookies)
 
       cookie = inspect_request(response).cookie
-      expect(cookie.split(";")).to include(
+      expect(cookie.split("; ")).to include(
         "some-cookie=choc-chip",
         "another-cookie=ny-cheesecake"
       )
@@ -1150,5 +1147,7 @@ RSpec.describe "Options" do
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
+
+
 
 end

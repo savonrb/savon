@@ -7,6 +7,14 @@ module Savon
   UnknownOperationError = Class.new(Error)
   InvalidResponseError  = Class.new(Error)
 
+  class DeprecatedOptionError < Error
+    attr_accessor :option
+    def initialize(option)
+      @option = option
+      super("#{option} is deprecated as it is not supported in Faraday")
+    end
+  end
+
   def self.client(globals = {}, &block)
     Client.new(globals, &block)
   end
