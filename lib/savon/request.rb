@@ -44,8 +44,6 @@ module Savon
       # connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
       # connection.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
 
-      # deprecated and seems to break faraday via infinite stack recursion... Expected to use max_version and min_version
-      # see: https://ruby-doc.org/3.2.2/exts/openssl/OpenSSL/SSL/SSLContext.html#method-i-ssl_version-3D
     end
 
     def configure_auth(connection)
