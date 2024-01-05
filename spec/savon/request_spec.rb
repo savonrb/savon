@@ -89,19 +89,19 @@ RSpec.describe Savon::WSDLRequest do
       end
     end
 
-    # describe "ssl version" do
-    #   it "is set when specified" do
-    #     globals.ssl_version()
-    #     http_connection.ssl.expects(:version).with(:TLSv1)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:ssl_version=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
+    describe "ssl version" do
+      it "is set when specified" do
+        globals.ssl_version(:TLSv1)
+        http_connection.ssl.expects(:version=).with(:TLSv1)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_connection.ssl.expects(:version=).never
+        new_wsdl_request.build
+      end
+    end
 
     describe "ssl min_version" do
       it "is set when specified" do
@@ -144,115 +144,6 @@ RSpec.describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
-
-    # describe "ssl ciphers" do
-    #   it "is set when specified" do
-    #     globals.ssl_ciphers(ciphers)
-    #     http_connection.ssl.expects(:ciphers=).with(ciphers)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:ciphers=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
-
-    # describe "ssl cert key file" do
-    #   it "is set when specified" do
-    #     cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-    #     globals.ssl_cert_key_file(cert_key)
-    #     http_connection.ssl.expects(:cert_key_file=).with(cert_key)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_key_file=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
-
-    # describe "ssl cert key password" do
-    #   it "is set when specified" do
-    #     the_pass = "secure-password!42"
-    #     globals.ssl_cert_key_password(the_pass)
-    #     http_connection.ssl.expects(:cert_key_password=).with(the_pass)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_key_password=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
-
-    # describe "ssl encrypted cert key file" do
-    #   describe "set with an invalid decrypting password" do
-    #     it "fails when attempting to use the SSL private key" do
-    #       skip("JRuby: find out why this does not raise an error!") if RUBY_PLATFORM == 'java'
-    #       pass = "wrong-password"
-    #       key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
-    #       cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
-    #
-    #       globals.ssl_cert_file(cert)
-    #       globals.ssl_cert_key_password(pass)
-    #       globals.ssl_cert_key_file(key)
-    #
-    #       new_wsdl_request.build
-    #
-    #       expect { http_connection.ssl.cert_key }.to raise_error OpenSSL::PKey::PKeyError
-    #     end
-    #   end
-    #
-    #   describe "set with a valid decrypting password" do
-    #     it "handles SSL private keys properly" do
-    #       pass = "secure-password!42"
-    #       key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
-    #       cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
-    #
-    #       globals.ssl_cert_file(cert)
-    #       globals.ssl_cert_key_password(pass)
-    #       globals.ssl_cert_key_file(key)
-    #
-    #       new_wsdl_request.build
-    #
-    #       expect(http_connection.ssl.cert_key.to_s).to match(/BEGIN RSA PRIVATE KEY/)
-    #     end
-    #   end
-    # end
-
-    # describe "ssl cert file" do
-    #   it "is set when specified" do
-    #     cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-    #     globals.ssl_cert_file(cert)
-    #     http_connection.ssl.expects(:cert_file=).with(cert)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_file=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
-
-    # describe "ssl ca cert file" do
-    #   it "is set when specified" do
-    #     ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-    #     globals.ssl_ca_cert_file(ca_cert)
-    #     http_connection.ssl.expects(:ca_cert_file=).with(ca_cert)
-    #
-    #     new_wsdl_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:ca_cert_file=).never
-    #     new_wsdl_request.build
-    #   end
-    # end
 
     describe "basic auth" do
       it "is set when specified" do
@@ -473,80 +364,6 @@ RSpec.describe Savon::SOAPRequest do
         new_soap_request.build
       end
     end
-
-    # describe "ssl ciphers" do
-    #   it "is set when specified" do
-    #     globals.ssl_ciphers(ciphers)
-    #     http_connection.ssl.expects(:ciphers=).with(ciphers)
-    #
-    #     new_soap_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:ciphers=).never
-    #     new_soap_request.build
-    #   end
-    # end
-
-    # describe "ssl cert key file" do
-    #   it "is set when specified" do
-    #     cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-    #     globals.ssl_cert_key_file(cert_key)
-    #     http_connection.ssl.expects(:cert_key_file=).with(cert_key)
-    #
-    #     new_soap_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_key_file=).never
-    #     new_soap_request.build
-    #   end
-    # end
-
-    # describe "ssl cert key password" do
-    #   it "is set when specified" do
-    #     the_pass = "secure-password!42"
-    #     globals.ssl_cert_key_password(the_pass)
-    #     http_connection.ssl.expects(:cert_key_password=).with(the_pass)
-    #
-    #     new_soap_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_key_password=).never
-    #     new_soap_request.build
-    #   end
-    # end
-
-    # describe "ssl cert file" do
-    #   it "is set when specified" do
-    #     cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-    #     globals.ssl_cert_file(cert)
-    #     http_connection.ssl.expects(:cert_file=).with(cert)
-    #
-    #     new_soap_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:cert_file=).never
-    #     new_soap_request.build
-    #   end
-    # end
-
-    # describe "ssl ca cert file" do
-    #   it "is set when specified" do
-    #     ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-    #     globals.ssl_ca_cert_file(ca_cert)
-    #     http_connection.ssl.expects(:ca_cert_file=).with(ca_cert)
-    #
-    #     new_soap_request.build
-    #   end
-    #
-    #   it "is not set otherwise" do
-    #     http_connection.ssl.expects(:ca_cert_file=).never
-    #     new_soap_request.build
-    #   end
-    # end
 
     describe "basic auth" do
       it "is set when specified" do
