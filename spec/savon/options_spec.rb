@@ -446,14 +446,14 @@ RSpec.describe "Options" do
     end
   end
 
-  # context "global :ssl_version" do
-  #   it "sets the SSL version to use" do
-  #     Faraday::SSLOptions.any_instance.expects(:ssl_version=).with(:TLSv1).twice
-  #
-  #     client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
-  #     client.call(:authenticate)
-  #   end
-  # end
+  context "global :ssl_version" do
+    it "sets the SSL version to use" do
+      Faraday::SSLOptions.any_instance.expects(:version=).with(:TLSv1).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
+      client.call(:authenticate)
+    end
+  end
 
   context "global :ssl_min_version" do
     it "sets the SSL min_version to use" do
