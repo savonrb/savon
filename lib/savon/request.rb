@@ -11,17 +11,17 @@ module Savon
 
     private
 
-    def configure_proxy(connection)
+    def configure_proxy
       connection.proxy = @globals[:proxy] if @globals.include? :proxy
     end
 
-    def configure_timeouts(connection)
+    def configure_timeouts
       connection.options.open_timeout = @globals[:open_timeout] if @globals.include? :open_timeout
       connection.options.read_timeout = @globals[:read_timeout] if @globals.include? :read_timeout
       connection.options.write_timeout = @globals[:write_timeout] if @globals.include? :write_timeout
     end
 
-    def configure_ssl(connection)
+    def configure_ssl
       connection.ssl.verify          = @globals[:ssl_verify]        if @globals.include? :ssl_verify
       connection.ssl.ca_file         = @globals[:ssl_ca_cert_file]  if @globals.include? :ssl_ca_cert_file
       connection.ssl.verify_hostname = @globals[:verify_hostname]   if @globals.include? :verify_hostname
@@ -46,24 +46,24 @@ module Savon
 
     end
 
-    def configure_auth(connection)
-      basic_auth(connection) if @globals.include?(:basic_auth)
-      digest_auth(connection) if @globals.include?(:digest_auth)
-      ntlm_auth(connection) if @globals.include?(:ntlm)
+    def configure_auth
+      basic_auth if @globals.include?(:basic_auth)
+      digest_auth if @globals.include?(:digest_auth)
+      ntlm_auth if @globals.include?(:ntlm)
     end
 
-    def basic_auth(connection)
+    def basic_auth
       connection.request(:authorization, :basic, *@globals[:basic_auth])
     end
 
-    def digest_auth(connection)
+    def digest_auth
       require 'faraday/digestauth'
       connection.request :digest, *@globals[:digest_auth]
     rescue LoadError => e
       raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
     end
 
-    def ntlm_auth(connection)
+    def ntlm_auth
       begin
         require 'rubyntlm'
         require 'faraday/net_http_persistent'
@@ -73,30 +73,41 @@ module Savon
       end
     end
 
-    def configure_redirect_handling(connection)
+    def configure_redirect_handling
       if @globals[:follow_redirects]
         require 'faraday/follow_redirects'
         connection.response :follow_redirects
       end
     end
+
+    def configure_adapter
+      connection.adapter(*@globals[:adapter]) unless @globals[:adapter].nil?
+    end
+
+    def configure_logging
+      connection.response(:logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level) if @globals[:log]
+    end
+
+    protected
+    attr_reader :connection
   end
 
   class WSDLRequest < HTTPRequest
 
     def build
-      configure_proxy(@connection)
-      configure_timeouts(@connection)
-      configure_ssl(@connection)
-      configure_auth(@connection)
-      connection.adapter(*@globals[:adapter]) unless @globals[:adapter].nil?
-      connection.response(:logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level) if @globals[:log]
-      configure_headers(connection)
-      @connection
+      configure_proxy
+      configure_timeouts
+      configure_ssl
+      configure_auth
+      configure_adapter
+      configure_logging
+      configure_headers
+      connection
     end
 
     private
 
-    def configure_headers(connection)
+    def configure_header
       connection.headers = @globals[:headers] if @globals.include? :headers
     end
   end
@@ -108,27 +119,22 @@ module Savon
       2 => "application/soap+xml;charset=%s"
     }
 
-
-
     def build(options = {})
-      @connection.yield_self do |connection|
-        configure_proxy(connection)
-        configure_timeouts(connection)
-        configure_ssl(connection)
-        configure_auth(connection)
-        configure_headers(connection, options[:soap_action], options[:headers])
-        configure_cookies(connection, options[:cookies])
-        connection.adapter *@globals[:adapter] unless @globals[:adapter].nil?
-        connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
-        configure_redirect_handling(connection)
-        yield(connection) if block_given?
-      end
-      @connection
+      configure_proxy
+      configure_timeouts
+      configure_ssl
+      configure_auth
+      configure_headers(options[:soap_action], options[:headers])
+      configure_cookies(options[:cookies])
+      configure_adapter
+      configure_logging
+      configure_redirect_handling
+      yield(connection) if block_given?
     end
 
     private
 
-    def configure_cookies(connection, cookies)
+    def configure_cookies(cookies)
       connection.headers['Cookie'] = cookies.map do |key, value|
         if key == :_
           value.join('; ')
@@ -138,7 +144,7 @@ module Savon
       end.join('; ') if cookies
     end
 
-    def configure_headers(connection, soap_action, headers)
+    def configure_headers(soap_action, headers)
       connection.headers = @globals[:headers] if @globals.include? :headers
       connection.headers.merge!(headers) if headers
       connection.headers["SOAPAction"]   ||= %{"#{soap_action}"} if soap_action
