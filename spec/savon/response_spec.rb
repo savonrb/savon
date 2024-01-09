@@ -252,9 +252,7 @@ RSpec.describe Savon::Response do
   def soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
-    http_response = Faraday::Response.new(env)
-
+    http_response = Responses.mock_faraday(response[:code], response[:headers], response[:body])
     Savon::Response.new(http_response, globals, locals)
   end
 
@@ -269,8 +267,7 @@ RSpec.describe Savon::Response do
   def invalid_soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" }
     response = defaults.merge options
-    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
-    http_response = Faraday::Response.new(env)
+    http_response = Responses.mock_faraday(response[:code], response[:headers], response[:body])
 
     Savon::Response.new(http_response, globals, locals)
   end

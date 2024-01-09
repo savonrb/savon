@@ -41,7 +41,7 @@ module Savon
       unless @response
         raise ExpectationError, "This expectation was not set up with a response."
       end
-      env = Faraday::Env.new(status: @response[:code], response_headers: @response[:headers], response_body: @response[:body])
+      env = Faraday::Env.from(status: @response[:code], response_headers: @response[:headers], response_body: @response[:body])
       Faraday::Response.new(env)
     end
 

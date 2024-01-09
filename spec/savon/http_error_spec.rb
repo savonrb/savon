@@ -51,8 +51,7 @@ RSpec.describe Savon::HTTPError do
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
 
-    env = Faraday::Env.new(status: response[:code], response_headers: response[:headers], response_body: response[:body])
-    Faraday::Response.new(env)
+    Responses.mock_faraday(response[:code], response[:headers], response[:body])
   end
 
 end
