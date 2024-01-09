@@ -88,8 +88,8 @@ module Savon
       configure_timeouts(@connection)
       configure_ssl(@connection)
       configure_auth(@connection)
-      connection.adapter *@globals[:adapter] unless @globals[:adapter].nil?
-      connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
+      connection.adapter(*@globals[:adapter]) unless @globals[:adapter].nil?
+      connection.response(:logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level) if @globals[:log]
       configure_headers(connection)
       @connection
     end
