@@ -47,23 +47,29 @@ module Savon
     end
 
     def configure_auth(connection)
-      connection.request :authorization, :basic, *@globals[:basic_auth]  if @globals.include? :basic_auth
-      if @globals.include? :digest_auth
-        begin
-          require 'faraday/digestauth'
-          connection.request :digest, *@globals[:digest_auth]
-        rescue LoadError => e
-          raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
-        end
-      end
-      if @globals.include?(:ntlm)
-        begin
-          require 'rubyntlm'
-          require 'faraday/net_http_persistent'
-          connection.adapter :net_http_persistent, pool_size: 5
-        rescue LoadError => e
-          raise LoadError, 'Using NTLM Auth requires both `rubyntlm` and `faraday-net_http_persistent` to be installed.'
-        end
+      basic_auth(connection) if @globals.include?(:basic_auth)
+      digest_auth(connection) if @globals.include?(:digest_auth)
+      ntlm_auth(connection) if @globals.include?(:ntlm)
+    end
+
+    def basic_auth(connection)
+      connection.request(:authorization, :basic, *@globals[:basic_auth])
+    end
+
+    def digest_auth(connection)
+      require 'faraday/digestauth'
+      connection.request :digest, *@globals[:digest_auth]
+    rescue LoadError => e
+      raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
+    end
+
+    def ntlm_auth(connection)
+      begin
+        require 'rubyntlm'
+        require 'faraday/net_http_persistent'
+        connection.adapter :net_http_persistent, pool_size: 5
+      rescue LoadError => e
+        raise LoadError, 'Using NTLM Auth requires both `rubyntlm` and `faraday-net_http_persistent` to be installed.'
       end
     end
 
@@ -78,15 +84,13 @@ module Savon
   class WSDLRequest < HTTPRequest
 
     def build
-      @connection.yield_self do |connection|
-        configure_proxy(connection)
-        configure_timeouts(connection)
-        configure_ssl(connection)
-        configure_auth(connection)
-        connection.adapter *@globals[:adapter] if !@globals[:adapter].nil?
-        connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
-        configure_headers(connection)
-      end
+      configure_proxy(@connection)
+      configure_timeouts(@connection)
+      configure_ssl(@connection)
+      configure_auth(@connection)
+      connection.adapter *@globals[:adapter] unless @globals[:adapter].nil?
+      connection.response :logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level if @globals[:log]
+      configure_headers(connection)
       @connection
     end
 
