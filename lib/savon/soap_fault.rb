@@ -5,7 +5,7 @@ module Savon
     def self.present?(http, xml = nil)
       xml ||= http.body
       fault_node  = xml.include?("Fault>")
-      soap1_fault = xml.match(/faultcode\/?\>/) && xml.match(/faultstring\/?\>/)
+      soap1_fault = xml.match(/faultcode\/?>/) && xml.match(/faultstring\/?>/)
       soap2_fault = xml.include?("Code>") && xml.include?("Reason>")
 
       fault_node && (soap1_fault || soap2_fault)

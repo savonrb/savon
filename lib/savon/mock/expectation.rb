@@ -75,7 +75,7 @@ module Savon
         next if (expected_value == :any &&  msg_real.include?(key))
         return false if expected_value != msg_real[key]
       end
-      return true
+      true
     end
   end
 end

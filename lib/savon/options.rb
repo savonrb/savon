@@ -131,7 +131,7 @@ module Savon
       @options[:namespace] = namespace
     end
 
-    # The namespace identifer.
+    # The namespace identifier.
     def namespace_identifier(identifier)
       @options[:namespace_identifier] = identifier
     end
@@ -405,7 +405,7 @@ module Savon
 
     # The local SOAP header. Expected to be a Hash or respond to #to_s.
     # Will be merged with the global SOAP header if both are Hashes.
-    # Otherwise the local option will be prefered.
+    # Otherwise the local option will be preferred.
     def soap_header(header)
       @options[:soap_header] = header
     end

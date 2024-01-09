@@ -59,7 +59,7 @@ module Savon
     def digest_auth
       require 'faraday/digestauth'
       connection.request :digest, *@globals[:digest_auth]
-    rescue LoadError => e
+    rescue LoadError
       raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
     end
 
@@ -68,7 +68,7 @@ module Savon
         require 'rubyntlm'
         require 'faraday/net_http_persistent'
         connection.adapter :net_http_persistent, pool_size: 5
-      rescue LoadError => e
+      rescue LoadError
         raise LoadError, 'Using NTLM Auth requires both `rubyntlm` and `faraday-net_http_persistent` to be installed.'
       end
     end
