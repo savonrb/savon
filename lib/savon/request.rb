@@ -107,7 +107,7 @@ module Savon
 
     private
 
-    def configure_header
+    def configure_headers
       connection.headers = @globals[:headers] if @globals.include? :headers
     end
   end
@@ -130,6 +130,7 @@ module Savon
       configure_logging
       configure_redirect_handling
       yield(connection) if block_given?
+      connection
     end
 
     private
