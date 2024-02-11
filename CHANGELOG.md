@@ -3,6 +3,10 @@
 ## Unreleased
 * Add your PR changelog line here
 
+## 2.15.0 (2024-02-10)
+
+* Drop support for ruby 2.7 and below. Added Ruby 3.2 and 3.3 to test matrix.
+
 ## 2.14.0 (2022-12-16)
 
 * BC BREAKING Fix: [#985](https://github.com/savonrb/savon/pull/985) Renamed `Savon::Response#hash` to `Savon::Response#full_hash`
