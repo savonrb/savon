@@ -6,6 +6,7 @@
 ## 2.15.0 (2024-02-10)
 
 * Drop support for ruby 2.7 and below. Added Ruby 3.2 and 3.3 to test matrix.
+* Allows wasabi v5.x, which now supports faraday
 
 ## 2.14.0 (2022-12-16)
 
