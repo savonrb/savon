@@ -17,6 +17,7 @@
 ## 2.13.1 (2022-09-04)
 
 * Fix: [#977](https://github.com/savonrb/savon/pull/977) Prevent "xmlns:xmlns" namespace but allow "xmlns" namespace.
+* Change: Require Ruby 2.7.0+ in the gemspec. [0e0d695f](https://github.com/savonrb/savon/commit/0e0d695f463b719fa0fef0f58a0404b1228957f0)
 
 ## 2.13.0 (2022-08-03)
 
