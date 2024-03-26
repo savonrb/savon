@@ -1,6 +1,7 @@
 # Savon changelog
 
 ## Unreleased
+* Ruby 3.0+ is required in the gemspec.
 * Add your PR changelog line here
 
 ## 2.15.0 (2024-02-10)
