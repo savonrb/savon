@@ -11,9 +11,9 @@ Heavy metal SOAP client
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
 
-## Version 2
+## Installation
 
-Savon version 2 is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
+Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
 ```
 $ gem install savon
@@ -22,7 +22,7 @@ $ gem install savon
 or add it to your Gemfile like this:
 
 ```
-gem 'savon', '~> 2.13.0'
+gem 'savon', '~> 2.15.0'
 ```
 
 ## Usage example
