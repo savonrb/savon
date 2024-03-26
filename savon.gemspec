@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://savonrb.com"
   s.summary     = "Heavy metal SOAP client"
   s.description = s.summary
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.0.0'
 
   s.license = 'MIT'
 
