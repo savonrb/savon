@@ -103,7 +103,7 @@ RSpec.describe Savon::Client do
     end
   end
 
-  describe "#call" do
+  describe "call" do
     it "calls a new SOAP operation" do
       locals = { :message => { :symbol => "AAPL" } }
       soap_response = new_soap_response
@@ -171,7 +171,7 @@ RSpec.describe Savon::Client do
     end
   end
 
-  describe "#build_request" do
+  describe "build_request" do
     it "returns the request without making an actual call" do
       expected_request = mock('request')
       wsdl = Wasabi::Document.new('http://example.com')
@@ -247,8 +247,7 @@ RSpec.describe Savon::Client do
   def new_http_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-
-    HTTPI::Response.new response[:code], response[:headers], response[:body]
+    Responses.mock_faraday(response[:code], response[:headers], response[:body])
   end
 
   def new_soap_response(options = {})

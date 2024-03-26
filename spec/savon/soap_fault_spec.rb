@@ -9,7 +9,7 @@ RSpec.describe Savon::SOAPFault do
   let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
   let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
   let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
-  let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
+  let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => ''), nori }
   let(:no_fault) { Savon::SOAPFault.new new_response, nori }
 
   let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym }) }
@@ -19,9 +19,9 @@ RSpec.describe Savon::SOAPFault do
     expect(Savon::SOAPFault.ancestors).to include(Savon::Error)
   end
 
-  describe "#http" do
-    it "returns the HTTPI::Response" do
-      expect(soap_fault.http).to be_an(HTTPI::Response)
+  describe "http" do
+    it "returns the Faraday::Response" do
+      expect(soap_fault.http).to be_an(Faraday::Response)
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe Savon::SOAPFault do
   end
 
   [:message, :to_s].each do |method|
-    describe "##{method}" do
+    describe "#{method}" do
       it "returns a SOAP 1.1 fault message" do
         expect(soap_fault.send method).to eq("(soap:Server) Fault occurred while processing.")
       end
@@ -83,7 +83,7 @@ RSpec.describe Savon::SOAPFault do
     end
   end
 
-  describe "#to_hash" do
+  describe "to_hash" do
     it "returns the SOAP response as a Hash unless a SOAP fault is present" do
       expect(no_fault.to_hash[:authenticate_response][:return][:success]).to be_truthy
     end
@@ -141,7 +141,7 @@ RSpec.describe Savon::SOAPFault do
     defaults = { :code => 500, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
 
-    HTTPI::Response.new response[:code], response[:headers], response[:body]
+    Responses.mock_faraday response[:code], response[:headers], response[:body]
   end
 
 end

@@ -45,7 +45,7 @@ RSpec.describe "Savon's mock interface" do
     expect(response).to_not be_successful
     expect(response).to be_a_soap_fault
 
-    expect(response.http.code).to eq(500)
+    expect(response.http.status).to eq(500)
     expect(response.http.headers).to eq("x-result" => "invalid")
     expect(response.http.body).to eq(soap_fault)
   end

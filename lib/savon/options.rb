@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "logger"
-require "httpi"
 
 module Savon
   class Options
@@ -8,6 +7,11 @@ module Savon
     def initialize(options = {})
       @options = {}
       assign options
+    end
+
+    def deprecate
+      option = caller_locations[0].label
+      raise DeprecatedOptionError.new(option)
     end
 
     attr_reader :option_type
@@ -198,13 +202,11 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
-      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
@@ -257,6 +259,7 @@ module Savon
 
     # Sets the cert key file to use.
     def ssl_cert_key_file(file)
+      deprecate
       @options[:ssl_cert_key_file] = file
     end
 
@@ -267,11 +270,13 @@ module Savon
 
     # Sets the cert key password to use.
     def ssl_cert_key_password(password)
+      deprecate
       @options[:ssl_cert_key_password] = password
     end
 
     # Sets the cert file to use.
     def ssl_cert_file(file)
+      deprecate
       @options[:ssl_cert_file] = file
     end
 
@@ -287,10 +292,12 @@ module Savon
 
     # Sets the ca cert to use.
     def ssl_ca_cert(cert)
+      deprecate
       @options[:ssl_ca_cert] = cert
     end
 
     def ssl_ciphers(ciphers)
+      deprecate
       @options[:ssl_ciphers] = ciphers
     end
 
@@ -389,7 +396,8 @@ module Savon
       defaults = {
         :advanced_typecasting => true,
         :response_parser      => :nokogiri,
-        :multipart            => false
+        :multipart            => false,
+        :body                 => false
       }
 
       super defaults.merge(options)
@@ -484,6 +492,10 @@ module Savon
 
     def headers(headers)
       @options[:headers] = headers
+    end
+
+    def body(body)
+      @options[:body] = body
     end
   end
 end
