@@ -538,7 +538,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
   * `Hash#map_soap_response` and some of its helpers are moved to [Nori v1.0.0](http://rubygems.org/gems/nori/versions/1.0.0).
     Along with replacing core extensions with a proper implementation, Nori now contains a number of methods
-    for [configuring its default behavior](https://github.com/savonrb/nori/blob/master/CHANGELOG.md):
+    for [configuring its default behavior](https://github.com/savonrb/nori/blob/main/CHANGELOG.md):
 
       * The option whether to strip namespaces was moved to Nori.strip_namespaces
       * You can disable "advanced typecasting" for SOAP response values

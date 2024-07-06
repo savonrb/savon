@@ -56,7 +56,7 @@ For more examples, you should check out the
 
 Every savon release is tested with contemporary supported versions of ruby. Historical compatibility information:
 
-* `master` - same support as Ruby
+* `main` - same support as Ruby
 * 2.15.x - MRI 3.0, 3.1, 3.2, 3.3
 * 2.13.x, 2.14.x - MRI 2.7, 3.0, 3.1
 * 2.12.x - MRI 2.2, 2.3, 2.4, 2.5
