@@ -1,7 +1,6 @@
 # Savon changelog
 
 ## Unreleased
-* Ruby 3.0+ is required in the gemspec.
 * Changes to utilize faraday instead of http
 * BC BREAKING Cookies are handled differently now
 * BC BREAKING Multiple pieces of functionality will rely on faraday libraries to be provided by the consuming codebase
@@ -15,6 +14,11 @@
   * Deprecates providing a ca cert, upgrade path is to provide a ca cert file
   * deprecates overriding ssl ciphers, as faraday does not support this
 * Add your PR changelog line here
+
+## 2.15.1 (2024-07-08)
+
+* Ruby 3.0+ is required in the gemspec.
+* Require httpi 4.x - older versions rely on `Rack::Utils::HeaderHash` which is removed in Rack 3.0.
 
 ## 2.15.0 (2024-02-10)
 
