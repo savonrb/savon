@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubyntlm",  ">= 0.6"
   s.add_development_dependency "rack", " < 4"
   s.add_development_dependency "puma",  ">= 4.3.8", "< 7"
+  s.add_development_dependency "httpclient"
 
   s.add_development_dependency "byebug"
   s.add_development_dependency "rake",  ">= 12.3.3"
