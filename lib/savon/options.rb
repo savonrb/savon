@@ -259,6 +259,7 @@ module Savon
 
     # Sets the cert key file to use.
     def ssl_cert_key_file(file)
+      deprecate
       @options[:ssl_cert_key_file] = file
     end
 
