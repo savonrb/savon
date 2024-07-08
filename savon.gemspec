@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.homepage    = "http://savonrb.com"
   s.summary     = "Heavy metal SOAP client"
   s.description = s.summary
-  s.required_ruby_version = '>= 2.7.0'
+  s.required_ruby_version = '>= 3.0.0'
 
   s.license = 'MIT'
 
@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "faraday",  "~> 2.8"
   s.add_dependency "faraday-gzip",  "~> 2.0"
   s.add_dependency "faraday-follow_redirects",  "~> 0.3"
-  s.add_dependency "wasabi", "~> 5.0"
+  s.add_dependency "wasabi", ">= 6"
   s.add_dependency "akami",    "~> 1.2"
   s.add_dependency "gyoku",    "~> 1.2"
   s.add_dependency "builder",  ">= 2.1.2"

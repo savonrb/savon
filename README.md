@@ -11,9 +11,9 @@ Heavy metal SOAP client
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
 
-## Version 2
+## Installation
 
-Savon version 2 is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
+Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
 
 ```
 $ gem install savon
@@ -22,7 +22,7 @@ $ gem install savon
 or add it to your Gemfile like this:
 
 ```
-gem 'savon', '~> 2.13.0'
+gem 'savon', '~> 2.15.0'
 ```
 
 ## Usage example
@@ -54,11 +54,17 @@ For more examples, you should check out the
 
 ## Ruby version support
 
-* `master` - MRI 2.7, 3.0, 3.1 (same support as Ruby)
+Every savon release is tested with contemporary supported versions of ruby. Historical compatibility information:
+
+* `main` - same support as Ruby
+* 2.15.x - MRI 3.0, 3.1, 3.2, 3.3
+* 2.13.x, 2.14.x - MRI 2.7, 3.0, 3.1
 * 2.12.x - MRI 2.2, 2.3, 2.4, 2.5
 * 2.11.x - MRI 2.0, 2.1, 2.2, and 2.3
 
 If you are running MRI 1.8.7, try a 2.6.x release.
+
+Most changes are not backported to older versions of savon, or unsupported ruby versions.
 
 ## Running tests
 

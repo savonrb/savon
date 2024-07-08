@@ -1,6 +1,7 @@
 # Savon changelog
 
 ## Unreleased
+* Ruby 3.0+ is required in the gemspec.
 * Add your PR changelog line here
 
 ## 2.15.0 (2024-02-10)
@@ -17,6 +18,7 @@
 ## 2.13.1 (2022-09-04)
 
 * Fix: [#977](https://github.com/savonrb/savon/pull/977) Prevent "xmlns:xmlns" namespace but allow "xmlns" namespace.
+* Change: Require Ruby 2.7.0+ in the gemspec. [0e0d695f](https://github.com/savonrb/savon/commit/0e0d695f463b719fa0fef0f58a0404b1228957f0)
 
 ## 2.13.0 (2022-08-03)
 
@@ -536,7 +538,7 @@ Combined release ticket: [#481](https://github.com/savonrb/savon/issues/481)
 
   * `Hash#map_soap_response` and some of its helpers are moved to [Nori v1.0.0](http://rubygems.org/gems/nori/versions/1.0.0).
     Along with replacing core extensions with a proper implementation, Nori now contains a number of methods
-    for [configuring its default behavior](https://github.com/savonrb/nori/blob/master/CHANGELOG.md):
+    for [configuring its default behavior](https://github.com/savonrb/nori/blob/main/CHANGELOG.md):
 
       * The option whether to strip namespaces was moved to Nori.strip_namespaces
       * You can disable "advanced typecasting" for SOAP response values
