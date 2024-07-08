@@ -318,6 +318,7 @@ module Savon
 
     # HTTP digest auth credentials.
     def digest_auth(*credentials)
+      deprecate
       @options[:digest_auth] = credentials.flatten
     end
 

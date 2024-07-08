@@ -48,19 +48,11 @@ module Savon
 
     def configure_auth
       basic_auth if @globals.include?(:basic_auth)
-      digest_auth if @globals.include?(:digest_auth)
       ntlm_auth if @globals.include?(:ntlm)
     end
 
     def basic_auth
       connection.request(:authorization, :basic, *@globals[:basic_auth])
-    end
-
-    def digest_auth
-      require 'faraday/digestauth'
-      connection.request :digest, *@globals[:digest_auth]
-    rescue LoadError
-      raise LoadError, 'Using Digest Auth requests `faraday-digestauth`'
     end
 
     def ntlm_auth

@@ -63,22 +63,6 @@ class IntegrationServer
       }
     end
 
-    map "/digest_auth" do
-      unprotected_app = lambda { |env|
-        IntegrationServer.respond_with :body => "digest-auth"
-      }
-
-      realm = 'digest-realm'
-      app = Rack::Auth::Digest::MD5.new(unprotected_app) do |username|
-        username == 'admin' ? Digest::MD5.hexdigest("admin:#{realm}:secret") : nil
-      end
-      app.realm = realm
-      app.opaque = 'this-should-be-secret'
-      app.passwords_hashed = true
-
-      run app
-    end
-
     map "/multipart" do
       run lambda { |env|
         boundary = 'mimepart_boundary'
