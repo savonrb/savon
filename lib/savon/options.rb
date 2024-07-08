@@ -468,8 +468,8 @@ module Savon
     # Cookies to be used for the next request
     # @param [Hash] cookies cookies associated to nil will be appended as array cookies, if you need a cookie equal to
     # and empty string, set it to ""
-    # @example cookies({accept: 'application/json', some-cookie: 'foo', HttpOnly: nil})
-    # # => "accept=application/json; some-cookie=foo; HttpOnly"
+    # @example cookies({accept: 'application/json', some-cookie: 'foo', "empty-cookie": "", HttpOnly: nil})
+    # # => "accept=application/json; some-cookie=foo; empty-cookie=; HttpOnly"
     def cookies(cookies)
       @options[:cookies] = cookies
     end
