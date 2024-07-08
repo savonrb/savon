@@ -159,20 +159,6 @@ RSpec.describe Savon::WSDLRequest do
       end
     end
 
-    describe "digest auth" do
-      it "is set when specified" do
-        globals.digest_auth("lea", "top-secret")
-        http_connection.expects(:request).with(:digest, "lea", "top-secret")
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_connection.expects(:request).with{|args| args.include?(:digest)}.never
-        new_wsdl_request.build
-      end
-    end
-
     describe "ntlm auth" do
       it 'tries to load ntlm when set' do
         globals.ntlm("han", "super-secret")
@@ -374,20 +360,6 @@ RSpec.describe Savon::SOAPRequest do
 
       it "is not set otherwise" do
         http_connection.expects(:request).with(:authorization, :basic, "luke", 'secret').never
-        new_soap_request.build
-      end
-    end
-
-    describe "digest auth" do
-      it "is set when specified" do
-        globals.digest_auth("lea", "top-secret")
-        http_connection.expects(:request).with(:digest, "lea", "top-secret")
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_connection.expects(:request).with(:digest, "lea", 'top-secret').never
         new_soap_request.build
       end
     end

@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", ">= 1.8.1"
   s.add_dependency "mail",     "~> 2.5"
 
-  s.add_development_dependency "faraday-digestauth",  "~> 0.4"
   s.add_development_dependency "faraday-net_http_persistent",  "~> 2.1"
   s.add_development_dependency "rubyntlm",  ">= 0.6"
   s.add_development_dependency "rack", " < 4"

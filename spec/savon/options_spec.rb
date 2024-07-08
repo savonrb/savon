@@ -564,15 +564,6 @@ RSpec.describe "Options" do
     end
   end
 
-  context "global :digest_auth" do
-    it "sets the digest auth credentials" do
-      client = new_client(:endpoint => @server.url(:digest_auth), :digest_auth => ["admin", "secret"])
-      response = client.call(:authenticate)
-
-      expect(response.http.body).to eq("digest-auth")
-    end
-  end
-
   context "global :ntlm" do
     it "sets the ntlm credentials to use" do
       credentials = ["admin", "secret"]
