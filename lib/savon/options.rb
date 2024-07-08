@@ -465,7 +465,11 @@ module Savon
       @options[:soap_action] = soap_action
     end
 
-    # Cookies to be used for the next request.
+    # Cookies to be used for the next request
+    # @param [Hash] cookies cookies associated to nil will be appended as array cookies, if you need a cookie equal to
+    # and empty string, set it to ""
+    # @example cookies({accept: 'application/json', some-cookie: 'foo', HttpOnly: nil})
+    # # => "accept=application/json; some-cookie=foo; HttpOnly"
     def cookies(cookies)
       @options[:cookies] = cookies
     end

@@ -231,7 +231,7 @@ RSpec.describe Savon::SOAPRequest do
         cookies = {
           'some-cookie': 'choc-chip',
           path: '/',
-          _: ['HttpOnly']
+          HttpOnly: nil
         }
 
         http_connection.headers.expects(:[]=).at_least_once

@@ -137,8 +137,8 @@ module Savon
 
     def configure_cookies(cookies)
       connection.headers['Cookie'] = cookies.map do |key, value|
-        if key == :_
-          value.join('; ')
+        if value.nil?
+          key
         else
           "#{key}=#{value}"
         end
