@@ -9,8 +9,7 @@ module Savon
       assign options
     end
 
-    def deprecate
-      option = caller_locations[0].label
+    def deprecate(option)
       raise DeprecatedOptionError.new(option)
     end
 
@@ -259,7 +258,7 @@ module Savon
 
     # Sets the cert key file to use.
     def ssl_cert_key_file(file)
-      deprecate
+      deprecate('ssl_cert_key_file')
       @options[:ssl_cert_key_file] = file
     end
 
@@ -270,13 +269,13 @@ module Savon
 
     # Sets the cert key password to use.
     def ssl_cert_key_password(password)
-      deprecate
+      deprecate('ssl_cert_key_password')
       @options[:ssl_cert_key_password] = password
     end
 
     # Sets the cert file to use.
     def ssl_cert_file(file)
-      deprecate
+      deprecate('ssl_cert_file')
       @options[:ssl_cert_file] = file
     end
 
@@ -292,12 +291,12 @@ module Savon
 
     # Sets the ca cert to use.
     def ssl_ca_cert(cert)
-      deprecate
+      deprecate('ssl_ca_cert')
       @options[:ssl_ca_cert] = cert
     end
 
     def ssl_ciphers(ciphers)
-      deprecate
+      deprecate('ssl_ciphers')
       @options[:ssl_ciphers] = ciphers
     end
 
@@ -318,7 +317,7 @@ module Savon
 
     # HTTP digest auth credentials.
     def digest_auth(*credentials)
-      deprecate
+      deprecate('digest_auth')
       @options[:digest_auth] = credentials.flatten
     end
 
