@@ -22,7 +22,7 @@ RSpec.describe Savon::HTTPError do
   end
 
   describe "#http" do
-    it "returns the HTTPI::Response" do
+    it "returns the Faraday::Response" do
       expect(http_error.http).to be_a(Faraday::Response)
     end
   end
