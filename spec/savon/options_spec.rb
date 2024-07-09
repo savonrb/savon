@@ -153,12 +153,9 @@ RSpec.describe "Options" do
     end
   end
 
-  # This feature is non-functional in 3.2 and 3.0 due to https://github.com/ruby/ruby/pull/9374 (works in 3.1... unknown why.)
-  # TODO 3.4 contains a fix for this when it is released.
   context "global :open_timeout" do
     let(:open_timeout) { 0.1 }
     it "makes the client timeout after n seconds" do
-      skip 'https://github.com/ruby/ruby/pull/9374'
       non_routable_ip = "http://192.0.2.0"
       client = new_client(:endpoint => non_routable_ip, :open_timeout => open_timeout)
       start_time = Time.now
