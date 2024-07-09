@@ -7,8 +7,7 @@ require "logger"
 
 RSpec.describe "Options" do
 
-  shared_examples(:deprecation) do
-    option = self.superclass.description[/:\w+/][1..-1].to_sym
+  shared_examples(:deprecation) do |option|
     it "Raises a deprecation error" do
       expect { new_client(:endpoint => @server.url, option => :none) }.to(
         raise_error(Savon::DeprecatedOptionError) {|e|
@@ -155,6 +154,7 @@ RSpec.describe "Options" do
   end
 
   # This feature is non-functional in 3.2 and 3.0 due to https://github.com/ruby/ruby/pull/9374 (works in 3.1... unknown why.)
+  # TODO 3.4 contains a fix for this when it is released.
   context "global :open_timeout" do
     let(:open_timeout) { 0.1 }
     it "makes the client timeout after n seconds" do
@@ -483,12 +483,11 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ciphers" do
-    it_behaves_like(:deprecation)
+    it_behaves_like(:deprecation, :ssl_ciphers)
   end
 
   context "global :ssl_cert_key_file" do
-    it_behaves_like(:deprecation)
-
+    it_behaves_like(:deprecation, :ssl_cert_key_file)
   end
 
   context "global :ssl_cert_key" do
@@ -503,11 +502,11 @@ RSpec.describe "Options" do
 
 
   context "global :ssl_cert_key_password" do
-    it_behaves_like(:deprecation)
+    it_behaves_like(:deprecation, :ssl_cert_key_password)
   end
 
   context "global :ssl_cert_file" do
-    it_behaves_like(:deprecation)
+    it_behaves_like(:deprecation, :ssl_cert_file)
   end
 
   context "global :ssl_cert" do
@@ -551,7 +550,7 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ca_cert" do
-    it_behaves_like(:deprecation)
+    it_behaves_like(:deprecation, :ssl_ca_cert)
   end
 
 
