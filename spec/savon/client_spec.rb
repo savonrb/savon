@@ -29,7 +29,7 @@ RSpec.describe Savon::Client do
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
 
-    it "builds an HTTPI request for Wasabi" do
+    it "builds a Faraday request for Wasabi" do
       http_request = mock
       wsdl_request = mock(:build => http_request)
       Savon::WSDLRequest.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(wsdl_request)

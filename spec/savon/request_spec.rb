@@ -13,7 +13,7 @@ RSpec.describe Savon::WSDLRequest do
   end
 
   describe "build" do
-    it "returns an Faraday::Request" do
+    it "returns a Faraday::Request" do
       wsdl_request = Savon::WSDLRequest.new(globals)
       result = wsdl_request.build
       expect(result).to be_an(Faraday::Connection)
@@ -193,7 +193,7 @@ RSpec.describe Savon::SOAPRequest do
   end
 
   describe "build" do
-    it "returns an Faraday::Request" do
+    it "returns a Faraday::Request" do
       soap_request = Savon::SOAPRequest.new(globals)
       expect(soap_request.build).to be_an(Faraday::Connection)
     end

@@ -367,7 +367,7 @@ module Savon
       @options[:multipart] = multipart
     end
 
-    # Instruct Savon what HTTPI adapter it should use instead of default
+    # Instruct Savon what Faraday adapter it should use instead of default
     def adapter(adapter)
       @options[:adapter] = adapter
     end

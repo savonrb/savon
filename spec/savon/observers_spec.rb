@@ -65,7 +65,7 @@ RSpec.describe Savon do
       expect(response.http.body).to eq("valid!")
     end
 
-    it "raises if an observer returns something other than nil or an HTTPI::Response" do
+    it "raises if an observer returns something other than nil or a Faraday::Response" do
       observer = Class.new {
 
         def notify(*)
@@ -77,7 +77,7 @@ RSpec.describe Savon do
       Savon.observers << observer
 
       expect { new_client.call(:authenticate) }.
-        to raise_error(Savon::Error, "Observers need to return an Faraday::Response " \
+        to raise_error(Savon::Error, "Observers need to return a Faraday::Response " \
                                      "to mock the request or nil to execute the request.")
     end
   end

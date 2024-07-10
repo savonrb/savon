@@ -13,10 +13,6 @@ end
 require "savon"
 require "rspec"
 
-# don't have HTTPI lazy-load HTTPClient, because then
-# it can't actually be refered to inside the specs.
-require "httpclient"
-
 support_files = File.expand_path("spec/support/**/*.rb")
 Dir[support_files].sort.each { |file| require file }
 
