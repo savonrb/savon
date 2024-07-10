@@ -1,6 +1,18 @@
 # Savon changelog
 
 ## Unreleased
+* Changes to utilize faraday instead of http
+* BC BREAKING Cookies are handled differently now
+* BC BREAKING Multiple pieces of functionality will rely on faraday libraries to be provided by the consuming codebase
+* BC BREAKING Adapter overrides now utilize the faraday model
+* BC BREAKING Multiple hard deprecations due to a lack of feature parity between Faraday and HTTPI
+  * Deprecates digest auth
+  * Deprecates ssl_cert_key_file auth, upgrade path is to read the key
+    in and provide it
+  * Deprecates encrypted ssl keys, upgrade path is to
+    decrypt the key and pass it to faraday in code
+  * Deprecates providing a ca cert, upgrade path is to provide a ca cert file
+  * deprecates overriding ssl ciphers, as faraday does not support this
 * Add your PR changelog line here
 
 ## 2.15.1 (2024-07-08)

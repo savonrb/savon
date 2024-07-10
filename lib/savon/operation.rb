@@ -7,6 +7,8 @@ require "savon/response"
 require "savon/request_logger"
 require "savon/http_error"
 require "mail"
+require 'faraday/gzip'
+
 
 module Savon
   class Operation
@@ -58,16 +60,20 @@ module Savon
       builder = build(locals, &block)
 
       response = Savon.notify_observers(@name, builder, @globals, @locals)
-      response ||= call_with_logging build_request(builder)
+      response ||= call_with_logging build_connection(builder)
 
-      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
+      raise_expected_faraday_response! unless response.kind_of?(Faraday::Response)
 
       create_response(response)
     end
 
     def request(locals = {}, &block)
       builder = build(locals, &block)
-      build_request(builder)
+      connection = build_connection(builder)
+      connection.build_request(:post) do |req|
+        req.url(@globals[:endpoint])
+        req.body = @locals[:body]
+      end
     end
 
     private
@@ -83,37 +89,47 @@ module Savon
       @locals = locals
     end
 
-    def call_with_logging(request)
-      @logger.log(request) { HTTPI.post(request, @globals[:adapter]) }
+    def call_with_logging(connection)
+      ntlm_auth = handle_ntlm(connection) if @globals.include?(:ntlm)
+      @logger.log_response(connection.post(@globals[:endpoint]) { |request|
+        request.body = @locals[:body]
+        request.headers['Authorization'] = "NTLM #{auth.encode64}" if ntlm_auth
+        @logger.log_request(request)
+      })
     end
 
-    def build_request(builder)
-      @locals[:soap_action] ||= soap_action
-      @globals[:endpoint] ||= endpoint
+    def handle_ntlm(connection)
+      ntlm_message = Net::NTLM::Message
+      response = connection.get(@globals[:endpoint]) do |request|
+        request.headers['Authorization'] = 'NTLM ' + ntlm_message::Type1.new.encode64
+      end
+      challenge = response.headers['www-authenticate'][/(?:NTLM|Negotiate) (.*)$/, 1]
+      message = ntlm_message::Type2.decode64(challenge)
+      message.response([:user, :password, :domain].zip(@globals[:ntlm]).to_h)
+    end
 
-      request = SOAPRequest.new(@globals).build(
+    def build_connection(builder)
+      @globals[:endpoint] ||= endpoint
+      @locals[:soap_action] ||= soap_action
+      @locals[:body] = builder.to_s
+      @connection = SOAPRequest.new(@globals).build(
         :soap_action => soap_action,
         :cookies     => @locals[:cookies],
         :headers     => @locals[:headers]
-      )
+      ) do |connection|
+        if builder.multipart
+          connection.request :gzip
+          connection.headers["Content-Type"] = %W[multipart/related
+                                                  type="#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}",
+                                                  start="#{builder.multipart[:start]}",
+                                                  boundary="#{builder.multipart[:multipart_boundary]}"].join("; ")
+          connection.headers["MIME-Version"] = "1.0"
+        end
 
-      request.url = endpoint
-      request.body = builder.to_s
-
-      if builder.multipart
-        request.gzip
-        request.headers["Content-Type"] = ["multipart/related",
-                                           "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
-                                           "start=\"#{builder.multipart[:start]}\"",
-                                           "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
-        request.headers["MIME-Version"] = "1.0"
+        connection.headers["Content-Length"] = @locals[:body].bytesize.to_s
       end
 
-      # TODO: could HTTPI do this automatically in case the header
-      #       was not specified manually? [dh, 2013-01-04]
-      request.headers["Content-Length"] = request.body.bytesize.to_s
 
-      request
     end
 
     def soap_action
@@ -138,8 +154,8 @@ module Savon
       end
     end
 
-    def raise_expected_httpi_response!
-      raise Error, "Observers need to return an HTTPI::Response to mock " \
+    def raise_expected_faraday_response!
+      raise Error, "Observers need to return an Faraday::Response to mock " \
                    "the request or nil to execute the request."
     end
 

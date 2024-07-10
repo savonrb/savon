@@ -5,17 +5,18 @@ require "integration/support/server"
 RSpec.describe Savon::WSDLRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
-  let(:http_request) { HTTPI::Request.new }
+  let(:http_connection) { Faraday::Connection.new }
   let(:ciphers)      { OpenSSL::Cipher.ciphers }
 
   def new_wsdl_request
-    Savon::WSDLRequest.new(globals, http_request)
+    Savon::WSDLRequest.new(globals, http_connection)
   end
 
-  describe "#build" do
-    it "returns an HTTPI::Request" do
+  describe "build" do
+    it "returns an Faraday::Request" do
       wsdl_request = Savon::WSDLRequest.new(globals)
-      expect(wsdl_request.build).to be_an(HTTPI::Request)
+      result = wsdl_request.build
+      expect(result).to be_an(Faraday::Connection)
     end
 
     describe "headers" do
@@ -35,13 +36,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "proxy" do
       it "is set when specified" do
         globals.proxy("http://proxy.example.com")
-        http_request.expects(:proxy=).with("http://proxy.example.com")
+        http_connection.expects(:proxy=).with("http://proxy.example.com")
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:proxy=).never
+        http_connection.expects(:proxy=).never
         new_wsdl_request.build
       end
     end
@@ -49,13 +50,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "open timeout" do
       it "is set when specified" do
         globals.open_timeout(22)
-        http_request.expects(:open_timeout=).with(22)
+        http_connection.options.expects(:open_timeout=).with(22)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:open_timeout=).never
+        http_connection.options.expects(:open_timeout=).never
         new_wsdl_request.build
       end
     end
@@ -63,13 +64,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "read timeout" do
       it "is set when specified" do
         globals.read_timeout(33)
-        http_request.expects(:read_timeout=).with(33)
+        http_connection.options.expects(:read_timeout=).with(33)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:read_timeout=).never
+        http_connection.options.expects(:read_timeout=).never
         new_wsdl_request.build
       end
     end
@@ -77,13 +78,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "write timeout" do
       it "is set when specified" do
         globals.write_timeout(44)
-        http_request.expects(:write_timeout=).with(44)
+        http_connection.options.expects(:write_timeout=).with(44)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:read_timeout=).never
+        http_connection.expects(:read_timeout=).never
         new_wsdl_request.build
       end
     end
@@ -91,13 +92,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "ssl version" do
       it "is set when specified" do
         globals.ssl_version(:TLSv1)
-        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
+        http_connection.ssl.expects(:version=).with(:TLSv1)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ssl_version=).never
+        http_connection.ssl.expects(:version=).never
         new_wsdl_request.build
       end
     end
@@ -105,13 +106,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "ssl min_version" do
       it "is set when specified" do
         globals.ssl_min_version(:TLS1_2)
-        http_request.auth.ssl.expects(:min_version=).with(:TLS1_2)
+        http_connection.ssl.expects(:min_version=).with(:TLS1_2)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:min_version=).never
+        http_connection.ssl.expects(:min_version=).never
         new_wsdl_request.build
       end
     end
@@ -119,13 +120,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "ssl max_version" do
       it "is set when specified" do
         globals.ssl_max_version(:TLS1_2)
-        http_request.auth.ssl.expects(:max_version=).with(:TLS1_2)
+        http_connection.ssl.expects(:max_version=).with(:TLS1_2)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:max_version=).never
+        http_connection.ssl.expects(:max_version=).never
         new_wsdl_request.build
       end
     end
@@ -133,122 +134,13 @@ RSpec.describe Savon::WSDLRequest do
     describe "ssl verify mode" do
       it "is set when specified" do
         globals.ssl_verify_mode(:peer)
-        http_request.auth.ssl.expects(:verify_mode=).with(:peer)
+        http_connection.ssl.expects(:verify_mode=).with(:peer)
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:verify_mode=).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "ssl ciphers" do
-      it "is set when specified" do
-        globals.ssl_ciphers(ciphers)
-        http_request.auth.ssl.expects(:ciphers=).with(ciphers)
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ciphers=).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "ssl cert key file" do
-      it "is set when specified" do
-        cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-        globals.ssl_cert_key_file(cert_key)
-        http_request.auth.ssl.expects(:cert_key_file=).with(cert_key)
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_key_file=).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "ssl cert key password" do
-      it "is set when specified" do
-        the_pass = "secure-password!42"
-        globals.ssl_cert_key_password(the_pass)
-        http_request.auth.ssl.expects(:cert_key_password=).with(the_pass)
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_key_password=).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "ssl encrypted cert key file" do
-      describe "set with an invalid decrypting password" do
-        it "fails when attempting to use the SSL private key" do
-          skip("JRuby: find out why this does not raise an error!") if RUBY_PLATFORM == 'java'
-          pass = "wrong-password"
-          key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
-          cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
-
-          globals.ssl_cert_file(cert)
-          globals.ssl_cert_key_password(pass)
-          globals.ssl_cert_key_file(key)
-
-          new_wsdl_request.build
-
-          expect { http_request.auth.ssl.cert_key }.to raise_error OpenSSL::PKey::PKeyError
-        end
-      end
-
-      describe "set with a valid decrypting password" do
-        it "handles SSL private keys properly" do
-          pass = "secure-password!42"
-          key  = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
-          cert = File.expand_path("../../fixtures/ssl/client_encrypted_key_cert.pem", __FILE__)
-
-          globals.ssl_cert_file(cert)
-          globals.ssl_cert_key_password(pass)
-          globals.ssl_cert_key_file(key)
-
-          new_wsdl_request.build
-
-          expect(http_request.auth.ssl.cert_key.to_s).to match(/BEGIN RSA PRIVATE KEY/)
-        end
-      end
-    end
-
-    describe "ssl cert file" do
-      it "is set when specified" do
-        cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-        globals.ssl_cert_file(cert)
-        http_request.auth.ssl.expects(:cert_file=).with(cert)
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_file=).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "ssl ca cert file" do
-      it "is set when specified" do
-        ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-        globals.ssl_ca_cert_file(ca_cert)
-        http_request.auth.ssl.expects(:ca_cert_file=).with(ca_cert)
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ca_cert_file=).never
+        http_connection.ssl.expects(:verify_mode=).never
         new_wsdl_request.build
       end
     end
@@ -256,41 +148,33 @@ RSpec.describe Savon::WSDLRequest do
     describe "basic auth" do
       it "is set when specified" do
         globals.basic_auth("luke", "secret")
-        http_request.auth.expects(:basic).with("luke", "secret")
+        http_connection.expects(:request).with(:authorization, :basic,"luke", "secret")
 
         new_wsdl_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.expects(:basic).never
-        new_wsdl_request.build
-      end
-    end
-
-    describe "digest auth" do
-      it "is set when specified" do
-        globals.digest_auth("lea", "top-secret")
-        http_request.auth.expects(:digest).with("lea", "top-secret")
-
-        new_wsdl_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.expects(:digest).never
+        http_connection.expects(:request).with{|args| args.include?(:basic)}.never
         new_wsdl_request.build
       end
     end
 
     describe "ntlm auth" do
-      it "is set when specified" do
+      it 'tries to load ntlm when set' do
         globals.ntlm("han", "super-secret")
-        http_request.auth.expects(:ntlm).with("han", "super-secret")
+        new_wsdl_request.build
+        expect(require 'rubyntlm').to be(false)
+      end
+
+      it "applies net-http-persistent when set" do
+        globals.ntlm("han", "super-secret")
+        http_connection.expects(:adapter).with{|params| params == :net_http_persistent}.at_least_once
 
         new_wsdl_request.build
       end
 
-      it "is not set otherwise" do
-        http_request.auth.expects(:ntlm).never
+      it "does not apply net-http-persistent when not set" do
+        http_connection.expects(:adapter).with(:net_http_persistent, pool_size: 5).never
         new_wsdl_request.build
       end
     end
@@ -301,43 +185,49 @@ end
 RSpec.describe Savon::SOAPRequest do
 
   let(:globals)      { Savon::GlobalOptions.new }
-  let(:http_request) { HTTPI::Request.new }
+  let(:http_connection) { Faraday::Connection.new }
   let(:ciphers)      { OpenSSL::Cipher.ciphers }
 
   def new_soap_request
-    Savon::SOAPRequest.new(globals, http_request)
+    Savon::SOAPRequest.new(globals, http_connection)
   end
 
-  describe "#build" do
-    it "returns an HTTPI::Request" do
+  describe "build" do
+    it "returns an Faraday::Request" do
       soap_request = Savon::SOAPRequest.new(globals)
-      expect(soap_request.build).to be_an(HTTPI::Request)
+      expect(soap_request.build).to be_an(Faraday::Connection)
     end
 
     describe "proxy" do
       it "is set when specified" do
         globals.proxy("http://proxy.example.com")
-        http_request.expects(:proxy=).with("http://proxy.example.com")
+        http_connection.expects(:proxy=).with("http://proxy.example.com")
 
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:proxy=).never
+        http_connection.expects(:proxy=).never
         new_soap_request.build
       end
     end
 
     describe "cookies" do
       it "sets the given cookies" do
-        cookies = [HTTPI::Cookie.new("some-cookie=choc-chip; Path=/; HttpOnly")]
+        cookies = {
+          'some-cookie': 'choc-chip',
+          path: '/',
+          HttpOnly: nil
+        }
 
-        http_request.expects(:set_cookies).with(cookies)
+        http_connection.headers.expects(:[]=).at_least_once
+        http_connection.headers.expects(:[]=).with('Cookie', 'some-cookie=choc-chip; path=/; HttpOnly').at_least_once
         new_soap_request.build(:cookies => cookies)
       end
 
       it "does not set the cookies if there are none" do
-        http_request.expects(:set_cookies).never
+        http_connection.headers.expects(:[]=).at_least_once
+        http_connection.expects(:[]=).with('Cookie').never
         new_soap_request.build
       end
     end
@@ -345,13 +235,13 @@ RSpec.describe Savon::SOAPRequest do
     describe "open timeout" do
       it "is set when specified" do
         globals.open_timeout(22)
-        http_request.expects(:open_timeout=).with(22)
+        http_connection.options.expects(:open_timeout=).with(22)
 
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:open_timeout=).never
+        http_connection.options.expects(:open_timeout=).never
         new_soap_request.build
       end
     end
@@ -359,13 +249,13 @@ RSpec.describe Savon::SOAPRequest do
     describe "read timeout" do
       it "is set when specified" do
         globals.read_timeout(33)
-        http_request.expects(:read_timeout=).with(33)
+        http_connection.options.expects(:read_timeout=).with(33)
 
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.expects(:read_timeout=).never
+        http_connection.options.expects(:read_timeout=).never
         new_soap_request.build
       end
     end
@@ -436,13 +326,13 @@ RSpec.describe Savon::SOAPRequest do
     describe "ssl version" do
       it "is set when specified" do
         globals.ssl_version(:TLSv1)
-        http_request.auth.ssl.expects(:ssl_version=).with(:TLSv1)
+        http_connection.ssl.expects(:version=).with(:TLSv1)
 
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ssl_version=).never
+        http_connection.ssl.expects(:version=).never
         new_soap_request.build
       end
     end
@@ -450,87 +340,13 @@ RSpec.describe Savon::SOAPRequest do
     describe "ssl verify mode" do
       it "is set when specified" do
         globals.ssl_verify_mode(:peer)
-        http_request.auth.ssl.expects(:verify_mode=).with(:peer)
+        http_connection.ssl.expects(:verify_mode=).with(:peer)
 
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.ssl.expects(:verify_mode=).never
-        new_soap_request.build
-      end
-    end
-
-    describe "ssl ciphers" do
-      it "is set when specified" do
-        globals.ssl_ciphers(ciphers)
-        http_request.auth.ssl.expects(:ciphers=).with(ciphers)
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ciphers=).never
-        new_soap_request.build
-      end
-    end
-
-    describe "ssl cert key file" do
-      it "is set when specified" do
-        cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
-        globals.ssl_cert_key_file(cert_key)
-        http_request.auth.ssl.expects(:cert_key_file=).with(cert_key)
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_key_file=).never
-        new_soap_request.build
-      end
-    end
-
-    describe "ssl cert key password" do
-      it "is set when specified" do
-        the_pass = "secure-password!42"
-        globals.ssl_cert_key_password(the_pass)
-        http_request.auth.ssl.expects(:cert_key_password=).with(the_pass)
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_key_password=).never
-        new_soap_request.build
-      end
-    end
-
-    describe "ssl cert file" do
-      it "is set when specified" do
-        cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-        globals.ssl_cert_file(cert)
-        http_request.auth.ssl.expects(:cert_file=).with(cert)
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:cert_file=).never
-        new_soap_request.build
-      end
-    end
-
-    describe "ssl ca cert file" do
-      it "is set when specified" do
-        ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
-        globals.ssl_ca_cert_file(ca_cert)
-        http_request.auth.ssl.expects(:ca_cert_file=).with(ca_cert)
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.ssl.expects(:ca_cert_file=).never
+        http_connection.ssl.expects(:verify_mode=).never
         new_soap_request.build
       end
     end
@@ -538,41 +354,25 @@ RSpec.describe Savon::SOAPRequest do
     describe "basic auth" do
       it "is set when specified" do
         globals.basic_auth("luke", "secret")
-        http_request.auth.expects(:basic).with("luke", "secret")
-
+        http_connection.expects(:request).with(:authorization, :basic, "luke", "secret")
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.expects(:basic).never
-        new_soap_request.build
-      end
-    end
-
-    describe "digest auth" do
-      it "is set when specified" do
-        globals.digest_auth("lea", "top-secret")
-        http_request.auth.expects(:digest).with("lea", "top-secret")
-
-        new_soap_request.build
-      end
-
-      it "is not set otherwise" do
-        http_request.auth.expects(:digest).never
+        http_connection.expects(:request).with(:authorization, :basic, "luke", 'secret').never
         new_soap_request.build
       end
     end
 
     describe "ntlm auth" do
-      it "is set when specified" do
+      it "uses the net-http-persistent adapter in faraday" do
         globals.ntlm("han", "super-secret")
-        http_request.auth.expects(:ntlm).with("han", "super-secret")
-
+        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5})
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_request.auth.expects(:ntlm).never
+        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5}).never
         new_soap_request.build
       end
     end

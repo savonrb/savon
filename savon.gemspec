@@ -17,16 +17,22 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "nori",     "~> 2.4"
-  s.add_dependency "httpi",    ">= 4", " < 5"
-  s.add_dependency "wasabi",   ">= 3.7", " < 6"
+  s.add_dependency "faraday",  "~> 2.8"
+  s.add_dependency "faraday-gzip",  "~> 2.0"
+  s.add_dependency "faraday-follow_redirects",  "~> 0.3"
+  s.add_dependency "wasabi", " > 5"
   s.add_dependency "akami",    "~> 1.2"
   s.add_dependency "gyoku",    "~> 1.2"
   s.add_dependency "builder",  ">= 2.1.2"
   s.add_dependency "nokogiri", ">= 1.8.1"
   s.add_dependency "mail",     "~> 2.5"
 
+  s.add_development_dependency "faraday-net_http_persistent",  "~> 2.1"
+  s.add_development_dependency "rubyntlm",  ">= 0.6"
   s.add_development_dependency "rack", " < 4"
   s.add_development_dependency "puma",  ">= 4.3.8", "< 7"
+  s.add_development_dependency "httpclient"
+  s.add_development_dependency "mutex_m"
 
   s.add_development_dependency "byebug"
   s.add_development_dependency "rake",  ">= 12.3.3"

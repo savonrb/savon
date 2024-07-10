@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "logger"
-require "httpi"
 
 module Savon
   class Options
@@ -8,6 +7,10 @@ module Savon
     def initialize(options = {})
       @options = {}
       assign options
+    end
+
+    def deprecate(option)
+      raise DeprecatedOptionError.new(option)
     end
 
     attr_reader :option_type
@@ -127,7 +130,7 @@ module Savon
       @options[:namespace] = namespace
     end
 
-    # The namespace identifer.
+    # The namespace identifier.
     def namespace_identifier(identifier)
       @options[:namespace_identifier] = identifier
     end
@@ -198,13 +201,11 @@ module Savon
 
     # Whether or not to log.
     def log(log)
-      HTTPI.log = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
     def logger(logger)
-      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
@@ -257,6 +258,7 @@ module Savon
 
     # Sets the cert key file to use.
     def ssl_cert_key_file(file)
+      deprecate('ssl_cert_key_file')
       @options[:ssl_cert_key_file] = file
     end
 
@@ -267,11 +269,13 @@ module Savon
 
     # Sets the cert key password to use.
     def ssl_cert_key_password(password)
+      deprecate('ssl_cert_key_password')
       @options[:ssl_cert_key_password] = password
     end
 
     # Sets the cert file to use.
     def ssl_cert_file(file)
+      deprecate('ssl_cert_file')
       @options[:ssl_cert_file] = file
     end
 
@@ -287,10 +291,12 @@ module Savon
 
     # Sets the ca cert to use.
     def ssl_ca_cert(cert)
+      deprecate('ssl_ca_cert')
       @options[:ssl_ca_cert] = cert
     end
 
     def ssl_ciphers(ciphers)
+      deprecate('ssl_ciphers')
       @options[:ssl_ciphers] = ciphers
     end
 
@@ -311,6 +317,7 @@ module Savon
 
     # HTTP digest auth credentials.
     def digest_auth(*credentials)
+      deprecate('digest_auth')
       @options[:digest_auth] = credentials.flatten
     end
 
@@ -389,7 +396,8 @@ module Savon
       defaults = {
         :advanced_typecasting => true,
         :response_parser      => :nokogiri,
-        :multipart            => false
+        :multipart            => false,
+        :body                 => false
       }
 
       super defaults.merge(options)
@@ -397,7 +405,7 @@ module Savon
 
     # The local SOAP header. Expected to be a Hash or respond to #to_s.
     # Will be merged with the global SOAP header if both are Hashes.
-    # Otherwise the local option will be prefered.
+    # Otherwise the local option will be preferred.
     def soap_header(header)
       @options[:soap_header] = header
     end
@@ -457,7 +465,11 @@ module Savon
       @options[:soap_action] = soap_action
     end
 
-    # Cookies to be used for the next request.
+    # Cookies to be used for the next request
+    # @param [Hash] cookies cookies associated to nil will be appended as array cookies, if you need a cookie equal to
+    # and empty string, set it to ""
+    # @example cookies({accept: 'application/json', some-cookie: 'foo', "empty-cookie": "", HttpOnly: nil})
+    # # => "accept=application/json; some-cookie=foo; empty-cookie=; HttpOnly"
     def cookies(cookies)
       @options[:cookies] = cookies
     end
@@ -484,6 +496,10 @@ module Savon
 
     def headers(headers)
       @options[:headers] = headers
+    end
+
+    def body(body)
+      @options[:body] = body
     end
   end
 end

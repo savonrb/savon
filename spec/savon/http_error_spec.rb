@@ -22,8 +22,8 @@ RSpec.describe Savon::HTTPError do
   end
 
   describe "#http" do
-    it "returns the HTTPI::Response" do
-      expect(http_error.http).to be_a(HTTPI::Response)
+    it "returns the Faraday::Response" do
+      expect(http_error.http).to be_a(Faraday::Response)
     end
   end
 
@@ -51,7 +51,7 @@ RSpec.describe Savon::HTTPError do
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
 
-    HTTPI::Response.new response[:code], response[:headers], response[:body]
+    Responses.mock_faraday(response[:code], response[:headers], response[:body])
   end
 
 end

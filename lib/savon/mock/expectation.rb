@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-require "httpi"
+require "faraday"
 
 module Savon
   class MockExpectation
@@ -41,8 +41,8 @@ module Savon
       unless @response
         raise ExpectationError, "This expectation was not set up with a response."
       end
-
-      HTTPI::Response.new(@response[:code], @response[:headers], @response[:body])
+      env = Faraday::Env.from(status: @response[:code], response_headers: @response[:headers], response_body: @response[:body])
+      Faraday::Response.new(env)
     end
 
     private
@@ -75,7 +75,7 @@ module Savon
         next if (expected_value == :any &&  msg_real.include?(key))
         return false if expected_value != msg_real[key]
       end
-      return true
+      true
     end
   end
 end

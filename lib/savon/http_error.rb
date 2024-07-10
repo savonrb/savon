@@ -4,7 +4,7 @@ module Savon
   class HTTPError < Error
 
     def self.present?(http)
-      http.error?
+      !http.success?
     end
 
     def initialize(http)
@@ -14,13 +14,13 @@ module Savon
     attr_reader :http
 
     def to_s
-      String.new("HTTP error (#{@http.code})").tap do |str_error|
+      String.new("HTTP error (#{@http.status})").tap do |str_error|
         str_error << ": #{@http.body}" unless @http.body.empty?
       end
     end
 
     def to_hash
-      { :code => @http.code, :headers => @http.headers, :body => @http.body }
+      { :code => @http.status, :headers => @http.headers, :body => @http.body }
     end
 
   end
