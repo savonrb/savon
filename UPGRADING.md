@@ -1,6 +1,6 @@
 # Upgrading from v2.x to v3.x
 
-Savon 3 is a major release that replaces its HTTP transport client, [HTTPI](https://github.com/savonrb/httpi) with [Faraday](https://lostisland.github.io/faraday), introducing major breaking changes.
+Savon 3 replaces its HTTP transport client, [HTTPI](https://github.com/savonrb/httpi) with [Faraday](https://lostisland.github.io/faraday), introducing major breaking changes.
 
 While this brings significant new features and improvements, it also removes or changes some existing features and options.
 
@@ -12,7 +12,7 @@ These options are no longer supported, as Faraday does not directly support them
 
 Resolution: 
 
-For `ssl_cert_key_file` and `ssl_cert_key_password` open and decrypt the client key using OpenSSL, and provide the result as the `ssl_cert_key` option instead.
+For `ssl_cert_key_file` and `ssl_cert_key_password` open and decrypt the client key using OpenSSL, and provide the `OpenSSL::PKey::RSA, OpenSSL::PKey::DSA` as the `ssl_cert_key` option instead.
 
 For `ssl_cert_file` pass the `OpenSSL::X509::Certificate` as the `ssl_cert` option instead.
 
