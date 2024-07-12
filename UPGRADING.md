@@ -46,3 +46,19 @@ will send the following cookies:
 "accept=application/json; some-cookie=foo; empty-cookie=; HttpOnly"
 ```
 
+
+### adapters
+Savon's adapters option now forwards adapter names and options to faraday.  
+While not fully supported or tested, it can be used to specify a custom adapter to use.  Must be
+compliant with faraday's adapter api.
+
+https://lostisland.github.io/faraday/#/adapters/index
+
+For example
+```ruby
+client = Savon.client(
+  wsdl: "http://example.com?wsdl",
+  adapter: [:typhoeus, {connect_timeout: 10}]
+)
+```
+Would create a savon client using the typhoeus adapter with a connect_timeout of 10 seconds.
