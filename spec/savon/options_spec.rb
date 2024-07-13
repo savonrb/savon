@@ -167,11 +167,8 @@ RSpec.describe "Options" do
           warn "Warning: looks like your network may be down?!\n" +
                "-> skipping spec at #{__FILE__}:#{__LINE__}"
         else
-          # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
-          #       instead of a specific client error [dh, 2012-12-08]
           expect(Time.now - start_time).to be_within(0.5).of(open_timeout)
           expect(error).to be_an(Faraday::ConnectionFailed)
-
         end
       }
     end
@@ -333,7 +330,7 @@ RSpec.describe "Options" do
       expect(stdout.string).to be_empty
     end
 
-    it "silences HTTPI as well" do
+    it "silences Faraday as well" do
       Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).never
 
       new_client(:log => false)
@@ -348,7 +345,7 @@ RSpec.describe "Options" do
       expect(stdout.string).to include("INFO -- : SOAP request")
     end
 
-    it "turns HTTPI logging back on as well" do
+    it "turns Faraday logging back on as well" do
       Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).at_least_once
       new_client(:log => true)
     end

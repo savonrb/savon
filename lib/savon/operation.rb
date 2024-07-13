@@ -155,7 +155,7 @@ module Savon
     end
 
     def raise_expected_faraday_response!
-      raise Error, "Observers need to return an Faraday::Response to mock " \
+      raise Error, "Observers need to return a Faraday::Response to mock " \
                    "the request or nil to execute the request."
     end
 

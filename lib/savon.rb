@@ -11,7 +11,7 @@ module Savon
     attr_accessor :option
     def initialize(option)
       @option = option
-      super("#{option} is deprecated as it is not supported in Faraday")
+      super("#{option} is deprecated as it is not supported in Faraday. See https://github.com/savonrb/savon/blob/main/UPGRADING.md for more information.")
     end
   end
 

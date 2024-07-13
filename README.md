@@ -10,6 +10,7 @@ Heavy metal SOAP client
 [![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
+If you're reading this on GitHub, note that this README is for the main branch and that features/changes described here might not correspond to your version. You can find the documentation for your release [at rubydoc.info](https://www.rubydoc.info/find/gems?q=savon).
 
 ## Installation
 
@@ -51,6 +52,10 @@ response.body
 
 For more examples, you should check out the
 [integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
+
+## Upgrading from v2.x to v3.x
+
+See [UPGRADING.md](UPGRADING.md) for more information.
 
 ## Ruby version support
 
