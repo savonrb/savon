@@ -2,7 +2,6 @@
 .byebug_history
 .DS_Store
 .yardoc
-.ruby-version
 doc
 rdox
 coverage
