@@ -109,10 +109,6 @@ module Savon
         request.headers["MIME-Version"] = "1.0"
       end
 
-      # TODO: could HTTPI do this automatically in case the header
-      #       was not specified manually? [dh, 2013-01-04]
-      request.headers["Content-Length"] = request.body.bytesize.to_s
-
       request
     end
 

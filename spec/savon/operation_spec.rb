@@ -106,15 +106,6 @@ RSpec.describe Savon::Operation do
       operation.call
     end
 
-    it "sets the Content-Length header" do
-      # XXX: probably the worst spec ever written. refactor! [dh, 2013-01-05]
-      http_request = HTTPI::Request.new
-      http_request.headers.expects(:[]=).with("Content-Length", "723")
-      Savon::SOAPRequest.any_instance.expects(:build).returns(http_request)
-
-      new_operation(:verify_address, wsdl, globals).call
-    end
-
     it "passes the local :soap_action option to the request builder" do
       globals.endpoint @server.url(:inspect_request)
       soap_action = "http://v1.example.com/VerifyAddress"
