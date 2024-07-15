@@ -1,6 +1,9 @@
 # Savon changelog
 
 ## Unreleased
+* MTOM attachment support by @ekzobrain in https://github.com/savonrb/savon/pull/1012
+* Fix: request logging when message contains non-ascii characters
+* Fix: when xml option is provided, attachments option was ignored
 * Add your PR changelog line here
 
 ## 3.0.0.rc1 (2024-07-15)
