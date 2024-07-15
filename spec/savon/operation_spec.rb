@@ -255,6 +255,61 @@ RSpec.describe Savon::Operation do
     end
   end
 
+  describe "attachments" do
+    let(:operation_name) { :example }
+    let(:wsdl)           { no_wsdl }
+    let(:attachments) do
+      [
+        { filename: "x1.xml", content: "<xml>abc</xml>" },
+        { filename: "x2.xml", content: "<xml>cde</xml>" }
+      ]
+    end
+
+    context "with SOAP 1.1" do
+      it "sends requests with content-type text/xml" do
+        req = operation.request(attachments: attachments)
+
+        expect(req.headers["Content-Type"]).to start_with("multipart/related; type=\"text/xml\"; ")
+      end
+    end
+
+    context "with SOAP 1.2" do
+      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false, soap_version: 2) }
+
+      it "sends requests with content-type application/soap+xml" do
+        req = operation.request(attachments: attachments)
+
+        expect(req.headers["Content-Type"]).to start_with("multipart/related; type=\"application/soap+xml\"; ")
+      end
+    end
+
+    context "MTOM" do
+      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:multipart), log: false) }
+
+      it "sends request with content-type header application/xop+xml" do
+        req = operation.request(mtom: true, attachments: attachments)
+
+        expect(req.headers["Content-Type"]).to start_with(
+          "multipart/related; type=\"application/xop+xml\"; start-info=\"text/xml\"; " \
+          "start=\"<soap-request-body@soap>\"; boundary=\"--==_mimepart_"
+        )
+      end
+
+      it "sends attachments with Content-Transfer-Encoding: binary" do
+        req = operation.request(mtom: true, attachments: attachments)
+
+        expect(req.body.to_s).to include("filename=x1.xml\r\nContent-Transfer-Encoding: binary")
+      end
+
+      it "successfully makes request" do
+        response = operation.call(mtom: true, attachments: attachments)
+
+        expect(response.multipart?).to be true
+        expect(response.attachments.first.content_id).to include("attachment1")
+      end
+    end
+  end
+
   def inspect_request(response)
     OpenStruct.new JSON.parse(response.http.body)
   end
