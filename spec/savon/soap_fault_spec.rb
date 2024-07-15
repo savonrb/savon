@@ -49,6 +49,11 @@ RSpec.describe Savon::SOAPFault do
     it "returns false unless the HTTP response contains a SOAP fault" do
       expect(Savon::SOAPFault.present? new_response).to be_falsey
     end
+
+    it "returns true even if the HTTP response contains a SOAP fault with invalid encoding" do
+      http = new_response(:body => Fixture.response(:soap_fault_invalid_encoding))
+      expect(Savon::SOAPFault.present? http).to be_truthy
+    end
   end
 
   [:message, :to_s].each do |method|

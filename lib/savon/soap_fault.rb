@@ -3,7 +3,14 @@ module Savon
   class SOAPFault < Error
 
     def self.present?(http, xml = nil)
-      xml ||= http.body
+      xml_orig ||= http.body
+      if xml_orig.valid_encoding?
+        xml = xml_orig
+      else
+        xml = xml_orig.encode(
+          'UTF-8', "ISO-8859-1", invalid: :replace, undef: :replace, replace: ''
+        )
+      end
       fault_node  = xml.include?("Fault>")
       soap1_fault = xml.match(/faultcode\/?>/) && xml.match(/faultstring\/?>/)
       soap2_fault = xml.include?("Code>") && xml.include?("Reason>")
