@@ -1,7 +1,11 @@
 # Savon changelog
 
 ## Unreleased
-* Changes to utilize faraday instead of http
+* Add your PR changelog line here
+
+## 3.0.0.rc1 (2024-07-15)
+
+* Use Faraday instead of HTTPI
 * BC BREAKING Cookies are handled differently now
 * BC BREAKING Multiple pieces of functionality will rely on faraday libraries to be provided by the consuming codebase
 * BC BREAKING Adapter overrides now utilize the faraday model
@@ -13,7 +17,6 @@
     decrypt the key and pass it to faraday in code
   * Deprecates providing a ca cert, upgrade path is to provide a ca cert file
   * deprecates overriding ssl ciphers, as faraday does not support this
-* Add your PR changelog line here
 
 ## 2.15.1 (2024-07-08)
 
