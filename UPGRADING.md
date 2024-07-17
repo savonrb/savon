@@ -46,6 +46,19 @@ will send the following cookies:
 "accept=application/json; some-cookie=foo; empty-cookie=; HttpOnly"
 ```
 
+### ssl_verify_mode
+
+The `ssl_verify_mode` option now expects an [OpenSSL::SSL::](https://ruby-doc.org/3.2.2/exts/openssl/OpenSSL/SSL.html) constant. Previously, HTTPI would allow the passing of a symbol like `:none` or `:peer`.
+
+```ruby
+ssl_verify_mode: :none
+```
+
+should now be written as:
+
+```ruby
+ssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
+```
 
 ### adapters
 Savon's adapters option now forwards adapter names and options to faraday.  
