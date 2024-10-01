@@ -14,7 +14,13 @@ module Savon
       return hash.map { |value| to_hash(value, path) } if hash.is_a?(Array)
       return hash.to_s unless hash.is_a?(Hash)
 
-      hash.each_with_object({}) do |(key, value), newhash|
+      if hash[:order!] == :use_schema || @order_with_schema
+        @order_with_schema = true
+        ordered_keys = @used_namespaces.select { |t| t.first == path.first && t.length == 2 }.keys.collect { |k| k.last }
+        hash[:order!] = ordered_keys
+      end
+
+      result = hash.each_with_object({}) do |(key, value), newhash|
         case key
         when :order!
           newhash[key] = add_namespaces_to_values(value, path)
@@ -32,6 +38,8 @@ module Savon
         end
         newhash
       end
+
+      ordered_keys(result)
     end
 
     private
@@ -47,6 +55,16 @@ module Savon
         namespace        = @used_namespaces[namespace_path] || ''
         namespace.empty? ? value : "#{namespace}:#{translated_value}"
       end
+    end
+
+    def ordered_keys(hash)
+      return hash unless @order_with_schema
+
+      if order_keys = hash.delete(:order!)
+        present_order_keys = order_keys & hash.keys
+        hash[:order!] = (present_order_keys + (hash.keys - present_order_keys)).select { |key| !key.to_s.end_with?('!') }
+      end
+      hash
     end
   end
 end

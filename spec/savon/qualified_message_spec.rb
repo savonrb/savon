@@ -64,6 +64,35 @@ module Savon
         expect(xml).to eq good_xml
       end
 
+      it "uses schema order when :order! is set to :use_schema" do
+        used_namespaces = {
+          %w(tns Foo) => 'ns'
+        }
+
+        hash = {
+          :foo => {
+            :order! => :use_schema,
+            :bar => 'zing',
+            :cash => 'pow'
+          }
+        }
+
+        good_result = {
+          "ns:Foo" => {
+            :order! => [:bar, :cash],
+            :bar => 'zing',
+            :cash => 'pow'
+          }
+        }
+
+        message = described_class.new(types, used_namespaces, key_converter)
+        resulting_hash = message.to_hash(hash, ['tns'])
+
+        expect(Gyoku.xml(resulting_hash, key_converter: key_converter)).to eq %(<ns:Foo><Bar>zing</Bar><Cash>pow</Cash></ns:Foo>)
+        expect(resulting_hash).to eq good_result
+        
+      end
+
       it "properly handles boolean false" do
         used_namespaces = {
           %w(tns Foo) => 'ns'
