@@ -77,7 +77,7 @@ module Savon
     end
 
     def configure_logging
-      connection.response(:logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level) if @globals[:log]
+      connection.response(:logger, @globals[:logger], headers: @globals[:log_headers]) if @globals[:log]
     end
 
     protected
