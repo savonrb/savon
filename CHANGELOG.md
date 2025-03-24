@@ -5,6 +5,7 @@
 * Fix: request logging when message contains non-ascii characters
 * Fix: when xml option is provided, attachments option was ignored
 * Add your PR changelog line here
+* Restore support for ssl ciphers
 
 ## 3.0.0.rc1 (2024-07-15)
 
