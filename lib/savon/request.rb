@@ -36,12 +36,12 @@ module Savon
       connection.ssl.version         = @globals[:ssl_version]       if @globals.include? :ssl_version
       connection.ssl.min_version     = @globals[:ssl_min_version]   if @globals.include? :ssl_min_version
       connection.ssl.max_version     = @globals[:ssl_max_version]   if @globals.include? :ssl_max_version
+      connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
 
       # No Faraday Equivalent out of box, see: https://lostisland.github.io/faraday/#/customization/ssl-options
       # connection.ssl.cert_file       = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
       # connection.ssl.cert_key_file   = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
       # connection.ssl.ca_cert         = @globals[:ssl_ca_cert]       if @globals.include? :ssl_ca_cert
-      # connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
       # connection.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
 
     end
