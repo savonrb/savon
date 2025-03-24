@@ -296,7 +296,6 @@ module Savon
     end
 
     def ssl_ciphers(ciphers)
-      deprecate('ssl_ciphers')
       @options[:ssl_ciphers] = ciphers
     end
 
