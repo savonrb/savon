@@ -477,7 +477,12 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ciphers" do
-    it_behaves_like(:deprecation, :ssl_ciphers)
+    it "sets the ciphers to use" do
+      Faraday::SSLOptions.any_instance.expects(:ciphers=).with(:none).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
+      client.call(:authenticate)
+    end
   end
 
   context "global :ssl_cert_key_file" do
