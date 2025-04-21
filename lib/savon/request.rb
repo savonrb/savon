@@ -80,6 +80,12 @@ module Savon
       connection.response(:logger, @globals[:logger], headers: @globals[:log_headers]) if @globals[:log]
     end
 
+    def configure_middlewares
+      @globals[:middlewares].each do |middleware_args|
+        connection.use(*middleware_args)
+      end
+    end
+
     protected
     attr_reader :connection
   end
@@ -92,6 +98,7 @@ module Savon
       configure_ssl
       configure_auth
       configure_adapter
+      configure_middlewares
       configure_logging
       configure_headers
       connection
@@ -119,6 +126,7 @@ module Savon
       configure_headers(options[:soap_action], options[:headers])
       configure_cookies(options[:cookies])
       configure_adapter
+      configure_middlewares
       configure_logging
       configure_redirect_handling
       yield(connection) if block_given?

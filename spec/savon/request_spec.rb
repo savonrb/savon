@@ -178,8 +178,25 @@ RSpec.describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
-  end
 
+    describe "middlewares" do
+      it "are set when specified" do
+        globals.middlewares([[1], [2, "two", { two: 2 }], [3]])
+
+        middleware_setup = sequence('middleware_setup')
+        http_connection.expects(:use).with(1).in_sequence(middleware_setup)
+        http_connection.expects(:use).with(2, "two", two: 2).in_sequence(middleware_setup)
+        http_connection.expects(:use).with(3).in_sequence(middleware_setup)
+
+        new_wsdl_request.build
+      end
+
+      it "are not set otherwise" do
+        http_connection.expects(:use).never
+        new_wsdl_request.build
+      end
+    end
+  end
 end
 
 RSpec.describe Savon::SOAPRequest do
@@ -376,6 +393,23 @@ RSpec.describe Savon::SOAPRequest do
         new_soap_request.build
       end
     end
-  end
 
+    describe "middlewares" do
+      it "are set when specified" do
+        globals.middlewares([[1], [2, "two", { two: 2 }], [3]])
+
+        middleware_setup = sequence('middleware_setup')
+        http_connection.expects(:use).with(1).in_sequence(middleware_setup)
+        http_connection.expects(:use).with(2, "two", two: 2).in_sequence(middleware_setup)
+        http_connection.expects(:use).with(3).in_sequence(middleware_setup)
+
+        new_soap_request.build
+      end
+
+      it "are not set otherwise" do
+        http_connection.expects(:use).never
+        new_soap_request.build
+      end
+    end
+  end
 end
