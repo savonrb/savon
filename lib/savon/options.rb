@@ -92,6 +92,7 @@ module Savon
         :convert_attributes_to       => lambda { |k,v| [k,v] },
         :multipart                   => false,
         :adapter                     => nil,
+        :middlewares                 => [],
         :use_wsa_headers             => false,
         :no_message_tag              => false,
         :follow_redirects            => false,
@@ -383,6 +384,25 @@ module Savon
     # Instruct requests to follow HTTP redirects.
     def follow_redirects(follow_redirects)
       @options[:follow_redirects] = follow_redirects
+    end
+
+    # Provide middlewares for Faraday connections.
+    # The argument is an array, with each element being another array
+    # that contains the middleware class and its arguments, in the same way
+    # as a normal call to Faraday::RackBuilder#use
+    #
+    # See https://lostisland.github.io/faraday/#/middleware/index?id=using-middleware
+    # For example:
+    #
+    # client = Savon.client(
+    #   middlewares: [
+    #     [Faraday::Request::UrlEncoded],
+    #     [Faraday::Response::Logger, { bodies: true }],
+    #     [Faraday::Adapter::NetHttp]
+    #   ]
+    # )
+    def middlewares(middlewares)
+      @options[:middlewares] = middlewares
     end
   end
 
