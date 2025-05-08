@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "nori",     "~> 2.4"
-  s.add_dependency "faraday",  "~> 2.11.0"
+  s.add_dependency "faraday",  "~> 2.11"
   s.add_dependency "faraday-gzip",  "~> 2.0"
   s.add_dependency "faraday-follow_redirects",  "~> 0.3"
   s.add_dependency "wasabi", " > 5"
