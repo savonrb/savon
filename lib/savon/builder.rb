@@ -63,7 +63,7 @@ module Savon
       if @signature
         @signature.document = xml_result
 
-        2.times do
+        3.times do
           @header = nil
           @signature.document = build_xml
         end
