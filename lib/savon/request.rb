@@ -80,6 +80,12 @@ module Savon
       connection.response(:logger, @globals[:logger], headers: @globals[:log_headers]) if @globals[:log]
     end
 
+    def configure_gzip
+      if connection.headers['Accept-Encoding'] && connection.headers['Accept-Encoding'].include?('gzip')
+        connection.request :gzip
+      end
+    end
+
     protected
     attr_reader :connection
   end
@@ -94,6 +100,7 @@ module Savon
       configure_adapter
       configure_logging
       configure_headers
+      configure_gzip
       connection
     end
 
@@ -121,6 +128,7 @@ module Savon
       configure_adapter
       configure_logging
       configure_redirect_handling
+      configure_gzip
       yield(connection) if block_given?
       connection
     end
