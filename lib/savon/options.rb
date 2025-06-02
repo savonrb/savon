@@ -92,6 +92,7 @@ module Savon
         :convert_attributes_to       => lambda { |k,v| [k,v] },
         :multipart                   => false,
         :adapter                     => nil,
+        :idle_timeout                => 60*5,
         :use_wsa_headers             => false,
         :no_message_tag              => false,
         :follow_redirects            => false,
@@ -163,6 +164,11 @@ module Savon
     # Write timeout in seconds.
     def write_timeout(write_timeout)
       @options[:write_timeout] = write_timeout
+    end
+
+    # Idle Timeout in seconds.  Only used for keep-alive connections.
+    def idle_timeout(idle_timeout)
+      @options[:idle_timeout] = idle_timeout
     end
 
     # The encoding to use. Defaults to "UTF-8".

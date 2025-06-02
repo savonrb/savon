@@ -34,6 +34,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "httpclient"
   s.add_development_dependency "mutex_m"
   s.add_development_dependency 'ostruct', '~> 0.6'
+  s.add_development_dependency "faraday-ntlm_auth"
 
   s.add_development_dependency "byebug"
   s.add_development_dependency "rake",  ">= 12.3.3"

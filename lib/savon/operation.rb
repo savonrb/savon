@@ -91,22 +91,10 @@ module Savon
     end
 
     def call_with_logging(connection)
-      ntlm_auth = handle_ntlm(connection) if @globals.include?(:ntlm)
       @logger.log_response(connection.post(@globals[:endpoint]) { |request|
         request.body = @locals[:body]
-        request.headers['Authorization'] = "NTLM #{auth.encode64}" if ntlm_auth
         @logger.log_request(request)
       })
-    end
-
-    def handle_ntlm(connection)
-      ntlm_message = Net::NTLM::Message
-      response = connection.get(@globals[:endpoint]) do |request|
-        request.headers['Authorization'] = 'NTLM ' + ntlm_message::Type1.new.encode64
-      end
-      challenge = response.headers['www-authenticate'][/(?:NTLM|Negotiate) (.*)$/, 1]
-      message = ntlm_message::Type2.decode64(challenge)
-      message.response([:user, :password, :domain].zip(@globals[:ntlm]).to_h)
     end
 
     def build_connection(builder)

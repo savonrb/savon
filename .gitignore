@@ -14,3 +14,4 @@ tmp
 Gemfile.lock
 bin/
 .rspec_status
+.idea
