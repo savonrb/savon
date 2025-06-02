@@ -57,11 +57,11 @@ module Savon
 
     def ntlm_auth
       begin
-        require 'rubyntlm'
-        require 'faraday/net_http_persistent'
-        connection.adapter :net_http_persistent, pool_size: 5
+        require 'faraday/ntlm_auth'
+        connection.adapter :net_http_persistent, pool_size: 5, idle_timeout: @globals[:idle_timeout] if @globals.include?(:idle_timeout)
+        connection.request :ntlm_auth, auth: @globals[:ntlm]
       rescue LoadError
-        raise LoadError, 'Using NTLM Auth requires both `rubyntlm` and `faraday-net_http_persistent` to be installed.'
+        raise LoadError, 'The "faraday-ntlm_auth" gem is required for NTLM authentication. Please add it to your Gemfile and run `bundle install`.'
       end
     end
 
@@ -101,6 +101,7 @@ module Savon
 
     def configure_headers
       connection.headers = @globals[:headers] if @globals.include? :headers
+      connection.headers["Content-Type"] ||= "text/xml;charset=#{@globals[:encoding]}"
     end
   end
 
