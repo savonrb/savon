@@ -389,12 +389,12 @@ RSpec.describe Savon::SOAPRequest do
     describe "ntlm auth" do
       it "uses the net-http-persistent adapter in faraday" do
         globals.ntlm("han", "super-secret")
-        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5})
+        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5, idle_timeout: 60 * 5})
         new_soap_request.build
       end
 
       it "is not set otherwise" do
-        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5}).never
+        http_connection.expects(:adapter).with(:net_http_persistent, {:pool_size => 5, idle_timeout: 60 * 5}).never
         new_soap_request.build
       end
     end
