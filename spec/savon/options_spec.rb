@@ -574,6 +574,7 @@ RSpec.describe "Options" do
       credentials = ["admin", "secret"]
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
+
       response = client.call(:authenticate)
       expect(response.http.env[:request_headers]["Authorization"]).to match(/NTLM/)
     end
