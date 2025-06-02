@@ -570,15 +570,12 @@ RSpec.describe "Options" do
   end
 
   context "global :ntlm" do
-    it "sets the ntlm credentials to use" do
+    it "sets the ntlm credentials to use, sending a challenge to the server" do
       credentials = ["admin", "secret"]
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
-      # TODO: find a way to integration test this. including an entire ntlm
-      # server implementation seems a bit over the top though.
-      Savon::Operation.any_instance.expects(:handle_ntlm)
-
       response = client.call(:authenticate)
+      expect(response.http.env[:request_headers]["Authorization"]).to match(/NTLM/)
     end
   end
 
