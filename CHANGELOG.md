@@ -1,7 +1,15 @@
 # Savon changelog
 
 ## Unreleased
-* Changes to utilize faraday instead of http
+* MTOM attachment support by @ekzobrain in https://github.com/savonrb/savon/pull/1012
+* Fix: request logging when message contains non-ascii characters
+* Fix: when xml option is provided, attachments option was ignored
+* Add your PR changelog line here
+* Restore support for ssl ciphers
+
+## 3.0.0.rc1 (2024-07-15)
+
+* Use Faraday instead of HTTPI
 * BC BREAKING Cookies are handled differently now
 * BC BREAKING Multiple pieces of functionality will rely on faraday libraries to be provided by the consuming codebase
 * BC BREAKING Adapter overrides now utilize the faraday model
@@ -13,7 +21,6 @@
     decrypt the key and pass it to faraday in code
   * Deprecates providing a ca cert, upgrade path is to provide a ca cert file
   * deprecates overriding ssl ciphers, as faraday does not support this
-* Add your PR changelog line here
 
 ## 2.15.1 (2024-07-08)
 

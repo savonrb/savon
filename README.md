@@ -23,7 +23,7 @@ $ gem install savon
 or add it to your Gemfile like this:
 
 ```
-gem 'savon', '~> 2.15.0'
+gem 'savon', '~> 3.0.0'
 ```
 
 ## Usage example

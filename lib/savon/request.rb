@@ -36,12 +36,12 @@ module Savon
       connection.ssl.version         = @globals[:ssl_version]       if @globals.include? :ssl_version
       connection.ssl.min_version     = @globals[:ssl_min_version]   if @globals.include? :ssl_min_version
       connection.ssl.max_version     = @globals[:ssl_max_version]   if @globals.include? :ssl_max_version
+      connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
 
       # No Faraday Equivalent out of box, see: https://lostisland.github.io/faraday/#/customization/ssl-options
       # connection.ssl.cert_file       = @globals[:ssl_cert_file]     if @globals.include? :ssl_cert_file
       # connection.ssl.cert_key_file   = @globals[:ssl_cert_key_file] if @globals.include? :ssl_cert_key_file
       # connection.ssl.ca_cert         = @globals[:ssl_ca_cert]       if @globals.include? :ssl_ca_cert
-      # connection.ssl.ciphers         = @globals[:ssl_ciphers]       if @globals.include? :ssl_ciphers
       # connection.ssl.cert_key_password = @globals[:ssl_cert_key_password] if @globals.include? :ssl_cert_key_password
 
     end
@@ -77,7 +77,13 @@ module Savon
     end
 
     def configure_logging
-      connection.response(:logger, nil, headers: @globals[:log_headers], level: @globals[:logger].level) if @globals[:log]
+      connection.response(:logger, @globals[:logger], headers: @globals[:log_headers]) if @globals[:log]
+    end
+
+    def configure_gzip
+      if connection.headers['Accept-Encoding'] && connection.headers['Accept-Encoding'].include?('gzip')
+        connection.request :gzip
+      end
     end
 
     protected
@@ -94,6 +100,7 @@ module Savon
       configure_adapter
       configure_logging
       configure_headers
+      configure_gzip
       connection
     end
 
@@ -122,6 +129,7 @@ module Savon
       configure_adapter
       configure_logging
       configure_redirect_handling
+      configure_gzip
       yield(connection) if block_given?
       connection
     end

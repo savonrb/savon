@@ -65,7 +65,6 @@ class IntegrationServer
 
     map "/multipart" do
       run lambda { |env|
-        boundary = 'mimepart_boundary'
         message = Mail.new
         xml_part = Mail::Part.new do
           content_type 'text/xml'

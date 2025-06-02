@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency "nori",     "~> 2.4"
-  s.add_dependency "faraday",  "~> 2.8"
+  s.add_dependency "faraday",  "~> 2.11"
   s.add_dependency "faraday-gzip",  "~> 2.0"
   s.add_dependency "faraday-follow_redirects",  "~> 0.3"
   s.add_dependency "wasabi", " > 5"
@@ -33,6 +33,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "puma",  ">= 4.3.8", "< 7"
   s.add_development_dependency "httpclient"
   s.add_development_dependency "mutex_m"
+  s.add_development_dependency 'ostruct', '~> 0.6'
   s.add_development_dependency "faraday-ntlm_auth"
 
   s.add_development_dependency "byebug"

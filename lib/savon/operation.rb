@@ -17,6 +17,7 @@ module Savon
       1 => "text/xml",
       2 => "application/soap+xml"
     }
+    SOAP_REQUEST_TYPE_MTOM = "application/xop+xml"
 
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
@@ -106,18 +107,21 @@ module Savon
         :headers     => @locals[:headers]
       ) do |connection|
         if builder.multipart
-          connection.request :gzip
-          connection.headers["Content-Type"] = %W[multipart/related
-                                                  type="#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}",
-                                                  start="#{builder.multipart[:start]}",
-                                                  boundary="#{builder.multipart[:multipart_boundary]}"].join("; ")
+          ctype_headers = ["multipart/related"]
+          if @locals[:mtom]
+            ctype_headers << "type=\"#{SOAP_REQUEST_TYPE_MTOM}\""
+            ctype_headers << "start-info=\"text/xml\""
+          else
+            ctype_headers << "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\""
+            connection.request :gzip
+          end
+          connection.headers["Content-Type"] = (ctype_headers + ["start=\"#{builder.multipart[:start]}\"",
+                                                  "boundary=\"#{builder.multipart[:multipart_boundary]}\""]).join("; ")
           connection.headers["MIME-Version"] = "1.0"
         end
 
         connection.headers["Content-Length"] = @locals[:body].bytesize.to_s
       end
-
-
     end
 
     def soap_action

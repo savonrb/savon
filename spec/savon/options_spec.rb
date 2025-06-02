@@ -331,7 +331,7 @@ RSpec.describe "Options" do
     end
 
     it "silences Faraday as well" do
-      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).never
+      Faraday::Connection.any_instance.expects(:response).never
 
       new_client(:log => false)
     end
@@ -346,7 +346,7 @@ RSpec.describe "Options" do
     end
 
     it "turns Faraday logging back on as well" do
-      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).at_least_once
+      Faraday::Connection.any_instance.expects(:response).with(:logger, kind_of(Logger), {:headers => true}).at_least_once
       new_client(:log => true)
     end
   end
@@ -367,10 +367,10 @@ RSpec.describe "Options" do
     end
 
     it "sets the logger of faraday connection as well" do
-      Faraday::Connection.any_instance.expects(:response).with(:logger, nil, {:headers => true, :level => 0}).at_least_once
+      custom_logger = Logger.new($stdout)
+      custom_logger.level = :fatal
+      Faraday::Connection.any_instance.expects(:response).with(:logger, custom_logger, {:headers => true}).at_least_once
       mock_stdout {
-        custom_logger = Logger.new($stdout)
-
         client = new_client(:endpoint => @server.url, :logger => custom_logger, :log => true)
         client.call(:authenticate)
       }
@@ -477,7 +477,12 @@ RSpec.describe "Options" do
   end
 
   context "global :ssl_ciphers" do
-    it_behaves_like(:deprecation, :ssl_ciphers)
+    it "sets the ciphers to use" do
+      Faraday::SSLOptions.any_instance.expects(:ciphers=).with(:none).twice
+
+      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
+      client.call(:authenticate)
+    end
   end
 
   context "global :ssl_cert_key_file" do

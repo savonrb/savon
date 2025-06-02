@@ -197,6 +197,78 @@ RSpec.describe Savon::Operation do
     end
   end
 
+  describe "attachments" do
+    context "soap_version 1" do
+      it "sends requests with content-type text/xml" do
+        globals.endpoint @server.url(:multipart)
+        operation = new_operation(:example, no_wsdl, globals)
+        req = operation.request do
+          attachments [
+            { filename: 'x1.xml', content: '<xml>abc</xml>'},
+            { filename: 'x2.xml', content: '<xml>cde</xml>'},
+          ]
+        end
+        expect(req.headers["Content-Type"]).to start_with "multipart/related; type=\"text/xml\"; "
+      end
+    end
+    context "soap_version 2" do
+      it "sends requests with content-type application/soap+xml" do
+        globals.endpoint @server.url(:multipart)
+        globals.soap_version 2
+        operation = new_operation(:example, no_wsdl, globals)
+        req = operation.request do
+          attachments [
+            { filename: 'x1.xml', content: '<xml>abc</xml>'},
+            { filename: 'x2.xml', content: '<xml>cde</xml>'},
+          ]
+        end
+        expect(req.headers["Content-Type"]).to start_with "multipart/related; type=\"application/soap+xml\"; "
+      end
+    end
+    context "MTOM" do
+      it "sends request with content-type header application/xop+xml" do
+        globals.endpoint @server.url(:multipart)
+        operation = new_operation(:example, no_wsdl, globals)
+        req = operation.request do
+          mtom true
+          attachments [
+            { filename: 'x1.xml', content: '<xml>abc</xml>'},
+            { filename: 'x2.xml', content: '<xml>cde</xml>'},
+          ]
+        end
+        expect(req.headers["Content-Type"]).to start_with "multipart/related; type=\"application/xop+xml\"; start-info=\"text/xml\"; start=\"<soap-request-body@soap>\"; boundary=\"--==_mimepart_"
+      end
+
+      it "sends attachments with Content-Transfer-Encoding: binary" do
+        globals.endpoint @server.url(:multipart)
+        operation = new_operation(:example, no_wsdl, globals)
+        req = operation.request do
+          mtom true
+          attachments [
+            { filename: 'x1.xml', content: '<xml>abc</xml>'},
+            { filename: 'x2.xml', content: '<xml>cde</xml>'},
+          ]
+        end
+        expect(req.body.to_s).to include("filename=x1.xml\r\nContent-Transfer-Encoding: binary")
+      end
+      
+      it "successfully makes request" do
+        globals.endpoint @server.url(:multipart)
+        operation = new_operation(:example, no_wsdl, globals)
+        response = operation.call do
+          mtom true
+          attachments [
+            { filename: 'x1.xml', content: '<xml>abc</xml>'},
+            { filename: 'x2.xml', content: '<xml>cde</xml>'},
+          ]
+        end
+
+        expect(response.multipart?).to be true
+        expect(response.attachments.first.content_id).to include('attachment1')
+      end
+    end
+  end
+
   def inspect_request(response)
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)

@@ -50,7 +50,7 @@ module Savon
     end
 
     def body_to_log(body)
-      LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
+      LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s.force_encoding(@globals[:encoding])
     end
 
   end
