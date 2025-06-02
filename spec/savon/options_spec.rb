@@ -183,6 +183,13 @@ RSpec.describe "Options" do
     end
   end
 
+  context "global :idle_timeout" do
+    it "sets the idle timeout for connection pools when net-http_persistent is used" do
+      client = new_client(:endpoint => @server.url, idle_timeout: 5, ntlm: ["admin", "secret", "domain"])
+      expect(client.globals[:idle_timeout]).to eq(5) # No great way to test this actually _works_ from a public setting
+    end
+  end
+
   context "global :encoding" do
     it "changes the XML instruction" do
       client = new_client(:endpoint => @server.url(:repeat), :encoding => "ISO-8859-1")
