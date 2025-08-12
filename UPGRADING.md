@@ -20,12 +20,6 @@ For `ssl_ca_cert` pass the file as the `ssl_ca_cert_file` option instead.
 
 For more information please see https://lostisland.github.io/faraday/#/customization/ssl-options
 
-### ssl_ciphers
-
-Specifying SSL ciphers is no longer supported, as Faraday does not support this, and attempting to use this option will raise an error.
-
-Resolution: remove code that attempts to set `ssl_ciphers`.
-
 ### digest_auth
 
 Digest authentication is no longer natively supported. If you need to use it, consider [Faraday::DigestAuth](https://github.com/bhaberer/faraday-digestauth)
