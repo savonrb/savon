@@ -947,6 +947,19 @@ RSpec.describe "Options" do
     end
   end
 
+  context "global :middlewares" do
+    let(:middlewares) { [[1],[2],[3]] }
+
+    it "adds middlewares to the connection" do
+      middleware_setup = sequence('middleware_setup')
+      Faraday::Connection.any_instance.expects(:use).with(1).in_sequence(middleware_setup)
+      Faraday::Connection.any_instance.expects(:use).with(2).in_sequence(middleware_setup)
+      Faraday::Connection.any_instance.expects(:use).with(3).in_sequence(middleware_setup)
+
+      client = new_client(:endpoint => @server.url, :middlewares => middlewares)
+    end
+  end
+
   context "global and request :soap_header" do
     it "merges the headers if both were provided as Hashes" do
       global_soap_header = {
