@@ -183,6 +183,13 @@ RSpec.describe "Options" do
     end
   end
 
+  context "global :idle_timeout" do
+    it "sets the idle timeout for connection pools when net-http_persistent is used" do
+      client = new_client(:endpoint => @server.url, :idle_timeout => 5, :ntlm => ["admin", "secret", "domain"])
+      expect(client.globals[:idle_timeout]).to eq(5) # No great way to test this actually _works_ from a public setting
+    end
+  end
+
   context "global :encoding" do
     it "changes the XML instruction" do
       client = new_client(:endpoint => @server.url(:repeat), :encoding => "ISO-8859-1")
@@ -563,15 +570,13 @@ RSpec.describe "Options" do
   end
 
   context "global :ntlm" do
-    it "sets the ntlm credentials to use" do
+    it "sets the ntlm credentials to use, sending a challenge to the server" do
       credentials = ["admin", "secret"]
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
-      # TODO: find a way to integration test this. including an entire ntlm
-      # server implementation seems a bit over the top though.
-      Savon::Operation.any_instance.expects(:handle_ntlm)
 
       response = client.call(:authenticate)
+      expect(response.http.env[:request_headers]["Authorization"]).to match(/NTLM/)
     end
   end
 
