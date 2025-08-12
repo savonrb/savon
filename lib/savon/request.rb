@@ -85,6 +85,12 @@ module Savon
         connection.use(*middleware_args)
       end
     end
+    
+    def configure_gzip
+      if connection.headers['Accept-Encoding'] && connection.headers['Accept-Encoding'].include?('gzip')
+        connection.request :gzip
+      end
+    end
 
     protected
     attr_reader :connection
@@ -101,6 +107,7 @@ module Savon
       configure_middlewares
       configure_logging
       configure_headers
+      configure_gzip
       connection
     end
 
@@ -129,6 +136,7 @@ module Savon
       configure_middlewares
       configure_logging
       configure_redirect_handling
+      configure_gzip
       yield(connection) if block_given?
       connection
     end

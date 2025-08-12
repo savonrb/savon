@@ -291,6 +291,28 @@ RSpec.describe Savon::SOAPRequest do
       end
     end
 
+    describe "gzip" do
+      it "is set when Accept-Encoding with gzip is specified" do
+        globals.headers("Accept-Encoding" => "gzip,deflate")
+        http_connection.expects(:request).with(:gzip)
+
+        new_soap_request.build
+      end
+
+      it "is not set when Acccept-Encoding does not include gzip" do
+        globals.headers("Accept-Encoding" => "deflate")
+        http_connection.expects(:request).with(:gzip).never
+
+        new_soap_request.build
+      end
+
+      it "is not set otherwise" do
+        http_connection.expects(:request).with(:gzip).never
+
+        new_soap_request.build
+      end
+    end
+
     describe "SOAPAction header" do
       it "is set and wrapped in parenthesis" do
         configured_http_request = new_soap_request.build(:soap_action => "findUser")
