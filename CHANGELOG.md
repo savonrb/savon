@@ -4,11 +4,15 @@
 * Add your PR changelog line here
 
 ## 3.0.0.rc2 (2025-08-12)
-* MTOM attachment support by @ekzobrain in https://github.com/savonrb/savon/pull/1012
-* Fix: request logging when message contains non-ascii characters
-* Fix: when xml option is provided, attachments option was ignored
-* Restore support for ssl ciphers
-* Add middleware support for faraday
+* MTOM support with tests by @pcai in https://github.com/savonrb/savon/pull/1012
+* Upgrade notes on ssl_verify_mode by @ehutzelman in https://github.com/savonrb/savon/pull/1013
+* Pass the provided Savon/custom logger to Faraday by @larskanis in https://github.com/savonrb/savon/pull/1017
+* Add ruby 3.4 to CI by @doconnor-clintel in https://github.com/savonrb/savon/pull/1024
+* Restore support for SSL Ciphers by @doconnor-clintel in https://github.com/savonrb/savon/pull/1020
+* Drop ruby 3.0 from CI by @doconnor-clintel in https://github.com/savonrb/savon/pull/1025
+* Don't block minor updates to faraday by @larskanis in https://github.com/savonrb/savon/pull/1028
+* Add gzip middleware when Accept-Encoding includes gzip by @kjeldahl in https://github.com/savonrb/savon/pull/1030
+* Add option to provide connection middlewares. by @amartinfraguas in https://github.com/savonrb/savon/pull/1026
 
 ## 3.0.0.rc1 (2024-07-15)
 
