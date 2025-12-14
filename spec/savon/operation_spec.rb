@@ -273,4 +273,24 @@ RSpec.describe Savon::Operation do
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
+
+  describe "NTLM authentication" do
+    it "sets the Authorization header after handshake" do
+      require "rubyntlm"
+
+      globals_with_ntlm = Savon::GlobalOptions.new(
+        endpoint: @server.url(:repeat),
+        namespace: "http://v1.example.com",
+        ntlm: ["username", "password", "domain"],
+        log: false,
+      )
+
+      operation = new_operation(:authenticate, no_wsdl, globals_with_ntlm)
+
+      mock_ntlm_response = stub(encode64: "mock_ntlm_token")
+      operation.stubs(:handle_ntlm).returns(mock_ntlm_response)
+
+      expect { operation.call }.not_to raise_error
+    end
+  end
 end

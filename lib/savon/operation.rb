@@ -94,7 +94,7 @@ module Savon
       ntlm_auth = handle_ntlm(connection) if @globals.include?(:ntlm)
       @logger.log_response(connection.post(@globals[:endpoint]) { |request|
         request.body = @locals[:body]
-        request.headers['Authorization'] = "NTLM #{auth.encode64}" if ntlm_auth
+        request.headers['Authorization'] = "NTLM #{ntlm_auth.encode64}" if ntlm_auth
         @logger.log_request(request)
       })
     end
