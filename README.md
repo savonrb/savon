@@ -7,7 +7,6 @@ Heavy metal SOAP client
 
 [![Ruby](https://github.com/savonrb/savon/actions/workflows/ci.yml/badge.svg)](https://github.com/savonrb/savon/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
-[![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
 If you're reading this on GitHub, note that this README is for the main branch and that features/changes described here might not correspond to your version. You can find the documentation for your release [at rubydoc.info](https://www.rubydoc.info/find/gems?q=savon).
