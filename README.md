@@ -7,7 +7,6 @@ Heavy metal SOAP client
 
 [![Ruby](https://github.com/savonrb/savon/actions/workflows/ci.yml/badge.svg)](https://github.com/savonrb/savon/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
-[![Code Climate](https://codeclimate.com/github/savonrb/savon.svg)](https://codeclimate.com/github/savonrb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
 
