@@ -196,6 +196,20 @@ RSpec.describe Savon::WSDLRequest do
         new_wsdl_request.build
       end
     end
+
+    describe "follow redirects" do
+      it "is set when specified" do
+        globals.follow_redirects(true)
+        http_connection.expects(:response).with(:follow_redirects)
+
+        new_wsdl_request.build
+      end
+
+      it "is not set otherwise" do
+        http_connection.expects(:response).with(:follow_redirects).never
+        new_wsdl_request.build
+      end
+    end
   end
 end
 
