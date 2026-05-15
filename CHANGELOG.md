@@ -1,7 +1,13 @@
 # Savon changelog
 
-## Unreleased
-* Add your PR changelog line here
+## 2.16.0 (UPCOMING)
+
+* Fix: Restore `Savon::Response#hash` removed in 2.14.0 (#985). Callers on 2.12.1 that use `response.hash` get the soap body back instead of Ruby's integer object id. A deprecation warning is emitted on each call. Use `#full_hash` going forward.
+* Fix: Require wasabi >= 5.1.0 (#1016). Wasabi 4.x used message names as soap body element names instead of operation names (savonrb/wasabi#122), causing servers to return a fault for operations whose message name carried an `In` suffix.
+* Fix: Stop dumping all WSDL namespaces into every soap envelope (#1014, #942). 2.13.0 injected every namespace from the entire WSDL document into each request, including structural ones that have no place in a request body. Strict servers reject envelopes with unexpected or duplicate declarations.
+* Fix: Raise a proper `SOAPFault` instead of a raw exception when `soap:Fault` contains invalid encoding (#923).
+* Fix: `SOAPFault.present?` was ignoring its `xml` argument and always operating on the instance's own body.
+* Change: Added Ruby 3.4 (#1024) and Ruby 4.0 (#1039) to the CI test matrix.
 
 ## 2.15.1 (2024-07-08)
 
