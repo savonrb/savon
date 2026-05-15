@@ -50,9 +50,23 @@ RSpec.describe Savon::SOAPFault do
       expect(Savon::SOAPFault.present? new_response).to be_falsey
     end
 
-    it "returns true even if the HTTP response contains a SOAP fault with invalid encoding" do
-      http = new_response(:body => Fixture.response(:soap_fault_invalid_encoding))
+    it "returns true if the http body has invalid encoding" do
+      body = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
+      expect(body.valid_encoding?).to be_falsey
+      http = new_response(:body => body)
       expect(Savon::SOAPFault.present? http).to be_truthy
+    end
+
+    it "returns true if the xml argument has invalid encoding" do
+      xml = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
+      expect(xml.valid_encoding?).to be_falsey
+      expect(Savon::SOAPFault.present? new_response, xml).to be_truthy
+    end
+
+    it "uses the xml argument over http body when provided" do
+      empty_http = new_response(:body => "")
+      xml = Fixture.response(:soap_fault)
+      expect(Savon::SOAPFault.present? empty_http, xml).to be_truthy
     end
   end
 
