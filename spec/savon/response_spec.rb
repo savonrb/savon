@@ -204,8 +204,17 @@ RSpec.describe Savon::Response do
   end
 
   describe "#hash" do
-    it "should return the complete SOAP response XML as a Hash" do
+    it "returns the SOAP body and emits a deprecation warning" do
       response = soap_response :body => Fixture.response(:header)
+      expect { response.hash }.to output(/Savon::Response#hash is deprecated and will be removed in version 3/).to_stderr
+      expect(response.hash[:envelope][:header][:session_number]).to eq("ABCD1234")
+    end
+  end
+
+  describe "#full_hash" do
+    it "returns the complete SOAP response XML as a Hash without warning" do
+      response = soap_response :body => Fixture.response(:header)
+      expect { response.full_hash }.not_to output.to_stderr
       expect(response.full_hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
   end

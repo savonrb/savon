@@ -54,6 +54,11 @@ module Savon
       result.kind_of?(Array) ? result.compact : [result].compact
     end
 
+    def hash
+      warn "Savon::Response#hash is deprecated and will be removed in version 3 - use #full_hash instead", uplevel: 1
+      full_hash
+    end
+
     def full_hash
       @full_hash ||= nori.parse(xml)
     end
