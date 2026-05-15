@@ -24,10 +24,7 @@ RSpec.describe Savon::Builder do
         'xmlns:xsd'       => "http://www.w3.org/2001/XMLSchema",
         'xmlns:xsi'       => "http://www.w3.org/2001/XMLSchema-instance",
         'xmlns:tns'       => "http://api.service.softlayer.com/soap/v3/",
-        'xmlns:env'       => "http://schemas.xmlsoap.org/soap/envelope/",
-        'xmlns:soap'      => "http://schemas.xmlsoap.org/wsdl/soap/",
-        'xmlns:soap-enc'  => "http://schemas.xmlsoap.org/soap/encoding/",
-        'xmlns:wsdl'      => "http://schemas.xmlsoap.org/wsdl/"
+        'xmlns:env'       => "http://schemas.xmlsoap.org/soap/envelope/"
       }
 
       locals = Savon::LocalOptions.new(message)
@@ -39,6 +36,13 @@ RSpec.describe Savon::Builder do
       envelope = parsed_doc.xpath('./env:Envelope').first
 
       expect(envelope.namespaces).to match(expected_namespaces)
+    end
+
+    it "does not include WSDL structural and binding namespaces" do
+      locals = Savon::LocalOptions.new
+      builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
+      namespaces = Nokogiri::XML(builder.to_s).root.namespaces
+      expect(namespaces.keys).not_to include("xmlns:soap", "xmlns:soap-enc", "xmlns:wsdl")
     end
   end
 end

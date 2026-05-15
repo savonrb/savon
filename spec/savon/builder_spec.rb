@@ -135,4 +135,53 @@ RSpec.describe Savon::Builder do
       expect(builder.body_attributes).to eq({})
     end
   end
+
+  describe "namespace declarations" do
+    it "includes exactly the required namespaces and no structural namespace declarations" do
+      expected = {
+        'xmlns:xsd' => 'http://www.w3.org/2001/XMLSchema',
+        'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
+        'xmlns:tns' => 'http://v1_0.ws.auth.order.example.com/',
+        'xmlns:env' => 'http://schemas.xmlsoap.org/soap/envelope/'
+      }
+      expect(Nokogiri::XML(builder.to_s).root.namespaces).to match(expected)
+    end
+
+    context "with a WSDL that declares multiple namespaces" do
+      let(:multi_wsdl) { Wasabi::Document.new Fixture.wsdl(:multiple_namespaces) }
+      subject(:multi_builder) { Savon::Builder.new(:Save, multi_wsdl, globals, locals) }
+
+      it "includes exactly the required namespaces and no structural namespace declarations" do
+        expected = {
+          'xmlns:xsd'     => 'http://www.w3.org/2001/XMLSchema',
+          'xmlns:xsi'     => 'http://www.w3.org/2001/XMLSchema-instance',
+          'xmlns:wsdl'    => 'http://example.com/actions',
+          'xmlns:env'     => 'http://schemas.xmlsoap.org/soap/envelope/',
+          'xmlns:article' => 'http://example.com/article'
+        }
+        expect(Nokogiri::XML(multi_builder.to_s).root.namespaces).to match(expected)
+      end
+
+      it "does not declare the same URI under two different prefixes" do
+        uris = multi_builder.to_s.scan(/xmlns:[^=]+="([^"]+)"/).flatten
+        expect(uris).to eq(uris.uniq)
+      end
+
+      it "does not produce duplicate namespace declarations when :namespaces overlaps with WSDL-derived namespaces" do
+        globals[:namespaces] = { "xmlns:article" => "http://example.com/article" }
+        xml = multi_builder.to_s
+        expect(xml.scan('xmlns:article=').length).to eq(1)
+      end
+
+      it "every prefix used in the body is declared in the envelope" do
+        locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
+        builder = Savon::Builder.new(:Save, multi_wsdl, globals, locals_with_msg)
+        xml = builder.to_s
+        used_prefixes     = xml.scan(/<\/?([a-zA-Z][a-zA-Z0-9-]*):/).flatten.uniq
+        declared_prefixes = xml.scan(/xmlns:([a-zA-Z][a-zA-Z0-9-]*)=/).flatten.uniq
+        expect(used_prefixes).not_to be_empty
+        expect(used_prefixes - declared_prefixes).to be_empty
+      end
+    end
+  end
 end

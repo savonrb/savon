@@ -95,9 +95,13 @@ module Savon
       @internal_namespace_count ||= 0
 
       unless identifier = namespace_by_uri(uri)
-        identifier = "ins#{@internal_namespace_count}"
+        wsdl_identifier = @wsdl.document? ? @wsdl.parser.namespaces.key(uri) : nil
+        # The prefix may already be taken by the target namespace or a user-supplied
+        # :namespaces override - fall back to ins0, ins1... rather than overwriting it.
+        wsdl_identifier = nil if wsdl_identifier && namespaces.key?("xmlns:#{wsdl_identifier}")
+        identifier = wsdl_identifier || "ins#{@internal_namespace_count}"
         namespaces["xmlns:#{identifier}"] = uri
-        @internal_namespace_count += 1
+        @internal_namespace_count += 1 unless wsdl_identifier
       end
 
       [path, identifier]
@@ -118,18 +122,6 @@ module Savon
         # check env_namespace
         namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
-
-        if @wsdl&.document
-          @wsdl.parser.namespaces.each do |identifier, path|
-            next if identifier == 'xmlns' # Do not include xmlns namespace as this causes issues for some servers (https://github.com/savonrb/savon/issues/986)
-
-            prefixed_identifier = "xmlns:#{identifier}"
-
-            next if namespaces.key?(prefixed_identifier)
-
-            namespaces[prefixed_identifier] = path
-          end
-        end
 
         namespaces
       end
