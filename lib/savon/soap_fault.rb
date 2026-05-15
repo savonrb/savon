@@ -4,7 +4,7 @@ module Savon
 
     def self.present?(http, xml = nil)
       body = xml || http.body
-      body = body.encode('UTF-8', 'ISO-8859-1', invalid: :replace, undef: :replace, replace: '') unless body.valid_encoding?
+      body = body.scrub('') unless body.valid_encoding?
       fault_node  = body.include?("Fault>")
       soap1_fault = body.match(/faultcode\/?\>/) && body.match(/faultstring\/?\>/)
       soap2_fault = body.include?("Code>") && body.include?("Reason>")
