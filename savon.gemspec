@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "nori",     "~> 2.4"
   s.add_dependency "httpi",    ">= 4", " < 5"
-  s.add_dependency "wasabi",   ">= 3.7", " < 6"
+  s.add_dependency "wasabi",   ">= 5.1.0", " < 6"
   s.add_dependency "akami",    "~> 1.2"
   s.add_dependency "gyoku",    "~> 1.2"
   s.add_dependency "builder",  ">= 2.1.2"
