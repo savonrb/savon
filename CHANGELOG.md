@@ -1,5 +1,11 @@
 # Savon changelog
 
+## 2.17.0 (UPCOMING)
+
+**Add opt-in Faraday transport**
+
+* Change: Observers must return `Savon::Transport::Response` (or `nil`) instead of `HTTPI::Response`. Returning `HTTPI::Response` still works but emits a deprecation warning.
+
 ## 2.16.0 (2026-05-18)
 
 **Restore compatibility**

@@ -21,6 +21,7 @@ RSpec.describe "Savon's mock interface" do
       message(:username => "luke", :password => "secret")
     end
 
+    expect(response.http).to be_a(Savon::Transport::Response)
     expect(response.http.body).to eq("<fixture/>")
   end
 

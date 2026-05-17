@@ -75,44 +75,29 @@ RSpec.describe Savon::Operation do
   end
 
   describe "#call" do
-    it "returns a response object" do
+    it "returns a response object whose http is a Transport::Response" do
       operation = new_operation(:verify_address, wsdl, globals)
-      expect(operation.call).to be_a(Savon::Response)
+      response = operation.call
+      expect(response).to be_a(Savon::Response)
+      expect(response.http).to be_a(Savon::Transport::Response)
     end
 
     it "uses the global :endpoint option for the request" do
       globals.endpoint("http://v1.example.com")
-      HTTPI::Request.any_instance.expects(:url=).with("http://v1.example.com")
-
       operation = new_operation(:verify_address, wsdl, globals)
-
-      # stub the actual request
-      http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call_with_logging).returns(http_response)
-
-      operation.call
+      expect(operation.request.url.to_s).to eq("http://v1.example.com")
     end
 
     it "falls back to use the WSDL's endpoint if the :endpoint option was not set" do
       globals_without_endpoint = Savon::GlobalOptions.new(:log => false)
-      HTTPI::Request.any_instance.expects(:url=).with(wsdl.endpoint)
-
       operation = new_operation(:verify_address, wsdl, globals_without_endpoint)
-
-      # stub the actual request
-      http_response = HTTPI::Response.new(200, {}, "")
-      operation.expects(:call_with_logging).returns(http_response)
-
-      operation.call
+      expect(operation.request.url.to_s).to eq(wsdl.endpoint.to_s)
     end
 
-    it "sets the Content-Length header" do
-      # XXX: probably the worst spec ever written. refactor! [dh, 2013-01-05]
-      http_request = HTTPI::Request.new
-      http_request.headers.expects(:[]=).with("Content-Length", "312")
-      Savon::SOAPRequest.any_instance.expects(:build).returns(http_request)
-
-      new_operation(:verify_address, wsdl, globals).call
+    it "sets Content-Length to the byte size of the body" do
+      operation = new_operation(:verify_address, wsdl, globals)
+      request = operation.request
+      expect(request.headers["Content-Length"]).to eq(request.body.bytesize.to_s)
     end
 
     it "passes the local :soap_action option to the request builder" do
@@ -126,14 +111,11 @@ RSpec.describe Savon::Operation do
       expect(actual_soap_action).to eq(%("#{soap_action}"))
     end
 
-    it "uses the local :cookies option" do
-      globals.endpoint @server.url(:inspect_request)
+    it "converts cookies to a Cookie: header on the request" do
       cookies = [HTTPI::Cookie.new("some-cookie=choc-chip")]
-
-      HTTPI::Request.any_instance.expects(:set_cookies).with(cookies)
-
       operation = new_operation(:verify_address, wsdl, globals)
-      operation.call(:cookies => cookies)
+      request = operation.request(:cookies => cookies)
+      expect(request.headers["Cookie"]).to eq("some-cookie=choc-chip")
     end
 
     it "passes nil to the request builder if the :soap_action was set to nil" do
@@ -192,10 +174,11 @@ RSpec.describe Savon::Operation do
   end
 
   describe "#request" do
-    it "returns the request" do
+    it "returns an HTTPI::Request with the XML body" do
       operation = new_operation(:verify_address, wsdl, globals)
       request = operation.request
 
+      expect(request).to be_a(HTTPI::Request)
       expect(request.body).to include('<tns:VerifyAddress></tns:VerifyAddress>')
     end
   end

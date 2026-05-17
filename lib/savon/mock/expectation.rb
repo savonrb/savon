@@ -1,7 +1,14 @@
 # frozen_string_literal: true
 require "httpi"
+require "savon/transport/response"
 
 module Savon
+  # A single test expectation set up by Savon's mock interface.
+  # One expectation covers one operation call in one test.
+  # 
+  # Records the expected operation name and message, captures what was
+  # actually called, and either returns a synthetic response or raises
+  # an error on mismatch.
   class MockExpectation
 
     def initialize(operation_name)
@@ -37,12 +44,13 @@ module Savon
       verify_message!
     end
 
+    # Returns a Transport::Response built from the configured response hash.
     def response!
       unless @response
         raise ExpectationError, "This expectation was not set up with a response."
       end
 
-      HTTPI::Response.new(@response[:code], @response[:headers], @response[:body])
+      Transport::Response.new(@response[:code], @response[:headers], @response[:body])
     end
 
     private

@@ -29,10 +29,10 @@ RSpec.describe Savon::Client do
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
 
-    it "builds an HTTPI request for Wasabi" do
+    it "builds an HTTPI request for Wasabi via Transport::HTTPI" do
       http_request = mock
-      wsdl_request = mock(:build => http_request)
-      Savon::WSDLRequest.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(wsdl_request)
+      transport    = mock(:wsdl_request => http_request)
+      Savon::Transport::HTTPI.expects(:new).with(instance_of(Savon::GlobalOptions)).returns(transport)
 
       Wasabi::Document.any_instance.expects(:request=).with(http_request)
       Savon.client(:wsdl => "http://example.com")

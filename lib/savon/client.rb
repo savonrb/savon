@@ -1,11 +1,16 @@
 # frozen_string_literal: true
 require "savon/operation"
-require "savon/request"
+require "savon/transport/httpi"
 require "savon/options"
 require "savon/block_interface"
 require "wasabi"
 
 module Savon
+  # The main entry point for Savon.
+  #
+  # Holds global configuration, owns the WSDL document, and dispatches
+  # named operations. A single Client instance is typically shared across
+  # multiple calls to the same service.
   class Client
 
     def initialize(globals = {}, &block)
@@ -63,7 +68,7 @@ module Savon
       @wsdl.namespace   = @globals[:namespace]   if @globals.include? :namespace
       @wsdl.adapter     = @globals[:adapter]     if @globals.include? :adapter
 
-      @wsdl.request = WSDLRequest.new(@globals).build
+      @wsdl.request = Transport::HTTPI.new(@globals).wsdl_request
     end
 
     def wsdl_or_endpoint_and_namespace_specified?
