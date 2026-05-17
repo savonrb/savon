@@ -253,15 +253,15 @@ RSpec.describe Savon::Response do
   end
 
   describe "#http" do
-    it "should return the HTTPI::Response" do
-      expect(soap_response.http).to be_an(HTTPI::Response)
+    it "returns the normalized transport response" do
+      expect(soap_response.http).to be_a(Savon::Transport::Response)
     end
   end
 
   def soap_response(options = {})
     defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
     response = defaults.merge options
-    http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
+    http_response = Savon::Transport::Response.new(response[:code], response[:headers], response[:body])
 
     Savon::Response.new(http_response, globals, locals)
   end

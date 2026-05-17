@@ -46,38 +46,52 @@ RSpec.describe Savon do
       expect(observer.locals).to  be_a(Savon::LocalOptions)
     end
 
-    it "allows to register an observer which mocks requests" do
+    it "accepts a Transport::Response from an observer" do
       observer = Class.new {
-
         def notify(*)
-          # return a response to mock the request
-          HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
+          Savon::Transport::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
-
       }.new
 
       Savon.observers << observer
 
-      response = new_client.call(:authenticate)
-
-      expect(response.http.code).to eq(201)
-      expect(response.http.headers).to eq("x-result" => "valid")
-      expect(response.http.body).to eq("valid!")
+      expect {
+        response = new_client.call(:authenticate)
+        expect(response.http.code).to eq(201)
+        expect(response.http.headers).to eq("x-result" => "valid")
+        expect(response.http.body).to eq("valid!")
+      }.not_to output.to_stderr
     end
 
-    it "raises if an observer returns something other than nil or an HTTPI::Response" do
+    it "allows observers to return deprecated HTTPI::Responses" do
       observer = Class.new {
+        def notify(*)
+          # return a response to mock the request
+          HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
+        end
+      }.new
 
+      Savon.observers << observer
+
+      expect {
+        response = new_client.call(:authenticate)
+        expect(response.http.code).to eq(201)
+        expect(response.http.headers).to eq("x-result" => "valid")
+        expect(response.http.body).to eq("valid!")
+      }.to output(/HTTPI::Response.*deprecated/i).to_stderr
+    end
+
+    it "raises if an observer returns something other than nil, HTTPI::Response, or Transport::Response" do
+      observer = Class.new {
         def notify(*)
           []
         end
-
       }.new
 
       Savon.observers << observer
 
       expect { new_client.call(:authenticate) }.
-        to raise_error(Savon::Error, "Observers need to return an HTTPI::Response " \
+        to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \
                                      "to mock the request or nil to execute the request.")
     end
   end

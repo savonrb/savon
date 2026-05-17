@@ -1,20 +1,33 @@
 # frozen_string_literal: true
 require "savon/options"
 require "savon/block_interface"
-require "savon/request"
 require "savon/builder"
 require "savon/response"
-require "savon/request_logger"
 require "savon/http_error"
+require "savon/transport/httpi"
 require "mail"
 
 module Savon
+  # Represents a single named SOAP operation.
+  #
+  # Bridges the SOAP layer (envelope building, action headers, multipart) and the
+  # transport layer (execution, logging). Knows nothing about transport internals
+  # such as proxy, SSL, or auth.
   class Operation
 
+    # SOAP Content-Type values indexed by SOAP version.
+    # SOAP 1.1 §6 (HTTP binding), SOAP 1.2 Part 2 §7.1.4 (HTTP media type)
+    CONTENT_TYPE = {
+      1 => "text/xml;charset=%s",
+      2 => "application/soap+xml;charset=%s"
+    }.freeze
+
+    # Maps SOAP version to the base MIME type used in multipart requests.
+    # RFC 2387 §3.1 (multipart/related Content-Type parameter)
     SOAP_REQUEST_TYPE = {
       1 => "text/xml",
       2 => "application/soap+xml"
-    }
+    }.freeze
 
     def self.create(operation_name, wsdl, globals)
       if wsdl.document?
@@ -35,18 +48,17 @@ module Savon
     end
 
     def self.ensure_name_is_symbol!(operation_name)
-      unless operation_name.kind_of? Symbol
+      unless operation_name.is_a? Symbol
         raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
                              "Actual: #{operation_name.inspect} (#{operation_name.class})"
       end
     end
 
     def initialize(name, wsdl, globals)
-      @name = name
-      @wsdl = wsdl
-      @globals = globals
-
-      @logger = RequestLogger.new(globals)
+      @name      = name
+      @wsdl      = wsdl
+      @globals   = globals
+      @transport = Transport::HTTPI.new(globals)
     end
 
     def build(locals = {}, &block)
@@ -54,20 +66,29 @@ module Savon
       Builder.new(@name, @wsdl, @globals, @locals)
     end
 
+    # Executes the SOAP operation and returns a Savon::Response.
+    #
+    # Observer short-circuit: if any registered observer returns a
+    # Transport::Response (or legacy HTTPI::Response), the HTTP call
+    # is skipped and that response is used directly.
     def call(locals = {}, &block)
-      builder = build(locals, &block)
-
+      builder  = build(locals, &block)
       response = Savon.notify_observers(@name, builder, @globals, @locals)
-      response ||= call_with_logging build_request(builder)
 
-      raise_expected_httpi_response! unless response.kind_of?(HTTPI::Response)
+      if response.nil?
+        response = @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
+      else
+        response = normalize_observer_response(response)
+      end
 
       create_response(response)
     end
 
+    # Builds and returns the HTTPI::Request that would be sent for this
+    # operation, without executing it. Useful for inspection and debugging.
     def request(locals = {}, &block)
       builder = build(locals, &block)
-      build_request(builder)
+      @transport.to_httpi_request(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
     end
 
     private
@@ -83,37 +104,33 @@ module Savon
       @locals = locals
     end
 
-    def call_with_logging(request)
-      @logger.log(request) { HTTPI.post(request, @globals[:adapter]) }
-    end
-
-    def build_request(builder)
-      @locals[:soap_action] ||= soap_action
-      @globals[:endpoint] ||= endpoint
-
-      request = SOAPRequest.new(@globals).build(
-        :soap_action => soap_action,
-        :cookies     => @locals[:cookies],
-        :headers     => @locals[:headers]
-      )
-
-      request.url = endpoint
-      request.body = builder.to_s
+    # Assembles the SOAP-level request headers for the given builder.
+    #
+    # Our responsibility regardless of transport:
+    #   * Content-Type (SOAP 1.1 §6 / SOAP 1.2 Part 2 §7.1.4)
+    #   * SOAPAction (SOAP 1.1 §6.1.1)
+    #   * Multipart Content-Type (RFC 2387), MIME-Version (RFC 2045 §4), Accept-Encoding (RFC 9110 §12.5.3)
+    def soap_headers(builder)
+      headers = {}
 
       if builder.multipart
-        request.gzip
-        request.headers["Content-Type"] = ["multipart/related",
-                                           "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
-                                           "start=\"#{builder.multipart[:start]}\"",
-                                           "boundary=\"#{builder.multipart[:multipart_boundary]}\""].join("; ")
-        request.headers["MIME-Version"] = "1.0"
+        # RFC 2387 §3 (multipart/related) - SOAP envelope is the root body part
+        headers["Content-Type"] = [
+          "multipart/related",
+          "type=\"#{SOAP_REQUEST_TYPE[@globals[:soap_version]]}\"",
+          "start=\"#{builder.multipart[:start]}\"",
+          "boundary=\"#{builder.multipart[:multipart_boundary]}\""
+        ].join("; ")
+        headers["MIME-Version"] = "1.0"
+        headers["Accept-Encoding"] = "gzip,deflate"
+      else
+        headers["Content-Type"] = CONTENT_TYPE[@globals[:soap_version]] % @globals[:encoding]
       end
 
-      # TODO: could HTTPI do this automatically in case the header
-      #       was not specified manually? [dh, 2013-01-04]
-      request.headers["Content-Length"] = request.body.bytesize.to_s
+      action = soap_action
+      headers["SOAPAction"] = %("#{action}") if action
 
-      request
+      headers
     end
 
     def soap_action
@@ -138,9 +155,21 @@ module Savon
       end
     end
 
-    def raise_expected_httpi_response!
-      raise Error, "Observers need to return an HTTPI::Response to mock " \
-                   "the request or nil to execute the request."
+    # Normalizes an observer return value into a Transport::Response.
+    #
+    # Accepts Transport::Response directly (current contract), wraps
+    # HTTPI::Response with a deprecation warning (legacy observer support),
+    # and raises on anything else.
+    def normalize_observer_response(response)
+      return response if response.is_a?(Transport::Response)
+
+      if response.is_a?(HTTPI::Response)
+        warn "Observers returning HTTPI::Response is deprecated - return Savon::Transport::Response instead."
+        return Transport::Response.from_httpi(response)
+      end
+
+      raise Error, "Observers need to return a Savon::Transport::Response " \
+                   "to mock the request or nil to execute the request."
     end
 
   end
