@@ -19,6 +19,7 @@ module Savon
       end
 
       set_globals(globals, block)
+      @globals.validate_transport!
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!
@@ -28,6 +29,18 @@ module Savon
     end
 
     attr_reader :globals, :wsdl
+
+    # Returns the memoized Faraday::Connection for this client.
+    # Callers use this to configure middleware, SSL, auth, timeouts, and any
+    # other transport-level concern before making calls.
+    # Raises ArgumentError if transport is not :faraday.
+    def faraday
+      unless @globals[:transport] == :faraday
+        raise ArgumentError, "client.faraday is only available when transport: :faraday is set"
+      end
+
+      @faraday ||= Faraday.new
+    end
 
     def operations
       raise_missing_wsdl_error! unless @wsdl.document?
