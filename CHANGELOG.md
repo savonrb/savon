@@ -4,6 +4,9 @@
 
 **Add opt-in Faraday transport**
 
+* Add: `transport: :faraday` global option. Defaults to `:httpi`.
+* Add: `client.faraday` - returns a memoized `Faraday::Connection` for configuring middleware, SSL, auth, and timeouts when using the Faraday transport.
+* Add: `Savon.client` raises if `transport: :faraday` is set but the faraday gem is not installed, or if any httpi-specific global option (`proxy`, timeouts, `ssl_*`, auth, `adapter`) is set alongside it. All conflicts are reported with their Faraday equivalents.
 * Change: Observers must return `Savon::Transport::Response` (or `nil`) instead of `HTTPI::Response`. Returning `HTTPI::Response` still works but emits a deprecation warning.
 
 ## 2.16.0 (2026-05-18)

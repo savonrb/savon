@@ -3,6 +3,10 @@ require "logger"
 require "httpi"
 
 module Savon
+
+  # Base class for GlobalOptions and LocalOptions.
+  # Stores options in a hash, dispatches setter calls by method name,
+  # raises UnknownOptionError for anything not defined on the subclass.
   class Options
 
     def initialize(options = {})
@@ -38,7 +42,10 @@ module Savon
     end
   end
 
+  # Options available in both GlobalOptions and LocalOptions.
+  # Currently covers WSSE authentication and timestamp headers.
   module SharedOptions
+
     # WSSE auth credentials for Akami.
     # Local will override the global wsse_auth value, e.g.
     #   global == [user, pass] && local == [user2, pass2] => [user2, pass2]
@@ -67,8 +74,203 @@ module Savon
     end
   end
 
+  # HTTPI-specific transport options included in GlobalOptions.
+  #
+  # Every option in this module is handled by HTTPI and has no effect when
+  # transport: :faraday is set. Faraday callers configure these concerns
+  # directly on the Faraday::Connection returned by client.faraday.
+  module HTTPITransportOptions
+
+    # Maps each httpi-only option to the Faraday equivalent so the
+    # error raised at init tells the caller exactly what to do instead.
+    # Options with a :default entry are only flagged when the caller
+    # sets a value that differs from the GlobalOptions default.
+    FARADAY_INCOMPATIBLE_GLOBALS = {
+      proxy:                 { hint: "client.faraday.proxy = url" },
+      open_timeout:          { hint: "client.faraday.options.timeout = N" },
+      read_timeout:          { hint: "client.faraday.options.timeout = N" },
+      write_timeout:         { hint: "client.faraday.options.write_timeout = N" },
+      ssl_version:           { hint: "client.faraday.ssl.version = version" },
+      ssl_min_version:       { hint: "client.faraday.ssl.min_version = version" },
+      ssl_max_version:       { hint: "client.faraday.ssl.max_version = version" },
+      ssl_verify_mode:       { hint: "client.faraday.ssl.verify = true/false" },
+      ssl_cert_key_file:     { hint: "client.faraday.ssl.client_key_file = path" },
+      ssl_cert_key:          { hint: "client.faraday.ssl.client_key = key" },
+      ssl_cert_key_password: { hint: "configure ssl context on client.faraday.ssl" },
+      ssl_cert_file:         { hint: "client.faraday.ssl.client_cert_file = path" },
+      ssl_cert:              { hint: "client.faraday.ssl.client_cert = cert" },
+      ssl_ca_cert_file:      { hint: "client.faraday.ssl.ca_file = path" },
+      ssl_ca_cert:           { hint: "client.faraday.ssl.ca_cert = cert" },
+      ssl_ciphers:           { hint: "client.faraday.ssl.ciphers = ciphers" },
+      ssl_ca_cert_path:      { hint: "client.faraday.ssl.ca_path = path" },
+      ssl_cert_store:        { hint: "client.faraday.ssl.cert_store = store" },
+      basic_auth:            { hint: "client.faraday.request :basic_auth, user, pass" },
+      digest_auth:           { hint: "client.faraday.request :authorization, :Digest, credentials" },
+      ntlm:                  { hint: "client.faraday.request :ntlm, user, pass" },
+      follow_redirects:      { hint: "client.faraday.use :follow_redirects", default: false },
+      adapter:               { hint: "client.faraday.adapter :net_http", default: nil }
+    }.freeze
+
+    # Validates that the chosen transport is compatible with the options set.
+    # Must be called after all options (including any block-form options) are set.
+    # Collects every conflict and raises a single InitializationError listing all
+    # problems and solutions at once.
+    def validate_transport!
+      return unless self[:transport] == :faraday
+
+      unless faraday_loaded?
+        raise InitializationError,
+              "transport: :faraday requires the faraday gem.\n" \
+              "Add to your Gemfile: gem 'faraday'"
+      end
+
+      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map do |option, config|
+        next unless include?(option)
+        next if config.key?(:default) && self[option] == config[:default]
+
+        "  #{option} - Use: #{config[:hint]}"
+      end
+
+      return if violations.empty?
+
+      raise InitializationError,
+            "The following options are not supported with transport: :faraday:\n" +
+            violations.join("\n")
+    end
+
+    # Proxy server to use for all requests.
+    def proxy(proxy)
+      @options[:proxy] = proxy unless proxy.nil?
+    end
+
+    # Open timeout in seconds.
+    def open_timeout(open_timeout)
+      @options[:open_timeout] = open_timeout
+    end
+
+    # Read timeout in seconds.
+    def read_timeout(read_timeout)
+      @options[:read_timeout] = read_timeout
+    end
+
+    # Write timeout in seconds.
+    def write_timeout(write_timeout)
+      @options[:write_timeout] = write_timeout
+    end
+
+    # Specifies the SSL version to use.
+    def ssl_version(version)
+      @options[:ssl_version] = version
+    end
+
+    # Specifies the minimum SSL version to use.
+    def ssl_min_version(version)
+      @options[:ssl_min_version] = version
+    end
+
+    # Specifies the maximum SSL version to use.
+    def ssl_max_version(version)
+      @options[:ssl_max_version] = version
+    end
+
+    # Whether and how to verify the SSL connection.
+    def ssl_verify_mode(verify_mode)
+      @options[:ssl_verify_mode] = verify_mode
+    end
+
+    # Sets the cert key file to use.
+    def ssl_cert_key_file(file)
+      @options[:ssl_cert_key_file] = file
+    end
+
+    # Sets the cert key to use.
+    def ssl_cert_key(key)
+      @options[:ssl_cert_key] = key
+    end
+
+    # Sets the cert key password to use.
+    def ssl_cert_key_password(password)
+      @options[:ssl_cert_key_password] = password
+    end
+
+    # Sets the cert file to use.
+    def ssl_cert_file(file)
+      @options[:ssl_cert_file] = file
+    end
+
+    # Sets the cert to use.
+    def ssl_cert(cert)
+      @options[:ssl_cert] = cert
+    end
+
+    # Sets the CA cert file to use.
+    def ssl_ca_cert_file(file)
+      @options[:ssl_ca_cert_file] = file
+    end
+
+    # Sets the CA cert to use.
+    def ssl_ca_cert(cert)
+      @options[:ssl_ca_cert] = cert
+    end
+
+    # Sets the SSL ciphers to use.
+    def ssl_ciphers(ciphers)
+      @options[:ssl_ciphers] = ciphers
+    end
+
+    # Sets the CA cert path.
+    def ssl_ca_cert_path(path)
+      @options[:ssl_ca_cert_path] = path
+    end
+
+    # Sets the SSL cert store.
+    def ssl_cert_store(store)
+      @options[:ssl_cert_store] = store
+    end
+
+    # HTTP basic auth credentials.
+    def basic_auth(*credentials)
+      @options[:basic_auth] = credentials.flatten
+    end
+
+    # HTTP digest auth credentials.
+    def digest_auth(*credentials)
+      @options[:digest_auth] = credentials.flatten
+    end
+
+    # NTLM auth credentials.
+    def ntlm(*credentials)
+      @options[:ntlm] = credentials.flatten
+    end
+
+    # Instruct requests to follow HTTP redirects.
+    def follow_redirects(follow_redirects)
+      @options[:follow_redirects] = follow_redirects
+    end
+
+    # Instruct Savon which HTTPI adapter to use instead of the default.
+    def adapter(adapter)
+      @options[:adapter] = adapter
+    end
+
+    private
+
+    # Attempts to load faraday. Returns true if available, false on LoadError.
+    def faraday_loaded?
+      require "faraday"
+      true
+    rescue LoadError
+      false
+    end
+  end
+
+  # Client-level options applied to every request made by a Savon::Client instance.
+  # Covers service location, SOAP configuration, logging, response parsing,
+  # and transport selection. HTTPI-specific options (proxy, timeouts, SSL, auth)
+  # come from HTTPITransportOptions.
   class GlobalOptions < Options
     include SharedOptions
+    include HTTPITransportOptions
 
     def initialize(options = {})
       @option_type = :global
@@ -88,12 +290,15 @@ module Savon
         :convert_response_tags_to    => lambda { |tag| StringUtils.snakecase(tag).to_sym},
         :convert_attributes_to       => lambda { |k,v| [k,v] },
         :multipart                   => false,
-        :adapter                     => nil,
         :use_wsa_headers             => false,
         :no_message_tag              => false,
-        :follow_redirects            => false,
         :unwrap                      => false,
-        :host                        => nil
+        :host                        => nil,
+        :transport                   => :httpi,
+
+        # httpi transport defaults
+        :adapter                     => nil,
+        :follow_redirects            => false
       }
 
       options = defaults.merge(options)
@@ -112,7 +317,7 @@ module Savon
       @options[:wsdl] = wsdl_address
     end
 
-    # set different host for actions in WSDL
+    # Set a different host for actions in the WSDL.
     def host(host)
       @options[:host] = host
     end
@@ -127,7 +332,7 @@ module Savon
       @options[:namespace] = namespace
     end
 
-    # The namespace identifer.
+    # The namespace identifier.
     def namespace_identifier(identifier)
       @options[:namespace_identifier] = identifier
     end
@@ -137,29 +342,9 @@ module Savon
       @options[:namespaces] = namespaces
     end
 
-    # Proxy server to use for all requests.
-    def proxy(proxy)
-      @options[:proxy] = proxy unless proxy.nil?
-    end
-
-    # A Hash of HTTP headers.
+    # A Hash of HTTP headers sent with every request.
     def headers(headers)
       @options[:headers] = headers
-    end
-
-    # Open timeout in seconds.
-    def open_timeout(open_timeout)
-      @options[:open_timeout] = open_timeout
-    end
-
-    # Read timeout in seconds.
-    def read_timeout(read_timeout)
-      @options[:read_timeout] = read_timeout
-    end
-
-    # Write timeout in seconds.
-    def write_timeout(write_timeout)
-      @options[:write_timeout] = write_timeout
     end
 
     # The encoding to use. Defaults to "UTF-8".
@@ -220,7 +405,7 @@ module Savon
       @options[:logger].level = levels[level]
     end
 
-    # To log headers or not.
+    # Whether to log headers.
     def log_headers(log_headers)
       @options[:log_headers] = log_headers
     end
@@ -233,90 +418,6 @@ module Savon
     # Whether to pretty print request and response XML log messages.
     def pretty_print_xml(pretty_print_xml)
       @options[:pretty_print_xml] = pretty_print_xml
-    end
-
-    # Specifies the SSL version to use.
-    def ssl_version(version)
-      @options[:ssl_version] = version
-    end
-
-    # Specifies the SSL version to use.
-    def ssl_min_version(version)
-      @options[:ssl_min_version] = version
-    end
-
-    # Specifies the SSL version to use.
-    def ssl_max_version(version)
-      @options[:ssl_max_version] = version
-    end
-
-    # Whether and how to to verify the connection.
-    def ssl_verify_mode(verify_mode)
-      @options[:ssl_verify_mode] = verify_mode
-    end
-
-    # Sets the cert key file to use.
-    def ssl_cert_key_file(file)
-      @options[:ssl_cert_key_file] = file
-    end
-
-    # Sets the cert key to use.
-    def ssl_cert_key(key)
-      @options[:ssl_cert_key] = key
-    end
-
-    # Sets the cert key password to use.
-    def ssl_cert_key_password(password)
-      @options[:ssl_cert_key_password] = password
-    end
-
-    # Sets the cert file to use.
-    def ssl_cert_file(file)
-      @options[:ssl_cert_file] = file
-    end
-
-    # Sets the cert to use.
-    def ssl_cert(cert)
-      @options[:ssl_cert] = cert
-    end
-
-    # Sets the ca cert file to use.
-    def ssl_ca_cert_file(file)
-      @options[:ssl_ca_cert_file] = file
-    end
-
-    # Sets the ca cert to use.
-    def ssl_ca_cert(cert)
-      @options[:ssl_ca_cert] = cert
-    end
-
-    def ssl_ciphers(ciphers)
-      @options[:ssl_ciphers] = ciphers
-    end
-
-    # Sets the ca cert path.
-    def ssl_ca_cert_path(path)
-      @options[:ssl_ca_cert_path] = path
-    end
-
-    # Sets the ssl cert store.
-    def ssl_cert_store(store)
-      @options[:ssl_cert_store] = store
-    end
-
-    # HTTP basic auth credentials.
-    def basic_auth(*credentials)
-      @options[:basic_auth] = credentials.flatten
-    end
-
-    # HTTP digest auth credentials.
-    def digest_auth(*credentials)
-      @options[:digest_auth] = credentials.flatten
-    end
-
-    # NTLM auth credentials.
-    def ntlm(*credentials)
-      @options[:ntlm] = credentials.flatten
     end
 
     # Instruct Nori whether to strip namespaces from XML nodes.
@@ -335,22 +436,22 @@ module Savon
       @options[:convert_request_keys_to] = converter
     end
 
-    # Tell Gyoku to unwrap Array of Hashes
-    # Accepts a boolean, default to false
+    # Tell Gyoku to unwrap Array of Hashes.
+    # Accepts a boolean, defaults to false.
     def unwrap(unwrap)
       @options[:unwrap] = unwrap
     end
 
     # Tell Nori how to convert XML tags from the SOAP response into Hash keys.
     # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
-    # Defaults to convert tags to snakecase Symbols.
+    # Defaults to converting tags to snakecase Symbols.
     def convert_response_tags_to(converter = nil, &block)
       @options[:convert_response_tags_to] = block || converter
     end
 
     # Tell Nori how to convert XML attributes on tags from the SOAP response into Hash keys.
     # Accepts a lambda or a block which receives an XML tag and returns a Hash key.
-    # Defaults to doing nothing
+    # Defaults to doing nothing.
     def convert_attributes_to(converter = nil, &block)
       @options[:convert_attributes_to] = block || converter
     end
@@ -360,26 +461,27 @@ module Savon
       @options[:multipart] = multipart
     end
 
-    # Instruct Savon what HTTPI adapter it should use instead of default
-    def adapter(adapter)
-      @options[:adapter] = adapter
-    end
-
     # Enable inclusion of WS-Addressing headers.
     def use_wsa_headers(use)
       @options[:use_wsa_headers] = use
     end
 
+    # Suppress the message tag wrapper around the SOAP body.
     def no_message_tag(bool)
       @options[:no_message_tag] = bool
     end
 
-    # Instruct requests to follow HTTP redirects.
-    def follow_redirects(follow_redirects)
-      @options[:follow_redirects] = follow_redirects
+    # HTTP transport to use. Accepts :httpi (default) or :faraday.
+    # When set to :faraday, configure transport concerns directly on the
+    # Faraday::Connection returned by client.faraday instead of using
+    # the HTTPITransportOptions.
+    def transport(transport)
+      @options[:transport] = transport
     end
   end
 
+  # Per-request options passed to client.call.
+  # Overrides or extends the matching GlobalOptions for a single SOAP operation.
   class LocalOptions < Options
     include SharedOptions
 
@@ -397,7 +499,7 @@ module Savon
 
     # The local SOAP header. Expected to be a Hash or respond to #to_s.
     # Will be merged with the global SOAP header if both are Hashes.
-    # Otherwise the local option will be prefered.
+    # Otherwise the local option will be preferred.
     def soap_header(header)
       @options[:soap_header] = header
     end
@@ -482,6 +584,7 @@ module Savon
       @options[:multipart] = multipart
     end
 
+    # Per-request HTTP headers. Merged with global headers for each request.
     def headers(headers)
       @options[:headers] = headers
     end
