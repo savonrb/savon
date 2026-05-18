@@ -19,6 +19,8 @@ jobs:
           bundler-cache: true
       - name: Audit dependencies
         run: bundle exec bundle-audit check --update
+      - name: Audit Ruby runtime
+        run: bundle exec ruby-audit check
 
   lint:
     runs-on: ubuntu-latest
