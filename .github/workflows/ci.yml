@@ -20,7 +20,7 @@ jobs:
       - name: Audit dependencies
         run: bundle exec bundle-audit check --update
       - name: Audit Ruby runtime
-        run: gem install ruby_audit --quiet && ruby-audit check
+        run: gem install ruby_audit --quiet && gem exec ruby_audit check
 
   lint:
     runs-on: ubuntu-latest
