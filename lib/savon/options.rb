@@ -3,7 +3,6 @@ require "logger"
 require "httpi"
 
 module Savon
-
   # Base class for GlobalOptions and LocalOptions.
   # Stores options in a hash, dispatches setter calls by method name,
   # raises UnknownOptionError for anything not defined on the subclass.
@@ -45,7 +44,6 @@ module Savon
   # Options available in both GlobalOptions and LocalOptions.
   # Currently covers WSSE authentication and timestamp headers.
   module SharedOptions
-
     # WSSE auth credentials for Akami.
     # Local will override the global wsse_auth value, e.g.
     #   global == [user, pass] && local == [user2, pass2] => [user2, pass2]
@@ -80,7 +78,6 @@ module Savon
   # transport: :faraday is set. Faraday callers configure these concerns
   # directly on the Faraday::Connection returned by client.faraday.
   module HTTPITransportOptions
-
     # Maps each httpi-only option to the Faraday equivalent so the
     # error raised at init tells the caller exactly what to do instead.
     # Options with a :default entry are only flagged when the caller

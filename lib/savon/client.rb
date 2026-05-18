@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "savon/operation"
 require "savon/transport/httpi"
+require "savon/transport/faraday"
 require "savon/options"
 require "savon/block_interface"
 require "wasabi"
@@ -39,7 +40,7 @@ module Savon
         raise ArgumentError, "client.faraday is only available when transport: :faraday is set"
       end
 
-      @faraday ||= Faraday.new
+      @faraday ||= ::Faraday.new
     end
 
     def operations
@@ -48,7 +49,7 @@ module Savon
     end
 
     def operation(operation_name)
-      Operation.create(operation_name, @wsdl, @globals)
+      Operation.create(operation_name, @wsdl, @globals, build_transport)
     end
 
     def call(operation_name, locals = {}, &block)
@@ -66,6 +67,15 @@ module Savon
 
     private
 
+    # Builds the transport for a single operation.
+    def build_transport
+      if @globals[:transport] == :faraday
+        Transport::Faraday.new(faraday, @globals)
+      else
+        Transport::HTTPI.new(@globals)
+      end
+    end
+
     def set_globals(globals, block)
       globals = GlobalOptions.new(globals)
       BlockInterface.new(globals).evaluate(block) if block
@@ -76,12 +86,16 @@ module Savon
     def build_wsdl_document
       @wsdl = Wasabi::Document.new
 
-      @wsdl.document    = @globals[:wsdl]        if @globals.include? :wsdl
-      @wsdl.endpoint    = @globals[:endpoint]    if @globals.include? :endpoint
-      @wsdl.namespace   = @globals[:namespace]   if @globals.include? :namespace
-      @wsdl.adapter     = @globals[:adapter]     if @globals.include? :adapter
+      @wsdl.document  = @globals[:wsdl]      if @globals.include? :wsdl
+      @wsdl.endpoint  = @globals[:endpoint]  if @globals.include? :endpoint
+      @wsdl.namespace = @globals[:namespace] if @globals.include? :namespace
 
-      @wsdl.request = Transport::HTTPI.new(@globals).wsdl_request
+      if @globals[:transport] == :faraday
+        @wsdl.request = faraday
+      else
+        @wsdl.adapter = @globals[:adapter] if @globals.include? :adapter
+        @wsdl.request = Transport::HTTPI.new(@globals).wsdl_request
+      end
     end
 
     def wsdl_or_endpoint_and_namespace_specified?

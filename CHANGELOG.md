@@ -4,10 +4,17 @@
 
 **Add opt-in Faraday transport**
 
-* Add: `transport: :faraday` global option. Defaults to `:httpi`.
-* Add: `client.faraday` - returns a memoized `Faraday::Connection` for configuring middleware, SSL, auth, and timeouts when using the Faraday transport.
-* Add: `Savon.client` raises if `transport: :faraday` is set but the faraday gem is not installed, or if any httpi-specific global option (`proxy`, timeouts, `ssl_*`, auth, `adapter`) is set alongside it. All conflicts are reported with their Faraday equivalents.
+Callers who set `transport: :faraday` get a memoized `Faraday::Connection` via `client.faraday` and full control over middleware, SSL, auth, and timeouts. Callers who do not set this option see no behavior change. HTTPI remains the default for 2.x.
+
+* Add: `transport: :faraday` global option. Defaults to `:httpi` (#992).
+* Add: `client.faraday` returns a memoized `Faraday::Connection` for configuring middleware, SSL, auth, and timeouts when using the Faraday transport.
+* Add: `Savon.client` raises if `transport: :faraday` is set but the faraday gem is not installed, or if any httpi-specific global option (`proxy`, timeouts, `ssl`, auth, `adapter`) is set alongside it. All conflicts are reported with their Faraday equivalents.
 * Change: Observers must return `Savon::Transport::Response` (or `nil`) instead of `HTTPI::Response`. Returning `HTTPI::Response` still works but emits a deprecation warning.
+* Unblocks:
+  * redirect following for WSDL fetches via `faraday-follow-redirects` middleware (#1033, savonrb/wasabi#18)
+  * digest authentication via `faraday-digestauth` middleware (#1021, savonrb/httpi#250)
+  * proxy authentication with special characters in passwords (#941)
+  * and setting an `Accept` header for WSDL requests from Rails apps (savonrb/wasabi#115)
 
 ## 2.16.0 (2026-05-18)
 

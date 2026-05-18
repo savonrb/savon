@@ -2,7 +2,6 @@
 require 'spec_helper'
 
 RSpec.describe Savon do
-
   it 'knows the message tag for :authentication' do
     message_tag = message_tag_for(:authentication, :authenticate)
     expect(message_tag).to eq(['http://v1_0.ws.auth.order.example.com/', 'authenticate'])
@@ -41,7 +40,8 @@ RSpec.describe Savon do
   def message_tag_for(fixture, operation_name)
     globals     = Savon::GlobalOptions.new(:log => false)
     wsdl        = Wasabi::Document.new Fixture.wsdl(fixture)
-    operation   = Savon::Operation.create(operation_name, wsdl, globals)
+    transport   = Savon::Transport::HTTPI.new(globals)
+    operation   = Savon::Operation.create(operation_name, wsdl, globals, transport)
     request_xml = operation.build.to_s
 
     nsid, local = extract_message_tag_from_request(request_xml)
@@ -58,5 +58,4 @@ RSpec.describe Savon do
   def extract_namespace_from_request(nsid, xml)
     xml.match(/xmlns:#{nsid}="(.+?)"/)[1]
   end
-
 end

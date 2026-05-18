@@ -51,6 +51,27 @@ response.body
 For more examples, you should check out the
 [integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
 
+## Faraday transport
+
+Savon uses HTTPI for HTTP by default. To opt into Faraday instead, add `faraday` to your Gemfile and set `transport: :faraday`:
+
+```ruby
+client = Savon.client(
+  transport: :faraday,
+  wsdl: "http://service.example.com?wsdl"
+)
+```
+
+Configure SSL, auth, timeouts, middleware, and anything else transport-related on the `Faraday::Connection` before making calls:
+
+```ruby
+client.faraday.ssl.verify               = false
+client.faraday.options.timeout          = 30
+client.faraday.options.open_timeout     = 5
+client.faraday.headers["Authorization"] = "Bearer #{token}"
+client.faraday.use Faraday::Response::Logger
+```
+
 ## Ruby version support
 
 Every savon release is tested with contemporary supported versions of ruby. Historical compatibility information:

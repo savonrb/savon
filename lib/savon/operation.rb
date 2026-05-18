@@ -5,6 +5,7 @@ require "savon/builder"
 require "savon/response"
 require "savon/http_error"
 require "savon/transport/httpi"
+require "savon/transport/faraday"
 require "mail"
 
 module Savon
@@ -29,13 +30,13 @@ module Savon
       2 => "application/soap+xml"
     }.freeze
 
-    def self.create(operation_name, wsdl, globals)
+    def self.create(operation_name, wsdl, globals, transport)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
         ensure_exists! operation_name, wsdl
       end
 
-      new(operation_name, wsdl, globals)
+      new(operation_name, wsdl, globals, transport)
     end
 
     def self.ensure_exists!(operation_name, wsdl)
@@ -54,11 +55,11 @@ module Savon
       end
     end
 
-    def initialize(name, wsdl, globals)
+    def initialize(name, wsdl, globals, transport)
       @name      = name
       @wsdl      = wsdl
       @globals   = globals
-      @transport = Transport::HTTPI.new(globals)
+      @transport = transport
     end
 
     def build(locals = {}, &block)
@@ -86,7 +87,14 @@ module Savon
 
     # Builds and returns the HTTPI::Request that would be sent for this
     # operation, without executing it. Useful for inspection and debugging.
+    # Not supported with transport: :faraday.
     def request(locals = {}, &block)
+      if @globals[:transport] == :faraday
+        raise ArgumentError, "#request returns an HTTPI::Request and is not supported " \
+                             "with transport: :faraday. Use client.faraday to configure " \
+                             "the connection"
+      end
+
       builder = build(locals, &block)
       @transport.to_httpi_request(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
     end

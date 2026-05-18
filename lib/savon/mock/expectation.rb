@@ -5,12 +5,11 @@ require "savon/transport/response"
 module Savon
   # A single test expectation set up by Savon's mock interface.
   # One expectation covers one operation call in one test.
-  # 
+  #
   # Records the expected operation name and message, captures what was
   # actually called, and either returns a synthetic response or raises
   # an error on mismatch.
   class MockExpectation
-
     def initialize(operation_name)
       @expected = { :operation_name => operation_name }
       @actual = nil
@@ -44,7 +43,10 @@ module Savon
       verify_message!
     end
 
-    # Returns a Transport::Response built from the configured response hash.
+    # Builds and returns a Transport::Response from the configured response hash.
+    #
+    # @return [Transport::Response]
+    # @raise  [ExpectationError] if no response was configured for this expectation
     def response!
       unless @response
         raise ExpectationError, "This expectation was not set up with a response."

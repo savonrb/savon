@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 require "httpi"
-require "savon/log_message"
+require "savon/transport/logging"
 require "savon/transport/response"
 
 module Savon
@@ -11,8 +11,8 @@ module Savon
     #   * header assembly
     #   * proxy/SSL/auth/timeout configuration
     #   * request execution
-    #   * logging
     class HTTPI
+      include Logging
 
       # @param globals [Savon::GlobalOptions] the client-level options
       def initialize(globals)
@@ -30,7 +30,7 @@ module Savon
       def post(url, soap_headers, body, locals)
         http_request = to_httpi_request(url, soap_headers, body, locals)
 
-        log_request(http_request) if log?
+        log_request(http_request.url, http_request.headers, http_request.body) if log?
 
         http_response = ::HTTPI.post(http_request, @globals[:adapter])
         response = Response.from_httpi(http_response)
@@ -51,6 +51,8 @@ module Savon
         headers = {}
         headers.merge!(@globals[:headers]) if @globals.include?(:headers)
         headers.merge!(locals[:headers])   if locals.include?(:headers)
+        
+        # soap_headers are lowest priority
         soap_headers.each { |k, v| headers[k] ||= v }
 
         if locals[:cookies]&.any?
@@ -99,7 +101,7 @@ module Savon
         http_request.write_timeout = @globals[:write_timeout] if @globals.include?(:write_timeout)
       end
 
-      # Configures SSL on the HTTPI::Request from all ssl_* globals.
+      # Configures SSL on the HTTPI::Request from all ssl globals.
       # SSL option reference: https://github.com/savonrb/httpi/blob/main/lib/httpi/auth/ssl.rb
       def configure_ssl(http_request)
         ssl = http_request.auth.ssl
@@ -129,37 +131,6 @@ module Savon
         http_request.follow_redirect = @globals[:follow_redirects] if @globals.include?(:follow_redirects)
       end
 
-      def log?
-        @globals[:log]
-      end
-
-      def log_headers?
-        @globals[:log_headers]
-      end
-
-      def logger
-        @globals[:logger]
-      end
-
-      def log_request(http_request)
-        logger.info  { "SOAP request: #{http_request.url}" }
-        logger.info  { headers_to_log(http_request.headers) } if log_headers?
-        logger.debug { body_to_log(http_request.body) }
-      end
-
-      def log_response(response)
-        logger.info  { "SOAP response (status #{response.code})" }
-        logger.debug { headers_to_log(response.headers) } if log_headers?
-        logger.debug { body_to_log(response.body) }
-      end
-
-      def headers_to_log(headers)
-        headers.map { |key, value| "#{key}: #{value}" }.join("\n")
-      end
-
-      def body_to_log(body)
-        LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
-      end
     end
   end
 end

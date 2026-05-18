@@ -52,6 +52,26 @@ RSpec.describe Savon::Transport::Response do
     end
   end
 
+  describe ".from_faraday" do
+    it "wraps a Faraday::Response, preserving status, headers, and body" do
+      faraday = stub(status: 201, headers: { "x-custom" => "val" }, body: "payload")
+      result  = described_class.from_faraday(faraday)
+
+      expect(result).to be_a(described_class)
+      expect(result.code).to eq(201)
+      expect(result.headers).to eq("x-custom" => "val")
+      expect(result.body).to eq("payload")
+    end
+
+    it "preserves error? semantics from the Faraday response status" do
+      faraday_ok  = stub(status: 200, headers: {}, body: "ok")
+      faraday_err = stub(status: 503, headers: {}, body: "error")
+
+      expect(described_class.from_faraday(faraday_ok).error?).to be(false)
+      expect(described_class.from_faraday(faraday_err).error?).to be(true)
+    end
+  end
+
   describe ".from_httpi" do
     it "wraps an HTTPI::Response, preserving code, headers, and body" do
       httpi = HTTPI::Response.new(201, { "x-custom" => "val" }, "payload")
