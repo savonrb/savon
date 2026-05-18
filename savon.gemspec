@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Savon::VERSION
   s.authors     = "Daniel Harrington"
   s.email       = "me@rubiii.com"
-  s.homepage    = "http://savonrb.com"
+  s.homepage    = "https://savonrb.com"
   s.summary     = "Heavy metal SOAP client"
   s.description = s.summary
   s.required_ruby_version = '>= 3.0.0'
