@@ -3,7 +3,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Client do
-
   before :all do
     @server = IntegrationServer.run
   end
@@ -60,6 +59,11 @@ RSpec.describe Savon::Client do
   end
 
   describe ".new with transport: :faraday" do
+    it "passes the Faraday::Connection to Wasabi" do
+      Wasabi::Document.any_instance.expects(:request=).with(instance_of(Faraday::Connection))
+      new_client_without_wsdl(:transport => :faraday)
+    end
+
     it "does not raise when faraday is available and no incompatible globals are set" do
       expect { new_client_without_wsdl(:transport => :faraday) }.not_to raise_error
     end
@@ -187,13 +191,15 @@ RSpec.describe Savon::Client do
       soap_response = new_soap_response
 
       wsdl = Wasabi::Document.new('http://example.com')
-      operation = Savon::Operation.new(:authenticate, wsdl, Savon::GlobalOptions.new)
+      globals = Savon::GlobalOptions.new
+      operation = Savon::Operation.new(:authenticate, wsdl, globals, Savon::Transport::HTTPI.new(globals))
       operation.expects(:call).with(locals).returns(soap_response)
 
       Savon::Operation.expects(:create).with(
         :authenticate,
         instance_of(Wasabi::Document),
-        instance_of(Savon::GlobalOptions)
+        instance_of(Savon::GlobalOptions),
+        instance_of(Savon::Transport::HTTPI)
       ).returns(operation)
 
       response = new_client.call(:authenticate, locals)
@@ -254,17 +260,20 @@ RSpec.describe Savon::Client do
       expected_request = mock('request')
       wsdl = Wasabi::Document.new('http://example.com')
 
+      globals = Savon::GlobalOptions.new
       operation = Savon::Operation.new(
         :authenticate,
         wsdl,
-        Savon::GlobalOptions.new
+        globals,
+        Savon::Transport::HTTPI.new(globals)
       )
       operation.expects(:request).returns(expected_request)
 
       Savon::Operation.expects(:create).with(
         :authenticate,
         instance_of(Wasabi::Document),
-        instance_of(Savon::GlobalOptions)
+        instance_of(Savon::GlobalOptions),
+        instance_of(Savon::Transport::HTTPI)
       ).returns(operation)
 
       operation.expects(:call).never
@@ -320,6 +329,12 @@ RSpec.describe Savon::Client do
     it "raises when given an unknown option via the block syntax" do
       expect { new_client.build_request(:authenticate) { another_invalid_local_option true } }.to raise_error Savon::UnknownOptionError
     end
+
+    it "raises ArgumentError when transport is :faraday" do
+      client = new_client_without_wsdl(:transport => :faraday)
+      expect { client.build_request(:authenticate) }.
+        to raise_error(ArgumentError, /#request.*not supported.*transport: :faraday/m)
+    end
   end
 
   def new_http_response(options = {})
@@ -346,5 +361,4 @@ RSpec.describe Savon::Client do
     globals = { :endpoint => "http://example.co", :namespace => "http://v1.example.com", :log => false }.merge(globals)
     Savon.client(globals)
   end
-
 end

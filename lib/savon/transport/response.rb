@@ -12,6 +12,11 @@ module Savon
         new(httpi_response.code, httpi_response.headers, httpi_response.body)
       end
 
+      # Creates a Transport::Response from a Faraday::Response.
+      def self.from_faraday(faraday_response)
+        new(faraday_response.status, faraday_response.headers.to_h, faraday_response.body)
+      end
+
       # @param code    [Integer] HTTP status code
       # @param headers [Hash]    response headers
       # @param body    [String]  response body

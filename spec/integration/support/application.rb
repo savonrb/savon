@@ -63,6 +63,15 @@ class IntegrationServer
       }
     end
 
+    map "/authentication.wsdl" do
+      run lambda { |env|
+        IntegrationServer.respond_with(
+          :body    => Fixture.wsdl(:authentication),
+          :headers => { "Content-Type" => "text/xml" }
+        )
+      }
+    end
+
     map "/multipart" do
       run lambda { |env|
         message = Mail.new

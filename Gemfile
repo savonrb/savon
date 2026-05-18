@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem "httpclient", "~> 2.7.1"
+gem "faraday", "~> 2.14"
 
 gem "bundler-audit", "~> 0.9.3", require: false
 gem "rubocop", "~> 1.86", ">= 1.86.2"

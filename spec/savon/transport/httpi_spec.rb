@@ -2,7 +2,7 @@
 require "spec_helper"
 
 RSpec.describe Savon::Transport::HTTPI do
-  let(:globals)  { Savon::GlobalOptions.new(:log => false) }
+  let(:globals) { Savon::GlobalOptions.new(:log => false) }
   subject(:transport) { described_class.new(globals) }
 
   describe "#to_httpi_request" do
@@ -76,6 +76,18 @@ RSpec.describe Savon::Transport::HTTPI do
 
     it "returns a Transport::Response" do
       expect(transport.post(url, {}, body, locals)).to be_a(Savon::Transport::Response)
+    end
+
+    it "forwards all soap_headers to the HTTP request" do
+      captured = nil
+      # Mocha stubs are matched LIFO; this overrides the before-block stub for this call.
+      HTTPI.stubs(:post).with { |req| 
+        captured = req.headers
+        true
+      }.returns(HTTPI::Response.new(200, {}, "ok"))
+      transport.post(url, { "SOAPAction" => '"test-op"', "Content-Type" => "text/xml;charset=UTF-8" }, body, locals)
+      expect(captured["SOAPAction"]).to    eq('"test-op"')
+      expect(captured["Content-Type"]).to  eq("text/xml;charset=UTF-8")
     end
 
     it "preserves the code, headers, and body from the HTTP response" do
