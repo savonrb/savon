@@ -35,7 +35,12 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha", "~> 0.14"
   s.add_development_dependency "json",  ">= 2.3.0"
 
-  s.metadata["rubygems_mfa_required"] = "true"
+  s.metadata = {
+    "rubygems_mfa_required" => "true",
+    "source_code_uri"       => "https://github.com/savonrb/savon",
+    "changelog_uri"         => "https://github.com/savonrb/savon/blob/v2.x/CHANGELOG.md",
+    "bug_tracker_uri"       => "https://github.com/savonrb/savon/issues"
+  }
 
   s.files = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'Rakefile', 'lib/**/*.rb']
 

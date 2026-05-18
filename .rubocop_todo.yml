@@ -171,6 +171,7 @@ Layout/HashAlignment:
     - 'spec/savon/request_logger_spec.rb'
     - 'spec/savon/soap_fault_spec.rb'
     - 'spec/savon/softlayer_spec.rb'
+    - 'savon.gemspec'
 
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
