@@ -4,6 +4,7 @@ gemspec
 
 gem "httpclient", "~> 2.7.1"
 
+gem "bundler-audit", require: false
 gem "rubocop", "~> 1.86", ">= 1.86.2"
 gem "rubocop-rake", "~> 0.7.1"
 gem "rubocop-rspec", "~> 3.9"
