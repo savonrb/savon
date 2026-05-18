@@ -1,0 +1,20 @@
+name: Push gem
+on:
+  release:
+    types: [published]
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
+    environment: release
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        with:
+          persist-credentials: false
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3"
+          bundler-cache: true
+      - uses: rubygems/release-gem@f0d7faff26625599a847d40d9fa28ace24c2aacc # v1

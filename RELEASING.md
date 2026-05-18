@@ -1,15 +1,15 @@
-_You'll need write access to the repository and the [rubygems](https://rubygems.org/gems/savon) project to create a release._
+_You'll need write access to the repository to create a release. Publishing is handled automatically via [trusted publishing](https://guides.rubygems.org/trusted-publishing/)._
 
 ## Cutting a release
 
-1. On main, edit [CHANGELOG.md](https://github.com/savonrb/savon/blob/main/CHANGELOG.md) to finalize the new version number and list of all changes.
+1. On your release branch (e.g. `main`, `v2.x`), edit [CHANGELOG.md](https://github.com/savonrb/savon/blob/main/CHANGELOG.md) to finalize the new version number and list of all changes.
 2. Bump [version.rb](https://github.com/savonrb/savon/blob/main/lib/savon/version.rb) to the version you picked in previous step.
-3. **Final check**: make sure all tests are green, and that `gem build savon.gemspec` on main succeeds. If not, merge any fixes back to main and go to step 1.
+3. **Final check**: make sure all tests are green, and that `rake build` succeeds. If not, merge any fixes back to the release branch and go to step 1.
 4. [Draft a new release](https://github.com/savonrb/savon/releases/new) on Github.
-   - Create a tag matching the version in previous step - e.g. `v2.12.1` - prepend the version number with a "v". 
-   - Use `v[version]` for the release title, and copy the changelog into the release notes. 
-   - Click "Publish release" to commit the tag on Github.
-5. `git checkout` the newly commited tag, then `gem build savon.gemspec` to build the gem package locally. Use `gem push savon-[version].gem` to publish to rubygems.
+   - In the "Choose a tag" field, type the version tag - e.g. `v2.12.1` - and select "Create new tag on publish".
+   - Use `v[version]` for the release title, and copy the changelog into the release notes.
+   - Click "Publish release". Github creates and pushes the tag, which triggers the release workflow.
+5. Publishing to RubyGems.org is fully automated. The [Push gem workflow](https://github.com/savonrb/savon/actions/workflows/gem_push.yml) triggers on the published release and requires approval from a release manager via the `release` environment before credentials are issued. **Before approving**: confirm that CI is green on the release commit. Approve the deployment in the Actions UI and the gem will be built and pushed automatically.
 
 ## Updating minimum ruby version
 
