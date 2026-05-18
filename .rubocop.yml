@@ -1,0 +1,11 @@
+inherit_from: .rubocop_todo.yml
+
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  SuggestExtensions: true
+
+Gemspec/RequireMFA:
+  Enabled: true

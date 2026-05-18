@@ -4,5 +4,8 @@ gemspec
 
 gem "httpclient", "~> 2.7.1"
 
+gem "rubocop", "~> 1.86", ">= 1.86.2"
+gem "rubocop-rake", "~> 0.7.1"
+gem "rubocop-rspec", "~> 3.9"
 gem "simplecov", :require => false
 gem "net-smtp" if RUBY_VERSION >= "3.1.0"
