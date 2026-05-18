@@ -5,6 +5,17 @@ on:
   - pull_request
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: ruby/setup-ruby@97ecb7b512899eb71ab1bf2310a624c6f1589ac6 # v1.308.0
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+      - name: RuboCop
+        run: bundle exec rubocop --format github
+
   test:
     runs-on: ubuntu-latest
     strategy:
