@@ -145,7 +145,7 @@ RSpec.describe "Options" do
         net_unreachable = error.kind_of? Errno::ENETUNREACH
         socket_err = error.kind_of? SocketError
         if host_unreachable || net_unreachable || socket_err
-          warn "Warning: looks like your network may be down?!\n" +
+          warn "Warning: looks like your network may be down?!\n" \
                "-> skipping spec at #{__FILE__}:#{__LINE__}"
         else
           # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError

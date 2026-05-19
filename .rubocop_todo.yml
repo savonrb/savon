@@ -745,12 +745,6 @@ Style/Lambda:
     - 'spec/savon/soap_fault_spec.rb'
     - 'spec/support/fixture.rb'
 
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/LineEndConcatenation:
-  Exclude:
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:
