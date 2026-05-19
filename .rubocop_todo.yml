@@ -163,12 +163,6 @@ Layout/SpaceInsideHashLiteralBraces:
     - 'spec/savon/options_spec.rb'
     - 'spec/savon/qualified_message_spec.rb'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-Lint/AmbiguousRegexpLiteral:
-  Exclude:
-    - 'lib/savon/string_utils.rb'
-
 # Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: AllowSafeAssignment.
