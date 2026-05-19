@@ -140,19 +140,14 @@ RSpec.describe "Options" do
       non_routable_ip = "http://192.0.2.0"
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
 
-      expect { client.call(:authenticate) }.to(raise_error { |error|
-        host_unreachable = error.kind_of? Errno::EHOSTUNREACH
-        net_unreachable = error.kind_of? Errno::ENETUNREACH
-        socket_err = error.kind_of? SocketError
-        if host_unreachable || net_unreachable || socket_err
-          warn "Warning: looks like your network may be down?!\n" \
-               "-> skipping spec at #{__FILE__}:#{__LINE__}"
-        else
-          # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
-          #       instead of a specific client error [dh, 2012-12-08]
-          expect(error).to be_an(HTTPClient::ConnectTimeoutError)
-        end
-      })
+      # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
+      #       instead of a specific client error [dh, 2012-12-08]
+      expect { client.call(:authenticate) }.to raise_error(
+        an_instance_of(Errno::EHOSTUNREACH)  # network may be down
+          .or(an_instance_of(Errno::ENETUNREACH))  # network may be down
+          .or(an_instance_of(SocketError))  # network may be down
+          .or(an_instance_of(HTTPClient::ConnectTimeoutError))
+      )
     end
   end
 
