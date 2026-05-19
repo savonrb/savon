@@ -6,7 +6,6 @@ require "puma/minissl"
 require "integration/support/application"
 
 class IntegrationServer
-
   def self.run(options = {})
     server = new(options)
     server.run
@@ -79,5 +78,4 @@ class IntegrationServer
 
     context
   end
-
 end

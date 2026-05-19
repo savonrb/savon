@@ -2,7 +2,6 @@
 
 module Savon
   class BlockInterface
-
     def initialize(target)
       @target = target
     end
@@ -23,6 +22,5 @@ module Savon
     rescue NoMethodError
       @original.send(method, *args, &block)
     end
-
   end
 end

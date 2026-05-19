@@ -14,7 +14,6 @@ module Savon
   # named operations. A single Client instance is typically shared across
   # multiple calls to the same service.
   class Client
-
     def initialize(globals = {}, &block)
       unless globals.is_a? Hash
         raise_version1_initialize_error! globals
@@ -121,6 +120,5 @@ module Savon
     def raise_missing_wsdl_error!
       raise "Unable to inspect the service without a WSDL document."
     end
-
   end
 end

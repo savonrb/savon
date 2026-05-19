@@ -2,7 +2,6 @@
 
 class Endpoint
   class << self
-
     # Returns the WSDL endpoint for a given +type+ of request.
     def wsdl(type = nil)
       case type
@@ -22,6 +21,5 @@ class Endpoint
       else "http://example.com/validation/1.0/AuthenticationService"
       end
     end
-
   end
 end

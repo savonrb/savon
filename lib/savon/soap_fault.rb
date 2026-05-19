@@ -2,7 +2,6 @@
 
 module Savon
   class SOAPFault < Error
-
     def self.present?(http, xml = nil)
       body = xml || http.body
       body = body.scrub('') unless body.valid_encoding?
@@ -46,6 +45,5 @@ module Savon
         "(#{code}) #{text}"
       end
     end
-
   end
 end

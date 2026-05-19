@@ -131,7 +131,6 @@ module Savon
       def configure_redirect_handling(http_request)
         http_request.follow_redirect = @globals[:follow_redirects] if @globals.include?(:follow_redirects)
       end
-
     end
   end
 end

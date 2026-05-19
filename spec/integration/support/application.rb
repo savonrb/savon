@@ -4,7 +4,6 @@ require "rack"
 require "json"
 
 class IntegrationServer
-
   def self.respond_with(options = {})
     code = options.fetch(:code, 200)
     body = options.fetch(:body, "")

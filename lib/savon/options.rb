@@ -8,7 +8,6 @@ module Savon
   # Stores options in a hash, dispatches setter calls by method name,
   # raises UnknownOptionError for anything not defined on the subclass.
   class Options
-
     def initialize(options = {})
       @options = {}
       assign options

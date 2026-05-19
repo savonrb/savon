@@ -6,7 +6,6 @@ module Savon
   module SpecHelper
 
     class Interface
-
       def mock!
         Savon.observers << self
       end
@@ -49,7 +48,6 @@ module Savon
         @expectations.clear
         raise
       end
-
     end
 
     def savon

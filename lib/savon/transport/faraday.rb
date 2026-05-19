@@ -65,7 +65,6 @@ module Savon
         headers["Content-Length"] = body.bytesize.to_s
         headers
       end
-
     end
   end
 end

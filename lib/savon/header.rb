@@ -6,7 +6,6 @@ require "securerandom"
 
 module Savon
   class Header
-
     def initialize(globals, locals)
       @gyoku_options  = { :key_converter => globals[:convert_request_keys_to] }
 
@@ -86,6 +85,5 @@ module Savon
 
       wsse
     end
-
   end
 end

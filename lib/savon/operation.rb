@@ -16,7 +16,6 @@ module Savon
   # transport layer (execution, logging). Knows nothing about transport internals
   # such as proxy, SSL, or auth.
   class Operation
-
     # SOAP Content-Type values indexed by SOAP version.
     # SOAP 1.1 §6 (HTTP binding), SOAP 1.2 Part 2 §7.1.4 (HTTP media type)
     CONTENT_TYPE = {
@@ -181,6 +180,5 @@ module Savon
       raise Error, "Observers need to return a Savon::Transport::Response " \
                    "to mock the request or nil to execute the request."
     end
-
   end
 end

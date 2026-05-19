@@ -164,6 +164,5 @@ module Savon
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }
       @nori = Nori.new(non_nil_nori_options)
     end
-
   end
 end
