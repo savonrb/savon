@@ -175,7 +175,7 @@ RSpec.describe Savon::Builder do
         locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
         builder = Savon::Builder.new(:Save, multi_wsdl, globals, locals_with_msg)
         xml = builder.to_s
-        used_prefixes     = xml.scan(/<\/?([a-zA-Z][a-zA-Z0-9-]*):/).flatten.uniq
+        used_prefixes     = xml.scan(%r{</?([a-zA-Z][a-zA-Z0-9-]*):}).flatten.uniq
         declared_prefixes = xml.scan(/xmlns:([a-zA-Z][a-zA-Z0-9-]*)=/).flatten.uniq
         expect(used_prefixes).not_to be_empty
         expect(used_prefixes - declared_prefixes).to be_empty

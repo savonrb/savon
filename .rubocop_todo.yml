@@ -266,17 +266,6 @@ Style/OptionalBooleanParameter:
     - 'lib/savon/log_message.rb'
     - 'lib/savon/options.rb'
 
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, AllowInnerSlashes.
-# SupportedStyles: slashes, percent_r, mixed
-Style/RegexpLiteral:
-  Exclude:
-    - 'lib/savon/soap_fault.rb'
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/client_spec.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish.

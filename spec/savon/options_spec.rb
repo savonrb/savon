@@ -648,14 +648,14 @@ RSpec.describe "Options" do
         expect(request).to include("<wsse:Username>#{username}</wsse:Username>")
 
         # the nonce node
-        expect(request).to match(/<wsse:Nonce.*>.+\n?<\/wsse:Nonce>/)
+        expect(request).to match(%r{<wsse:Nonce.*>.+\n?</wsse:Nonce>})
 
         # the created node with a timestamp
-        expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+        expect(request).to match(%r{<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*</wsu:Created>})
 
         # the password node contains the encrypted value
         password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
-        expect(request).to match(/<wsse:Password Type="#{password_digest}">.+<\/wsse:Password>/)
+        expect(request).to match(%r{<wsse:Password Type="#{password_digest}">.+</wsse:Password>})
         expect(request).not_to include(password)
       end
     end
@@ -764,10 +764,10 @@ RSpec.describe "Options" do
         expect(request).to include("xmlns:wsu=\"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd\"")
 
         # the created node with a timestamp
-        expect(request).to match(/<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Created>/)
+        expect(request).to match(%r{<wsu:Created>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*</wsu:Created>})
 
         # the expires node with a timestamp
-        expect(request).to match(/<wsu:Expires>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*<\/wsu:Expires>/)
+        expect(request).to match(%r{<wsu:Expires>\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*</wsu:Expires>})
       end
     end
 
