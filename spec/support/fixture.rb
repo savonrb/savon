@@ -18,7 +18,7 @@ class Fixture
       define_method(type) { |fixture| self[type, fixture] }
     end
 
-  private
+    private
 
     def nori
       Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym })
