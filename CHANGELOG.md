@@ -1,6 +1,6 @@
 # Savon changelog
 
-## 2.17.0 (UPCOMING)
+## 2.17.0 (2026-05-19)
 
 **Add opt-in Faraday transport**
 

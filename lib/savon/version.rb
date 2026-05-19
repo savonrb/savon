@@ -1,5 +1,5 @@
 # frozen_string_literal: true
 
 module Savon
-  VERSION = '2.16.0'
+  VERSION = '2.17.0'
 end
