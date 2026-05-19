@@ -6,11 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 50
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterMagicComment:
-  Enabled: false
-
 # Offense count: 36
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.

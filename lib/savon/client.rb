@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "savon/operation"
 require "savon/transport/httpi"
 require "savon/transport/faraday"

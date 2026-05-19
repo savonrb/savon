@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "httpi"
 require "savon/transport/logging"
 require "savon/transport/response"

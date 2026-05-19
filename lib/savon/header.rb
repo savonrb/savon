@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "akami"
 require "gyoku"
 require "securerandom"

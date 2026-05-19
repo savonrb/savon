@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "savon/options"
 require "savon/block_interface"
 require "savon/builder"

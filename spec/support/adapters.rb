@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'httpi/adapter/httpclient'
 
 # Proxy adapter. Records all requests and passes them to HTTPClient
