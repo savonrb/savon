@@ -58,12 +58,12 @@ module Savon
     end
 
     def build_wsa_header
-       return '' unless @globals[:use_wsa_headers]
-       convert_to_xml({
-         'wsa:Action' => @locals[:soap_action],
-         'wsa:To' => @globals[:endpoint],
-         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
-       })
+      return '' unless @globals[:use_wsa_headers]
+      convert_to_xml({
+        'wsa:Action' => @locals[:soap_action],
+        'wsa:To' => @globals[:endpoint],
+        'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
+      })
     end
 
     def convert_to_xml(hash_or_string)
