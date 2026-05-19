@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Savon::LogMessage do
-
   it "returns the message if it's not XML" do
     message = log_message("hello", [:password], :pretty_print).to_s
     expect(message).to eq("hello")
@@ -48,5 +47,4 @@ RSpec.describe Savon::LogMessage do
   def log_message(*args)
     Savon::LogMessage.new(*args)
   end
-
 end

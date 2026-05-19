@@ -163,5 +163,4 @@ RSpec.describe Savon::SOAPFault do
 
     HTTPI::Response.new response[:code], response[:headers], response[:body]
   end
-
 end

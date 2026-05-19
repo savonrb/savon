@@ -4,7 +4,6 @@ require "spec_helper"
 
 module Savon
   RSpec.describe QualifiedMessage, "#to_hash" do
-
     context "if a key ends with !" do
       let(:used_namespaces) { {} }
       let(:key_converter) { :camelcase }
@@ -98,6 +97,5 @@ module Savon
         expect(xml).to eq good_xml
       end
     end
-
   end
 end

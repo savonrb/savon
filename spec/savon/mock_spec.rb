@@ -173,5 +173,4 @@ RSpec.describe "Savon's mock interface" do
 
     Savon.client defaults.merge(globals)
   end
-
 end

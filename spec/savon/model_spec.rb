@@ -4,7 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Model do
-
   before :all do
     @server = IntegrationServer.run
   end
@@ -202,7 +201,5 @@ RSpec.describe Savon::Model do
         expect(model).to respond_to(method)
       end
     end
-
   end
-
 end

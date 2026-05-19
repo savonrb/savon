@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Savon::StringUtils do
-
   describe "snakecase" do
     it "lowercases one word CamelCase" do
       expect(Savon::StringUtils.snakecase("Merb")).to eq("merb")
@@ -35,5 +34,4 @@ RSpec.describe Savon::StringUtils do
       expect(Savon::StringUtils.snakecase("User.GetEmail")).to eq("user_get_email")
     end
   end
-
 end

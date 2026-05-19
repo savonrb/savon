@@ -7,7 +7,6 @@ require "ostruct"
 require "logger"
 
 RSpec.describe "Options" do
-
   before :all do
     @server = IntegrationServer.run
   end
@@ -226,7 +225,6 @@ RSpec.describe "Options" do
 
       expect(response.http.body.scan(/<tns:Qualified>/).count).to eq(1)
     end
-
   end
 
   context "global :env_namespace" do
@@ -350,7 +348,6 @@ RSpec.describe "Options" do
 
       expect(HTTPI.logger).to be custom_logger
     end
-
   end
 
   context "global :log_level" do
@@ -490,7 +487,6 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key, :ssl_cert_key_password => cert_key_pass)
       client.call(:authenticate)
     end
-
   end
 
   context "global :ssl_cert_file" do
@@ -1141,5 +1137,4 @@ RSpec.describe "Options" do
     hash = JSON.parse(response.http.body)
     OpenStruct.new(hash)
   end
-
 end

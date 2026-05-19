@@ -4,7 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Message do
-
   before do
     @server = IntegrationServer.run
   end
@@ -58,5 +57,4 @@ RSpec.describe Savon::Message do
       end
     end
   end
-
 end

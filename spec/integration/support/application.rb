@@ -14,7 +14,6 @@ class IntegrationServer
   end
 
   Application = Rack::Builder.new do
-
     map "/" do
       run lambda { |env|
         IntegrationServer.respond_with :body => env["REQUEST_METHOD"].downcase
@@ -102,6 +101,5 @@ class IntegrationServer
         })
       }
     end
-
   end
 end

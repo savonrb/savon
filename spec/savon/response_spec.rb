@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Savon::Response do
-
   let(:globals) { Savon::GlobalOptions.new }
   let(:locals)  { Savon::LocalOptions.new }
 
@@ -282,5 +281,4 @@ RSpec.describe Savon::Response do
 
     Savon::Response.new(http_response, globals, locals)
   end
-
 end

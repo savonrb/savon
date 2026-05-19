@@ -4,7 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon do
-
   before :all do
     @server = IntegrationServer.run
   end
@@ -20,7 +19,6 @@ RSpec.describe Savon do
 
     it "allows to register an observer for every request" do
       observer = Class.new {
-
         def notify(operation_name, builder, globals, locals)
           @operation_name = operation_name
 
@@ -33,7 +31,6 @@ RSpec.describe Savon do
         end
 
         attr_reader :operation_name, :builder, :globals, :locals
-
       }.new
 
       Savon.observers << observer
@@ -104,5 +101,4 @@ RSpec.describe Savon do
       :log       => false
     )
   end
-
 end

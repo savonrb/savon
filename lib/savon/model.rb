@@ -48,7 +48,6 @@ module Savon
     # Class methods.
     def class_operation_module
       @class_operation_module ||= Module.new {
-
         def client(globals = {})
           @client ||= Savon::Client.new(globals)
         rescue InitializationError
@@ -67,18 +66,15 @@ module Savon
                 "client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
                 "client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
         end
-
       }.tap { |mod| extend(mod) }
     end
 
     # Instance methods.
     def instance_operation_module
       @instance_operation_module ||= Module.new {
-
         def client
           self.class.client
         end
-
       }.tap { |mod| include(mod) }
     end
 

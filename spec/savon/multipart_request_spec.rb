@@ -1,7 +1,6 @@
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-
   let(:globals)     { Savon::GlobalOptions.new({ :endpoint => "http://example.co", :namespace => "http://v1.example.com" }) }
   let(:no_wsdl)     { Wasabi::Document.new }
 
@@ -22,7 +21,6 @@ RSpec.describe Savon::Builder do
       expect(request_body).to match(/^Content-Location: #{attachment[:filename]}\s$/)
       expect(request_body).to include(Base64.encode64(attachment[:content]).strip)
     end
-
   end
 
   it "building multipart request from file" do
@@ -41,6 +39,5 @@ RSpec.describe Savon::Builder do
       expect(request_body).to match(/^Content-Location: #{id}\s$/)
       expect(request_body.gsub("\r", "")).to include(Base64.encode64(File.read(file)).strip)
     end
-
   end
 end

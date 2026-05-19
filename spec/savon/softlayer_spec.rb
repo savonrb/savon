@@ -3,7 +3,6 @@
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-
   subject(:builder) { Savon::Builder.new(:create_object, wsdl, globals, locals) }
 
   let(:globals)     { Savon::GlobalOptions.new }
