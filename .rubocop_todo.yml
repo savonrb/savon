@@ -218,18 +218,6 @@ Style/Documentation:
     - 'lib/savon/string_utils.rb'
 
 # Offense count: 4
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: always, always_true, never
-Style/FrozenStringLiteralComment:
-  Exclude:
-    - '**/*.arb'
-    - 'Gemfile'
-    - 'Rakefile'
-    - 'savon.gemspec'
-    - 'spec/savon/multipart_request_spec.rb'
-
-# Offense count: 4
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: MinBodyLength, AllowConsecutiveConditionals.
 Style/GuardClause:
