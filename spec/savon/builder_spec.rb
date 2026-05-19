@@ -98,9 +98,9 @@ RSpec.describe Savon::Builder do
       end
       let(:globals) { Savon::GlobalOptions.new(wsse_signature: signature) }
 
-      subject(:signed_message_nn) {Nokogiri::XML(builder.to_s).remove_namespaces!}
+      subject(:signed_message_nn) { Nokogiri::XML(builder.to_s).remove_namespaces! }
 
-      subject(:signed_message) {Nokogiri::XML(builder.to_s)}
+      subject(:signed_message) { Nokogiri::XML(builder.to_s) }
 
       it "should contain a header" do
         expect(signed_message_nn.xpath('/Envelope/Header').size).to eq(1)
