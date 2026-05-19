@@ -38,6 +38,12 @@ RSpec.describe Savon::Client do
       Savon.client(wsdl: "http://example.com")
     end
 
+    it "loads local WSDL's from a local file path" do
+      wsdl_path = File.expand_path('../fixtures/wsdl/authentication.xml', __dir__)
+      client = Savon.client(wsdl: wsdl_path, log: false)
+      expect(client.operations).to eq([:authenticate])
+    end
+
     it "raises if initialized with anything other than a Hash" do
       expect { Savon.client("http://example.com") }
         .to raise_error(Savon::InitializationError, %r{Some code tries to initialize Savon with the "http://example\.com" \(String\)})
