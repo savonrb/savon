@@ -34,7 +34,7 @@ RSpec.describe Savon::LogMessage do
   end
 
   it "properly applies Proc filter" do
-    filter = Proc.new do |document|
+    filter = proc do |document|
       document.xpath('//password').each do |node|
         node.content = "FILTERED"
       end

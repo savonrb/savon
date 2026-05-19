@@ -823,12 +823,6 @@ Style/PercentLiteralDelimiters:
     - 'spec/savon/response_spec.rb'
 
 # Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/Proc:
-  Exclude:
-    - 'spec/savon/log_message_spec.rb'
-
-# Offense count: 1
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle, AllowedCompactTypes.
 # SupportedStyles: compact, exploded
