@@ -1,8 +1,8 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Savon::LogMessage do
-
   it "returns the message if it's not XML" do
     message = log_message("hello", [:password], :pretty_print).to_s
     expect(message).to eq("hello")
@@ -25,7 +25,7 @@ RSpec.describe Savon::LogMessage do
   it "filters tags in a given message without pretty printing" do
     message = log_message("<root><password>secret</password></root>", [:password], false).to_s
     expect(message).to include("<password>***FILTERED***</password>")
-    expect(message).to_not include("\n  <password>***FILTERED***</password>") # no pretty printing
+    expect(message).not_to include("\n  <password>***FILTERED***</password>") # no pretty printing
   end
 
   it "filters tags in a given message with pretty printing" do
@@ -34,7 +34,7 @@ RSpec.describe Savon::LogMessage do
   end
 
   it "properly applies Proc filter" do
-    filter = Proc.new do |document|
+    filter = proc do |document|
       document.xpath('//password').each do |node|
         node.content = "FILTERED"
       end
@@ -47,5 +47,4 @@ RSpec.describe Savon::LogMessage do
   def log_message(*args)
     Savon::LogMessage.new(*args)
   end
-
 end

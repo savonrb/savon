@@ -2,7 +2,6 @@
 
 module Savon
   class HTTPError < Error
-
     def self.present?(http)
       http.error?
     end
@@ -20,8 +19,7 @@ module Savon
     end
 
     def to_hash
-      { :code => @http.code, :headers => @http.headers, :body => @http.body }
+      { code: @http.code, headers: @http.headers, body: @http.body }
     end
-
   end
 end

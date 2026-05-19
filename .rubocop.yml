@@ -5,7 +5,30 @@ plugins:
   - rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 3.0
   SuggestExtensions: true
 
 Gemspec/RequireMFA:
   Enabled: true
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+
+RSpec/ContextWording:
+  Enabled: false
+
+Style/BlockDelimiters:
+  EnforcedStyle: semantic
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+  EnforcedShorthandSyntax: never
+
+# Savon::BlockInterface calls block.binding, which fails
+# on C-level procs created by Symbol#to_proc.
+Style/SymbolProc:
+  Exclude:
+    - 'spec/savon/options_spec.rb'

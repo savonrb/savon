@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module Savon
 
+module Savon
   Error                 = Class.new(RuntimeError)
   InitializationError   = Class.new(Error)
   UnknownOptionError    = Class.new(Error)
@@ -16,11 +16,10 @@ module Savon
   end
 
   def self.notify_observers(operation_name, builder, globals, locals)
-    observers.inject(nil) do |response, observer|
+    observers.inject(nil) do |_response, observer|
       observer.notify(operation_name, builder, globals, locals)
     end
   end
-
 end
 
 require "savon/version"

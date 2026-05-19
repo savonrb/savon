@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "savon/operation"
 require "savon/transport/httpi"
 require "savon/transport/faraday"
@@ -13,9 +14,8 @@ module Savon
   # named operations. A single Client instance is typically shared across
   # multiple calls to the same service.
   class Client
-
     def initialize(globals = {}, &block)
-      unless globals.kind_of? Hash
+      unless globals.is_a? Hash
         raise_version1_initialize_error! globals
       end
 
@@ -104,9 +104,9 @@ module Savon
 
     def raise_version1_initialize_error!(object)
       raise InitializationError,
-        "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
-        "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
-        "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
+            "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
+            "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
+            "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
     end
 
     def raise_initialization_error!
@@ -120,6 +120,5 @@ module Savon
     def raise_missing_wsdl_error!
       raise "Unable to inspect the service without a WSDL document."
     end
-
   end
 end

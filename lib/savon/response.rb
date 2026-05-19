@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "nori"
 require "savon/soap_fault"
 require "savon/http_error"
@@ -6,14 +7,14 @@ require "savon/http_error"
 module Savon
   class Response
     CRLF = /\r\n/
-    WSP  = /[#{%Q|\x9\x20|}]/
+    WSP  = /[\t ]/
 
     def initialize(http, globals, locals)
-      @http    = http
-      @globals = globals
-      @locals  = locals
-      @attachments = []
-      @xml     = ''
+      @http            = http
+      @globals         = globals
+      @locals          = locals
+      @attachments     = []
+      @xml             = ''
       @has_parsed_body = false
 
       build_soap_and_http_errors!
@@ -25,7 +26,7 @@ module Savon
     def success?
       !soap_fault? && !http_error?
     end
-    alias_method :successful?, :success?
+    alias successful? success?
 
     def soap_fault?
       SOAPFault.present?(@http, xml)
@@ -43,15 +44,16 @@ module Savon
       find('Body')
     end
 
-    alias_method :to_hash, :body
+    alias to_hash body
 
     def to_array(*path)
-      result = path.inject body do |memo, key|
+      result = path.inject(body) { |memo, key|
         return [] if memo[key].nil?
-        memo[key]
-      end
 
-      result.kind_of?(Array) ? result.compact : [result].compact
+        memo[key]
+      }
+
+      result.is_a?(Array) ? result.compact : [result].compact
     end
 
     def hash
@@ -72,8 +74,8 @@ module Savon
       end
     end
 
-    alias_method :to_xml, :xml
-    alias_method :to_s,   :xml
+    alias to_xml xml
+    alias to_s xml
 
     def doc
       @doc ||= Nokogiri.XML(xml)
@@ -107,19 +109,20 @@ module Savon
 
     def boundary
       return unless multipart?
+
       Mail::Field.new('content-type', http.headers['content-type']).parameters['boundary']
     end
 
     def parse_body
       http.body.force_encoding Encoding::ASCII_8BIT
       parts = http.body.split(/(?:\A|\r\n)--#{Regexp.escape(boundary)}(?=(?:--)?\s*$)/)
-      parts[1..-1].to_a.each_with_index do |part, index|
+      parts[1..].to_a.each_with_index do |part, index|
         header_part, body_part = part.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
         section = Mail::Part.new(
           body: body_part
         )
         section.header = header_part
-        if index == 0
+        if index.zero?
           @xml = section.body.to_s
         else
           @attachments << section
@@ -139,7 +142,7 @@ module Savon
     end
 
     def raise_invalid_response_error!
-      raise InvalidResponseError, "Unable to parse response body:\n" + xml.inspect
+      raise InvalidResponseError, "Unable to parse response body:\n#{xml.inspect}"
     end
 
     def xml_namespaces
@@ -150,17 +153,16 @@ module Savon
       return @nori if @nori
 
       nori_options = {
-        :delete_namespace_attributes => @globals[:delete_namespace_attributes],
-        :strip_namespaces            => @globals[:strip_namespaces],
-        :convert_tags_to             => @globals[:convert_response_tags_to],
-        :convert_attributes_to       => @globals[:convert_attributes_to],
-        :advanced_typecasting        => @locals[:advanced_typecasting],
-        :parser                      => @locals[:response_parser]
+        delete_namespace_attributes: @globals[:delete_namespace_attributes],
+        strip_namespaces: @globals[:strip_namespaces],
+        convert_tags_to: @globals[:convert_response_tags_to],
+        convert_attributes_to: @globals[:convert_attributes_to],
+        advanced_typecasting: @locals[:advanced_typecasting],
+        parser: @locals[:response_parser]
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }
       @nori = Nori.new(non_nil_nori_options)
     end
-
   end
 end

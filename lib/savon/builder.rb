@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "savon/header"
 require "savon/message"
 require "nokogiri"
@@ -12,12 +13,12 @@ module Savon
     SCHEMA_TYPES = {
       "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
-    }
+    }.freeze
 
     SOAP_NAMESPACE = {
       1 => "http://schemas.xmlsoap.org/soap/envelope/",
       2 => "http://www.w3.org/2003/05/soap-envelope"
-    }
+    }.freeze
 
     WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
 
@@ -34,7 +35,7 @@ module Savon
     end
 
     def pretty
-      Nokogiri.XML(to_s).to_xml(:indent => 2)
+      Nokogiri.XML(to_s).to_xml(indent: 2)
     end
 
     def build_document
@@ -71,30 +72,29 @@ module Savon
 
     def to_s
       return @locals[:xml] if @locals.include? :xml
+
       build_document
     end
 
     private
 
     def convert_type_definitions_to_hash
-      @wsdl.type_definitions.inject({}) do |memo, (path, type)|
+      @wsdl.type_definitions.each_with_object({}) do |(path, type), memo|
         memo[path] = type
-        memo
       end
     end
 
     def convert_type_namespaces_to_hash
-      @wsdl.type_namespaces.inject({}) do |memo, (path, uri)|
+      @wsdl.type_namespaces.each_with_object({}) do |(path, uri), memo|
         key, value = use_namespace(path, uri)
         memo[key] = value
-        memo
       end
     end
 
     def use_namespace(path, uri)
       @internal_namespace_count ||= 0
 
-      unless identifier = namespace_by_uri(uri)
+      unless (identifier = namespace_by_uri(uri))
         wsdl_identifier = @wsdl.document? ? @wsdl.parser.namespaces.key(uri) : nil
         # The prefix may already be taken by the target namespace or a user-supplied
         # :namespaces override - fall back to ins0, ins1... rather than overwriting it.
@@ -120,7 +120,7 @@ module Savon
           @globals[:namespace] || @wsdl.namespace
 
         # check env_namespace
-        namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
+        namespaces["xmlns#{env_namespace && env_namespace != '' ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
 
         namespaces
@@ -137,8 +137,9 @@ module Savon
 
     def namespaced_message_tag
       tag_name = message_tag
-      return [tag_name] if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
-      if namespace_identifier == nil
+      return [tag_name] if @wsdl.document? && @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+
+      if namespace_identifier.nil?
         [tag_name, message_attributes]
       elsif @used_namespaces[[tag_name.to_s]]
         [@used_namespaces[[tag_name.to_s]], tag_name, message_attributes]
@@ -156,6 +157,7 @@ module Savon
       message_tag = serialized_message_tag[1]
       @wsdl.soap_input(@operation_name.to_sym)[message_tag].each_pair do |message, type|
         break if @locals[:message].nil?
+
         message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
         message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
         messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
@@ -169,7 +171,7 @@ module Savon
       message_tag = wsdl_tag_name.keys.first if wsdl_tag_name.is_a?(Hash)
       message_tag ||= @locals[:message_tag]
       message_tag ||= wsdl_tag_name
-      message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
+      message_tag ||= Gyoku.xml_tag(@operation_name, key_converter: @globals[:convert_request_keys_to])
 
       message_tag.to_sym
     end
@@ -179,7 +181,7 @@ module Savon
     end
 
     def body_message
-      if @wsdl.document? and @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+      if @wsdl.document? && @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
         serialized_messages
       else
         message.to_s
@@ -213,7 +215,7 @@ module Savon
 
     def builder
       builder = ::Builder::XmlMarkup.new
-      builder.instruct!(:xml, :encoding => @globals[:encoding])
+      builder.instruct!(:xml, encoding: @globals[:encoding])
       builder
     end
 
@@ -246,7 +248,7 @@ module Savon
 
       # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
       # should redefine the sort order, because the soap request xml should be the first
-      multipart_message.body.set_sort_order [ "text/xml" ]
+      multipart_message.body.set_sort_order ["text/xml"]
 
       multipart_message.body.encoded(multipart_message.content_transfer_encoding)
     end
@@ -261,10 +263,10 @@ module Savon
       end
       multipart_message.add_part xml_part
 
-      #request.headers["Content-Type"] = "multipart/related; boundary=\"#{multipart_message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
+      # request.headers["Content-Type"] = "multipart/related; boundary=\"#{multipart_message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
       @multipart = {
         multipart_boundary: multipart_message.body.boundary,
-        start: xml_part.content_id,
+        start: xml_part.content_id
       }
 
       multipart_message

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe Savon do
@@ -38,7 +39,7 @@ RSpec.describe Savon do
   end
 
   def message_tag_for(fixture, operation_name)
-    globals     = Savon::GlobalOptions.new(:log => false)
+    globals     = Savon::GlobalOptions.new(log: false)
     wsdl        = Wasabi::Document.new Fixture.wsdl(fixture)
     transport   = Savon::Transport::HTTPI.new(globals)
     operation   = Savon::Operation.create(operation_name, wsdl, globals, transport)
@@ -52,7 +53,7 @@ RSpec.describe Savon do
 
   def extract_message_tag_from_request(xml)
     match = xml.match(/<\w+?:Body><(.+?):(.+?)>/)
-    [ match[1], match[2] ]
+    [match[1], match[2]]
   end
 
   def extract_namespace_from_request(nsid, xml)

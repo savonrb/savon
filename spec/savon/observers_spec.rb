@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon do
-
   before :all do
     @server = IntegrationServer.run
   end
@@ -13,13 +13,12 @@ RSpec.describe Savon do
   end
 
   describe ".observers" do
-    after :each do
-      Savon.observers.clear
+    after do
+      described_class.observers.clear
     end
 
     it "allows to register an observer for every request" do
-      observer = Class.new {
-
+      observer = Class.new do
         def notify(operation_name, builder, globals, locals)
           @operation_name = operation_name
 
@@ -32,10 +31,9 @@ RSpec.describe Savon do
         end
 
         attr_reader :operation_name, :builder, :globals, :locals
+      end.new
 
-      }.new
-
-      Savon.observers << observer
+      described_class.observers << observer
 
       new_client.call(:authenticate)
 
@@ -47,13 +45,13 @@ RSpec.describe Savon do
     end
 
     it "accepts a Transport::Response from an observer" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           Savon::Transport::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
-      }.new
+      end.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       expect {
         response = new_client.call(:authenticate)
@@ -64,14 +62,14 @@ RSpec.describe Savon do
     end
 
     it "allows observers to return deprecated HTTPI::Responses" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           # return a response to mock the request
           HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
-      }.new
+      end.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       expect {
         response = new_client.call(:authenticate)
@@ -82,26 +80,25 @@ RSpec.describe Savon do
     end
 
     it "raises if an observer returns something other than nil, HTTPI::Response, or Transport::Response" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           []
         end
-      }.new
+      end.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
-      expect { new_client.call(:authenticate) }.
-        to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \
+      expect { new_client.call(:authenticate) }
+        .to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \
                                      "to mock the request or nil to execute the request.")
     end
   end
 
   def new_client
     Savon.client(
-      :endpoint  => @server.url(:repeat),
-      :namespace => "http://v1.example.com",
-      :log       => false
+      endpoint: @server.url(:repeat),
+      namespace: "http://v1.example.com",
+      log: false
     )
   end
-
 end

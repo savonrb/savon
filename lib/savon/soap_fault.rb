@@ -1,12 +1,12 @@
 # frozen_string_literal: true
+
 module Savon
   class SOAPFault < Error
-
     def self.present?(http, xml = nil)
       body = xml || http.body
       body = body.scrub('') unless body.valid_encoding?
       fault_node  = body.include?("Fault>")
-      soap1_fault = body.match(/faultcode\/?\>/) && body.match(/faultstring\/?\>/)
+      soap1_fault = body.match(%r{faultcode/?>}) && body.match(%r{faultstring/?>})
       soap2_fault = body.include?("Code>") && body.include?("Reason>")
 
       fault_node && (soap1_fault || soap2_fault)
@@ -45,6 +45,5 @@ module Savon
         "(#{code}) #{text}"
       end
     end
-
   end
 end

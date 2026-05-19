@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "logger"
 require "httpi"
 
@@ -7,7 +8,6 @@ module Savon
   # Stores options in a hash, dispatches setter calls by method name,
   # raises UnknownOptionError for anything not defined on the subclass.
   class Options
-
     def initialize(options = {})
       @options = {}
       assign options
@@ -21,7 +21,7 @@ module Savon
 
     def []=(option, value)
       value = [value].flatten
-      self.send(option, *value)
+      send(option, *value)
     end
 
     def include?(option)
@@ -32,7 +32,7 @@ module Savon
 
     def assign(options)
       options.each do |option, value|
-        self.send(option, value)
+        send(option, value)
       end
     end
 
@@ -51,11 +51,12 @@ module Savon
     #   global == [user, pass] && local == nil   => [user, pass]
     def wsse_auth(*credentials)
       credentials.flatten!
-      if credentials.size == 1
-        @options[:wsse_auth] = credentials.first
-      else
-        @options[:wsse_auth] = credentials
-      end
+      @options[:wsse_auth] =
+        if credentials.size == 1
+          credentials.first
+        else
+          credentials
+        end
     end
 
     # Instruct Akami to enable wsu:Timestamp headers.
@@ -83,29 +84,29 @@ module Savon
     # Options with a :default entry are only flagged when the caller
     # sets a value that differs from the GlobalOptions default.
     FARADAY_INCOMPATIBLE_GLOBALS = {
-      proxy:                 { hint: "client.faraday.proxy = url" },
-      open_timeout:          { hint: "client.faraday.options.timeout = N" },
-      read_timeout:          { hint: "client.faraday.options.timeout = N" },
-      write_timeout:         { hint: "client.faraday.options.write_timeout = N" },
-      ssl_version:           { hint: "client.faraday.ssl.version = version" },
-      ssl_min_version:       { hint: "client.faraday.ssl.min_version = version" },
-      ssl_max_version:       { hint: "client.faraday.ssl.max_version = version" },
-      ssl_verify_mode:       { hint: "client.faraday.ssl.verify = true/false" },
-      ssl_cert_key_file:     { hint: "client.faraday.ssl.client_key_file = path" },
-      ssl_cert_key:          { hint: "client.faraday.ssl.client_key = key" },
+      proxy: { hint: "client.faraday.proxy = url" },
+      open_timeout: { hint: "client.faraday.options.timeout = N" },
+      read_timeout: { hint: "client.faraday.options.timeout = N" },
+      write_timeout: { hint: "client.faraday.options.write_timeout = N" },
+      ssl_version: { hint: "client.faraday.ssl.version = version" },
+      ssl_min_version: { hint: "client.faraday.ssl.min_version = version" },
+      ssl_max_version: { hint: "client.faraday.ssl.max_version = version" },
+      ssl_verify_mode: { hint: "client.faraday.ssl.verify = true/false" },
+      ssl_cert_key_file: { hint: "client.faraday.ssl.client_key_file = path" },
+      ssl_cert_key: { hint: "client.faraday.ssl.client_key = key" },
       ssl_cert_key_password: { hint: "configure ssl context on client.faraday.ssl" },
-      ssl_cert_file:         { hint: "client.faraday.ssl.client_cert_file = path" },
-      ssl_cert:              { hint: "client.faraday.ssl.client_cert = cert" },
-      ssl_ca_cert_file:      { hint: "client.faraday.ssl.ca_file = path" },
-      ssl_ca_cert:           { hint: "client.faraday.ssl.ca_cert = cert" },
-      ssl_ciphers:           { hint: "client.faraday.ssl.ciphers = ciphers" },
-      ssl_ca_cert_path:      { hint: "client.faraday.ssl.ca_path = path" },
-      ssl_cert_store:        { hint: "client.faraday.ssl.cert_store = store" },
-      basic_auth:            { hint: "client.faraday.request :basic_auth, user, pass" },
-      digest_auth:           { hint: "client.faraday.request :authorization, :Digest, credentials" },
-      ntlm:                  { hint: "client.faraday.request :ntlm, user, pass" },
-      follow_redirects:      { hint: "client.faraday.use :follow_redirects", default: false },
-      adapter:               { hint: "client.faraday.adapter :net_http", default: nil }
+      ssl_cert_file: { hint: "client.faraday.ssl.client_cert_file = path" },
+      ssl_cert: { hint: "client.faraday.ssl.client_cert = cert" },
+      ssl_ca_cert_file: { hint: "client.faraday.ssl.ca_file = path" },
+      ssl_ca_cert: { hint: "client.faraday.ssl.ca_cert = cert" },
+      ssl_ciphers: { hint: "client.faraday.ssl.ciphers = ciphers" },
+      ssl_ca_cert_path: { hint: "client.faraday.ssl.ca_path = path" },
+      ssl_cert_store: { hint: "client.faraday.ssl.cert_store = store" },
+      basic_auth: { hint: "client.faraday.request :basic_auth, user, pass" },
+      digest_auth: { hint: "client.faraday.request :authorization, :Digest, credentials" },
+      ntlm: { hint: "client.faraday.request :ntlm, user, pass" },
+      follow_redirects: { hint: "client.faraday.use :follow_redirects", default: false },
+      adapter: { hint: "client.faraday.adapter :net_http", default: nil }
     }.freeze
 
     # Validates that the chosen transport is compatible with the options set.
@@ -121,18 +122,17 @@ module Savon
               "Add to your Gemfile: gem 'faraday'"
       end
 
-      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map do |option, config|
+      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map { |option, config|
         next unless include?(option)
         next if config.key?(:default) && self[option] == config[:default]
 
         "  #{option} - Use: #{config[:hint]}"
-      end
+      }
 
       return if violations.empty?
 
       raise InitializationError,
-            "The following options are not supported with transport: :faraday:\n" +
-            violations.join("\n")
+            "The following options are not supported with transport: :faraday:\n#{violations.join("\n")}"
     end
 
     # Proxy server to use for all requests.
@@ -273,29 +273,29 @@ module Savon
       @option_type = :global
 
       defaults = {
-        :encoding                    => "UTF-8",
-        :soap_version                => 1,
-        :namespaces                  => {},
-        :logger                      => Logger.new($stdout),
-        :log                         => false,
-        :log_headers                 => true,
-        :filters                     => [],
-        :pretty_print_xml            => false,
-        :raise_errors                => true,
-        :strip_namespaces            => true,
-        :delete_namespace_attributes => false,
-        :convert_response_tags_to    => lambda { |tag| StringUtils.snakecase(tag).to_sym},
-        :convert_attributes_to       => lambda { |k,v| [k,v] },
-        :multipart                   => false,
-        :use_wsa_headers             => false,
-        :no_message_tag              => false,
-        :unwrap                      => false,
-        :host                        => nil,
-        :transport                   => :httpi,
+        encoding: "UTF-8",
+        soap_version: 1,
+        namespaces: {},
+        logger: Logger.new($stdout),
+        log: false,
+        log_headers: true,
+        filters: [],
+        pretty_print_xml: false,
+        raise_errors: true,
+        strip_namespaces: true,
+        delete_namespace_attributes: false,
+        convert_response_tags_to: ->(tag) { StringUtils.snakecase(tag).to_sym },
+        convert_attributes_to: ->(k, v) { [k, v] },
+        multipart: false,
+        use_wsa_headers: false,
+        no_message_tag: false,
+        unwrap: false,
+        host: nil,
+        transport: :httpi,
 
         # httpi transport defaults
-        :adapter                     => nil,
-        :follow_redirects            => false
+        adapter: nil,
+        follow_redirects: false
       }
 
       options = defaults.merge(options)
@@ -392,7 +392,7 @@ module Savon
 
     # Changes the Logger's log level.
     def log_level(level)
-      levels = { :debug => 0, :info => 1, :warn => 2, :error => 3, :fatal => 4 }
+      levels = { debug: 0, info: 1, warn: 2, error: 3, fatal: 4 }
 
       unless levels.include? level
         raise ArgumentError, "Invalid log level: #{level.inspect}\n" \
@@ -486,9 +486,9 @@ module Savon
       @option_type = :local
 
       defaults = {
-        :advanced_typecasting => true,
-        :response_parser      => :nokogiri,
-        :multipart            => false
+        advanced_typecasting: true,
+        response_parser: :nokogiri,
+        multipart: false
       }
 
       super defaults.merge(options)

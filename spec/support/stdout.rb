@@ -1,6 +1,6 @@
 # frozen_string_literal: true
-module SpecSupport
 
+module SpecSupport
   def mock_stdout
     original_stdout = $stdout
 
@@ -22,5 +22,4 @@ module SpecSupport
     $stdout = original_stdout
     result
   end
-
 end

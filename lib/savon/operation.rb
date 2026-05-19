@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "savon/options"
 require "savon/block_interface"
 require "savon/builder"
@@ -15,7 +16,6 @@ module Savon
   # transport layer (execution, logging). Knows nothing about transport internals
   # such as proxy, SSL, or auth.
   class Operation
-
     # SOAP Content-Type values indexed by SOAP version.
     # SOAP 1.1 §6 (HTTP binding), SOAP 1.2 Part 2 §7.1.4 (HTTP media type)
     CONTENT_TYPE = {
@@ -45,14 +45,14 @@ module Savon
                                      "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
     rescue Wasabi::Resolver::HTTPError => e
-      raise HTTPError.new(e.response)
+      raise HTTPError, e.response
     end
 
     def self.ensure_name_is_symbol!(operation_name)
-      unless operation_name.is_a? Symbol
-        raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
-                             "Actual: #{operation_name.inspect} (#{operation_name.class})"
-      end
+      return if operation_name.is_a? Symbol
+
+      raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
+                           "Actual: #{operation_name.inspect} (#{operation_name.class})"
     end
 
     def initialize(name, wsdl, globals, transport)
@@ -76,11 +76,12 @@ module Savon
       builder  = build(locals, &block)
       response = Savon.notify_observers(@name, builder, @globals, @locals)
 
-      if response.nil?
-        response = @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
-      else
-        response = normalize_observer_response(response)
-      end
+      response =
+        if response.nil?
+          @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
+        else
+          normalize_observer_response(response)
+        end
 
       create_response(response)
     end
@@ -147,10 +148,10 @@ module Savon
 
       # get the soap_action from local options
       @locals[:soap_action] ||
-      # with no local option, but a wsdl, ask it for the soap_action
-      @wsdl.document? && @wsdl.soap_action(@name.to_sym) ||
-      # if there is no soap_action up to this point, fallback to a simple default
-      Gyoku.xml_tag(@name, :key_converter => @globals[:convert_request_keys_to])
+        # with no local option, but a wsdl, ask it for the soap_action
+        @wsdl.document? && @wsdl.soap_action(@name.to_sym) ||
+        # if there is no soap_action up to this point, fallback to a simple default
+        Gyoku.xml_tag(@name, key_converter: @globals[:convert_request_keys_to])
     end
 
     def endpoint
@@ -179,6 +180,5 @@ module Savon
       raise Error, "Observers need to return a Savon::Transport::Response " \
                    "to mock the request or nil to execute the request."
     end
-
   end
 end

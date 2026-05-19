@@ -1,10 +1,10 @@
 # frozen_string_literal: true
+
 require "savon/qualified_message"
 require "gyoku"
 
 module Savon
   class Message
-
     def initialize(message_tag, namespace_identifier, types, used_namespaces, message, element_form_default, key_converter, unwrap)
       @message_tag = message_tag
       @namespace_identifier = namespace_identifier
@@ -18,21 +18,20 @@ module Savon
     end
 
     def to_s
-      return @message.to_s unless @message.kind_of? Hash
+      return @message.to_s unless @message.is_a? Hash
 
       if @element_form_default == :qualified
         @message = QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(@message, [@message_tag.to_s])
       end
 
       gyoku_options = {
-        :element_form_default => @element_form_default,
-        :namespace            => @namespace_identifier,
-        :key_converter        => @key_converter,
-        :unwrap               => @unwrap
+        element_form_default: @element_form_default,
+        namespace: @namespace_identifier,
+        key_converter: @key_converter,
+        unwrap: @unwrap
       }
 
       Gyoku.xml(@message, gyoku_options)
     end
-
   end
 end

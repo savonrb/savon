@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "bundler"
 require "byebug"
 Bundler.setup(:default, :development)
@@ -6,7 +7,7 @@ Bundler.setup(:default, :development)
 unless RUBY_PLATFORM =~ /java/
   require "simplecov"
   SimpleCov.start do
-      add_filter "spec"
+    add_filter "spec"
   end
 end
 
@@ -18,7 +19,7 @@ require "rspec"
 require "httpclient"
 
 support_files = File.expand_path("spec/support/**/*.rb")
-Dir[support_files].sort.each { |file| require file }
+Dir[support_files].sort.each do |file| require file end
 
 RSpec.configure do |config|
   config.include SpecSupport

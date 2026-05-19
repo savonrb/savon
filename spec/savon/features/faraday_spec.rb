@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 require "integration/support/server"
 require "json"
@@ -17,10 +18,10 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   def new_client(extra = {})
     Savon.client(
-      { :endpoint  => @server.url(:repeat),
-        :namespace => "http://v1.example.com",
-        :transport => :faraday,
-        :log       => false }.merge(extra)
+      { endpoint: @server.url(:repeat),
+        namespace: "http://v1.example.com",
+        transport: :faraday,
+        log: false }.merge(extra)
     )
   end
 
@@ -29,7 +30,7 @@ RSpec.describe "Savon client with transport: :faraday" do
   end
 
   it "routes a SOAP call through the Faraday transport and returns a Savon::Response" do
-    response = new_client.call(:authenticate, :message => { :symbol => "AAPL" })
+    response = new_client.call(:authenticate, message: { symbol: "AAPL" })
     expect(response).to        be_a(Savon::Response)
     expect(response.http).to   be_a(Savon::Transport::Response)
     expect(response.http.body).to include("<symbol>AAPL</symbol>")
@@ -37,10 +38,10 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "applies a default header set on client.faraday to the outbound request" do
     client = Savon.client(
-      :endpoint  => @server.url(:inspect_request),
-      :namespace => "http://v1.example.com",
-      :transport => :faraday,
-      :log       => false
+      endpoint: @server.url(:inspect_request),
+      namespace: "http://v1.example.com",
+      transport: :faraday,
+      log: false
     )
     client.faraday.headers["X-Token"] = "from-faraday"
 
@@ -50,35 +51,35 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "fetches a remote WSDL through the Faraday connection" do
     client = Savon.client(
-      :wsdl      => @server.url("authentication.wsdl"),
-      :transport => :faraday,
-      :log       => false
+      wsdl: @server.url("authentication.wsdl"),
+      transport: :faraday,
+      log: false
     )
     expect(client.operations).to include(:authenticate)
   end
 
   it "sends a multipart request and parses a multipart response" do
     client = Savon.client(
-      :endpoint  => @server.url(:multipart),
-      :namespace => "http://v1.example.com",
-      :transport => :faraday,
-      :log       => false
+      endpoint: @server.url(:multipart),
+      namespace: "http://v1.example.com",
+      transport: :faraday,
+      log: false
     )
-    response = client.call(:authenticate) do
-      attachments [{ :filename => "x1.xml", :content => "<xml>abc</xml>" }]
-    end
+    response = client.call(:authenticate) {
+      attachments [{ filename: "x1.xml", content: "<xml>abc</xml>" }]
+    }
 
     expect(response.multipart?).to be true
   end
 
   it "forwards cookies as the Cookie: header" do
     client = Savon.client(
-      :endpoint  => @server.url(:inspect_request),
-      :namespace => "http://v1.example.com",
-      :transport => :faraday,
-      :log       => false
+      endpoint: @server.url(:inspect_request),
+      namespace: "http://v1.example.com",
+      transport: :faraday,
+      log: false
     )
-    response = client.call(:authenticate, :cookies => [HTTPI::Cookie.new("session=abc")])
+    response = client.call(:authenticate, cookies: [HTTPI::Cookie.new("session=abc")])
     expect(inspect_request(response).cookie).to include("session=abc")
   end
 end

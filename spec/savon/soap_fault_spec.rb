@@ -1,22 +1,23 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Savon::SOAPFault do
-  let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
-  let(:empty_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
-  let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
-  let(:soap_fault_funky) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault_funky)), nori }
-  let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
-  let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
-  let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
-  let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
-  let(:no_fault) { Savon::SOAPFault.new new_response, nori }
+  let(:soap_fault) { described_class.new new_response(body: Fixture.response(:soap_fault)), nori }
+  let(:empty_soap_fault) { described_class.new new_response(body: Fixture.response(:empty_soap_fault)), nori }
+  let(:soap_fault2) { described_class.new new_response(body: Fixture.response(:soap_fault12)), nori }
+  let(:soap_fault_funky) { described_class.new new_response(body: Fixture.response(:soap_fault_funky)), nori }
+  let(:soap_fault_nc) { described_class.new new_response(body: Fixture.response(:soap_fault)), nori_no_convert }
+  let(:soap_fault_nc2) { described_class.new new_response(body: Fixture.response(:soap_fault12)), nori_no_convert }
+  let(:another_soap_fault) { described_class.new new_response(body: Fixture.response(:another_soap_fault)), nori }
+  let(:soap_fault_no_body) { described_class.new new_response(body: {}), nori }
+  let(:no_fault) { described_class.new new_response, nori }
 
-  let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym }) }
-  let(:nori_no_convert) { Nori.new(:strip_namespaces => true, :convert_tags_to => nil) }
+  let(:nori) { Nori.new(strip_namespaces: true, convert_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).to_sym }) }
+  let(:nori_no_convert) { Nori.new(strip_namespaces: true, convert_tags_to: nil) }
 
   it "inherits from Savon::Error" do
-    expect(Savon::SOAPFault.ancestors).to include(Savon::Error)
+    expect(described_class.ancestors).to include(Savon::Error)
   end
 
   describe "#http" do
@@ -27,77 +28,77 @@ RSpec.describe Savon::SOAPFault do
 
   describe ".present?" do
     it "returns true if the HTTP response contains a SOAP 1.1 fault" do
-      http = new_response(:body => Fixture.response(:soap_fault))
-      expect(Savon::SOAPFault.present? http).to be_truthy
+      http = new_response(body: Fixture.response(:soap_fault))
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP 1.1 fault with empty fault tags" do
-      http = new_response(:body => Fixture.response(:empty_soap_fault))
-      expect(Savon::SOAPFault.present? http).to be_truthy
+      http = new_response(body: Fixture.response(:empty_soap_fault))
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP 1.2 fault" do
-      http = new_response(:body => Fixture.response(:soap_fault12))
-      expect(Savon::SOAPFault.present? http).to be_truthy
+      http = new_response(body: Fixture.response(:soap_fault12))
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP fault with different namespaces" do
-      http = new_response(:body => Fixture.response(:another_soap_fault))
-      expect(Savon::SOAPFault.present? http).to be_truthy
+      http = new_response(body: Fixture.response(:another_soap_fault))
+      expect(described_class).to be_present(http)
     end
 
     it "returns false unless the HTTP response contains a SOAP fault" do
-      expect(Savon::SOAPFault.present? new_response).to be_falsey
+      expect(described_class).not_to be_present(new_response)
     end
 
     it "returns true if the http body has invalid encoding" do
       body = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
-      expect(body.valid_encoding?).to be_falsey
-      http = new_response(:body => body)
-      expect(Savon::SOAPFault.present? http).to be_truthy
+      expect(body).not_to be_valid_encoding
+      http = new_response(body: body)
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the xml argument has invalid encoding" do
       xml = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
-      expect(xml.valid_encoding?).to be_falsey
-      expect(Savon::SOAPFault.present? new_response, xml).to be_truthy
+      expect(xml).not_to be_valid_encoding
+      expect(described_class).to be_present(new_response, xml)
     end
 
     it "uses the xml argument over http body when provided" do
-      empty_http = new_response(:body => "")
+      empty_http = new_response(body: "")
       xml = Fixture.response(:soap_fault)
-      expect(Savon::SOAPFault.present? empty_http, xml).to be_truthy
+      expect(described_class).to be_present(empty_http, xml)
     end
   end
 
-  [:message, :to_s].each do |method|
+  %i[message to_s].each do |method|
     describe "##{method}" do
       it "returns a SOAP 1.1 fault message" do
-        expect(soap_fault.send method).to eq("(soap:Server) Fault occurred while processing.")
+        expect(soap_fault.send(method)).to eq("(soap:Server) Fault occurred while processing.")
       end
 
       it "returns an empty fault message" do
-        expect(empty_soap_fault.send method).to eq(nil)
+        expect(empty_soap_fault.send(method)).to be_nil
       end
 
       it "returns a SOAP 1.2 fault message" do
-        expect(soap_fault2.send method).to eq("(soap:Sender) Sender Timeout")
+        expect(soap_fault2.send(method)).to eq("(soap:Sender) Sender Timeout")
       end
 
       it "returns a SOAP fault message (with different namespaces)" do
-        expect(another_soap_fault.send method).to eq("(ERR_NO_SESSION) Wrong session message")
+        expect(another_soap_fault.send(method)).to eq("(ERR_NO_SESSION) Wrong session message")
       end
 
       it "works even if the keys are different in a SOAP 1.1 fault message" do
-        expect(soap_fault_nc.send method).to eq("(soap:Server) Fault occurred while processing.")
+        expect(soap_fault_nc.send(method)).to eq("(soap:Server) Fault occurred while processing.")
       end
 
       it "works even if the keys are different in a SOAP 1.2 fault message" do
-        expect(soap_fault_nc2.send method).to eq("(soap:Sender) Sender Timeout")
+        expect(soap_fault_nc2.send(method)).to eq("(soap:Sender) Sender Timeout")
       end
 
       it "works even if the keys are different in a funky SOAP fault message" do
-        expect(soap_fault_funky.send method).to eq("(42) The Answer to Life The Universe And Everything")
+        expect(soap_fault_funky.send(method)).to eq("(42) The Answer to Life The Universe And Everything")
       end
     end
   end
@@ -109,9 +110,9 @@ RSpec.describe Savon::SOAPFault do
 
     it "returns a SOAP 1.1 fault as a Hash" do
       expected = {
-        :fault => {
-          :faultstring => "Fault occurred while processing.",
-          :faultcode   => "soap:Server"
+        fault: {
+          faultstring: "Fault occurred while processing.",
+          faultcode: "soap:Server"
         }
       }
 
@@ -120,10 +121,10 @@ RSpec.describe Savon::SOAPFault do
 
     it "returns a SOAP 1.2 fault as a Hash" do
       expected = {
-        :fault => {
-          :detail => { :max_time => "P5M" },
-          :reason => { :text => "Sender Timeout" },
-          :code   => { :value => "soap:Sender", :subcode => { :value => "m:MessageTimeout" } }
+        fault: {
+          detail: { max_time: "P5M" },
+          reason: { text: "Sender Timeout" },
+          code: { value: "soap:Sender", subcode: { value: "m:MessageTimeout" } }
         }
       }
 
@@ -133,9 +134,9 @@ RSpec.describe Savon::SOAPFault do
     it "works even if the keys are different" do
       expected = {
         "Fault" => {
-          "Code" => {
-            "Value"  => "soap:Sender",
-            "Subcode"=> {
+          "Code"   => {
+            "Value"   => "soap:Sender",
+            "Subcode" => {
               "Value" => "m:MessageTimeout"
             }
           },
@@ -157,10 +158,9 @@ RSpec.describe Savon::SOAPFault do
   end
 
   def new_response(options = {})
-    defaults = { :code => 500, :headers => {}, :body => Fixture.response(:authentication) }
+    defaults = { code: 500, headers: {}, body: Fixture.response(:authentication) }
     response = defaults.merge options
 
     HTTPI::Response.new response[:code], response[:headers], response[:body]
   end
-
 end

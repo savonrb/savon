@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe "Number conversion example" do
@@ -7,15 +8,15 @@ RSpec.describe "Number conversion example" do
 
   let(:client) do
     Savon.client(
-      :wsdl => "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl",
-      :ssl_verify_mode => :none,
+      wsdl: "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl",
+      ssl_verify_mode: :none,
 
       # Lower timeouts so these specs don't take forever when the service is not available.
-      :open_timeout => 10,
-      :read_timeout => 10,
+      open_timeout: 10,
+      read_timeout: 10,
 
       # Disable logging for cleaner spec output.
-      :log => false
+      log: false
     )
   end
 
@@ -23,16 +24,16 @@ RSpec.describe "Number conversion example" do
     mutex = Mutex.new
     threads_waiting = request_data.size
 
-    threads = request_data.map do |number|
+    threads = request_data.map { |number|
       thread = Thread.new do
-        response = call_and_fail_gracefully(client, :number_to_words, :message => { :ubi_num => number })
+        response = call_and_fail_gracefully(client, :number_to_words, message: { ubi_num: number })
         Thread.current[:value] = response.body[:number_to_words_response][:number_to_words_result]
         mutex.synchronize { threads_waiting -= 1 }
       end
 
       thread.abort_on_exception = true
       thread
-    end
+    }
 
     sleep(1) until threads_waiting == 0
 

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
+
 require "savon/mock"
 
 module Savon
   module SpecHelper
-
     class Interface
-
       def mock!
         Savon.observers << self
       end
@@ -27,14 +26,12 @@ module Savon
       def notify(operation_name, builder, globals, locals)
         expectation = expectations.shift
 
-        if expectation
-          expectation.actual(operation_name, builder, globals, locals)
+        raise ExpectationError, "Unexpected request to the #{operation_name.inspect} operation." unless expectation
 
-          expectation.verify!
-          expectation.response!
-        else
-          raise ExpectationError, "Unexpected request to the #{operation_name.inspect} operation."
-        end
+        expectation.actual(operation_name, builder, globals, locals)
+
+        expectation.verify!
+        expectation.response!
       rescue ExpectationError
         @expectations.clear
         raise
@@ -42,12 +39,12 @@ module Savon
 
       def verify!
         return if expectations.empty?
+
         expectations.each(&:verify!)
       rescue ExpectationError
         @expectations.clear
         raise
       end
-
     end
 
     def savon
@@ -58,6 +55,5 @@ module Savon
       super if defined? super
       savon.verify!
     end
-
   end
 end

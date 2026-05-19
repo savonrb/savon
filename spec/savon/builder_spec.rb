@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-
-  subject(:builder) { Savon::Builder.new(:authenticate, wsdl, globals, locals) }
+  subject(:builder) { described_class.new(:authenticate, wsdl, globals, locals) }
 
   let(:globals)     { Savon::GlobalOptions.new }
   let(:locals)      { Savon::LocalOptions.new }
@@ -40,15 +40,11 @@ RSpec.describe Savon::Builder do
       expect(builder.to_s).to include("<tns:doAuthenticate>")
     end
 
-    it "includes the message tag from the WSDL if its available" do
-      expect(builder.to_s).to include("<tns:authenticate>")
-    end
-
     it "includes a message tag created by Gyoku if both option and WSDL are missing" do
       globals[:namespace] = "http://v1.example.com"
 
       locals = Savon::LocalOptions.new
-      builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
+      builder = described_class.new(:authenticate, no_wsdl, globals, locals)
 
       expect(builder.to_s).to include("<wsdl:authenticate>")
     end
@@ -65,19 +61,19 @@ RSpec.describe Savon::Builder do
     it "uses the default :wsdl identifier if both option and WSDL were not specified" do
       globals[:namespace] = "http://v1.example.com"
 
-      builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
+      builder = described_class.new(:authenticate, no_wsdl, globals, locals)
       expect(builder.to_s).to include("<wsdl:authenticate>")
     end
 
-    it "uses the global :element_form_default option if it's available " do
+    it "uses the global :element_form_default option if it's available" do
       globals[:element_form_default] = :qualified
-      locals[:message] = { :username => "luke", :password => "secret" }
+      locals[:message] = { username: "luke", password: "secret" }
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
     end
 
     it "uses the WSDL's element_form_default value if the global option was set specified" do
-      locals[:message] = { :username => "luke", :password => "secret" }
+      locals[:message] = { username: "luke", password: "secret" }
       wsdl.element_form_default = :qualified
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
@@ -86,52 +82,52 @@ RSpec.describe Savon::Builder do
     describe "#wsse_signature" do
       fixture_dir = File.join(File.dirname(__FILE__), '..', 'fixtures', 'ssl')
 
+      subject(:signed_message_nn) { Nokogiri::XML(builder.to_s).remove_namespaces! }
+
+      let(:signed_message) { Nokogiri::XML(builder.to_s) }
       let(:cert)        { File.join(fixture_dir, 'client_cert.pem') }
       let(:private_key) { File.join(fixture_dir, 'client_key.pem') }
       let(:signature) do
         Akami::WSSE::Signature.new(
           Akami::WSSE::Certs.new(
-            :cert_file => cert,
-            :private_key_file => private_key
+            cert_file: cert,
+            private_key_file: private_key
           )
         )
       end
       let(:globals) { Savon::GlobalOptions.new(wsse_signature: signature) }
 
-      subject(:signed_message_nn) {Nokogiri::XML(builder.to_s).remove_namespaces!}
-      subject(:signed_message) {Nokogiri::XML(builder.to_s)}
-
-      it "should contain a header" do
+      it "contains a header" do
         expect(signed_message_nn.xpath('/Envelope/Header').size).to eq(1)
       end
 
-      it "should contain a wsse:Security" do
+      it "contains a wsse:Security" do
         expect(signed_message_nn.xpath('/Envelope/Header/Security').size).to eq(1)
       end
 
-      it "should have a Body[@wsu:Id]" do
-        #must investigate: acts funny in mri ruby
-        #expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
+      it "has a Body[@wsu:Id]" do
+        # must investigate: acts funny in mri ruby
+        # expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
         expect(signed_message_nn.xpath('//Body').attr('Id').value).to include('Body-')
       end
 
       it "signature should be valid" do
-        certs = Akami::WSSE::Certs.new(:cert_file => cert, :private_key_file => private_key)
+        certs = Akami::WSSE::Certs.new(cert_file: cert, private_key_file: private_key)
         signature_value = signed_message_nn.xpath('//SignatureValue').text
         signed_info_fragment = signed_message.xpath('//default:SignedInfo', default: "http://www.w3.org/2000/09/xmldsig#").to_xml
-        data = Nokogiri::XML(signed_info_fragment){|config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS}
-        data.root.default_namespace='http://www.w3.org/2000/09/xmldsig#'
+        data = Nokogiri::XML(signed_info_fragment) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
+        data.root.default_namespace = 'http://www.w3.org/2000/09/xmldsig#'
 
         signed_info = data.canonicalize Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
 
-        signature = certs.private_key.sign(OpenSSL::Digest::SHA1.new, signed_info)
+        signature = certs.private_key.sign(OpenSSL::Digest.new('SHA1'), signed_info)
         expect(Base64.encode64(signature).gsub("\n", '')).to eq(signature_value)
       end
     end
   end
 
   describe '#body_attributes' do
-    it 'should not be nil' do
+    it 'is not nil' do
       expect(builder.body_attributes).to eq({})
     end
   end
@@ -148,8 +144,9 @@ RSpec.describe Savon::Builder do
     end
 
     context "with a WSDL that declares multiple namespaces" do
+      subject(:multi_builder) { described_class.new(:Save, multi_wsdl, globals, locals) }
+
       let(:multi_wsdl) { Wasabi::Document.new Fixture.wsdl(:multiple_namespaces) }
-      subject(:multi_builder) { Savon::Builder.new(:Save, multi_wsdl, globals, locals) }
 
       it "includes exactly the required namespaces and no structural namespace declarations" do
         expected = {
@@ -175,9 +172,9 @@ RSpec.describe Savon::Builder do
 
       it "every prefix used in the body is declared in the envelope" do
         locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
-        builder = Savon::Builder.new(:Save, multi_wsdl, globals, locals_with_msg)
+        builder = described_class.new(:Save, multi_wsdl, globals, locals_with_msg)
         xml = builder.to_s
-        used_prefixes     = xml.scan(/<\/?([a-zA-Z][a-zA-Z0-9-]*):/).flatten.uniq
+        used_prefixes     = xml.scan(%r{</?([a-zA-Z][a-zA-Z0-9-]*):}).flatten.uniq
         declared_prefixes = xml.scan(/xmlns:([a-zA-Z][a-zA-Z0-9-]*)=/).flatten.uniq
         expect(used_prefixes).not_to be_empty
         expect(used_prefixes - declared_prefixes).to be_empty

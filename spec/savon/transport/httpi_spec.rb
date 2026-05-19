@@ -1,9 +1,11 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Savon::Transport::HTTPI do
-  let(:globals) { Savon::GlobalOptions.new(:log => false) }
   subject(:transport) { described_class.new(globals) }
+
+  let(:globals) { Savon::GlobalOptions.new(log: false) }
 
   describe "#to_httpi_request" do
     let(:url)    { "http://example.com/soap" }
@@ -72,7 +74,7 @@ RSpec.describe Savon::Transport::HTTPI do
     let(:body)   { "<body/>" }
     let(:locals) { Savon::LocalOptions.new }
 
-    before { HTTPI.stubs(:post).returns(HTTPI::Response.new(200, {}, "ok")) }
+    before do HTTPI.stubs(:post).returns(HTTPI::Response.new(200, {}, "ok")) end
 
     it "returns a Transport::Response" do
       expect(transport.post(url, {}, body, locals)).to be_a(Savon::Transport::Response)
@@ -81,7 +83,7 @@ RSpec.describe Savon::Transport::HTTPI do
     it "forwards all soap_headers to the HTTP request" do
       captured = nil
       # Mocha stubs are matched LIFO; this overrides the before-block stub for this call.
-      HTTPI.stubs(:post).with { |req| 
+      HTTPI.stubs(:post).with { |req|
         captured = req.headers
         true
       }.returns(HTTPI::Response.new(200, {}, "ok"))
@@ -99,7 +101,7 @@ RSpec.describe Savon::Transport::HTTPI do
     end
 
     it "skips LogMessage construction when the logger level would suppress the output" do
-      globals_logging = Savon::GlobalOptions.new(:log => true)
+      globals_logging = Savon::GlobalOptions.new(log: true)
       globals_logging[:logger].level = Logger::FATAL
 
       Savon::LogMessage.expects(:new).never
@@ -133,7 +135,7 @@ RSpec.describe Savon::Transport::HTTPI do
 
     it "applies globals[:basic_auth]" do
       globals.basic_auth("user", "pass")
-      expect(transport.wsdl_request.auth.basic).to eq(["user", "pass"])
+      expect(transport.wsdl_request.auth.basic).to eq(%w[user pass])
     end
   end
 end

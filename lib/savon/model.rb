@@ -1,7 +1,7 @@
 # frozen_string_literal: true
+
 module Savon
   module Model
-
     def self.extended(base)
       base.setup
     end
@@ -32,7 +32,7 @@ module Savon
         def #{StringUtils.snakecase(operation.to_s)}(locals = {})
           client.call #{operation.inspect}, locals
         end
-      }
+      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
     end
 
     # Defines an instance-level SOAP operation.
@@ -41,13 +41,12 @@ module Savon
         def #{StringUtils.snakecase(operation.to_s)}(locals = {})
           self.class.#{StringUtils.snakecase(operation.to_s)} locals
         end
-      }
+      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
     end
 
     # Class methods.
     def class_operation_module
-      @class_operation_module ||= Module.new {
-
+      @class_operation_module ||= Module.new do
         def client(globals = {})
           @client ||= Savon::Client.new(globals)
         rescue InitializationError
@@ -60,26 +59,22 @@ module Savon
 
         def raise_initialization_error!
           raise InitializationError,
-            "Expected the model to be initialized with either a WSDL document or the SOAP endpoint and target namespace options.\n" \
-            "Make sure to setup the model by calling the .client class method before calling the .global method.\n\n" \
-            "client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
-            "client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
-            "client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
+                "Expected the model to be initialized with either a WSDL document or the SOAP endpoint and target namespace options.\n" \
+                "Make sure to setup the model by calling the .client class method before calling the .global method.\n\n" \
+                "client(wsdl: '/Users/me/project/service.wsdl')                              # to use a local WSDL document\n" \
+                "client(wsdl: 'http://example.com?wsdl')                                     # to use a remote WSDL document\n" \
+                "client(endpoint: 'http://example.com', namespace: 'http://v1.example.com')  # if you don't have a WSDL document"
         end
-
-      }.tap { |mod| extend(mod) }
+      end.tap { |mod| extend(mod) }
     end
 
     # Instance methods.
     def instance_operation_module
-      @instance_operation_module ||= Module.new {
-
+      @instance_operation_module ||= Module.new do
         def client
           self.class.client
         end
-
-      }.tap { |mod| include(mod) }
+      end.tap { |mod| include(mod) }
     end
-
   end
 end

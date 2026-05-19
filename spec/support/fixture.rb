@@ -1,10 +1,9 @@
 # frozen_string_literal: true
-class Fixture
 
-  TYPES = { :gzip => "gz", :response => "xml", :wsdl => "xml" }
+class Fixture
+  TYPES = { gzip: "gz", response: "xml", wsdl: "xml" }.freeze
 
   class << self
-
     def [](type, fixture)
       fixtures(type)[fixture] ||= read_file type, fixture
     end
@@ -14,14 +13,14 @@ class Fixture
       @full_hash[fixture] ||= nori.parse(response(fixture))[:envelope][:body]
     end
 
-    TYPES.each do |type, ext|
+    TYPES.each_key do |type|
       define_method(type) { |fixture| self[type, fixture] }
     end
 
-  private
+    private
 
     def nori
-      Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym })
+      Nori.new(strip_namespaces: true, convert_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
     end
 
     def fixtures(type)
@@ -35,6 +34,5 @@ class Fixture
 
       File.read path
     end
-
   end
 end

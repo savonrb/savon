@@ -1,9 +1,9 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-
-  subject(:builder) { Savon::Builder.new(:create_object, wsdl, globals, locals) }
+  subject(:builder) { described_class.new(:create_object, wsdl, globals, locals) }
 
   let(:globals)     { Savon::GlobalOptions.new }
   # let(:locals)      { Savon::LocalOptions.new }
@@ -13,26 +13,26 @@ RSpec.describe Savon::Builder do
   describe "#to_s" do
     it "defaults to include the default envelope namespace of :env" do
       message = {
-        :message=>{
-          :template_object=>{
-            :longName=>"Zertico LLC Reseller"
+        message: {
+          template_object: {
+            longName: "Zertico LLC Reseller"
           }
         }
       }
 
       expected_namespaces = {
-        'xmlns:xsd'       => "http://www.w3.org/2001/XMLSchema",
-        'xmlns:xsi'       => "http://www.w3.org/2001/XMLSchema-instance",
-        'xmlns:tns'       => "http://api.service.softlayer.com/soap/v3/",
-        'xmlns:env'       => "http://schemas.xmlsoap.org/soap/envelope/"
+        'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:tns' => "http://api.service.softlayer.com/soap/v3/",
+        'xmlns:env' => "http://schemas.xmlsoap.org/soap/envelope/"
       }
 
       locals = Savon::LocalOptions.new(message)
-      builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
+      builder = described_class.new(:create_object, wsdl, globals, locals)
 
-      parsed_doc = Nokogiri::XML(builder.to_s) do |config|
+      parsed_doc = Nokogiri::XML(builder.to_s) { |config|
         config.norecover.strict
-      end
+      }
       envelope = parsed_doc.xpath('./env:Envelope').first
 
       expect(envelope.namespaces).to match(expected_namespaces)
@@ -40,7 +40,7 @@ RSpec.describe Savon::Builder do
 
     it "does not include WSDL structural and binding namespaces" do
       locals = Savon::LocalOptions.new
-      builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
+      builder = described_class.new(:create_object, wsdl, globals, locals)
       namespaces = Nokogiri::XML(builder.to_s).root.namespaces
       expect(namespaces.keys).not_to include("xmlns:soap", "xmlns:soap-enc", "xmlns:wsdl")
     end

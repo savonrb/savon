@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "httpi"
 require "savon/transport/logging"
 require "savon/transport/response"
@@ -51,9 +52,9 @@ module Savon
         headers = {}
         headers.merge!(@globals[:headers]) if @globals.include?(:headers)
         headers.merge!(locals[:headers])   if locals.include?(:headers)
-        
+
         # soap_headers are lowest priority
-        soap_headers.each { |k, v| headers[k] ||= v }
+        soap_headers.each do |k, v| headers[k] ||= v end
 
         if locals[:cookies]&.any?
           headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
@@ -130,7 +131,6 @@ module Savon
       def configure_redirect_handling(http_request)
         http_request.follow_redirect = @globals[:follow_redirects] if @globals.include?(:follow_redirects)
       end
-
     end
   end
 end

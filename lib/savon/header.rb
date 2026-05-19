@@ -1,13 +1,13 @@
 # frozen_string_literal: true
+
 require "akami"
 require "gyoku"
 require "securerandom"
 
 module Savon
   class Header
-
     def initialize(globals, locals)
-      @gyoku_options  = { :key_converter => globals[:convert_request_keys_to] }
+      @gyoku_options  = { key_converter: globals[:convert_request_keys_to] }
 
       @wsse_auth      = locals[:wsse_auth].nil? ? globals[:wsse_auth] : locals[:wsse_auth]
       @wsse_timestamp = locals[:wsse_timestamp].nil? ? globals[:wsse_timestamp] : locals[:wsse_timestamp]
@@ -41,7 +41,7 @@ module Savon
 
     def build_header
       header =
-        if global_header.kind_of?(Hash) && local_header.kind_of?(Hash)
+        if global_header.is_a?(Hash) && local_header.is_a?(Hash)
           global_header.merge(local_header)
         elsif local_header
           local_header
@@ -58,16 +58,17 @@ module Savon
     end
 
     def build_wsa_header
-       return '' unless @globals[:use_wsa_headers]
-       convert_to_xml({
-         'wsa:Action' => @locals[:soap_action],
-         'wsa:To' => @globals[:endpoint],
-         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
-       })
+      return '' unless @globals[:use_wsa_headers]
+
+      convert_to_xml({
+        'wsa:Action'    => @locals[:soap_action],
+        'wsa:To'        => @globals[:endpoint],
+        'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
+      })
     end
 
     def convert_to_xml(hash_or_string)
-      if hash_or_string.kind_of? Hash
+      if hash_or_string.is_a? Hash
         Gyoku.xml(hash_or_string, gyoku_options)
       else
         hash_or_string.to_s
@@ -78,12 +79,11 @@ module Savon
       wsse = Akami.wsse
       wsse.credentials(*wsse_auth) if wsse_auth
       wsse.timestamp = wsse_timestamp if wsse_timestamp
-      if wsse_signature && wsse_signature.have_document?
+      if wsse_signature&.have_document?
         wsse.signature = wsse_signature
       end
 
       wsse
     end
-
   end
 end

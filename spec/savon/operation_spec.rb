@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 require "integration/support/server"
 require "faraday/adapter/test"
@@ -14,7 +15,7 @@ RSpec.describe Savon::Operation do
     @server.stop
   end
 
-  let(:operation)      { Savon::Operation.create(operation_name, wsdl, globals, transport) }
+  let(:operation)      { described_class.create(operation_name, wsdl, globals, transport) }
   let(:operation_name) { :verify_address }
   let(:transport)      { Savon::Transport::HTTPI.new(globals) }
   let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false) }
@@ -28,15 +29,15 @@ RSpec.describe Savon::Operation do
 
   describe ".create with a WSDL" do
     it "returns a new operation" do
-      expect(operation).to be_a(Savon::Operation)
+      expect(operation).to be_a(described_class)
     end
 
     context "when the operation name is not a Symbol" do
       let(:operation_name) { "not a symbol" }
 
       it "raises ArgumentError" do
-        expect { operation }.
-          to raise_error(ArgumentError, /Expected the first parameter \(the name of the operation to call\) to be a symbol/)
+        expect { operation }
+          .to raise_error(ArgumentError, /Expected the first parameter \(the name of the operation to call\) to be a symbol/)
       end
     end
 
@@ -44,8 +45,8 @@ RSpec.describe Savon::Operation do
       let(:operation_name) { :no_such_operation }
 
       it "raises UnknownOperationError" do
-        expect { operation }.
-          to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
+        expect { operation }
+          .to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
       end
     end
 
@@ -67,7 +68,7 @@ RSpec.describe Savon::Operation do
     let(:wsdl) { no_wsdl }
 
     it "returns a new operation" do
-      expect(operation).to be_a(Savon::Operation)
+      expect(operation).to be_a(described_class)
     end
   end
 
@@ -148,12 +149,12 @@ RSpec.describe Savon::Operation do
       let(:wsdl)           { no_wsdl }
 
       it "parses multipart attachments" do
-        response = operation.call do
+        response = operation.call {
           attachments [
             { filename: "x1.xml", content: "<xml>abc</xml>" },
-            { filename: "x2.xml", content: "<xml>cde</xml>" },
+            { filename: "x2.xml", content: "<xml>cde</xml>" }
           ]
-        end
+        }
 
         expect(response.multipart?).to be true
         expect(response.header).to eq "response header"
@@ -182,15 +183,15 @@ RSpec.describe Savon::Operation do
     let(:operation_name) { :authenticate }
     let(:globals) do
       Savon::GlobalOptions.new(
-        endpoint:  "http://example.com/soap",
+        endpoint: "http://example.com/soap",
         namespace: "http://v1.example.com",
         transport: :faraday,
-        log:       false
+        log: false
       )
     end
 
     it "routes the request through Transport::Faraday and returns a Savon::Response" do
-      stubs.post("/soap") { [200, {}, Fixture.response(:authentication)] }
+      stubs.post("/soap") do [200, {}, Fixture.response(:authentication)] end
       response = operation.call
       expect(response).to be_a(Savon::Response)
       expect(response.http).to be_a(Savon::Transport::Response)
