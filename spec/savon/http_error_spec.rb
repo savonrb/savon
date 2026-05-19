@@ -28,7 +28,7 @@ RSpec.describe Savon::HTTPError do
     end
   end
 
-  [:message, :to_s].each do |method|
+  %i[message to_s].each do |method|
     describe "##{method}" do
       it "returns the HTTP error message" do
         expect(http_error.send(method)).to eq("HTTP error (404): Not Found")

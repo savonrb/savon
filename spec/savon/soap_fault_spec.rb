@@ -71,7 +71,7 @@ RSpec.describe Savon::SOAPFault do
     end
   end
 
-  [:message, :to_s].each do |method|
+  %i[message to_s].each do |method|
     describe "##{method}" do
       it "returns a SOAP 1.1 fault message" do
         expect(soap_fault.send(method)).to eq("(soap:Server) Fault occurred while processing.")

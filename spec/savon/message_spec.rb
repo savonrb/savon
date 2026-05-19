@@ -32,7 +32,7 @@ RSpec.describe Savon::Message do
       {
         :email_count => 3,
         :user_name   => 'josh',
-        :order!      => [:user_name, :email_count]
+        :order!      => %i[user_name email_count]
       }
     }
 
