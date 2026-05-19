@@ -30,9 +30,9 @@ RSpec.describe Savon::Message do
   context "with a qualified message" do
     let(:message) {
       {
-       :email_count => 3,
-       :user_name   => 'josh',
-       :order!      => [:user_name, :email_count]
+        :email_count => 3,
+        :user_name   => 'josh',
+        :order!      => [:user_name, :email_count]
       }
     }
 
