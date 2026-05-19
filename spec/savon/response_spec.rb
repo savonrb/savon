@@ -46,11 +46,11 @@ RSpec.describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "does not return true in case the response seems to be ok" do
-      expect(soap_response.soap_fault?).to be_falsey
+      expect(soap_response).not_to be_soap_fault
     end
 
     it "returns true in case of a SOAP fault" do
-      expect(soap_fault_response.soap_fault?).to be_truthy
+      expect(soap_fault_response).to be_soap_fault
     end
   end
 
@@ -70,11 +70,11 @@ RSpec.describe Savon::Response do
     before { globals[:raise_errors] = false }
 
     it "does not return true in case the response seems to be ok" do
-      expect(soap_response.http_error?).not_to be_truthy
+      expect(soap_response).not_to be_http_error
     end
 
     it "returns true in case of an HTTP error" do
-      expect(soap_response(:code => 500).http_error?).to be_truthy
+      expect(soap_response(:code => 500)).to be_http_error
     end
   end
 
