@@ -248,7 +248,7 @@ module Savon
 
       # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
       # should redefine the sort order, because the soap request xml should be the first
-      multipart_message.body.set_sort_order [ "text/xml" ]
+      multipart_message.body.set_sort_order ["text/xml"]
 
       multipart_message.body.encoded(multipart_message.content_transfer_encoding)
     end

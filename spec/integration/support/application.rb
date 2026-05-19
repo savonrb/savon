@@ -91,7 +91,7 @@ class IntegrationServer
         message.parts.last.content_id = 'attachment1'
 
         message.ready_to_send!
-        message.body.set_sort_order [ "text/xml" ]
+        message.body.set_sort_order ["text/xml"]
         message.body.encoded(message.content_transfer_encoding)
 
         IntegrationServer.respond_with({

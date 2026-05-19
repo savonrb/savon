@@ -53,7 +53,7 @@ RSpec.describe Savon do
 
   def extract_message_tag_from_request(xml)
     match = xml.match(/<\w+?:Body><(.+?):(.+?)>/)
-    [ match[1], match[2] ]
+    [match[1], match[2]]
   end
 
   def extract_namespace_from_request(nsid, xml)

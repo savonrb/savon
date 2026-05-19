@@ -49,7 +49,7 @@ RSpec.describe Savon::Message do
     let(:client_config) { super().merge(use_wsa_headers: true) }
 
     context 'headers' do
-      [ 'wsa:Action', 'wsa:To', 'wsa:MessageID' ].each do |header|
+      ['wsa:Action', 'wsa:To', 'wsa:MessageID'].each do |header|
         it "should include #{header} header" do
           response = client.call(:something, message: {})
           expect(response.xml).to include(header)
