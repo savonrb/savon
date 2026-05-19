@@ -90,8 +90,8 @@ RSpec.describe Savon do
 
       Savon.observers << observer
 
-      expect { new_client.call(:authenticate) }.
-        to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \
+      expect { new_client.call(:authenticate) }
+        .to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \
                                      "to mock the request or nil to execute the request.")
     end
   end

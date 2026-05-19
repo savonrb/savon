@@ -6,19 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 32
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: leading, trailing
-Layout/DotPosition:
-  Exclude:
-    - 'spec/savon/client_spec.rb'
-    - 'spec/savon/mock_spec.rb'
-    - 'spec/savon/model_spec.rb'
-    - 'spec/savon/observers_spec.rb'
-    - 'spec/savon/operation_spec.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 10
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterGuardClause:

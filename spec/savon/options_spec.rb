@@ -155,8 +155,8 @@ RSpec.describe "Options" do
     it "makes the client timeout after n seconds" do
       client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 0.1, :read_timeout => 0.1)
 
-      expect { client.call(:authenticate) }.
-        to raise_error(HTTPClient::ReceiveTimeoutError)
+      expect { client.call(:authenticate) }
+        .to raise_error(HTTPClient::ReceiveTimeoutError)
     end
   end
 
@@ -264,8 +264,8 @@ RSpec.describe "Options" do
     it "when true, instructs Savon to raise SOAP fault errors" do
       client = new_client(:endpoint => @server.url(:repeat), :raise_errors => true)
 
-      expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }.
-        to raise_error(Savon::SOAPFault)
+      expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }
+        .to raise_error(Savon::SOAPFault)
 
       begin
         client.call(:authenticate, :xml => Fixture.response(:soap_fault))
@@ -389,8 +389,8 @@ RSpec.describe "Options" do
     end
 
     it "raises when the given level is not valid" do
-      expect { new_client(:log_level => :invalid) }.
-        to raise_error(ArgumentError, /Invalid log level: :invalid/)
+      expect { new_client(:log_level => :invalid) }
+        .to raise_error(ArgumentError, /Invalid log level: :invalid/)
     end
   end
 

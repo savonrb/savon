@@ -38,23 +38,23 @@ RSpec.describe Savon::Client do
     end
 
     it "raises if initialized with anything other than a Hash" do
-      expect { Savon.client("http://example.com") }.
-        to raise_error(Savon::InitializationError, /Some code tries to initialize Savon with the "http:\/\/example\.com" \(String\)/)
+      expect { Savon.client("http://example.com") }
+        .to raise_error(Savon::InitializationError, /Some code tries to initialize Savon with the "http:\/\/example\.com" \(String\)/)
     end
 
     it "raises if not initialized with either a :wsdl or both :endpoint and :namespace options" do
-      expect { Savon.client(:endpoint => "http://example.com") }.
-        to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
+      expect { Savon.client(:endpoint => "http://example.com") }
+        .to raise_error(Savon::InitializationError, /Expected either a WSDL document or the SOAP endpoint and target namespace options/)
     end
 
     it "raises a when given an unknown option via the Hash syntax" do
-      expect { Savon.client(:invalid_global_option => true) }.
-        to raise_error(Savon::UnknownOptionError, "Unknown global option: :invalid_global_option")
+      expect { Savon.client(:invalid_global_option => true) }
+        .to raise_error(Savon::UnknownOptionError, "Unknown global option: :invalid_global_option")
     end
 
     it "raises a when given an unknown option via the block syntax" do
-      expect { Savon.client { another_invalid_global_option true } }.
-        to raise_error(Savon::UnknownOptionError, "Unknown global option: :another_invalid_global_option")
+      expect { Savon.client { another_invalid_global_option true } }
+        .to raise_error(Savon::UnknownOptionError, "Unknown global option: :another_invalid_global_option")
     end
   end
 
@@ -70,20 +70,20 @@ RSpec.describe Savon::Client do
 
     it "raises if the faraday gem is not installed" do
       Savon::GlobalOptions.any_instance.stubs(:faraday_loaded?).returns(false)
-      expect { new_client_without_wsdl(:transport => :faraday) }.
-        to raise_error(Savon::InitializationError, /transport: :faraday requires the faraday gem.*Add to your Gemfile/m)
+      expect { new_client_without_wsdl(:transport => :faraday) }
+        .to raise_error(Savon::InitializationError, /transport: :faraday requires the faraday gem.*Add to your Gemfile/m)
     end
 
     it "raises for incompatible global open_timeout listing the Faraday equivalent" do
-      expect { new_client_without_wsdl(:transport => :faraday, :open_timeout => 10) }.
-        to raise_error(Savon::InitializationError,
-                       /not supported with transport: :faraday.*open_timeout.*client\.faraday\.options\.timeout/m)
+      expect { new_client_without_wsdl(:transport => :faraday, :open_timeout => 10) }
+        .to raise_error(Savon::InitializationError,
+                        /not supported with transport: :faraday.*open_timeout.*client\.faraday\.options\.timeout/m)
     end
 
     it "raises for incompatible global proxy listing the Faraday equivalent" do
-      expect { new_client_without_wsdl(:transport => :faraday, :proxy => "http://proxy:8080") }.
-        to raise_error(Savon::InitializationError,
-                       /not supported with transport: :faraday.*proxy.*client\.faraday\.proxy/m)
+      expect { new_client_without_wsdl(:transport => :faraday, :proxy => "http://proxy:8080") }
+        .to raise_error(Savon::InitializationError,
+                        /not supported with transport: :faraday.*proxy.*client\.faraday\.proxy/m)
     end
 
     it "lists all incompatible globals in a single error" do
@@ -98,25 +98,25 @@ RSpec.describe Savon::Client do
     end
 
     it "does not raise when adapter is nil (the default)" do
-      expect { new_client_without_wsdl(:transport => :faraday, :adapter => nil) }.
-        not_to raise_error
+      expect { new_client_without_wsdl(:transport => :faraday, :adapter => nil) }
+        .not_to raise_error
     end
 
     it "raises when adapter is set to a non-nil value with a solution hint" do
-      expect { new_client_without_wsdl(:transport => :faraday, :adapter => :httpclient) }.
-        to raise_error(Savon::InitializationError,
-                       /not supported with transport: :faraday.*adapter.*client\.faraday\.adapter/m)
+      expect { new_client_without_wsdl(:transport => :faraday, :adapter => :httpclient) }
+        .to raise_error(Savon::InitializationError,
+                        /not supported with transport: :faraday.*adapter.*client\.faraday\.adapter/m)
     end
 
     it "does not raise when follow_redirects is false (the default)" do
-      expect { new_client_without_wsdl(:transport => :faraday, :follow_redirects => false) }.
-        not_to raise_error
+      expect { new_client_without_wsdl(:transport => :faraday, :follow_redirects => false) }
+        .not_to raise_error
     end
 
     it "raises when follow_redirects is true with a solution hint" do
-      expect { new_client_without_wsdl(:transport => :faraday, :follow_redirects => true) }.
-        to raise_error(Savon::InitializationError,
-                       /not supported with transport: :faraday.*follow_redirects.*client\.faraday\.use/m)
+      expect { new_client_without_wsdl(:transport => :faraday, :follow_redirects => true) }
+        .to raise_error(Savon::InitializationError,
+                        /not supported with transport: :faraday.*follow_redirects.*client\.faraday\.use/m)
     end
   end
 
@@ -132,8 +132,8 @@ RSpec.describe Savon::Client do
     end
 
     it "raises when transport is not :faraday" do
-      expect { new_client.faraday }.
-        to raise_error(ArgumentError, /client\.faraday is only available when transport: :faraday is set/)
+      expect { new_client.faraday }
+        .to raise_error(ArgumentError, /client\.faraday is only available when transport: :faraday is set/)
     end
   end
 
@@ -176,8 +176,8 @@ RSpec.describe Savon::Client do
     end
 
     it "raises if there's no such SOAP operation" do
-      expect { new_client.operation(:does_not_exist) }.
-        to raise_error(Savon::UnknownOperationError)
+      expect { new_client.operation(:does_not_exist) }
+        .to raise_error(Savon::UnknownOperationError)
     end
 
     it "does not raise when there is no WSDL document" do
@@ -245,13 +245,13 @@ RSpec.describe Savon::Client do
     end
 
     it "raises a when given an unknown option via the Hash syntax" do
-      expect { new_client.call(:authenticate, :invalid_local_option => true) }.
-        to raise_error(Savon::UnknownOptionError, "Unknown local option: :invalid_local_option")
+      expect { new_client.call(:authenticate, :invalid_local_option => true) }
+        .to raise_error(Savon::UnknownOptionError, "Unknown local option: :invalid_local_option")
     end
 
     it "raises a when given an unknown option via the block syntax" do
-      expect { new_client.call(:authenticate) { another_invalid_local_option true } }.
-        to raise_error(Savon::UnknownOptionError, "Unknown local option: :another_invalid_local_option")
+      expect { new_client.call(:authenticate) { another_invalid_local_option true } }
+        .to raise_error(Savon::UnknownOptionError, "Unknown local option: :another_invalid_local_option")
     end
   end
 
@@ -292,8 +292,8 @@ RSpec.describe Savon::Client do
         message(:symbol => "AAPL")
       end
 
-      expect(request.body).
-        to include('<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>')
+      expect(request.body)
+        .to include('<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>')
     end
 
     it "accepts a block with one argument" do
@@ -306,16 +306,16 @@ RSpec.describe Savon::Client do
         locals.message(@instance_variable)
       end
 
-      expect(request.body).
-        to include("<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>")
+      expect(request.body)
+        .to include("<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>")
     end
 
     it "accepts argument for the message tag" do
       client = new_client(:endpoint => @server.url(:repeat))
       request = client.build_request(:authenticate, :attributes => { "ID" => "ABC321" })
 
-      expect(request.body).
-        to include("<tns:authenticate ID=\"ABC321\"></tns:authenticate>")
+      expect(request.body)
+        .to include("<tns:authenticate ID=\"ABC321\"></tns:authenticate>")
     end
 
     it "raises when the operation name is not a symbol" do
@@ -332,8 +332,8 @@ RSpec.describe Savon::Client do
 
     it "raises ArgumentError when transport is :faraday" do
       client = new_client_without_wsdl(:transport => :faraday)
-      expect { client.build_request(:authenticate) }.
-        to raise_error(ArgumentError, /#request.*not supported.*transport: :faraday/m)
+      expect { client.build_request(:authenticate) }
+        .to raise_error(ArgumentError, /#request.*not supported.*transport: :faraday/m)
     end
   end
 

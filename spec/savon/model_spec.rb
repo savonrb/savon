@@ -26,8 +26,8 @@ RSpec.describe Savon::Model do
     it "raises if the client was not initialized properly" do
       model = Class.new { extend Savon::Model }
 
-      expect { model.client }.
-        to raise_error(Savon::InitializationError, /^Expected the model to be initialized/)
+      expect { model.client }
+        .to raise_error(Savon::InitializationError, /^Expected the model to be initialized/)
     end
   end
 

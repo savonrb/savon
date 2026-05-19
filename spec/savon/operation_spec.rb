@@ -35,8 +35,8 @@ RSpec.describe Savon::Operation do
       let(:operation_name) { "not a symbol" }
 
       it "raises ArgumentError" do
-        expect { operation }.
-          to raise_error(ArgumentError, /Expected the first parameter \(the name of the operation to call\) to be a symbol/)
+        expect { operation }
+          .to raise_error(ArgumentError, /Expected the first parameter \(the name of the operation to call\) to be a symbol/)
       end
     end
 
@@ -44,8 +44,8 @@ RSpec.describe Savon::Operation do
       let(:operation_name) { :no_such_operation }
 
       it "raises UnknownOperationError" do
-        expect { operation }.
-          to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
+        expect { operation }
+          .to raise_error(Savon::UnknownOperationError, /Unable to find SOAP operation: :no_such_operation/)
       end
     end
 
