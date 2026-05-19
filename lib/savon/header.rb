@@ -59,6 +59,7 @@ module Savon
 
     def build_wsa_header
       return '' unless @globals[:use_wsa_headers]
+
       convert_to_xml({
         'wsa:Action' => @locals[:soap_action],
         'wsa:To' => @globals[:endpoint],

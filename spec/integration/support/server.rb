@@ -19,6 +19,7 @@ class IntegrationServer
   def self.integration_fixture(file)
     file = File.expand_path("../../fixtures/#{file}", __FILE__)
     raise "No such file '#{file}'" unless File.exist? file
+
     file
   end
 

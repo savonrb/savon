@@ -48,6 +48,7 @@ module Savon
     def to_array(*path)
       result = path.inject body do |memo, key|
         return [] if memo[key].nil?
+
         memo[key]
       end
 
@@ -107,6 +108,7 @@ module Savon
 
     def boundary
       return unless multipart?
+
       Mail::Field.new('content-type', http.headers['content-type']).parameters['boundary']
     end
 

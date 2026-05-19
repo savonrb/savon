@@ -42,6 +42,7 @@ module Savon
 
       def verify!
         return if expectations.empty?
+
         expectations.each(&:verify!)
       rescue ExpectationError
         @expectations.clear

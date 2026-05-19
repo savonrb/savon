@@ -71,6 +71,7 @@ module Savon
 
     def to_s
       return @locals[:xml] if @locals.include? :xml
+
       build_document
     end
 
@@ -136,6 +137,7 @@ module Savon
     def namespaced_message_tag
       tag_name = message_tag
       return [tag_name] if @wsdl.document? && @wsdl.soap_input(@operation_name.to_sym).is_a?(Hash)
+
       if namespace_identifier.nil?
         [tag_name, message_attributes]
       elsif @used_namespaces[[tag_name.to_s]]
@@ -154,6 +156,7 @@ module Savon
       message_tag = serialized_message_tag[1]
       @wsdl.soap_input(@operation_name.to_sym)[message_tag].each_pair do |message, type|
         break if @locals[:message].nil?
+
         message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
         message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
         messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"

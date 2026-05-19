@@ -6,17 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 10
-# This cop supports safe autocorrection (--autocorrect).
-Layout/EmptyLineAfterGuardClause:
-  Exclude:
-    - 'lib/savon/builder.rb'
-    - 'lib/savon/header.rb'
-    - 'lib/savon/mock/expectation.rb'
-    - 'lib/savon/mock/spec_helper.rb'
-    - 'lib/savon/response.rb'
-    - 'spec/integration/support/server.rb'
-
 # Offense count: 50
 # This cop supports safe autocorrection (--autocorrect).
 Layout/EmptyLineAfterMagicComment:
