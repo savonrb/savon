@@ -833,12 +833,6 @@ Style/RegexpLiteral:
     - 'spec/savon/client_spec.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-Style/SlicingWithRange:
-  Exclude:
-    - 'lib/savon/response.rb'
-
 # Offense count: 2
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: RequireEnglish.

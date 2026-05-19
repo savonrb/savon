@@ -113,7 +113,7 @@ module Savon
     def parse_body
       http.body.force_encoding Encoding::ASCII_8BIT
       parts = http.body.split(/(?:\A|\r\n)--#{Regexp.escape(boundary)}(?=(?:--)?\s*$)/)
-      parts[1..-1].to_a.each_with_index do |part, index|
+      parts[1..].to_a.each_with_index do |part, index|
         header_part, body_part = part.lstrip.split(/#{CRLF}#{CRLF}|#{CRLF}#{WSP}*#{CRLF}(?!#{WSP})/m, 2)
         section = Mail::Part.new(
           body: body_part
