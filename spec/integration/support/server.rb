@@ -12,9 +12,9 @@ class IntegrationServer
     server
   end
 
-  def self.ssl_ca_file;   integration_fixture("ca_all.pem")  end
-  def self.ssl_key_file;  integration_fixture("server.key")  end
-  def self.ssl_cert_file; integration_fixture("server.cert") end
+  def self.ssl_ca_file = integration_fixture("ca_all.pem")
+  def self.ssl_key_file = integration_fixture("server.key")
+  def self.ssl_cert_file = integration_fixture("server.cert")
 
   def self.integration_fixture(file)
     file = File.expand_path("../../fixtures/#{file}", __FILE__)
