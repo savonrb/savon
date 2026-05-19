@@ -119,7 +119,7 @@ module Savon
           body: body_part
         )
         section.header = header_part
-        if index == 0
+        if index.zero?
           @xml = section.body.to_s
         else
           @attachments << section

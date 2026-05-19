@@ -7,7 +7,7 @@ module Savon
     end
 
     def evaluate(block)
-      if block.arity > 0
+      if block.arity.positive?
         block.call(@target)
       else
         @original = eval("self", block.binding, __FILE__, __LINE__)

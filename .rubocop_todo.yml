@@ -546,16 +546,6 @@ Style/NumericLiterals:
   MinDigits: 9
 
 # Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle, AllowedMethods, AllowedPatterns.
-# SupportedStyles: predicate, comparison
-Style/NumericPredicate:
-  Exclude:
-    - 'spec/**/*'
-    - 'lib/savon/block_interface.rb'
-    - 'lib/savon/response.rb'
-
-# Offense count: 2
 # Configuration parameters: AllowedMethods.
 # AllowedMethods: respond_to_missing?
 Style/OptionalBooleanParameter:
