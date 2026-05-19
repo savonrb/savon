@@ -41,7 +41,7 @@ module Savon
 
     def build_header
       header =
-        if global_header.kind_of?(Hash) && local_header.kind_of?(Hash)
+        if global_header.is_a?(Hash) && local_header.is_a?(Hash)
           global_header.merge(local_header)
         elsif local_header
           local_header
@@ -67,7 +67,7 @@ module Savon
     end
 
     def convert_to_xml(hash_or_string)
-      if hash_or_string.kind_of? Hash
+      if hash_or_string.is_a? Hash
         Gyoku.xml(hash_or_string, gyoku_options)
       else
         hash_or_string.to_s

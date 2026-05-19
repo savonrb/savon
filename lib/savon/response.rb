@@ -51,7 +51,7 @@ module Savon
         memo[key]
       end
 
-      result.kind_of?(Array) ? result.compact : [result].compact
+      result.is_a?(Array) ? result.compact : [result].compact
     end
 
     def hash

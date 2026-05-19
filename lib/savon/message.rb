@@ -18,7 +18,7 @@ module Savon
     end
 
     def to_s
-      return @message.to_s unless @message.kind_of? Hash
+      return @message.to_s unless @message.is_a? Hash
 
       if @element_form_default == :qualified
         @message = QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(@message, [@message_tag.to_s])

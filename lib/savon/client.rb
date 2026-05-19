@@ -15,7 +15,7 @@ module Savon
   class Client
 
     def initialize(globals = {}, &block)
-      unless globals.kind_of? Hash
+      unless globals.is_a? Hash
         raise_version1_initialize_error! globals
       end
 

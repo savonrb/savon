@@ -21,7 +21,7 @@ module Savon
     end
 
     def returns(response)
-      response = { :code => 200, :headers => {}, :body => response } if response.kind_of?(String)
+      response = { :code => 200, :headers => {}, :body => response } if response.is_a?(String)
       @response = response
       self
     end
