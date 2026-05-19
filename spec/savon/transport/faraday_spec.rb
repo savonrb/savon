@@ -5,6 +5,8 @@ require "faraday/adapter/test"
 require "savon/transport/faraday"
 
 RSpec.describe Savon::Transport::Faraday do
+  subject(:transport) { described_class.new(connection, globals) }
+
   let(:stubs) { ::Faraday::Adapter::Test::Stubs.new }
   let(:url)    { "http://example.com/soap" }
   let(:body)   { "<soap:Envelope/>" }
@@ -15,8 +17,6 @@ RSpec.describe Savon::Transport::Faraday do
       f.adapter :test, stubs
     end
   end
-
-  subject(:transport) { described_class.new(connection, globals) }
 
   describe "#post" do
     it "returns a Transport::Response" do

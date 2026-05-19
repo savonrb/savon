@@ -3,11 +3,11 @@
 require "spec_helper"
 
 RSpec.describe Savon::Transport::Response do
+  subject(:response) { described_class.new(code, headers, body) }
+
   let(:code)    { 200 }
   let(:headers) { { "content-type" => "text/xml" } }
   let(:body)    { "<soap:Envelope/>" }
-
-  subject(:response) { described_class.new(code, headers, body) }
 
   describe "#code" do
     it "returns the HTTP status code" do

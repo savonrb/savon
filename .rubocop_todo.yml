@@ -115,15 +115,6 @@ RSpec/InstanceVariable:
     - 'spec/savon/operation_spec.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/LeadingSubject:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/transport/faraday_spec.rb'
-    - 'spec/savon/transport/httpi_spec.rb'
-    - 'spec/savon/transport/response_spec.rb'
-
 # Offense count: 62
 RSpec/MultipleExpectations:
   Max: 9

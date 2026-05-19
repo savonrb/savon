@@ -3,9 +3,9 @@
 require "spec_helper"
 
 RSpec.describe Savon::Transport::HTTPI do
-  let(:globals) { Savon::GlobalOptions.new(:log => false) }
-
   subject(:transport) { described_class.new(globals) }
+
+  let(:globals) { Savon::GlobalOptions.new(:log => false) }
 
   describe "#to_httpi_request" do
     let(:url)    { "http://example.com/soap" }

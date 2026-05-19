@@ -82,6 +82,10 @@ RSpec.describe Savon::Builder do
     describe "#wsse_signature" do
       fixture_dir = File.join(File.dirname(__FILE__), '..', 'fixtures', 'ssl')
 
+      subject(:signed_message) { Nokogiri::XML(builder.to_s) }
+
+      subject(:signed_message_nn) { Nokogiri::XML(builder.to_s).remove_namespaces! }
+
       let(:cert)        { File.join(fixture_dir, 'client_cert.pem') }
       let(:private_key) { File.join(fixture_dir, 'client_key.pem') }
       let(:signature) do
@@ -93,10 +97,6 @@ RSpec.describe Savon::Builder do
         )
       end
       let(:globals) { Savon::GlobalOptions.new(wsse_signature: signature) }
-
-      subject(:signed_message_nn) { Nokogiri::XML(builder.to_s).remove_namespaces! }
-
-      subject(:signed_message) { Nokogiri::XML(builder.to_s) }
 
       it "contains a header" do
         expect(signed_message_nn.xpath('/Envelope/Header').size).to eq(1)
