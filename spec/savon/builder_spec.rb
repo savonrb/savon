@@ -124,7 +124,7 @@ RSpec.describe Savon::Builder do
 
         signed_info = data.canonicalize Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
 
-        signature = certs.private_key.sign(OpenSSL::Digest::SHA1.new, signed_info)
+        signature = certs.private_key.sign(OpenSSL::Digest.new('SHA1'), signed_info)
         expect(Base64.encode64(signature).gsub("\n", '')).to eq(signature_value)
       end
     end

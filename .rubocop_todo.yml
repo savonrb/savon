@@ -323,12 +323,6 @@ Lint/AssignmentInCondition:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-Lint/DeprecatedOpenSSLConstant:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 Lint/LiteralInInterpolation:
   Exclude:
     - 'lib/savon/response.rb'
