@@ -17,6 +17,9 @@ Layout/FirstHashElementIndentation:
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
 
+RSpec/ContextWording:
+  Enabled: false
+
 # Savon::BlockInterface calls block.binding, which fails
 # on C-level procs created by Symbol#to_proc.
 Style/SymbolProc:

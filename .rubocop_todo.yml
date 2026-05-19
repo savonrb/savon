@@ -70,16 +70,6 @@ RSpec/BeforeAfterAll:
     - 'spec/savon/operation_spec.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 80
-# Configuration parameters: Prefixes, AllowedPatterns.
-# Prefixes: when, with, without
-RSpec/ContextWording:
-  Exclude:
-    - 'spec/savon/message_spec.rb'
-    - 'spec/savon/operation_spec.rb'
-    - 'spec/savon/options_spec.rb'
-    - 'spec/savon/qualified_message_spec.rb'
-
 # Offense count: 3
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
