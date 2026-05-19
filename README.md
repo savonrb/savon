@@ -99,6 +99,16 @@ $ bundle exec rspec
   - See https://github.com/savonrb/savon/issues/488 for more info
 
 
+## Known limitations
+
+### WSDL imports are not followed
+
+Savon uses [Wasabi](https://github.com/savonrb/wasabi) to parse WSDL documents. Wasabi parses only the root document. It does not fetch or inline documents referenced by `wsdl:import` or `wsdl:include` ([wasabi#1](https://github.com/savonrb/wasabi/issues/1), [wasabi#56](https://github.com/savonrb/wasabi/issues/56)). All messages, portTypes, and bindings must be defined in the root WSDL file for Savon to see them.
+
+**Workaround:** if you have access to the imported documents, manually merge their `wsdl:message` and `wsdl:portType` elements into the root document and pass that to Savon.
+
+If you need full import support, consider [WSDL](https://rubygems.org/gems/wsdl) as an alternative.
+
 ## Documentation
 
 Please be sure to [read the documentation](https://www.rubydoc.info/github/savonrb/savon/).
