@@ -18,9 +18,9 @@ RSpec.describe "Savon's mock interface" do
     message = { :username => "luke", :password => "secret" }
     savon.expects(:authenticate).with(:message => message).returns("<fixture/>")
 
-    response = new_client.call(:authenticate) do
+    response = new_client.call(:authenticate) {
       message(:username => "luke", :password => "secret")
-    end
+    }
 
     expect(response.http).to be_a(Savon::Transport::Response)
     expect(response.http.body).to eq("<fixture/>")
@@ -30,9 +30,9 @@ RSpec.describe "Savon's mock interface" do
     message = { :username => "luke", :password => :any }
     savon.expects(:authenticate).with(:message => message).returns("<fixture/>")
 
-    response = new_client.call(:authenticate) do
+    response = new_client.call(:authenticate) {
       message(:username => "luke", :password => "secret")
-    end
+    }
 
     expect(response.http.body).to eq("<fixture/>")
   end

@@ -27,7 +27,7 @@ RSpec.describe Savon::Response do
   end
 
   describe "#success?" do
-    before { globals[:raise_errors] = false }
+    before do globals[:raise_errors] = false end
 
     it "returns true if the request was successful" do
       expect(soap_response).to be_a_success
@@ -43,7 +43,7 @@ RSpec.describe Savon::Response do
   end
 
   describe "#soap_fault?" do
-    before { globals[:raise_errors] = false }
+    before do globals[:raise_errors] = false end
 
     it "does not return true in case the response seems to be ok" do
       expect(soap_response).not_to be_soap_fault
@@ -55,7 +55,7 @@ RSpec.describe Savon::Response do
   end
 
   describe "#soap_fault" do
-    before { globals[:raise_errors] = false }
+    before do globals[:raise_errors] = false end
 
     it "returns nil in case the response seems to be ok" do
       expect(soap_response.soap_fault).to be_nil
@@ -67,7 +67,7 @@ RSpec.describe Savon::Response do
   end
 
   describe "#http_error?" do
-    before { globals[:raise_errors] = false }
+    before do globals[:raise_errors] = false end
 
     it "does not return true in case the response seems to be ok" do
       expect(soap_response).not_to be_http_error
@@ -79,7 +79,7 @@ RSpec.describe Savon::Response do
   end
 
   describe "#http_error" do
-    before { globals[:raise_errors] = false }
+    before do globals[:raise_errors] = false end
 
     it "returns nil in case the response seems to be ok" do
       expect(soap_response.http_error).to be_nil

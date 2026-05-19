@@ -65,9 +65,9 @@ RSpec.describe "Savon client with transport: :faraday" do
       :transport => :faraday,
       :log       => false
     )
-    response = client.call(:authenticate) do
+    response = client.call(:authenticate) {
       attachments [{ :filename => "x1.xml", :content => "<xml>abc</xml>" }]
-    end
+    }
 
     expect(response.multipart?).to be true
   end

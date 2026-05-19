@@ -54,7 +54,7 @@ module Savon
         headers.merge!(locals[:headers])   if locals.include?(:headers)
 
         # soap_headers are lowest priority
-        soap_headers.each { |k, v| headers[k] ||= v }
+        soap_headers.each do |k, v| headers[k] ||= v end
 
         if locals[:cookies]&.any?
           headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")

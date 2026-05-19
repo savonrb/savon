@@ -24,7 +24,7 @@ RSpec.describe "Number conversion example" do
     mutex = Mutex.new
     threads_waiting = request_data.size
 
-    threads = request_data.map do |number|
+    threads = request_data.map { |number|
       thread = Thread.new do
         response = call_and_fail_gracefully(client, :number_to_words, :message => { :ubi_num => number })
         Thread.current[:value] = response.body[:number_to_words_response][:number_to_words_result]
@@ -33,7 +33,7 @@ RSpec.describe "Number conversion example" do
 
       thread.abort_on_exception = true
       thread
-    end
+    }
 
     sleep(1) until threads_waiting == 0
 

@@ -25,7 +25,7 @@ RSpec.describe Savon::BlockInterface do
 
     context "when block arity == 0" do
       it "delegates method calls to the target" do
-        target.define_singleton_method(:hello) { "world" }
+        target.define_singleton_method(:hello) do "world" end
         result = nil
         interface.evaluate(proc { result = hello })
         expect(result).to eq("world")

@@ -12,7 +12,7 @@ RSpec.describe Savon::Message do
     @server.stop
   end
 
-  let(:client_config) {
+  let(:client_config) do
     {
       :endpoint                 => @server.url(:repeat),
       :namespace                => 'http://example.com',
@@ -23,22 +23,22 @@ RSpec.describe Savon::Message do
 
       :convert_response_tags_to => nil
     }
-  }
+  end
 
   let(:client) { Savon.client(client_config) }
 
   context "with a qualified message" do
-    let(:message) {
+    let(:message) do
       {
         :email_count => 3,
         :user_name   => 'josh',
         :order!      => %i[user_name email_count]
       }
-    }
+    end
 
-    let(:converted_keys) {
+    let(:converted_keys) do
       '<wsdl:UserName>josh</wsdl:UserName><wsdl:EmailCount>3</wsdl:EmailCount>'
-    }
+    end
 
     it "converts request Hash keys for which there is not namespace" do
       response = client.call(:something, :message => message)

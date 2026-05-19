@@ -33,7 +33,7 @@ module Savon
       # @param headers [Hash]   request headers
       # @param body    [String] the serialized SOAP envelope
       def log_request(url, headers, body)
-        logger.info  { "SOAP request: #{url}" }
+        logger.info  do "SOAP request: #{url}" end
         logger.info  { headers_to_log(headers) } if log_headers?
         logger.debug { body_to_log(body) }
       end
@@ -43,7 +43,7 @@ module Savon
       #
       # @param response [Transport::Response]
       def log_response(response)
-        logger.info  { "SOAP response (status #{response.code})" }
+        logger.info  do "SOAP response (status #{response.code})" end
         logger.debug { headers_to_log(response.headers) } if log_headers?
         logger.debug { body_to_log(response.body) }
       end

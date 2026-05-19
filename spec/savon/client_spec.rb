@@ -14,17 +14,17 @@ RSpec.describe Savon::Client do
 
   describe ".new" do
     it "supports a block without arguments to create a client with global options" do
-      client = Savon.client do
+      client = Savon.client {
         wsdl Fixture.wsdl(:authentication)
-      end
+      }
 
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
 
     it "supports a block with one argument to create a client with global options" do
-      client = Savon.client do |globals|
+      client = Savon.client { |globals|
         globals.wsdl Fixture.wsdl(:authentication)
-      end
+      }
 
       expect(client.globals[:wsdl]).to eq(Fixture.wsdl(:authentication))
     end
@@ -211,9 +211,9 @@ RSpec.describe Savon::Client do
     it "supports a block without arguments to call an operation with local options" do
       client = new_client(:endpoint => @server.url(:repeat))
 
-      response = client.call(:authenticate) do
+      response = client.call(:authenticate) {
         message(:symbol => "AAPL")
-      end
+      }
 
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
     end
@@ -224,9 +224,9 @@ RSpec.describe Savon::Client do
       # supports instance variables!
       @instance_variable = { :symbol => "AAPL" }
 
-      response = client.call(:authenticate) do |locals|
+      response = client.call(:authenticate) { |locals|
         locals.message(@instance_variable)
-      end
+      }
 
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
     end
@@ -281,18 +281,18 @@ RSpec.describe Savon::Client do
       operation.expects(:call).never
 
       client = new_client(:endpoint => @server.url(:repeat))
-      request = client.build_request(:authenticate) do
+      request = client.build_request(:authenticate) {
         message(:symbol => "AAPL")
-      end
+      }
 
       expect(request).to eq expected_request
     end
 
     it "accepts a block without arguments" do
       client = new_client(:endpoint => @server.url(:repeat))
-      request = client.build_request(:authenticate) do
+      request = client.build_request(:authenticate) {
         message(:symbol => "AAPL")
-      end
+      }
 
       expect(request.body)
         .to include('<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>')
@@ -304,9 +304,9 @@ RSpec.describe Savon::Client do
       # supports instance variables!
       @instance_variable = { :symbol => "AAPL" }
 
-      request = client.build_request(:authenticate) do |locals|
+      request = client.build_request(:authenticate) { |locals|
         locals.message(@instance_variable)
-      end
+      }
 
       expect(request.body)
         .to include("<tns:authenticate><symbol>AAPL</symbol></tns:authenticate>")

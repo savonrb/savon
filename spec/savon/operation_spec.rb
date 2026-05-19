@@ -149,12 +149,12 @@ RSpec.describe Savon::Operation do
       let(:wsdl)           { no_wsdl }
 
       it "parses multipart attachments" do
-        response = operation.call do
+        response = operation.call {
           attachments [
             { filename: "x1.xml", content: "<xml>abc</xml>" },
             { filename: "x2.xml", content: "<xml>cde</xml>" }
           ]
-        end
+        }
 
         expect(response.multipart?).to be true
         expect(response.header).to eq "response header"
@@ -191,7 +191,7 @@ RSpec.describe Savon::Operation do
     end
 
     it "routes the request through Transport::Faraday and returns a Savon::Response" do
-      stubs.post("/soap") { [200, {}, Fixture.response(:authentication)] }
+      stubs.post("/soap") do [200, {}, Fixture.response(:authentication)] end
       response = operation.call
       expect(response).to be_a(Savon::Response)
       expect(response.http).to be_a(Savon::Transport::Response)

@@ -30,9 +30,9 @@ RSpec.describe Savon::Builder do
       locals = Savon::LocalOptions.new(message)
       builder = described_class.new(:create_object, wsdl, globals, locals)
 
-      parsed_doc = Nokogiri::XML(builder.to_s) do |config|
+      parsed_doc = Nokogiri::XML(builder.to_s) { |config|
         config.norecover.strict
-      end
+      }
       envelope = parsed_doc.xpath('./env:Envelope').first
 
       expect(envelope.namespaces).to match(expected_namespaces)

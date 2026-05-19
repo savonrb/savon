@@ -122,12 +122,12 @@ module Savon
               "Add to your Gemfile: gem 'faraday'"
       end
 
-      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map do |option, config|
+      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map { |option, config|
         next unless include?(option)
         next if config.key?(:default) && self[option] == config[:default]
 
         "  #{option} - Use: #{config[:hint]}"
-      end
+      }
 
       return if violations.empty?
 

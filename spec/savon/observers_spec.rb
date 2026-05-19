@@ -18,7 +18,7 @@ RSpec.describe Savon do
     end
 
     it "allows to register an observer for every request" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(operation_name, builder, globals, locals)
           @operation_name = operation_name
 
@@ -31,7 +31,7 @@ RSpec.describe Savon do
         end
 
         attr_reader :operation_name, :builder, :globals, :locals
-      }.new
+      end.new
 
       described_class.observers << observer
 
@@ -45,11 +45,11 @@ RSpec.describe Savon do
     end
 
     it "accepts a Transport::Response from an observer" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           Savon::Transport::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
-      }.new
+      end.new
 
       described_class.observers << observer
 
@@ -62,12 +62,12 @@ RSpec.describe Savon do
     end
 
     it "allows observers to return deprecated HTTPI::Responses" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           # return a response to mock the request
           HTTPI::Response.new(201, { "x-result" => "valid" }, "valid!")
         end
-      }.new
+      end.new
 
       described_class.observers << observer
 
@@ -80,11 +80,11 @@ RSpec.describe Savon do
     end
 
     it "raises if an observer returns something other than nil, HTTPI::Response, or Transport::Response" do
-      observer = Class.new {
+      observer = Class.new do
         def notify(*)
           []
         end
-      }.new
+      end.new
 
       described_class.observers << observer
 

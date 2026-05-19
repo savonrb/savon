@@ -186,11 +186,11 @@ RSpec.describe "Options" do
     end
 
     it "accepts anything other than a String and calls #to_s on it" do
-      to_s_header = Class.new {
+      to_s_header = Class.new do
         def to_s
           "to_s_header"
         end
-      }.new
+      end.new
 
       client = new_client(:endpoint => @server.url(:repeat), :soap_header => to_s_header)
       response = client.call(:authenticate)
@@ -312,10 +312,10 @@ RSpec.describe "Options" do
     end
 
     it "instructs Savon to log SOAP requests and responses" do
-      stdout = mock_stdout do
+      stdout = mock_stdout {
         client = new_client(:endpoint => @server.url, :log => true)
         client.call(:authenticate)
-      end
+      }
 
       expect(stdout.string).to include("INFO -- : SOAP request")
     end
@@ -573,13 +573,13 @@ RSpec.describe "Options" do
 
   context "global :filters" do
     it "filters a list of XML tags from logged SOAP messages" do
-      captured = mock_stdout do
+      captured = mock_stdout {
         client = new_client(:endpoint => @server.url(:repeat), :log => true)
         client.globals[:filters] << :password
 
         message = { :username => "luke", :password => "secret" }
         client.call(:authenticate, :message => message)
-      end
+      }
 
       captured.rewind
       messages = captured.readlines.join("\n")
@@ -590,7 +590,7 @@ RSpec.describe "Options" do
 
   context "global :pretty_print_xml" do
     it "is a nice but expensive way to debug XML messages" do
-      captured = mock_stdout do
+      captured = mock_stdout {
         client = new_client(
           :endpoint         => @server.url(:repeat),
           :pretty_print_xml => true,
@@ -599,7 +599,7 @@ RSpec.describe "Options" do
         client.globals[:logger].formatter = proc { |*, msg| "#{msg}\n" }
 
         client.call(:authenticate)
-      end
+      }
 
       captured.rewind
       messages = captured.readlines.join("\n")
@@ -862,15 +862,15 @@ RSpec.describe "Options" do
 
   context "global :convert_request_keys_to" do
     it "changes how Hash message key Symbols are translated to XML tags for the request" do
-      client = new_client_without_wsdl do |globals|
+      client = new_client_without_wsdl { |globals|
         globals.endpoint @server.url(:repeat)
         globals.namespace "http://v1.example.com"
         globals.convert_request_keys_to :camelcase # or one of [:lower_camelcase, :upcase, :none]
-      end
+      }
 
-      response = client.call(:find_user) do |locals|
+      response = client.call(:find_user) { |locals|
         locals.message(:user_name => "luke", "pass_word" => "secret")
-      end
+      }
 
       request = response.http.body
 
@@ -890,16 +890,16 @@ RSpec.describe "Options" do
     end
 
     it "accepts a block in the block-based interface" do
-      client = Savon.client do |globals|
+      client = Savon.client { |globals|
         globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
         globals.convert_response_tags_to { |tag| Savon::StringUtils.snakecase(tag).upcase }
-      end
+      }
 
-      response = client.call(:authenticate) do |locals|
+      response = client.call(:authenticate) { |locals|
         locals.xml Fixture.response(:authentication)
-      end
+      }
 
       expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
@@ -919,16 +919,16 @@ RSpec.describe "Options" do
     end
 
     it "accepts a block in the block-based interface" do
-      client = Savon.client do |globals|
+      client = Savon.client { |globals|
         globals.log                      false
         globals.wsdl                     Fixture.wsdl(:authentication)
         globals.endpoint                 @server.url(:repeat)
         globals.convert_attributes_to    { |k, v| [k, v] }
-      end
+      }
 
-      response = client.call(:authenticate) do |locals|
+      response = client.call(:authenticate) { |locals|
         locals.xml Fixture.response(:f5)
-      end
+      }
 
       expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
     end
@@ -1016,11 +1016,11 @@ RSpec.describe "Options" do
     end
 
     it "accepts anything other than a String and calls #to_s on it" do
-      to_s_header = Class.new {
+      to_s_header = Class.new do
         def to_s
           "to_s_header"
         end
-      }.new
+      end.new
 
       client = new_client(:endpoint => @server.url(:repeat))
 
