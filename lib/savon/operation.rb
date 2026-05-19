@@ -76,11 +76,12 @@ module Savon
       builder  = build(locals, &block)
       response = Savon.notify_observers(@name, builder, @globals, @locals)
 
-      if response.nil?
-        response = @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
-      else
-        response = normalize_observer_response(response)
-      end
+      response =
+        if response.nil?
+          @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
+        else
+          normalize_observer_response(response)
+        end
 
       create_response(response)
     end

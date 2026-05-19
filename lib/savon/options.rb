@@ -51,11 +51,12 @@ module Savon
     #   global == [user, pass] && local == nil   => [user, pass]
     def wsse_auth(*credentials)
       credentials.flatten!
-      if credentials.size == 1
-        @options[:wsse_auth] = credentials.first
-      else
-        @options[:wsse_auth] = credentials
-      end
+      @options[:wsse_auth] =
+        if credentials.size == 1
+          credentials.first
+        else
+          credentials
+        end
     end
 
     # Instruct Akami to enable wsu:Timestamp headers.

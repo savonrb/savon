@@ -446,15 +446,6 @@ Style/ClassCheck:
     - 'lib/savon/response.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.
-# SupportedStyles: assign_to_condition, assign_inside_condition
-Style/ConditionalAssignment:
-  Exclude:
-    - 'lib/savon/operation.rb'
-    - 'lib/savon/options.rb'
-
 # Offense count: 14
 # Configuration parameters: AllowedConstants.
 Style/Documentation:
