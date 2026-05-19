@@ -39,7 +39,7 @@ RSpec.describe "Options" do
 
     it "ignores namespace identifier if it is nil" do
       client = new_client(:endpoint => @server.url(:repeat), :namespace_identifier => nil)
-      response = client.call(:authenticate, :message => {:user => 'foo'})
+      response = client.call(:authenticate, :message => { :user => 'foo' })
 
       expect(response.http.body).to include('xmlns="http://v1_0.ws.auth.order.example.com/"')
       expect(response.http.body).to include("<authenticate><user>foo</user></authenticate>")
@@ -50,10 +50,10 @@ RSpec.describe "Options" do
     it "omits the 'message tag' encapsulation step" do
       client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => true,
                           :wsdl => Fixture.wsdl(:no_message_tag))
-      msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
-                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items'        => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
+      msg = { 'extLoginData' => { 'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
+                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1 },
+              'Items'        => [{ 'Item' => { 'SKU' => '001002003A', 'CustomerID' => 1,
+                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A' } }] }
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(1)
@@ -65,10 +65,10 @@ RSpec.describe "Options" do
       # That is just a guess though. I don't really have to properly debug the WSDL parser.
       client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => false,
                           :wsdl => Fixture.wsdl(:no_message_tag))
-      msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
-                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items'        => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
+      msg = { 'extLoginData' => { 'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
+                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1 },
+              'Items'        => [{ 'Item' => { 'SKU' => '001002003A', 'CustomerID' => 1,
+                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A' } }] }
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(2)
@@ -219,7 +219,7 @@ RSpec.describe "Options" do
     it "qualifies elements embedded in complex types" do
       client = new_client(:endpoint => @server.url(:repeat),
                           :wsdl     => Fixture.wsdl(:elements_in_types))
-      msg = {":TopLevelTransaction"=>{":Qualified"=>"A Value"}}
+      msg = { ":TopLevelTransaction"=>{ ":Qualified"=>"A Value" } }
 
       response = client.call(:top_level_transaction, :message => msg)
 
@@ -885,7 +885,7 @@ RSpec.describe "Options" do
     it "changes how XML tag attributes from the SOAP response are translated into Hash keys" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda { |k, v| [k, v] })
       response = client.call(:authenticate, :xml => Fixture.response(:f5))
-      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({:"@s:type"=>"y:string"})
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
     end
 
     it "strips the attributes if an appropriate lambda is set" do
@@ -906,7 +906,7 @@ RSpec.describe "Options" do
         locals.xml Fixture.response(:f5)
       end
 
-      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({:"@s:type"=>"y:string"})
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
     end
   end
 
@@ -1027,7 +1027,7 @@ RSpec.describe "Options" do
   context "request: attributes" do
     it "when set, adds the attributes to the message tag" do
       client   = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :attributes => { "Token" => "secret"})
+      response = client.call(:authenticate, :attributes => { "Token" => "secret" })
 
       expect(response.http.body).to include('<tns:authenticate Token="secret">')
     end

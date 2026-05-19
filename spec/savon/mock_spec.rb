@@ -143,7 +143,7 @@ RSpec.describe "Savon's mock interface" do
 
   it "matchers can be used to specify the message" do
     savon.expects(:find_user).with(:message => include(:username)).returns("<fixture/>")
-    message = { :username => "Han Solo", password: "querty"}
+    message = { :username => "Han Solo", password: "querty" }
 
     expect { new_client.call(:find_user, :message => message) }.to_not raise_error
   end

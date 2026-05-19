@@ -232,7 +232,7 @@ RSpec.describe Savon::Client do
 
     it "accepts arguments for the message tag" do
       client   = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :attributes => { "ID" => "ABC321"})
+      response = client.call(:authenticate, :attributes => { "ID" => "ABC321" })
 
       expect(response.http.body).to include('<tns:authenticate ID="ABC321">')
     end

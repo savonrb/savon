@@ -7,8 +7,8 @@ RSpec.describe Savon::Builder do
   it "building multipart request from inline content" do
     locals = {
       attachments: [
-        { filename: 'x1.xml', content: '<xml>abc1</xml>'},
-        { filename: 'x2.xml', content: '<xml>abc2</xml>'}
+        { filename: 'x1.xml', content: '<xml>abc1</xml>' },
+        { filename: 'x2.xml', content: '<xml>abc2</xml>' }
       ]
     }
     builder = Savon::Builder.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))

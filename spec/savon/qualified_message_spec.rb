@@ -11,7 +11,7 @@ module Savon
 
       it "restores the ! in a key" do
         message = described_class.new(types, used_namespaces, key_converter)
-        resulting_hash = message.to_hash({:Metal! => "<Nice/>"}, ["Rock"])
+        resulting_hash = message.to_hash({ :Metal! => "<Nice/>" }, ["Rock"])
 
         expect(resulting_hash).to eq({ :Metal! => "<Nice/>" })
       end
