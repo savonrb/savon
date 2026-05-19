@@ -16,7 +16,7 @@ RSpec.describe Savon::Model do
     it "returns the memoized client" do
       model = Class.new do
         extend Savon::Model
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
       end
 
       expect(model.client).to be_a(Savon::Client)
@@ -36,7 +36,7 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
 
         global :soap_version, 2
         global :open_timeout, 71
@@ -54,7 +54,7 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
         operations :authenticate
       end
 
@@ -67,13 +67,13 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+        client endpoint: repeat_url, namespace: "http://v1.example.com"
         global :log, false
 
         operations :authenticate
       end
 
-      response = model.authenticate(:xml => Fixture.response(:authentication))
+      response = model.authenticate(xml: Fixture.response(:authentication))
       expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
     end
 
@@ -81,7 +81,7 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
         operations :authenticate
       end
 
@@ -95,21 +95,21 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+        client endpoint: repeat_url, namespace: "http://v1.example.com"
         global :log, false
 
         operations :authenticate
       end
 
       model_instance = model.new
-      response = model_instance.authenticate(:xml => Fixture.response(:authentication))
+      response = model_instance.authenticate(xml: Fixture.response(:authentication))
       expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
     end
 
     it "generates class methods with source location pointing to the def line in model.rb" do
       model = Class.new do
         extend Savon::Model
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
         operations :authenticate
       end
 
@@ -121,7 +121,7 @@ RSpec.describe Savon::Model do
     it "generates instance methods with source location pointing to the def line in model.rb" do
       model = Class.new do
         extend Savon::Model
-        client :wsdl => Fixture.wsdl(:authentication)
+        client wsdl: Fixture.wsdl(:authentication)
         operations :authenticate
       end
 
@@ -136,7 +136,7 @@ RSpec.describe Savon::Model do
 
     model = Class.new do
       extend Savon::Model
-      client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+      client endpoint: repeat_url, namespace: "http://v1.example.com"
     end
 
     supermodel = model.dup
@@ -147,10 +147,10 @@ RSpec.describe Savon::Model do
       super
     end
 
-    supermodel.client.expects(:call).with(:authenticate, :message => { :username => "luke", :password => "secret" })
+    supermodel.client.expects(:call).with(:authenticate, message: { username: "luke", password: "secret" })
     supermodel.expects(:p).with("super")  # stupid, but works
 
-    supermodel.authenticate(:message => { :username => "luke", :password => "secret" })
+    supermodel.authenticate(message: { username: "luke", password: "secret" })
   end
 
   it "allows to overwrite instance operations" do
@@ -158,7 +158,7 @@ RSpec.describe Savon::Model do
 
     model = Class.new do
       extend Savon::Model
-      client :endpoint => repeat_url, :namespace => "http://v1.example.com"
+      client endpoint: repeat_url, namespace: "http://v1.example.com"
     end
 
     supermodel = model.dup
@@ -170,10 +170,10 @@ RSpec.describe Savon::Model do
       super
     end
 
-    supermodel.client.expects(:call).with(:authenticate, :message => { :username => "luke", :password => "secret" })
+    supermodel.client.expects(:call).with(:authenticate, message: { username: "luke", password: "secret" })
     supermodel.expects(:p).with("super")  # stupid, but works
 
-    supermodel.authenticate(:message => { :username => "luke", :password => "secret" })
+    supermodel.authenticate(message: { username: "luke", password: "secret" })
   end
 
   describe ".all_operations" do
@@ -181,7 +181,7 @@ RSpec.describe Savon::Model do
       model = Class.new do
         extend Savon::Model
 
-        client :wsdl => Fixture.wsdl(:taxcloud)
+        client wsdl: Fixture.wsdl(:taxcloud)
         all_operations
       end
 

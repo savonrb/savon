@@ -19,7 +19,7 @@ module Savon
     end
 
     def to_hash
-      { :code => @http.code, :headers => @http.headers, :body => @http.body }
+      { code: @http.code, headers: @http.headers, body: @http.body }
     end
   end
 end

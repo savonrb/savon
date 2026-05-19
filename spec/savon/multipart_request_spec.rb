@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-  let(:globals)     { Savon::GlobalOptions.new({ :endpoint => "http://example.co", :namespace => "http://v1.example.com" }) }
+  let(:globals)     { Savon::GlobalOptions.new({ endpoint: "http://example.co", namespace: "http://v1.example.com" }) }
   let(:no_wsdl)     { Wasabi::Document.new }
 
   it "building multipart request from inline content" do

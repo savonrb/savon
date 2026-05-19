@@ -25,10 +25,10 @@ module Savon
       end
 
       gyoku_options = {
-        :element_form_default => @element_form_default,
-        :namespace            => @namespace_identifier,
-        :key_converter        => @key_converter,
-        :unwrap               => @unwrap
+        element_form_default: @element_form_default,
+        namespace: @namespace_identifier,
+        key_converter: @key_converter,
+        unwrap: @unwrap
       }
 
       Gyoku.xml(@message, gyoku_options)

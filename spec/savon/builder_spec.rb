@@ -67,13 +67,13 @@ RSpec.describe Savon::Builder do
 
     it "uses the global :element_form_default option if it's available" do
       globals[:element_form_default] = :qualified
-      locals[:message] = { :username => "luke", :password => "secret" }
+      locals[:message] = { username: "luke", password: "secret" }
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
     end
 
     it "uses the WSDL's element_form_default value if the global option was set specified" do
-      locals[:message] = { :username => "luke", :password => "secret" }
+      locals[:message] = { username: "luke", password: "secret" }
       wsdl.element_form_default = :qualified
 
       expect(builder.to_s).to include("<tns:username>luke</tns:username>")
@@ -90,8 +90,8 @@ RSpec.describe Savon::Builder do
       let(:signature) do
         Akami::WSSE::Signature.new(
           Akami::WSSE::Certs.new(
-            :cert_file        => cert,
-            :private_key_file => private_key
+            cert_file: cert,
+            private_key_file: private_key
           )
         )
       end
@@ -112,7 +112,7 @@ RSpec.describe Savon::Builder do
       end
 
       it "signature should be valid" do
-        certs = Akami::WSSE::Certs.new(:cert_file => cert, :private_key_file => private_key)
+        certs = Akami::WSSE::Certs.new(cert_file: cert, private_key_file: private_key)
         signature_value = signed_message_nn.xpath('//SignatureValue').text
         signed_info_fragment = signed_message.xpath('//default:SignedInfo', default: "http://www.w3.org/2000/09/xmldsig#").to_xml
         data = Nokogiri::XML(signed_info_fragment) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }

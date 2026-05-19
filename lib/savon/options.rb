@@ -273,29 +273,29 @@ module Savon
       @option_type = :global
 
       defaults = {
-        :encoding                    => "UTF-8",
-        :soap_version                => 1,
-        :namespaces                  => {},
-        :logger                      => Logger.new($stdout),
-        :log                         => false,
-        :log_headers                 => true,
-        :filters                     => [],
-        :pretty_print_xml            => false,
-        :raise_errors                => true,
-        :strip_namespaces            => true,
-        :delete_namespace_attributes => false,
-        :convert_response_tags_to    => ->(tag) { StringUtils.snakecase(tag).to_sym },
-        :convert_attributes_to       => ->(k, v) { [k, v] },
-        :multipart                   => false,
-        :use_wsa_headers             => false,
-        :no_message_tag              => false,
-        :unwrap                      => false,
-        :host                        => nil,
-        :transport                   => :httpi,
+        encoding: "UTF-8",
+        soap_version: 1,
+        namespaces: {},
+        logger: Logger.new($stdout),
+        log: false,
+        log_headers: true,
+        filters: [],
+        pretty_print_xml: false,
+        raise_errors: true,
+        strip_namespaces: true,
+        delete_namespace_attributes: false,
+        convert_response_tags_to: ->(tag) { StringUtils.snakecase(tag).to_sym },
+        convert_attributes_to: ->(k, v) { [k, v] },
+        multipart: false,
+        use_wsa_headers: false,
+        no_message_tag: false,
+        unwrap: false,
+        host: nil,
+        transport: :httpi,
 
         # httpi transport defaults
-        :adapter                     => nil,
-        :follow_redirects            => false
+        adapter: nil,
+        follow_redirects: false
       }
 
       options = defaults.merge(options)
@@ -392,7 +392,7 @@ module Savon
 
     # Changes the Logger's log level.
     def log_level(level)
-      levels = { :debug => 0, :info => 1, :warn => 2, :error => 3, :fatal => 4 }
+      levels = { debug: 0, info: 1, warn: 2, error: 3, fatal: 4 }
 
       unless levels.include? level
         raise ArgumentError, "Invalid log level: #{level.inspect}\n" \
@@ -486,9 +486,9 @@ module Savon
       @option_type = :local
 
       defaults = {
-        :advanced_typecasting => true,
-        :response_parser      => :nokogiri,
-        :multipart            => false
+        advanced_typecasting: true,
+        response_parser: :nokogiri,
+        multipart: false
       }
 
       super defaults.merge(options)

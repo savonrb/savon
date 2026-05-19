@@ -96,9 +96,9 @@ RSpec.describe Savon do
 
   def new_client
     Savon.client(
-      :endpoint  => @server.url(:repeat),
-      :namespace => "http://v1.example.com",
-      :log       => false
+      endpoint: @server.url(:repeat),
+      namespace: "http://v1.example.com",
+      log: false
     )
   end
 end

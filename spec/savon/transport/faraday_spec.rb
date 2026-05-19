@@ -11,7 +11,7 @@ RSpec.describe Savon::Transport::Faraday do
   let(:url)    { "http://example.com/soap" }
   let(:body)   { "<soap:Envelope/>" }
   let(:locals) { Savon::LocalOptions.new }
-  let(:globals) { Savon::GlobalOptions.new(:log => false) }
+  let(:globals) { Savon::GlobalOptions.new(log: false) }
   let(:connection) do
     ::Faraday.new do |f|
       f.adapter :test, stubs
@@ -133,7 +133,7 @@ RSpec.describe Savon::Transport::Faraday do
     end
 
     it "skips LogMessage construction when the logger level would suppress the output" do
-      globals_logging = Savon::GlobalOptions.new(:log => true)
+      globals_logging = Savon::GlobalOptions.new(log: true)
       globals_logging[:logger].level = Logger::FATAL
       logging_stubs = ::Faraday::Adapter::Test::Stubs.new
       logging_stubs.post("/soap") do [200, {}, "ok"] end

@@ -11,9 +11,9 @@ module Savon
 
       it "restores the ! in a key" do
         message = described_class.new(types, used_namespaces, key_converter)
-        resulting_hash = message.to_hash({ :Metal! => "<Nice/>" }, ["Rock"])
+        resulting_hash = message.to_hash({ Metal!: "<Nice/>" }, ["Rock"])
 
-        expect(resulting_hash).to eq({ :Metal! => "<Nice/>" })
+        expect(resulting_hash).to eq({ Metal!: "<Nice/>" })
       end
 
       it "properly handles special keys when namespaces are present" do
@@ -23,31 +23,31 @@ module Savon
         }
 
         hash = {
-          :foo => {
-            :bar             => {
-              :zing => 'pow'
+          foo: {
+            bar: {
+              zing: 'pow'
             },
-            :cash            => {
+            cash: {
               :@attr1   => 'val1',
               :content! => 'Chunky Bacon'
             },
-            :attributes!     => {
-              :bar => { :attr2 => 'val2' }
+            attributes!: {
+              bar: { attr2: 'val2' }
             },
-            :"self_closing/" => '',
-            :order!          => %i[cash bar self_closing/]
+            "self_closing/": '',
+            order!: %i[cash bar self_closing/]
           }
         }
 
         good_result = {
           "ns:Foo" => {
-            'ns:Bar'         => { :zing => "pow" },
+            'ns:Bar'         => { zing: "pow" },
             :cash            => {
               :@attr1   => "val1",
               :content! => "Chunky Bacon"
             },
             :attributes!     => {
-              'ns:Bar' => { :attr2 => 'val2' }
+              'ns:Bar' => { attr2: 'val2' }
             },
             :"self_closing/" => '',
             :order!          => [:cash, 'ns:Bar', :"self_closing/"]
@@ -70,8 +70,8 @@ module Savon
         }
 
         hash = {
-          :foo => {
-            :falsey => {
+          foo: {
+            falsey: {
               :@attr1   => false,
               :content! => false
             }
@@ -80,7 +80,7 @@ module Savon
 
         good_result = {
           "ns:Foo" => {
-            :falsey => {
+            falsey: {
               :@attr1   => false,
               :content! => false
             }

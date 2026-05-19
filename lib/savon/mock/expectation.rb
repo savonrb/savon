@@ -12,7 +12,7 @@ module Savon
   # an error on mismatch.
   class MockExpectation
     def initialize(operation_name)
-      @expected = { :operation_name => operation_name }
+      @expected = { operation_name: operation_name }
       @actual = nil
     end
 
@@ -22,15 +22,15 @@ module Savon
     end
 
     def returns(response)
-      response = { :code => 200, :headers => {}, :body => response } if response.is_a?(String)
+      response = { code: 200, headers: {}, body: response } if response.is_a?(String)
       @response = response
       self
     end
 
     def actual(operation_name, _builder, _globals, locals)
       @actual = {
-        :operation_name => operation_name,
-        :message        => locals[:message]
+        operation_name: operation_name,
+        message: locals[:message]
       }
     end
 

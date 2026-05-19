@@ -35,7 +35,7 @@ module Savon
     end
 
     def pretty
-      Nokogiri.XML(to_s).to_xml(:indent => 2)
+      Nokogiri.XML(to_s).to_xml(indent: 2)
     end
 
     def build_document
@@ -171,7 +171,7 @@ module Savon
       message_tag = wsdl_tag_name.keys.first if wsdl_tag_name.is_a?(Hash)
       message_tag ||= @locals[:message_tag]
       message_tag ||= wsdl_tag_name
-      message_tag ||= Gyoku.xml_tag(@operation_name, :key_converter => @globals[:convert_request_keys_to])
+      message_tag ||= Gyoku.xml_tag(@operation_name, key_converter: @globals[:convert_request_keys_to])
 
       message_tag.to_sym
     end
@@ -215,7 +215,7 @@ module Savon
 
     def builder
       builder = ::Builder::XmlMarkup.new
-      builder.instruct!(:xml, :encoding => @globals[:encoding])
+      builder.instruct!(:xml, encoding: @globals[:encoding])
       builder
     end
 

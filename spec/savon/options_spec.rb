@@ -17,7 +17,7 @@ RSpec.describe "Options" do
 
   context "global: endpoint and namespace" do
     it "sets the SOAP endpoint to use to allow requests without a WSDL document" do
-      client = new_client_without_wsdl(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com")
+      client = new_client_without_wsdl(endpoint: @server.url(:repeat), namespace: "http://v1.example.com")
       response = client.call(:authenticate)
 
       # the default namespace identifier is :wsdl and contains the namespace option
@@ -30,7 +30,7 @@ RSpec.describe "Options" do
 
   context "global :namespace_identifier" do
     it "changes the default namespace identifier" do
-      client = new_client(:endpoint => @server.url(:repeat), :namespace_identifier => :lol)
+      client = new_client(endpoint: @server.url(:repeat), namespace_identifier: :lol)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include('xmlns:lol="http://v1_0.ws.auth.order.example.com/"')
@@ -38,8 +38,8 @@ RSpec.describe "Options" do
     end
 
     it "ignores namespace identifier if it is nil" do
-      client = new_client(:endpoint => @server.url(:repeat), :namespace_identifier => nil)
-      response = client.call(:authenticate, :message => { :user => 'foo' })
+      client = new_client(endpoint: @server.url(:repeat), namespace_identifier: nil)
+      response = client.call(:authenticate, message: { user: 'foo' })
 
       expect(response.http.body).to include('xmlns="http://v1_0.ws.auth.order.example.com/"')
       expect(response.http.body).to include("<authenticate><user>foo</user></authenticate>")
@@ -48,13 +48,13 @@ RSpec.describe "Options" do
 
   context "global: :no_message_tag" do
     it "omits the 'message tag' encapsulation step" do
-      client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => true,
-                          :wsdl => Fixture.wsdl(:no_message_tag))
+      client = new_client(endpoint: @server.url(:repeat), no_message_tag: true,
+                          wsdl: Fixture.wsdl(:no_message_tag))
       msg = { 'extLoginData' => { 'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
                                 'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1 },
               'Items'        => [{ 'Item' => { 'SKU' => '001002003A', 'CustomerID' => 1,
                                      'InventoryMethod' => 'FIFO', 'UPC' => '001002003A' } }] }
-      response = client.call(:create_items, :message => msg)
+      response = client.call(:create_items, message: msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(1)
     end
@@ -63,13 +63,13 @@ RSpec.describe "Options" do
       # This test is probably just exposing a bug while the previous
       # test is using a workaround fix.
       # That is just a guess though. I don't really have to properly debug the WSDL parser.
-      client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => false,
-                          :wsdl => Fixture.wsdl(:no_message_tag))
+      client = new_client(endpoint: @server.url(:repeat), no_message_tag: false,
+                          wsdl: Fixture.wsdl(:no_message_tag))
       msg = { 'extLoginData' => { 'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
                                 'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1 },
               'Items'        => [{ 'Item' => { 'SKU' => '001002003A', 'CustomerID' => 1,
                                      'InventoryMethod' => 'FIFO', 'UPC' => '001002003A' } }] }
-      response = client.call(:create_items, :message => msg)
+      response = client.call(:create_items, message: msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(2)
     end
@@ -78,7 +78,7 @@ RSpec.describe "Options" do
   context "global :namespaces" do
     it "adds additional namespaces to the SOAP envelope" do
       namespaces = { "xmlns:whatever" => "http://whatever.example.com" }
-      client = new_client(:endpoint => @server.url(:repeat), :namespaces => namespaces)
+      client = new_client(endpoint: @server.url(:repeat), namespaces: namespaces)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include('xmlns:whatever="http://whatever.example.com"')
@@ -87,7 +87,7 @@ RSpec.describe "Options" do
 
   context 'global :follow_redirects' do
     it 'sets whether or not request should follow redirects' do
-      client = new_client(:endpoint => @server.url, :follow_redirects => true)
+      client = new_client(endpoint: @server.url, follow_redirects: true)
 
       HTTPI::Request.any_instance.expects(:follow_redirect=).with(true)
 
@@ -95,7 +95,7 @@ RSpec.describe "Options" do
     end
 
     it 'defaults to false' do
-      client = new_client(:endpoint => @server.url)
+      client = new_client(endpoint: @server.url)
 
       HTTPI::Request.any_instance.expects(:follow_redirect=).with(false)
 
@@ -106,7 +106,7 @@ RSpec.describe "Options" do
   context "global :proxy" do
     it "sets the proxy server to use" do
       proxy_url = "http://example.com"
-      client = new_client(:endpoint => @server.url, :proxy => proxy_url)
+      client = new_client(endpoint: @server.url, proxy: proxy_url)
 
       # TODO: find a way to integration test this [dh, 2012-12-08]
       HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
@@ -117,7 +117,7 @@ RSpec.describe "Options" do
 
   context "global :host" do
     it "overrides the WSDL endpoint host" do
-      client = new_client(:wsdl => Fixture.wsdl(:no_message_tag), host: "https://example.com:8080")
+      client = new_client(wsdl: Fixture.wsdl(:no_message_tag), host: "https://example.com:8080")
 
       request = client.build_request(:update_orders)
       expect(request.url.to_s).to eq "https://example.com:8080/webserviceexternal/contracts.asmx"
@@ -126,7 +126,7 @@ RSpec.describe "Options" do
 
   context "global :headers" do
     it "sets the HTTP headers for the next request" do
-      client = new_client(:endpoint => @server.url(:inspect_request), :headers => { "X-Token" => "secret" })
+      client = new_client(endpoint: @server.url(:inspect_request), headers: { "X-Token" => "secret" })
 
       response = client.call(:authenticate)
       x_token  = inspect_request(response).x_token
@@ -138,7 +138,7 @@ RSpec.describe "Options" do
   context "global :open_timeout" do
     it "makes the client timeout after n seconds" do
       non_routable_ip = "http://192.0.2.0"
-      client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
+      client = new_client(endpoint: non_routable_ip, open_timeout: 0.1)
 
       # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
       #       instead of a specific client error [dh, 2012-12-08]
@@ -153,7 +153,7 @@ RSpec.describe "Options" do
 
   context "global :read_timeout" do
     it "makes the client timeout after n seconds" do
-      client = new_client(:endpoint => @server.url(:timeout), :open_timeout => 0.1, :read_timeout => 0.1)
+      client = new_client(endpoint: @server.url(:timeout), open_timeout: 0.1, read_timeout: 0.1)
 
       expect { client.call(:authenticate) }
         .to raise_error(HTTPClient::ReceiveTimeoutError)
@@ -162,14 +162,14 @@ RSpec.describe "Options" do
 
   context "global :encoding" do
     it "changes the XML instruction" do
-      client = new_client(:endpoint => @server.url(:repeat), :encoding => "ISO-8859-1")
+      client = new_client(endpoint: @server.url(:repeat), encoding: "ISO-8859-1")
       response = client.call(:authenticate)
 
       expect(response.http.body).to match(/<\?xml version="1\.0" encoding="ISO-8859-1"\?>/)
     end
 
     it "changes the Content-Type header" do
-      client = new_client(:endpoint => @server.url(:inspect_request), :encoding => "ISO-8859-1")
+      client = new_client(endpoint: @server.url(:inspect_request), encoding: "ISO-8859-1")
 
       response = client.call(:authenticate)
       content_type = inspect_request(response).content_type
@@ -179,7 +179,7 @@ RSpec.describe "Options" do
 
   context "global :soap_header" do
     it "accepts a Hash of SOAP header information" do
-      client = new_client(:endpoint => @server.url(:repeat), :soap_header => { :auth_token => "secret" })
+      client = new_client(endpoint: @server.url(:repeat), soap_header: { auth_token: "secret" })
       response = client.call(:authenticate)
 
       expect(response.http.body).to include("<env:Header><authToken>secret</authToken></env:Header>")
@@ -192,7 +192,7 @@ RSpec.describe "Options" do
         end
       end.new
 
-      client = new_client(:endpoint => @server.url(:repeat), :soap_header => to_s_header)
+      client = new_client(endpoint: @server.url(:repeat), soap_header: to_s_header)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include("<env:Header>to_s_header</env:Header>")
@@ -202,26 +202,26 @@ RSpec.describe "Options" do
   context "global :element_form_default" do
     it "specifies whether elements should be :qualified or :unqualified" do
       # qualified
-      client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :qualified)
+      client = new_client(endpoint: @server.url(:repeat), element_form_default: :qualified)
 
-      response = client.call(:authenticate, :message => { :user => "luke", :password => "secret" })
+      response = client.call(:authenticate, message: { user: "luke", password: "secret" })
       expect(response.http.body).to include("<tns:user>luke</tns:user>")
       expect(response.http.body).to include("<tns:password>secret</tns:password>")
 
       # unqualified
-      client = new_client(:endpoint => @server.url(:repeat), :element_form_default => :unqualified)
+      client = new_client(endpoint: @server.url(:repeat), element_form_default: :unqualified)
 
-      response = client.call(:authenticate, :message => { :user => "lea", :password => "top-secret" })
+      response = client.call(:authenticate, message: { user: "lea", password: "top-secret" })
       expect(response.http.body).to include("<user>lea</user>")
       expect(response.http.body).to include("<password>top-secret</password>")
     end
 
     it "qualifies elements embedded in complex types" do
-      client = new_client(:endpoint => @server.url(:repeat),
-                          :wsdl     => Fixture.wsdl(:elements_in_types))
+      client = new_client(endpoint: @server.url(:repeat),
+                          wsdl: Fixture.wsdl(:elements_in_types))
       msg = { ":TopLevelTransaction"=>{ ":Qualified"=>"A Value" } }
 
-      response = client.call(:top_level_transaction, :message => msg)
+      response = client.call(:top_level_transaction, message: msg)
 
       expect(response.http.body.scan(/<tns:Qualified>/).count).to eq(1)
     end
@@ -229,14 +229,14 @@ RSpec.describe "Options" do
 
   context "global :env_namespace" do
     it "when set, replaces the default namespace identifier for the SOAP envelope" do
-      client = new_client(:endpoint => @server.url(:repeat), :env_namespace => "soapenv")
+      client = new_client(endpoint: @server.url(:repeat), env_namespace: "soapenv")
       response = client.call(:authenticate)
 
       expect(response.http.body).to include("<soapenv:Envelope")
     end
 
     it "when not set, Savon defaults to use :env as the namespace identifier for the SOAP envelope" do
-      client = new_client(:endpoint => @server.url(:repeat))
+      client = new_client(endpoint: @server.url(:repeat))
       response = client.call(:authenticate)
 
       expect(response.http.body).to include("<env:Envelope")
@@ -245,14 +245,14 @@ RSpec.describe "Options" do
 
   context "global :soap_version" do
     it "uses the correct SOAP 1.1 namespace" do
-      client = new_client(:endpoint => @server.url(:repeat), :soap_version => 1)
+      client = new_client(endpoint: @server.url(:repeat), soap_version: 1)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
     end
 
     it "uses the correct SOAP 1.2 namespace" do
-      client = new_client(:endpoint => @server.url(:repeat), :soap_version => 2)
+      client = new_client(endpoint: @server.url(:repeat), soap_version: 2)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include('xmlns:env="http://www.w3.org/2003/05/soap-envelope"')
@@ -261,13 +261,13 @@ RSpec.describe "Options" do
 
   context "global: raise_errors" do
     it "when true, instructs Savon to raise SOAP fault errors" do
-      client = new_client(:endpoint => @server.url(:repeat), :raise_errors => true)
+      client = new_client(endpoint: @server.url(:repeat), raise_errors: true)
 
-      expect { client.call(:authenticate, :xml => Fixture.response(:soap_fault)) }
+      expect { client.call(:authenticate, xml: Fixture.response(:soap_fault)) }
         .to raise_error(Savon::SOAPFault)
 
       begin
-        client.call(:authenticate, :xml => Fixture.response(:soap_fault))
+        client.call(:authenticate, xml: Fixture.response(:soap_fault))
       rescue Savon::SOAPFault => e
         # check whether the configured nori instance is used by the soap fault
         expect(e.to_hash[:fault][:faultcode]).to eq("soap:Server")
@@ -275,20 +275,20 @@ RSpec.describe "Options" do
     end
 
     it "when true, instructs Savon to raise HTTP errors" do
-      client = new_client(:endpoint => @server.url(404), :raise_errors => true)
+      client = new_client(endpoint: @server.url(404), raise_errors: true)
       expect { client.call(:authenticate) }.to raise_error(Savon::HTTPError)
     end
 
     it "when false, instructs Savon to not raise SOAP fault errors" do
-      client = new_client(:endpoint => @server.url(:repeat), :raise_errors => false)
-      response = client.call(:authenticate, :xml => Fixture.response(:soap_fault))
+      client = new_client(endpoint: @server.url(:repeat), raise_errors: false)
+      response = client.call(:authenticate, xml: Fixture.response(:soap_fault))
 
       expect(response).not_to be_successful
       expect(response).to be_a_soap_fault
     end
 
     it "when false, instructs Savon to not raise HTTP errors" do
-      client = new_client(:endpoint => @server.url(404), :raise_errors => false)
+      client = new_client(endpoint: @server.url(404), raise_errors: false)
       response = client.call(:authenticate)
 
       expect(response).not_to be_successful
@@ -299,7 +299,7 @@ RSpec.describe "Options" do
   context "global :log" do
     it "instructs Savon not to log SOAP requests and responses" do
       stdout = mock_stdout {
-        client = new_client(:endpoint => @server.url, :log => false)
+        client = new_client(endpoint: @server.url, log: false)
         client.call(:authenticate)
       }
 
@@ -308,12 +308,12 @@ RSpec.describe "Options" do
 
     it "silences HTTPI as well" do
       HTTPI.expects(:log=).with(false)
-      new_client(:log => false)
+      new_client(log: false)
     end
 
     it "instructs Savon to log SOAP requests and responses" do
       stdout = mock_stdout {
-        client = new_client(:endpoint => @server.url, :log => true)
+        client = new_client(endpoint: @server.url, log: true)
         client.call(:authenticate)
       }
 
@@ -322,7 +322,7 @@ RSpec.describe "Options" do
 
     it "turns HTTPI logging back on as well" do
       HTTPI.expects(:log=).with(true)
-      new_client(:log => true)
+      new_client(log: true)
     end
   end
 
@@ -335,7 +335,7 @@ RSpec.describe "Options" do
     it "allows a custom logger to be set" do
       custom_logger = Logger.new($stdout)
 
-      client = new_client(:logger => custom_logger, :log => true)
+      client = new_client(logger: custom_logger, log: true)
       logger = client.globals[:logger]
 
       expect(logger).to eq(custom_logger)
@@ -344,7 +344,7 @@ RSpec.describe "Options" do
     it "sets the logger of HTTPI as well" do
       custom_logger = Logger.new($stdout)
 
-      new_client(:logger => custom_logger, :log => true)
+      new_client(logger: custom_logger, log: true)
 
       expect(HTTPI.logger).to be custom_logger
     end
@@ -352,42 +352,42 @@ RSpec.describe "Options" do
 
   context "global :log_level" do
     it "allows changing the Logger's log level to :debug" do
-      client = new_client(:log_level => :debug)
+      client = new_client(log_level: :debug)
       level = client.globals[:logger].level
 
       expect(level).to eq(0)
     end
 
     it "allows changing the Logger's log level to :info" do
-      client = new_client(:log_level => :info)
+      client = new_client(log_level: :info)
       level = client.globals[:logger].level
 
       expect(level).to eq(1)
     end
 
     it "allows changing the Logger's log level to :warn" do
-      client = new_client(:log_level => :warn)
+      client = new_client(log_level: :warn)
       level = client.globals[:logger].level
 
       expect(level).to eq(2)
     end
 
     it "allows changing the Logger's log level to :error" do
-      client = new_client(:log_level => :error)
+      client = new_client(log_level: :error)
       level = client.globals[:logger].level
 
       expect(level).to eq(3)
     end
 
     it "allows changing the Logger's log level to :fatal" do
-      client = new_client(:log_level => :fatal)
+      client = new_client(log_level: :fatal)
       level = client.globals[:logger].level
 
       expect(level).to eq(4)
     end
 
     it "raises when the given level is not valid" do
-      expect { new_client(:log_level => :invalid) }
+      expect { new_client(log_level: :invalid) }
         .to raise_error(ArgumentError, /Invalid log level: :invalid/)
     end
   end
@@ -395,7 +395,7 @@ RSpec.describe "Options" do
   context "global :log_headers" do
     it "instructs Savon to log SOAP requests and responses headers" do
       stdout = mock_stdout {
-        client = new_client(:endpoint => @server.url, :log => true)
+        client = new_client(endpoint: @server.url, log: true)
         client.call(:authenticate)
       }
       soap_header = stdout.string.downcase.include? "content-type"
@@ -404,7 +404,7 @@ RSpec.describe "Options" do
 
     it "stops Savon from logging SOAP requests and responses headers" do
       stdout = mock_stdout {
-        client = new_client(:endpoint => @server.url, :log => true, :log_headers => false)
+        client = new_client(endpoint: @server.url, log: true, log_headers: false)
         client.call(:authenticate)
       }
       soap_header = stdout.string.include? "Content-Type"
@@ -416,7 +416,7 @@ RSpec.describe "Options" do
     it "sets the SSL version to use" do
       HTTPI::Auth::SSL.any_instance.expects(:ssl_version=).with(:TLSv1).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_version => :TLSv1)
+      client = new_client(endpoint: @server.url, ssl_version: :TLSv1)
       client.call(:authenticate)
     end
   end
@@ -425,7 +425,7 @@ RSpec.describe "Options" do
     it "sets the SSL min_version to use" do
       HTTPI::Auth::SSL.any_instance.expects(:min_version=).with(:TLS1_2).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_min_version => :TLS1_2)
+      client = new_client(endpoint: @server.url, ssl_min_version: :TLS1_2)
       client.call(:authenticate)
     end
   end
@@ -434,7 +434,7 @@ RSpec.describe "Options" do
     it "sets the SSL max_version to use" do
       HTTPI::Auth::SSL.any_instance.expects(:max_version=).with(:TLS1_2).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_max_version => :TLS1_2)
+      client = new_client(endpoint: @server.url, ssl_max_version: :TLS1_2)
       client.call(:authenticate)
     end
   end
@@ -443,7 +443,7 @@ RSpec.describe "Options" do
     it "sets the verify mode to use" do
       HTTPI::Auth::SSL.any_instance.expects(:verify_mode=).with(:peer).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_verify_mode => :peer)
+      client = new_client(endpoint: @server.url, ssl_verify_mode: :peer)
       client.call(:authenticate)
     end
   end
@@ -452,7 +452,7 @@ RSpec.describe "Options" do
     it "sets the ciphers to use" do
       HTTPI::Auth::SSL.any_instance.expects(:ciphers=).with(:none).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_ciphers => :none)
+      client = new_client(endpoint: @server.url, ssl_ciphers: :none)
       client.call(:authenticate)
     end
   end
@@ -462,7 +462,7 @@ RSpec.describe "Options" do
       cert_key = File.expand_path('../fixtures/ssl/client_key.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key)
+      client = new_client(endpoint: @server.url, ssl_cert_key_file: cert_key)
       client.call(:authenticate)
     end
   end
@@ -472,7 +472,7 @@ RSpec.describe "Options" do
       cert_key = File.open(File.expand_path('../fixtures/ssl/client_key.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:cert_key=).with(cert_key).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_key => cert_key)
+      client = new_client(endpoint: @server.url, ssl_cert_key: cert_key)
       client.call(:authenticate)
     end
   end
@@ -484,7 +484,7 @@ RSpec.describe "Options" do
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_password=).with(cert_key_pass).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key, :ssl_cert_key_password => cert_key_pass)
+      client = new_client(endpoint: @server.url, ssl_cert_key_file: cert_key, ssl_cert_key_password: cert_key_pass)
       client.call(:authenticate)
     end
   end
@@ -494,7 +494,7 @@ RSpec.describe "Options" do
       cert = File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_file => cert)
+      client = new_client(endpoint: @server.url, ssl_cert_file: cert)
       client.call(:authenticate)
     end
   end
@@ -504,7 +504,7 @@ RSpec.describe "Options" do
       cert = File.open(File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:cert=).with(cert).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert => cert)
+      client = new_client(endpoint: @server.url, ssl_cert: cert)
       client.call(:authenticate)
     end
   end
@@ -514,7 +514,7 @@ RSpec.describe "Options" do
       ca_cert = File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
+      client = new_client(endpoint: @server.url, ssl_ca_cert_file: ca_cert)
       client.call(:authenticate)
     end
   end
@@ -524,7 +524,7 @@ RSpec.describe "Options" do
       ca_cert_path = "../../fixtures/ssl"
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert_path=).with(ca_cert_path).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_ca_cert_path => ca_cert_path)
+      client = new_client(endpoint: @server.url, ssl_ca_cert_path: ca_cert_path)
       client.call(:authenticate)
     end
   end
@@ -534,7 +534,7 @@ RSpec.describe "Options" do
       cert_store = OpenSSL::X509::Store.new
       HTTPI::Auth::SSL.any_instance.expects(:cert_store=).with(cert_store).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_cert_store => cert_store)
+      client = new_client(endpoint: @server.url, ssl_cert_store: cert_store)
       client.call(:authenticate)
     end
   end
@@ -544,14 +544,14 @@ RSpec.describe "Options" do
       ca_cert = File.open(File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert=).with(ca_cert).twice
 
-      client = new_client(:endpoint => @server.url, :ssl_ca_cert => ca_cert)
+      client = new_client(endpoint: @server.url, ssl_ca_cert: ca_cert)
       client.call(:authenticate)
     end
   end
 
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
-      client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => %w[admin secret])
+      client = new_client(endpoint: @server.url(:basic_auth), basic_auth: %w[admin secret])
       response = client.call(:authenticate)
 
       expect(response.http.body).to eq("basic-auth")
@@ -561,7 +561,7 @@ RSpec.describe "Options" do
   context "global :ntlm" do
     it "sets the ntlm credentials to use" do
       credentials = %w[admin secret]
-      client = new_client(:endpoint => @server.url, :ntlm => credentials)
+      client = new_client(endpoint: @server.url, ntlm: credentials)
 
       # TODO: find a way to integration test this. including an entire ntlm
       # server implementation seems a bit over the top though.
@@ -574,11 +574,11 @@ RSpec.describe "Options" do
   context "global :filters" do
     it "filters a list of XML tags from logged SOAP messages" do
       captured = mock_stdout {
-        client = new_client(:endpoint => @server.url(:repeat), :log => true)
+        client = new_client(endpoint: @server.url(:repeat), log: true)
         client.globals[:filters] << :password
 
-        message = { :username => "luke", :password => "secret" }
-        client.call(:authenticate, :message => message)
+        message = { username: "luke", password: "secret" }
+        client.call(:authenticate, message: message)
       }
 
       captured.rewind
@@ -592,9 +592,9 @@ RSpec.describe "Options" do
     it "is a nice but expensive way to debug XML messages" do
       captured = mock_stdout {
         client = new_client(
-          :endpoint         => @server.url(:repeat),
-          :pretty_print_xml => true,
-          :log              => true
+          endpoint: @server.url(:repeat),
+          pretty_print_xml: true,
+          log: true
         )
         client.globals[:logger].formatter = proc { |*, msg| "#{msg}\n" }
 
@@ -669,21 +669,21 @@ RSpec.describe "Options" do
     describe "global" do
       context "enabled" do
         context "without digest" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password]) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_auth: [username, password]) }
           let(:response) { client.call(:authenticate) }
 
           include_examples "WSSE basic auth"
         end
 
         context "with digest" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_auth: [username, password, :digest]) }
           let(:response) { client.call(:authenticate) }
 
           include_examples "WSSE digest auth"
         end
 
         context "local override" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => %w[luke secret]) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_auth: %w[luke secret]) }
 
           context "enabled" do
             let(:username) { "lea" }
@@ -716,7 +716,7 @@ RSpec.describe "Options" do
         end
 
         context "global" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_auth: [username, password, :digest]) }
           let(:response) { client.call(:authenticate) }
 
           include_examples "WSSE digest auth"
@@ -724,7 +724,7 @@ RSpec.describe "Options" do
       end
 
       context "not enabled" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+        let(:client) { new_client(endpoint: @server.url(:repeat)) }
 
         describe "local" do
           context "enabled" do
@@ -781,7 +781,7 @@ RSpec.describe "Options" do
       context "enabled" do
         context "through block without arguments" do
           let(:client) do
-            new_client(:endpoint => @server.url(:repeat)) do |globals|
+            new_client(endpoint: @server.url(:repeat)) do |globals|
               globals.wsse_timestamp
             end
           end
@@ -791,14 +791,14 @@ RSpec.describe "Options" do
         end
 
         context "through initializer options" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_timestamp: true) }
           let(:response) { client.call(:authenticate) }
 
           include_examples "WSSE timestamp"
         end
 
         context "with local override" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+          let(:client) { new_client(endpoint: @server.url(:repeat), wsse_timestamp: true) }
 
           context "enabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp } }
@@ -821,7 +821,7 @@ RSpec.describe "Options" do
       end
 
       context "not enabled" do
-        let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+        let(:client) { new_client(endpoint: @server.url(:repeat)) }
 
         describe "local" do
           context "enabled" do
@@ -849,12 +849,12 @@ RSpec.describe "Options" do
   context "global :strip_namespaces" do
     it "can be changed to not strip any namespaces" do
       client = new_client(
-        :endpoint                 => @server.url(:repeat),
-        :convert_response_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag) },
-        :strip_namespaces         => false
+        endpoint: @server.url(:repeat),
+        convert_response_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag) },
+        strip_namespaces: false
       )
 
-      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
+      response = client.call(:authenticate, xml: Fixture.response(:authentication))
 
       expect(response.full_hash["soap:envelope"]["soap:body"]).to include("ns2:authenticate_response")
     end
@@ -883,8 +883,8 @@ RSpec.describe "Options" do
 
   context "global :convert_response_tags_to" do
     it "changes how XML tags from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).upcase })
-      response = client.call(:authenticate, :xml => Fixture.response(:authentication))
+      client = new_client(endpoint: @server.url(:repeat), convert_response_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).upcase })
+      response = client.call(:authenticate, xml: Fixture.response(:authentication))
 
       expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
     end
@@ -907,14 +907,14 @@ RSpec.describe "Options" do
 
   context "global :convert_attributes_to" do
     it "changes how XML tag attributes from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => ->(k, v) { [k, v] })
-      response = client.call(:authenticate, :xml => Fixture.response(:f5))
-      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
+      client = new_client(endpoint: @server.url(:repeat), convert_attributes_to: ->(k, v) { [k, v] })
+      response = client.call(:authenticate, xml: Fixture.response(:f5))
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ "@s:type": "y:string" })
     end
 
     it "strips the attributes if an appropriate lambda is set" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => ->(_k, _v) { [] })
-      response = client.call(:authenticate, :xml => Fixture.response(:f5))
+      client = new_client(endpoint: @server.url(:repeat), convert_attributes_to: ->(_k, _v) { [] })
+      response = client.call(:authenticate, xml: Fixture.response(:f5))
       expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to be_nil
     end
 
@@ -930,7 +930,7 @@ RSpec.describe "Options" do
         locals.xml Fixture.response(:f5)
       }
 
-      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ "@s:type": "y:string" })
     end
   end
 
@@ -946,9 +946,9 @@ RSpec.describe "Options" do
       ## adapter= method is called first time with nil and second time with adapter. [Envek, 2014-05-03]
       # Wasabi::Document.any_instance.expects(:adapter=).with(:fake_adapter_for_test)
       client = Savon.client(
-        :log     => false,
-        :wsdl    => @server.url(:authentication),
-        :adapter => :fake_adapter_for_test
+        log: false,
+        wsdl: @server.url(:authentication),
+        adapter: :fake_adapter_for_test
       )
       operations = client.operations
       expect(operations).to eq([:authenticate])
@@ -959,9 +959,9 @@ RSpec.describe "Options" do
 
     it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
       client = new_client_without_wsdl(
-        :endpoint  => @server.url(:repeat),
-        :namespace => "http://v1.example.com",
-        :adapter   => :adapter_for_test
+        endpoint: @server.url(:repeat),
+        namespace: "http://v1.example.com",
+        adapter: :adapter_for_test
       )
       response = client.call(:authenticate)
       expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
@@ -975,18 +975,18 @@ RSpec.describe "Options" do
   context "global and request :soap_header" do
     it "merges the headers if both were provided as Hashes" do
       global_soap_header = {
-        :global_header => { :auth_token => "secret" },
-        :merged        => { :global => true }
+        global_header: { auth_token: "secret" },
+        merged: { global: true }
       }
 
       request_soap_header = {
-        :request_header => { :auth_token => "secret" },
-        :merged         => { :request => true }
+        request_header: { auth_token: "secret" },
+        merged: { request: true }
       }
 
-      client = new_client(:endpoint => @server.url(:repeat), :soap_header => global_soap_header)
+      client = new_client(endpoint: @server.url(:repeat), soap_header: global_soap_header)
 
-      response = client.call(:authenticate, :soap_header => request_soap_header)
+      response = client.call(:authenticate, soap_header: request_soap_header)
       request_body = response.http.body
 
       expect(request_body).to include("<globalHeader><authToken>secret</authToken></globalHeader>")
@@ -998,9 +998,9 @@ RSpec.describe "Options" do
       global_soap_header  = "<global>header</global>"
       request_soap_header = "<request>header</request>"
 
-      client = new_client(:endpoint => @server.url(:repeat), :soap_header => global_soap_header)
+      client = new_client(endpoint: @server.url(:repeat), soap_header: global_soap_header)
 
-      response = client.call(:authenticate, :soap_header => request_soap_header)
+      response = client.call(:authenticate, soap_header: request_soap_header)
       request_body = response.http.body
 
       expect(request_body).to include("<env:Header><request>header</request></env:Header>")
@@ -1009,9 +1009,9 @@ RSpec.describe "Options" do
 
   context "request :soap_header" do
     it "accepts a Hash of SOAP header information" do
-      client = new_client(:endpoint => @server.url(:repeat))
+      client = new_client(endpoint: @server.url(:repeat))
 
-      response = client.call(:authenticate, :soap_header => { :auth_token => "secret" })
+      response = client.call(:authenticate, soap_header: { auth_token: "secret" })
       expect(response.http.body).to include("<env:Header><authToken>secret</authToken></env:Header>")
     end
 
@@ -1022,26 +1022,26 @@ RSpec.describe "Options" do
         end
       end.new
 
-      client = new_client(:endpoint => @server.url(:repeat))
+      client = new_client(endpoint: @server.url(:repeat))
 
-      response = client.call(:authenticate, :soap_header => to_s_header)
+      response = client.call(:authenticate, soap_header: to_s_header)
       expect(response.http.body).to include("<env:Header>to_s_header</env:Header>")
     end
   end
 
   context "request: message_tag" do
     it "when set, changes the SOAP message tag" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message_tag => :doAuthenticate)
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message_tag: :doAuthenticate)
       expect(response.http.body).to include("<tns:doAuthenticate></tns:doAuthenticate>")
     end
 
     it "without it, Savon tries to get the message tag from the WSDL document" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate)
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate)
       expect(response.http.body).to include("<tns:authenticate></tns:authenticate>")
     end
 
     it "without the option and a WSDL, Savon defaults to Gyoku to create the name" do
-      client = Savon.client(:endpoint => @server.url(:repeat), :namespace => "http://v1.example.com", :log => false)
+      client = Savon.client(endpoint: @server.url(:repeat), namespace: "http://v1.example.com", log: false)
 
       response = client.call(:init_authentication)
       expect(response.http.body).to include("<wsdl:initAuthentication></wsdl:initAuthentication>")
@@ -1050,8 +1050,8 @@ RSpec.describe "Options" do
 
   context "request: attributes" do
     it "when set, adds the attributes to the message tag" do
-      client   = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :attributes => { "Token" => "secret" })
+      client   = new_client(endpoint: @server.url(:repeat))
+      response = client.call(:authenticate, attributes: { "Token" => "secret" })
 
       expect(response.http.body).to include('<tns:authenticate Token="secret">')
     end
@@ -1059,7 +1059,7 @@ RSpec.describe "Options" do
 
   context "request: soap_action" do
     it "without it, Savon tries to get the SOAPAction from the WSDL document and falls back to Gyoku" do
-      client = new_client(:endpoint => @server.url(:inspect_request))
+      client = new_client(endpoint: @server.url(:inspect_request))
 
       response = client.call(:authenticate)
       soap_action = inspect_request(response).soap_action
@@ -1067,9 +1067,9 @@ RSpec.describe "Options" do
     end
 
     it "when set, changes the SOAPAction HTTP header" do
-      client = new_client(:endpoint => @server.url(:inspect_request))
+      client = new_client(endpoint: @server.url(:inspect_request))
 
-      response = client.call(:authenticate, :soap_action => "doAuthenticate")
+      response = client.call(:authenticate, soap_action: "doAuthenticate")
       soap_action = inspect_request(response).soap_action
       expect(soap_action).to eq('"doAuthenticate"')
     end
@@ -1077,7 +1077,7 @@ RSpec.describe "Options" do
 
   context "request :message" do
     it "accepts a Hash which is passed to Gyoku to be converted to XML" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message => { :user => "luke", :password => "secret" })
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: { user: "luke", password: "secret" })
 
       request = response.http.body
       expect(request).to include("<user>luke</user>")
@@ -1085,14 +1085,14 @@ RSpec.describe "Options" do
     end
 
     it "also accepts a String of raw XML" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :message => "<user>lea</user><password>top-secret</password>")
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: "<user>lea</user><password>top-secret</password>")
       expect(response.http.body).to include("<tns:authenticate><user>lea</user><password>top-secret</password></tns:authenticate>")
     end
   end
 
   context "request :xml" do
     it "accepts a String of raw XML" do
-      response = new_client(:endpoint => @server.url(:repeat)).call(:authenticate, :xml => "<soap>request</soap>")
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, xml: "<soap>request</soap>")
       expect(response.http.body).to eq("<soap>request</soap>")
     end
   end
@@ -1104,8 +1104,8 @@ RSpec.describe "Options" do
         HTTPI::Cookie.new("another-cookie=ny-cheesecake")
       ]
 
-      client   = new_client(:endpoint => @server.url(:inspect_request))
-      response = client.call(:authenticate, :cookies => cookies)
+      client   = new_client(endpoint: @server.url(:inspect_request))
+      response = client.call(:authenticate, cookies: cookies)
 
       cookie = inspect_request(response).cookie
       expect(cookie.split(";")).to include(
@@ -1117,8 +1117,8 @@ RSpec.describe "Options" do
 
   context "request :advanced_typecasting" do
     it "can be changed to false to disable Nori's advanced typecasting" do
-      client = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :xml => Fixture.response(:authentication), :advanced_typecasting => false)
+      client = new_client(endpoint: @server.url(:repeat))
+      response = client.call(:authenticate, xml: Fixture.response(:authentication), advanced_typecasting: false)
 
       expect(response.body[:authenticate_response][:return][:success]).to eq("true")
     end
@@ -1126,11 +1126,11 @@ RSpec.describe "Options" do
 
   context "request :response_parser" do
     it "instructs Nori to change the response parser" do
-      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
+      nori = Nori.new(strip_namespaces: true, convert_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
       Nori.expects(:new).with { |options| options[:parser] == :nokogiri }.returns(nori)
 
-      client = new_client(:endpoint => @server.url(:repeat))
-      response = client.call(:authenticate, :xml => Fixture.response(:authentication), :response_parser => :nokogiri)
+      client = new_client(endpoint: @server.url(:repeat))
+      response = client.call(:authenticate, xml: Fixture.response(:authentication), response_parser: :nokogiri)
 
       expect(response.body).not_to be_empty
     end
@@ -1138,9 +1138,9 @@ RSpec.describe "Options" do
 
   context "request :headers" do
     it "sets headers" do
-      client = new_client(:endpoint => @server.url(:inspect_request))
+      client = new_client(endpoint: @server.url(:inspect_request))
 
-      response = client.call(:authenticate, :headers => { "X-Token" => "secret" })
+      response = client.call(:authenticate, headers: { "X-Token" => "secret" })
       x_token  = inspect_request(response).x_token
 
       expect(x_token).to eq("secret")
@@ -1148,12 +1148,12 @@ RSpec.describe "Options" do
   end
 
   def new_client(globals = {}, &block)
-    globals = { :wsdl => Fixture.wsdl(:authentication), :log => false }.merge(globals)
+    globals = { wsdl: Fixture.wsdl(:authentication), log: false }.merge(globals)
     Savon.client(globals, &block)
   end
 
   def new_client_without_wsdl(globals = {}, &block)
-    globals = { :log => false }.merge(globals)
+    globals = { log: false }.merge(globals)
     Savon.client(globals, &block)
   end
 

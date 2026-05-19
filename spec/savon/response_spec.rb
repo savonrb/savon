@@ -17,12 +17,12 @@ RSpec.describe Savon::Response do
     end
 
     it "raises a Savon::HTTP::Error in case of an HTTP error" do
-      expect { soap_response :code => 500 }.to raise_error(Savon::HTTPError)
+      expect { soap_response code: 500 }.to raise_error(Savon::HTTPError)
     end
 
     it "does not raise a Savon::HTTP::Error in case the default is turned off" do
       globals[:raise_errors] = false
-      soap_response :code => 500
+      soap_response code: 500
     end
   end
 
@@ -74,7 +74,7 @@ RSpec.describe Savon::Response do
     end
 
     it "returns true in case of an HTTP error" do
-      expect(soap_response(:code => 500)).to be_http_error
+      expect(soap_response(code: 500)).to be_http_error
     end
   end
 
@@ -86,20 +86,20 @@ RSpec.describe Savon::Response do
     end
 
     it "returns a HTTPError in case of an HTTP error" do
-      expect(soap_response(:code => 500).http_error).to be_a(Savon::HTTPError)
+      expect(soap_response(code: 500).http_error).to be_a(Savon::HTTPError)
     end
   end
 
   describe "#header" do
     it "returns the SOAP response header as a Hash" do
-      response = soap_response :body => Fixture.response(:header)
-      expect(response.header).to include(:session_number => "ABCD1234")
+      response = soap_response body: Fixture.response(:header)
+      expect(response.header).to include(session_number: "ABCD1234")
     end
 
     it 'respects the global :strip_namespaces option' do
       globals[:strip_namespaces] = false
 
-      response_with_header = soap_response(:body => Fixture.response(:header))
+      response_with_header = soap_response(body: Fixture.response(:header))
       header = response_with_header.header
 
       expect(header).to be_a(Hash)
@@ -112,7 +112,7 @@ RSpec.describe Savon::Response do
     it 'respects the global :convert_response_tags_to option' do
       globals[:convert_response_tags_to] = lambda(&:upcase)
 
-      response_with_header = soap_response(:body => Fixture.response(:header))
+      response_with_header = soap_response(body: Fixture.response(:header))
       header = response_with_header.header
 
       expect(header).to be_a(Hash)
@@ -122,7 +122,7 @@ RSpec.describe Savon::Response do
     it 'respects the global :convert_attributes_to option' do
       globals[:convert_attributes_to] = ->(_k, _v) { [] }
 
-      response_with_header = soap_response(:body => Fixture.response(:header))
+      response_with_header = soap_response(body: Fixture.response(:header))
       header = response_with_header.header
 
       expect(header).to be_a(Hash)
@@ -143,14 +143,14 @@ RSpec.describe Savon::Response do
       end
 
       it "returns a Hash for a SOAP multiRef response" do
-        hash = soap_response(:body => Fixture.response(:multi_ref)).send(method)
+        hash = soap_response(body: Fixture.response(:multi_ref)).send(method)
 
         expect(hash[:list_response]).to be_a(Hash)
         expect(hash[:multi_ref]).to be_an(Array)
       end
 
       it "adds existing namespaced elements as an array" do
-        hash = soap_response(:body => Fixture.response(:list)).send(method)
+        hash = soap_response(body: Fixture.response(:list)).send(method)
 
         expect(hash[:multi_namespaced_entry_response][:history]).to be_a(Hash)
         expect(hash[:multi_namespaced_entry_response][:history][:case]).to be_an(Array)
@@ -185,8 +185,8 @@ RSpec.describe Savon::Response do
       end
 
       it "properlies return FalseClass values [#327]" do
-        body = Gyoku.xml(:envelope => { :body => { :return => { :success => false } } })
-        expect(soap_response(:body => body).to_array(:return, :success)).to eq([false])
+        body = Gyoku.xml(envelope: { body: { return: { success: false } } })
+        expect(soap_response(body: body).to_array(:return, :success)).to eq([false])
       end
     end
 
@@ -205,7 +205,7 @@ RSpec.describe Savon::Response do
 
   describe "#hash" do
     it "returns the SOAP body and emits a deprecation warning" do
-      response = soap_response :body => Fixture.response(:header)
+      response = soap_response body: Fixture.response(:header)
       expect { response.hash }.to output(/Savon::Response#hash is deprecated and will be removed in version 3/).to_stderr
       expect(response.hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
@@ -213,7 +213,7 @@ RSpec.describe Savon::Response do
 
   describe "#full_hash" do
     it "returns the complete SOAP response XML as a Hash without warning" do
-      response = soap_response :body => Fixture.response(:header)
+      response = soap_response body: Fixture.response(:header)
       expect { response.full_hash }.not_to output.to_stderr
       expect(response.full_hash[:envelope][:header][:session_number]).to eq("ABCD1234")
     end
@@ -247,7 +247,7 @@ RSpec.describe Savon::Response do
     end
 
     it 'fails correctly when envelope contains only string' do
-      response = soap_response({ :body => Fixture.response(:no_body) })
+      response = soap_response({ body: Fixture.response(:no_body) })
       expect { response.find('Body') }.to raise_error Savon::InvalidResponseError
     end
   end
@@ -259,7 +259,7 @@ RSpec.describe Savon::Response do
   end
 
   def soap_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
+    defaults = { code: 200, headers: {}, body: Fixture.response(:authentication) }
     response = defaults.merge options
     http_response = Savon::Transport::Response.new(response[:code], response[:headers], response[:body])
 
@@ -267,15 +267,15 @@ RSpec.describe Savon::Response do
   end
 
   def soap_fault_response
-    soap_response :code => 500, :body => Fixture.response(:soap_fault)
+    soap_response code: 500, body: Fixture.response(:soap_fault)
   end
 
   def http_error_response
-    soap_response :code => 404, :body => "Not found"
+    soap_response code: 404, body: "Not found"
   end
 
   def invalid_soap_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => "I'm not SOAP" }
+    defaults = { code: 200, headers: {}, body: "I'm not SOAP" }
     response = defaults.merge options
     http_response = HTTPI::Response.new(response[:code], response[:headers], response[:body])
 

@@ -39,7 +39,7 @@ RSpec.describe Savon do
   end
 
   def message_tag_for(fixture, operation_name)
-    globals     = Savon::GlobalOptions.new(:log => false)
+    globals     = Savon::GlobalOptions.new(log: false)
     wsdl        = Wasabi::Document.new Fixture.wsdl(fixture)
     transport   = Savon::Transport::HTTPI.new(globals)
     operation   = Savon::Operation.create(operation_name, wsdl, globals, transport)

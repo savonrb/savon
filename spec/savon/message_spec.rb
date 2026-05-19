@@ -14,14 +14,14 @@ RSpec.describe Savon::Message do
 
   let(:client_config) do
     {
-      :endpoint                 => @server.url(:repeat),
-      :namespace                => 'http://example.com',
-      :log                      => false,
+      endpoint: @server.url(:repeat),
+      namespace: 'http://example.com',
+      log: false,
 
-      :element_form_default     => :qualified,
-      :convert_request_keys_to  => :camelcase,
+      element_form_default: :qualified,
+      convert_request_keys_to: :camelcase,
 
-      :convert_response_tags_to => nil
+      convert_response_tags_to: nil
     }
   end
 
@@ -30,9 +30,9 @@ RSpec.describe Savon::Message do
   context "with a qualified message" do
     let(:message) do
       {
-        :email_count => 3,
-        :user_name   => 'josh',
-        :order!      => %i[user_name email_count]
+        email_count: 3,
+        user_name: 'josh',
+        order!: %i[user_name email_count]
       }
     end
 
@@ -41,7 +41,7 @@ RSpec.describe Savon::Message do
     end
 
     it "converts request Hash keys for which there is not namespace" do
-      response = client.call(:something, :message => message)
+      response = client.call(:something, message: message)
       expect(response.xml).to include(converted_keys)
     end
   end

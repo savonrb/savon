@@ -13,6 +13,6 @@ RSpec::Core::RakeTask.new "spec:integration" do |t|
 end
 
 desc "Alias for spec task"
-task :test => :spec
+task test: :spec
 
-task :default => :spec
+task default: :spec

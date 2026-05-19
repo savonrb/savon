@@ -47,11 +47,11 @@ module Savon
     alias to_hash body
 
     def to_array(*path)
-      result = path.inject body do |memo, key|
+      result = path.inject(body) { |memo, key|
         return [] if memo[key].nil?
 
         memo[key]
-      end
+      }
 
       result.is_a?(Array) ? result.compact : [result].compact
     end
@@ -153,12 +153,12 @@ module Savon
       return @nori if @nori
 
       nori_options = {
-        :delete_namespace_attributes => @globals[:delete_namespace_attributes],
-        :strip_namespaces            => @globals[:strip_namespaces],
-        :convert_tags_to             => @globals[:convert_response_tags_to],
-        :convert_attributes_to       => @globals[:convert_attributes_to],
-        :advanced_typecasting        => @locals[:advanced_typecasting],
-        :parser                      => @locals[:response_parser]
+        delete_namespace_attributes: @globals[:delete_namespace_attributes],
+        strip_namespaces: @globals[:strip_namespaces],
+        convert_tags_to: @globals[:convert_response_tags_to],
+        convert_attributes_to: @globals[:convert_attributes_to],
+        advanced_typecasting: @locals[:advanced_typecasting],
+        parser: @locals[:response_parser]
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }

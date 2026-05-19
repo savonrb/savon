@@ -3,8 +3,8 @@
 require "spec_helper"
 
 RSpec.describe Savon::HTTPError do
-  let(:http_error) { described_class.new new_response(:code => 404, :body => "Not Found") }
-  let(:http_error_with_empty_body) { described_class.new new_response(:code => 404, :body => "") }
+  let(:http_error) { described_class.new new_response(code: 404, body: "Not Found") }
+  let(:http_error_with_empty_body) { described_class.new new_response(code: 404, body: "") }
   let(:no_error) { described_class.new new_response }
 
   it "inherits from Savon::Error" do
@@ -13,7 +13,7 @@ RSpec.describe Savon::HTTPError do
 
   describe ".present?" do
     it "returns true if there was an HTTP error" do
-      http = new_response(:code => 404, :body => "Not Found")
+      http = new_response(code: 404, body: "Not Found")
       expect(described_class).to be_present(http)
     end
 
@@ -44,12 +44,12 @@ RSpec.describe Savon::HTTPError do
 
   describe "#to_hash" do
     it "returns the HTTP response details as a Hash" do
-      expect(http_error.to_hash).to eq(:code => 404, :headers => {}, :body => "Not Found")
+      expect(http_error.to_hash).to eq(code: 404, headers: {}, body: "Not Found")
     end
   end
 
   def new_response(options = {})
-    defaults = { :code => 200, :headers => {}, :body => Fixture.response(:authentication) }
+    defaults = { code: 200, headers: {}, body: Fixture.response(:authentication) }
     response = defaults.merge options
 
     HTTPI::Response.new response[:code], response[:headers], response[:body]

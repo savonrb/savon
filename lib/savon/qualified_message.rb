@@ -38,7 +38,7 @@ module Savon
     private
 
     def translate_tag(key)
-      Gyoku.xml_tag(key, :key_converter => @key_converter).to_s
+      Gyoku.xml_tag(key, key_converter: @key_converter).to_s
     end
 
     def add_namespaces_to_values(values, path)

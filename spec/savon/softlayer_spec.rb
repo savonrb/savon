@@ -13,9 +13,9 @@ RSpec.describe Savon::Builder do
   describe "#to_s" do
     it "defaults to include the default envelope namespace of :env" do
       message = {
-        :message => {
-          :template_object => {
-            :longName => "Zertico LLC Reseller"
+        message: {
+          template_object: {
+            longName: "Zertico LLC Reseller"
           }
         }
       }

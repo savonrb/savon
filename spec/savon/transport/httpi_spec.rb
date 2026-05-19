@@ -5,7 +5,7 @@ require "spec_helper"
 RSpec.describe Savon::Transport::HTTPI do
   subject(:transport) { described_class.new(globals) }
 
-  let(:globals) { Savon::GlobalOptions.new(:log => false) }
+  let(:globals) { Savon::GlobalOptions.new(log: false) }
 
   describe "#to_httpi_request" do
     let(:url)    { "http://example.com/soap" }
@@ -101,7 +101,7 @@ RSpec.describe Savon::Transport::HTTPI do
     end
 
     it "skips LogMessage construction when the logger level would suppress the output" do
-      globals_logging = Savon::GlobalOptions.new(:log => true)
+      globals_logging = Savon::GlobalOptions.new(log: true)
       globals_logging[:logger].level = Logger::FATAL
 
       Savon::LogMessage.expects(:new).never

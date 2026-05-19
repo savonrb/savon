@@ -23,6 +23,10 @@ RSpec/ContextWording:
 Style/BlockDelimiters:
   EnforcedStyle: semantic
 
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+  EnforcedShorthandSyntax: never
+
 # Savon::BlockInterface calls block.binding, which fails
 # on C-level procs created by Symbol#to_proc.
 Style/SymbolProc:

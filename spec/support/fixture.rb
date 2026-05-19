@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Fixture
-  TYPES = { :gzip => "gz", :response => "xml", :wsdl => "xml" }.freeze
+  TYPES = { gzip: "gz", response: "xml", wsdl: "xml" }.freeze
 
   class << self
     def [](type, fixture)
@@ -20,7 +20,7 @@ class Fixture
     private
 
     def nori
-      Nori.new(:strip_namespaces => true, :convert_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
+      Nori.new(strip_namespaces: true, convert_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
     end
 
     def fixtures(type)
