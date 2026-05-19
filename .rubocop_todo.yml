@@ -83,21 +83,6 @@ RSpec/DescribeClass:
     - 'spec/savon/features/faraday_spec.rb'
     - 'spec/savon/mock_spec.rb'
 
-# Offense count: 51
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: SkipBlocks, EnforcedStyle, OnlyStaticConstants.
-# SupportedStyles: described_class, explicit
-RSpec/DescribedClass:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/http_error_spec.rb'
-    - 'spec/savon/multipart_request_spec.rb'
-    - 'spec/savon/observers_spec.rb'
-    - 'spec/savon/operation_spec.rb'
-    - 'spec/savon/soap_fault_spec.rb'
-    - 'spec/savon/softlayer_spec.rb'
-    - 'spec/savon/string_utils_spec.rb'
-
 # Offense count: 87
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:

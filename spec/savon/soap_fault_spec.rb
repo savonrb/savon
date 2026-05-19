@@ -3,21 +3,21 @@
 require "spec_helper"
 
 RSpec.describe Savon::SOAPFault do
-  let(:soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori }
-  let(:empty_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
-  let(:soap_fault2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori }
-  let(:soap_fault_funky) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault_funky)), nori }
-  let(:soap_fault_nc) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
-  let(:soap_fault_nc2) { Savon::SOAPFault.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
-  let(:another_soap_fault) { Savon::SOAPFault.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
-  let(:soap_fault_no_body) { Savon::SOAPFault.new new_response(:body => {}), nori }
-  let(:no_fault) { Savon::SOAPFault.new new_response, nori }
+  let(:soap_fault) { described_class.new new_response(:body => Fixture.response(:soap_fault)), nori }
+  let(:empty_soap_fault) { described_class.new new_response(:body => Fixture.response(:empty_soap_fault)), nori }
+  let(:soap_fault2) { described_class.new new_response(:body => Fixture.response(:soap_fault12)), nori }
+  let(:soap_fault_funky) { described_class.new new_response(:body => Fixture.response(:soap_fault_funky)), nori }
+  let(:soap_fault_nc) { described_class.new new_response(:body => Fixture.response(:soap_fault)), nori_no_convert }
+  let(:soap_fault_nc2) { described_class.new new_response(:body => Fixture.response(:soap_fault12)), nori_no_convert }
+  let(:another_soap_fault) { described_class.new new_response(:body => Fixture.response(:another_soap_fault)), nori }
+  let(:soap_fault_no_body) { described_class.new new_response(:body => {}), nori }
+  let(:no_fault) { described_class.new new_response, nori }
 
   let(:nori) { Nori.new(:strip_namespaces => true, :convert_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).to_sym }) }
   let(:nori_no_convert) { Nori.new(:strip_namespaces => true, :convert_tags_to => nil) }
 
   it "inherits from Savon::Error" do
-    expect(Savon::SOAPFault.ancestors).to include(Savon::Error)
+    expect(described_class.ancestors).to include(Savon::Error)
   end
 
   describe "#http" do
@@ -29,45 +29,45 @@ RSpec.describe Savon::SOAPFault do
   describe ".present?" do
     it "returns true if the HTTP response contains a SOAP 1.1 fault" do
       http = new_response(:body => Fixture.response(:soap_fault))
-      expect(Savon::SOAPFault).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP 1.1 fault with empty fault tags" do
       http = new_response(:body => Fixture.response(:empty_soap_fault))
-      expect(Savon::SOAPFault).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP 1.2 fault" do
       http = new_response(:body => Fixture.response(:soap_fault12))
-      expect(Savon::SOAPFault).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the HTTP response contains a SOAP fault with different namespaces" do
       http = new_response(:body => Fixture.response(:another_soap_fault))
-      expect(Savon::SOAPFault).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns false unless the HTTP response contains a SOAP fault" do
-      expect(Savon::SOAPFault).not_to be_present(new_response)
+      expect(described_class).not_to be_present(new_response)
     end
 
     it "returns true if the http body has invalid encoding" do
       body = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
       expect(body).not_to be_valid_encoding
       http = new_response(:body => body)
-      expect(Savon::SOAPFault).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns true if the xml argument has invalid encoding" do
       xml = (Fixture.response(:soap_fault).b + "\xFF".b).force_encoding('UTF-8')
       expect(xml).not_to be_valid_encoding
-      expect(Savon::SOAPFault).to be_present(new_response, xml)
+      expect(described_class).to be_present(new_response, xml)
     end
 
     it "uses the xml argument over http body when provided" do
       empty_http = new_response(:body => "")
       xml = Fixture.response(:soap_fault)
-      expect(Savon::SOAPFault).to be_present(empty_http, xml)
+      expect(described_class).to be_present(empty_http, xml)
     end
   end
 

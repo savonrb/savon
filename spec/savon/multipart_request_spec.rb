@@ -13,7 +13,7 @@ RSpec.describe Savon::Builder do
         { filename: 'x2.xml', content: '<xml>abc2</xml>' }
       ]
     }
-    builder = Savon::Builder.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
     request_body = builder.to_s
 
     expect(request_body).to include('Content-Type')
@@ -31,7 +31,7 @@ RSpec.describe Savon::Builder do
         'file.gz' => File.expand_path('../fixtures/gzip/message.gz', __dir__)
       }
     }
-    builder = Savon::Builder.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
     request_body = builder.to_s
 
     expect(request_body).to include('Content-Type')

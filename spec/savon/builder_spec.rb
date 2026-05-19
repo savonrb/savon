@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-  subject(:builder) { Savon::Builder.new(:authenticate, wsdl, globals, locals) }
+  subject(:builder) { described_class.new(:authenticate, wsdl, globals, locals) }
 
   let(:globals)     { Savon::GlobalOptions.new }
   let(:locals)      { Savon::LocalOptions.new }
@@ -44,7 +44,7 @@ RSpec.describe Savon::Builder do
       globals[:namespace] = "http://v1.example.com"
 
       locals = Savon::LocalOptions.new
-      builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
+      builder = described_class.new(:authenticate, no_wsdl, globals, locals)
 
       expect(builder.to_s).to include("<wsdl:authenticate>")
     end
@@ -61,7 +61,7 @@ RSpec.describe Savon::Builder do
     it "uses the default :wsdl identifier if both option and WSDL were not specified" do
       globals[:namespace] = "http://v1.example.com"
 
-      builder = Savon::Builder.new(:authenticate, no_wsdl, globals, locals)
+      builder = described_class.new(:authenticate, no_wsdl, globals, locals)
       expect(builder.to_s).to include("<wsdl:authenticate>")
     end
 
@@ -145,7 +145,7 @@ RSpec.describe Savon::Builder do
     end
 
     context "with a WSDL that declares multiple namespaces" do
-      subject(:multi_builder) { Savon::Builder.new(:Save, multi_wsdl, globals, locals) }
+      subject(:multi_builder) { described_class.new(:Save, multi_wsdl, globals, locals) }
 
       let(:multi_wsdl) { Wasabi::Document.new Fixture.wsdl(:multiple_namespaces) }
 
@@ -173,7 +173,7 @@ RSpec.describe Savon::Builder do
 
       it "every prefix used in the body is declared in the envelope" do
         locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
-        builder = Savon::Builder.new(:Save, multi_wsdl, globals, locals_with_msg)
+        builder = described_class.new(:Save, multi_wsdl, globals, locals_with_msg)
         xml = builder.to_s
         used_prefixes     = xml.scan(%r{</?([a-zA-Z][a-zA-Z0-9-]*):}).flatten.uniq
         declared_prefixes = xml.scan(/xmlns:([a-zA-Z][a-zA-Z0-9-]*)=/).flatten.uniq

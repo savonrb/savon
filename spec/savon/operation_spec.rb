@@ -15,7 +15,7 @@ RSpec.describe Savon::Operation do
     @server.stop
   end
 
-  let(:operation)      { Savon::Operation.create(operation_name, wsdl, globals, transport) }
+  let(:operation)      { described_class.create(operation_name, wsdl, globals, transport) }
   let(:operation_name) { :verify_address }
   let(:transport)      { Savon::Transport::HTTPI.new(globals) }
   let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false) }
@@ -29,7 +29,7 @@ RSpec.describe Savon::Operation do
 
   describe ".create with a WSDL" do
     it "returns a new operation" do
-      expect(operation).to be_a(Savon::Operation)
+      expect(operation).to be_a(described_class)
     end
 
     context "when the operation name is not a Symbol" do
@@ -68,7 +68,7 @@ RSpec.describe Savon::Operation do
     let(:wsdl) { no_wsdl }
 
     it "returns a new operation" do
-      expect(operation).to be_a(Savon::Operation)
+      expect(operation).to be_a(described_class)
     end
   end
 

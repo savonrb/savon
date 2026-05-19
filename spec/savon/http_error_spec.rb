@@ -3,22 +3,22 @@
 require "spec_helper"
 
 RSpec.describe Savon::HTTPError do
-  let(:http_error) { Savon::HTTPError.new new_response(:code => 404, :body => "Not Found") }
-  let(:http_error_with_empty_body) { Savon::HTTPError.new new_response(:code => 404, :body => "") }
-  let(:no_error) { Savon::HTTPError.new new_response }
+  let(:http_error) { described_class.new new_response(:code => 404, :body => "Not Found") }
+  let(:http_error_with_empty_body) { described_class.new new_response(:code => 404, :body => "") }
+  let(:no_error) { described_class.new new_response }
 
   it "inherits from Savon::Error" do
-    expect(Savon::HTTPError.ancestors).to include(Savon::Error)
+    expect(described_class.ancestors).to include(Savon::Error)
   end
 
   describe ".present?" do
     it "returns true if there was an HTTP error" do
       http = new_response(:code => 404, :body => "Not Found")
-      expect(Savon::HTTPError).to be_present(http)
+      expect(described_class).to be_present(http)
     end
 
     it "returns false unless there was an HTTP error" do
-      expect(Savon::HTTPError).not_to be_present(new_response)
+      expect(described_class).not_to be_present(new_response)
     end
   end
 

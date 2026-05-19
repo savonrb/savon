@@ -14,7 +14,7 @@ RSpec.describe Savon do
 
   describe ".observers" do
     after do
-      Savon.observers.clear
+      described_class.observers.clear
     end
 
     it "allows to register an observer for every request" do
@@ -33,7 +33,7 @@ RSpec.describe Savon do
         attr_reader :operation_name, :builder, :globals, :locals
       }.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       new_client.call(:authenticate)
 
@@ -51,7 +51,7 @@ RSpec.describe Savon do
         end
       }.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       expect {
         response = new_client.call(:authenticate)
@@ -69,7 +69,7 @@ RSpec.describe Savon do
         end
       }.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       expect {
         response = new_client.call(:authenticate)
@@ -86,7 +86,7 @@ RSpec.describe Savon do
         end
       }.new
 
-      Savon.observers << observer
+      described_class.observers << observer
 
       expect { new_client.call(:authenticate) }
         .to raise_error(Savon::Error, "Observers need to return a Savon::Transport::Response " \

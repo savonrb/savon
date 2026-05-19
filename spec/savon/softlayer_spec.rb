@@ -3,7 +3,7 @@
 require "spec_helper"
 
 RSpec.describe Savon::Builder do
-  subject(:builder) { Savon::Builder.new(:create_object, wsdl, globals, locals) }
+  subject(:builder) { described_class.new(:create_object, wsdl, globals, locals) }
 
   let(:globals)     { Savon::GlobalOptions.new }
   # let(:locals)      { Savon::LocalOptions.new }
@@ -28,7 +28,7 @@ RSpec.describe Savon::Builder do
       }
 
       locals = Savon::LocalOptions.new(message)
-      builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
+      builder = described_class.new(:create_object, wsdl, globals, locals)
 
       parsed_doc = Nokogiri::XML(builder.to_s) do |config|
         config.norecover.strict
@@ -40,7 +40,7 @@ RSpec.describe Savon::Builder do
 
     it "does not include WSDL structural and binding namespaces" do
       locals = Savon::LocalOptions.new
-      builder = Savon::Builder.new(:create_object, wsdl, globals, locals)
+      builder = described_class.new(:create_object, wsdl, globals, locals)
       namespaces = Nokogiri::XML(builder.to_s).root.namespaces
       expect(namespaces.keys).not_to include("xmlns:soap", "xmlns:soap-enc", "xmlns:wsdl")
     end
