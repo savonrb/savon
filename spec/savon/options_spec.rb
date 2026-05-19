@@ -561,7 +561,7 @@ RSpec.describe "Options" do
 
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
-      client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => ["admin", "secret"])
+      client = new_client(:endpoint => @server.url(:basic_auth), :basic_auth => %w[admin secret])
       response = client.call(:authenticate)
 
       expect(response.http.body).to eq("basic-auth")
@@ -570,7 +570,7 @@ RSpec.describe "Options" do
 
   context "global :ntlm" do
     it "sets the ntlm credentials to use" do
-      credentials = ["admin", "secret"]
+      credentials = %w[admin secret]
       client = new_client(:endpoint => @server.url, :ntlm => credentials)
 
       # TODO: find a way to integration test this. including an entire ntlm
@@ -690,7 +690,7 @@ RSpec.describe "Options" do
         end
 
         context "local override" do
-          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => ["luke", "secret"]) }
+          let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => %w[luke secret]) }
 
           context "enabled" do
             let(:username) { "lea" }

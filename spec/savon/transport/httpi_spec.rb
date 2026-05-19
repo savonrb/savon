@@ -133,7 +133,7 @@ RSpec.describe Savon::Transport::HTTPI do
 
     it "applies globals[:basic_auth]" do
       globals.basic_auth("user", "pass")
-      expect(transport.wsdl_request.auth.basic).to eq(["user", "pass"])
+      expect(transport.wsdl_request.auth.basic).to eq(%w[user pass])
     end
   end
 end
