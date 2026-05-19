@@ -94,7 +94,7 @@ module Savon
     def use_namespace(path, uri)
       @internal_namespace_count ||= 0
 
-      unless identifier = namespace_by_uri(uri)
+      unless (identifier = namespace_by_uri(uri))
         wsdl_identifier = @wsdl.document? ? @wsdl.parser.namespaces.key(uri) : nil
         # The prefix may already be taken by the target namespace or a user-supplied
         # :namespaces override - fall back to ins0, ins1... rather than overwriting it.
