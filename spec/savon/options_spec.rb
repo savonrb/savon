@@ -791,10 +791,12 @@ RSpec.describe "Options" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp } }
             include_examples "WSSE timestamp"
           end
+
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(false) } }
             include_examples "no WSSE timestamp"
           end
+
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(nil) } }
             include_examples "WSSE timestamp"
@@ -809,10 +811,12 @@ RSpec.describe "Options" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp } }
             include_examples "WSSE timestamp"
           end
+
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(false) } }
             include_examples "no WSSE timestamp"
           end
+
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(nil) } }
             include_examples "no WSSE timestamp"
