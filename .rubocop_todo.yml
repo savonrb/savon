@@ -109,12 +109,6 @@ RSpec/MultipleExpectations:
 RSpec/MultipleMemoizedHelpers:
   Max: 11
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/MultipleSubjects:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-
 # Offense count: 28
 # Configuration parameters: AllowedGroups.
 RSpec/NestedGroups:
