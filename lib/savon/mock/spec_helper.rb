@@ -4,7 +4,6 @@ require "savon/mock"
 
 module Savon
   module SpecHelper
-
     class Interface
       def mock!
         Savon.observers << self
@@ -58,6 +57,5 @@ module Savon
       super if defined? super
       savon.verify!
     end
-
   end
 end

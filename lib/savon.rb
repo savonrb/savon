@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 module Savon
-
   Error                 = Class.new(RuntimeError)
   InitializationError   = Class.new(Error)
   UnknownOptionError    = Class.new(Error)
@@ -21,7 +20,6 @@ module Savon
       observer.notify(operation_name, builder, globals, locals)
     end
   end
-
 end
 
 require "savon/version"

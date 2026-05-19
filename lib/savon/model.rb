@@ -2,7 +2,6 @@
 
 module Savon
   module Model
-
     def self.extended(base)
       base.setup
     end
@@ -77,6 +76,5 @@ module Savon
         end
       }.tap { |mod| include(mod) }
     end
-
   end
 end
