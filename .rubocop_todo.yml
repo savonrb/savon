@@ -843,12 +843,6 @@ Style/RedundantRegexpEscape:
     - 'lib/savon/soap_fault.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantSelf:
-  Exclude:
-    - 'lib/savon/options.rb'
-
 # Offense count: 9
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, AllowInnerSlashes.

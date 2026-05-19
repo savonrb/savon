@@ -21,7 +21,7 @@ module Savon
 
     def []=(option, value)
       value = [value].flatten
-      self.send(option, *value)
+      send(option, *value)
     end
 
     def include?(option)
@@ -32,7 +32,7 @@ module Savon
 
     def assign(options)
       options.each do |option, value|
-        self.send(option, value)
+        send(option, value)
       end
     end
 
