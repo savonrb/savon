@@ -496,14 +496,6 @@ RSpec/ExampleWording:
     - 'spec/savon/response_spec.rb'
 
 # Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: implicit, each, example
-RSpec/HookArgument:
-  Exclude:
-    - 'spec/savon/observers_spec.rb'
-
-# Offense count: 1
 RSpec/IdenticalEqualityAssertion:
   Exclude:
     - 'spec/savon/client_spec.rb'

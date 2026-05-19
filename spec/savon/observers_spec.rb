@@ -13,7 +13,7 @@ RSpec.describe Savon do
   end
 
   describe ".observers" do
-    after :each do
+    after do
       Savon.observers.clear
     end
 
