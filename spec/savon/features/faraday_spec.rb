@@ -82,4 +82,16 @@ RSpec.describe "Savon client with transport: :faraday" do
     response = client.call(:authenticate, cookies: [HTTPI::Cookie.new("session=abc")])
     expect(inspect_request(response).cookie).to include("session=abc")
   end
+
+  it "sends the exact Content-Length on the wire (via the Faraday adapter)" do
+    client = Savon.client(
+      endpoint: @server.url(:inspect_request),
+      namespace: "http://v1.example.com",
+      transport: :faraday,
+      log: false
+    )
+    data = inspect_request(client.call(:authenticate))
+    expect(data.content_length).to match(/\A\d+\z/), "expected a single integer - a comma would mean the header was sent twice"
+    expect(data.content_length).to eq(data.body_bytesize)
+  end
 end

@@ -104,9 +104,14 @@ RSpec.describe Savon::Operation do
       end
     end
 
-    it "sets Content-Length to the byte size of the body" do
-      request = operation.request
-      expect(request.headers["Content-Length"]).to eq(request.body.bytesize.to_s)
+    context "when verifying Content-Length via the HTTPI adapter" do
+      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+
+      it "sends the exact Content-Length on the wire (via the HTTPI adapter)" do
+        data = inspect_request(operation.call)
+        expect(data.content_length).to match(/\A\d+\z/), "expected a single integer not multiple values"
+        expect(data.content_length).to eq(data.body_bytesize)
+      end
     end
 
     it "converts cookies to a Cookie: header on the request" do
