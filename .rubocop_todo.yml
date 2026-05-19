@@ -478,12 +478,6 @@ RSpec/EmptyLineAfterFinalLet:
     - 'spec/savon/options_spec.rb'
     - 'spec/savon/transport/httpi_spec.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/EmptyLineAfterSubject:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-
 # Offense count: 84
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
