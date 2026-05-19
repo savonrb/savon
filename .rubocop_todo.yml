@@ -736,12 +736,6 @@ Style/EachWithObject:
   Exclude:
     - 'lib/savon/builder.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Style/Encoding:
-  Exclude:
-    - 'savon.gemspec'
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/EvalWithLocation:
