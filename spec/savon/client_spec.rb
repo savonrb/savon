@@ -142,7 +142,7 @@ RSpec.describe Savon::Client do
       expect(new_client.globals).to be_an_instance_of(Savon::GlobalOptions)
     end
 
-    fit "defaults :log to false" do
+    it "defaults :log to false" do
       client = Savon.client(:wsdl => Fixture.wsdl(:authentication))
       expect(client.globals[:log]).to be_falsey
     end
