@@ -151,7 +151,7 @@ RSpec.describe Savon::Operation do
         response = operation.call do
           attachments [
             { filename: "x1.xml", content: "<xml>abc</xml>" },
-            { filename: "x2.xml", content: "<xml>cde</xml>" },
+            { filename: "x2.xml", content: "<xml>cde</xml>" }
           ]
         end
 
