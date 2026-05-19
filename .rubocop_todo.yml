@@ -649,14 +649,6 @@ Style/AndOr:
   Exclude:
     - 'lib/savon/builder.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: percent_q, bare_percent
-Style/BarePercentLiterals:
-  Exclude:
-    - 'lib/savon/response.rb'
-
 # Offense count: 37
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, ProceduralMethods, FunctionalMethods, AllowedMethods, AllowedPatterns, AllowBracesOnProceduralOneLiners, BracesRequiredMethods.
