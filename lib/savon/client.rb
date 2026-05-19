@@ -104,9 +104,9 @@ module Savon
 
     def raise_version1_initialize_error!(object)
       raise InitializationError,
-        "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
-        "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
-        "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
+            "Some code tries to initialize Savon with the #{object.inspect} (#{object.class}) \n" \
+            "Savon 2 expects a Hash of options for creating a new client and executing requests.\n" \
+            "Please read the updated documentation for version 2: http://savonrb.com/version2.html"
     end
 
     def raise_initialization_error!
