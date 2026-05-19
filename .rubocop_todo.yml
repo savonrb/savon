@@ -836,12 +836,6 @@ Style/RaiseArgs:
   Exclude:
     - 'lib/savon/operation.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantParentheses:
-  Exclude:
-    - 'lib/savon/mock/expectation.rb'
-
 # Offense count: 4
 # This cop supports safe autocorrection (--autocorrect).
 Style/RedundantRegexpEscape:
