@@ -162,16 +162,6 @@ RSpec/NoExpectationExample:
     - 'spec/savon/transport/faraday_spec.rb'
     - 'spec/savon/transport/httpi_spec.rb'
 
-# Offense count: 9
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: not_to, to_not
-RSpec/NotToNot:
-  Exclude:
-    - 'spec/savon/log_message_spec.rb'
-    - 'spec/savon/mock_spec.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 16
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: Strict, EnforcedStyle, AllowedExplicitMatchers.

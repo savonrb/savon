@@ -25,7 +25,7 @@ RSpec.describe Savon::LogMessage do
   it "filters tags in a given message without pretty printing" do
     message = log_message("<root><password>secret</password></root>", [:password], false).to_s
     expect(message).to include("<password>***FILTERED***</password>")
-    expect(message).to_not include("\n  <password>***FILTERED***</password>") # no pretty printing
+    expect(message).not_to include("\n  <password>***FILTERED***</password>") # no pretty printing
   end
 
   it "filters tags in a given message with pretty printing" do

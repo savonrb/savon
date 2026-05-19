@@ -283,7 +283,7 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat), :raise_errors => false)
       response = client.call(:authenticate, :xml => Fixture.response(:soap_fault))
 
-      expect(response).to_not be_successful
+      expect(response).not_to be_successful
       expect(response).to be_a_soap_fault
     end
 
@@ -291,7 +291,7 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(404), :raise_errors => false)
       response = client.call(:authenticate)
 
-      expect(response).to_not be_successful
+      expect(response).not_to be_successful
       expect(response).to be_a_http_error
     end
   end
@@ -656,7 +656,7 @@ RSpec.describe "Options" do
         # the password node contains the encrypted value
         password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
         expect(request).to match(/<wsse:Password Type="#{password_digest}">.+<\/wsse:Password>/)
-        expect(request).to_not include(password)
+        expect(request).not_to include(password)
       end
     end
 
@@ -1132,7 +1132,7 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat))
       response = client.call(:authenticate, :xml => Fixture.response(:authentication), :response_parser => :nokogiri)
 
-      expect(response.body).to_not be_empty
+      expect(response.body).not_to be_empty
     end
   end
 

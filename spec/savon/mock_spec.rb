@@ -44,7 +44,7 @@ RSpec.describe "Savon's mock interface" do
     savon.expects(:authenticate).returns(response)
     response = new_client(:raise_errors => false).call(:authenticate)
 
-    expect(response).to_not be_successful
+    expect(response).not_to be_successful
     expect(response).to be_a_soap_fault
 
     expect(response.http.code).to eq(500)
@@ -132,20 +132,20 @@ RSpec.describe "Savon's mock interface" do
     savon.expects(:find_user).with(:message => :any).returns("<fixture/>")
     message = { :username => "luke" }
 
-    expect { new_client.call(:find_user, :message => message) }.to_not raise_error
+    expect { new_client.call(:find_user, :message => message) }.not_to raise_error
   end
 
   it "does not fail when any message is expected and no actual message" do
     savon.expects(:find_user).with(:message => :any).returns("<fixture/>")
 
-    expect { new_client.call(:find_user) }.to_not raise_error
+    expect { new_client.call(:find_user) }.not_to raise_error
   end
 
   it "matchers can be used to specify the message" do
     savon.expects(:find_user).with(:message => include(:username)).returns("<fixture/>")
     message = { :username => "Han Solo", password: "querty" }
 
-    expect { new_client.call(:find_user, :message => message) }.to_not raise_error
+    expect { new_client.call(:find_user, :message => message) }.not_to raise_error
   end
 
   it "allows code to rescue Savon::Error and still report test failures" do
