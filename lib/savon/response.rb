@@ -25,7 +25,7 @@ module Savon
     def success?
       !soap_fault? && !http_error?
     end
-    alias_method :successful?, :success?
+    alias successful? success?
 
     def soap_fault?
       SOAPFault.present?(@http, xml)
@@ -43,7 +43,7 @@ module Savon
       find('Body')
     end
 
-    alias_method :to_hash, :body
+    alias to_hash body
 
     def to_array(*path)
       result = path.inject body do |memo, key|
@@ -72,8 +72,8 @@ module Savon
       end
     end
 
-    alias_method :to_xml, :xml
-    alias_method :to_s,   :xml
+    alias to_xml xml
+    alias to_s xml
 
     def doc
       @doc ||= Nokogiri.XML(xml)
