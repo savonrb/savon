@@ -110,7 +110,7 @@ RSpec.describe Savon::Response do
     end
 
     it 'respects the global :convert_response_tags_to option' do
-      globals[:convert_response_tags_to] = lambda { |key| key.upcase }
+      globals[:convert_response_tags_to] = lambda(&:upcase)
 
       response_with_header = soap_response(:body => Fixture.response(:header))
       header = response_with_header.header
@@ -166,7 +166,7 @@ RSpec.describe Savon::Response do
       end
 
       it 'respects the global :convert_response_tags_to option' do
-        globals[:convert_response_tags_to] = lambda { |key| key.upcase }
+        globals[:convert_response_tags_to] = lambda(&:upcase)
 
         body = soap_response.body
 
