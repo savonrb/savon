@@ -134,9 +134,9 @@ RSpec.describe Savon::SOAPFault do
     it "works even if the keys are different" do
       expected = {
         "Fault" => {
-          "Code" => {
-            "Value"  => "soap:Sender",
-            "Subcode"=> {
+          "Code"   => {
+            "Value"   => "soap:Sender",
+            "Subcode" => {
               "Value" => "m:MessageTimeout"
             }
           },

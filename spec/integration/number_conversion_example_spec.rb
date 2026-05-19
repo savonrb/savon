@@ -8,15 +8,15 @@ RSpec.describe "Number conversion example" do
 
   let(:client) do
     Savon.client(
-      :wsdl => "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl",
+      :wsdl            => "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl",
       :ssl_verify_mode => :none,
 
       # Lower timeouts so these specs don't take forever when the service is not available.
-      :open_timeout => 10,
-      :read_timeout => 10,
+      :open_timeout    => 10,
+      :read_timeout    => 10,
 
       # Disable logging for cleaner spec output.
-      :log => false
+      :log             => false
     )
   end
 

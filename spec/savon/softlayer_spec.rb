@@ -13,18 +13,18 @@ RSpec.describe Savon::Builder do
   describe "#to_s" do
     it "defaults to include the default envelope namespace of :env" do
       message = {
-        :message=>{
-          :template_object=>{
-            :longName=>"Zertico LLC Reseller"
+        :message => {
+          :template_object => {
+            :longName => "Zertico LLC Reseller"
           }
         }
       }
 
       expected_namespaces = {
-        'xmlns:xsd'       => "http://www.w3.org/2001/XMLSchema",
-        'xmlns:xsi'       => "http://www.w3.org/2001/XMLSchema-instance",
-        'xmlns:tns'       => "http://api.service.softlayer.com/soap/v3/",
-        'xmlns:env'       => "http://schemas.xmlsoap.org/soap/envelope/"
+        'xmlns:xsd' => "http://www.w3.org/2001/XMLSchema",
+        'xmlns:xsi' => "http://www.w3.org/2001/XMLSchema-instance",
+        'xmlns:tns' => "http://api.service.softlayer.com/soap/v3/",
+        'xmlns:env' => "http://schemas.xmlsoap.org/soap/envelope/"
       }
 
       locals = Savon::LocalOptions.new(message)

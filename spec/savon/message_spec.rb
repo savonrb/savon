@@ -14,12 +14,12 @@ RSpec.describe Savon::Message do
 
   let(:client_config) {
     {
-      :endpoint => @server.url(:repeat),
-      :namespace => 'http://example.com',
-      :log => false,
+      :endpoint                 => @server.url(:repeat),
+      :namespace                => 'http://example.com',
+      :log                      => false,
 
-      :element_form_default => :qualified,
-      :convert_request_keys_to => :camelcase,
+      :element_form_default     => :qualified,
+      :convert_request_keys_to  => :camelcase,
 
       :convert_response_tags_to => nil
     }

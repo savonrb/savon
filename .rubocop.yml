@@ -14,6 +14,9 @@ Gemspec/RequireMFA:
 Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: table
+
 # Savon::BlockInterface calls block.binding, which fails
 # on C-level procs created by Symbol#to_proc.
 Style/SymbolProc:

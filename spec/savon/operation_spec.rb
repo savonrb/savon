@@ -183,10 +183,10 @@ RSpec.describe Savon::Operation do
     let(:operation_name) { :authenticate }
     let(:globals) do
       Savon::GlobalOptions.new(
-        endpoint:  "http://example.com/soap",
+        endpoint: "http://example.com/soap",
         namespace: "http://v1.example.com",
         transport: :faraday,
-        log:       false
+        log: false
       )
     end
 

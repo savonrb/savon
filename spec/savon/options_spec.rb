@@ -51,9 +51,9 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => true,
                           :wsdl => Fixture.wsdl(:no_message_tag))
       msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
-               'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items' => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
+                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
+             'Items'        => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(1)
@@ -66,9 +66,9 @@ RSpec.describe "Options" do
       client = new_client(:endpoint => @server.url(:repeat), :no_message_tag => false,
                           :wsdl => Fixture.wsdl(:no_message_tag))
       msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
-               'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items' => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
+                                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
+             'Items'        => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+                                     'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(2)
@@ -218,7 +218,7 @@ RSpec.describe "Options" do
 
     it "qualifies elements embedded in complex types" do
       client = new_client(:endpoint => @server.url(:repeat),
-                          :wsdl => Fixture.wsdl(:elements_in_types))
+                          :wsdl     => Fixture.wsdl(:elements_in_types))
       msg = {":TopLevelTransaction"=>{":Qualified"=>"A Value"}}
 
       response = client.call(:top_level_transaction, :message => msg)
@@ -592,9 +592,9 @@ RSpec.describe "Options" do
     it "is a nice but expensive way to debug XML messages" do
       captured = mock_stdout do
         client = new_client(
-          :endpoint => @server.url(:repeat),
+          :endpoint         => @server.url(:repeat),
           :pretty_print_xml => true,
-          :log => true
+          :log              => true
         )
         client.globals[:logger].formatter = proc { |*, msg| "#{msg}\n" }
 
@@ -825,9 +825,9 @@ RSpec.describe "Options" do
   context "global :strip_namespaces" do
     it "can be changed to not strip any namespaces" do
       client = new_client(
-        :endpoint => @server.url(:repeat),
+        :endpoint                 => @server.url(:repeat),
         :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag) },
-        :strip_namespaces => false
+        :strip_namespaces         => false
       )
 
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
@@ -922,8 +922,8 @@ RSpec.describe "Options" do
       ## adapter= method is called first time with nil and second time with adapter. [Envek, 2014-05-03]
       # Wasabi::Document.any_instance.expects(:adapter=).with(:fake_adapter_for_test)
       client = Savon.client(
-        :log => false,
-        :wsdl => @server.url(:authentication),
+        :log     => false,
+        :wsdl    => @server.url(:authentication),
         :adapter => :fake_adapter_for_test
       )
       operations = client.operations
@@ -935,9 +935,9 @@ RSpec.describe "Options" do
 
     it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
       client = new_client_without_wsdl(
-        :endpoint => @server.url(:repeat),
+        :endpoint  => @server.url(:repeat),
         :namespace => "http://v1.example.com",
-        :adapter => :adapter_for_test
+        :adapter   => :adapter_for_test
       )
       response = client.call(:authenticate)
       expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
@@ -952,12 +952,12 @@ RSpec.describe "Options" do
     it "merges the headers if both were provided as Hashes" do
       global_soap_header = {
         :global_header => { :auth_token => "secret" },
-        :merged => { :global => true }
+        :merged        => { :global => true }
       }
 
       request_soap_header = {
         :request_header => { :auth_token => "secret" },
-        :merged => { :request => true }
+        :merged         => { :request => true }
       }
 
       client = new_client(:endpoint => @server.url(:repeat), :soap_header => global_soap_header)

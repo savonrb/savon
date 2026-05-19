@@ -91,7 +91,7 @@ RSpec.describe Savon::Builder do
       let(:signature) do
         Akami::WSSE::Signature.new(
           Akami::WSSE::Certs.new(
-            :cert_file => cert,
+            :cert_file        => cert,
             :private_key_file => private_key
           )
         )

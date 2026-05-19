@@ -18,39 +18,39 @@ module Savon
 
       it "properly handles special keys when namespaces are present" do
         used_namespaces = {
-          %w(tns Foo) => 'ns',
+          %w(tns Foo)     => 'ns',
           %w(tns Foo Bar) => 'ns'
         }
 
         hash = {
           :foo => {
-            :bar => {
+            :bar             => {
               :zing => 'pow'
             },
-            :cash => {
-              :@attr1 => 'val1',
+            :cash            => {
+              :@attr1   => 'val1',
               :content! => 'Chunky Bacon'
             },
-            :attributes! => {
+            :attributes!     => {
               :bar => { :attr2 => 'val2' }
             },
             :"self_closing/" => '',
-            :order! => [:cash, :bar, :"self_closing/"]
+            :order!          => [:cash, :bar, :"self_closing/"]
           }
         }
 
         good_result = {
           "ns:Foo" => {
-            'ns:Bar' => { :zing => "pow" },
-            :cash => {
-              :@attr1 => "val1",
+            'ns:Bar'         => { :zing => "pow" },
+            :cash            => {
+              :@attr1   => "val1",
               :content! => "Chunky Bacon"
             },
-            :attributes! => {
+            :attributes!     => {
               'ns:Bar' => { :attr2 => 'val2' }
             },
             :"self_closing/" => '',
-            :order! => [:cash, 'ns:Bar', :"self_closing/"]
+            :order!          => [:cash, 'ns:Bar', :"self_closing/"]
           }
         }
 
@@ -72,7 +72,7 @@ module Savon
         hash = {
           :foo => {
             :falsey => {
-              :@attr1 => false,
+              :@attr1   => false,
               :content! => false
             }
           }
@@ -81,7 +81,7 @@ module Savon
         good_result = {
           "ns:Foo" => {
             :falsey => {
-              :@attr1 => false,
+              :@attr1   => false,
               :content! => false
             }
           }
