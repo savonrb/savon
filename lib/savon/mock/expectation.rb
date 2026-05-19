@@ -79,7 +79,8 @@ module Savon
     end
 
     def equals_except_any(msg_expected, msg_real)
-      return true if msg_expected === msg_real
+      # === allows RSpec matchers (e.g. include(:key)) to be used as expected values
+      return true if msg_expected === msg_real # rubocop:disable Style/CaseEquality
       return false if msg_expected.nil? || msg_real.nil? # If both are nil has returned true
       msg_expected.each do |key, expected_value|
         next if expected_value == :any &&  msg_real.include?(key)
