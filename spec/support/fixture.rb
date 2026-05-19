@@ -14,7 +14,7 @@ class Fixture
       @full_hash[fixture] ||= nori.parse(response(fixture))[:envelope][:body]
     end
 
-    TYPES.each do |type, ext|
+    TYPES.each_key do |type|
       define_method(type) { |fixture| self[type, fixture] }
     end
 
