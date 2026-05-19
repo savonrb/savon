@@ -16,7 +16,7 @@ module Savon
   end
 
   def self.notify_observers(operation_name, builder, globals, locals)
-    observers.inject(nil) do |response, observer|
+    observers.inject(nil) do |_response, observer|
       observer.notify(operation_name, builder, globals, locals)
     end
   end

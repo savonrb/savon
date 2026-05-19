@@ -33,7 +33,7 @@ class IntegrationServer
     end
 
     map "/timeout" do
-      run lambda { |env|
+      run lambda { |_env|
         sleep 2
         IntegrationServer.respond_with :body => "timeout"
       }
@@ -57,13 +57,13 @@ class IntegrationServer
         username == "admin" && password == "secret"
       end
 
-      run lambda { |env|
+      run lambda { |_env|
         IntegrationServer.respond_with :body => "basic-auth"
       }
     end
 
     map "/authentication.wsdl" do
-      run lambda { |env|
+      run lambda { |_env|
         IntegrationServer.respond_with(
           :body    => Fixture.wsdl(:authentication),
           :headers => { "Content-Type" => "text/xml" }
@@ -72,7 +72,7 @@ class IntegrationServer
     end
 
     map "/multipart" do
-      run lambda { |env|
+      run lambda { |_env|
         message = Mail.new
         xml_part = Mail::Part.new do
           content_type 'text/xml'
