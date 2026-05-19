@@ -167,12 +167,6 @@ RSpec/RepeatedExampleGroupBody:
   Exclude:
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 3
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/ScatteredLet:
-  Exclude:
-    - 'spec/savon/transport/faraday_spec.rb'
-
 # Offense count: 4
 # Configuration parameters: CustomTransform, IgnoreMethods, IgnoreMetadata, InflectorPath, EnforcedInflector.
 # SupportedInflectors: default, active_support
