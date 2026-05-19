@@ -105,6 +105,30 @@ RSpec.describe Savon::Model do
       response = model_instance.authenticate(:xml => Fixture.response(:authentication))
       expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
     end
+
+    it "generates class methods with source location pointing to the def line in model.rb" do
+      model = Class.new {
+        extend Savon::Model
+        client :wsdl => Fixture.wsdl(:authentication)
+        operations :authenticate
+      }
+
+      file, line = model.method(:authenticate).source_location
+      expect(file).to end_with("savon/model.rb")
+      expect(File.readlines(file)[line - 1]).to include("def ")
+    end
+
+    it "generates instance methods with source location pointing to the def line in model.rb" do
+      model = Class.new {
+        extend Savon::Model
+        client :wsdl => Fixture.wsdl(:authentication)
+        operations :authenticate
+      }
+
+      file, line = model.instance_method(:authenticate).source_location
+      expect(file).to end_with("savon/model.rb")
+      expect(File.readlines(file)[line - 1]).to include("def ")
+    end
   end
 
   it "allows to overwrite class operations" do

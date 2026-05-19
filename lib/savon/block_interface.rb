@@ -10,7 +10,7 @@ module Savon
       if block.arity > 0
         block.call(@target)
       else
-        @original = eval("self", block.binding)
+        @original = eval("self", block.binding, __FILE__, __LINE__)
         instance_eval(&block)
       end
     end

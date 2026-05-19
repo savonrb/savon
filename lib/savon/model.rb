@@ -32,7 +32,7 @@ module Savon
         def #{StringUtils.snakecase(operation.to_s)}(locals = {})
           client.call #{operation.inspect}, locals
         end
-      }
+      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
     end
 
     # Defines an instance-level SOAP operation.
@@ -41,7 +41,7 @@ module Savon
         def #{StringUtils.snakecase(operation.to_s)}(locals = {})
           self.class.#{StringUtils.snakecase(operation.to_s)} locals
         end
-      }
+      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
     end
 
     # Class methods.
