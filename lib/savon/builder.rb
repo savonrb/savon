@@ -120,7 +120,7 @@ module Savon
           @globals[:namespace] || @wsdl.namespace
 
         # check env_namespace
-        namespaces["xmlns#{env_namespace && env_namespace != "" ? ":#{env_namespace}" : ''}"] =
+        namespaces["xmlns#{env_namespace && env_namespace != '' ? ":#{env_namespace}" : ''}"] =
           SOAP_NAMESPACE[@globals[:soap_version]]
 
         namespaces
