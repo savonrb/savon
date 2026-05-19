@@ -903,15 +903,6 @@ Style/TrailingCommaInArrayLiteral:
     - 'spec/savon/multipart_request_spec.rb'
     - 'spec/savon/operation_spec.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyleForMultiline.
-# SupportedStylesForMultiline: comma, consistent_comma, diff_comma, no_comma
-Style/TrailingCommaInHashLiteral:
-  Exclude:
-    - 'lib/savon/builder.rb'
-    - 'spec/savon/qualified_message_spec.rb'
-
 # Offense count: 35
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowHeredoc, AllowURI, AllowQualifiedName, URISchemes, AllowRBSInlineAnnotation, AllowCopDirectives, AllowedPatterns, SplitStrings.

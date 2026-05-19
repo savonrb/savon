@@ -264,7 +264,7 @@ module Savon
       # request.headers["Content-Type"] = "multipart/related; boundary=\"#{multipart_message.body.boundary}\"; type=\"text/xml\"; start=\"#{xml_part.content_id}\""
       @multipart = {
         multipart_boundary: multipart_message.body.boundary,
-        start: xml_part.content_id,
+        start: xml_part.content_id
       }
 
       multipart_message

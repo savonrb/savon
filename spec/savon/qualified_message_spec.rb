@@ -32,7 +32,7 @@ module Savon
               :content! => 'Chunky Bacon'
             },
             :attributes! => {
-              :bar => { :attr2 => 'val2' },
+              :bar => { :attr2 => 'val2' }
             },
             :"self_closing/" => '',
             :order! => [:cash, :bar, :"self_closing/"]
