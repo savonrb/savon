@@ -698,14 +698,6 @@ Style/GuardClause:
     - 'lib/savon/mock/spec_helper.rb'
     - 'lib/savon/operation.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: braces, no_braces
-Style/HashAsLastArrayItem:
-  Exclude:
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 576
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.

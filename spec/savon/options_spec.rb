@@ -52,8 +52,8 @@ RSpec.describe "Options" do
                           :wsdl => Fixture.wsdl(:no_message_tag))
       msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items' => ['Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}]}
+             'Items' => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(1)
@@ -67,8 +67,8 @@ RSpec.describe "Options" do
                           :wsdl => Fixture.wsdl(:no_message_tag))
       msg = {'extLoginData' => {'Login' => 'test.user', 'Password' => 'secret', 'FacilityID' => 1,
                'ThreePLKey' => '{XXXX-XXXX-XXXX-XXXX}', 'ThreePLID' => 1},
-             'Items' => ['Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
-              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}]}
+             'Items' => [{'Item' => {'SKU' => '001002003A', 'CustomerID' => 1,
+              'InventoryMethod' => 'FIFO', 'UPC' => '001002003A'}}]}
       response = client.call(:create_items, :message => msg)
 
       expect(response.http.body.scan(/<tns:extLoginData>/).count).to eq(2)
