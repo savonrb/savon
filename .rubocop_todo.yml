@@ -282,15 +282,6 @@ Layout/SpaceInsideParens:
   Exclude:
     - 'spec/savon/client_spec.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: final_newline, final_blank_line
-Layout/TrailingEmptyLines:
-  Exclude:
-    - 'lib/savon/string_utils.rb'
-    - 'spec/savon/multipart_request_spec.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: AllowedMethods, AllowedPatterns.
