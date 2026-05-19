@@ -894,7 +894,7 @@ RSpec.describe "Options" do
     it "strips the attributes if an appropriate lambda is set" do
       client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda {|k,v| []})
       response = client.call(:authenticate, :xml => Fixture.response(:f5))
-      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq(nil)
+      expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to be_nil
     end
 
     it "accepts a block in the block-based interface" do

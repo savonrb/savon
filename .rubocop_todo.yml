@@ -224,13 +224,6 @@ RSpec/AnyInstance:
     - 'spec/savon/operation_spec.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 2
-# This cop supports unsafe autocorrection (--autocorrect-all).
-RSpec/BeEq:
-  Exclude:
-    - 'spec/savon/options_spec.rb'
-    - 'spec/savon/soap_fault_spec.rb'
-
 # Offense count: 14
 RSpec/BeforeAfterAll:
   Exclude:

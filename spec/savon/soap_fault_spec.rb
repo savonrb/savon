@@ -77,7 +77,7 @@ RSpec.describe Savon::SOAPFault do
       end
 
       it "returns an empty fault message" do
-        expect(empty_soap_fault.send method).to eq(nil)
+        expect(empty_soap_fault.send method).to be_nil
       end
 
       it "returns a SOAP 1.2 fault message" do
