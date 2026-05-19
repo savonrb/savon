@@ -10,5 +10,7 @@ RSpec::Core::RakeTask.new "spec:integration" do |t|
   t.pattern = "spec/integration/**/*_spec.rb"
 end
 
-task :default => :spec
+desc "Alias for spec task"
 task :test => :spec
+
+task :default => :spec
