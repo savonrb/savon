@@ -926,9 +926,9 @@ RSpec.describe "Options" do
       ## adapter= method is called first time with nil and second time with adapter. [Envek, 2014-05-03]
       # Wasabi::Document.any_instance.expects(:adapter=).with(:fake_adapter_for_test)
       client = Savon.client(
-          :log => false,
-          :wsdl => @server.url(:authentication),
-          :adapter => :fake_adapter_for_test
+        :log => false,
+        :wsdl => @server.url(:authentication),
+        :adapter => :fake_adapter_for_test
       )
       operations = client.operations
       expect(operations).to eq([:authenticate])
@@ -939,9 +939,9 @@ RSpec.describe "Options" do
 
     it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
       client = new_client_without_wsdl(
-          :endpoint => @server.url(:repeat),
-          :namespace => "http://v1.example.com",
-          :adapter => :adapter_for_test
+        :endpoint => @server.url(:repeat),
+        :namespace => "http://v1.example.com",
+        :adapter => :adapter_for_test
       )
       response = client.call(:authenticate)
       expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
