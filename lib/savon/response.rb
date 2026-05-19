@@ -6,7 +6,7 @@ require "savon/http_error"
 module Savon
   class Response
     CRLF = /\r\n/
-    WSP  = /[#{%Q|\x9\x20|}]/
+    WSP  = /[\t ]/
 
     def initialize(http, globals, locals)
       @http    = http

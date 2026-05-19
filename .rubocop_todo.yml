@@ -321,12 +321,6 @@ Lint/AssignmentInCondition:
   Exclude:
     - 'lib/savon/builder.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-Lint/LiteralInInterpolation:
-  Exclude:
-    - 'lib/savon/response.rb'
-
 # Offense count: 4
 # Configuration parameters: AllowedParentClasses.
 Lint/MissingSuper:
