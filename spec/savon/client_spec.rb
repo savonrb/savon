@@ -210,7 +210,7 @@ RSpec.describe Savon::Client do
       client = new_client(:endpoint => @server.url(:repeat))
 
       response = client.call(:authenticate) do
-        message(:symbol => "AAPL" )
+        message(:symbol => "AAPL")
       end
 
       expect(response.http.body).to include("<symbol>AAPL</symbol>")
@@ -280,7 +280,7 @@ RSpec.describe Savon::Client do
 
       client = new_client(:endpoint => @server.url(:repeat))
       request = client.build_request(:authenticate) do
-        message(:symbol => "AAPL" )
+        message(:symbol => "AAPL")
       end
 
       expect(request).to eq expected_request
@@ -289,7 +289,7 @@ RSpec.describe Savon::Client do
     it "accepts a block without arguments" do
       client = new_client(:endpoint => @server.url(:repeat))
       request = client.build_request(:authenticate) do
-        message(:symbol => "AAPL" )
+        message(:symbol => "AAPL")
       end
 
       expect(request.body).
