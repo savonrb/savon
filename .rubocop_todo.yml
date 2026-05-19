@@ -848,14 +848,6 @@ Style/NestedParenthesizedCalls:
     - 'spec/savon/http_error_spec.rb'
     - 'spec/savon/soap_fault_spec.rb'
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: predicate, comparison
-Style/NilComparison:
-  Exclude:
-    - 'lib/savon/builder.rb'
-
 # Offense count: 4
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: Strict, AllowedNumbers, AllowedPatterns.
