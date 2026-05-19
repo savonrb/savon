@@ -244,14 +244,14 @@ RSpec.describe "Options" do
   end
 
   context "global :soap_version" do
-    it "it uses the correct SOAP 1.1 namespace" do
+    it "uses the correct SOAP 1.1 namespace" do
       client = new_client(:endpoint => @server.url(:repeat), :soap_version => 1)
       response = client.call(:authenticate)
 
       expect(response.http.body).to include('xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"')
     end
 
-    it "it uses the correct SOAP 1.2 namespace" do
+    it "uses the correct SOAP 1.2 namespace" do
       client = new_client(:endpoint => @server.url(:repeat), :soap_version => 2)
       response = client.call(:authenticate)
 

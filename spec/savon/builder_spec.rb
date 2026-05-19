@@ -102,15 +102,15 @@ RSpec.describe Savon::Builder do
 
       subject(:signed_message) { Nokogiri::XML(builder.to_s) }
 
-      it "should contain a header" do
+      it "contains a header" do
         expect(signed_message_nn.xpath('/Envelope/Header').size).to eq(1)
       end
 
-      it "should contain a wsse:Security" do
+      it "contains a wsse:Security" do
         expect(signed_message_nn.xpath('/Envelope/Header/Security').size).to eq(1)
       end
 
-      it "should have a Body[@wsu:Id]" do
+      it "has a Body[@wsu:Id]" do
         # must investigate: acts funny in mri ruby
         # expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
         expect(signed_message_nn.xpath('//Body').attr('Id').value).to include('Body-')
@@ -132,7 +132,7 @@ RSpec.describe Savon::Builder do
   end
 
   describe '#body_attributes' do
-    it 'should not be nil' do
+    it 'is not nil' do
       expect(builder.body_attributes).to eq({})
     end
   end

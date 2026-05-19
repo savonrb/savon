@@ -51,7 +51,7 @@ RSpec.describe Savon::Message do
 
     context 'headers' do
       ['wsa:Action', 'wsa:To', 'wsa:MessageID'].each do |header|
-        it "should include #{header} header" do
+        it "includes #{header} header" do
           response = client.call(:something, message: {})
           expect(response.xml).to include(header)
         end

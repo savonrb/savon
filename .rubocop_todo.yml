@@ -103,18 +103,6 @@ RSpec/DescribedClass:
 RSpec/ExampleLength:
   Max: 40
 
-# Offense count: 33
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: CustomTransform, IgnoredWords, DisallowedExamples.
-# DisallowedExamples: works
-RSpec/ExampleWording:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/message_spec.rb'
-    - 'spec/savon/model_spec.rb'
-    - 'spec/savon/options_spec.rb'
-    - 'spec/savon/response_spec.rb'
-
 # Offense count: 1
 RSpec/IdenticalEqualityAssertion:
   Exclude:

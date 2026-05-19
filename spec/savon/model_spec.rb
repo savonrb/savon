@@ -177,7 +177,7 @@ RSpec.describe Savon::Model do
   end
 
   describe ".all_operations" do
-    it "should call operations with all available client operations" do
+    it "calls operations with all available client operations" do
       model = Class.new {
         extend Savon::Model
 
