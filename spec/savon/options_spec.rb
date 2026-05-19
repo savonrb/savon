@@ -602,7 +602,8 @@ RSpec.describe "Options" do
         client = new_client(
           :endpoint => @server.url(:repeat),
           :pretty_print_xml => true,
-          :log => true)
+          :log => true
+        )
         client.globals[:logger].formatter = proc { |*, msg| "#{msg}\n" }
 
         client.call(:authenticate)
