@@ -18,8 +18,8 @@ module Savon
 
       it "properly handles special keys when namespaces are present" do
         used_namespaces = {
-          %w(tns Foo)     => 'ns',
-          %w(tns Foo Bar) => 'ns'
+          %w[tns Foo]     => 'ns',
+          %w[tns Foo Bar] => 'ns'
         }
 
         hash = {
@@ -66,7 +66,7 @@ module Savon
 
       it "properly handles boolean false" do
         used_namespaces = {
-          %w(tns Foo) => 'ns'
+          %w[tns Foo] => 'ns'
         }
 
         hash = {

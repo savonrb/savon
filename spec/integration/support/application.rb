@@ -76,11 +76,11 @@ class IntegrationServer
         message = Mail.new
         xml_part = Mail::Part.new do
           content_type 'text/xml'
-          body %{<?xml version='1.0' encoding='UTF-8'?>
+          body %(<?xml version='1.0' encoding='UTF-8'?>
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
   <soapenv:Header>response header</soapenv:Header>
   <soapenv:Body>response body</soapenv:Body>
-</soapenv:Envelope>}
+</soapenv:Envelope>)
           # in Content-Type the start parameter is recommended (RFC 2387)
           content_id '<soap-request-body@soap>'
         end

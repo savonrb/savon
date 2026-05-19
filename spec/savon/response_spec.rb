@@ -134,7 +134,7 @@ RSpec.describe Savon::Response do
     end
   end
 
-  %w(body to_hash).each do |method|
+  %w[body to_hash].each do |method|
     describe "##{method}" do
       it "returns the SOAP response body as a Hash" do
         expect(soap_response.send(method)[:authenticate_response][:return]).to eq(
