@@ -12,12 +12,12 @@ module Savon
     SCHEMA_TYPES = {
       "xmlns:xsd" => "http://www.w3.org/2001/XMLSchema",
       "xmlns:xsi" => "http://www.w3.org/2001/XMLSchema-instance"
-    }
+    }.freeze
 
     SOAP_NAMESPACE = {
       1 => "http://schemas.xmlsoap.org/soap/envelope/",
       2 => "http://www.w3.org/2003/05/soap-envelope"
-    }
+    }.freeze
 
     WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
 

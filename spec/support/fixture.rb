@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 class Fixture
 
-  TYPES = { :gzip => "gz", :response => "xml", :wsdl => "xml" }
+  TYPES = { :gzip => "gz", :response => "xml", :wsdl => "xml" }.freeze
 
   class << self
 
