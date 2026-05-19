@@ -62,11 +62,6 @@ RSpec.describe Savon::Transport::HTTPI do
       locals_with_cookies = Savon::LocalOptions.new(cookies: cookies)
       expect(transport.to_httpi_request(url, {}, body, locals_with_cookies).headers["Cookie"]).to eq("session=abc;user=dan")
     end
-
-    it "computes Content-Length from the body byte size" do
-      body_str = "hello"
-      expect(transport.to_httpi_request(url, {}, body_str, locals).headers["Content-Length"]).to eq(body_str.bytesize.to_s)
-    end
   end
 
   describe "#post" do

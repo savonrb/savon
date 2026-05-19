@@ -41,11 +41,14 @@ class IntegrationServer
 
     map "/inspect_request" do
       run lambda { |env|
+        request_body = env["rack.input"].read
         body = {
           soap_action: env["HTTP_SOAPACTION"],
           cookie: env["HTTP_COOKIE"],
           x_token: env["HTTP_X_TOKEN"],
-          content_type: env["CONTENT_TYPE"]
+          content_type: env["CONTENT_TYPE"],
+          content_length: env["CONTENT_LENGTH"],
+          body_bytesize: request_body.bytesize.to_s
         }
 
         IntegrationServer.respond_with body: JSON.dump(body)

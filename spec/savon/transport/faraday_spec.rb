@@ -121,17 +121,6 @@ RSpec.describe Savon::Transport::Faraday do
       expect(captured.request_headers["Cookie"]).to eq("session=abc;user=dan")
     end
 
-    it "computes Content-Length from the body byte size" do
-      body_str = "hello"
-      captured = nil
-      stubs.post("/soap") do |env|
-        captured = env
-        [200, {}, "ok"]
-      end
-      transport.post(url, {}, body_str, locals)
-      expect(captured.request_headers["Content-Length"]).to eq(body_str.bytesize.to_s)
-    end
-
     it "skips LogMessage construction when the logger level would suppress the output" do
       globals_logging = Savon::GlobalOptions.new(log: true)
       globals_logging[:logger].level = Logger::FATAL

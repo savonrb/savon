@@ -1,5 +1,9 @@
 # Savon changelog
 
+## UPCOMING
+
+* Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - Removed Content-Length computing from Faraday and HTTPI transports.
+
 ## 2.17.0 (2026-05-19)
 
 **Add opt-in Faraday transport**
