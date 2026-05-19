@@ -484,7 +484,6 @@ RSpec.describe "Options" do
     end
   end
 
-
   context "global :ssl_cert_key_password" do
     it "sets the encrypted cert key file password to use" do
       cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
@@ -557,7 +556,6 @@ RSpec.describe "Options" do
       client.call(:authenticate)
     end
   end
-
 
   context "global :basic_auth" do
     it "sets the basic auth credentials" do
