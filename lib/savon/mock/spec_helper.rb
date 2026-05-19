@@ -26,14 +26,12 @@ module Savon
       def notify(operation_name, builder, globals, locals)
         expectation = expectations.shift
 
-        if expectation
-          expectation.actual(operation_name, builder, globals, locals)
+        raise ExpectationError, "Unexpected request to the #{operation_name.inspect} operation." unless expectation
 
-          expectation.verify!
-          expectation.response!
-        else
-          raise ExpectationError, "Unexpected request to the #{operation_name.inspect} operation."
-        end
+        expectation.actual(operation_name, builder, globals, locals)
+
+        expectation.verify!
+        expectation.response!
       rescue ExpectationError
         @expectations.clear
         raise

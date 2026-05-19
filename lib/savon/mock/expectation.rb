@@ -59,25 +59,25 @@ module Savon
     private
 
     def verify_operation_name!
-      unless @expected[:operation_name] == @actual[:operation_name]
-        raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation.\n" \
-                                "Received a request to the #{@actual[:operation_name].inspect} operation instead."
-      end
+      return if @expected[:operation_name] == @actual[:operation_name]
+
+      raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation.\n" \
+                              "Received a request to the #{@actual[:operation_name].inspect} operation instead."
     end
 
     def verify_message!
       return if @expected[:message].eql? :any
 
-      unless equals_except_any(@expected[:message], @actual[:message])
-        expected_message = "  with this message: #{@expected[:message].inspect}" if @expected[:message]
-        expected_message ||= "  with no message."
+      return if equals_except_any(@expected[:message], @actual[:message])
 
-        actual_message = "  with this message: #{@actual[:message].inspect}" if @actual[:message]
-        actual_message ||= "  with no message."
+      expected_message = "  with this message: #{@expected[:message].inspect}" if @expected[:message]
+      expected_message ||= "  with no message."
 
-        raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation\n#{expected_message}\n" \
-        "Received a request to the #{@actual[:operation_name].inspect} operation\n#{actual_message}"
-      end
+      actual_message = "  with this message: #{@actual[:message].inspect}" if @actual[:message]
+      actual_message ||= "  with no message."
+
+      raise ExpectationError, "Expected a request to the #{@expected[:operation_name].inspect} operation\n#{expected_message}\n" \
+      "Received a request to the #{@actual[:operation_name].inspect} operation\n#{actual_message}"
     end
 
     def equals_except_any(msg_expected, msg_real)

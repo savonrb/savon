@@ -49,10 +49,10 @@ module Savon
     end
 
     def self.ensure_name_is_symbol!(operation_name)
-      unless operation_name.is_a? Symbol
-        raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
-                             "Actual: #{operation_name.inspect} (#{operation_name.class})"
-      end
+      return if operation_name.is_a? Symbol
+
+      raise ArgumentError, "Expected the first parameter (the name of the operation to call) to be a symbol\n" \
+                           "Actual: #{operation_name.inspect} (#{operation_name.class})"
     end
 
     def initialize(name, wsdl, globals, transport)
