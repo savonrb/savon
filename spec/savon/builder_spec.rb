@@ -149,8 +149,9 @@ RSpec.describe Savon::Builder do
     end
 
     context "with a WSDL that declares multiple namespaces" do
-      let(:multi_wsdl) { Wasabi::Document.new Fixture.wsdl(:multiple_namespaces) }
       subject(:multi_builder) { Savon::Builder.new(:Save, multi_wsdl, globals, locals) }
+
+      let(:multi_wsdl) { Wasabi::Document.new Fixture.wsdl(:multiple_namespaces) }
 
       it "includes exactly the required namespaces and no structural namespace declarations" do
         expected = {

@@ -671,12 +671,14 @@ RSpec.describe "Options" do
         context "without digest" do
           let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password]) }
           let(:response) { client.call(:authenticate) }
+
           include_examples "WSSE basic auth"
         end
 
         context "with digest" do
           let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
           let(:response) { client.call(:authenticate) }
+
           include_examples "WSSE digest auth"
         end
 
@@ -689,22 +691,26 @@ RSpec.describe "Options" do
 
             context "without digest" do
               let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(username, password) } }
+
               include_examples "WSSE basic auth"
             end
 
             context "with digest" do
               let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(username, password, :digest) } }
+
               include_examples "WSSE digest auth"
             end
           end
 
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(false) } }
+
             include_examples "no WSSE auth"
           end
 
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(nil) } }
+
             include_examples "WSSE basic auth"
           end
         end
@@ -712,6 +718,7 @@ RSpec.describe "Options" do
         context "global" do
           let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_auth => [username, password, :digest]) }
           let(:response) { client.call(:authenticate) }
+
           include_examples "WSSE digest auth"
         end
       end
@@ -722,16 +729,19 @@ RSpec.describe "Options" do
         describe "local" do
           context "enabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(username, password, :digest) } }
+
             include_examples "WSSE digest auth"
           end
 
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(false) } }
+
             include_examples "no WSSE auth"
           end
 
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_auth(nil) } }
+
             include_examples "no WSSE auth"
           end
         end
@@ -776,29 +786,35 @@ RSpec.describe "Options" do
             end
           end
           let(:response) { client.call(:authenticate) }
+
           include_examples "WSSE timestamp"
         end
 
         context "through initializer options" do
           let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
           let(:response) { client.call(:authenticate) }
+
           include_examples "WSSE timestamp"
         end
 
         context "with local override" do
           let(:client) { new_client(:endpoint => @server.url(:repeat), :wsse_timestamp => true) }
+
           context "enabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp } }
+
             include_examples "WSSE timestamp"
           end
 
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(false) } }
+
             include_examples "no WSSE timestamp"
           end
 
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(nil) } }
+
             include_examples "WSSE timestamp"
           end
         end
@@ -806,19 +822,23 @@ RSpec.describe "Options" do
 
       context "not enabled" do
         let(:client) { new_client(:endpoint => @server.url(:repeat)) }
+
         describe "local" do
           context "enabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp } }
+
             include_examples "WSSE timestamp"
           end
 
           context "disabled" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(false) } }
+
             include_examples "no WSSE timestamp"
           end
 
           context "set to nil" do
             let(:response) { client.call(:authenticate) { |locals| locals.wsse_timestamp(nil) } }
+
             include_examples "no WSSE timestamp"
           end
         end

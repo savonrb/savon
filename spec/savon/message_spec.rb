@@ -39,6 +39,7 @@ RSpec.describe Savon::Message do
     let(:converted_keys) {
       '<wsdl:UserName>josh</wsdl:UserName><wsdl:EmailCount>3</wsdl:EmailCount>'
     }
+
     it "converts request Hash keys for which there is not namespace" do
       response = client.call(:something, :message => message)
       expect(response.xml).to include(converted_keys)

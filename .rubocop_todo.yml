@@ -98,15 +98,6 @@ RSpec/DescribedClass:
     - 'spec/savon/softlayer_spec.rb'
     - 'spec/savon/string_utils_spec.rb'
 
-# Offense count: 23
-# This cop supports safe autocorrection (--autocorrect).
-RSpec/EmptyLineAfterFinalLet:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/message_spec.rb'
-    - 'spec/savon/options_spec.rb'
-    - 'spec/savon/transport/httpi_spec.rb'
-
 # Offense count: 84
 # Configuration parameters: CountAsOne.
 RSpec/ExampleLength:
