@@ -163,11 +163,6 @@ RSpec/NoExpectationExample:
     - 'spec/savon/transport/httpi_spec.rb'
 
 # Offense count: 2
-RSpec/RepeatedExample:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-
-# Offense count: 2
 RSpec/RepeatedExampleGroupBody:
   Exclude:
     - 'spec/savon/options_spec.rb'

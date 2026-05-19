@@ -40,10 +40,6 @@ RSpec.describe Savon::Builder do
       expect(builder.to_s).to include("<tns:doAuthenticate>")
     end
 
-    it "includes the message tag from the WSDL if its available" do
-      expect(builder.to_s).to include("<tns:authenticate>")
-    end
-
     it "includes a message tag created by Gyoku if both option and WSDL are missing" do
       globals[:namespace] = "http://v1.example.com"
 
