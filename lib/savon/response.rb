@@ -142,7 +142,7 @@ module Savon
     end
 
     def raise_invalid_response_error!
-      raise InvalidResponseError, "Unable to parse response body:\n" + xml.inspect
+      raise InvalidResponseError, "Unable to parse response body:\n#{xml.inspect}"
     end
 
     def xml_namespaces

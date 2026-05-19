@@ -323,15 +323,6 @@ Style/RegexpLiteral:
 Style/SpecialGlobalVars:
   EnforcedStyle: use_perl_names
 
-# Offense count: 3
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: Mode.
-Style/StringConcatenation:
-  Exclude:
-    - 'lib/savon/options.rb'
-    - 'lib/savon/response.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 1342
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, ConsistentQuotesInMultiline.

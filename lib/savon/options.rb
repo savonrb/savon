@@ -132,8 +132,7 @@ module Savon
       return if violations.empty?
 
       raise InitializationError,
-            "The following options are not supported with transport: :faraday:\n" +
-            violations.join("\n")
+            "The following options are not supported with transport: :faraday:\n#{violations.join("\n")}"
     end
 
     # Proxy server to use for all requests.
