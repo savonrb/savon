@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   s.add_dependency "wasabi",   ">= 5.1.0", " < 6"
 
   s.add_development_dependency 'ostruct', '~> 0.6'
-  s.add_development_dependency "puma",  ">= 4.3.8", "< 7"
+  s.add_development_dependency "puma", ">= 4.3.8", "< 7"
   s.add_development_dependency "rack", " < 4"
 
   s.add_development_dependency "byebug"

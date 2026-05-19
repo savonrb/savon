@@ -143,9 +143,9 @@ RSpec.describe "Options" do
       # TODO: make HTTPI tag timeout errors, then depend on HTTPI::TimeoutError
       #       instead of a specific client error [dh, 2012-12-08]
       expect { client.call(:authenticate) }.to raise_error(
-        an_instance_of(Errno::EHOSTUNREACH)  # network may be down
-          .or(an_instance_of(Errno::ENETUNREACH))  # network may be down
-          .or(an_instance_of(SocketError))  # network may be down
+        an_instance_of(Errno::EHOSTUNREACH) # network may be down
+          .or(an_instance_of(Errno::ENETUNREACH)) # network may be down
+          .or(an_instance_of(SocketError)) # network may be down
           .or(an_instance_of(HTTPClient::ConnectTimeoutError))
       )
     end
@@ -841,7 +841,7 @@ RSpec.describe "Options" do
       client = new_client_without_wsdl do |globals|
         globals.endpoint @server.url(:repeat)
         globals.namespace "http://v1.example.com"
-        globals.convert_request_keys_to :camelcase  # or one of [:lower_camelcase, :upcase, :none]
+        globals.convert_request_keys_to :camelcase # or one of [:lower_camelcase, :upcase, :none]
       end
 
       response = client.call(:find_user) do |locals|
@@ -1075,7 +1075,7 @@ RSpec.describe "Options" do
 
   context "request :cookies" do
     it "accepts an Array of HTTPI::Cookie objects for the next request" do
-      cookies  = [
+      cookies = [
         HTTPI::Cookie.new("some-cookie=choc-chip"),
         HTTPI::Cookie.new("another-cookie=ny-cheesecake")
       ]

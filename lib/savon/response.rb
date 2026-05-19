@@ -10,11 +10,11 @@ module Savon
     WSP  = /[\t ]/
 
     def initialize(http, globals, locals)
-      @http    = http
-      @globals = globals
-      @locals  = locals
-      @attachments = []
-      @xml     = ''
+      @http            = http
+      @globals         = globals
+      @locals          = locals
+      @attachments     = []
+      @xml             = ''
       @has_parsed_body = false
 
       build_soap_and_http_errors!

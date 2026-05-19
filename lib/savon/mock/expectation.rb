@@ -86,7 +86,7 @@ module Savon
       return false if msg_expected.nil? || msg_real.nil? # If both are nil has returned true
 
       msg_expected.each do |key, expected_value|
-        next if expected_value == :any &&  msg_real.include?(key)
+        next if expected_value == :any && msg_real.include?(key)
         return false if expected_value != msg_real[key]
       end
       true
