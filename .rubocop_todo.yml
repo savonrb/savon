@@ -503,12 +503,6 @@ RSpec/ExampleWording:
 
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
-RSpec/ExcessiveDocstringSpacing:
-  Exclude:
-    - 'spec/savon/builder_spec.rb'
-
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.
 # SupportedStyles: implicit, each, example
 RSpec/HookArgument:

@@ -69,7 +69,7 @@ RSpec.describe Savon::Builder do
       expect(builder.to_s).to include("<wsdl:authenticate>")
     end
 
-    it "uses the global :element_form_default option if it's available " do
+    it "uses the global :element_form_default option if it's available" do
       globals[:element_form_default] = :qualified
       locals[:message] = { :username => "luke", :password => "secret" }
 
