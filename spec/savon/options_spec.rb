@@ -140,7 +140,7 @@ RSpec.describe "Options" do
       non_routable_ip = "http://192.0.2.0"
       client = new_client(:endpoint => non_routable_ip, :open_timeout => 0.1)
 
-      expect { client.call(:authenticate) }.to raise_error { |error|
+      expect { client.call(:authenticate) }.to(raise_error { |error|
         host_unreachable = error.kind_of? Errno::EHOSTUNREACH
         net_unreachable = error.kind_of? Errno::ENETUNREACH
         socket_err = error.kind_of? SocketError
@@ -152,7 +152,7 @@ RSpec.describe "Options" do
           #       instead of a specific client error [dh, 2012-12-08]
           expect(error).to be_an(HTTPClient::ConnectTimeoutError)
         end
-      }
+      })
     end
   end
 
