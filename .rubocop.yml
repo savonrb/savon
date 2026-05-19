@@ -5,6 +5,7 @@ plugins:
   - rubocop-rspec
 
 AllCops:
+  TargetRubyVersion: 3.0
   SuggestExtensions: true
 
 Gemspec/RequireMFA:
