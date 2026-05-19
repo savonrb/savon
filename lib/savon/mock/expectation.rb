@@ -26,7 +26,7 @@ module Savon
       self
     end
 
-    def actual(operation_name, builder, globals, locals)
+    def actual(operation_name, _builder, _globals, locals)
       @actual = {
         :operation_name => operation_name,
         :message        => locals[:message]
