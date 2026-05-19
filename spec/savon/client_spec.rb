@@ -129,7 +129,8 @@ RSpec.describe Savon::Client do
 
     it "returns the same connection on repeated calls (memoized)" do
       client = new_client_without_wsdl(:transport => :faraday)
-      expect(client.faraday).to be(client.faraday)
+      faraday = client.faraday
+      expect(faraday).to be(client.faraday)
     end
 
     it "raises when transport is not :faraday" do

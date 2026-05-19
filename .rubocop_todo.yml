@@ -103,11 +103,6 @@ RSpec/DescribedClass:
 RSpec/ExampleLength:
   Max: 40
 
-# Offense count: 1
-RSpec/IdenticalEqualityAssertion:
-  Exclude:
-    - 'spec/savon/client_spec.rb'
-
 # Offense count: 115
 # Configuration parameters: AssignmentOnly.
 RSpec/InstanceVariable:
