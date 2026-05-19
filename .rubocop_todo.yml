@@ -182,15 +182,6 @@ Layout/IndentationWidth:
     - 'lib/savon/header.rb'
     - 'spec/spec_helper.rb'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: AllowDoxygenCommentStyle, AllowGemfileRubyComment, AllowRBSInlineAnnotation, AllowSteepAnnotation.
-Layout/LeadingCommentSpace:
-  Exclude:
-    - 'lib/savon/builder.rb'
-    - 'spec/savon/builder_spec.rb'
-    - 'spec/savon/mock_spec.rb'
-
 # Offense count: 1
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle.

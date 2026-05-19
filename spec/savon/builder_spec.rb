@@ -111,8 +111,8 @@ RSpec.describe Savon::Builder do
       end
 
       it "should have a Body[@wsu:Id]" do
-        #must investigate: acts funny in mri ruby
-        #expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
+        # must investigate: acts funny in mri ruby
+        # expect(signed_message.xpath('//soapenv:Body', soapenv: "http://schemas.xmlsoap.org/soap/envelope/").attribute('ws:Id').value).to include('Body-')
         expect(signed_message_nn.xpath('//Body').attr('Id').value).to include('Body-')
       end
 

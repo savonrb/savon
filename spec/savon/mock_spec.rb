@@ -64,7 +64,7 @@ RSpec.describe "Savon's mock interface" do
 
   it "fails when the expected operation was not called" do
     # TODO: find out how to test this! [dh, 2012-12-17]
-    #savon.expects(:authenticate)
+    # savon.expects(:authenticate)
   end
 
   it "fails when the return value for an expectation was not specified" do
