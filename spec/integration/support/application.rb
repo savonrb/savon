@@ -87,7 +87,7 @@ class IntegrationServer
         end
         message.add_part xml_part
 
-        message.add_file File.expand_path("../../../fixtures/gzip/message.gz", __FILE__)
+        message.add_file File.expand_path('../../fixtures/gzip/message.gz', __dir__)
         message.parts.last.content_location = 'message.gz'
         message.parts.last.content_id = 'attachment1'
 

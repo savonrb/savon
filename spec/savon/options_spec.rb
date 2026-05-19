@@ -461,7 +461,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_cert_key_file" do
     it "sets the cert key file to use" do
-      cert_key = File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)
+      cert_key = File.expand_path('../fixtures/ssl/client_key.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_key_file => cert_key)
@@ -471,7 +471,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_cert_key" do
     it "sets the cert key to use" do
-      cert_key = File.open(File.expand_path("../../fixtures/ssl/client_key.pem", __FILE__)).read
+      cert_key = File.open(File.expand_path('../fixtures/ssl/client_key.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:cert_key=).with(cert_key).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_key => cert_key)
@@ -481,7 +481,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_cert_key_password" do
     it "sets the encrypted cert key file password to use" do
-      cert_key = File.expand_path("../../fixtures/ssl/client_encrypted_key.pem", __FILE__)
+      cert_key = File.expand_path('../fixtures/ssl/client_encrypted_key.pem', __dir__)
       cert_key_pass = "secure-password!42"
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_file=).with(cert_key).twice
       HTTPI::Auth::SSL.any_instance.expects(:cert_key_password=).with(cert_key_pass).twice
@@ -494,7 +494,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_cert_file" do
     it "sets the cert file to use" do
-      cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+      cert = File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:cert_file=).with(cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert_file => cert)
@@ -504,7 +504,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_cert" do
     it "sets the cert to use" do
-      cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
+      cert = File.open(File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:cert=).with(cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_cert => cert)
@@ -514,7 +514,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_ca_cert_file" do
     it "sets the ca cert file to use" do
-      ca_cert = File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)
+      ca_cert = File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert_file=).with(ca_cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert_file => ca_cert)
@@ -544,7 +544,7 @@ RSpec.describe "Options" do
 
   context "global :ssl_ca_cert" do
     it "sets the ca cert file to use" do
-      ca_cert = File.open(File.expand_path("../../fixtures/ssl/client_cert.pem", __FILE__)).read
+      ca_cert = File.open(File.expand_path('../fixtures/ssl/client_cert.pem', __dir__)).read
       HTTPI::Auth::SSL.any_instance.expects(:ca_cert=).with(ca_cert).twice
 
       client = new_client(:endpoint => @server.url, :ssl_ca_cert => ca_cert)

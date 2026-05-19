@@ -466,15 +466,6 @@ Style/Documentation:
     - 'lib/savon/soap_fault.rb'
     - 'lib/savon/string_utils.rb'
 
-# Offense count: 10
-# This cop supports safe autocorrection (--autocorrect).
-Style/ExpandPathArguments:
-  Exclude:
-    - 'savon.gemspec'
-    - 'spec/integration/support/application.rb'
-    - 'spec/savon/multipart_request_spec.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 4
 # This cop supports unsafe autocorrection (--autocorrect-all).
 # Configuration parameters: EnforcedStyle.

@@ -28,7 +28,7 @@ RSpec.describe Savon::Builder do
   it "building multipart request from file" do
     locals = {
       attachments: {
-        'file.gz' => File.expand_path("../../fixtures/gzip/message.gz", __FILE__)
+        'file.gz' => File.expand_path('../fixtures/gzip/message.gz', __dir__)
       }
     }
     builder = Savon::Builder.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
