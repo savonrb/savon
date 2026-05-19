@@ -257,18 +257,6 @@ Style/IfUnlessModifier:
     - 'lib/savon/transport/faraday.rb'
     - 'lib/savon/transport/httpi.rb'
 
-# Offense count: 12
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: line_count_dependent, lambda, literal
-Style/Lambda:
-  Exclude:
-    - 'lib/savon/options.rb'
-    - 'spec/savon/options_spec.rb'
-    - 'spec/savon/response_spec.rb'
-    - 'spec/savon/soap_fault_spec.rb'
-    - 'spec/support/fixture.rb'
-
 # Offense count: 2
 Style/MissingRespondToMissing:
   Exclude:

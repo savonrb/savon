@@ -120,7 +120,7 @@ RSpec.describe Savon::Response do
     end
 
     it 'respects the global :convert_attributes_to option' do
-      globals[:convert_attributes_to] = lambda { |_k, _v| [] }
+      globals[:convert_attributes_to] = ->(_k, _v) { [] }
 
       response_with_header = soap_response(:body => Fixture.response(:header))
       header = response_with_header.header

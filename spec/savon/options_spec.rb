@@ -850,7 +850,7 @@ RSpec.describe "Options" do
     it "can be changed to not strip any namespaces" do
       client = new_client(
         :endpoint                 => @server.url(:repeat),
-        :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag) },
+        :convert_response_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag) },
         :strip_namespaces         => false
       )
 
@@ -883,7 +883,7 @@ RSpec.describe "Options" do
 
   context "global :convert_response_tags_to" do
     it "changes how XML tags from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).upcase })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_response_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).upcase })
       response = client.call(:authenticate, :xml => Fixture.response(:authentication))
 
       expect(response.full_hash["ENVELOPE"]["BODY"]).to include("AUTHENTICATE_RESPONSE")
@@ -907,13 +907,13 @@ RSpec.describe "Options" do
 
   context "global :convert_attributes_to" do
     it "changes how XML tag attributes from the SOAP response are translated into Hash keys" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda { |k, v| [k, v] })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => ->(k, v) { [k, v] })
       response = client.call(:authenticate, :xml => Fixture.response(:f5))
       expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to eq({ :"@s:type"=>"y:string" })
     end
 
     it "strips the attributes if an appropriate lambda is set" do
-      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => lambda { |_k, _v| [] })
+      client = new_client(:endpoint => @server.url(:repeat), :convert_attributes_to => ->(_k, _v) { [] })
       response = client.call(:authenticate, :xml => Fixture.response(:f5))
       expect(response.body[:get_agent_listen_address_response][:return][:item].first[:ipport][:address]).to be_nil
     end
@@ -1126,7 +1126,7 @@ RSpec.describe "Options" do
 
   context "request :response_parser" do
     it "instructs Nori to change the response parser" do
-      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => lambda { |tag| Savon::StringUtils.snakecase(tag).to_sym })
+      nori = Nori.new(:strip_namespaces => true, :convert_tags_to => ->(tag) { Savon::StringUtils.snakecase(tag).to_sym })
       Nori.expects(:new).with { |options| options[:parser] == :nokogiri }.returns(nori)
 
       client = new_client(:endpoint => @server.url(:repeat))
