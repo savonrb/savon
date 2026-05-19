@@ -274,9 +274,9 @@ RSpec.describe "Options" do
 
       begin
         client.call(:authenticate, :xml => Fixture.response(:soap_fault))
-      rescue Savon::SOAPFault => soap_fault
+      rescue Savon::SOAPFault => e
         # check whether the configured nori instance is used by the soap fault
-        expect(soap_fault.to_hash[:fault][:faultcode]).to eq("soap:Server")
+        expect(e.to_hash[:fault][:faultcode]).to eq("soap:Server")
       end
     end
 

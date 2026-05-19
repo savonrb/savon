@@ -390,13 +390,6 @@ Metrics/ParameterLists:
 Metrics/PerceivedComplexity:
   Max: 15
 
-# Offense count: 1
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: PreferredName.
-Naming/RescuedExceptionsVariableName:
-  Exclude:
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 23
 RSpec/AnyInstance:
   Exclude:
