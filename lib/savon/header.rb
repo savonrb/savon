@@ -78,7 +78,7 @@ module Savon
       wsse = Akami.wsse
       wsse.credentials(*wsse_auth) if wsse_auth
       wsse.timestamp = wsse_timestamp if wsse_timestamp
-      if wsse_signature && wsse_signature.have_document?
+      if wsse_signature&.have_document?
         wsse.signature = wsse_signature
       end
 
