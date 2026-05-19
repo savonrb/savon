@@ -26,7 +26,7 @@ RSpec.describe Savon::Transport::Faraday do
 
     it "forwards all soap_headers to the HTTP request" do
       captured = nil
-      stubs.post("/soap") { |env| 
+      stubs.post("/soap") { |env|
         captured = env.request_headers
         [200, {}, "ok"]
       }

@@ -53,7 +53,7 @@ module Savon
         headers = {}
         headers.merge!(@globals[:headers]) if @globals.include?(:headers)
         headers.merge!(locals[:headers])   if locals.include?(:headers)
-        
+
         # soap_headers are lowest priority
         soap_headers.each { |k, v| headers[k] ||= v }
 

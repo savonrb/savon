@@ -81,7 +81,7 @@ RSpec.describe Savon::Transport::HTTPI do
     it "forwards all soap_headers to the HTTP request" do
       captured = nil
       # Mocha stubs are matched LIFO; this overrides the before-block stub for this call.
-      HTTPI.stubs(:post).with { |req| 
+      HTTPI.stubs(:post).with { |req|
         captured = req.headers
         true
       }.returns(HTTPI::Response.new(200, {}, "ok"))
