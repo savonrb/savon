@@ -6,9 +6,19 @@ class AdapterForTest < HTTPI::Adapter::Base
 
   register :adapter_for_test
 
+  class << self
+    attr_reader :requests, :methods
+
+    def reset!
+      @requests = []
+      @methods = []
+    end
+  end
+
+  reset!
+
   def initialize(request)
-    @@requests ||= []
-    @@requests.push request
+    self.class.requests << request
     @request = request
     @worker = HTTPI::Adapter::HTTPClient.new(request)
   end
@@ -18,8 +28,7 @@ class AdapterForTest < HTTPI::Adapter::Base
   end
 
   def request(method)
-    @@methods ||= []
-    @@methods.push method
+    self.class.methods << method
     @worker.request(method)
   end
 
@@ -31,17 +40,26 @@ class FakeAdapterForTest < HTTPI::Adapter::Base
 
   register :fake_adapter_for_test
 
+  class << self
+    attr_reader :requests, :methods
+
+    def reset!
+      @requests = []
+      @methods = []
+    end
+  end
+
+  reset!
+
   def initialize(request)
-    @@requests ||= []
-    @@requests.push request
+    self.class.requests << request
     @request = request
   end
 
   attr_reader :client
 
   def request(method)
-    @@methods ||= []
-    @@methods.push method
+    self.class.methods << method
     target = @request.url.path.to_sym
     HTTPI::Response.new(200, {}, Fixture.wsdl(target))
   end

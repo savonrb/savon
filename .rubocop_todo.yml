@@ -446,11 +446,6 @@ Style/ClassCheck:
     - 'lib/savon/response.rb'
     - 'spec/savon/options_spec.rb'
 
-# Offense count: 4
-Style/ClassVars:
-  Exclude:
-    - 'spec/support/adapters.rb'
-
 # Offense count: 2
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, SingleLineConditionsOnly, IncludeTernaryExpressions.

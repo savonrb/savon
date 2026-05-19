@@ -914,6 +914,11 @@ RSpec.describe "Options" do
   end
 
   context 'global: :adapter' do
+    before do
+      FakeAdapterForTest.reset!
+      AdapterForTest.reset!
+    end
+
     it 'passes option to Wasabi initializer for WSDL fetching' do
       ## I want to use there something similar to the next mock expectation, but I can't
       ## as due to how Savon sets up Wasabi::Document and Wasabi::Document initialize itself
@@ -926,9 +931,9 @@ RSpec.describe "Options" do
       )
       operations = client.operations
       expect(operations).to eq([:authenticate])
-      expect(FakeAdapterForTest.class_variable_get(:@@requests).size).to eq(1)
-      expect(FakeAdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:authentication)))
-      expect(FakeAdapterForTest.class_variable_get(:@@methods)).to eq([:get])
+      expect(FakeAdapterForTest.requests.size).to eq(1)
+      expect(FakeAdapterForTest.requests.first.url).to eq(URI.parse(@server.url(:authentication)))
+      expect(FakeAdapterForTest.methods).to eq([:get])
     end
 
     it 'instructs HTTPI to use provided adapter for performing SOAP requests' do
@@ -940,9 +945,9 @@ RSpec.describe "Options" do
       response = client.call(:authenticate)
       expect(response.http.body).to include('xmlns:wsdl="http://v1.example.com"')
       expect(response.http.body).to include('<wsdl:authenticate>')
-      expect(AdapterForTest.class_variable_get(:@@requests).size).to eq(1)
-      expect(AdapterForTest.class_variable_get(:@@requests).first.url).to eq(URI.parse(@server.url(:repeat)))
-      expect(AdapterForTest.class_variable_get(:@@methods)).to eq([:post])
+      expect(AdapterForTest.requests.size).to eq(1)
+      expect(AdapterForTest.requests.first.url).to eq(URI.parse(@server.url(:repeat)))
+      expect(AdapterForTest.methods).to eq([:post])
     end
   end
 
