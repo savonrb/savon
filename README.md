@@ -2,113 +2,78 @@
 
 Heavy metal SOAP client
 
-[Documentation](https://www.rubydoc.info/gems/savon/) | [Support](https://stackoverflow.com/questions/tagged/savon) |
-[Mailing list](https://groups.google.com/forum/#!forum/savonrb)
-
 [![Ruby](https://github.com/savonrb/savon/actions/workflows/ci.yml/badge.svg)](https://github.com/savonrb/savon/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
+Savon is a SOAP client for Ruby. [SOAP is the protocol](https://www.w3.org/TR/soap/) spoken by many enterprise systems in banking, government, ERP or payroll. When they hand you a WSDL URL or file instead of a REST spec, it's SOAP. Savon reads the WSDL, maps available operations to Ruby symbols, converts Ruby hashes to SOAP envelopes and turns XML responses into hashes you can work with.
+
+Full documentation is at [savonrb.com](https://savonrb.com).
 
 ## Installation
 
-Savon is available through [Rubygems](http://rubygems.org/gems/savon) and can be installed via:
-
-```
-$ gem install savon
-```
-
-or add it to your Gemfile like this:
-
-```
+```ruby
 gem 'savon', '~> 2.17'
 ```
 
-## Usage example
+## Usage
 
-``` ruby
+```ruby
 require 'savon'
 
-# create a client for the service
-client = Savon.client(wsdl: 'http://service.example.com?wsdl')
+# Point Savon to a local or remote WSDL document
+client = Savon.client(wsdl: 'https://service.example.com?wsdl')
 
-# or: create a client with a wsdl provided as a string
-client = Savon.client do |config|
-  wsdl_content = File.read("/path/to/wsdl")
-  config.wsdl wsdl_content
-end
-
+# See what the service exposes
 client.operations
-# => [:find_user, :list_users]
+# => [:find_user, :create_user]
 
-# call the 'findUser' operation
+# Make a request and work with the response
 response = client.call(:find_user, message: { id: 42 })
+response.body[:find_user_response]
+# => { id: 42, name: "Hoff" }
 
-response.body
-# => { find_user_response: { id: 42, name: 'Hoff' } }
+# Savon raises a Savon::SOAPFault when the server returns a SOAP fault
+rescue Savon::SOAPFault => e
+  puts e.to_hash.dig(:fault, :faultstring)
 ```
 
-For more examples, you should check out the
-[integration tests](https://github.com/savonrb/savon/tree/version2/spec/integration).
-
-## Faraday transport
-
-Savon uses HTTPI for HTTP by default. To opt into Faraday instead, add `faraday` to your Gemfile and set `transport: :faraday`:
+Enable logging to see the raw SOAP envelopes. That's probably the single most useful thing while getting a new integration working:
 
 ```ruby
 client = Savon.client(
-  transport: :faraday,
-  wsdl: "http://service.example.com?wsdl"
+  wsdl: 'https://service.example.com?wsdl',
+  pretty_print_xml: true,
+  log: true
 )
 ```
 
-Configure SSL, auth, timeouts, middleware, and anything else transport-related on the `Faraday::Connection` before making calls:
+### Authentication
+
+Most enterprise services require authentication. Common options:
 
 ```ruby
-client.faraday.ssl.verify               = false
-client.faraday.options.timeout          = 30
-client.faraday.options.open_timeout     = 5
-client.faraday.headers["Authorization"] = "Bearer #{token}"
-client.faraday.use Faraday::Response::Logger
+# HTTP basic auth
+Savon.client(wsdl: '...', basic_auth: ['user', 'secret'])
+
+# WS-Security (WSSE)
+Savon.client(wsdl: '...', wsse_auth: ['user', 'secret', :digest], wsse_timestamp: true)
 ```
 
-## Ruby version support
+See [Authentication](https://savonrb.com/version2/globals.html) on the website for HTTP digest, NTLM, and certificate-based options.
 
-Every savon release is tested with contemporary supported versions of ruby. Historical compatibility information:
+### Transport
 
-* `main` - same support as Ruby
-* 2.15.x - MRI 3.0, 3.1, 3.2, 3.3
-* 2.13.x, 2.14.x - MRI 2.7, 3.0, 3.1
-* 2.12.x - MRI 2.2, 2.3, 2.4, 2.5
-* 2.11.x - MRI 2.0, 2.1, 2.2, and 2.3
+Savon uses [HTTPI](https://github.com/savonrb/httpi) for HTTP by default. Since v2.17.0 you can opt-in to use Faraday by passing `transport: :faraday` which exposes the Faraday connection at `client.faraday` for you to configure. Savon is only adding some SOAP-specifics on top.
 
-If you are running MRI 1.8.7, try a 2.6.x release.
+## Ruby support
 
-Most changes are not backported to older versions of savon, or unsupported ruby versions.
-
-## Running tests
-
-```bash
-$ bundle install
-$ bundle exec rspec
-```
-
-## FAQ
-
-* URI::InvalidURIError -- if you see this error, then it is likely that the http client you are using cannot parse the URI for your WSDL. Try `gem install httpclient` or add it to your `Gemfile`.
-  - See https://github.com/savonrb/savon/issues/488 for more info
-
+Savon 2.x requires Ruby 3.0 or later. See the [changelog](CHANGELOG.md) for historical compatibility.
 
 ## Known limitations
 
-### WSDL imports are not followed
+**WSDL imports are not followed.** Savon parses only the root WSDL document via [Wasabi](https://github.com/savonrb/wasabi). Messages, port types, and bindings defined in imported files are invisible to Savon. If you control the WSDL, merge the imported elements into the root document and pass that to Savon as a string. If you need full import support, the [WSDL](https://rubygems.org/gems/wsdl) gem is an alternative.
 
-Savon uses [Wasabi](https://github.com/savonrb/wasabi) to parse WSDL documents. Wasabi parses only the root document. It does not fetch or inline documents referenced by `wsdl:import` or `wsdl:include` ([wasabi#1](https://github.com/savonrb/wasabi/issues/1), [wasabi#56](https://github.com/savonrb/wasabi/issues/56)). All messages, portTypes, and bindings must be defined in the root WSDL file for Savon to see them.
+## Contributing
 
-**Workaround:** if you have access to the imported documents, manually merge their `wsdl:message` and `wsdl:portType` elements into the root document and pass that to Savon.
-
-If you need full import support, consider [WSDL](https://rubygems.org/gems/wsdl) as an alternative.
-
-## Documentation
-
-Please be sure to [read the documentation](https://www.rubydoc.info/github/savonrb/savon/).
+See [CONTRIBUTING.md](CONTRIBUTING.md). MIT licensed.

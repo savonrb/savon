@@ -22,6 +22,15 @@ to make sure the integration with real-world services still works.
 
 These specs are not run by CI, because the services are not guaranteed to work all the time.
 
+**Running tests**
+
+```bash
+bundle install
+bundle exec rspec
+```
+
+Note that CI only runs the unit tests under `spec/savon`. There are also integration specs under `spec/integration` that hit real services.
+
 Please follow this workflow for Pull Requests:
 
 * [Fork the project](https://help.github.com/articles/fork-a-repo)
