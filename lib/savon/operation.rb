@@ -45,7 +45,7 @@ module Savon
                                      "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
     rescue Wasabi::Resolver::HTTPError => e
-      raise HTTPError.new(e.response)
+      raise HTTPError, e.response
     end
 
     def self.ensure_name_is_symbol!(operation_name)
