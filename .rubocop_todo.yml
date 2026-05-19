@@ -466,12 +466,6 @@ Style/Documentation:
     - 'lib/savon/soap_fault.rb'
     - 'lib/savon/string_utils.rb'
 
-# Offense count: 2
-# This cop supports safe autocorrection (--autocorrect).
-Style/EachWithObject:
-  Exclude:
-    - 'lib/savon/builder.rb'
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/EvalWithLocation:

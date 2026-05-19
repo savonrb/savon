@@ -77,17 +77,15 @@ module Savon
     private
 
     def convert_type_definitions_to_hash
-      @wsdl.type_definitions.inject({}) do |memo, (path, type)|
+      @wsdl.type_definitions.each_with_object({}) do |(path, type), memo|
         memo[path] = type
-        memo
       end
     end
 
     def convert_type_namespaces_to_hash
-      @wsdl.type_namespaces.inject({}) do |memo, (path, uri)|
+      @wsdl.type_namespaces.each_with_object({}) do |(path, uri), memo|
         key, value = use_namespace(path, uri)
         memo[key] = value
-        memo
       end
     end
 
