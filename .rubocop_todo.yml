@@ -830,13 +830,6 @@ Style/RaiseArgs:
   Exclude:
     - 'lib/savon/operation.rb'
 
-# Offense count: 4
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantRegexpEscape:
-  Exclude:
-    - 'lib/savon/soap_fault.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 9
 # This cop supports safe autocorrection (--autocorrect).
 # Configuration parameters: EnforcedStyle, AllowInnerSlashes.

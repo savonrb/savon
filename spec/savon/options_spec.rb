@@ -664,7 +664,7 @@ RSpec.describe "Options" do
 
         # the password node contains the encrypted value
         password_digest = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
-        expect(request).to match(/<wsse:Password Type=\"#{password_digest}\">.+<\/wsse:Password>/)
+        expect(request).to match(/<wsse:Password Type="#{password_digest}">.+<\/wsse:Password>/)
         expect(request).to_not include(password)
       end
     end
