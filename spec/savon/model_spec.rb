@@ -162,18 +162,18 @@ RSpec.describe Savon::Model do
       }
 
       [:verify_address,
-      :lookup_for_date,
-      :lookup,
-      :authorized,
-      :authorized_with_capture,
-      :captured,
-      :returned,
-      :get_tic_groups,
-      :get_ti_cs,
-      :get_ti_cs_by_group,
-      :add_exempt_certificate,
-      :delete_exempt_certificate,
-      :get_exempt_certificates].each do |method|
+       :lookup_for_date,
+       :lookup,
+       :authorized,
+       :authorized_with_capture,
+       :captured,
+       :returned,
+       :get_tic_groups,
+       :get_ti_cs,
+       :get_ti_cs_by_group,
+       :add_exempt_certificate,
+       :delete_exempt_certificate,
+       :get_exempt_certificates].each do |method|
         expect(model).to respond_to(method)
       end
     end
