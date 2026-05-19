@@ -121,7 +121,7 @@ RSpec.describe Savon::Builder do
         signature_value = signed_message_nn.xpath('//SignatureValue').text
         signed_info_fragment = signed_message.xpath('//default:SignedInfo', default: "http://www.w3.org/2000/09/xmldsig#").to_xml
         data = Nokogiri::XML(signed_info_fragment) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
-        data.root.default_namespace='http://www.w3.org/2000/09/xmldsig#'
+        data.root.default_namespace = 'http://www.w3.org/2000/09/xmldsig#'
 
         signed_info = data.canonicalize Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0
 
