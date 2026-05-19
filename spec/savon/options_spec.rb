@@ -91,7 +91,7 @@ RSpec.describe "Options" do
 
       HTTPI::Request.any_instance.expects(:follow_redirect=).with(true)
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
 
     it 'defaults to false' do
@@ -99,7 +99,7 @@ RSpec.describe "Options" do
 
       HTTPI::Request.any_instance.expects(:follow_redirect=).with(false)
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
   end
 
@@ -111,7 +111,7 @@ RSpec.describe "Options" do
       # TODO: find a way to integration test this [dh, 2012-12-08]
       HTTPI::Request.any_instance.expects(:proxy=).with(proxy_url)
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
   end
 
@@ -345,7 +345,7 @@ RSpec.describe "Options" do
     it "sets the logger of HTTPI as well" do
       custom_logger = Logger.new($stdout)
 
-      client = new_client(:logger => custom_logger, :log => true)
+      new_client(:logger => custom_logger, :log => true)
 
       expect(HTTPI.logger).to be custom_logger
     end
@@ -570,7 +570,7 @@ RSpec.describe "Options" do
       # server implementation seems a bit over the top though.
       HTTPI::Auth::Config.any_instance.expects(:ntlm).with(*credentials)
 
-      response = client.call(:authenticate)
+      client.call(:authenticate)
     end
   end
 

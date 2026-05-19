@@ -182,13 +182,6 @@ Lint/UnusedBlockArgument:
     - 'spec/savon/response_spec.rb'
     - 'spec/support/fixture.rb'
 
-# Offense count: 6
-# This cop supports safe autocorrection (--autocorrect).
-Lint/UselessAssignment:
-  Exclude:
-    - 'spec/savon/mock_spec.rb'
-    - 'spec/savon/options_spec.rb'
-
 # Offense count: 11
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:

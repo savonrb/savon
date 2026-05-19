@@ -154,7 +154,7 @@ RSpec.describe "Savon's mock interface" do
     expect {
       begin
         new_client.call(:find_user)
-      rescue Savon::Error => e
+      rescue Savon::Error
         puts "any real error (e.g. SOAP fault or HTTP error) is OK in the big picture, move on"
       end
     }.to raise_error(Savon::ExpectationError, "Expected a request to the :find_user operation\n" \
