@@ -70,10 +70,17 @@ module Savon
       @body_attributes ||= @signature.nil? ? {} : @signature.body_attributes
     end
 
+    # Returns the request body as a String. When the caller supplies a pre-built
+    # envelope via the :xml local option it is used verbatim, but it must still
+    # be wrapped in a multipart message when :attachments are present.
+    # Otherwise the attachments are silently dropped.
     def to_s
-      return @locals[:xml] if @locals.include? :xml
-
-      build_document
+      if @locals.include?(:xml)
+        xml = @locals[:xml]
+        @locals[:attachments] ? build_multipart_message(xml) : xml
+      else
+        build_document
+      end
     end
 
     private

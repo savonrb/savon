@@ -1,5 +1,9 @@
 # Savon changelog
 
+## 2.18.0 (UNRELEASED)
+
+* Add: `:attachments` now works when the caller also supplies a pre-built `:xml` envelope. Multipart support ([#761](https://github.com/savonrb/savon/pull/761)), squash-merged as [`4e7ae5e`](https://github.com/savonrb/savon/commit/4e7ae5e93926629422b0df4a7003f0ce18084a78) shipped in 2.13.0, but it only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, `Builder#to_s` returned it early and the attachment-wrapping step never ran, so the attachments were silently dropped. That combination has never worked. It slipped through because no test exercised `:xml` and `:attachments` together.
+
 ## 2.17.1 (2026-05-21)
 
 * Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - The HTTPI and Faraday transports no longer set an explicit `Content-Length` request header. The underlying HTTP library already computes it from the body; sending it as well produced a duplicate header on adapters that do not deduplicate (e.g. httpclient), which some servers reject.
