@@ -272,32 +272,6 @@ module Savon
     def initialize(options = {})
       @option_type = :global
 
-      defaults = {
-        encoding: "UTF-8",
-        soap_version: 1,
-        namespaces: {},
-        logger: Logger.new($stdout),
-        log: false,
-        log_headers: true,
-        filters: [],
-        pretty_print_xml: false,
-        raise_errors: true,
-        strip_namespaces: true,
-        delete_namespace_attributes: false,
-        convert_response_tags_to: ->(tag) { StringUtils.snakecase(tag).to_sym },
-        convert_attributes_to: ->(k, v) { [k, v] },
-        multipart: false,
-        use_wsa_headers: false,
-        no_message_tag: false,
-        unwrap: false,
-        host: nil,
-        transport: :httpi,
-
-        # httpi transport defaults
-        adapter: nil,
-        follow_redirects: false
-      }
-
       options = defaults.merge(options)
 
       # this option is a shortcut on the logger which needs to be set
@@ -427,6 +401,26 @@ module Savon
       @options[:delete_namespace_attributes] = delete_namespace_attributes
     end
 
+    # The value Nori assigns to empty XML tags in the SOAP response.
+    # Defaults to nil, matching Nori's default; set to "" to map empty tags
+    # to an empty String instead.
+    def empty_tag_value(value)
+      @options[:empty_tag_value] = value
+    end
+
+    # Instruct Nori whether to convert dashes in response tag names to
+    # underscores before they become Hash keys. Defaults to true.
+    def convert_dashes_to_underscores(convert)
+      @options[:convert_dashes_to_underscores] = convert
+    end
+
+    # Instruct Nori whether to scrub invalid byte sequences from the response
+    # body before parsing it. Defaults to true, which lets responses containing
+    # invalid characters still be parsed.
+    def scrub_xml(scrub)
+      @options[:scrub_xml] = scrub
+    end
+
     # Tell Gyoku how to convert Hash key Symbols to XML tags.
     # Accepts one of :lower_camelcase, :camelcase, :upcase, or :none.
     def convert_request_keys_to(converter)
@@ -474,6 +468,40 @@ module Savon
     # the HTTPITransportOptions.
     def transport(transport)
       @options[:transport] = transport
+    end
+
+    private
+
+    # The default value for every global option.
+    def defaults
+      {
+        encoding: "UTF-8",
+        soap_version: 1,
+        namespaces: {},
+        logger: Logger.new($stdout),
+        log: false,
+        log_headers: true,
+        filters: [],
+        pretty_print_xml: false,
+        raise_errors: true,
+        strip_namespaces: true,
+        delete_namespace_attributes: false,
+        empty_tag_value: nil,
+        convert_dashes_to_underscores: true,
+        scrub_xml: true,
+        convert_response_tags_to: ->(tag) { StringUtils.snakecase(tag).to_sym },
+        convert_attributes_to: ->(k, v) { [k, v] },
+        multipart: false,
+        use_wsa_headers: false,
+        no_message_tag: false,
+        unwrap: false,
+        host: nil,
+        transport: :httpi,
+
+        # httpi transport defaults
+        adapter: nil,
+        follow_redirects: false
+      }
     end
   end
 

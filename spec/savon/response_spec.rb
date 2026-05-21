@@ -176,6 +176,87 @@ RSpec.describe Savon::Response do
     end
   end
 
+  describe "Nori option forwarding" do
+    let(:dashed_body) {
+      <<~XML
+        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body><foo-bar>baz</foo-bar></soap:Body>
+        </soap:Envelope>
+      XML
+    }
+
+    let(:empty_tag_body) {
+      <<~XML
+        <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+          <soap:Body><thing/></soap:Body>
+        </soap:Envelope>
+      XML
+    }
+
+    describe ":convert_dashes_to_underscores" do
+      it "converts dashes in response tag names to underscores by default" do
+        # identity converter so the only transformation under test is the dash conversion
+        globals[:convert_response_tags_to] = ->(tag) { tag }
+
+        body = soap_response(body: dashed_body).body
+
+        expect(body.keys).to include("foo_bar")
+      end
+
+      it "preserves dashes when the option is disabled" do
+        globals[:convert_dashes_to_underscores] = false
+        globals[:convert_response_tags_to] = ->(tag) { tag }
+
+        body = soap_response(body: dashed_body).body
+
+        expect(body.keys).to include("foo-bar")
+      end
+    end
+
+    describe ":empty_tag_value" do
+      it "maps empty tags to nil by default" do
+        body = soap_response(body: empty_tag_body).body
+
+        expect(body).to have_key(:thing)
+        expect(body[:thing]).to be_nil
+      end
+
+      it "maps empty tags to the configured value" do
+        globals[:empty_tag_value] = ""
+
+        body = soap_response(body: empty_tag_body).body
+
+        expect(body[:thing]).to eq("")
+      end
+    end
+
+    describe ":scrub_xml" do
+      let(:invalid_byte_body) {
+        +%(<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">) <<
+          %(<soap:Body><thing>bad\xFFbyte</thing></soap:Body></soap:Envelope>)
+      }
+
+      it "parses a response containing invalid byte sequences by default" do
+        expect(invalid_byte_body).not_to be_valid_encoding
+
+        body = soap_response(body: invalid_byte_body).body
+
+        expect(body).to have_key(:thing)
+      end
+
+      it "forwards a disabled :scrub_xml option to Nori" do
+        globals[:scrub_xml] = false
+        passthrough = Nori.new(
+          strip_namespaces: true,
+          convert_tags_to: ->(tag) { Savon::StringUtils.snakecase(tag).to_sym }
+        )
+        Nori.expects(:new).with { |options| options[:scrub_xml] == false }.returns(passthrough)
+
+        soap_response.body
+      end
+    end
+  end
+
   describe "#to_array" do
     context "when the given path exists" do
       it "returns an Array containing the path value" do

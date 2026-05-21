@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency "httpi",    ">= 4", " < 5"
   s.add_dependency "mail",     "~> 2.5"
   s.add_dependency "nokogiri", ">= 1.8.1"
-  s.add_dependency "nori",     "~> 2.4"
+  s.add_dependency "nori",     "~> 2.7"
   s.add_dependency "wasabi",   ">= 5.1.0", " < 6"
 
   s.add_development_dependency 'ostruct', '~> 0.6'

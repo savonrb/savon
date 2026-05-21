@@ -155,6 +155,9 @@ module Savon
       nori_options = {
         delete_namespace_attributes: @globals[:delete_namespace_attributes],
         strip_namespaces: @globals[:strip_namespaces],
+        empty_tag_value: @globals[:empty_tag_value],
+        convert_dashes_to_underscores: @globals[:convert_dashes_to_underscores],
+        scrub_xml: @globals[:scrub_xml],
         convert_tags_to: @globals[:convert_response_tags_to],
         convert_attributes_to: @globals[:convert_attributes_to],
         advanced_typecasting: @locals[:advanced_typecasting],
