@@ -1,6 +1,6 @@
 # Savon changelog
 
-## UPCOMING
+## 2.17.1 (2026-05-21)
 
 * Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - The HTTPI and Faraday transports no longer set an explicit `Content-Length` request header. The underlying HTTP library already computes it from the body; sending it as well produced a duplicate header on adapters that do not deduplicate (e.g. httpclient), which some servers reject.
 * Fix: Requests using `attachments` were sent with a plain `text/xml` Content-Type instead of `multipart/related`. The 2.17.0 transport refactor assembled the request headers before the multipart body was built, leaving `Builder#multipart` empty at header time, so servers received a multipart body labelled as plain XML. 2.16.x and earlier are unaffected.
