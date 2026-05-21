@@ -7,10 +7,10 @@ require "savon/transport/faraday"
 RSpec.describe Savon::Transport::Faraday do
   subject(:transport) { described_class.new(connection, globals) }
 
-  let(:stubs) { ::Faraday::Adapter::Test::Stubs.new }
-  let(:url)    { "http://example.com/soap" }
-  let(:body)   { "<soap:Envelope/>" }
-  let(:locals) { Savon::LocalOptions.new }
+  let(:stubs)   { ::Faraday::Adapter::Test::Stubs.new }
+  let(:url)     { "http://example.com/soap" }
+  let(:body)    { "<soap:Envelope/>" }
+  let(:locals)  { Savon::LocalOptions.new }
   let(:globals) { Savon::GlobalOptions.new(log: false) }
   let(:connection) do
     ::Faraday.new do |f|
@@ -119,6 +119,16 @@ RSpec.describe Savon::Transport::Faraday do
       end
       transport.post(url, {}, body, locals_with_cookies)
       expect(captured.request_headers["Cookie"]).to eq("session=abc;user=dan")
+    end
+
+    it "does not set Content-Length - the HTTP library computes it from the body" do
+      captured = nil
+      stubs.post("/soap") do |env|
+        captured = env
+        [200, {}, "ok"]
+      end
+      transport.post(url, {}, body, locals)
+      expect(captured.request_headers["Content-Length"]).to be_nil
     end
 
     it "skips LogMessage construction when the logger level would suppress the output" do

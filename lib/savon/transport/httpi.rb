@@ -60,8 +60,6 @@ module Savon
           headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
         end
 
-        headers["Content-Length"] = body.bytesize.to_s
-
         http_request = ::HTTPI::Request.new
         http_request.url = url
         http_request.body = body

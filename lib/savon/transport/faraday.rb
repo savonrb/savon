@@ -8,7 +8,7 @@ module Savon
     # Faraday-backed HTTP transport for the opt-in Faraday path.
     #
     # Encapsulates everything Faraday-specific:
-    #   * header assembly (SOAP + global + local + cookies + Content-Length)
+    #   * header assembly (SOAP + global + local + cookies)
     #   * request execution via the caller-configured Faraday::Connection
     #
     # Transport-level concerns (SSL, auth, proxy, timeouts, middleware) are
@@ -33,7 +33,7 @@ module Savon
       # @param locals       [Savon::LocalOptions] per-request options
       # @return             [Transport::Response]
       def post(url, soap_headers, body, locals)
-        headers = build_headers(soap_headers, body, locals)
+        headers = build_headers(soap_headers, locals)
 
         log_request(url, headers, body) if log?
 
@@ -49,8 +49,8 @@ module Savon
 
       # Merges all header sources in precedence order:
       # locals[:headers] > globals[:headers] > soap_headers
-      # Appends Cookie from locals[:cookies] and Content-Length from body.
-      def build_headers(soap_headers, body, locals)
+      # Appends Cookie from locals[:cookies].
+      def build_headers(soap_headers, locals)
         headers = {}
         headers.merge!(@globals[:headers]) if @globals.include?(:headers)
         headers.merge!(locals[:headers])   if locals.include?(:headers)
@@ -62,7 +62,6 @@ module Savon
           headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
         end
 
-        headers["Content-Length"] = body.bytesize.to_s
         headers
       end
     end

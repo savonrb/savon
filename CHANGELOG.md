@@ -2,7 +2,7 @@
 
 ## UPCOMING
 
-* Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - Removed Content-Length computing from Faraday and HTTPI transports.
+* Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - The HTTPI and Faraday transports no longer set an explicit `Content-Length` request header. The underlying HTTP library already computes it from the body; sending it as well produced a duplicate header on adapters that do not deduplicate (e.g. httpclient), which some servers reject.
 
 ## 2.17.0 (2026-05-19)
 
