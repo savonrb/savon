@@ -78,7 +78,9 @@ module Savon
 
       response =
         if response.nil?
-          @transport.post(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
+          body = builder.to_s
+          headers = soap_headers(builder)
+          @transport.post(endpoint.to_s, headers, body, @locals)
         else
           normalize_observer_response(response)
         end
@@ -97,7 +99,9 @@ module Savon
       end
 
       builder = build(locals, &block)
-      @transport.to_httpi_request(endpoint.to_s, soap_headers(builder), builder.to_s, @locals)
+      # Build the body before soap_headers - see #call.
+      body = builder.to_s
+      @transport.to_httpi_request(endpoint.to_s, soap_headers(builder), body, @locals)
     end
 
     private

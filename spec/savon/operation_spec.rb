@@ -178,6 +178,18 @@ RSpec.describe Savon::Operation do
         expect(response.attachments).to be_empty
       end
     end
+
+    context "with attachments" do
+      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+
+      it "sends a multipart/related Content-Type" do
+        response = operation.call {
+          attachments [{ filename: "x1.xml", content: "<xml>abc</xml>" }]
+        }
+
+        expect(inspect_request(response).content_type).to start_with("multipart/related;")
+      end
+    end
   end
 
   describe "#call with transport: :faraday" do
@@ -222,6 +234,24 @@ RSpec.describe Savon::Operation do
       request = operation.request
       expect(request).to be_a(HTTPI::Request)
       expect(request.body).to include("<tns:VerifyAddress></tns:VerifyAddress>")
+    end
+
+    context "with attachments" do
+      # Regression: the 2.17.0 transport refactor assembled request headers
+      # before the multipart body was built, so Builder#multipart was empty at
+      # header time and the request went out as plain text/xml.
+      it "sets a multipart/related Content-Type carrying the body's MIME boundary" do
+        request = operation.request {
+          attachments [{ filename: "x1.xml", content: "<xml>abc</xml>" }]
+        }
+
+        content_type = request.headers["Content-Type"]
+        expect(content_type).to start_with("multipart/related;")
+
+        boundary = content_type[/boundary="([^"]+)"/, 1]
+        expect(boundary).not_to be_nil
+        expect(request.body).to include("--#{boundary}")
+      end
     end
   end
 
