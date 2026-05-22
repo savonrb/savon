@@ -8,6 +8,13 @@ RSpec.describe Savon::LogMessage do
     expect(message).to eq("hello")
   end
 
+  it "returns non-XML messages with invalid bytes" do
+    message = +"hello\xFF"
+    message.force_encoding("UTF-8")
+
+    expect(log_message(message, [:password], :pretty_print).to_s).to eq(message)
+  end
+
   it "returns the message if it shouldn't be filtered or pretty printed" do
     Nokogiri.expects(:XML).never
 

@@ -20,6 +20,11 @@ module Savon
       2 => "http://www.w3.org/2003/05/soap-envelope"
     }.freeze
 
+    SOAP_XOP_REQUEST_TYPE = {
+      1 => "text/xml",
+      2 => "application/soap+xml"
+    }.freeze
+
     WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
 
     def initialize(operation_name, wsdl, globals, locals)
@@ -255,15 +260,31 @@ module Savon
 
       # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
       # should redefine the sort order, because the soap request xml should be the first
-      multipart_message.body.set_sort_order ["text/xml"]
+      multipart_message.body.set_sort_order(
+        @locals[:mtom] ? ["application/xop+xml", "text/xml"] : ["text/xml"]
+      )
 
       multipart_message.body.encoded(multipart_message.content_transfer_encoding)
     end
 
     def init_multipart_message(message_xml)
       multipart_message = Mail.new
+
+      # MTOM differs from general SOAP attachments:
+      # 1. binary encoding
+      # 2. application/xop+xml mime type
+      if @locals[:mtom]
+        type = "application/xop+xml; charset=#{@globals[:encoding]}; " \
+               "type=\"#{SOAP_XOP_REQUEST_TYPE[@globals[:soap_version]]}\""
+
+        multipart_message.transport_encoding = 'binary'
+        message_xml = message_xml.dup.force_encoding('BINARY')
+      else
+        type = 'text/xml'
+      end
+
       xml_part = Mail::Part.new do
-        content_type 'text/xml'
+        content_type type
         body message_xml
         # in Content-Type the start parameter is recommended (RFC 2387)
         content_id '<soap-request-body@soap>'

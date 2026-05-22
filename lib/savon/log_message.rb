@@ -11,11 +11,10 @@ module Savon
     end
 
     def to_s
-      message_is_xml = @message =~ /^</
-      has_filters    = @filters.any?
-      pretty_print   = @pretty_print
+      has_filters  = @filters.any?
+      pretty_print = @pretty_print
 
-      return @message unless message_is_xml
+      return @message unless message_is_xml?
       return @message unless has_filters || pretty_print
 
       document = Nokogiri.XML(@message)
@@ -24,6 +23,10 @@ module Savon
     end
 
     private
+
+    def message_is_xml?
+      @message.respond_to?(:getbyte) && @message.getbyte(0) == "<".ord
+    end
 
     def apply_filter(document)
       return document unless document.errors.empty?

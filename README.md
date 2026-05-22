@@ -74,6 +74,8 @@ Savon 2.x requires Ruby 3.0 or later. See the [changelog](CHANGELOG.md) for hist
 
 **WSDL imports are not followed.** Savon parses only the root WSDL document via [Wasabi](https://github.com/savonrb/wasabi). Messages, port types, and bindings defined in imported files are invisible to Savon. If you control the WSDL, merge the imported elements into the root document and pass that to Savon as a string. If you need full import support, the [WSDL](https://rubygems.org/gems/wsdl) gem is an alternative.
 
+**MTOM/XOP support is request framing only.** Savon can emit outbound MTOM/XOP request framing, but it does not rewrite normal base64 XML into XOP, generate `xop:Include` nodes, validate references, infer MIME types from XML, or deserialize inbound MTOM responses. Callers provide the `xop:Include` XML and matching attachment Content-IDs.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). MIT licensed.

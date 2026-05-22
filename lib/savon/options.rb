@@ -493,7 +493,8 @@ module Savon
       defaults = {
         advanced_typecasting: true,
         response_parser: :nokogiri,
-        multipart: false
+        multipart: false,
+        mtom: false
       }
 
       super defaults.merge(options)
@@ -554,6 +555,15 @@ module Savon
     # The Content-ID is important if you want to refer to the attachments from the SOAP request
     def attachments(attachments)
       @options[:attachments] = attachments
+    end
+
+    # Emit outbound MTOM/XOP request framing for attachments.
+    #
+    # This is a low-level framing option. Savon does not rewrite normal base64 XML
+    # into XOP or process inbound MTOM responses. Callers must provide XML with
+    # xop:Include href="cid:..." references and matching attachment Content-IDs.
+    def mtom(mtom)
+      @options[:mtom] = mtom
     end
 
     # Value of the SOAPAction HTTP header.
