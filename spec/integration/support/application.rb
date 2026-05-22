@@ -3,8 +3,16 @@
 require "rack"
 require "json"
 require "digest/md5"
-require "net/ntlm"
 require "openssl"
+
+begin
+  # net/ntlm ships with rubyntlm, a dependency of faraday-ntlm_auth,
+  # which does not support Ruby 4 or truffleruby. The NtlmAuthEndpoint
+  # is only exercised by the NTLM specs, which are skipped on those Rubies.
+  require "net/ntlm"
+rescue LoadError
+  nil
+end
 
 class IntegrationServer
   def self.respond_with(options = {})
