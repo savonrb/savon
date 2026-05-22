@@ -330,6 +330,31 @@ RSpec.describe Savon::Operation do
     end
   end
 
+  describe "multipart transport parity" do
+    let(:wsdl)           { no_wsdl }
+    let(:operation_name) { :example }
+    let(:attachments) do
+      [
+        { filename: "x1.xml", content: "<xml>abc</xml>" },
+        { filename: "x2.xml", content: "<xml>cde</xml>" }
+      ]
+    end
+
+    it "sends equivalent non-MTOM multipart SOAP headers and body through HTTPI and Faraday" do
+      httpi_request = capture_httpi_request(attachments: attachments)
+      faraday_request = capture_faraday_request(attachments: attachments)
+
+      expect(soap_level_headers(httpi_request[:headers])["Content-Type"])
+        .to start_with('multipart/related; type="text/xml"; ')
+      expect(soap_level_headers(faraday_request[:headers])["Content-Type"])
+        .to start_with('multipart/related; type="text/xml"; ')
+      expect(soap_level_headers(faraday_request[:headers]))
+        .to eq(soap_level_headers(httpi_request[:headers]))
+      expect(normalize_multipart_boundary(faraday_request[:body], faraday_request[:headers]))
+        .to eq(normalize_multipart_boundary(httpi_request[:body], httpi_request[:headers]))
+    end
+  end
+
   def inspect_request(response)
     OpenStruct.new JSON.parse(response.http.body)
   end
@@ -342,5 +367,72 @@ RSpec.describe Savon::Operation do
       'start="<soap-request-body@soap>"',
       'boundary="--==_mimepart_'
     ].join("; ")
+  end
+
+  def capture_httpi_request(locals)
+    globals = transport_parity_globals
+    transport = Savon::Transport::HTTPI.new(globals)
+    operation = described_class.create(operation_name, wsdl, globals, transport)
+    captured = nil
+
+    HTTPI.stubs(:post).with { |request|
+      captured = { headers: request.headers, body: request.body }
+      true
+    }.returns(HTTPI::Response.new(200, {}, "<response/>"))
+
+    operation.call(locals)
+    captured
+  end
+
+  def capture_faraday_request(locals)
+    globals = transport_parity_globals(transport: :faraday)
+    stubs = ::Faraday::Adapter::Test::Stubs.new
+    captured = nil
+    connection = ::Faraday.new do |faraday|
+      faraday.adapter :test, stubs
+    end
+
+    stubs.post("/soap") do |env|
+      captured = { headers: env.request_headers, body: env.body }
+      [200, {}, "<response/>"]
+    end
+
+    transport = Savon::Transport::Faraday.new(connection, globals)
+    operation = described_class.create(operation_name, wsdl, globals, transport)
+
+    operation.call(locals)
+    stubs.verify_stubbed_calls
+    captured
+  end
+
+  def transport_parity_globals(extra = {})
+    Savon::GlobalOptions.new(
+      {
+        endpoint: "http://example.com/soap",
+        namespace: "http://v1.example.com",
+        log: false
+      }.merge(extra)
+    )
+  end
+
+  def soap_level_headers(headers)
+    %w[Content-Type MIME-Version Accept-Encoding SOAPAction].each_with_object({}) do |key, selected|
+      selected[key] = normalize_boundary(headers[key]) if headers.key?(key)
+    end
+  end
+
+  def normalize_multipart_boundary(body, headers)
+    normalize_boundary(body, multipart_boundary(headers))
+  end
+
+  def normalize_boundary(value, boundary = nil)
+    boundary ||= value[/boundary="([^"]+)"/, 1]
+    return value unless boundary
+
+    value.gsub(boundary, "BOUNDARY")
+  end
+
+  def multipart_boundary(headers)
+    headers.fetch("Content-Type")[/boundary="([^"]+)"/, 1]
   end
 end
