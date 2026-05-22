@@ -84,7 +84,7 @@ RSpec.describe Savon::Client do
     it "raises for incompatible global open_timeout listing the Faraday equivalent" do
       expect { new_client_without_wsdl(transport: :faraday, open_timeout: 10) }
         .to raise_error(Savon::InitializationError,
-                        /not supported with transport: :faraday.*open_timeout.*client\.faraday\.options\.timeout/m)
+                        /not supported with transport: :faraday.*open_timeout.*client\.faraday\.options\.open_timeout/m)
     end
 
     it "raises for incompatible global proxy listing the Faraday equivalent" do
@@ -93,13 +93,25 @@ RSpec.describe Savon::Client do
                         /not supported with transport: :faraday.*proxy.*client\.faraday\.proxy/m)
     end
 
+    it "raises for ssl_verify_mode :peer with the matching Faraday constant" do
+      expect { new_client_without_wsdl(transport: :faraday, ssl_verify_mode: :peer) }
+        .to raise_error(Savon::InitializationError,
+                        /ssl_verify_mode.*client\.faraday\.ssl\.verify_mode = OpenSSL::SSL::VERIFY_PEER/m)
+    end
+
+    it "raises for ssl_verify_mode :none with the matching Faraday constant" do
+      expect { new_client_without_wsdl(transport: :faraday, ssl_verify_mode: :none) }
+        .to raise_error(Savon::InitializationError,
+                        /ssl_verify_mode.*client\.faraday\.ssl\.verify_mode = OpenSSL::SSL::VERIFY_NONE/m)
+    end
+
     it "lists all incompatible globals in a single error" do
       expect {
         new_client_without_wsdl(transport: :faraday, open_timeout: 10, proxy: "http://proxy:8080")
       }.to raise_error(Savon::InitializationError) do |error|
         expect(error.message).to include("open_timeout")
         expect(error.message).to include("proxy")
-        expect(error.message).to include("client.faraday.options.timeout")
+        expect(error.message).to include("client.faraday.options.open_timeout")
         expect(error.message).to include("client.faraday.proxy")
       end
     end
@@ -112,7 +124,7 @@ RSpec.describe Savon::Client do
     it "raises when adapter is set to a non-nil value with a solution hint" do
       expect { new_client_without_wsdl(transport: :faraday, adapter: :httpclient) }
         .to raise_error(Savon::InitializationError,
-                        /not supported with transport: :faraday.*adapter.*client\.faraday\.adapter/m)
+                        /not supported with transport: :faraday.*adapter.*client\.faraday\.adapter :httpclient/m)
     end
 
     it "does not raise when follow_redirects is false (the default)" do
@@ -123,7 +135,7 @@ RSpec.describe Savon::Client do
     it "raises when follow_redirects is true with a solution hint" do
       expect { new_client_without_wsdl(transport: :faraday, follow_redirects: true) }
         .to raise_error(Savon::InitializationError,
-                        /not supported with transport: :faraday.*follow_redirects.*client\.faraday\.use/m)
+                        /not supported with transport: :faraday.*follow_redirects.*client\.faraday\.response/m)
     end
   end
 

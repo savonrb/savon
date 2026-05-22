@@ -2,6 +2,7 @@
 
 require "logger"
 require "httpi"
+require "savon/faraday_migration_hint"
 
 module Savon
   # Base class for GlobalOptions and LocalOptions.
@@ -73,46 +74,24 @@ module Savon
     end
   end
 
-  # HTTPI-specific transport options included in GlobalOptions.
+  # Options that belong to HTTPI's transport layer.
   #
-  # Every option in this module is handled by HTTPI and has no effect when
-  # transport: :faraday is set. Faraday callers configure these concerns
-  # directly on the Faraday::Connection returned by client.faraday.
+  # They still work with the default HTTPI transport. With `transport: :faraday`,
+  # Savon does not translate them because Faraday exposes its own setup API for
+  # proxy, timeout, TLS, auth, redirects, and adapter choices.
   module HTTPITransportOptions
-    # Maps each httpi-only option to the Faraday equivalent so the
-    # error raised at init tells the caller exactly what to do instead.
-    # Options with a :default entry are only flagged when the caller
-    # sets a value that differs from the GlobalOptions default.
-    FARADAY_INCOMPATIBLE_GLOBALS = {
-      proxy: { hint: "client.faraday.proxy = url" },
-      open_timeout: { hint: "client.faraday.options.timeout = N" },
-      read_timeout: { hint: "client.faraday.options.timeout = N" },
-      write_timeout: { hint: "client.faraday.options.write_timeout = N" },
-      ssl_version: { hint: "client.faraday.ssl.version = version" },
-      ssl_min_version: { hint: "client.faraday.ssl.min_version = version" },
-      ssl_max_version: { hint: "client.faraday.ssl.max_version = version" },
-      ssl_verify_mode: { hint: "client.faraday.ssl.verify = true/false" },
-      ssl_cert_key_file: { hint: "client.faraday.ssl.client_key_file = path" },
-      ssl_cert_key: { hint: "client.faraday.ssl.client_key = key" },
-      ssl_cert_key_password: { hint: "configure ssl context on client.faraday.ssl" },
-      ssl_cert_file: { hint: "client.faraday.ssl.client_cert_file = path" },
-      ssl_cert: { hint: "client.faraday.ssl.client_cert = cert" },
-      ssl_ca_cert_file: { hint: "client.faraday.ssl.ca_file = path" },
-      ssl_ca_cert: { hint: "client.faraday.ssl.ca_cert = cert" },
-      ssl_ciphers: { hint: "client.faraday.ssl.ciphers = ciphers" },
-      ssl_ca_cert_path: { hint: "client.faraday.ssl.ca_path = path" },
-      ssl_cert_store: { hint: "client.faraday.ssl.cert_store = store" },
-      basic_auth: { hint: "client.faraday.request :basic_auth, user, pass" },
-      digest_auth: { hint: "client.faraday.request :authorization, :Digest, credentials" },
-      ntlm: { hint: "client.faraday.request :ntlm, user, pass" },
-      follow_redirects: { hint: "client.faraday.use :follow_redirects", default: false },
-      adapter: { hint: "client.faraday.adapter :net_http", default: nil }
+    TRANSPORT_DEFAULTS = {
+      adapter: nil,
+      follow_redirects: false
     }.freeze
 
-    # Validates that the chosen transport is compatible with the options set.
-    # Must be called after all options (including any block-form options) are set.
-    # Collects every conflict and raises a single InitializationError listing all
-    # problems and solutions at once.
+    # These are rejected for `transport: :faraday` once the caller has set a
+    # non-default value. The error points to the matching Faraday setup.
+    FARADAY_INCOMPATIBLE_GLOBALS = FaradayMigrationHint::OPTIONS
+
+    # Runs after all global options have been assigned, including options set in
+    # the client block. Reports every HTTPI-only option in one error so callers
+    # can move their transport setup to Faraday in one pass.
     def validate_transport!
       return unless self[:transport] == :faraday
 
@@ -122,11 +101,11 @@ module Savon
               "Add to your Gemfile: gem 'faraday'"
       end
 
-      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map { |option, config|
+      violations = FARADAY_INCOMPATIBLE_GLOBALS.filter_map { |option|
         next unless include?(option)
-        next if config.key?(:default) && self[option] == config[:default]
+        next if default_transport_option?(option)
 
-        "  #{option} - Use: #{config[:hint]}"
+        FaradayMigrationHint.new(option, self[option]).message
       }
 
       return if violations.empty?
@@ -252,6 +231,10 @@ module Savon
 
     private
 
+    def default_transport_option?(option)
+      TRANSPORT_DEFAULTS.key?(option) && self[option] == TRANSPORT_DEFAULTS[option]
+    end
+
     # Attempts to load faraday. Returns true if available, false on LoadError.
     def faraday_loaded?
       require "faraday"
@@ -271,7 +254,6 @@ module Savon
 
     def initialize(options = {})
       @option_type = :global
-
       options = defaults.merge(options)
 
       # this option is a shortcut on the logger which needs to be set
@@ -463,9 +445,8 @@ module Savon
     end
 
     # HTTP transport to use. Accepts :httpi (default) or :faraday.
-    # When set to :faraday, configure transport concerns directly on the
-    # Faraday::Connection returned by client.faraday instead of using
-    # the HTTPITransportOptions.
+    # With :faraday, set proxy, timeout, TLS, auth, redirect, and adapter
+    # details on `client.faraday`; the HTTPI transport options are not copied.
     def transport(transport)
       @options[:transport] = transport
     end
@@ -474,7 +455,7 @@ module Savon
 
     # The default value for every global option.
     def defaults
-      {
+      HTTPITransportOptions::TRANSPORT_DEFAULTS.merge(
         encoding: "UTF-8",
         soap_version: 1,
         namespaces: {},
@@ -496,12 +477,8 @@ module Savon
         no_message_tag: false,
         unwrap: false,
         host: nil,
-        transport: :httpi,
-
-        # httpi transport defaults
-        adapter: nil,
-        follow_redirects: false
-      }
+        transport: :httpi
+      )
     end
   end
 
