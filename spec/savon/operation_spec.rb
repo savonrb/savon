@@ -283,16 +283,36 @@ RSpec.describe Savon::Operation do
       end
     end
 
+    it "does not send SOAPAction when soap_action is explicitly nil" do
+      generic_req = operation.request(attachments: attachments, soap_action: nil)
+      mtom_req = operation.request(mtom: true, attachments: attachments, soap_action: nil)
+
+      expect(generic_req.headers).not_to have_key("SOAPAction")
+      expect(mtom_req.headers).not_to have_key("SOAPAction")
+    end
+
     context "MTOM" do
       let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:multipart), log: false) }
 
-      it "sends request with content-type header application/xop+xml" do
+      it "sends SOAP 1.1 request headers with MTOM content-type metadata" do
         req = operation.request(mtom: true, attachments: attachments)
 
-        expect(req.headers["Content-Type"]).to start_with(
-          "multipart/related; type=\"application/xop+xml\"; start-info=\"text/xml\"; " \
-          "start=\"<soap-request-body@soap>\"; boundary=\"--==_mimepart_"
+        expect(req.headers["Content-Type"]).to start_with(mtom_content_type_prefix("text/xml"))
+        expect(req.headers["MIME-Version"]).to eq("1.0")
+        expect(req.headers["Accept-Encoding"]).to eq("gzip,deflate")
+      end
+
+      it "sends SOAP 1.2 request headers with MTOM content-type metadata" do
+        globals = Savon::GlobalOptions.new(
+          endpoint: @server.url(:multipart),
+          log: false,
+          soap_version: 2
         )
+        transport = Savon::Transport::HTTPI.new(globals)
+        operation = described_class.create(operation_name, wsdl, globals, transport)
+        req = operation.request(mtom: true, attachments: attachments)
+
+        expect(req.headers["Content-Type"]).to start_with(mtom_content_type_prefix("application/soap+xml"))
       end
 
       it "sends attachments with Content-Transfer-Encoding: binary" do
@@ -312,5 +332,15 @@ RSpec.describe Savon::Operation do
 
   def inspect_request(response)
     OpenStruct.new JSON.parse(response.http.body)
+  end
+
+  def mtom_content_type_prefix(start_info)
+    [
+      'multipart/related',
+      'type="application/xop+xml"',
+      %(start-info="#{start_info}"),
+      'start="<soap-request-body@soap>"',
+      'boundary="--==_mimepart_'
+    ].join("; ")
   end
 end
