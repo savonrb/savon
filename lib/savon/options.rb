@@ -557,7 +557,11 @@ module Savon
       @options[:attachments] = attachments
     end
 
-    # Instruct Savon to send attachments using MTOM https://www.w3.org/TR/soap12-mtom/
+    # Emit outbound MTOM/XOP request framing for attachments.
+    #
+    # This is a low-level framing option. Savon does not rewrite normal base64 XML
+    # into XOP or process inbound MTOM responses. Callers must provide XML with
+    # xop:Include href="cid:..." references and matching attachment Content-IDs.
     def mtom(mtom)
       @options[:mtom] = mtom
     end
