@@ -7,6 +7,7 @@ plugins:
 AllCops:
   TargetRubyVersion: 3.0
   SuggestExtensions: true
+  NewCops: enable
 
 Gemspec/RequireMFA:
   Enabled: true
