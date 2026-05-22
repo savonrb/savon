@@ -14,6 +14,14 @@ end
 require "savon"
 require "rspec"
 
+# faraday-ntlm_auth does not support Ruby 4 or truffleruby. See Gemfile.
+FARADAY_NTLM_AUTH_AVAILABLE = begin
+  require "faraday/ntlm_auth"
+  true
+rescue LoadError
+  false
+end
+
 # don't have HTTPI lazy-load HTTPClient, because then
 # it can't actually be refered to inside the specs.
 require "httpclient"

@@ -12,7 +12,6 @@ require "webrick/httpproxy"
 require "puma/minissl"
 require "faraday/follow_redirects"
 require "faraday/digestauth"
-require "faraday/ntlm_auth"
 
 class FaradayTransportOptionServers
   attr_reader :host, :http_server, :https_server, :mtls_server, :ca_path,
@@ -306,6 +305,10 @@ RSpec.describe "Savon Faraday transport - connection options" do
 
   # NTLM auth
   describe "ntlm" do
+    before do
+      skip "faraday-ntlm_auth does not support Ruby 4 or truffleruby" unless FARADAY_NTLM_AUTH_AVAILABLE
+    end
+
     # NTLM has to reuse the TCP connection between the Type2 challenge and the
     # Type3 response, so this middleware needs net_http_persistent. The domain
     # field must be an empty string rather than nil because rubyntlm serializes
