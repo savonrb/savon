@@ -25,3 +25,7 @@ about: Create a bug report
 
 * ruby version: 
 * savon version: 
+
+---
+
+By opening this issue, I confirm that my participation follows Savon's [Code of Conduct](https://github.com/savonrb/savon/blob/main/CODE_OF_CONDUCT.md).
