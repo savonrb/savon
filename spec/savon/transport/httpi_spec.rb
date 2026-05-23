@@ -57,10 +57,22 @@ RSpec.describe Savon::Transport::HTTPI do
       expect(transport.to_httpi_request(url, soap_headers, body, locals_with_headers).headers["SOAPAction"]).to eq('"from-locals"')
     end
 
-    it "converts cookies to a Cookie: header" do
+    it "converts an Array of HTTPI::Cookie objects to a Cookie: header" do
       cookies = [HTTPI::Cookie.new("session=abc"), HTTPI::Cookie.new("user=dan")]
       locals_with_cookies = Savon::LocalOptions.new(cookies: cookies)
       expect(transport.to_httpi_request(url, {}, body, locals_with_cookies).headers["Cookie"]).to eq("session=abc;user=dan")
+    end
+
+    it "de-duplicates cookies by name (last value wins, matching HTTPI::CookieStore)" do
+      cookies = [HTTPI::Cookie.new("session=old"), HTTPI::Cookie.new("session=new")]
+      locals_with_cookies = Savon::LocalOptions.new(cookies: cookies)
+      expect(transport.to_httpi_request(url, {}, body, locals_with_cookies).headers["Cookie"]).to eq("session=new")
+    end
+
+    it "accepts any object responding to :cookies (e.g. a previous response) for v2.12.1 compatibility" do
+      previous_response = HTTPI::Response.new(200, { "Set-Cookie" => "session=abc; Path=/" }, "")
+      locals_with_cookies = Savon::LocalOptions.new(cookies: previous_response)
+      expect(transport.to_httpi_request(url, {}, body, locals_with_cookies).headers["Cookie"]).to eq("session=abc")
     end
 
     it "does not set Content-Length - the HTTP library computes it from the body" do
@@ -98,6 +110,19 @@ RSpec.describe Savon::Transport::HTTPI do
       expect(result.code).to eq(201)
       expect(result.headers).to eq("x-foo" => "bar")
       expect(result.body).to eq("payload")
+    end
+
+    it "exposes Set-Cookie response headers as an Array of HTTPI::Cookie" do
+      HTTPI.stubs(:post).returns(HTTPI::Response.new(200, { "Set-Cookie" => ["session=abc; Path=/", "user=dan; HttpOnly"] }, ""))
+      cookies = transport.post(url, {}, body, locals).cookies
+
+      expect(cookies).to all(be_a(HTTPI::Cookie))
+      expect(cookies.map(&:name_and_value)).to eq(%w[session=abc user=dan])
+    end
+
+    it "returns an empty Array of cookies when no Set-Cookie header is present" do
+      HTTPI.stubs(:post).returns(HTTPI::Response.new(200, {}, ""))
+      expect(transport.post(url, {}, body, locals).cookies).to eq([])
     end
 
     it "skips LogMessage construction when the logger level would suppress the output" do

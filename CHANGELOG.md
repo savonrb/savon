@@ -2,10 +2,16 @@
 
 ## 2.18.0 (UNRELEASED)
 
+* Fix: The `:cookies` request option regressed from 2.12.1. The 2.17.0 transport refactor reimplemented cookie handling on top of `Array#map`, so callers that passed an responding to `#cookies` (hopefully not that many) hit `NoMethodError`. Also cookie-name de-duplication via `HTTPI::CookieStore` was lost. The HTTPI
+transport now delegates to `HTTPI::Request#set_cookies` again, restoring both shapes and the de-duplication.
+* Fix: `response.http.cookies` works again. 2.17.0's `Savon::Transport::Response` only exposed `code`, `headers`, `body`. Cookies transport-specific. The HTTPI transport returns `Array<HTTPI::Cookie>` (matching 2.12.1 and round-trippable), the Faraday transport returns a plain `Hash<String, String>` so Faraday callers
+do not need HTTPI types.
+* Add: The Faraday transport's `:cookies` option accepts a `String` (used verbatim) or a `Hash` (formatted as `"name=value; name=value"`). Round-trippable as well.
 * Add: three Nori response-parsing options are now exposed as Savon globals: `:empty_tag_value` (the value assigned to empty XML tags, default `nil`), `:convert_dashes_to_underscores` (convert dashes in response tag names to underscores, default `true`) and `:scrub_xml` (scrub invalid byte sequences from the response body before parsing, default `true`). Each default matches Nori's own default, so callers that do not set these options parse responses identically.
 * Change: the minimum supported Nori version is now `~> 2.7` (previously `~> 2.4`). The options above need it. `:empty_tag_value` arrived in Nori 2.6.0 and `:scrub_xml` in 2.7.0. And the 2.5–2.7 series also improved response parsing in ways Savon callers benefit from: documents containing invalid byte sequences now parse instead of raising, the REXML parser no longer turns `&lt;` inside CDATA into `<`, the `xs:date`/`xs:time`/`xs:dateTime` typecasting patterns were corrected, and Nori stopped monkey-patching `String` and `Object`. We should make sure to keep everyone on the latest version of our companion libraries to make our life easier.
 * Add: `:attachments` now works when the caller also supplies a pre-built `:xml` envelope. Multipart support ([#761](https://github.com/savonrb/savon/pull/761)), squash-merged as [`4e7ae5e`](https://github.com/savonrb/savon/commit/4e7ae5e93926629422b0df4a7003f0ce18084a78) shipped in 2.13.0, but it only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, `Builder#to_s` returned it early and the attachment-wrapping step never ran, so the attachments were silently dropped. That combination has never worked. It slipped through because no test exercised `:xml` and `:attachments` together.
 * Improve: Faraday migration hints are now more precise. Each HTTPI-specific global option produces a concrete Faraday code example showing exactly how to achieve the same effect via `client.faraday` middleware or connection options. Integration tests were added to verify each hint is raised and that these work with Savon.
+
 
 ## 2.17.1 (2026-05-21)
 

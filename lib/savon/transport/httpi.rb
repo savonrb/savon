@@ -34,10 +34,14 @@ module Savon
         log_request(http_request.url, http_request.headers, http_request.body) if log?
 
         http_response = ::HTTPI.post(http_request, @globals[:adapter])
-        response = Response.from_httpi(http_response)
+        response = Response.new(
+          http_response.code,
+          http_response.headers,
+          http_response.body,
+          cookies: ::HTTPI::Cookie.list_from_headers(http_response.headers)
+        )
 
         log_response(response) if log?
-
         response
       end
 
@@ -56,14 +60,11 @@ module Savon
         # soap_headers are lowest priority
         soap_headers.each do |k, v| headers[k] ||= v end
 
-        if locals[:cookies]&.any?
-          headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
-        end
-
         http_request = ::HTTPI::Request.new
         http_request.url = url
         http_request.body = body
         http_request.headers = headers
+        http_request.set_cookies(locals[:cookies]) if locals[:cookies]
         configure_http_request(http_request)
         http_request
       end

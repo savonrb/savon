@@ -72,14 +72,14 @@ RSpec.describe "Savon client with transport: :faraday" do
     expect(response.multipart?).to be true
   end
 
-  it "forwards cookies as the Cookie: header" do
+  it "forwards a Hash of cookies as the Cookie: header" do
     client = Savon.client(
       endpoint: @server.url(:inspect_request),
       namespace: "http://v1.example.com",
       transport: :faraday,
       log: false
     )
-    response = client.call(:authenticate, cookies: [HTTPI::Cookie.new("session=abc")])
+    response = client.call(:authenticate, cookies: { "session" => "abc" })
     expect(inspect_request(response).cookie).to include("session=abc")
   end
 

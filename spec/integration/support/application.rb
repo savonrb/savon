@@ -212,6 +212,20 @@ class IntegrationServer
       }
     end
 
+    # Sets two cookies on the response and echoes the inbound Cookie header
+    # in the body. Used to verify the cookies round-trip pattern.
+    map "/cookies_roundtrip" do
+      run lambda { |env|
+        body = JSON.dump(cookie: env["HTTP_COOKIE"])
+        IntegrationServer.respond_with(
+          body: body,
+          headers: {
+            "Set-Cookie" => ["session=abc; Path=/", "user=dan; HttpOnly"]
+          }
+        )
+      }
+    end
+
     map "/basic_auth" do
       use Rack::Auth::Basic, "basic-realm" do |username, password|
         username == "admin" && password == "secret"

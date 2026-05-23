@@ -43,6 +43,21 @@ RSpec.describe Savon::Transport::Faraday do
       expect(result.body).to eq("payload")
     end
 
+    it "exposes Set-Cookie response headers as a Hash of name => value" do
+      stubs.post("/soap") do [200, { "Set-Cookie" => "session=abc; Path=/, user=dan; HttpOnly" }, ""] end
+      expect(transport.post(url, {}, body, locals).cookies).to eq("session" => "abc", "user" => "dan")
+    end
+
+    it "lets the last value win when the same cookie name appears more than once" do
+      stubs.post("/soap") do [200, { "Set-Cookie" => "session=old, session=new" }, ""] end
+      expect(transport.post(url, {}, body, locals).cookies).to eq("session" => "new")
+    end
+
+    it "returns an empty Hash of cookies when no Set-Cookie header is present" do
+      stubs.post("/soap") do [200, {}, ""] end
+      expect(transport.post(url, {}, body, locals).cookies).to eq({})
+    end
+
     it "includes soap_headers in the request" do
       captured = nil
       stubs.post("/soap") do |env|
@@ -109,16 +124,26 @@ RSpec.describe Savon::Transport::Faraday do
       expect(captured.request_headers["SOAPAction"]).to eq('"from-locals"')
     end
 
-    it "converts cookies to a Cookie: header" do
-      cookies = [HTTPI::Cookie.new("session=abc"), HTTPI::Cookie.new("user=dan")]
-      locals_with_cookies = Savon::LocalOptions.new(cookies: cookies)
+    it "formats a Hash cookies value as a 'name=value; ...' Cookie: header" do
+      locals_with_cookies = Savon::LocalOptions.new(cookies: { "session" => "abc", "user" => "dan" })
       captured = nil
       stubs.post("/soap") do |env|
         captured = env
         [200, {}, "ok"]
       end
       transport.post(url, {}, body, locals_with_cookies)
-      expect(captured.request_headers["Cookie"]).to eq("session=abc;user=dan")
+      expect(captured.request_headers["Cookie"]).to eq("session=abc; user=dan")
+    end
+
+    it "passes a String cookies value through verbatim as the Cookie: header" do
+      locals_with_cookies = Savon::LocalOptions.new(cookies: "session=abc; user=dan")
+      captured = nil
+      stubs.post("/soap") do |env|
+        captured = env
+        [200, {}, "ok"]
+      end
+      transport.post(url, {}, body, locals_with_cookies)
+      expect(captured.request_headers["Cookie"]).to eq("session=abc; user=dan")
     end
 
     it "does not set Content-Length - the HTTP library computes it from the body" do

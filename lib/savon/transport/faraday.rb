@@ -38,11 +38,29 @@ module Savon
         log_request(url, headers, body) if log?
 
         faraday_response = @connection.post(url, body, headers)
-        response = Response.from_faraday(faraday_response)
+        response = Response.new(
+          faraday_response.status,
+          faraday_response.headers.to_h,
+          faraday_response.body,
+          cookies: self.class.parse_cookies(faraday_response.headers)
+        )
 
         log_response(response) if log?
-
         response
+      end
+
+      # Parses Set-Cookie headers into a Hash of name => value. Accepts both
+      # the Array and String form. Attributes after the first ';' are discarded.
+      def self.parse_cookies(headers)
+        raw = headers["set-cookie"] || headers["Set-Cookie"]
+        return {} unless raw
+
+        raw_array = raw.is_a?(Array) ? raw : raw.split(/,\s*/)
+        raw_array.each_with_object({}) do |cookie_str, hash|
+          name_value = cookie_str.split(";", 2).first.to_s.strip
+          name, value = name_value.split("=", 2)
+          hash[name] = value if name && !name.empty?
+        end
       end
 
       private
@@ -58,11 +76,22 @@ module Savon
         # soap_headers are lowest priority
         soap_headers.each do |k, v| headers[k] ||= v end
 
-        if locals[:cookies]&.any?
-          headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
-        end
+        cookie_header = format_cookies(locals[:cookies])
+        headers["Cookie"] = cookie_header if cookie_header
 
         headers
+      end
+
+      # Builds the Cookie header from a given value.
+      # Accepts:
+      #   * String - passed through verbatim
+      #   * Hash   - formatted as "name=value; name=value" (browser style)
+      # Returns nil when no cookies were supplied.
+      def format_cookies(cookies)
+        return nil if cookies.nil?
+        return cookies if cookies.is_a?(String)
+
+        cookies.map { |name, value| "#{name}=#{value}" }.join("; ")
       end
     end
   end
