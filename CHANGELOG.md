@@ -1,51 +1,86 @@
 # Savon changelog
 
-## 2.18.0 (UNRELEASED)
+All notable changes to this project will be documented in this file.
 
-* Fix: The `:cookies` request option regressed from 2.12.1. The 2.17.0 transport refactor reimplemented cookie handling on top of `Array#map`, so callers that passed an responding to `#cookies` (hopefully not that many) hit `NoMethodError`. Also cookie-name de-duplication via `HTTPI::CookieStore` was lost. The HTTPI
-transport now delegates to `HTTPI::Request#set_cookies` again, restoring both shapes and the de-duplication.
-* Fix: `response.http.cookies` works again. 2.17.0's `Savon::Transport::Response` only exposed `code`, `headers`, `body`. Cookies transport-specific. The HTTPI transport returns `Array<HTTPI::Cookie>` (matching 2.12.1 and round-trippable), the Faraday transport returns a plain `Hash<String, String>` so Faraday callers
-do not need HTTPI types.
-* Add: The Faraday transport's `:cookies` option accepts a `String` (used verbatim) or a `Hash` (formatted as `"name=value; name=value"`). Round-trippable as well.
-* Add: three Nori response-parsing options are now exposed as Savon globals: `:empty_tag_value` (the value assigned to empty XML tags, default `nil`), `:convert_dashes_to_underscores` (convert dashes in response tag names to underscores, default `true`) and `:scrub_xml` (scrub invalid byte sequences from the response body before parsing, default `true`). Each default matches Nori's own default, so callers that do not set these options parse responses identically.
-* Change: the minimum supported Nori version is now `~> 2.7` (previously `~> 2.4`). The options above need it. `:empty_tag_value` arrived in Nori 2.6.0 and `:scrub_xml` in 2.7.0. And the 2.5–2.7 series also improved response parsing in ways Savon callers benefit from: documents containing invalid byte sequences now parse instead of raising, the REXML parser no longer turns `&lt;` inside CDATA into `<`, the `xs:date`/`xs:time`/`xs:dateTime` typecasting patterns were corrected, and Nori stopped monkey-patching `String` and `Object`. We should make sure to keep everyone on the latest version of our companion libraries to make our life easier.
-* Add: `:attachments` now works when the caller also supplies a pre-built `:xml` envelope. Multipart support ([#761](https://github.com/savonrb/savon/pull/761)), squash-merged as [`4e7ae5e`](https://github.com/savonrb/savon/commit/4e7ae5e93926629422b0df4a7003f0ce18084a78) shipped in 2.13.0, but it only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, `Builder#to_s` returned it early and the attachment-wrapping step never ran, so the attachments were silently dropped. That combination has never worked. It slipped through because no test exercised `:xml` and `:attachments` together.
-* Improve: Faraday migration hints are now more precise. Each HTTPI-specific global option produces a concrete Faraday code example showing exactly how to achieve the same effect via `client.faraday` middleware or connection options. Integration tests were added to verify each hint is raised and that these work with Savon.
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
 
-## 2.17.1 (2026-05-21)
+**Restore 2.17.0 cookie regressions and surface Nori parsing options**
 
-* Fix: [#1008](https://github.com/savonrb/savon/pull/1008) - The HTTPI and Faraday transports no longer set an explicit `Content-Length` request header. The underlying HTTP library already computes it from the body; sending it as well produced a duplicate header on adapters that do not deduplicate (e.g. httpclient), which some servers reject.
-* Fix: Requests using `attachments` were sent with a plain `text/xml` Content-Type instead of `multipart/related`. The 2.17.0 transport refactor assembled the request headers before the multipart body was built, leaving `Builder#multipart` empty at header time, so servers received a multipart body labelled as plain XML. 2.16.x and earlier are unaffected.
+### Fixed
 
-## 2.17.0 (2026-05-19)
+* **`:cookies` request option works again.** The 2.17.0 transport refactor reimplemented cookie handling on top of `Array#map`, which broke callers passing an object that responds to `#cookies` and lost cookie-name de-duplication via `HTTPI::CookieStore`. The HTTPI transport delegates to `HTTPI::Request#set_cookies` again, restoring both shapes.
+* **`response.http.cookies` works again.** 2.17.0's `Savon::Transport::Response` only exposed `code`, `headers`, and `body`. The HTTPI transport now returns `Array<HTTPI::Cookie>` (matching 2.12.1). The Faraday transport returns `Hash<String, String>` so Faraday callers do not need HTTPI types.
+* **`:attachments` now works with a user-supplied `:xml` envelope** ([#761](https://github.com/savonrb/savon/pull/761)). Multipart support shipped in 2.13.0 but only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, attachments were silently dropped.
+
+### Added
+
+* **Faraday `:cookies` option accepts a `String` or `Hash`.** Strings are used verbatim, Hashes are formatted as `"name=value; name=value"`. Round-trippable with the Faraday response shape.
+* **Three Nori response-parsing options exposed as Savon globals:** `:empty_tag_value` (default `nil`), `:convert_dashes_to_underscores` (default `true`), and `:scrub_xml` (default `true`). Defaults match Nori's own for backwards compatibility.
+
+### Changed
+
+* **Minimum Nori version is now `~> 2.7`** (was `~> 2.4`). Needed for the new parsing options (`:empty_tag_value` arrived in Nori 2.6.0, `:scrub_xml` in 2.7.0). The 2.5–2.7 series also brings fixes callers benefit from automatically: invalid byte sequences parse instead of raising, REXML no longer turns `&lt;` inside CDATA into `<`, `xs:date`/`xs:time`/`xs:dateTime` typecasting was corrected, and Nori stopped monkey-patching `String` and `Object`.
+* **Faraday migration hints are now value-aware and verified.** Each hint prints the caller's actual option value and spells out the full gem/require/setup where needed. Fixed several incorrect examples and added tests to verify every hint.
+
+## [2.17.1] - 2026-05-21
+
+### Fixed
+
+* [#1008](https://github.com/savonrb/savon/pull/1008) - The HTTPI and Faraday transports no longer set an explicit `Content-Length` request header. The underlying HTTP library already computes it from the body. Sending it as well produced a duplicate header on adapters that do not deduplicate (e.g. httpclient), which some servers reject.
+* Requests using `attachments` were sent with a plain `text/xml` Content-Type instead of `multipart/related`. The 2.17.0 transport refactor assembled the request headers before the multipart body was built, leaving `Builder#multipart` empty at header time, so servers received a multipart body labelled as plain XML. 2.16.x and earlier are unaffected.
+
+## [2.17.0] - 2026-05-19
 
 **Add opt-in Faraday transport**
 
 Callers who set `transport: :faraday` get a memoized `Faraday::Connection` via `client.faraday` and full control over middleware, SSL, auth, and timeouts. Callers who do not set this option see no behavior change. HTTPI remains the default for 2.x.
 
-* Add: `transport: :faraday` global option. Defaults to `:httpi` (#992).
-* Add: `client.faraday` returns a memoized `Faraday::Connection` for configuring middleware, SSL, auth, and timeouts when using the Faraday transport.
-* Add: `Savon.client` raises if `transport: :faraday` is set but the faraday gem is not installed, or if any httpi-specific global option (`proxy`, timeouts, `ssl`, auth, `adapter`) is set alongside it. All conflicts are reported with their Faraday equivalents.
-* Change: Observers must return `Savon::Transport::Response` (or `nil`) instead of `HTTPI::Response`. Returning `HTTPI::Response` still works but emits a deprecation warning.
-* Unblocks:
-  * redirect following for WSDL fetches via `faraday-follow-redirects` middleware (#1033, savonrb/wasabi#18)
-  * digest authentication via `faraday-digestauth` middleware (#1021, savonrb/httpi#250)
-  * proxy authentication with special characters in passwords (#941)
-  * and setting an `Accept` header for WSDL requests from Rails apps (savonrb/wasabi#115)
+### Added
 
-## 2.16.0 (2026-05-18)
+* `transport: :faraday` global option. Defaults to `:httpi` (#992).
+* `client.faraday` returns a memoized `Faraday::Connection` for configuring middleware, SSL, auth, and timeouts when using the Faraday transport.
+* `Savon.client` raises if `transport: :faraday` is set but the faraday gem is not installed, or if any httpi-specific global option (`proxy`, timeouts, `ssl`, auth, `adapter`) is set alongside it. All conflicts are reported with their Faraday equivalents.
+
+### Changed
+
+* Observers must return `Savon::Transport::Response` (or `nil`) instead of `HTTPI::Response`.
+
+### Deprecated
+
+* The HTTPI transport (currently the default) and all HTTPI-specific global options enumerated in `Savon::FaradayMigrationHint::OPTIONS` (`proxy`, `open_timeout`, `read_timeout`, `write_timeout`, the `ssl_*` family, `basic_auth`, `digest_auth`, `ntlm`, `follow_redirects`, `adapter`) will be removed in 3.0. Migrate to `transport: :faraday`. `FaradayMigrationHint` shows the Faraday equivalent for each option.
+* Returning `HTTPI::Response` from observers emits a deprecation warning and will be removed in 3.0. Return `Savon::Transport::Response` instead.
+
+The Faraday transport unblocks:
+
+* redirect following for WSDL fetches via `faraday-follow-redirects` middleware (#1033, savonrb/wasabi#18)
+* digest authentication via `faraday-digestauth` middleware (#1021, savonrb/httpi#250)
+* proxy authentication with special characters in passwords (#941)
+* and setting an `Accept` header for WSDL requests from Rails apps (savonrb/wasabi#115)
+
+## [2.16.0] - 2026-05-18
 
 **Restore compatibility**
 
 If you stayed on 2.12.1 because a later version broke something, this release is for you. The fixes below target the most commonly reported upgrade blockers. Existing code should work without modification.
 
-* Fix: Restore `Savon::Response#hash` removed in 2.14.0 (#985). Callers on 2.12.1 that use `response.hash` get the soap body back instead of Ruby's integer object id. A deprecation warning is emitted on each call. Use `#full_hash` going forward.
-* Fix: Require wasabi >= 5.1.0 (#1015, #1016). Wasabi 4.x used message names as soap body element names and SOAPAction header values instead of operation names (savonrb/wasabi#122), causing servers to return a fault or reject the action for operations whose message name carried an `In` suffix.
-* Fix: Stop dumping all WSDL namespaces into every soap envelope (#1014, #942). 2.13.0 injected every namespace from the entire WSDL document into each request, including structural ones that have no place in a request body. Strict servers reject envelopes with unexpected or duplicate declarations.
-* Fix: Raise a proper `SOAPFault` instead of a raw exception when `soap:Fault` contains invalid encoding (#923).
-* Fix: `SOAPFault.present?` was ignoring its `xml` argument and always operating on the instance's own body.
-* Change: Added Ruby 3.4 (#1024) and Ruby 4.0 (#1039) to the CI test matrix.
+### Fixed
+
+* Restore `Savon::Response#hash` removed in 2.14.0 (#985). Callers on 2.12.1 that use `response.hash` get the soap body back instead of Ruby's integer object id.
+* Require wasabi >= 5.1.0 (#1015, #1016). Wasabi 4.x used message names as soap body element names and SOAPAction header values instead of operation names (savonrb/wasabi#122), causing servers to return a fault or reject the action for operations whose message name carried an `In` suffix.
+* Stop dumping all WSDL namespaces into every soap envelope (#1014, #942). 2.13.0 injected every namespace from the entire WSDL document into each request, including structural ones that have no place in a request body. Strict servers reject envelopes with unexpected or duplicate declarations.
+* Raise a proper `SOAPFault` instead of a raw exception when `soap:Fault` contains invalid encoding (#923).
+* `SOAPFault.present?` was ignoring its `xml` argument and always operating on the instance's own body.
+
+### Changed
+
+* Added Ruby 3.4 (#1024) and Ruby 4.0 (#1039) to the CI test matrix.
+
+### Deprecated
+
+* `Savon::Response#hash` emits a deprecation warning on each call. Use `#full_hash` going forward. Will be removed in 3.0.
 
 ## 2.15.1 (2024-07-08)
 
@@ -1199,3 +1234,8 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 ## 0.5.0 (2009-11-29)
 
 * Complete rewrite and public release.
+
+[Unreleased]: https://github.com/savonrb/savon/compare/v2.17.1...HEAD
+[2.17.1]: https://github.com/savonrb/savon/compare/v2.17.0...v2.17.1
+[2.17.0]: https://github.com/savonrb/savon/compare/v2.16.0...v2.17.0
+[2.16.0]: https://github.com/savonrb/savon/compare/v2.15.1...v2.16.0

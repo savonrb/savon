@@ -6,7 +6,7 @@ Heavy metal SOAP client
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
 [![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
 
-Savon is a SOAP client for Ruby. [SOAP is the protocol](https://www.w3.org/TR/soap/) spoken by many enterprise systems in banking, government, ERP or payroll. When they hand you a WSDL URL or file instead of a REST spec, it's SOAP. Savon reads the WSDL, maps available operations to Ruby symbols, converts Ruby hashes to SOAP envelopes and turns XML responses into hashes you can work with.
+Savon is a SOAP client for Ruby. [SOAP is the protocol](https://www.w3.org/TR/soap/) spoken by many enterprise systems. When they hand you a WSDL URL or file instead of a REST spec, it's SOAP. Savon reads the WSDL, maps available operations to Ruby symbols, converts Ruby hashes to SOAP envelopes and turns XML responses into hashes you can work with.
 
 Full documentation is at [savonrb.com](https://savonrb.com).
 
@@ -68,7 +68,17 @@ Savon uses [HTTPI](https://github.com/savonrb/httpi) for HTTP by default. Since 
 
 ## Ruby support
 
-Savon 2.x requires Ruby 3.0 or later. See the [changelog](CHANGELOG.md) for historical compatibility.
+Savon 2.x requires Ruby >= 3.0.0, kept as the lower bound for backward compatibility. Note that Ruby 3.0–3.3 are EOL or security-only. Ruby 3.4+ is the minimum version with active maintenance.
+
+## Versioning & stability
+
+Savon follows [Semantic Versioning 2.0.0](https://semver.org/spec/v2.0.0.html). The changelog format is [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+**The 2.x line is anchored on 2.12.1.** Every 2.x release is supposed to be safe to upgrade to from 2.12.1, and anything that worked in 2.12.1 keeps working. We do not remove or rename public APIs in the 2.x line. New behavior is opt-in and requires an explicit option change. If you found a problem with that, please let us know.
+
+We only soft-deprecate APIs we plan to remove. The `Deprecated` sections of the [changelog](CHANGELOG.md) list every API that is planned to be removed with version 3.0.
+
+Callers on 2.13.0–2.15.x may see specific post-2.12.1 behaviors restored to the 2.12.1 contract. This is intentional.
 
 ## Known limitations
 
