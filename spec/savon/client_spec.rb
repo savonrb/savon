@@ -338,6 +338,22 @@ RSpec.describe Savon::Client do
         .to include("<tns:authenticate ID=\"ABC321\"></tns:authenticate>")
     end
 
+    it "exposes the endpoint Savon would POST to via #url" do
+      endpoint = @server.url(:repeat)
+      client = new_client(endpoint: endpoint)
+      request = client.build_request(:authenticate)
+
+      expect(request.url).to eq URI(endpoint)
+    end
+
+    it "exposes the SOAP request headers including SOAPAction via #headers" do
+      client = new_client(endpoint: @server.url(:repeat))
+      request = client.build_request(:authenticate)
+
+      expect(request.headers).to have_key("SOAPAction")
+      expect(request.headers["Content-Type"]).to match(%r{text/xml})
+    end
+
     it "raises when the operation name is not a symbol" do
       expect { new_client.build_request("not a symbol") }.to raise_error ArgumentError
     end
