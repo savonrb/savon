@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **Minimum Nori version is now `~> 2.7`** (was `~> 2.4`). Needed for the new parsing options (`:empty_tag_value` arrived in Nori 2.6.0, `:scrub_xml` in 2.7.0). The 2.5–2.7 series also brings fixes callers benefit from automatically: invalid byte sequences parse instead of raising, REXML no longer turns `&lt;` inside CDATA into `<`, `xs:date`/`xs:time`/`xs:dateTime` typecasting was corrected, and Nori stopped monkey-patching `String` and `Object`.
 * **Faraday migration hints are now value-aware and verified.** Each hint prints the caller's actual option value and spells out the full gem/require/setup where needed. Fixed several incorrect examples and added tests to verify every hint.
 
+### Deprecated
+
+* Deprecated the global and local `:multipart` options. They have been no-ops since v2.13.0. Specifically since commit 4e7ae5e. Savon detects multipart responses by checking the `Content-Type` header.
+
 ## [2.17.1] - 2026-05-21
 
 ### Fixed
