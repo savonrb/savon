@@ -177,7 +177,7 @@ module Savon
       return response if response.is_a?(Transport::Response)
 
       if response.is_a?(HTTPI::Response)
-        warn "Observers returning HTTPI::Response is deprecated - return Savon::Transport::Response instead."
+        warn "Observers returning HTTPI::Response is deprecated - return Savon::Transport::Response instead.", uplevel: 1
         return Transport::Response.new(
           response.code,
           response.headers,
