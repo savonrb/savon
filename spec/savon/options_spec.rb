@@ -558,6 +558,31 @@ RSpec.describe "Options" do
     end
   end
 
+  context "global :digest_auth" do
+    it "succeeds with correct credentials" do
+      client = new_client(
+        endpoint: @server.url(:digest_auth),
+        digest_auth: %w[admin secret],
+        adapter: :httpclient,
+        raise_errors: false
+      )
+      response = client.call(:authenticate)
+
+      expect(response.http.code).to eq(200)
+      expect(response.http.body).to eq("digest-auth-ok")
+    end
+
+    it "raises Savon::HTTPError with wrong credentials" do
+      client = new_client(
+        endpoint: @server.url(:digest_auth),
+        digest_auth: %w[admin wrong],
+        adapter: :httpclient
+      )
+
+      expect { client.call(:authenticate) }.to raise_error(Savon::HTTPError)
+    end
+  end
+
   context "global :ntlm" do
     it "sets the ntlm credentials to use" do
       credentials = %w[admin secret]
