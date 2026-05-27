@@ -879,6 +879,22 @@ RSpec.describe "Options" do
       expect(request).to include("<UserName>luke</UserName>")
       expect(request).to include("<pass_word>secret</pass_word>")
     end
+
+    it "defaults to lowerCamelCase conversion" do
+      client = new_client_without_wsdl { |globals|
+        globals.endpoint @server.url(:repeat)
+        globals.namespace "http://v1.example.com"
+      }
+
+      response = client.call(:find_user) { |locals|
+        locals.message(user_id: 42)
+      }
+
+      request = response.http.body
+
+      expect(request).to include("<wsdl:findUser>")
+      expect(request).to include("<userId>42</userId>")
+    end
   end
 
   context "global :convert_response_tags_to" do
