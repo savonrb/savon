@@ -1092,17 +1092,45 @@ RSpec.describe "Options" do
   end
 
   context "request :message" do
-    it "accepts a Hash which is passed to Gyoku to be converted to XML" do
-      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: { user: "luke", password: "secret" })
+    it "accepts a Hash and serializes it to XML" do
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: {
+        order: {
+          customer_id: "CUST-042",
+          shipping_address: {
+            street: "1428 Elm St",
+            city: "Springfield",
+            zip: "12345"
+          },
+          notes: "Leave at door"
+        }
+      })
 
-      request = response.http.body
-      expect(request).to include("<user>luke</user>")
-      expect(request).to include("<password>secret</password>")
+      expect(response.http.body).to include(
+        "<order>" \
+          "<customerId>CUST-042</customerId>" \
+          "<shippingAddress>" \
+            "<street>1428 Elm St</street>" \
+            "<city>Springfield</city>" \
+            "<zip>12345</zip>" \
+          "</shippingAddress>" \
+          "<notes>Leave at door</notes>" \
+        "</order>"
+      )
     end
 
-    it "also accepts a String of raw XML" do
-      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: "<user>lea</user><password>top-secret</password>")
-      expect(response.http.body).to include("<tns:authenticate><user>lea</user><password>top-secret</password></tns:authenticate>")
+    it "produces repeated XML elements for array values" do
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: {
+        user_ids: { id: [1, 2, 3] }
+      })
+
+      expect(response.http.body).to include("<userIds><id>1</id><id>2</id><id>3</id></userIds>")
+    end
+
+    it "accepts a String of raw XML" do
+      message  = "<user>lea</user><password>top-secret</password>"
+      response = new_client(endpoint: @server.url(:repeat)).call(:authenticate, message: message)
+
+      expect(response.http.body).to include("<tns:authenticate>#{message}</tns:authenticate>")
     end
   end
 
