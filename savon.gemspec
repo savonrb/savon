@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.metadata = {
     "rubygems_mfa_required" => "true",
     "source_code_uri"       => "https://github.com/savonrb/savon",
-    "changelog_uri"         => "https://github.com/savonrb/savon/blob/v2.x/CHANGELOG.md",
+    "changelog_uri"         => "https://github.com/savonrb/savon/blob/main/CHANGELOG.md",
     "bug_tracker_uri"       => "https://github.com/savonrb/savon/issues"
   }
 
