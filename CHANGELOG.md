@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.17.2] - UPCOMING
 
-**Restore 2.17.0 cookie regressions and surface Nori parsing options**
+**Fix CVE-2026-53510 and restore 2.17.0 cookie regressions**
 
 ### Fixed
 
+* **Fix CVE-2026-53510** `Savon::Model` generated SOAP operation methods by interpolating operation names into Ruby source passed to `module_eval`. An attacker who can control the operation names of a WSDL, can inject Ruby code that executes in the application process. This affects only the `.all_operations` class method provided by `Savon::Model` to automatically register all operations provided by the WSDL. Configuring `Savon::Model` with trusted operation names via `.operations` is safe. Thanks to @connorshea for securely disclosing this, providing a proof and a great report.
 * **`:cookies` request option works again.** The 2.17.0 transport refactor reimplemented cookie handling on top of `Array#map`, which broke callers passing an object that responds to `#cookies` and lost cookie-name de-duplication via `HTTPI::CookieStore`. The HTTPI transport delegates to `HTTPI::Request#set_cookies` again, restoring both shapes.
 * **`response.http.cookies` works again.** 2.17.0's `Savon::Transport::Response` only exposed `code`, `headers`, and `body`. The HTTPI transport now returns `Array<HTTPI::Cookie>` (matching 2.12.1). The Faraday transport returns `Hash<String, String>` so Faraday callers do not need HTTPI types.
 * **`:attachments` now works with a user-supplied `:xml` envelope** ([#761](https://github.com/savonrb/savon/pull/761)). Multipart support shipped in 2.13.0 but only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, attachments were silently dropped.
@@ -1239,7 +1240,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Complete rewrite and public release.
 
-[Unreleased]: https://github.com/savonrb/savon/compare/v2.17.1...HEAD
+[2.17.2]: https://github.com/savonrb/savon/compare/v2.17.1...v2.17.2
 [2.17.1]: https://github.com/savonrb/savon/compare/v2.17.0...v2.17.1
 [2.17.0]: https://github.com/savonrb/savon/compare/v2.16.0...v2.17.0
 [2.16.0]: https://github.com/savonrb/savon/compare/v2.15.1...v2.16.0

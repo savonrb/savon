@@ -28,20 +28,25 @@ module Savon
 
     # Defines a class-level SOAP operation.
     def define_class_operation(operation)
-      class_operation_module.module_eval %{
-        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
-          client.call #{operation.inspect}, locals
-        end
-      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
+      method_name = operation_method_name(operation)
+
+      class_operation_module.define_method(method_name) do |locals = {}|
+        client.call operation, locals
+      end
     end
 
     # Defines an instance-level SOAP operation.
     def define_instance_operation(operation)
-      instance_operation_module.module_eval %{
-        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
-          self.class.#{StringUtils.snakecase(operation.to_s)} locals
-        end
-      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
+      method_name = operation_method_name(operation)
+
+      instance_operation_module.define_method(method_name) do |locals = {}|
+        self.class.public_send(method_name, locals)
+      end
+    end
+
+    # Returns the generated Ruby method name for a SOAP operation.
+    def operation_method_name(operation)
+      StringUtils.snakecase(operation.to_s).to_sym
     end
 
     # Class methods.
