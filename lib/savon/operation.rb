@@ -33,19 +33,20 @@ module Savon
     def self.create(operation_name, wsdl, globals, transport)
       if wsdl.document?
         ensure_name_is_symbol! operation_name
-        ensure_exists! operation_name, wsdl
+        ensure_exists! operation_name, wsdl, transport
       end
 
       new(operation_name, wsdl, globals, transport)
     end
 
-    def self.ensure_exists!(operation_name, wsdl)
+    # Verifies the operation is provided by the WSDL.
+    def self.ensure_exists!(operation_name, wsdl, transport)
       unless wsdl.soap_actions.include? operation_name
         raise UnknownOperationError, "Unable to find SOAP operation: #{operation_name.inspect}\n" \
                                      "Operations provided by your service: #{wsdl.soap_actions.inspect}"
       end
     rescue Wasabi::Resolver::HTTPError => e
-      raise HTTPError, e.response
+      raise HTTPError, transport.normalize_response(e.response)
     end
 
     def self.ensure_name_is_symbol!(operation_name)
@@ -73,19 +74,19 @@ module Savon
     # Transport::Response (or legacy HTTPI::Response), the HTTP call
     # is skipped and that response is used directly.
     def call(locals = {}, &block)
-      builder  = build(locals, &block)
-      response = Savon.notify_observers(@name, builder, @globals, @locals)
+      builder = build(locals, &block)
+      observer_response = Savon.notify_observers(@name, builder, @globals, @locals)
 
-      response =
-        if response.nil?
+      transport_response =
+        if observer_response.nil?
           body = builder.to_s
           headers = soap_headers(builder)
           @transport.post(endpoint.to_s, headers, body, @locals)
         else
-          normalize_observer_response(response)
+          normalize_observer_response(observer_response)
         end
 
-      create_response(response)
+      Response.new(transport_response, @globals, @locals)
     end
 
     # Builds and returns the HTTPI::Request that would be sent for this
@@ -105,10 +106,6 @@ module Savon
     end
 
     private
-
-    def create_response(response)
-      Response.new(response, @globals, @locals)
-    end
 
     def set_locals(locals, block)
       locals = LocalOptions.new(locals)
@@ -173,17 +170,12 @@ module Savon
     # Accepts Transport::Response directly (current contract), wraps
     # HTTPI::Response with a deprecation warning (legacy observer support),
     # and raises on anything else.
-    def normalize_observer_response(response)
-      return response if response.is_a?(Transport::Response)
+    def normalize_observer_response(observer_response)
+      return observer_response if observer_response.is_a?(Transport::Response)
 
-      if response.is_a?(HTTPI::Response)
+      if observer_response.is_a?(HTTPI::Response)
         warn "Observers returning HTTPI::Response is deprecated - return Savon::Transport::Response instead.", uplevel: 1
-        return Transport::Response.new(
-          response.code,
-          response.headers,
-          response.body,
-          cookies: HTTPI::Cookie.list_from_headers(response.headers)
-        )
+        return Transport::Response.from_httpi(observer_response)
       end
 
       raise Error, "Observers need to return a Savon::Transport::Response " \

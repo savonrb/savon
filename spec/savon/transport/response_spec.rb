@@ -63,4 +63,51 @@ RSpec.describe Savon::Transport::Response do
       expect(described_class.new(200, {}, "").cookies).to be_nil
     end
   end
+
+  describe ".from_httpi" do
+    subject(:response) { described_class.from_httpi(httpi_response) }
+
+    let(:httpi_response) do
+      HTTPI::Response.new(201, { "Set-Cookie" => "session=test; Path=/", "x-foo" => "bar" }, "payload")
+    end
+
+    it "maps the HTTPI status code onto #code" do
+      expect(response.code).to eq(201)
+    end
+
+    it "carries the headers and body across unchanged" do
+      expect(response.headers).to include("x-foo" => "bar")
+      expect(response.body).to eq("payload")
+    end
+
+    it "exposes cookies as an Array of HTTPI::Cookie" do
+      expect(response.cookies).to all(be_a(HTTPI::Cookie))
+      expect(response.cookies.map(&:name_and_value)).to eq(["session=test"])
+    end
+  end
+
+  describe ".from_faraday" do
+    subject(:response) { described_class.from_faraday(faraday_response) }
+
+    let(:faraday_response) do
+      env = Faraday::Env.new
+      env.status = 201
+      env.response_headers = { "Set-Cookie" => "session=test; Path=/", "x-foo" => "bar" }
+      env.response_body = "payload"
+      Faraday::Response.new(env)
+    end
+
+    it "maps the Faraday status onto #code" do
+      expect(response.code).to eq(201)
+    end
+
+    it "carries the headers and body across unchanged" do
+      expect(response.headers).to include("x-foo" => "bar")
+      expect(response.body).to eq("payload")
+    end
+
+    it "exposes cookies as a Hash of name => value" do
+      expect(response.cookies).to eq("session" => "test")
+    end
+  end
 end
