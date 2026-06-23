@@ -14,5 +14,4 @@ tmp
 .ruby-version
 .tool-versions
 Gemfile.lock
-bin/
 .rspec_status
