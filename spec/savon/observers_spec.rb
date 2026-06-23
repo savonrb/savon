@@ -4,14 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   describe ".observers" do
     after do
       described_class.observers.clear
@@ -96,7 +88,7 @@ RSpec.describe Savon do
 
   def new_client
     Savon.client(
-      endpoint: @server.url(:repeat),
+      endpoint: integration_server.url(:repeat),
       namespace: "http://v1.example.com",
       log: false
     )

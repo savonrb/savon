@@ -4,14 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Model do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   describe ".client" do
     it "returns the memoized client" do
       model = Class.new do
@@ -62,7 +54,7 @@ RSpec.describe Savon::Model do
     end
 
     it "executes class-level SOAP operations" do
-      repeat_url = @server.url(:repeat)
+      repeat_url = integration_server.url(:repeat)
 
       model = Class.new do
         extend Savon::Model
@@ -90,7 +82,7 @@ RSpec.describe Savon::Model do
     end
 
     it "executes instance-level SOAP operations" do
-      repeat_url = @server.url(:repeat)
+      repeat_url = integration_server.url(:repeat)
 
       model = Class.new do
         extend Savon::Model
@@ -132,7 +124,7 @@ RSpec.describe Savon::Model do
   end
 
   it "allows to overwrite class operations" do
-    repeat_url = @server.url(:repeat)
+    repeat_url = integration_server.url(:repeat)
 
     model = Class.new do
       extend Savon::Model
@@ -154,7 +146,7 @@ RSpec.describe Savon::Model do
   end
 
   it "allows to overwrite instance operations" do
-    repeat_url = @server.url(:repeat)
+    repeat_url = integration_server.url(:repeat)
 
     model = Class.new do
       extend Savon::Model
