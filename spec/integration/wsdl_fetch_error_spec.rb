@@ -8,14 +8,6 @@ require "integration/support/server"
 # When a WSDL document cannot be fetched, Wasabi raises a
 # Wasabi::Resolver::HTTPError and we wrap that in a Savon::HTTPError.
 RSpec.describe "WSDL fetch failure" do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   describe "using the HTTPI transport" do
     let(:error) { http_error_for(:httpi) }
 
@@ -60,7 +52,7 @@ RSpec.describe "WSDL fetch failure" do
   # operation against a WSDL URL that responds with 502.
   def http_error_for(transport)
     client = Savon.client(
-      wsdl: @server.url("server_error"),
+      wsdl: integration_server.url("server_error"),
       transport: transport,
       log: false
     )

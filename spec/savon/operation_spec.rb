@@ -7,18 +7,10 @@ require "json"
 require "ostruct"
 
 RSpec.describe Savon::Operation do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   let(:operation)      { described_class.create(operation_name, wsdl, globals, transport) }
   let(:operation_name) { :verify_address }
   let(:transport)      { Savon::Transport::HTTPI.new(globals) }
-  let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false) }
+  let(:globals)        { Savon::GlobalOptions.new(endpoint: integration_server.url(:repeat), log: false) }
   let(:wsdl)           { Wasabi::Document.new Fixture.wsdl(:taxcloud) }
   let(:no_wsdl) do
     Wasabi::Document.new.tap do |doc|
@@ -105,7 +97,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "when verifying Content-Length via the HTTPI adapter" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "sends the exact Content-Length on the wire (via the HTTPI adapter)" do
         data = inspect_request(operation.call)
@@ -121,7 +113,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "routing the SOAPAction header" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "passes the local :soap_action option to the request builder" do
         soap_action = "http://v1.example.com/VerifyAddress"
@@ -150,7 +142,7 @@ RSpec.describe Savon::Operation do
 
     context "with a multipart response" do
       let(:operation_name) { :example }
-      let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:multipart), log: false) }
+      let(:globals)        { Savon::GlobalOptions.new(endpoint: integration_server.url(:multipart), log: false) }
       let(:wsdl)           { no_wsdl }
 
       it "parses multipart attachments" do
@@ -180,7 +172,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "with attachments" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "sends a multipart/related Content-Type" do
         response = operation.call {
