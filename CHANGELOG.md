@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.17.3] - 2026-06-23
+
+### Fixed
+
+**Fix Savon::HTTPError compatibility with Faraday transport**
+
+* **`Savon::HTTPError` works with the Faraday transport** ([#1050](https://github.com/savonrb/savon/issues/1050)). When a the WSDL could not be fetched under `transport: :faraday`, `Savon::HTTPError#to_s` and `#to_hash` raised `NoMethodError: undefined method 'code'` because they were handed a raw `Faraday::Response`, which exposes `#status` rather than `#code`. Transports now normalize adapter-specific response objects into `Savon::Transport::Response` before they reach `Savon::HTTPError`.
+
 ## [2.17.2] - 2026-06-10
 
 **Fix CVE-2026-53510 and restore 2.17.0 cookie regressions**
