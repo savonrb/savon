@@ -66,6 +66,7 @@ RSpec/BeforeAfterAll:
     - 'spec/savon/observers_spec.rb'
     - 'spec/savon/operation_spec.rb'
     - 'spec/savon/options_spec.rb'
+    - 'spec/integration/wsdl_fetch_error_spec.rb'
 
 # Offense count: 5
 # Configuration parameters: IgnoredMetadata.
@@ -77,6 +78,7 @@ RSpec/DescribeClass:
     - '**/spec/system/**/*'
     - '**/spec/views/**/*'
     - 'spec/integration/number_conversion_example_spec.rb'
+    - 'spec/integration/wsdl_fetch_error_spec.rb'
     - 'spec/savon/features/cookies_spec.rb'
     - 'spec/savon/features/faraday_spec.rb'
     - 'spec/savon/features/faraday_transport_options_spec.rb'
@@ -99,6 +101,7 @@ RSpec/InstanceVariable:
     - 'spec/savon/observers_spec.rb'
     - 'spec/savon/operation_spec.rb'
     - 'spec/savon/options_spec.rb'
+    - 'spec/integration/wsdl_fetch_error_spec.rb'
 
 # Offense count: 71
 RSpec/MultipleExpectations:

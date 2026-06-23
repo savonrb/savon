@@ -16,7 +16,7 @@ RSpec.describe "WSDL fetch failure" do
     @server.stop
   end
 
-  describe "over the HTTPI transport" do
+  describe "using the HTTPI transport" do
     let(:error) { http_error_for(:httpi) }
 
     it "raises a Savon::HTTPError" do
@@ -27,12 +27,16 @@ RSpec.describe "WSDL fetch failure" do
       expect(error.to_s).to eq("HTTP error (502): Bad Gateway")
     end
 
-    it "renders the status and body via #to_hash" do
-      expect(error.to_hash).to eq(code: 502, headers: error.http.headers, body: "Bad Gateway")
+    it "renders the status, headers and body via #to_hash" do
+      expect(error.to_hash).to include(
+        code: 502,
+        body: "Bad Gateway",
+        headers: { "content-type" => "text/plain", "content-length" => "11" }
+      )
     end
   end
 
-  describe "over the Faraday transport" do
+  describe "using the Faraday transport" do
     let(:error) { http_error_for(:faraday) }
 
     it "raises a Savon::HTTPError" do
@@ -43,8 +47,12 @@ RSpec.describe "WSDL fetch failure" do
       expect(error.to_s).to eq("HTTP error (502): Bad Gateway")
     end
 
-    it "renders the status and body via #to_hash" do
-      expect(error.to_hash).to eq(code: 502, headers: error.http.headers, body: "Bad Gateway")
+    it "renders the status, headers and body via #to_hash" do
+      expect(error.to_hash).to include(
+        code: 502,
+        body: "Bad Gateway",
+        headers: { "content-type" => "text/plain", "content-length" => "11" }
+      )
     end
   end
 
