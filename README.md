@@ -86,4 +86,4 @@ Callers on 2.13.0–2.15.x may see specific post-2.12.1 behaviors restored to th
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md). MIT licensed.
+See [CONTRIBUTING.md](CONTRIBUTING.md). Everyone interacting in Savon's codebases, issue trackers, and discussion forums is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md). MIT licensed.
