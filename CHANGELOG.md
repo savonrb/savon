@@ -5,11 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.17.3] - 2026-06-23
+## [2.17.4] - UPCOMING
+
+**Restore WS-Addressing `wsa:Action` and `wsa:To` headers**
 
 ### Fixed
 
+* **WS-Addressing headers are populated from the WSDL again** ([#1057](https://github.com/savonrb/savon/issues/1057)). With `use_wsa_headers: true` and no explicit `:soap_action` or `:endpoint`, Savon emitted empty `<wsa:Action xsi:nil="true"/>` and `<wsa:To xsi:nil="true"/>` elements instead of the operation's SOAPAction and service endpoint. Up to 2.16.0 those values were populated as a side effect of building the HTTP request. The 2.17.0 transport refactor removed that step.
+
+## [2.17.3] - 2026-06-23
+
 **Fix Savon::HTTPError compatibility with Faraday transport**
+
+### Fixed
 
 * **`Savon::HTTPError` works with the Faraday transport** ([#1050](https://github.com/savonrb/savon/issues/1050)). When a the WSDL could not be fetched under `transport: :faraday`, `Savon::HTTPError#to_s` and `#to_hash` raised `NoMethodError: undefined method 'code'` because they were handed a raw `Faraday::Response`, which exposes `#status` rather than `#code`. Transports now normalize adapter-specific response objects into `Savon::Transport::Response` before they reach `Savon::HTTPError`.
 
@@ -1248,6 +1256,7 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Complete rewrite and public release.
 
+[2.17.4]: https://github.com/savonrb/savon/compare/v2.17.3...v2.17.4
 [2.17.3]: https://github.com/savonrb/savon/compare/v2.17.2...v2.17.3
 [2.17.2]: https://github.com/savonrb/savon/compare/v2.17.1...v2.17.2
 [2.17.1]: https://github.com/savonrb/savon/compare/v2.17.0...v2.17.1

@@ -65,7 +65,7 @@ module Savon
 
     def build(locals = {}, &block)
       set_locals(locals, block)
-      Builder.new(@name, @wsdl, @globals, @locals)
+      Builder.new(@name, @wsdl, @globals, @locals, soap_action: soap_action, endpoint: endpoint)
     end
 
     # Executes the SOAP operation and returns a Savon::Response.
