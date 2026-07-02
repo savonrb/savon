@@ -2,11 +2,20 @@
 
 require "savon/header"
 require "savon/message"
+require "savon/effective_options"
 require "nokogiri"
 require "builder"
 require "gyoku"
 
 module Savon
+  # Builds the SOAP request for an operation: the XML envelope, or
+  # a multipart/related message when the request carries attachments
+  # (SOAP with Attachments, https://www.w3.org/TR/SOAP-attachments).
+  #
+  # It owns the envelope structure, its namespace declarations, and the body,
+  # and signs the document when a WSSE signature is present. Message-body
+  # serialization is delegated to {Savon::Message}, the Header element to
+  # {Savon::Header}, and Hash-to-XML conversion to Gyoku.
   class Builder
     attr_reader :multipart
 
@@ -22,6 +31,15 @@ module Savon
 
     WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
 
+    # @param operation_name [Symbol] the SOAP operation being called
+    # @param wsdl [Wasabi::Document] the parsed WSDL, or an empty document when
+    #   the client was configured without one
+    # @param globals [Savon::GlobalOptions] client-level options
+    # @param locals [Savon::LocalOptions] per-request options
+    # @param soap_action [String, nil] the operation's resolved SOAPAction,
+    #   forwarded to the header for +wsa:Action+
+    # @param endpoint [String, nil] the operation's resolved endpoint, forwarded
+    #   to the header for +wsa:To+
     def initialize(operation_name, wsdl, globals, locals, soap_action: nil, endpoint: nil)
       @operation_name = operation_name
 
@@ -30,7 +48,8 @@ module Savon
       @locals      = locals
       @soap_action = soap_action
       @endpoint    = endpoint
-      @signature   = @locals[:wsse_signature] || @globals[:wsse_signature]
+      @effective   = EffectiveOptions.new(globals, locals)
+      @signature   = @effective.wsse_signature
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
@@ -141,7 +160,7 @@ module Savon
     end
 
     def header
-      @header ||= Header.new(@globals, @locals, soap_action: @soap_action, endpoint: @endpoint)
+      @header ||= Header.new(@globals, @effective, soap_action: @soap_action, endpoint: @endpoint)
     end
 
     def namespaced_message_tag
