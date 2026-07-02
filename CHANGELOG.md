@@ -7,11 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [2.17.4] - UPCOMING
 
-**Restore WS-Addressing `wsa:Action` and `wsa:To` headers**
+**Restore WS-Addressing headers and fix `:wsse_signature` resolution**
 
 ### Fixed
 
 * **WS-Addressing headers are populated from the WSDL again** ([#1057](https://github.com/savonrb/savon/issues/1057)). With `use_wsa_headers: true` and no explicit `:soap_action` or `:endpoint`, Savon emitted empty `<wsa:Action xsi:nil="true"/>` and `<wsa:To xsi:nil="true"/>` elements instead of the operation's SOAPAction and service endpoint. Up to 2.16.0 those values were populated as a side effect of building the HTTP request. The 2.17.0 transport refactor removed that step.
+* **A local `:wsse_signature` no longer crashes when set to `false`.** Passing `wsse_signature: false` to a call raised `NoMethodError: undefined method 'have_document?' for false` while building the WSSE header. The envelope builder and the SOAP header also resolved the option with different rules, so they could disagree on which signature applies. Both now read it through `Savon::EffectiveOptions`, the one place that resolves options settable in both the global and the local scope. A falsy local `:wsse_signature` falls back to the global one. Setting a signature object in either scope is unaffected.
 
 ## [2.17.3] - 2026-06-23
 
