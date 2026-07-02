@@ -6,7 +6,10 @@ require "securerandom"
 
 module Savon
   class Header
-    def initialize(globals, locals)
+    # +soap_action+ and +endpoint+ are the resolved values for the request,
+    # supplied by the operation. They populate the WSA Action/To headers
+    # (WS-Addressing 1.0 - Core §3.1) when +use_wsa_headers+ is enabled.
+    def initialize(globals, locals, soap_action: nil, endpoint: nil)
       @gyoku_options  = { key_converter: globals[:convert_request_keys_to] }
 
       @wsse_auth      = locals[:wsse_auth].nil? ? globals[:wsse_auth] : locals[:wsse_auth]
@@ -15,6 +18,9 @@ module Savon
 
       @global_header  = globals[:soap_header]
       @local_header   = locals[:soap_header]
+
+      @wsa_action     = soap_action
+      @wsa_to         = endpoint
 
       @globals        = globals
       @locals         = locals
@@ -61,8 +67,8 @@ module Savon
       return '' unless @globals[:use_wsa_headers]
 
       convert_to_xml({
-        'wsa:Action'    => @locals[:soap_action],
-        'wsa:To'        => @globals[:endpoint],
+        'wsa:Action'    => @wsa_action,
+        'wsa:To'        => @wsa_to,
         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
       })
     end

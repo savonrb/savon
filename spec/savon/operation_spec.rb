@@ -71,6 +71,63 @@ RSpec.describe Savon::Operation do
       expect(builder).to be_a(Savon::Builder)
       expect(builder.to_s).to include("<tns:VerifyAddress><tns:test>message</tns:test></tns:VerifyAddress>")
     end
+
+    # With use_wsa_headers and no explicit :soap_action/:endpoint,
+    # WSA headers must be populated from the WSDL.
+    context "with use_wsa_headers and no explicit soap_action or endpoint" do
+      let(:globals) { Savon::GlobalOptions.new(log: false, use_wsa_headers: true) }
+
+      it "populates wsa:Action from the WSDL soapAction" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:Action>http://taxcloud.net/VerifyAddress</wsa:Action>")
+      end
+
+      it "populates wsa:To from the WSDL endpoint" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:To>https://api.taxcloud.net/1.0/TaxCloud.asmx</wsa:To>")
+      end
+
+      it "does not emit nil WSA headers" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).not_to include('xsi:nil="true"')
+      end
+    end
+
+    # Explicit :soap_action/:endpoint must take precedence
+    # over the WSDL when populating the WSA headers.
+    context "with use_wsa_headers and explicit soap_action and endpoint" do
+      let(:globals) do
+        Savon::GlobalOptions.new(log: false, use_wsa_headers: true, endpoint: "http://explicit.example.com/service")
+      end
+
+      it "uses the explicit soap_action for wsa:Action" do
+        xml = operation.build(message: {}, soap_action: "http://explicit.example.com/Action").to_s
+
+        expect(xml).to include("<wsa:Action>http://explicit.example.com/Action</wsa:Action>")
+      end
+
+      it "uses the explicit endpoint for wsa:To" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:To>http://explicit.example.com/service</wsa:To>")
+      end
+    end
+
+    # Without use_wsa_headers, no WS-Addressing namespace or headers are emitted.
+    context "without use_wsa_headers" do
+      let(:globals) { Savon::GlobalOptions.new(log: false) }
+
+      it "emits no WSA namespace or headers" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).not_to include("xmlns:wsa")
+        expect(xml).not_to include("<wsa:Action")
+        expect(xml).not_to include("<wsa:To")
+      end
+    end
   end
 
   describe "#call" do

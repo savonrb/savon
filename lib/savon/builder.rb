@@ -22,13 +22,15 @@ module Savon
 
     WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
 
-    def initialize(operation_name, wsdl, globals, locals)
+    def initialize(operation_name, wsdl, globals, locals, soap_action: nil, endpoint: nil)
       @operation_name = operation_name
 
-      @wsdl      = wsdl
-      @globals   = globals
-      @locals    = locals
-      @signature = @locals[:wsse_signature] || @globals[:wsse_signature]
+      @wsdl        = wsdl
+      @globals     = globals
+      @locals      = locals
+      @soap_action = soap_action
+      @endpoint    = endpoint
+      @signature   = @locals[:wsse_signature] || @globals[:wsse_signature]
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
@@ -139,7 +141,7 @@ module Savon
     end
 
     def header
-      @header ||= Header.new(@globals, @locals)
+      @header ||= Header.new(@globals, @locals, soap_action: @soap_action, endpoint: @endpoint)
     end
 
     def namespaced_message_tag
