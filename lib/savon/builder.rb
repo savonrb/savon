@@ -36,20 +36,14 @@ module Savon
     #   the client was configured without one
     # @param globals [Savon::GlobalOptions] client-level options
     # @param locals [Savon::LocalOptions] per-request options
-    # @param soap_action [String, nil] the operation's resolved SOAPAction,
-    #   forwarded to the header for +wsa:Action+
-    # @param endpoint [String, nil] the operation's resolved endpoint, forwarded
-    #   to the header for +wsa:To+
-    def initialize(operation_name, wsdl, globals, locals, soap_action: nil, endpoint: nil)
+    def initialize(operation_name, wsdl, globals, locals)
       @operation_name = operation_name
 
-      @wsdl        = wsdl
-      @globals     = globals
-      @locals      = locals
-      @soap_action = soap_action
-      @endpoint    = endpoint
-      @effective   = EffectiveOptions.new(globals, locals)
-      @signature   = @effective.wsse_signature
+      @wsdl      = wsdl
+      @globals   = globals
+      @locals    = locals
+      @effective = EffectiveOptions.new(operation_name, wsdl, globals, locals)
+      @signature = @effective.wsse_signature
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
@@ -160,7 +154,7 @@ module Savon
     end
 
     def header
-      @header ||= Header.new(@globals, @effective, soap_action: @soap_action, endpoint: @endpoint)
+      @header ||= Header.new(@globals, @effective)
     end
 
     def namespaced_message_tag

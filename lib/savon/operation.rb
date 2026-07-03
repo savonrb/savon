@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "savon/options"
+require "savon/effective_options"
 require "savon/block_interface"
 require "savon/builder"
 require "savon/response"
@@ -65,7 +66,7 @@ module Savon
 
     def build(locals = {}, &block)
       set_locals(locals, block)
-      Builder.new(@name, @wsdl, @globals, @locals, soap_action: soap_action, endpoint: endpoint)
+      Builder.new(@name, @wsdl, @globals, @locals)
     end
 
     # Executes the SOAP operation and returns a Savon::Response.
@@ -114,6 +115,13 @@ module Savon
       @locals = locals
     end
 
+    # The effective options view for the current request. Built on demand
+    # instead of being cached, so it always reflects the current per-request
+    # options.
+    def effective_options
+      EffectiveOptions.new(@name, @wsdl, @globals, @locals)
+    end
+
     # Assembles the SOAP-level request headers for the given builder.
     #
     # Our responsibility regardless of transport:
@@ -143,26 +151,16 @@ module Savon
       headers
     end
 
+    # The resolved SOAPAction of the request, used for the HTTP header.
+    # {Savon::EffectiveOptions#soap_action} owns the precedence rules.
     def soap_action
-      # soap_action explicitly set to something falsy
-      return if @locals.include?(:soap_action) && !@locals[:soap_action]
-
-      # get the soap_action from local options
-      @locals[:soap_action] ||
-        # with no local option, but a wsdl, ask it for the soap_action
-        @wsdl.document? && @wsdl.soap_action(@name.to_sym) ||
-        # if there is no soap_action up to this point, fallback to a simple default
-        Gyoku.xml_tag(@name, key_converter: @globals[:convert_request_keys_to])
+      effective_options.soap_action
     end
 
+    # The resolved endpoint URL the request is sent to.
+    # {Savon::EffectiveOptions#endpoint} owns the precedence rules.
     def endpoint
-      @globals[:endpoint] || @wsdl.endpoint.tap do |url|
-        if @globals[:host]
-          host_url = URI.parse(@globals[:host])
-          url.host = host_url.host
-          url.port = host_url.port
-        end
-      end
+      effective_options.endpoint
     end
 
     # Normalizes an observer return value into a Transport::Response.

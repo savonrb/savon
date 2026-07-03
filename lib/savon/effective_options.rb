@@ -1,20 +1,65 @@
 # frozen_string_literal: true
 
+require "gyoku"
+require "uri"
+
 module Savon
-  # Resolves the effective value of options that can be set in both the global
-  # (client) and the local (per-request) scope.
+  # Resolves the effective value of options whose answer combines more than
+  # one source: the per-request options, the client options, the WSDL
+  # document, and built-in defaults.
   #
-  # The WSSE options and +:soap_header+ accept a client-level value on
-  # {Savon::GlobalOptions} and a per-request value on {Savon::LocalOptions}.
-  # EffectiveOptions owns those precedence rules and exposes one reader per
-  # resolvable option, so every consumer of a dual-scope option resolves it
-  # identically. It never mutates the underlying options.
+  # {Savon::GlobalOptions} and {Savon::LocalOptions} store what the caller
+  # said. EffectiveOptions answers what the request uses. It owns the
+  # precedence rules and exposes one reader per resolvable option, so every
+  # consumer of an option resolves it identically. Resolution is a pure read.
+  # It never mutates the options or the WSDL document.
   class EffectiveOptions
+    # @param operation_name [Symbol] the SOAP operation being called
+    # @param wsdl [Wasabi::Document] the parsed WSDL, or an empty document
+    #   when the client was configured without one
     # @param globals [Savon::GlobalOptions] the client-level options
     # @param locals [Savon::LocalOptions] the per-request options
-    def initialize(globals, locals)
-      @globals = globals
-      @locals  = locals
+    def initialize(operation_name, wsdl, globals, locals)
+      @operation_name = operation_name
+      @wsdl           = wsdl
+      @globals        = globals
+      @locals         = locals
+    end
+
+    # Resolves the SOAPAction of the request (SOAP 1.1 §6.1.1).
+    #
+    # An explicit local +:soap_action+ wins. A local +false+ or +nil+ disables
+    # the action, so no SOAPAction HTTP header is sent and an enabled
+    # +wsa:Action+ header stays empty. Without a local value the WSDL provides
+    # the soapAction of the operation. Without a WSDL document the operation
+    # name is converted to an XML tag as a best-effort default.
+    #
+    # @return [String, nil] the action, or +nil+ when explicitly disabled
+    def soap_action
+      return if @locals.include?(:soap_action) && !@locals[:soap_action]
+
+      @locals[:soap_action] ||
+        (@wsdl.document? && @wsdl.soap_action(@operation_name.to_sym)) ||
+        Gyoku.xml_tag(@operation_name, key_converter: @globals[:convert_request_keys_to])
+    end
+
+    # Resolves the endpoint URL the request is sent to.
+    #
+    # A global +:endpoint+ wins over the service address of the WSDL. The
+    # global +:host+ option replaces host and port of the WSDL address and
+    # keeps scheme, path and query. The override is applied to a copy. The
+    # WSDL document keeps its parsed address.
+    #
+    # @return [URI, String, nil] the endpoint as provided by the winning source
+    def endpoint
+      return @globals[:endpoint] if @globals[:endpoint]
+      return @wsdl.endpoint unless @globals[:host]
+
+      host_url = URI.parse(@globals[:host])
+      url      = @wsdl.endpoint.dup
+      url.host = host_url.host
+      url.port = host_url.port
+      url
     end
 
     # Resolves the WSSE auth credentials passed to Akami. A local value takes
