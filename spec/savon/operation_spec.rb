@@ -128,6 +128,17 @@ RSpec.describe Savon::Operation do
         expect(xml).not_to include("<wsa:To")
       end
     end
+
+    # A global :host override redirects the request without changing the WSDL.
+    context "with a global :host override" do
+      let(:globals) { Savon::GlobalOptions.new(log: false, host: "http://localhost:8080") }
+
+      it "does not mutate the WSDL document's endpoint" do
+        operation.build(message: {})
+
+        expect(wsdl.endpoint.to_s).to eq("https://api.taxcloud.net/1.0/TaxCloud.asmx")
+      end
+    end
   end
 
   describe "#call" do

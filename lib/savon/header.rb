@@ -23,11 +23,9 @@ module Savon
     # @param globals [Savon::GlobalOptions] client-level options, read for the
     #   Gyoku key converter (+:convert_request_keys_to+) and the WS-Addressing
     #   toggle (+:use_wsa_headers+)
-    # @param effective [Savon::EffectiveOptions] resolves the WSSE and
-    #   soap_header values across the global and local scopes
-    # @param soap_action [String, nil] the resolved SOAPAction, used as +wsa:Action+
-    # @param endpoint [String, nil] the resolved endpoint, used as +wsa:To+
-    def initialize(globals, effective, soap_action: nil, endpoint: nil)
+    # @param effective [Savon::EffectiveOptions] resolves the WSSE, soap_header,
+    #   soap_action and endpoint values for the request
+    def initialize(globals, effective)
       @gyoku_options  = { key_converter: globals[:convert_request_keys_to] }
 
       @wsse_auth      = effective.wsse_auth
@@ -36,8 +34,7 @@ module Savon
       @soap_header    = effective.soap_header
 
       @globals        = globals
-      @wsa_action     = soap_action
-      @wsa_to         = endpoint
+      @effective      = effective
       @header         = build
     end
 
@@ -86,7 +83,8 @@ module Savon
     end
 
     # Builds the WS-Addressing header, that's +wsa:Action+, +wsa:To+ and a freshly
-    # generated +wsa:MessageID+ (WS-Addressing 1.0 - Core §3). Emitted only when
+    # generated +wsa:MessageID+ (WS-Addressing 1.0 - Core §3). +wsa:Action+ carries
+    # the resolved SOAPAction and +wsa:To+ the resolved endpoint. Emitted only when
     # the +:use_wsa_headers+ global is set. Otherwise returns an empty string.
     #
     # @return [String]
@@ -94,8 +92,8 @@ module Savon
       return '' unless @globals[:use_wsa_headers]
 
       convert_to_xml({
-        'wsa:Action'    => @wsa_action,
-        'wsa:To'        => @wsa_to,
+        'wsa:Action'    => @effective.soap_action,
+        'wsa:To'        => @effective.endpoint,
         'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
       })
     end
