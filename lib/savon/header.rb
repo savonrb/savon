@@ -2,7 +2,7 @@
 
 require "akami"
 require "gyoku"
-require "securerandom"
+require "savon/addressing"
 
 module Savon
   # Assembles the SOAP +Header+ element of a request envelope and renders it to
@@ -13,8 +13,7 @@ module Savon
   # order:
   #
   # 1. application headers supplied by the caller (the +soap_header+ option),
-  # 2. the WS-Addressing headers +wsa:Action+, +wsa:To+ and +wsa:MessageID+
-  #    (WS-Addressing 1.0 - Core §3),
+  # 2. the WS-Addressing headers, rendered by {Savon::Addressing},
   # 3. the WS-Security header with UsernameToken credentials, a +wsu:Timestamp+
   #    and an XML Signature (OASIS WSS SOAP Message Security 1.1).
   #
@@ -33,12 +32,19 @@ module Savon
       @wsse_signature = effective.wsse_signature
       @soap_header    = effective.soap_header
 
-      @globals        = globals
-      @effective      = effective
-      @header         = build
+      @addressing = build_addressing(globals, effective)
+      @header     = build
     end
 
     attr_reader :gyoku_options, :wsse_auth, :wsse_timestamp, :wsse_signature
+
+    # Returns the XML attributes of the enclosing Header element. Only the
+    # WS-Addressing section declares one, the +xmlns:wsa+ prefix.
+    #
+    # @return [Hash{String => String}]
+    def attributes
+      @addressing.namespace_attributes
+    end
 
     # @return [Boolean] whether the rendered header is empty, i.e. there is no
     #   header content to include in the envelope
@@ -56,12 +62,28 @@ module Savon
 
     private
 
+    # Constructs the WS-Addressing section from the resolved request values.
+    # Resolving the endpoint raises without a WSDL document and without a
+    # global +:endpoint+, so action and endpoint are only resolved when the
+    # +:use_wsa_headers+ global asks for the headers.
+    #
+    # @return [Savon::Addressing]
+    def build_addressing(globals, effective)
+      return Addressing.new(enabled: false) unless globals[:use_wsa_headers]
+
+      Addressing.new(
+        enabled: true,
+        action: effective.soap_action,
+        to: effective.endpoint
+      )
+    end
+
     # Concatenates the three header sections in document order: caller content,
     # WS-Addressing, then WSSE security.
     #
     # @return [String]
     def build
-      build_header + build_wsa_header + build_wsse_header
+      build_header + @addressing.to_xml + build_wsse_header
     end
 
     # Renders the resolved soap_header. {Savon::EffectiveOptions#soap_header}
@@ -80,22 +102,6 @@ module Savon
     def build_wsse_header
       wsse_header = akami
       wsse_header.respond_to?(:to_xml) ? wsse_header.to_xml : ""
-    end
-
-    # Builds the WS-Addressing header, that's +wsa:Action+, +wsa:To+ and a freshly
-    # generated +wsa:MessageID+ (WS-Addressing 1.0 - Core §3). +wsa:Action+ carries
-    # the resolved SOAPAction and +wsa:To+ the resolved endpoint. Emitted only when
-    # the +:use_wsa_headers+ global is set. Otherwise returns an empty string.
-    #
-    # @return [String]
-    def build_wsa_header
-      return '' unless @globals[:use_wsa_headers]
-
-      convert_to_xml({
-        'wsa:Action'    => @effective.soap_action,
-        'wsa:To'        => @effective.endpoint,
-        'wsa:MessageID' => "urn:uuid:#{SecureRandom.uuid}"
-      })
     end
 
     # Renders a header value to XML. A Hash goes through Gyoku (honouring the

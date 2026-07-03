@@ -177,6 +177,27 @@ RSpec.describe Savon::Builder do
     end
   end
 
+  describe "#header_attributes" do
+    it "declares the wsa prefix when :use_wsa_headers is set" do
+      globals[:use_wsa_headers] = true
+
+      expect(builder.header_attributes).to eq(
+        "xmlns:wsa" => "http://www.w3.org/2005/08/addressing"
+      )
+    end
+
+    it "declares nothing otherwise" do
+      expect(builder.header_attributes).to eq({})
+    end
+  end
+
+  describe "WSA_NAMESPACE" do
+    # The constant is public since 2.12 and stays available as an alias.
+    it "keeps the deprecated alias of the WS-Addressing namespace" do
+      expect(described_class::WSA_NAMESPACE).to eq(Savon::Addressing::NAMESPACE)
+    end
+  end
+
   describe "namespace declarations" do
     it "includes exactly the required namespaces and no structural namespace declarations" do
       expected = {

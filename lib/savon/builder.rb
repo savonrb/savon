@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "savon/addressing"
 require "savon/header"
 require "savon/message"
 require "savon/effective_options"
@@ -29,7 +30,9 @@ module Savon
       2 => "http://www.w3.org/2003/05/soap-envelope"
     }.freeze
 
-    WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
+    # @deprecated Use {Savon::Addressing::NAMESPACE} instead. This alias will
+    #   be removed in Savon 3.0.
+    WSA_NAMESPACE = Addressing::NAMESPACE
 
     # @param operation_name [Symbol] the SOAP operation being called
     # @param wsdl [Wasabi::Document] the parsed WSDL, or an empty document when
@@ -77,8 +80,12 @@ module Savon
       end
     end
 
+    # Returns the XML attributes of the envelope's Header element, provided
+    # by the header's sections.
+    #
+    # @return [Hash{String => String}]
     def header_attributes
-      @globals[:use_wsa_headers] ? { 'xmlns:wsa' => WSA_NAMESPACE } : {}
+      header.attributes
     end
 
     def body_attributes
