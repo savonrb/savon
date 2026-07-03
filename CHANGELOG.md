@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * **A global `:host` override no longer rewrites the WSDL's endpoint.** Resolving the request endpoint with `:host` set replaced host and port of the parsed WSDL address in place, visible as a permanently changed `client.wsdl.endpoint` after the first call. Endpoint and SOAPAction resolution moved into `Savon::EffectiveOptions`, which applies the override to a copy and never touches the WSDL document.
 * **A local `:wsse_signature` no longer crashes when set to `false`.** Passing `wsse_signature: false` to a call raised `NoMethodError: undefined method 'have_document?' for false` while building the WSSE header. The envelope builder and the SOAP header also resolved the option with different rules, so they could disagree on which signature applies. Both now read it through `Savon::EffectiveOptions`, the one place that resolves options settable in both the global and the local scope. A falsy local `:wsse_signature` falls back to the global one. Setting a signature object in either scope is unaffected.
 
+### Deprecated
+
+* **`Savon::Builder::WSA_NAMESPACE`.** WS-Addressing emission moved into `Savon::Addressing`, which owns the namespace as `Savon::Addressing::NAMESPACE`. The constant on `Savon::Builder` stays available as an alias and will be removed in Savon 3.
+
 ## [2.17.3] - 2026-06-23
 
 **Fix Savon::HTTPError compatibility with Faraday transport**
