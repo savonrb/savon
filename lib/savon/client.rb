@@ -4,6 +4,7 @@ require "savon/operation"
 require "savon/transport/httpi"
 require "savon/transport/faraday"
 require "savon/options"
+require "savon/future"
 require "savon/block_interface"
 require "wasabi"
 
@@ -21,6 +22,7 @@ module Savon
 
       set_globals(globals, block)
       @globals.validate_transport!
+      Future.announce(@globals[:logger]) if @globals[:future]
 
       unless wsdl_or_endpoint_and_namespace_specified?
         raise_initialization_error!

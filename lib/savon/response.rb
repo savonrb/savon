@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "nori"
+require "savon/future"
 require "savon/soap_fault"
 require "savon/http_error"
 
@@ -169,7 +170,22 @@ module Savon
       }
 
       non_nil_nori_options = nori_options.reject { |_, value| value.nil? }
+      apply_future_profiles(non_nil_nori_options) if @globals[:future]
       @nori = Nori.new(non_nil_nori_options)
+    end
+
+    # Adds the Nori profiles from {Savon::Future::NORI_PROFILES} under the
+    # +future+ flag. Explicitly set Savon options keep winning over the
+    # profile defaults. An explicit +empty_tag_value+ passes through even
+    # when nil, and +advanced_typecasting+ only reaches Nori when the
+    # caller set it, leaving the default to the standards profile.
+    #
+    # @param nori_options [Hash] the options built for Nori, mutated in place
+    # @return [void]
+    def apply_future_profiles(nori_options)
+      nori_options.merge!(Future::NORI_PROFILES)
+      nori_options[:empty_tag_value] = @globals[:empty_tag_value] if @globals.explicit?(:empty_tag_value)
+      nori_options.delete(:advanced_typecasting) unless @locals.explicit?(:advanced_typecasting)
     end
   end
 end

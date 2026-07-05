@@ -1,17 +1,29 @@
 # frozen_string_literal: true
 
 require "logger"
+require "set"
 require "httpi"
 require "savon/faraday_migration_hint"
+require "savon/future"
 
 module Savon
   # Base class for GlobalOptions and LocalOptions.
   # Stores options in a hash, dispatches setter calls by method name,
   # raises UnknownOptionError for anything not defined on the subclass.
+  #
+  # Owns the layering of built-in defaults and caller-provided options.
+  # Subclasses supply their defaults through the private {#defaults} hook.
+  # Every option set by the caller is tracked, so {#explicit?} can tell a
+  # deliberate choice apart from a default even when both hold the same value.
   class Options
     def initialize(options = {})
-      @options = {}
-      assign options
+      @options  = {}
+      @explicit = Set.new
+
+      # Skip defaults the caller overrides, so setters with side effects
+      # (such as :log and :logger) run once per option.
+      assign(defaults.reject { |option, _| options.key?(option) })
+      assign(options, explicit: true)
     end
 
     attr_reader :option_type
@@ -21,6 +33,7 @@ module Savon
     end
 
     def []=(option, value)
+      @explicit << option
       value = [value].flatten
       send(option, *value)
     end
@@ -29,10 +42,41 @@ module Savon
       @options.key? option
     end
 
+    # Returns whether the caller provided the option, through the
+    # constructor, a setter call, or a block. Built-in defaults are not
+    # explicit. Overlays such as the +future+ defaults never replace an
+    # explicit option.
+    #
+    # @param option [Symbol] the option name
+    # @return [Boolean]
+    def explicit?(option)
+      @explicit.include?(option)
+    end
+
+    # Records an option as caller-provided. {Savon::BlockInterface} calls
+    # this after forwarding a setter, because block-set options go through
+    # the plain setters and would otherwise be indistinguishable from
+    # defaults.
+    #
+    # @api private
+    # @param option [Symbol] the option name
+    # @return [void]
+    def mark_explicit(option)
+      @explicit << option
+    end
+
     private
 
-    def assign(options)
+    # The built-in default for every option. Subclasses override this hook.
+    #
+    # @return [Hash{Symbol => Object}]
+    def defaults
+      {}
+    end
+
+    def assign(options, explicit: false)
       options.each do |option, value|
+        @explicit << option if explicit
         send(option, value)
       end
     end
@@ -254,7 +298,7 @@ module Savon
 
     def initialize(options = {})
       @option_type = :global
-      options = defaults.merge(options)
+      options = options.dup
 
       # this option is a shortcut on the logger which needs to be set
       # before it can be modified to set the option.
@@ -457,7 +501,34 @@ module Savon
       @options[:transport] = transport
     end
 
+    # Opt into the preview of the next major version's defaults.
+    #
+    # Accepts a strict Boolean and is global-only. When enabled, the
+    # {Savon::Future} member defaults apply to every option the caller has
+    # not explicitly set, and the client logs one info-level line at
+    # initialization. A +log_level+ of +:warn+ or higher silences the line.
+    #
+    # @param future [Boolean] whether to preview the next major's defaults
+    # @raise [ArgumentError] when the value is not +true+ or +false+
+    def future(future)
+      raise ArgumentError, "future: expects true or false, got: #{future.inspect}" unless [true, false].include?(future)
+
+      @options[:future] = future
+      apply_future_defaults if future
+    end
+
     private
+
+    # Applies the {Savon::Future} member defaults to every option the
+    # caller has not explicitly set. Runs from the +future+ setter, so the
+    # overlay works no matter how the flag is assigned. Member options set
+    # explicitly before keep their value, member options set afterwards
+    # overwrite the overlay through their plain setters.
+    def apply_future_defaults
+      Future::GLOBAL_DEFAULTS.each do |option, value|
+        send(option, value) unless explicit?(option)
+      end
+    end
 
     # The default value for every global option.
     def defaults
@@ -483,7 +554,8 @@ module Savon
         no_message_tag: false,
         unwrap: false,
         host: nil,
-        transport: :httpi
+        transport: :httpi,
+        future: false
       )
     end
   end
@@ -495,14 +567,7 @@ module Savon
 
     def initialize(options = {})
       @option_type = :local
-
-      defaults = {
-        advanced_typecasting: true,
-        response_parser: :nokogiri,
-        multipart: false
-      }
-
-      super defaults.merge(options)
+      super
     end
 
     # The local SOAP header. Expected to be a Hash or respond to #to_s.
@@ -601,6 +666,17 @@ module Savon
     # Per-request HTTP headers. Merged with global headers for each request.
     def headers(headers)
       @options[:headers] = headers
+    end
+
+    private
+
+    # The default value for every local option.
+    def defaults
+      {
+        advanced_typecasting: true,
+        response_parser: :nokogiri,
+        multipart: false
+      }
     end
   end
 end
