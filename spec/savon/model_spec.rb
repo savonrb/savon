@@ -2,6 +2,8 @@
 
 require "spec_helper"
 require "integration/support/server"
+require "logger"
+require "stringio"
 
 RSpec.describe Savon::Model do
   describe ".client" do
@@ -38,6 +40,77 @@ RSpec.describe Savon::Model do
       expect(model.client.globals[:soap_version]).to eq(2)
       expect(model.client.globals[:open_timeout]).to eq(71)
       expect(model.client.globals[:wsse_auth]).to eq(["luke", "secret", :digest])
+    end
+
+    it "keeps mutating the memoized client without the future flag" do
+      model = Class.new do
+        extend Savon::Model
+        client wsdl: Fixture.wsdl(:authentication)
+      end
+
+      first = model.client
+      model.global(:soap_version, 2)
+
+      expect(model.client).to equal(first)
+      expect(model.client.globals[:soap_version]).to eq(2)
+    end
+  end
+
+  describe ".global with future: true" do
+    def quiet_logger(io)
+      Logger.new(io)
+    end
+
+    it "records options into the one client created on first use" do
+      io = StringIO.new
+      logger = quiet_logger(io)
+
+      model = Class.new do
+        extend Savon::Model
+
+        client wsdl: Fixture.wsdl(:authentication), future: true, logger: logger
+
+        global :soap_version, 2
+        global :wsse_auth, "luke", "secret", :digest
+      end
+
+      expect(model.client.globals[:soap_version]).to eq(2)
+      expect(model.client.globals[:wsse_auth]).to eq(["luke", "secret", :digest])
+      expect(model.client.globals[:future]).to be(true)
+      expect(model.client.globals).to be_frozen
+    end
+
+    it "creates the client once and announces the preview once" do
+      io = StringIO.new
+      logger = quiet_logger(io)
+
+      model = Class.new do
+        extend Savon::Model
+
+        client wsdl: Fixture.wsdl(:authentication), future: true, logger: logger
+
+        global :soap_version, 2
+      end
+
+      expect(io.string).to be_empty
+
+      model.client
+
+      expect(io.string.scan("future: true").size).to eq(1)
+    end
+
+    it "rejects configuration after first use" do
+      io = StringIO.new
+      logger = quiet_logger(io)
+
+      model = Class.new do
+        extend Savon::Model
+        client wsdl: Fixture.wsdl(:authentication), future: true, logger: logger
+      end
+      model.client
+
+      expect { model.global(:soap_version, 2) }
+        .to raise_error(FrozenError, /frozen once the client is created/)
     end
   end
 

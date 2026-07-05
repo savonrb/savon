@@ -30,7 +30,7 @@ module Savon
       end
 
       build_wsdl_document
-      @globals.freeze if @globals[:future]
+      @globals.finalize!
     end
 
     attr_reader :globals, :wsdl

@@ -43,10 +43,18 @@ RSpec.describe Savon::Future do
     end
 
     it "applies the previewed defaults when set after initialization" do
+      # A bare options object is never finalized
       globals = Savon::GlobalOptions.new
       globals[:future] = true
 
       expect(globals[:transport]).to eq(:faraday)
+    end
+
+    it "cannot be enabled after the client is created" do
+      client = Savon.client(no_wsdl_globals)
+
+      expect { client.globals[:future] = true }
+        .to raise_error(ArgumentError, /future can only be set when the client is created/)
     end
 
     it "applies the previewed defaults when enabled in a client block" do

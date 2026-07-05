@@ -52,14 +52,33 @@ module Savon
     # Class methods.
     def class_operation_module
       @class_operation_module ||= Module.new do
+        # Configures and returns the model's Savon::Client. The first call
+        # with options is the configuration, later options are ignored.
+        # With +future: true+ in the configuration, creation is deferred
+        # until first use, so options recorded by +global+ become part of
+        # one client. The configuring call then returns nil.
         def client(globals = {})
-          @client ||= Savon::Client.new(globals)
+          if globals.any?
+            @client_globals ||= globals.dup
+            return if @client_globals[:future]
+          end
+
+          @client ||= Savon::Client.new(@client_globals || {})
         rescue InitializationError
           raise_initialization_error!
         end
 
+        # Sets a single global option. With +future: true+ this records
+        # into the configuration of the not-yet-created client. Without
+        # the flag it mutates the live client, as it always has.
         def global(option, *value)
-          client.globals[option] = value
+          if @client.nil? && @client_globals && @client_globals[:future]
+            # Constructor setters take one argument, so single values are
+            # unwrapped the way []= would flatten them.
+            @client_globals[option] = value.size == 1 ? value.first : value
+          else
+            client.globals[option] = value
+          end
         end
 
         def raise_initialization_error!

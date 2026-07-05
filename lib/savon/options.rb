@@ -39,7 +39,7 @@ module Savon
         raise FrozenError, "Can't set the #{option_type} option #{option.inspect}. " \
                            "Options are frozen once the client is created (future: true). " \
                            "Savon 3 freezes the options of every client. " \
-                           "Pass all options to Savon.client(...) instead."
+                           "Pass all options when creating the client instead."
       end
 
       value = [value].flatten
@@ -72,6 +72,17 @@ module Savon
     def freeze
       defaults # memoize, so reads never write to the frozen object
       super
+    end
+
+    # Marks the end of the configuration phase. {Savon::Client} calls this
+    # once the client is fully created. Init-only options such as +future+
+    # reject writes afterwards, and with the +future+ flag on the options
+    # freeze entirely. Options never handed to a client stay unfinalized.
+    #
+    # @return [void]
+    def finalize!
+      @finalized = true
+      freeze if self[:future]
     end
 
     private
@@ -543,6 +554,7 @@ module Savon
     # @param future [Boolean] whether to preview the next major's defaults
     # @raise [ArgumentError] when the value is not +true+ or +false+
     def future(future)
+      raise ArgumentError, "future can only be set when the client is created" if @finalized
       raise ArgumentError, "future: expects true or false, got: #{future.inspect}" unless [true, false].include?(future)
 
       @options[:future] = future
