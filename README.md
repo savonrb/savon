@@ -4,7 +4,7 @@ Heavy metal SOAP client
 
 [![Ruby](https://github.com/savonrb/savon/actions/workflows/ci.yml/badge.svg)](https://github.com/savonrb/savon/actions/workflows/ci.yml)
 [![Gem Version](https://badge.fury.io/rb/savon.svg)](http://badge.fury.io/rb/savon)
-[![Coverage Status](https://coveralls.io/repos/savonrb/savon/badge.svg)](https://coveralls.io/r/savonrb/savon)
+[![Coverage Status](https://coveralls.io/repos/github/savonrb/savon/badge.svg?branch=main)](https://coveralls.io/github/savonrb/savon?branch=main)
 
 Savon is a SOAP client for Ruby. [SOAP is the protocol](https://www.w3.org/TR/soap/) spoken by many enterprise systems. When they hand you a WSDL URL or file instead of a REST spec, it's SOAP. Savon reads the WSDL, maps available operations to Ruby symbols, converts Ruby hashes to SOAP envelopes and turns XML responses into hashes you can work with.
 

@@ -57,3 +57,9 @@ jobs:
           bundler-cache: true # bundle installs and caches dependencies
       - name: Run tests
         run: bundle exec rake --trace
+      - name: Upload coverage to Coveralls
+        if: matrix.ruby == '3.4'
+        uses: coverallsapp/github-action@5cbfd81b66ca5d10c19b062c04de0199c215fb6e # v2.3.7
+        with:
+          file: coverage/.resultset.json
+          format: simplecov
