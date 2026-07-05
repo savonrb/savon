@@ -21,7 +21,8 @@ module Savon
       end
 
       set_globals(globals, block)
-      @globals.validate_transport!
+      @globals.validate!
+      mirror_logging_to_httpi
       Future.announce(@globals[:logger]) if @globals[:future]
 
       unless wsdl_or_endpoint_and_namespace_specified?
@@ -83,6 +84,17 @@ module Savon
       BlockInterface.new(globals).evaluate(block) if block
 
       @globals = globals
+    end
+
+    # Mirrors the client's logging setup to HTTPI's process-global state,
+    # which HTTPI reads while executing requests. Runs once, after all
+    # options are assigned. Faraday clients leave HTTPI alone. Goes away in
+    # Savon 3 together with the HTTPI transport.
+    def mirror_logging_to_httpi
+      return if @globals[:transport] == :faraday
+
+      HTTPI.log    = @globals[:log]
+      HTTPI.logger = @globals[:logger]
     end
 
     def build_wsdl_document

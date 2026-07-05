@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+* **Faraday clients no longer touch HTTPI's global logging configuration.** Creating a client stamped `HTTPI.log` and `HTTPI.logger` regardless of the chosen transport. With `transport: :faraday` HTTPI is not involved, so its process-global logging state is now left alone. Clients on the default HTTPI transport still mirror their `log`/`logger` setup to HTTPI, once at client initialization.
+
 ### Added
 
 * **Add `future: true` global option as Savon 3.0 preview channel** ([discussion #1060](https://github.com/savonrb/savon/discussions/1060)). One opt-in flag that enables the next major version's defaults today. Every option you set explicitly still keeps winning over the future defaults. This grows with 2.x minor releases and changes will be listed here under a new "3.0 preview" section (see below). Release updates are posted in the discussion. With the flag on, the client logs one info-level line at initialization stating this contract. A `log_level` of `:warn` or higher silences it.

@@ -24,9 +24,7 @@ module Savon
     private
 
     def method_missing(method, *args, &block)
-      result = @target.send(method, *args, &block)
-      @target.mark_explicit(method) if @target.respond_to?(:mark_explicit)
-      result
+      @target.send(method, *args, &block)
     rescue NoMethodError
       @original.send(method, *args, &block)
     end

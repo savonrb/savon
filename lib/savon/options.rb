@@ -1,82 +1,82 @@
 # frozen_string_literal: true
 
 require "logger"
-require "set"
 require "httpi"
 require "savon/faraday_migration_hint"
 require "savon/future"
 
 module Savon
   # Base class for GlobalOptions and LocalOptions.
-  # Stores options in a hash, dispatches setter calls by method name,
-  # raises UnknownOptionError for anything not defined on the subclass.
+  # Dispatches setter calls by method name and raises UnknownOptionError
+  # for anything not defined on the subclass.
   #
-  # Owns the layering of built-in defaults and caller-provided options.
-  # Subclasses supply their defaults through the private {#defaults} hook.
-  # Every option set by the caller is tracked, so {#explicit?} can tell a
-  # deliberate choice apart from a default even when both hold the same value.
+  # Stores only what the caller set. Built-in defaults come from the
+  # private {#defaults} hook and overlays such as the +future+ members from
+  # {#overlays}. Both stay separate from the caller's options. {#[]}
+  # resolves the layers on every read, caller over overlay over default, so
+  # the precedence rules live in one place and never depend on assignment
+  # order. {#explicit?} tells a deliberate choice apart from a default even
+  # when both hold the same value.
   class Options
     def initialize(options = {})
-      @options  = {}
-      @explicit = Set.new
-
-      # Skip defaults the caller overrides, so setters with side effects
-      # (such as :log and :logger) run once per option.
-      assign(defaults.reject { |option, _| options.key?(option) })
-      assign(options, explicit: true)
+      @options = {}
+      assign options
     end
 
     attr_reader :option_type
 
+    # Resolves the option: the caller's value if one was set, otherwise an
+    # overlay value, otherwise the built-in default.
     def [](option)
-      @options[option]
+      return @options[option] if @options.key?(option)
+      return overlays[option] if overlays.key?(option)
+
+      defaults[option]
     end
 
     def []=(option, value)
-      @explicit << option
       value = [value].flatten
       send(option, *value)
     end
 
+    # Returns whether the option has a value from any layer, set by the
+    # caller or carrying a built-in default.
     def include?(option)
-      @options.key? option
+      @options.key?(option) || defaults.key?(option)
     end
 
     # Returns whether the caller provided the option, through the
-    # constructor, a setter call, or a block. Built-in defaults are not
-    # explicit. Overlays such as the +future+ defaults never replace an
-    # explicit option.
+    # constructor, a setter call, or a block. Built-in defaults and
+    # overlays are not explicit. Overlays such as the +future+ defaults
+    # never replace an explicit option.
     #
     # @param option [Symbol] the option name
     # @return [Boolean]
     def explicit?(option)
-      @explicit.include?(option)
-    end
-
-    # Records an option as caller-provided. {Savon::BlockInterface} calls
-    # this after forwarding a setter, because block-set options go through
-    # the plain setters and would otherwise be indistinguishable from
-    # defaults.
-    #
-    # @api private
-    # @param option [Symbol] the option name
-    # @return [void]
-    def mark_explicit(option)
-      @explicit << option
+      @options.key?(option)
     end
 
     private
 
     # The built-in default for every option. Subclasses override this hook.
+    # Memoized, so reads return stable objects and mutations of a read
+    # default persist.
     #
     # @return [Hash{Symbol => Object}]
     def defaults
       {}
     end
 
-    def assign(options, explicit: false)
+    # Values layered between the caller's options and the built-in
+    # defaults. Subclasses override this hook.
+    #
+    # @return [Hash{Symbol => Object}]
+    def overlays
+      {}
+    end
+
+    def assign(options)
       options.each do |option, value|
-        @explicit << option if explicit
         send(option, value)
       end
     end
@@ -133,9 +133,10 @@ module Savon
     # non-default value. The error points to the matching Faraday setup.
     FARADAY_INCOMPATIBLE_GLOBALS = FaradayMigrationHint::OPTIONS
 
-    # Runs after all global options have been assigned, including options set in
-    # the client block. Reports every HTTPI-only option in one error so callers
-    # can move their transport setup to Faraday in one pass.
+    # Runs from {Savon::GlobalOptions#validate!} after all global options have
+    # been assigned, including options set in the client block. Reports every
+    # HTTPI-only option in one error so callers can move their transport setup
+    # to Faraday in one pass.
     def validate_transport!
       return unless self[:transport] == :faraday
 
@@ -309,6 +310,18 @@ module Savon
       log_level(delayed_level) unless delayed_level.nil?
     end
 
+    # Finalizes the options after construction. {Savon::Client} calls this
+    # once, after the constructor hash and the options block are both
+    # applied. Validations that need the complete set of options run here
+    # instead of in individual setters, so their outcome never depends on
+    # assignment order.
+    #
+    # @raise [InitializationError] when the options cannot work together
+    # @return [void]
+    def validate!
+      validate_transport!
+    end
+
     # Location of the local or remote WSDL document.
     def wsdl(wsdl_address)
       @options[:wsdl] = wsdl_address
@@ -378,15 +391,16 @@ module Savon
       @options[:raise_errors] = raise_errors
     end
 
-    # Whether or not to log.
+    # Whether or not to log. {Savon::Client} mirrors the effective value to
+    # HTTPI once at initialization when the HTTPI transport is used.
     def log(log)
-      HTTPI.log = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
+    # {Savon::Client} mirrors the effective value to HTTPI once at
+    # initialization when the HTTPI transport is used.
     def logger(logger)
-      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
@@ -399,7 +413,7 @@ module Savon
                              "Expected one of: #{levels.keys.inspect}"
       end
 
-      @options[:logger].level = levels[level]
+      self[:logger].level = levels[level]
     end
 
     # Whether to log headers.
@@ -514,25 +528,23 @@ module Savon
       raise ArgumentError, "future: expects true or false, got: #{future.inspect}" unless [true, false].include?(future)
 
       @options[:future] = future
-      apply_future_defaults if future
     end
 
     private
 
-    # Applies the {Savon::Future} member defaults to every option the
-    # caller has not explicitly set. Runs from the +future+ setter, so the
-    # overlay works no matter how the flag is assigned. Member options set
-    # explicitly before keep their value, member options set afterwards
-    # overwrite the overlay through their plain setters.
-    def apply_future_defaults
-      Future::GLOBAL_DEFAULTS.each do |option, value|
-        send(option, value) unless explicit?(option)
-      end
+    # Layers the {Savon::Future} member defaults between the caller's
+    # options and the built-in defaults while the +future+ flag is on.
+    # Resolution happens in {Savon::Options#[]} on every read, so the
+    # overlay works no matter how or when the flag is assigned. Reads the
+    # flag from the caller's options directly because resolving it through
+    # {Savon::Options#[]} would recurse into this hook.
+    def overlays
+      @options[:future] ? Future::GLOBAL_DEFAULTS : {}
     end
 
     # The default value for every global option.
     def defaults
-      HTTPITransportOptions::TRANSPORT_DEFAULTS.merge(
+      @defaults ||= HTTPITransportOptions::TRANSPORT_DEFAULTS.merge(
         encoding: "UTF-8",
         soap_version: 1,
         namespaces: {},
@@ -672,7 +684,7 @@ module Savon
 
     # The default value for every local option.
     def defaults
-      {
+      @defaults ||= {
         advanced_typecasting: true,
         response_parser: :nokogiri,
         multipart: false

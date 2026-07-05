@@ -54,4 +54,69 @@ RSpec.describe Savon::Options do
       expect(locals.explicit?(:advanced_typecasting)).to be(false)
     end
   end
+
+  describe "storage and resolution" do
+    it "returns the built-in default for options the caller did not set" do
+      expect(Savon::GlobalOptions.new[:soap_version]).to eq(1)
+    end
+
+    it "returns the caller's value for options the caller set" do
+      expect(Savon::GlobalOptions.new(soap_version: 2)[:soap_version]).to eq(2)
+    end
+
+    it "returns the caller's value even when it is nil" do
+      globals = Savon::GlobalOptions.new(convert_response_tags_to: nil)
+
+      expect(globals[:convert_response_tags_to]).to be_nil
+    end
+
+    it "is explicit for options the caller set to nil" do
+      globals = Savon::GlobalOptions.new(empty_tag_value: nil)
+
+      expect(globals.explicit?(:empty_tag_value)).to be(true)
+    end
+
+    it "includes defaulted options" do
+      expect(Savon::GlobalOptions.new.include?(:log)).to be(true)
+      expect(Savon::LocalOptions.new.include?(:advanced_typecasting)).to be(true)
+    end
+
+    it "does not include unset options without a default" do
+      expect(Savon::GlobalOptions.new.include?(:wsdl)).to be(false)
+    end
+
+    it "returns the same default object on every read" do
+      globals = Savon::GlobalOptions.new
+
+      expect(globals[:namespaces]).to equal(globals[:namespaces])
+    end
+
+    it "persists mutations of a read default" do
+      globals = Savon::GlobalOptions.new
+      globals[:namespaces]["xmlns:ins0"] = "http://example.com"
+
+      expect(globals[:namespaces]).to eq("xmlns:ins0" => "http://example.com")
+    end
+
+    it "mirrors the :log default to HTTPI at client initialization" do
+      HTTPI.log = true
+      Savon.client(endpoint: "http://example.com", namespace: "http://v1.example.com")
+
+      expect(HTTPI.log?).to be(false)
+    ensure
+      HTTPI.log = false
+    end
+
+    it "leaves HTTPI's logging state alone under transport: :faraday" do
+      # HTTPI is not involved in a Faraday client, so its process-global
+      # logging configuration stays whatever it was.
+      HTTPI.log = true
+      Savon.client(endpoint: "http://example.com", namespace: "http://v1.example.com",
+                   transport: :faraday)
+
+      expect(HTTPI.log?).to be(true)
+    ensure
+      HTTPI.log = false
+    end
+  end
 end
