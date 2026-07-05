@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+* **Writing to a duplicated options object no longer changes the original.** `client.globals.dup` shared its internal storage with the client, so writes to the copy silently reconfigured it.
 * **Faraday clients no longer touch HTTPI's global logging configuration.** Creating a client stamped `HTTPI.log` and `HTTPI.logger` regardless of the chosen transport. With `transport: :faraday` HTTPI is not involved, so its process-global logging state is now left alone. Clients on the default HTTPI transport still mirror their `log`/`logger` setup to HTTPI, once at client initialization.
 
 ### Added

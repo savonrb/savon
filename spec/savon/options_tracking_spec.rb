@@ -91,6 +91,14 @@ RSpec.describe Savon::Options do
       expect(globals[:namespaces]).to equal(globals[:namespaces])
     end
 
+    it "gives a dup its own storage" do
+      globals = Savon::GlobalOptions.new
+      copy = globals.dup
+      copy[:soap_version] = 2
+
+      expect(globals[:soap_version]).to eq(1)
+    end
+
     it "persists mutations of a read default" do
       globals = Savon::GlobalOptions.new
       globals[:namespaces]["xmlns:ins0"] = "http://example.com"

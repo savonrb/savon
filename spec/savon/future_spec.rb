@@ -151,6 +151,15 @@ RSpec.describe Savon::Future do
       expect(client.globals[:soap_version]).to eq(1)
     end
 
+    it "cannot be changed through a dup of the frozen globals" do
+      client = Savon.client(no_wsdl_globals.merge(future: true))
+
+      copy = client.globals.dup
+      copy[:log] = true
+
+      expect(client.globals[:log]).to be(false)
+    end
+
     it "keeps the globals mutable without the flag" do
       client = Savon.client(no_wsdl_globals)
       client.globals[:log] = true

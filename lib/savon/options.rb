@@ -104,6 +104,12 @@ module Savon
       {}
     end
 
+    # A copy gets its own storage, so writes to it never reach the original.
+    def initialize_copy(source)
+      super
+      @options = @options.dup
+    end
+
     def assign(options)
       options.each do |option, value|
         send(option, value)
