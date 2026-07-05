@@ -23,39 +23,39 @@ RSpec.describe Savon::Future do
     end
   end
 
-  describe "member defaults" do
-    it "defaults member options to the future values" do
+  describe "previewed defaults" do
+    it "applies the previewed defaults" do
       globals = Savon::GlobalOptions.new(future: true)
 
       expect(globals[:transport]).to eq(:faraday)
     end
 
-    it "keeps explicitly set member options" do
+    it "keeps explicitly set options" do
       globals = Savon::GlobalOptions.new(future: true, transport: :httpi)
 
       expect(globals[:transport]).to eq(:httpi)
     end
 
-    it "keeps explicitly set member options regardless of hash order" do
+    it "keeps explicitly set options regardless of hash order" do
       globals = Savon::GlobalOptions.new(transport: :httpi, future: true)
 
       expect(globals[:transport]).to eq(:httpi)
     end
 
-    it "applies the member defaults when set after initialization" do
+    it "applies the previewed defaults when set after initialization" do
       globals = Savon::GlobalOptions.new
       globals[:future] = true
 
       expect(globals[:transport]).to eq(:faraday)
     end
 
-    it "applies the member defaults when enabled in a client block" do
+    it "applies the previewed defaults when enabled in a client block" do
       client = Savon.client(no_wsdl_globals) { future true }
 
       expect(client.globals[:transport]).to eq(:faraday)
     end
 
-    it "keeps member options set explicitly in a client block" do
+    it "keeps options set explicitly in a client block" do
       client = Savon.client(no_wsdl_globals) {
         transport :httpi
         future true
@@ -118,6 +118,36 @@ RSpec.describe Savon::Future do
       expect(body[:empty]).to be_nil
       expect(body[:token]).to eq("abc")
       expect(body[:flag]).to be(true)
+    end
+  end
+
+  describe "frozen options" do
+    it "freezes the globals once the client is created" do
+      client = Savon.client(no_wsdl_globals.merge(future: true))
+
+      expect(client.globals).to be_frozen
+    end
+
+    it "raises a helpful error when setting a global after client creation" do
+      client = Savon.client(no_wsdl_globals.merge(future: true))
+
+      expect { client.globals[:log] = true }
+        .to raise_error(FrozenError, /frozen once the client is created/)
+    end
+
+    it "keeps resolving reads on the frozen globals" do
+      client = Savon.client(no_wsdl_globals.merge(future: true))
+
+      # :soap_version comes from the defaults layer - reading it must not
+      # write any memoization state to the frozen object.
+      expect(client.globals[:soap_version]).to eq(1)
+    end
+
+    it "keeps the globals mutable without the flag" do
+      client = Savon.client(no_wsdl_globals)
+      client.globals[:log] = true
+
+      expect(client.globals[:log]).to be(true)
     end
   end
 

@@ -21,11 +21,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 3.0 preview
 
-Preview members enabled by `future: true`, new in this release:
+New in the `future: true` preview with this release:
 
 * **Nori `standards: true`** - spec-correct response parsing. Empty tags parse to `""` instead of `nil` (with or without attributes, `xsi:nil="true"` still wins), whitespace-only text under `xml:space="preserve"` is kept, and no types are guessed without a schema: `advanced_typecasting` defaults to off and bare `type=`/`nil=` attributes are ordinary attributes. An explicit `empty_tag_value` or `advanced_typecasting` option keeps winning.
 * **Nori `serializable: true`** - plain, directly-serializable response data with no custom value classes. A tag with text and attributes parses to `{"#text" => ..., "@attr" => ...}` instead of a `Nori::StringWithAttributes`, so attributes survive `to_json`.
 * **`transport: :faraday`** - the Faraday transport (introduced in 2.17.0) becomes the default under the flag. Requires the `faraday` gem. HTTPI-specific globals such as `proxy`, the timeout and `ssl_*` families, and HTTP auth are rejected at initialization with a per-option migration hint.
+* **Frozen client options** - `client.globals` is frozen once the client is created. Setting a global afterwards raises a `FrozenError` explaining the contract. Mutating options after creation skipped initialization-time validation and WSDL setup and was never thread-safe. Savon 3 makes every client immutable. This includes `Savon::Model.global`. Options need to be passed to `client(...)` instead.
 
 ## [2.17.4] - 2026-07-03
 

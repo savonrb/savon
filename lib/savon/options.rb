@@ -10,11 +10,11 @@ module Savon
   # Dispatches setter calls by method name and raises UnknownOptionError
   # for anything not defined on the subclass.
   #
-  # Stores only what the caller set. Built-in defaults come from the
-  # private {#defaults} hook and overlays such as the +future+ members from
-  # {#overlays}. Both stay separate from the caller's options. {#[]}
-  # resolves the layers on every read, caller over overlay over default, so
-  # the precedence rules live in one place and never depend on assignment
+  # Stores only what the caller set. Built-in defaults come from the private
+  # {#defaults} hook and overlays such as the +future+ preview defaults from
+  # {#overlays}. Both stay separate from the caller's options.
+  # {#[]} resolves the layers on every read, caller over overlay over default,
+  # so the precedence rules live in one place and never depend on assignment
   # order. {#explicit?} tells a deliberate choice apart from a default even
   # when both hold the same value.
   class Options
@@ -35,6 +35,13 @@ module Savon
     end
 
     def []=(option, value)
+      if frozen?
+        raise FrozenError, "Can't set the #{option_type} option #{option.inspect}. " \
+                           "Options are frozen once the client is created (future: true). " \
+                           "Savon 3 freezes the options of every client. " \
+                           "Pass all options to Savon.client(...) instead."
+      end
+
       value = [value].flatten
       send(option, *value)
     end
@@ -54,6 +61,17 @@ module Savon
     # @return [Boolean]
     def explicit?(option)
       @options.key?(option)
+    end
+
+    # Freezes the options. Reads keep resolving through all layers, and
+    # setting an option through {#[]=} raises FrozenError afterwards.
+    # {Savon::Client} freezes its globals once the client is created under
+    # the +future+ flag. Savon 3 does it for every client.
+    #
+    # @return [self]
+    def freeze
+      defaults # memoize, so reads never write to the frozen object
+      super
     end
 
     private
@@ -518,8 +536,8 @@ module Savon
     # Opt into the preview of the next major version's defaults.
     #
     # Accepts a strict Boolean and is global-only. When enabled, the
-    # {Savon::Future} member defaults apply to every option the caller has
-    # not explicitly set, and the client logs one info-level line at
+    # {Savon::Future} previewed defaults apply to every option the caller
+    # has not explicitly set, and the client logs one info-level line at
     # initialization. A +log_level+ of +:warn+ or higher silences the line.
     #
     # @param future [Boolean] whether to preview the next major's defaults
@@ -532,7 +550,7 @@ module Savon
 
     private
 
-    # Layers the {Savon::Future} member defaults between the caller's
+    # Layers the {Savon::Future} previewed defaults between the caller's
     # options and the built-in defaults while the +future+ flag is on.
     # Resolution happens in {Savon::Options#[]} on every read, so the
     # overlay works no matter how or when the flag is assigned. Reads the

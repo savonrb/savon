@@ -4,12 +4,18 @@ module Savon
   # The preview channel for the next major version's defaults.
   #
   # Enabled by the +future: true+ global option, read by
-  # {Savon::GlobalOptions#future}. The flag is all-or-nothing. Members
-  # cannot be disabled individually, but every explicitly set option keeps
-  # winning over a member default. Members grow with 2.x minor releases,
-  # and each release lists its additions under the "3.0 preview" section
-  # of the changelog. Version 3.0 makes the members the defaults and the
-  # flag a no-op.
+  # {Savon::GlobalOptions#future}. Everything the preview changes arrives
+  # as a default. An option you set explicitly wins over a previewed
+  # default the same way it wins over a built-in one. There is no finer
+  # control than that. Previewed behavior changes cannot be switched off
+  # individually. The preview grows with 2.x minor releases, and each
+  # release lists its additions under the "3.0 preview" section of the
+  # changelog. Version 3.0 makes the previewed behavior the default and
+  # the flag a no-op.
+  #
+  # The preview covers option defaults ({GLOBAL_DEFAULTS} and
+  # {NORI_PROFILES}) as well as behavior changes such as {Savon::Client}
+  # freezing its options once the client is created.
   module Future
     # Global options the flag overlays between the built-in defaults and
     # the caller's explicit options.
@@ -36,7 +42,7 @@ module Savon
     # @return [void]
     def self.announce(logger)
       logger.info "Savon future: true is on. This client previews the Savon 3.0 defaults. " \
-                  "Preview members grow with 2.x minor releases. See the '3.0 preview' " \
+                  "The preview grows with 2.x minor releases. See the '3.0 preview' " \
                   "changelog sections and #{DISCUSSION_URL}"
     end
   end
