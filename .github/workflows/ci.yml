@@ -21,7 +21,7 @@ jobs:
       - name: Audit dependencies
         run: bundle exec bundle-audit check --update
       - name: Audit Ruby runtime
-        run: gem install ruby_audit --quiet && gem exec ruby_audit check
+        run: bundle exec ruby-audit check
 
   zizmor:
     runs-on: ubuntu-latest
