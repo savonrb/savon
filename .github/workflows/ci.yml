@@ -21,7 +21,16 @@ jobs:
       - name: Audit dependencies
         run: bundle exec bundle-audit check --update
       - name: Audit Ruby runtime
-        run: bundle exec ruby-audit check
+        # CVE-2026-41316 is an ERB flaw fixed in Ruby 4.0.3 and not yet backported.
+        # Ignored on affected rubies only. See:
+        # https://www.ruby-lang.org/en/news/2026/04/21/erb-cve-2026-41316/
+        # https://github.com/advisories/GHSA-q339-8rmv-2mhv
+        run: |
+          ignore=""
+          if ruby -e 'exit 1 unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("4.0.3")'; then
+            ignore="--ignore CVE-2026-41316"
+          fi
+          bundle exec ruby-audit check $ignore
 
   zizmor:
     runs-on: ubuntu-latest
