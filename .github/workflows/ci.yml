@@ -4,7 +4,8 @@ on:
   - push
   - pull_request
 
-permissions: read-all # default to read-only
+permissions:
+  contents: read # checkout only, nothing else
 
 jobs:
   audit:
@@ -21,6 +22,17 @@ jobs:
         run: bundle exec bundle-audit check --update
       - name: Audit Ruby runtime
         run: gem install ruby_audit --quiet && gem exec ruby_audit check
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - name: Audit workflows
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
+        with:
+          advanced-security: false # fail the build on findings instead of uploading SARIF
 
   lint:
     runs-on: ubuntu-latest
