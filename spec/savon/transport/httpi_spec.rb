@@ -86,7 +86,9 @@ RSpec.describe Savon::Transport::HTTPI do
     let(:body)   { "<body/>" }
     let(:locals) { Savon::LocalOptions.new }
 
-    before do HTTPI.stubs(:post).returns(HTTPI::Response.new(200, {}, "ok")) end
+    before do
+      HTTPI.stubs(:post).returns(HTTPI::Response.new(200, {}, "ok"))
+    end
 
     it "returns a Transport::Response" do
       expect(transport.post(url, {}, body, locals)).to be_a(Savon::Transport::Response)

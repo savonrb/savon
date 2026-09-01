@@ -102,11 +102,11 @@ end
 server_cluster = nil
 
 RSpec.describe "Savon Faraday transport - connection options" do
-  before :all do
+  before(:context) do
     server_cluster = FaradayTransportOptionServers.start
   end
 
-  after :all do
+  after(:context) do
     server_cluster&.stop
   end
 

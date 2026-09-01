@@ -6,11 +6,11 @@ require "savon/mock/spec_helper"
 RSpec.describe "Savon's mock interface" do
   include Savon::SpecHelper
 
-  before :all do
+  before(:context) do
     savon.mock!
   end
 
-  after :all do
+  after(:context) do
     savon.unmock!
   end
 
