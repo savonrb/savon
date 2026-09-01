@@ -5,6 +5,8 @@ This page describes how to contribute changes to Savon.
 Please do not create a pull request without reading this guide first.
 Make sure to read the documentation for your version and ask questions on [Stack Overflow](https://stackoverflow.com/questions/ask?tags=savon).
 
+Participation in this project is governed by the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 **Bug fixes**
 
 If you really think you found a bug, please make sure to add as much information as possible

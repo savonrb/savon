@@ -36,3 +36,7 @@ about: Create a bug report
 * ruby version: 
 * savon version: 
 * transport (httpi default, or faraday): 
+
+---
+
+By opening this issue, I confirm that my participation follows Savon's [Code of Conduct](https://github.com/savonrb/savon/blob/main/CODE_OF_CONDUCT.md).
