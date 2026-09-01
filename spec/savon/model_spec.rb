@@ -4,14 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Model do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   describe ".client" do
     it "returns the memoized client" do
       model = Class.new do
@@ -62,7 +54,7 @@ RSpec.describe Savon::Model do
     end
 
     it "executes class-level SOAP operations" do
-      repeat_url = @server.url(:repeat)
+      repeat_url = integration_server.url(:repeat)
 
       model = Class.new do
         extend Savon::Model
@@ -90,7 +82,7 @@ RSpec.describe Savon::Model do
     end
 
     it "executes instance-level SOAP operations" do
-      repeat_url = @server.url(:repeat)
+      repeat_url = integration_server.url(:repeat)
 
       model = Class.new do
         extend Savon::Model
@@ -106,7 +98,7 @@ RSpec.describe Savon::Model do
       expect(response.body[:authenticate_response][:return]).to include(:authentication_value)
     end
 
-    it "generates class methods with source location pointing to the def line in model.rb" do
+    it "generates class methods with source location pointing to model.rb" do
       model = Class.new do
         extend Savon::Model
         client wsdl: Fixture.wsdl(:authentication)
@@ -115,10 +107,10 @@ RSpec.describe Savon::Model do
 
       file, line = model.method(:authenticate).source_location
       expect(file).to end_with("savon/model.rb")
-      expect(File.readlines(file)[line - 1]).to include("def ")
+      expect(File.readlines(file)[line - 1]).to include("define_method")
     end
 
-    it "generates instance methods with source location pointing to the def line in model.rb" do
+    it "generates instance methods with source location pointing to model.rb" do
       model = Class.new do
         extend Savon::Model
         client wsdl: Fixture.wsdl(:authentication)
@@ -127,12 +119,12 @@ RSpec.describe Savon::Model do
 
       file, line = model.instance_method(:authenticate).source_location
       expect(file).to end_with("savon/model.rb")
-      expect(File.readlines(file)[line - 1]).to include("def ")
+      expect(File.readlines(file)[line - 1]).to include("define_method")
     end
   end
 
   it "allows to overwrite class operations" do
-    repeat_url = @server.url(:repeat)
+    repeat_url = integration_server.url(:repeat)
 
     model = Class.new do
       extend Savon::Model
@@ -154,7 +146,7 @@ RSpec.describe Savon::Model do
   end
 
   it "allows to overwrite instance operations" do
-    repeat_url = @server.url(:repeat)
+    repeat_url = integration_server.url(:repeat)
 
     model = Class.new do
       extend Savon::Model
@@ -200,6 +192,34 @@ RSpec.describe Savon::Model do
          get_exempt_certificates].each do |method|
         expect(model).to respond_to(method)
       end
+    end
+
+    it "treats WSDL operation names as data when generating model methods" do
+      evidence = File.expand_path("../../pwned_savon_model_spec", __dir__)
+      File.delete(evidence) if File.exist?(evidence)
+
+      malicious_wsdl = <<~XML
+        <?xml version="1.0"?>
+        <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                          name="EvilService" targetNamespace="urn:evil">
+          <wsdl:binding name="EvilBinding" type="wsdl:EvilPort">
+            <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <wsdl:operation name="foo&#10;end&#10;`echo exploited &gt; pwned_savon_model_spec 2&gt;&amp;1`&#10;def x">
+              <soap:operation soapAction="urn:evil#foo"/>
+            </wsdl:operation>
+          </wsdl:binding>
+        </wsdl:definitions>
+      XML
+
+      model = Class.new do
+        extend Savon::Model
+        client wsdl: malicious_wsdl
+      end
+
+      expect { model.all_operations }.not_to change { File.exist?(evidence) }.from(false)
+    ensure
+      File.delete(evidence) if evidence && File.exist?(evidence)
     end
   end
 end

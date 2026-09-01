@@ -431,6 +431,12 @@ module Savon
 
     # Instruct Savon to create a multipart response if available.
     def multipart(multipart)
+      if multipart
+        warn "The global :multipart option has been a no-op since v2.13.0. " \
+          "Savon detects whether the response is multipart by checking if the " \
+          "response Content-Type header contains 'multipart'. You can remove" \
+          "this option from your code to make this warning disappear.", uplevel: 1
+      end
       @options[:multipart] = multipart
     end
 
@@ -583,6 +589,12 @@ module Savon
 
     # Instruct Savon to create a multipart response if available.
     def multipart(multipart)
+      if multipart
+        warn "The local :multipart option has been a no-op since v2.13.0. " \
+            "Savon detects whether the response is multipart by checking if the " \
+            "response Content-Type header contains 'multipart'. You can remove" \
+            "this option from your code to make this warning disappear.", uplevel: 1
+      end
       @options[:multipart] = multipart
     end
 

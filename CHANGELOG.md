@@ -5,12 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.17.4] - 2026-07-03
 
-**Restore 2.17.0 cookie regressions and surface Nori parsing options**
+**Restore WS-Addressing headers and fix `:wsse_signature` resolution**
 
 ### Fixed
 
+* **WS-Addressing headers are populated from the WSDL again** ([#1057](https://github.com/savonrb/savon/issues/1057)). With `use_wsa_headers: true` and no explicit `:soap_action` or `:endpoint`, Savon emitted empty `<wsa:Action xsi:nil="true"/>` and `<wsa:To xsi:nil="true"/>` elements instead of the operation's SOAPAction and service endpoint. Up to 2.16.0 those values were populated as a side effect of building the HTTP request. The 2.17.0 transport refactor removed that step.
+* **A global `:host` override no longer rewrites the WSDL's endpoint.** Resolving the request endpoint with `:host` set replaced host and port of the parsed WSDL address in place, visible as a permanently changed `client.wsdl.endpoint` after the first call. Endpoint and SOAPAction resolution moved into `Savon::EffectiveOptions`, which applies the override to a copy and never touches the WSDL document.
+* **A local `:wsse_signature` no longer crashes when set to `false`.** Passing `wsse_signature: false` to a call raised `NoMethodError: undefined method 'have_document?' for false` while building the WSSE header. The envelope builder and the SOAP header also resolved the option with different rules, so they could disagree on which signature applies. Both now read it through `Savon::EffectiveOptions`, the one place that resolves options settable in both the global and the local scope. A falsy local `:wsse_signature` falls back to the global one. Setting a signature object in either scope is unaffected.
+
+### Deprecated
+
+* **`Savon::Builder::WSA_NAMESPACE`.** WS-Addressing emission moved into `Savon::Addressing`, which owns the namespace as `Savon::Addressing::NAMESPACE`. The constant on `Savon::Builder` stays available as an alias and will be removed in Savon 3.
+
+## [2.17.3] - 2026-06-23
+
+**Fix Savon::HTTPError compatibility with Faraday transport**
+
+### Fixed
+
+* **`Savon::HTTPError` works with the Faraday transport** ([#1050](https://github.com/savonrb/savon/issues/1050)). When a the WSDL could not be fetched under `transport: :faraday`, `Savon::HTTPError#to_s` and `#to_hash` raised `NoMethodError: undefined method 'code'` because they were handed a raw `Faraday::Response`, which exposes `#status` rather than `#code`. Transports now normalize adapter-specific response objects into `Savon::Transport::Response` before they reach `Savon::HTTPError`.
+
+## [2.17.2] - 2026-06-10
+
+**Fix CVE-2026-53510 and restore 2.17.0 cookie regressions**
+
+### Fixed
+
+* **Fix CVE-2026-53510** `Savon::Model` generated SOAP operation methods by interpolating operation names into Ruby source passed to `module_eval`. An attacker who can control the operation names of a WSDL, can inject Ruby code that executes in the application process. This affects only the `.all_operations` class method provided by `Savon::Model` to automatically register all operations provided by the WSDL. Configuring `Savon::Model` with trusted operation names via `.operations` is safe. Thanks to @connorshea for securely disclosing this, providing a proof and a great report.
 * **`:cookies` request option works again.** The 2.17.0 transport refactor reimplemented cookie handling on top of `Array#map`, which broke callers passing an object that responds to `#cookies` and lost cookie-name de-duplication via `HTTPI::CookieStore`. The HTTPI transport delegates to `HTTPI::Request#set_cookies` again, restoring both shapes.
 * **`response.http.cookies` works again.** 2.17.0's `Savon::Transport::Response` only exposed `code`, `headers`, and `body`. The HTTPI transport now returns `Array<HTTPI::Cookie>` (matching 2.12.1). The Faraday transport returns `Hash<String, String>` so Faraday callers do not need HTTPI types.
 * **`:attachments` now works with a user-supplied `:xml` envelope** ([#761](https://github.com/savonrb/savon/pull/761)). Multipart support shipped in 2.13.0 but only wrapped envelopes Savon built itself. When a caller passed their own `:xml`, attachments were silently dropped.
@@ -24,6 +47,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 * **Minimum Nori version is now `~> 2.7`** (was `~> 2.4`). Needed for the new parsing options (`:empty_tag_value` arrived in Nori 2.6.0, `:scrub_xml` in 2.7.0). The 2.5–2.7 series also brings fixes callers benefit from automatically: invalid byte sequences parse instead of raising, REXML no longer turns `&lt;` inside CDATA into `<`, `xs:date`/`xs:time`/`xs:dateTime` typecasting was corrected, and Nori stopped monkey-patching `String` and `Object`.
 * **Faraday migration hints are now value-aware and verified.** Each hint prints the caller's actual option value and spells out the full gem/require/setup where needed. Fixed several incorrect examples and added tests to verify every hint.
+
+### Deprecated
+
+* Deprecated the global and local `:multipart` options. They have been no-ops since v2.13.0. Specifically since commit 4e7ae5e. Savon detects multipart responses by checking the `Content-Type` header.
 
 ## [2.17.1] - 2026-05-21
 
@@ -1235,7 +1262,9 @@ Pay attention to the following list and read the updated Wiki: http://wiki.githu
 
 * Complete rewrite and public release.
 
-[Unreleased]: https://github.com/savonrb/savon/compare/v2.17.1...HEAD
+[2.17.4]: https://github.com/savonrb/savon/compare/v2.17.3...v2.17.4
+[2.17.3]: https://github.com/savonrb/savon/compare/v2.17.2...v2.17.3
+[2.17.2]: https://github.com/savonrb/savon/compare/v2.17.1...v2.17.2
 [2.17.1]: https://github.com/savonrb/savon/compare/v2.17.0...v2.17.1
 [2.17.0]: https://github.com/savonrb/savon/compare/v2.16.0...v2.17.0
 [2.16.0]: https://github.com/savonrb/savon/compare/v2.15.1...v2.16.0

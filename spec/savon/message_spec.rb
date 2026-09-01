@@ -4,17 +4,9 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Message do
-  before do
-    @server = IntegrationServer.run
-  end
-
-  after do
-    @server.stop
-  end
-
   let(:client_config) do
     {
-      endpoint: @server.url(:repeat),
+      endpoint: integration_server.url(:repeat),
       namespace: 'http://example.com',
       log: false,
 

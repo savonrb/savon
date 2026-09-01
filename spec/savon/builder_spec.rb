@@ -123,12 +123,78 @@ RSpec.describe Savon::Builder do
         signature = certs.private_key.sign(OpenSSL::Digest.new('SHA1'), signed_info)
         expect(Base64.encode64(signature).gsub("\n", '')).to eq(signature_value)
       end
+
+      # The signature object is consumed in two places. The builder signs the
+      # document and the header emits the wsse:BinarySecurityToken via Akami, so
+      # both must resolve to the same effective signature. A local signature
+      # overrides a global one.
+      context "when a local :wsse_signature is also set" do
+        let(:local_key) { OpenSSL::PKey::RSA.new(2048) }
+        let(:local_cert) do
+          OpenSSL::X509::Certificate.new.tap do |c|
+            c.version    = 2
+            c.serial     = 2
+            c.subject    = OpenSSL::X509::Name.parse("/CN=local-signature")
+            c.issuer     = c.subject
+            c.public_key = local_key.public_key
+            c.not_before = Time.now
+            c.not_after  = Time.now + 3600
+            c.sign(local_key, OpenSSL::Digest.new("SHA256"))
+          end
+        end
+        let(:local_signature) do
+          Akami::WSSE::Signature.new(
+            Akami::WSSE::Certs.new(cert_string: local_cert.to_pem, private_key_string: local_key.to_pem)
+          )
+        end
+        let(:locals) { Savon::LocalOptions.new(wsse_signature: local_signature) }
+
+        it "embeds the local certificate, not the global one" do
+          output       = builder.to_s
+          local_token  = Base64.strict_encode64(local_cert.to_der)
+          global_token = Base64.strict_encode64(OpenSSL::X509::Certificate.new(File.read(cert)).to_der)
+
+          expect(output).to include(local_token)
+          expect(output).not_to include(global_token)
+        end
+      end
+
+      context "when the local :wsse_signature is false" do
+        let(:locals) { Savon::LocalOptions.new(wsse_signature: false) }
+
+        it "falls back to the global signature" do
+          global_token = Base64.strict_encode64(OpenSSL::X509::Certificate.new(File.read(cert)).to_der)
+
+          expect(builder.to_s).to include(global_token)
+        end
+      end
     end
   end
 
   describe '#body_attributes' do
     it 'is not nil' do
       expect(builder.body_attributes).to eq({})
+    end
+  end
+
+  describe "#header_attributes" do
+    it "declares the wsa prefix when :use_wsa_headers is set" do
+      globals[:use_wsa_headers] = true
+
+      expect(builder.header_attributes).to eq(
+        "xmlns:wsa" => "http://www.w3.org/2005/08/addressing"
+      )
+    end
+
+    it "declares nothing otherwise" do
+      expect(builder.header_attributes).to eq({})
+    end
+  end
+
+  describe "WSA_NAMESPACE" do
+    # The constant is public since 2.12 and stays available as an alias.
+    it "keeps the deprecated alias of the WS-Addressing namespace" do
+      expect(described_class::WSA_NAMESPACE).to eq(Savon::Addressing::NAMESPACE)
     end
   end
 

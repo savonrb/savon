@@ -11,6 +11,7 @@ tmp
 *.gem
 .bundle
 .rspec
+.ruby-version
+.tool-versions
 Gemfile.lock
-bin/
 .rspec_status

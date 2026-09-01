@@ -8,17 +8,9 @@ require "ostruct"
 # Integration tests for the opt-in Faraday transport.
 # Each test makes a real HTTP request to the local Puma/Rack test server.
 RSpec.describe "Savon client with transport: :faraday" do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   def new_client(extra = {})
     Savon.client(
-      { endpoint: @server.url(:repeat),
+      { endpoint: integration_server.url(:repeat),
         namespace: "http://v1.example.com",
         transport: :faraday,
         log: false }.merge(extra)
@@ -38,7 +30,7 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "applies a default header set on client.faraday to the outbound request" do
     client = Savon.client(
-      endpoint: @server.url(:inspect_request),
+      endpoint: integration_server.url(:inspect_request),
       namespace: "http://v1.example.com",
       transport: :faraday,
       log: false
@@ -51,7 +43,7 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "fetches a remote WSDL through the Faraday connection" do
     client = Savon.client(
-      wsdl: @server.url("authentication.wsdl"),
+      wsdl: integration_server.url("authentication.wsdl"),
       transport: :faraday,
       log: false
     )
@@ -60,7 +52,7 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "sends a multipart request and parses a multipart response" do
     client = Savon.client(
-      endpoint: @server.url(:multipart),
+      endpoint: integration_server.url(:multipart),
       namespace: "http://v1.example.com",
       transport: :faraday,
       log: false
@@ -74,7 +66,7 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "forwards a Hash of cookies as the Cookie: header" do
     client = Savon.client(
-      endpoint: @server.url(:inspect_request),
+      endpoint: integration_server.url(:inspect_request),
       namespace: "http://v1.example.com",
       transport: :faraday,
       log: false
@@ -85,7 +77,7 @@ RSpec.describe "Savon client with transport: :faraday" do
 
   it "sends the exact Content-Length on the wire (via the Faraday adapter)" do
     client = Savon.client(
-      endpoint: @server.url(:inspect_request),
+      endpoint: integration_server.url(:inspect_request),
       namespace: "http://v1.example.com",
       transport: :faraday,
       log: false

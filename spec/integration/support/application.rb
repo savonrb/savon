@@ -245,6 +245,12 @@ class IntegrationServer
       }
     end
 
+    map "/server_error" do
+      run lambda { |_env|
+        IntegrationServer.respond_with code: 502, body: "Bad Gateway"
+      }
+    end
+
     # 307 keeps the redirect as POST with the original body.
     # Using 302 with Faraday's follow_redirects middleware
     # rewrites POST to GET and drops the body.

@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency "wasabi",   ">= 5.1.0", " < 6"
 
   s.add_development_dependency 'ostruct', '~> 0.6'
-  s.add_development_dependency "puma", ">= 4.3.8", "< 7"
+  s.add_development_dependency "puma", "~> 8.0.2"
   s.add_development_dependency "rack", " < 4"
 
   s.add_development_dependency "byebug"
@@ -39,7 +39,7 @@ Gem::Specification.new do |s|
   s.metadata = {
     "rubygems_mfa_required" => "true",
     "source_code_uri"       => "https://github.com/savonrb/savon",
-    "changelog_uri"         => "https://github.com/savonrb/savon/blob/v2.x/CHANGELOG.md",
+    "changelog_uri"         => "https://github.com/savonrb/savon/blob/main/CHANGELOG.md",
     "bug_tracker_uri"       => "https://github.com/savonrb/savon/issues"
   }
 

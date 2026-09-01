@@ -38,15 +38,18 @@ module Savon
         log_request(url, headers, body) if log?
 
         faraday_response = @connection.post(url, body, headers)
-        response = Response.new(
-          faraday_response.status,
-          faraday_response.headers.to_h,
-          faraday_response.body,
-          cookies: self.class.parse_cookies(faraday_response.headers)
-        )
+        response = normalize_response(faraday_response)
 
         log_response(response) if log?
         response
+      end
+
+      # Normalizes a native Faraday::Response into a Transport::Response.
+      #
+      # @param faraday_response [Faraday::Response]
+      # @return                 [Transport::Response]
+      def normalize_response(faraday_response)
+        Response.from_faraday(faraday_response)
       end
 
       # Parses Set-Cookie headers into a Hash of name => value. Accepts both

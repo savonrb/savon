@@ -33,16 +33,19 @@ module Savon
 
         log_request(http_request.url, http_request.headers, http_request.body) if log?
 
-        http_response = ::HTTPI.post(http_request, @globals[:adapter])
-        response = Response.new(
-          http_response.code,
-          http_response.headers,
-          http_response.body,
-          cookies: ::HTTPI::Cookie.list_from_headers(http_response.headers)
-        )
+        httpi_response = ::HTTPI.post(http_request, @globals[:adapter])
+        response = normalize_response(httpi_response)
 
         log_response(response) if log?
         response
+      end
+
+      # Normalizes a native HTTPI::Response into a Transport::Response.
+      #
+      # @param httpi_response [HTTPI::Response]
+      # @return               [Transport::Response]
+      def normalize_response(httpi_response)
+        Response.from_httpi(httpi_response)
       end
 
       # Builds a fully-configured HTTPI::Request.

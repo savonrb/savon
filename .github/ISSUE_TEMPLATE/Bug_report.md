@@ -15,16 +15,27 @@ about: Create a bug report
 **Current behavior:**
 
 
+**Expected behavior:**
+
+
 **Steps to reproduce current behavior:**
 
+<!-- The more of the following you can give us, the faster we can reproduce and fix it. -->
 
-**Expected behavior:**
+* Client setup and the operation call (the Ruby code you ran):
+
+* The request XML Savon built (or just the part that's wrong):
+
+* The response you got back (body, and for a transport issue the status and headers):
+
+* The WSDL of the service, or a snippet of the operation involved:
 
 
 **System information:**
 
 * ruby version: 
 * savon version: 
+* transport (httpi default, or faraday): 
 
 ---
 

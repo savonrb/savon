@@ -4,14 +4,6 @@ require "spec_helper"
 require "integration/support/server"
 
 RSpec.describe Savon::Client do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   describe ".new" do
     it "supports a block without arguments to create a client with global options" do
       client = Savon.client {
@@ -41,6 +33,12 @@ RSpec.describe Savon::Client do
     it "loads local WSDL's from a local file path" do
       wsdl_path = File.expand_path('../fixtures/wsdl/authentication.xml', __dir__)
       client = Savon.client(wsdl: wsdl_path, log: false)
+      expect(client.operations).to eq([:authenticate])
+    end
+
+    it "loads WSDL's from a raw XML string" do
+      wsdl_xml = File.read(File.expand_path('../fixtures/wsdl/authentication.xml', __dir__))
+      client = Savon.client(wsdl: wsdl_xml, log: false)
       expect(client.operations).to eq([:authenticate])
     end
 
@@ -227,7 +225,7 @@ RSpec.describe Savon::Client do
     end
 
     it "supports a block without arguments to call an operation with local options" do
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
 
       response = client.call(:authenticate) {
         message(symbol: "AAPL")
@@ -237,7 +235,7 @@ RSpec.describe Savon::Client do
     end
 
     it "supports a block with one argument to call an operation with local options" do
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
 
       # supports instance variables!
       @instance_variable = { symbol: "AAPL" }
@@ -250,7 +248,7 @@ RSpec.describe Savon::Client do
     end
 
     it "accepts arguments for the message tag" do
-      client   = new_client(endpoint: @server.url(:repeat))
+      client   = new_client(endpoint: integration_server.url(:repeat))
       response = client.call(:authenticate, attributes: { "ID" => "ABC321" })
 
       expect(response.http.body).to include('<tns:authenticate ID="ABC321">')
@@ -298,7 +296,7 @@ RSpec.describe Savon::Client do
 
       operation.expects(:call).never
 
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
       request = client.build_request(:authenticate) {
         message(symbol: "AAPL")
       }
@@ -307,7 +305,7 @@ RSpec.describe Savon::Client do
     end
 
     it "accepts a block without arguments" do
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
       request = client.build_request(:authenticate) {
         message(symbol: "AAPL")
       }
@@ -317,7 +315,7 @@ RSpec.describe Savon::Client do
     end
 
     it "accepts a block with one argument" do
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
 
       # supports instance variables!
       @instance_variable = { symbol: "AAPL" }
@@ -331,11 +329,27 @@ RSpec.describe Savon::Client do
     end
 
     it "accepts argument for the message tag" do
-      client = new_client(endpoint: @server.url(:repeat))
+      client = new_client(endpoint: integration_server.url(:repeat))
       request = client.build_request(:authenticate, attributes: { "ID" => "ABC321" })
 
       expect(request.body)
         .to include("<tns:authenticate ID=\"ABC321\"></tns:authenticate>")
+    end
+
+    it "exposes the endpoint Savon would POST to via #url" do
+      endpoint = integration_server.url(:repeat)
+      client = new_client(endpoint: endpoint)
+      request = client.build_request(:authenticate)
+
+      expect(request.url).to eq URI(endpoint)
+    end
+
+    it "exposes the SOAP request headers including SOAPAction via #headers" do
+      client = new_client(endpoint: integration_server.url(:repeat))
+      request = client.build_request(:authenticate)
+
+      expect(request.headers).to have_key("SOAPAction")
+      expect(request.headers["Content-Type"]).to match(%r{text/xml})
     end
 
     it "raises when the operation name is not a symbol" do

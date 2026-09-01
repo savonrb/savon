@@ -9,19 +9,23 @@ module Savon
     CRLF = /\r\n/
     WSP  = /[\t ]/
 
-    def initialize(http, globals, locals)
-      @http            = http
-      @globals         = globals
-      @locals          = locals
-      @attachments     = []
-      @xml             = ''
-      @has_parsed_body = false
+    def initialize(transport_response, globals, locals)
+      @transport_response = transport_response
+      @globals            = globals
+      @locals             = locals
+      @attachments        = []
+      @xml                = ''
+      @has_parsed_body    = false
 
       build_soap_and_http_errors!
       raise_soap_and_http_errors! if @globals[:raise_errors]
     end
 
-    attr_reader :http, :globals, :locals, :soap_fault, :http_error
+    attr_reader :globals, :locals, :soap_fault, :http_error
+
+    def http
+      @transport_response
+    end
 
     def success?
       !soap_fault? && !http_error?
@@ -29,11 +33,11 @@ module Savon
     alias successful? success?
 
     def soap_fault?
-      SOAPFault.present?(@http, xml)
+      SOAPFault.present?(http, xml)
     end
 
     def http_error?
-      HTTPError.present? @http
+      HTTPError.present? http
     end
 
     def header
@@ -70,7 +74,7 @@ module Savon
         parse_body unless @has_parsed_body
         @xml
       else
-        @http.body
+        http.body
       end
     end
 
@@ -132,8 +136,8 @@ module Savon
     end
 
     def build_soap_and_http_errors!
-      @soap_fault = SOAPFault.new(@http, nori, xml) if soap_fault?
-      @http_error = HTTPError.new(@http) if http_error?
+      @soap_fault = SOAPFault.new(http, nori, xml) if soap_fault?
+      @http_error = HTTPError.new(http) if http_error?
     end
 
     def raise_soap_and_http_errors!

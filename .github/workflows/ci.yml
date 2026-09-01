@@ -4,31 +4,52 @@ on:
   - push
   - pull_request
 
-permissions: read-all # default to read-only
+permissions:
+  contents: read # checkout only, nothing else
 
 jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
       - name: Audit dependencies
         run: bundle exec bundle-audit check --update
       - name: Audit Ruby runtime
-        run: gem install ruby_audit --quiet && gem exec ruby_audit check
+        # CVE-2026-41316 is an ERB flaw fixed in Ruby 4.0.3 and not yet backported.
+        # Ignored on affected rubies only. See:
+        # https://www.ruby-lang.org/en/news/2026/04/21/erb-cve-2026-41316/
+        # https://github.com/advisories/GHSA-q339-8rmv-2mhv
+        run: |
+          ignore=""
+          if ruby -e 'exit 1 unless Gem::Version.new(RUBY_VERSION) < Gem::Version.new("4.0.3")'; then
+            ignore="--ignore CVE-2026-41316"
+          fi
+          bundle exec ruby-audit check $ignore
+
+  zizmor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Audit workflows
+        uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
+        with:
+          advanced-security: false # fail the build on findings instead of uploading SARIF
 
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
+      - uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: "3.4"
           bundler-cache: true
@@ -40,17 +61,26 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ruby: ['3.0', 3.1, 3.2, 3.3, 3.4, '4.0', head, truffleruby-head]
+        ruby: ['3.0', 3.1, 3.2, 3.3, 3.4, '4.0', truffleruby, head, truffleruby-head]
+    # Head builds exist to surface upstream regressions early.
+    # They should not block the build.
+    continue-on-error: ${{ matrix.ruby == 'head' || matrix.ruby == 'truffleruby-head' }}
     env:
       RAILS_ENV: test
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
       - name: Set up Ruby
-        uses: ruby/setup-ruby@afeafc3d1ab54a631816aba4c914a0081c12ff2f # v1.310.0
+        uses: ruby/setup-ruby@95ef2b042f9d7a56d8268cba8559e2842e2ad01b # v1.321.0
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true # bundle installs and caches dependencies
       - name: Run tests
         run: bundle exec rake --trace
+      - name: Upload coverage to Coveralls
+        if: matrix.ruby == '3.4'
+        uses: coverallsapp/github-action@8d6379e14d29928660c4ba802d8e85393440b329 # v2.3.8
+        with:
+          file: coverage/.resultset.json
+          format: simplecov

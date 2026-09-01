@@ -7,18 +7,10 @@ require "json"
 require "ostruct"
 
 RSpec.describe Savon::Operation do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   let(:operation)      { described_class.create(operation_name, wsdl, globals, transport) }
   let(:operation_name) { :verify_address }
   let(:transport)      { Savon::Transport::HTTPI.new(globals) }
-  let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false) }
+  let(:globals)        { Savon::GlobalOptions.new(endpoint: integration_server.url(:repeat), log: false) }
   let(:wsdl)           { Wasabi::Document.new Fixture.wsdl(:taxcloud) }
   let(:no_wsdl) do
     Wasabi::Document.new.tap do |doc|
@@ -79,6 +71,74 @@ RSpec.describe Savon::Operation do
       expect(builder).to be_a(Savon::Builder)
       expect(builder.to_s).to include("<tns:VerifyAddress><tns:test>message</tns:test></tns:VerifyAddress>")
     end
+
+    # With use_wsa_headers and no explicit :soap_action/:endpoint,
+    # WSA headers must be populated from the WSDL.
+    context "with use_wsa_headers and no explicit soap_action or endpoint" do
+      let(:globals) { Savon::GlobalOptions.new(log: false, use_wsa_headers: true) }
+
+      it "populates wsa:Action from the WSDL soapAction" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:Action>http://taxcloud.net/VerifyAddress</wsa:Action>")
+      end
+
+      it "populates wsa:To from the WSDL endpoint" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:To>https://api.taxcloud.net/1.0/TaxCloud.asmx</wsa:To>")
+      end
+
+      it "does not emit nil WSA headers" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).not_to include('xsi:nil="true"')
+      end
+    end
+
+    # Explicit :soap_action/:endpoint must take precedence
+    # over the WSDL when populating the WSA headers.
+    context "with use_wsa_headers and explicit soap_action and endpoint" do
+      let(:globals) do
+        Savon::GlobalOptions.new(log: false, use_wsa_headers: true, endpoint: "http://explicit.example.com/service")
+      end
+
+      it "uses the explicit soap_action for wsa:Action" do
+        xml = operation.build(message: {}, soap_action: "http://explicit.example.com/Action").to_s
+
+        expect(xml).to include("<wsa:Action>http://explicit.example.com/Action</wsa:Action>")
+      end
+
+      it "uses the explicit endpoint for wsa:To" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).to include("<wsa:To>http://explicit.example.com/service</wsa:To>")
+      end
+    end
+
+    # Without use_wsa_headers, no WS-Addressing namespace or headers are emitted.
+    context "without use_wsa_headers" do
+      let(:globals) { Savon::GlobalOptions.new(log: false) }
+
+      it "emits no WSA namespace or headers" do
+        xml = operation.build(message: {}).to_s
+
+        expect(xml).not_to include("xmlns:wsa")
+        expect(xml).not_to include("<wsa:Action")
+        expect(xml).not_to include("<wsa:To")
+      end
+    end
+
+    # A global :host override redirects the request without changing the WSDL.
+    context "with a global :host override" do
+      let(:globals) { Savon::GlobalOptions.new(log: false, host: "http://localhost:8080") }
+
+      it "does not mutate the WSDL document's endpoint" do
+        operation.build(message: {})
+
+        expect(wsdl.endpoint.to_s).to eq("https://api.taxcloud.net/1.0/TaxCloud.asmx")
+      end
+    end
   end
 
   describe "#call" do
@@ -105,7 +165,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "when verifying Content-Length via the HTTPI adapter" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "sends the exact Content-Length on the wire (via the HTTPI adapter)" do
         data = inspect_request(operation.call)
@@ -121,7 +181,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "routing the SOAPAction header" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "passes the local :soap_action option to the request builder" do
         soap_action = "http://v1.example.com/VerifyAddress"
@@ -150,7 +210,7 @@ RSpec.describe Savon::Operation do
 
     context "with a multipart response" do
       let(:operation_name) { :example }
-      let(:globals)        { Savon::GlobalOptions.new(endpoint: @server.url(:multipart), log: false) }
+      let(:globals)        { Savon::GlobalOptions.new(endpoint: integration_server.url(:multipart), log: false) }
       let(:wsdl)           { no_wsdl }
 
       it "parses multipart attachments" do
@@ -180,7 +240,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "with attachments" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:inspect_request), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:inspect_request), log: false) }
 
       it "sends a multipart/related Content-Type" do
         response = operation.call {

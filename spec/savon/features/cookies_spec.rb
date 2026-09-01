@@ -10,17 +10,9 @@ require "json"
 #   * The shape of cookies is transport-specific (HTTPI::Cookie array vs Hash)
 #   * client.call(cookies: previous_response.http.cookies) works on both
 RSpec.describe "Cookie round-trip across transports" do
-  before :all do
-    @server = IntegrationServer.run
-  end
-
-  after :all do
-    @server.stop
-  end
-
   def build_client(transport)
     Savon.client(
-      endpoint: @server.url(:cookies_roundtrip),
+      endpoint: integration_server.url(:cookies_roundtrip),
       namespace: "http://v1.example.com",
       transport: transport,
       log: false
