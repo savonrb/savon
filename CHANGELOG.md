@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Fixed
+
+* **Writing to a duplicated options object no longer changes the original.** `client.globals.dup` shared its internal storage with the client, so writes to the copy silently reconfigured it.
+* **Faraday clients no longer touch HTTPI's global logging configuration.** Creating a client stamped `HTTPI.log` and `HTTPI.logger` regardless of the chosen transport. With `transport: :faraday` HTTPI is not involved, so its process-global logging state is now left alone. Clients on the default HTTPI transport still mirror their `log`/`logger` setup to HTTPI, once at client initialization.
+
+### Added
+
+* **Add `future: true` global option as Savon 3.0 preview channel** ([discussion #1060](https://github.com/savonrb/savon/discussions/1060)). One opt-in flag that enables the next major version's defaults today. Every option you set explicitly still keeps winning over the future defaults. This grows with 2.x minor releases and changes will be listed here under a new "3.0 preview" section (see below). Release updates are posted in the discussion. With the flag on, the client logs one info-level line at initialization stating this contract. A `log_level` of `:warn` or higher silences it. The flag can only be set when creating a client.
+
+### Changed
+
+* **Minimum Nori version is now `~> 2.9`** (was `~> 2.7`). Needed for the `standards` and `serializable` parsing profiles that `future: true` enables. Independent of the flag, the Nori 2.8-2.9 series brings one default-on bugfix callers benefit from automatically: whitespace-only CDATA content is preserved as text instead of being dropped.
+
+### 3.0 preview
+
+New in the `future: true` preview with this release:
+
+* **Nori `standards: true`** - spec-correct response parsing. Empty tags parse to `""` instead of `nil` (with or without attributes, `xsi:nil="true"` still wins), whitespace-only text under `xml:space="preserve"` is kept, and no types are guessed without a schema: `advanced_typecasting` defaults to off and bare `type=`/`nil=` attributes are ordinary attributes. An explicit `empty_tag_value` or `advanced_typecasting` option keeps winning.
+* **Nori `serializable: true`** - plain, directly-serializable response data with no custom value classes. A tag with text and attributes parses to `{"#text" => ..., "@attr" => ...}` instead of a `Nori::StringWithAttributes`, so attributes survive `to_json`.
+* **`transport: :faraday`** - the Faraday transport (introduced in 2.17.0) becomes the default under the flag. Requires the `faraday` gem. HTTPI-specific globals such as `proxy`, the timeout and `ssl_*` families, and HTTP auth are rejected at initialization with a per-option migration hint.
+* **Frozen client options** - `client.globals` is frozen once the client is created. Setting a global afterwards raises a `FrozenError` explaining the contract. Mutating options after creation skipped initialization-time validation and WSDL setup and was never thread-safe. Savon 3 makes every client immutable. With `Savon::Model`, enabling the future flag in its `client(...)` configuration changes the model to record options, later `global` calls included, and create the client once on first use. Configuring the model after first use raises.
+
 ## [2.17.4] - 2026-07-03
 
 **Restore WS-Addressing headers and fix `:wsse_signature` resolution**

@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module Savon
+  # Evaluates an options block against an {Options} target.
+  #
+  # A block expecting an argument receives the target directly. A block
+  # without arguments is instance-evaluated, so bare setter calls reach the
+  # target through {#method_missing} and unknown methods fall back to the
+  # scope the block was defined in.
   class BlockInterface
     def initialize(target)
       @target = target

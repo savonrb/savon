@@ -3,11 +3,20 @@
 require "logger"
 require "httpi"
 require "savon/faraday_migration_hint"
+require "savon/future"
 
 module Savon
   # Base class for GlobalOptions and LocalOptions.
-  # Stores options in a hash, dispatches setter calls by method name,
-  # raises UnknownOptionError for anything not defined on the subclass.
+  # Dispatches setter calls by method name and raises UnknownOptionError
+  # for anything not defined on the subclass.
+  #
+  # Stores only what the caller set. Built-in defaults come from the private
+  # {#defaults} hook and overlays such as the +future+ preview defaults from
+  # {#overlays}. Both stay separate from the caller's options.
+  # {#[]} resolves the layers on every read, caller over overlay over default,
+  # so the precedence rules live in one place and never depend on assignment
+  # order. {#explicit?} tells a deliberate choice apart from a default even
+  # when both hold the same value.
   class Options
     def initialize(options = {})
       @options = {}
@@ -16,20 +25,90 @@ module Savon
 
     attr_reader :option_type
 
+    # Resolves the option: the caller's value if one was set, otherwise an
+    # overlay value, otherwise the built-in default.
     def [](option)
-      @options[option]
+      return @options[option] if @options.key?(option)
+      return overlays[option] if overlays.key?(option)
+
+      defaults[option]
     end
 
     def []=(option, value)
+      if frozen?
+        raise FrozenError, "Can't set the #{option_type} option #{option.inspect}. " \
+                           "Options are frozen once the client is created (future: true). " \
+                           "Savon 3 freezes the options of every client. " \
+                           "Pass all options when creating the client instead."
+      end
+
       value = [value].flatten
       send(option, *value)
     end
 
+    # Returns whether the option has a value from any layer, set by the
+    # caller or carrying a built-in default.
     def include?(option)
-      @options.key? option
+      @options.key?(option) || defaults.key?(option)
+    end
+
+    # Returns whether the caller provided the option, through the
+    # constructor, a setter call, or a block. Built-in defaults and
+    # overlays are not explicit. Overlays such as the +future+ defaults
+    # never replace an explicit option.
+    #
+    # @param option [Symbol] the option name
+    # @return [Boolean]
+    def explicit?(option)
+      @options.key?(option)
+    end
+
+    # Freezes the options. Reads keep resolving through all layers, and
+    # setting an option through {#[]=} raises FrozenError afterwards.
+    # {Savon::Client} freezes its globals once the client is created under
+    # the +future+ flag. Savon 3 does it for every client.
+    #
+    # @return [self]
+    def freeze
+      defaults # memoize, so reads never write to the frozen object
+      super
+    end
+
+    # Marks the end of the configuration phase. {Savon::Client} calls this
+    # once the client is fully created. Init-only options such as +future+
+    # reject writes afterwards, and with the +future+ flag on the options
+    # freeze entirely. Options never handed to a client stay unfinalized.
+    #
+    # @return [void]
+    def finalize!
+      @finalized = true
+      freeze if self[:future]
     end
 
     private
+
+    # The built-in default for every option. Subclasses override this hook.
+    # Memoized, so reads return stable objects and mutations of a read
+    # default persist.
+    #
+    # @return [Hash{Symbol => Object}]
+    def defaults
+      {}
+    end
+
+    # Values layered between the caller's options and the built-in
+    # defaults. Subclasses override this hook.
+    #
+    # @return [Hash{Symbol => Object}]
+    def overlays
+      {}
+    end
+
+    # A copy gets its own storage, so writes to it never reach the original.
+    def initialize_copy(source)
+      super
+      @options = @options.dup
+    end
 
     def assign(options)
       options.each do |option, value|
@@ -89,9 +168,10 @@ module Savon
     # non-default value. The error points to the matching Faraday setup.
     FARADAY_INCOMPATIBLE_GLOBALS = FaradayMigrationHint::OPTIONS
 
-    # Runs after all global options have been assigned, including options set in
-    # the client block. Reports every HTTPI-only option in one error so callers
-    # can move their transport setup to Faraday in one pass.
+    # Runs from {Savon::GlobalOptions#validate!} after all global options have
+    # been assigned, including options set in the client block. Reports every
+    # HTTPI-only option in one error so callers can move their transport setup
+    # to Faraday in one pass.
     def validate_transport!
       return unless self[:transport] == :faraday
 
@@ -254,7 +334,7 @@ module Savon
 
     def initialize(options = {})
       @option_type = :global
-      options = defaults.merge(options)
+      options = options.dup
 
       # this option is a shortcut on the logger which needs to be set
       # before it can be modified to set the option.
@@ -263,6 +343,18 @@ module Savon
       super(options)
 
       log_level(delayed_level) unless delayed_level.nil?
+    end
+
+    # Finalizes the options after construction. {Savon::Client} calls this
+    # once, after the constructor hash and the options block are both
+    # applied. Validations that need the complete set of options run here
+    # instead of in individual setters, so their outcome never depends on
+    # assignment order.
+    #
+    # @raise [InitializationError] when the options cannot work together
+    # @return [void]
+    def validate!
+      validate_transport!
     end
 
     # Location of the local or remote WSDL document.
@@ -334,15 +426,16 @@ module Savon
       @options[:raise_errors] = raise_errors
     end
 
-    # Whether or not to log.
+    # Whether or not to log. {Savon::Client} mirrors the effective value to
+    # HTTPI once at initialization when the HTTPI transport is used.
     def log(log)
-      HTTPI.log = log
       @options[:log] = log
     end
 
     # The logger to use. Defaults to a Savon::Logger instance.
+    # {Savon::Client} mirrors the effective value to HTTPI once at
+    # initialization when the HTTPI transport is used.
     def logger(logger)
-      HTTPI.logger = logger
       @options[:logger] = logger
     end
 
@@ -355,7 +448,7 @@ module Savon
                              "Expected one of: #{levels.keys.inspect}"
       end
 
-      @options[:logger].level = levels[level]
+      self[:logger].level = levels[level]
     end
 
     # Whether to log headers.
@@ -457,11 +550,37 @@ module Savon
       @options[:transport] = transport
     end
 
+    # Opt into the preview of the next major version's defaults.
+    #
+    # Accepts a strict Boolean and is global-only. When enabled, the
+    # {Savon::Future} previewed defaults apply to every option the caller
+    # has not explicitly set, and the client logs one info-level line at
+    # initialization. A +log_level+ of +:warn+ or higher silences the line.
+    #
+    # @param future [Boolean] whether to preview the next major's defaults
+    # @raise [ArgumentError] when the value is not +true+ or +false+
+    def future(future)
+      raise ArgumentError, "future can only be set when the client is created" if @finalized
+      raise ArgumentError, "future: expects true or false, got: #{future.inspect}" unless [true, false].include?(future)
+
+      @options[:future] = future
+    end
+
     private
+
+    # Layers the {Savon::Future} previewed defaults between the caller's
+    # options and the built-in defaults while the +future+ flag is on.
+    # Resolution happens in {Savon::Options#[]} on every read, so the
+    # overlay works no matter how or when the flag is assigned. Reads the
+    # flag from the caller's options directly because resolving it through
+    # {Savon::Options#[]} would recurse into this hook.
+    def overlays
+      @options[:future] ? Future::GLOBAL_DEFAULTS : {}
+    end
 
     # The default value for every global option.
     def defaults
-      HTTPITransportOptions::TRANSPORT_DEFAULTS.merge(
+      @defaults ||= HTTPITransportOptions::TRANSPORT_DEFAULTS.merge(
         encoding: "UTF-8",
         soap_version: 1,
         namespaces: {},
@@ -483,7 +602,8 @@ module Savon
         no_message_tag: false,
         unwrap: false,
         host: nil,
-        transport: :httpi
+        transport: :httpi,
+        future: false
       )
     end
   end
@@ -495,14 +615,7 @@ module Savon
 
     def initialize(options = {})
       @option_type = :local
-
-      defaults = {
-        advanced_typecasting: true,
-        response_parser: :nokogiri,
-        multipart: false
-      }
-
-      super defaults.merge(options)
+      super
     end
 
     # The local SOAP header. Expected to be a Hash or respond to #to_s.
@@ -601,6 +714,17 @@ module Savon
     # Per-request HTTP headers. Merged with global headers for each request.
     def headers(headers)
       @options[:headers] = headers
+    end
+
+    private
+
+    # The default value for every local option.
+    def defaults
+      @defaults ||= {
+        advanced_typecasting: true,
+        response_parser: :nokogiri,
+        multipart: false
+      }
     end
   end
 end
