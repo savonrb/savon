@@ -13,11 +13,13 @@ module Savon
 
     # Accepts one or more SOAP operations and generates both class and instance methods named
     # after the given operations. Each generated method accepts an optional SOAP message Hash.
+    # Raises ArgumentError for reserved model method names, before defining any methods.
     def operations(*operations)
-      operations.each do |operation|
-        define_class_operation(operation)
-        define_instance_operation(operation)
+      operations.map { |operation| [operation, operation_method_name(operation)] }.each do |operation, method_name|
+        define_class_operation(operation, method_name)
+        define_instance_operation(method_name)
       end
+      operations
     end
 
     def all_operations
@@ -27,18 +29,14 @@ module Savon
     private
 
     # Defines a class-level SOAP operation.
-    def define_class_operation(operation)
-      method_name = operation_method_name(operation)
-
+    def define_class_operation(operation, method_name)
       class_operation_module.define_method(method_name) do |locals = {}|
         client.call operation, locals
       end
     end
 
     # Defines an instance-level SOAP operation.
-    def define_instance_operation(operation)
-      method_name = operation_method_name(operation)
-
+    def define_instance_operation(method_name)
       instance_operation_module.define_method(method_name) do |locals = {}|
         self.class.public_send(method_name, locals)
       end
@@ -46,7 +44,12 @@ module Savon
 
     # Returns the generated Ruby method name for a SOAP operation.
     def operation_method_name(operation)
-      StringUtils.snakecase(operation.to_s).to_sym
+      method_name = StringUtils.snakecase(operation.to_s).to_sym
+      reserved_methods = Model.instance_methods(false) + Model.private_instance_methods(false) +
+                         %i[client global raise_initialization_error!]
+      raise ArgumentError, "SOAP operation #{operation.inspect} conflicts with reserved Savon::Model method #{method_name.inspect}" if reserved_methods.include?(method_name)
+
+      method_name
     end
 
     # Class methods.

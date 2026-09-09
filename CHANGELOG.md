@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+* `Savon::Model.operations` and `.all_operations` now reject names that normalize to reserved model methods with `ArgumentError`, before defining any methods. This prevents a WSDL operation named `client` from overwriting the client accessor and causing unbounded recursion. Call operations with reserved names explicitly through `model.client.call(:client, ...)`.
+
 ## [2.17.4] - 2026-07-03
 
 **Restore WS-Addressing headers and fix `:wsse_signature` resolution**

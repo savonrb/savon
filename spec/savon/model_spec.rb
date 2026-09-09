@@ -42,6 +42,36 @@ RSpec.describe Savon::Model do
   end
 
   describe ".operations" do
+    %i[client Client CLIENT global setup operations all_operations
+       define_class_operation define_instance_operation operation_method_name
+       class_operation_module instance_operation_module raise_initialization_error!].each do |operation|
+      it "rejects the reserved operation name #{operation}" do
+        model = Class.new { extend Savon::Model }
+
+        expect { model.operations(operation) }
+          .to raise_error(ArgumentError, /reserved Savon::Model method/)
+      end
+    end
+
+    it "validates all names before defining any operations" do
+      model = Class.new { extend Savon::Model }
+
+      expect { model.operations(:authenticate, :client) }.to raise_error(ArgumentError)
+      expect(model).not_to respond_to(:authenticate)
+      expect(model.new).not_to respond_to(:authenticate)
+    end
+
+    it "allows operations to be registered more than once" do
+      model = Class.new { extend Savon::Model }
+
+      2.times do
+        model.operations(:authenticate)
+      end
+
+      expect(model).to respond_to(:authenticate)
+      expect(model.new).to respond_to(:authenticate)
+    end
+
     it "defines class methods for each operation" do
       model = Class.new do
         extend Savon::Model
@@ -169,6 +199,35 @@ RSpec.describe Savon::Model do
   end
 
   describe ".all_operations" do
+    it "rejects a WSDL operation named client without overwriting the client accessor" do
+      wsdl = <<~XML
+        <?xml version="1.0"?>
+        <wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+                          xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+                          name="Service" targetNamespace="urn:test">
+          <wsdl:binding name="Binding" type="wsdl:Port">
+            <soap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+            <wsdl:operation name="client">
+              <soap:operation soapAction="urn:test#client"/>
+            </wsdl:operation>
+          </wsdl:binding>
+        </wsdl:definitions>
+      XML
+      model = Class.new do
+        extend Savon::Model
+        client wsdl: wsdl
+      end
+      client = model.client
+
+      expect { model.all_operations }.to raise_error(ArgumentError, /reserved Savon::Model method/)
+      expect(model.client).to equal(client)
+      expect(model.new.client).to equal(client)
+      model.global :soap_version, 2
+      expect(client.globals[:soap_version]).to eq(2)
+      client.expects(:call).with(:client, message: { value: "test" }).returns(:response)
+      expect(model.client.call(:client, message: { value: "test" })).to eq(:response)
+    end
+
     it "calls operations with all available client operations" do
       model = Class.new do
         extend Savon::Model
