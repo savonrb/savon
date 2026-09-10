@@ -1,8 +1,9 @@
 name: Ruby
 
 on:
-  - push
-  - pull_request
+  push:
+    branches: [main]
+  pull_request:
 
 permissions:
   contents: read # checkout only, nothing else
