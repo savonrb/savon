@@ -19,7 +19,7 @@ module Savon
       return @message unless has_filters || pretty_print
 
       # @message may be multipart, cut off extra lines before open tag
-      document = Nokogiri.XML(@message[message_is_xml..-1])
+      document = Nokogiri.XML(@message[message_is_xml..])
       document = apply_filter(document) if has_filters
       document.to_xml(nokogiri_options)
     end
