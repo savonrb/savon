@@ -1,23 +1,45 @@
 # frozen_string_literal: true
 
 require "spec_helper"
+require "integration/support/webmock"
 
+# Integration coverage for concurrent SOAP requests against the
+# NumberConversion service.
+#
+# The WSDL and the SOAP responses are captured fixtures (see
+# spec/integration/fixtures/); WebMock stubs the HTTP layer, so this spec
+# needs no internet access.
 RSpec.describe "Number conversion example" do
+  let(:wsdl_url) { "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl" }
+  let(:endpoint_url) { "https://www.dataaccess.com/webservicesserver/NumberConversion.wso" }
+
   let(:expected) { ["seventy million seventy thousand ten ", "twenty four million fifty thousand one hundred and ten ", "twenty million fifty thousand five hundred and fifty "] }
   let(:request_data) { [70070010, 24050110, 20050550] }
 
   let(:client) do
     Savon.client(
-      wsdl: "https://www.dataaccess.com/webservicesserver/NumberConversion.wso?wsdl",
-      ssl_verify_mode: :none,
-
-      # Lower timeouts so these specs don't take forever when the service is not available.
-      open_timeout: 10,
-      read_timeout: 10,
+      wsdl: wsdl_url,
 
       # Disable logging for cleaner spec output.
       log: false
     )
+  end
+
+  before do
+    stub_request(:get, wsdl_url).to_return(
+      status: 200,
+      body: File.read(File.expand_path("fixtures/number_conversion.wsdl", __dir__)),
+      headers: { "Content-Type" => "text/xml; charset=utf-8" }
+    )
+
+    stub_request(:post, endpoint_url).to_return do |request|
+      number = request.body[/ubiNum>(\d+)</, 1]
+      {
+        status: 200,
+        body: File.read(File.expand_path("fixtures/number_to_words_#{number}.xml", __dir__)),
+        headers: { "Content-Type" => "text/xml; charset=utf-8" }
+      }
+    end
   end
 
   it "supports threads making requests simultaneously" do
