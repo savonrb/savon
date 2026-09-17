@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+* A URL assigned directly to `client.wsdl.endpoint` is overridden by per-operation port routing once wasabi 5.2 ships ([#879](https://github.com/savonrb/savon/issues/879)). `EffectiveOptions#endpoint` now asks the WSDL document for the current operation's port endpoint first and only falls back to the document-wide address. Pass `:endpoint` explicitly instead — that is still checked first and wins.
+
 ## [2.17.5] - 2026-09-09
 
 ### Security

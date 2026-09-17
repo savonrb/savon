@@ -181,6 +181,29 @@ RSpec.describe Savon::EffectiveOptions do
         expect(effective.endpoint.to_s).to eq("https://example.com/first")
       end
     end
+
+    context "with a global :host override" do
+      before do
+        globals[:host] = "http://localhost:8080"
+      end
+
+      it "replaces host and port and keeps scheme and path" do
+        expect(effective.endpoint.to_s).to eq("https://localhost:8080/1.0/TaxCloud.asmx")
+      end
+
+      it "does not mutate the WSDL document's endpoint" do
+        effective.endpoint
+
+        expect(wsdl.endpoint.to_s).to eq("https://api.taxcloud.net/1.0/TaxCloud.asmx")
+      end
+
+      it "resolves to an equal value on every call" do
+        first  = effective.endpoint
+        second = effective.endpoint
+
+        expect(second).to eq(first)
+      end
+    end
   end
 
   # Resolution is a pure read. The readers never write resolved values back
