@@ -44,6 +44,29 @@ RSpec.describe Savon::LogMessage do
     expect(message).to include("<password>FILTERED</password>")
   end
 
+  it "trims a multipart preamble before filtering" do
+    multipart = "--MIME_boundary\r\n" \
+                "Content-Type: text/xml\r\n" \
+                "\r\n" \
+                "<root><password>secret</password></root>"
+
+    message = log_message(multipart, [:password], false).to_s
+    expect(message).not_to include("--MIME_boundary")
+    expect(message).to include("<password>***FILTERED***</password>")
+  end
+
+  it "trims a multipart preamble before pretty printing" do
+    multipart = "--MIME_boundary\r\n" \
+                "Content-Type: text/xml\r\n" \
+                "\r\n" \
+                "<envelope><body>hello</body></envelope>"
+
+    message = log_message(multipart, [], :pretty_print).to_s
+    expect(message).not_to include("--MIME_boundary")
+    expect(message).to include("\n<envelope>")
+    expect(message).to include("\n  <body>")
+  end
+
   def log_message(*args)
     Savon::LogMessage.new(*args)
   end

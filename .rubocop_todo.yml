@@ -60,7 +60,7 @@ RSpec/BeforeAfterAll:
     - 'spec/savon/features/faraday_transport_options_spec.rb'
     - 'spec/savon/mock_spec.rb'
 
-# Offense count: 6
+# Offense count: 7
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
   Exclude:
@@ -70,6 +70,7 @@ RSpec/DescribeClass:
     - '**/spec/system/**/*'
     - '**/spec/views/**/*'
     - 'spec/integration/number_conversion_example_spec.rb'
+    - 'spec/integration/real_world_wsdls_spec.rb'
     - 'spec/integration/wsdl_fetch_error_spec.rb'
     - 'spec/savon/features/cookies_spec.rb'
     - 'spec/savon/features/faraday_spec.rb'
