@@ -132,6 +132,56 @@ RSpec.describe Savon::EffectiveOptions do
       expect(effective.endpoint.to_s).to eq("https://api.taxcloud.net/1.0/TaxCloud.asmx")
     end
 
+    context "with a WSDL document exposing per-port endpoints (wasabi >= 5.2)" do
+      # Mocha mocks on purpose: the released wasabi gem does not define
+      # #endpoint_for_operation yet.
+      let(:wsdl) do
+        mock("wsdl").tap do |wsdl|
+          wsdl.stubs(:document?).returns(true)
+          wsdl.stubs(:endpoint).returns(URI("https://example.com/first"))
+          wsdl.stubs(:endpoint_for_operation).returns(URI("https://example.com/per-port"))
+        end
+      end
+
+      it "prefers the operation's port endpoint over the document-wide one" do
+        expect(effective.endpoint.to_s).to eq("https://example.com/per-port")
+      end
+
+      it "passes the operation name and soap_version through" do
+        globals[:soap_version] = 2
+        wsdl.expects(:endpoint_for_operation)
+            .with(:verify_address, soap_version: 2)
+            .returns(URI("https://example.com/per-port"))
+
+        expect(effective.endpoint.to_s).to eq("https://example.com/per-port")
+      end
+
+      it "falls back to the document-wide endpoint when no port serves the operation" do
+        wsdl.stubs(:endpoint_for_operation).returns(nil)
+
+        expect(effective.endpoint.to_s).to eq("https://example.com/first")
+      end
+
+      it "applies the :host override to the per-port endpoint" do
+        globals[:host] = "http://localhost:8080"
+
+        expect(effective.endpoint.to_s).to eq("https://localhost:8080/per-port")
+      end
+    end
+
+    context "with a WSDL document without per-port endpoints (wasabi < 5.2)" do
+      let(:wsdl) do
+        mock("wsdl").tap do |wsdl|
+          wsdl.stubs(:document?).returns(true)
+          wsdl.stubs(:endpoint).returns(URI("https://example.com/first"))
+        end
+      end
+
+      it "uses the document-wide endpoint" do
+        expect(effective.endpoint.to_s).to eq("https://example.com/first")
+      end
+    end
+
     context "with a global :host override" do
       before do
         globals[:host] = "http://localhost:8080"

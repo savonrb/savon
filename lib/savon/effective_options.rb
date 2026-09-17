@@ -45,18 +45,23 @@ module Savon
 
     # Resolves the endpoint URL the request is sent to.
     #
-    # A global +:endpoint+ wins over the service address of the WSDL. The
-    # global +:host+ option replaces host and port of the WSDL address and
-    # keeps scheme, path and query. The override is applied to a copy. The
-    # WSDL document keeps its parsed address.
+    # A global +:endpoint+ wins over the service address of the WSDL. When
+    # the WSDL document exposes per-port endpoints (wasabi >= 5.2), the
+    # address of the port serving the current operation wins over the
+    # document-wide address. The global +:host+ option replaces host and
+    # port of the winning address and keeps scheme, path and query. The
+    # override is applied to a copy. The WSDL document keeps its parsed
+    # address.
     #
     # @return [URI, String, nil] the endpoint as provided by the winning source
     def endpoint
       return @globals[:endpoint] if @globals[:endpoint]
-      return @wsdl.endpoint unless @globals[:host]
+
+      url = operation_endpoint || @wsdl.endpoint
+      return url unless @globals[:host]
 
       host_url = URI.parse(@globals[:host])
-      url      = @wsdl.endpoint.dup
+      url      = url.dup
       url.host = host_url.host
       url.port = host_url.port
       url
@@ -110,6 +115,16 @@ module Savon
     end
 
     private
+
+    # Resolves the endpoint of the port serving the current operation.
+    # Returns +nil+ when the WSDL document has no per-port endpoint API
+    # (wasabi < 5.2) or when no port serves the operation, so the caller
+    # falls back to the document-wide endpoint.
+    def operation_endpoint
+      return unless @wsdl.document? && @wsdl.respond_to?(:endpoint_for_operation)
+
+      @wsdl.endpoint_for_operation(@operation_name, soap_version: @globals[:soap_version])
+    end
 
     # Resolves an option where a local +false+ is meaningful and disables it.
     # Only a local +nil+ falls through to the global value. Contrast with
