@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha", "~> 0.14"
   s.add_development_dependency "rake",  ">= 12.3.3"
   s.add_development_dependency "rspec", "~> 3.9"
+  s.add_development_dependency "webmock", "~> 3.0"
 
   s.metadata = {
     "rubygems_mfa_required" => "true",
