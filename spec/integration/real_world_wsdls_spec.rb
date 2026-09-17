@@ -26,7 +26,7 @@ RSpec.describe "Real-world WSDLs" do
 
       body = client.build_request(:sync_lead, message: { return_lead: true }).body
       expect(body).to include("<tns:paramsSyncLead>")
-      expect(body).not_to match(%r{<tns:syncLead>})
+      expect(body).not_to match(/<tns:syncLead>/)
     end
   end
 
@@ -63,10 +63,10 @@ RSpec.describe "Real-world WSDLs" do
       body = client.build_request(
         :get_ad_extensions_associations,
         message: {
-          account_id: 150168726,
+          account_id: 150_168_726,
           association_type: "Campaign",
           ad_extension_type: "CallAdExtension",
-          entity_ids: [{ long: 8177659860409 }]
+          entity_ids: [{ long: 8_177_659_860_409 }]
         }
       ).body
 
@@ -95,6 +95,20 @@ RSpec.describe "Real-world WSDLs" do
     end
   end
 
-  # (Parser-torture WSDLs without direct issues get their own describe block
-  # in the follow-up commit.)
+  describe "parser torture WSDLs" do
+    # No direct savon issues; these are large, gnarly real-world WSDLs that
+    # smoke-test the parser against regressions.
+    {
+      "workday_hr.wsdl"         => :get_organization,
+      "netsuite_2024_1.wsdl"    => :search,
+      "salesforce_partner.wsdl" => :login
+    }.each do |wsdl, operation|
+      it "parses #{wsdl} and exposes #{operation}" do
+        client = real_world_client(wsdl)
+
+        expect(client.operations).not_to be_empty
+        expect(client.operations).to include(operation)
+      end
+    end
+  end
 end
