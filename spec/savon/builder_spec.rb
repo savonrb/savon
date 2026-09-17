@@ -171,6 +171,48 @@ RSpec.describe Savon::Builder do
     end
   end
 
+  describe "with a WSDL operation that has typed message parts" do
+    let(:locals) { Savon::LocalOptions.new(message: { username: "luke", password: "secret" }) }
+
+    before do
+      wsdl.stubs(:soap_input).returns(
+        "authenticate" => { "username" => %w[xsd string], "password" => %w[xsd string] }
+      )
+    end
+
+    it "builds the body from the typed parts with xsi:type attributes" do
+      body = builder.to_s
+
+      expect(body).to include('<username xsi:type="xsd:string">luke</username>')
+      expect(body).to include('<password xsi:type="xsd:string">secret</password>')
+    end
+
+    it "builds an empty body when no message was given" do
+      builder = described_class.new(:authenticate, wsdl, globals, Savon::LocalOptions.new)
+
+      expect(builder.to_s).not_to include("xsi:type")
+    end
+  end
+
+  describe "with a blank :env_namespace" do
+    before do
+      globals[:env_namespace] = ""
+    end
+
+    it "omits the namespace prefix from the envelope" do
+      body = builder.to_s
+
+      expect(body).to include("<Envelope")
+      expect(body).to include("<Body>")
+      expect(body).not_to include("<env:Envelope")
+      expect(body).not_to include("<env:Body>")
+    end
+
+    it "declares the SOAP namespace without a prefix" do
+      expect(builder.to_s).to include('xmlns="http://schemas.xmlsoap.org/soap/envelope/"')
+    end
+  end
+
   describe '#body_attributes' do
     it 'is not nil' do
       expect(builder.body_attributes).to eq({})

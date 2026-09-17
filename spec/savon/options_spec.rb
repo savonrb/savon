@@ -105,6 +105,59 @@ RSpec.describe "Options" do
 
       client.call(:authenticate)
     end
+
+    it "does not store a proxy when nil" do
+      options = Savon::GlobalOptions.new
+      options.proxy(nil)
+
+      expect(options.include?(:proxy)).to be(false)
+    end
+  end
+
+  context "global :multipart" do
+    it "warns that the option is a no-op when set to true" do
+      options = Savon::GlobalOptions.new
+
+      expect { options.multipart(true) }.to output(/The global :multipart option has been a no-op/).to_stderr
+    end
+
+    it "does not warn when set to false" do
+      options = Savon::GlobalOptions.new
+
+      expect { options.multipart(false) }.not_to output.to_stderr
+    end
+  end
+
+  context "local :multipart" do
+    it "warns that the option is a no-op when set to true" do
+      options = Savon::LocalOptions.new
+
+      expect { options.multipart(true) }.to output(/The local :multipart option has been a no-op/).to_stderr
+    end
+
+    it "does not warn when set to false" do
+      options = Savon::LocalOptions.new
+
+      expect { options.multipart(false) }.not_to output.to_stderr
+    end
+  end
+
+  context "global :write_timeout" do
+    it "stores the write timeout" do
+      options = Savon::GlobalOptions.new
+      options.write_timeout(10)
+
+      expect(options[:write_timeout]).to eq(10)
+    end
+  end
+
+  describe "#faraday_loaded?" do
+    it "returns false when faraday cannot be loaded" do
+      options = Savon::GlobalOptions.new
+      options.stubs(:require).with("faraday").raises(LoadError)
+
+      expect(options.send(:faraday_loaded?)).to be(false)
+    end
   end
 
   context "global :host" do
