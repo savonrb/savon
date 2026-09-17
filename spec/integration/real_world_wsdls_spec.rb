@@ -31,11 +31,10 @@ RSpec.describe "Real-world WSDLs" do
   end
 
   describe "Juniper booking engine (issue #879)" do
-    # The WSDL exposes 12 ports on different endpoint URLs, but savon has
-    # never routed operations to their own port's endpoint (#879, open):
-    # every request goes to the first port's address. These specs pin the
-    # parsing side (operations from every portType are visible) and
-    # document the endpoint behavior, so a future fix knows where to start.
+    # The WSDL exposes 12 ports on different endpoint URLs. Savon used to
+    # route every operation to the first port's address (#879); with
+    # wasabi >= 5.2 (per-port endpoints) each operation resolves to the
+    # address of the port that serves it.
     it "exposes operations from every portType" do
       client = real_world_client("juniper_879.wsdl")
 
@@ -43,11 +42,22 @@ RSpec.describe "Real-world WSDLs" do
       expect(client.operations).to include(:hotel_list_inventory, :hotel_booking, :check_payment)
     end
 
-    it "resolves the endpoint to the first port's address" do
+    it "routes each operation to its own port's endpoint" do
       client = real_world_client("juniper_879.wsdl")
 
-      expect(client.wsdl.endpoint.to_s)
-        .to eq("http://xml2.bookingengine.es/webservice/jp/operations/booktransactions.asmx")
+      # Operation#endpoint is private; it is what #call resolves per request.
+      resolve = ->(operation) { client.operation(operation).send(:endpoint).to_s }
+
+      if client.wsdl.respond_to?(:endpoint_for_operation)
+        expect(resolve.call(:hotel_booking))
+          .to eq("http://xml2.bookingengine.es/webservice/jp/operations/booktransactions.asmx")
+        expect(resolve.call(:hotel_list_inventory))
+          .to eq("http://xml2.bookingengine.es/webservice/jp/operations/inventorytransactions.asmx")
+      else
+        # wasabi < 5.2: every request goes to the first port's address.
+        expect(resolve.call(:hotel_booking))
+          .to eq("http://xml2.bookingengine.es/webservice/jp/operations/booktransactions.asmx")
+      end
     end
   end
 
