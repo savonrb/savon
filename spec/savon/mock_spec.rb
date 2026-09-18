@@ -64,8 +64,26 @@ RSpec.describe "Savon's mock interface" do
   end
 
   it "fails when the expected operation was not called" do
-    # TODO: find out how to test this! [dh, 2012-12-17]
-    # savon.expects(:authenticate)
+    savon.expects(:authenticate)
+
+    expect { savon.verify! }
+      .to raise_error(Savon::ExpectationError,
+                      "Expected a request to the :authenticate operation, but no request was executed.")
+  end
+
+  it "fails the RSpec after-hook when the expected operation was not called" do
+    savon.expects(:authenticate)
+
+    expect { verify_mocks_for_rspec }
+      .to raise_error(Savon::ExpectationError,
+                      "Expected a request to the :authenticate operation, but no request was executed.")
+  end
+
+  it "fails when the actual message does not match the expected message" do
+    savon.expects(:find_user).with(message: { username: "luke" }).returns("<fixture/>")
+
+    expect { new_client.call(:find_user, message: { username: "lea" }) }
+      .to raise_error(Savon::ExpectationError, /Expected a request to the :find_user operation/)
   end
 
   it "fails when the return value for an expectation was not specified" do

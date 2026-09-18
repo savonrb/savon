@@ -79,6 +79,11 @@ RSpec.describe Savon::Transport::HTTPI do
       request = transport.to_httpi_request(url, {}, body, locals)
       expect(request.headers["Content-Length"]).to be_nil
     end
+
+    it "applies the global :write_timeout to the request" do
+      globals.write_timeout(5)
+      expect(transport.to_httpi_request(url, {}, body, locals).write_timeout).to eq(5)
+    end
   end
 
   describe "#post" do
