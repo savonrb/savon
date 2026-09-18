@@ -8,6 +8,13 @@ module Savon
       @types           = types
       @used_namespaces = used_namespaces
       @key_converter   = key_converter
+
+      # Schema tables are keyed by exact element names, but message keys pass
+      # through the key converter first (:entity_ids becomes "entityIds" while
+      # the schema says "EntityIds"). Index both tables by downcased path so a
+      # converted key can still find its schema entry. Exact matches always win.
+      @types_index           = index_by_normalized_path(types)
+      @used_namespaces_index = index_by_normalized_path(used_namespaces)
     end
 
     def to_hash(hash, path)
@@ -28,7 +35,8 @@ module Savon
             translated_key  = translate_tag(key)
             newkey          = add_namespaces_to_values(key, path).first
             newpath         = path + [translated_key]
-            newhash[newkey] = to_hash(value, @types[newpath] ? [@types[newpath]] : newpath)
+            type            = lookup(@types, @types_index, newpath)
+            newhash[newkey] = to_hash(value, type ? [type] : newpath)
           end
         end
         newhash
@@ -45,8 +53,28 @@ module Savon
       Array(values).collect do |value|
         translated_value = translate_tag(value)
         namespace_path   = path + [translated_value]
-        namespace        = @used_namespaces[namespace_path] || ''
+        namespace        = lookup(@used_namespaces, @used_namespaces_index, namespace_path) || ''
         namespace.empty? ? value : "#{namespace}:#{translated_value}"
+      end
+    end
+
+    # Finds the schema entry for a message path. Converted message keys rarely
+    # match schema element names exactly ("entityIds" vs "EntityIds"), so fall
+    # back to a case-insensitive match when the exact lookup misses.
+    def lookup(table, index, path)
+      return table[path] if table.key?(path)
+
+      original = index[normalize_path(path)]
+      original && table[original]
+    end
+
+    def normalize_path(path)
+      path.map { |segment| segment.to_s.downcase }
+    end
+
+    def index_by_normalized_path(table)
+      table.each_with_object({}) do |(path, _), memo|
+        memo[normalize_path(path)] ||= path
       end
     end
   end

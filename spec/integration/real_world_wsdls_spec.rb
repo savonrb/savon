@@ -62,11 +62,12 @@ RSpec.describe "Real-world WSDLs" do
   end
 
   describe "Bing Ads CampaignManagement v13 (issue #895)" do
-    # 1.2MB, 217 namespaces. #895 (open): elements typed in the
-    # Serialization/Arrays namespace (e.g. <long>) are emitted with the tns:
-    # prefix instead of ins0:. Savon has no schema-driven prefix resolution,
-    # so this spec pins the parse/build side that does work.
-    it "parses the WSDL and builds a well-formed request" do
+    # 1.2MB, 217 namespaces. #895: elements typed in the
+    # Serialization/Arrays namespace (e.g. <long>) were emitted with the tns:
+    # prefix instead of ins0:, because the key-converted message keys
+    # ("entityIds") never matched the schema element names ("EntityIds") in
+    # the type-namespace lookups. Guards the fix.
+    it "prefixes schema-typed elements with their own namespace" do
       client = real_world_client("bing_ads_v13.wsdl")
       expect(client.operations).to include(:get_ad_extensions_associations)
 
@@ -81,7 +82,8 @@ RSpec.describe "Real-world WSDLs" do
       ).body
 
       expect(body).to include("<tns:GetAdExtensionsAssociationsRequest>")
-      expect(body).to include("8177659860409")
+      expect(body).to include("<ins0:long>8177659860409</ins0:long>")
+      expect(body).not_to include("<tns:long>")
     end
   end
 
