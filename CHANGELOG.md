@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Security
+
+* `Savon::Model.operations` and `.all_operations` no longer rely on a hand-maintained list of reserved names. The guard now derives its denylist from the model's own ancestor chains — every method instances respond to plus every method the class object responds to — so a WSDL operation can never shadow an existing method. This closes the `class`/`public_send` bypass (unbounded recursion via the generated `self.class.public_send(...)` bodies, hijacked reflective dispatch) and the whole class of follow-on reports (`new`, `freeze`, `send`, …) by construction instead of one advisory at a time. Re-registering an already-defined operation is still allowed; anything else that collides raises `ArgumentError`. Call such operations explicitly through `model.client.call(:operation, ...)`.
+
 ### Changed
 
 * A URL assigned directly to `client.wsdl.endpoint` is overridden by per-operation port routing once wasabi 5.2 ships ([#879](https://github.com/savonrb/savon/issues/879)). `EffectiveOptions#endpoint` now asks the WSDL document for the current operation's port endpoint first and only falls back to the document-wide address. Pass `:endpoint` explicitly instead — that is still checked first and wins.
