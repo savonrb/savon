@@ -42,14 +42,26 @@ RSpec.describe Savon::Model do
   end
 
   describe ".operations" do
-    %i[client Client CLIENT global setup operations all_operations
-       define_class_operation define_instance_operation operation_method_name
-       class_operation_module instance_operation_module raise_initialization_error!].each do |operation|
-      it "rejects the reserved operation name #{operation}" do
+    # The guard derives its denylist from the model's own ancestor chains, so derive
+    # the expectation the same way: every name that survives snakecase normalization
+    # unchanged is a name a WSDL operation could actually generate.
+    shadowable_operation_names = begin
+      model = Class.new { extend Savon::Model }
+      (model.instance_methods + model.private_instance_methods +
+       model.singleton_class.instance_methods + model.singleton_class.private_instance_methods)
+        .uniq
+        .select { |name| Savon::StringUtils.snakecase(name.to_s).to_sym == name }
+    end
+
+    it "derives a denylist covering the known shadowing cases" do
+      expect(shadowable_operation_names).to include(:client, :class, :public_send, :new, :freeze, :global)
+    end
+
+    shadowable_operation_names.each do |name|
+      it "rejects the shadowable operation name #{name}" do
         model = Class.new { extend Savon::Model }
 
-        expect { model.operations(operation) }
-          .to raise_error(ArgumentError, /reserved Savon::Model method/)
+        expect { model.operations(name) }.to raise_error(ArgumentError, /reserved Savon::Model method/)
       end
     end
 
