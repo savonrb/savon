@@ -278,6 +278,12 @@ RSpec.describe Savon::Builder do
         expect(xml.scan('xmlns:article=').length).to eq(1)
       end
 
+      it "reuses the prefix already declared for a type's namespace URI" do
+        locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
+        xml = described_class.new(:Save, multi_wsdl, globals, locals_with_msg).to_s
+        expect(xml).to include("<wsdl:article><article:author>Test</article:author>")
+      end
+
       it "every prefix used in the body is declared in the envelope" do
         locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
         builder = described_class.new(:Save, multi_wsdl, globals, locals_with_msg)
