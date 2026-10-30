@@ -45,12 +45,7 @@ module Savon
     # Returns the generated Ruby method name for a SOAP operation.
     def operation_method_name(operation)
       method_name = StringUtils.snakecase(operation.to_s).to_sym
-      # Re-registering an operation stays allowed; any other name must not shadow a
-      # method the model already responds to. The denylist is derived from the model's
-      # own ancestor chains — everything instances respond to plus everything the class
-      # object responds to — rather than hand-maintained, so inherited methods the
-      # generated bodies rely on (class, public_send, ...) and reflective entry points
-      # (new, freeze, ...) are covered by construction instead of one advisory at a time.
+      # Re-registering an operation stays allowed; any other name must not shadow a method the model already responds to.
       return method_name if generated_operation_names.include?(method_name)
 
       reserved_methods = instance_methods + private_instance_methods +
