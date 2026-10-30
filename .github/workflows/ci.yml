@@ -58,7 +58,8 @@ jobs:
         run: bundle exec rubocop --format github
 
   test:
-    runs-on: ubuntu-latest
+    # Ruby 3.0 and 3.1 have no prebuilt binaries for newer Ubuntu images.
+    runs-on: ${{ (matrix.ruby == '3.0' || matrix.ruby == '3.1') && 'ubuntu-24.04' || 'ubuntu-latest' }}
     strategy:
       fail-fast: false
       matrix:
