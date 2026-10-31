@@ -124,7 +124,7 @@ module Savon
       @internal_namespace_count ||= 0
 
       unless (identifier = namespace_by_uri(uri))
-        wsdl_identifier = @wsdl.document? ? @wsdl.parser.namespaces.key(uri) : nil
+        wsdl_identifier = wsdl_namespace_identifier(uri)
         # The prefix may already be taken by the target namespace or a user-supplied
         # :namespaces override - fall back to ins0, ins1... rather than overwriting it.
         wsdl_identifier = nil if wsdl_identifier && namespaces.key?("xmlns:#{wsdl_identifier}")
@@ -134,6 +134,12 @@ module Savon
       end
 
       [path, identifier]
+    end
+
+    def wsdl_namespace_identifier(uri)
+      return unless @wsdl.document?
+
+      @wsdl.parser.namespaces.find { |key, value| value == uri && !key.downcase.start_with?("xml") }&.first
     end
 
     def namespaces_with_globals

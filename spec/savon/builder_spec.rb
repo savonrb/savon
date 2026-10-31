@@ -294,5 +294,30 @@ RSpec.describe Savon::Builder do
         expect(used_prefixes - declared_prefixes).to be_empty
       end
     end
+
+    context "with a schema whose targetNamespace is the WSDL root's default namespace" do
+      subject(:default_builder) { described_class.new(:op, default_wsdl, globals, locals_with_msg) }
+
+      let(:default_wsdl)    { Wasabi::Document.new Fixture.wsdl(:default_namespace_target) }
+      let(:locals_with_msg) { Savon::LocalOptions.new(message: { a: "1" }) }
+
+      it "falls back to an insN prefix instead of the reserved xmlns prefix" do
+        xml = default_builder.to_s
+        expect(xml).not_to include("xmlns:xmlns")
+        expect(xml).to include('xmlns:ins0="http://schemas.xmlsoap.org/wsdl/"')
+        expect(xml).to include("<ins0:a>1</ins0:a>")
+      end
+
+      it "produces namespace-well-formed XML" do
+        expect(Nokogiri::XML(default_builder.to_s, &:strict).errors).to be_empty
+      end
+
+      it "reuses another prefix the WSDL declares for the same URI" do
+        wsdl_xml = Fixture.wsdl(:default_namespace_target).sub("xmlns:soap=", 'xmlns:def="http://schemas.xmlsoap.org/wsdl/" xmlns:soap=')
+        xml = described_class.new(:op, Wasabi::Document.new(wsdl_xml), globals, locals_with_msg).to_s
+        expect(xml).not_to include("xmlns:xmlns")
+        expect(xml).to include("<def:a>1</def:a>")
+      end
+    end
   end
 end
