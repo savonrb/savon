@@ -17,30 +17,38 @@ module Savon
       @used_namespaces_index = index_by_normalized_path(used_namespaces)
     end
 
-    def to_hash(hash, path)
+    def to_hash(hash, path, schema_order: false)
       return hash unless hash
-      return hash.map { |value| to_hash(value, path) } if hash.is_a?(Array)
+      return hash.map { |value| to_hash(value, path, schema_order: schema_order) } if hash.is_a?(Array)
       return hash.to_s unless hash.is_a?(Hash)
 
-      hash.each_with_object({}) do |(key, value), newhash|
+      schema_order ||= hash[:order!] == :use_schema
+      tags_by_key = {}
+
+      newhash = hash.each_with_object({}) do |(key, value), newhash|
         case key
         when :order!
-          newhash[key] = add_namespaces_to_values(value, path)
+          newhash[key] = add_namespaces_to_values(value, path) unless value == :use_schema
         when :attributes!, :content!
           newhash[key] = to_hash(value, path)
         else
           if key.to_s =~ /!$/
             newhash[key] = value
+            tags_by_key[key] = translate_tag(key.to_s.chomp("!")) unless key.to_s == "order!"
           else
             translated_key  = translate_tag(key)
             newkey          = add_namespaces_to_values(key, path).first
             newpath         = path + [translated_key]
             type            = lookup(@types, @types_index, newpath)
-            newhash[newkey] = to_hash(value, type ? [type] : newpath)
+            newhash[newkey] = to_hash(value, type ? [type] : newpath, schema_order: schema_order)
+            tags_by_key[newkey] = translated_key
           end
         end
         newhash
       end
+
+      newhash[:order!] = order_by_schema(tags_by_key, path) if schema_order && !newhash.key?(:order!)
+      newhash
     end
 
     private
@@ -55,6 +63,21 @@ module Savon
         namespace_path   = path + [translated_value]
         namespace        = lookup(@used_namespaces, @used_namespaces_index, namespace_path) || ''
         namespace.empty? ? value : "#{namespace}:#{translated_value}"
+      end
+    end
+
+    # Keys unknown to the schema keep their relative order after the known ones.
+    def order_by_schema(tags_by_key, path)
+      position_by_tag = schema_children(path).each_with_index.to_h
+      tags_by_key.keys.sort_by.with_index do |key, index|
+        [position_by_tag.fetch(tags_by_key[key].downcase, position_by_tag.size), index]
+      end
+    end
+
+    def schema_children(path)
+      parent = normalize_path(path)
+      @used_namespaces_index.keys.filter_map do |child|
+        child.last if child.length == parent.length + 1 && child.first(parent.length) == parent
       end
     end
 
