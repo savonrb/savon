@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:tns="http://example.com/orders" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://example.com/orders">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://example.com/orders">
+      <s:complexType name="Address">
+        <s:sequence>
+          <s:element name="Street" type="s:string" />
+          <s:element name="City" type="s:string" />
+          <s:element name="Zip" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="PlaceOrder">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="Customer" type="s:string" />
+            <s:element minOccurs="0" name="Note" type="s:string" />
+            <s:element name="Address" type="tns:Address" />
+            <s:element name="Total" type="s:decimal" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="PlaceOrderResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element name="OrderId" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="PlaceOrderSoapIn">
+    <wsdl:part name="parameters" element="tns:PlaceOrder" />
+  </wsdl:message>
+  <wsdl:message name="PlaceOrderSoapOut">
+    <wsdl:part name="parameters" element="tns:PlaceOrderResponse" />
+  </wsdl:message>
+  <wsdl:portType name="OrdersSoap">
+    <wsdl:operation name="PlaceOrder">
+      <wsdl:input message="tns:PlaceOrderSoapIn" />
+      <wsdl:output message="tns:PlaceOrderSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrdersSoap" type="tns:OrdersSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="PlaceOrder">
+      <soap:operation soapAction="http://example.com/orders/PlaceOrder" style="document" />
+      <wsdl:input><soap:body use="literal" /></wsdl:input>
+      <wsdl:output><soap:body use="literal" /></wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Orders">
+    <wsdl:port name="OrdersSoap" binding="tns:OrdersSoap">
+      <soap:address location="http://example.com/orders.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
