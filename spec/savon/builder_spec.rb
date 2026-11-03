@@ -320,4 +320,165 @@ RSpec.describe Savon::Builder do
       end
     end
   end
+
+  describe "ordering the message with order!: :use_schema" do
+    let(:wsdl) { Wasabi::Document.new Fixture.wsdl(:schema_order) }
+
+    def body_for(message)
+      locals = Savon::LocalOptions.new(message: message)
+      described_class.new(:place_order, wsdl, globals, locals).to_s[%r{<tns:PlaceOrder>.*</tns:PlaceOrder>}]
+    end
+
+    it "orders each level of the message like the schema sequence" do
+      message = { total: 9, address: { zip: "75001", street: "1 Main St", city: "Paris" }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city><tns:zip>75001</tns:zip></tns:address>" \
+        "<tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "places an optional element given by the caller at its schema position" do
+      message = { total: 9, note: "fragile", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note>fragile</tns:note><tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "raises for keys unknown to the schema" do
+      message = { gift: true, total: 9, coupon: "XMAS", customer: "alice", order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for gift, coupon in PlaceOrder:/)
+    end
+
+    it "raises for an element inside an xs:choice, which Wasabi doesn't record" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St" }, order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for phone in Address:/)
+    end
+
+    it "orders an element inside an xs:choice with an explicit order! on its level" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St", order!: %i[street phone] }, order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:phone>0102030405</tns:phone></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders keys whose value Gyoku writes unescaped" do
+      message = { total: 9, note!: "<b>fragile</b>", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note><b>fragile</b></tns:note><tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders keys of several words whose value Gyoku writes unescaped" do
+      message = { total: 9, gift_note!: "<b>happy birthday</b>", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:giftNote><b>happy birthday</b></tns:giftNote>" \
+        "<tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves an element given with content! and attributes as it is" do
+      message = { note: [{ content!: "fragile", "@lang" => "en" }], customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note lang=\"en\">fragile</tns:note></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves attributes out of the order" do
+      message = { customer: "alice", address: { "@kind" => "home", city: "Paris", street: "1 Main St" }, order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address kind=\"home\"><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "keeps an explicit order! given as a string key on a nested hash" do
+      message = { address: { zip: "75001", city: "Paris", "order!" => %i[zip city] }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:zip>75001</tns:zip><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "raises for a level the schema doesn't describe" do
+      message = { customer: "alice", gift: { wrapping: "red", card: "yes" }, order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, %r{no schema sequence for PlaceOrder/gift})
+    end
+
+    it "keeps an explicit order! given on a nested hash" do
+      message = { address: { zip: "75001", city: "Paris", order!: %i[zip city] }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:zip>75001</tns:zip><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders every hash of an array" do
+      message = { customer: "alice", address: [{ city: "Paris", street: "1 Main St" }, { city: "Lyon", street: "2 Side St" }], order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city></tns:address>" \
+        "<tns:address><tns:street>2 Side St</tns:street><tns:city>Lyon</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves the caller's message untouched" do
+      message = { total: 9, customer: "alice", order!: :use_schema }
+
+      expect { body_for(message) }.not_to(change { message })
+    end
+
+    it "orders the content of a message part like its type" do
+      wsdl.stubs(:document?).returns(true)
+      wsdl.stubs(:soap_input).returns("PlaceOrder" => { "Address" => %w[tns Address] })
+      message = { address: { zip: "75001", city: "Paris", street: "1 Main St", order!: :use_schema } }
+      locals = Savon::LocalOptions.new(message: message)
+
+      expect(described_class.new(:place_order, wsdl, globals, locals).to_s).to include(
+        "<street>1 Main St</street><city>Paris</city><zip>75001</zip>"
+      )
+    end
+
+    context "with a schema whose elements are unqualified" do
+      let(:wsdl) do
+        Wasabi::Document.new Fixture.wsdl(:schema_order).sub('elementFormDefault="qualified"', 'elementFormDefault="unqualified"')
+      end
+
+      it "orders each level of the message like the schema sequence" do
+        message = { total: 9, address: { zip: "75001", street: "1 Main St", city: "Paris" }, customer: "alice", order!: :use_schema }
+
+        expect(body_for(message)).to eq(
+          "<tns:PlaceOrder><customer>alice</customer>" \
+          "<address><street>1 Main St</street><city>Paris</city><zip>75001</zip></address>" \
+          "<total>9</total></tns:PlaceOrder>"
+        )
+      end
+
+      it "keeps the caller's order without :use_schema" do
+        expect(body_for({ total: 9, customer: "alice" })).to eq(
+          "<tns:PlaceOrder><total>9</total><customer>alice</customer></tns:PlaceOrder>"
+        )
+      end
+    end
+
+    it "keeps the caller's order without :use_schema" do
+      expect(body_for({ total: 9, customer: "alice" })).to eq(
+        "<tns:PlaceOrder><tns:total>9</tns:total><tns:customer>alice</tns:customer></tns:PlaceOrder>"
+      )
+    end
+  end
 end

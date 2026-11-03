@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+* **`order!: :use_schema` orders a message like the WSDL's `xs:sequence`** ([#592](https://github.com/savonrb/savon/issues/592)). Nested hashes and arrays of hashes follow, and an explicit `order!` array on a nested hash still wins, whether the schema qualifies its elements or not. A level the schema doesn't describe, or a key it doesn't list (elements inside an `xs:choice` or `xs:group` included, which Wasabi doesn't record), raises `Savon::Error` instead of guessing the order: an explicit `order!` on that level works around it.
+
 ### Security
 
 * `Savon::Model.operations` and `.all_operations` no longer rely on a hand-maintained list of reserved names. The guard now derives its denylist from the model's own ancestor chains — every method instances respond to plus every method the class object responds to — so a WSDL operation can never shadow an existing method. This closes the `class`/`public_send` bypass (unbounded recursion via the generated `self.class.public_send(...)` bodies, hijacked reflective dispatch) and the whole class of follow-on reports (`new`, `freeze`, `send`, …) by construction instead of one advisory at a time. Re-registering an already-defined operation is still allowed; anything else that collides raises `ArgumentError`. Call such operations explicitly through `model.client.call(:operation, ...)`.

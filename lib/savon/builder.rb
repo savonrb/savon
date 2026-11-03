@@ -194,7 +194,7 @@ module Savon
         break if @locals[:message].nil?
 
         message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
-        message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
+        message_content = Message.new(type.last, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
         messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
       end
       messages

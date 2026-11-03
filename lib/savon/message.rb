@@ -22,6 +22,9 @@ module Savon
 
       if @element_form_default == :qualified
         @message = QualifiedMessage.new(@types, @used_namespaces, @key_converter).to_hash(@message, [@message_tag.to_s])
+      elsif schema_order?(@message)
+        unqualified = QualifiedMessage.new(@types, @used_namespaces, @key_converter, qualify: false)
+        @message = unqualified.to_hash(@message, [@message_tag.to_s])
       end
 
       gyoku_options = {
@@ -32,6 +35,16 @@ module Savon
       }
 
       Gyoku.xml(@message, gyoku_options)
+    end
+
+    private
+
+    def schema_order?(value)
+      case value
+      when Hash then QualifiedMessage.order_option(value) == :use_schema || value.each_value.any? { |nested| schema_order?(nested) }
+      when Array then value.any? { |nested| schema_order?(nested) }
+      else false
+      end
     end
   end
 end
