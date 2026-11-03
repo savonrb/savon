@@ -44,7 +44,7 @@ module Savon
             newpath         = path + [translated_key]
             type            = lookup(@types, @types_index, newpath)
             newhash[newkey] = to_hash(value, type ? [type] : newpath, schema_order: schema_order)
-            tags_by_key[newkey] = translated_key
+            tags_by_key[newkey] = translated_key unless key.to_s.start_with?("@")
           end
         end
         newhash

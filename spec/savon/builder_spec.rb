@@ -368,6 +368,15 @@ RSpec.describe Savon::Builder do
       )
     end
 
+    it "leaves attributes out of the order" do
+      message = { customer: "alice", address: { "@kind" => "home", city: "Paris", street: "1 Main St" }, order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address kind=\"home\"><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
     it "keeps an explicit order! given as a string key on a nested hash" do
       message = { address: { zip: "75001", city: "Paris", "order!" => %i[zip city] }, customer: "alice", order!: :use_schema }
 
