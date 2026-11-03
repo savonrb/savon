@@ -84,7 +84,8 @@ module Savon
       end
     end
 
-    # Keys unknown to the schema keep their relative order after the known ones.
+    # Wasabi doesn't record elements inside an xs:choice or xs:group, so they
+    # are unknown keys too: raise rather than guess where they go.
     def order_by_schema(tags_by_key, path)
       children = schema_children(path)
       if children.empty? && tags_by_key.any?
@@ -93,9 +94,13 @@ module Savon
       end
 
       position_by_tag = children.each_with_index.to_h
-      tags_by_key.keys.sort_by.with_index do |key, index|
-        [position_by_tag.fetch(tags_by_key[key].downcase, position_by_tag.size), index]
+      unknown_tags = tags_by_key.values.reject { |tag| position_by_tag.key?(tag.downcase) }
+      if unknown_tags.any?
+        raise Error, "order!: :use_schema found no schema element for #{unknown_tags.join(', ')} in #{path.join('/')}: " \
+                     "give this level its own order! array"
       end
+
+      tags_by_key.keys.sort_by { |key| position_by_tag.fetch(tags_by_key[key].downcase) }
     end
 
     def schema_children(path)

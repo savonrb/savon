@@ -7,6 +7,10 @@
           <s:element name="Street" type="s:string" />
           <s:element name="City" type="s:string" />
           <s:element name="Zip" type="s:string" />
+          <s:choice minOccurs="0">
+            <s:element name="Phone" type="s:string" />
+            <s:element name="Email" type="s:string" />
+          </s:choice>
         </s:sequence>
       </s:complexType>
       <s:element name="PlaceOrder">

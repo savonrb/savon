@@ -322,12 +322,24 @@ RSpec.describe Savon::Builder do
       )
     end
 
-    it "puts keys unknown to the schema last, in the caller's order" do
+    it "raises for keys unknown to the schema" do
       message = { gift: true, total: 9, coupon: "XMAS", customer: "alice", order!: :use_schema }
 
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for gift, coupon in PlaceOrder:/)
+    end
+
+    it "raises for an element inside an xs:choice, which Wasabi doesn't record" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St" }, order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for phone in Address:/)
+    end
+
+    it "orders an element inside an xs:choice with an explicit order! on its level" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St", order!: %i[street phone] }, order!: :use_schema }
+
       expect(body_for(message)).to eq(
-        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:total>9</tns:total>" \
-        "<tns:gift>true</tns:gift><tns:coupon>XMAS</tns:coupon></tns:PlaceOrder>"
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:phone>0102030405</tns:phone></tns:address></tns:PlaceOrder>"
       )
     end
 
