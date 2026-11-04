@@ -11,24 +11,28 @@ module Savon
     end
 
     def to_s
-      message_is_xml = @message =~ /</
+      message = @message
+      begin
+        message_is_xml = message =~ /</
+      rescue ArgumentError
+        # The message encoding holds invalid bytes (e.g. a binary multipart
+        # body mistagged as UTF-8): search the bytes instead of raising.
+        message = message.b
+        message_is_xml = message.index("<")
+      end
       has_filters    = @filters.any?
       pretty_print   = @pretty_print
 
-      return @message unless message_is_xml?
+      return @message unless message_is_xml
       return @message unless has_filters || pretty_print
 
-      # @message may be multipart, cut off extra lines before open tag
-      document = Nokogiri.XML(@message[message_is_xml..])
+      # The message may be multipart, cut off extra lines before open tag
+      document = Nokogiri.XML(message[message_is_xml..])
       document = apply_filter(document) if has_filters
       document.to_xml(nokogiri_options)
     end
 
     private
-
-    def message_is_xml?
-      @message.respond_to?(:getbyte) && @message.getbyte(0) == "<".ord
-    end
 
     def apply_filter(document)
       return document unless document.errors.empty?
