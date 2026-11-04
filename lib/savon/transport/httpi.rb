@@ -33,12 +33,19 @@ module Savon
 
         log_request(http_request.url, http_request.headers, http_request.body) if log?
 
-        http_response = ::HTTPI.post(http_request, @globals[:adapter])
-        response = Response.from_httpi(http_response)
+        httpi_response = ::HTTPI.post(http_request, @globals[:adapter])
+        response = normalize_response(httpi_response)
 
         log_response(response) if log?
-
         response
+      end
+
+      # Normalizes a native HTTPI::Response into a Transport::Response.
+      #
+      # @param httpi_response [HTTPI::Response]
+      # @return               [Transport::Response]
+      def normalize_response(httpi_response)
+        Response.from_httpi(httpi_response)
       end
 
       # Builds a fully-configured HTTPI::Request.
@@ -56,14 +63,11 @@ module Savon
         # soap_headers are lowest priority
         soap_headers.each do |k, v| headers[k] ||= v end
 
-        if locals[:cookies]&.any?
-          headers["Cookie"] = locals[:cookies].map(&:name_and_value).join(";")
-        end
-
         http_request = ::HTTPI::Request.new
         http_request.url = url
         http_request.body = body
         http_request.headers = headers
+        http_request.set_cookies(locals[:cookies]) if locals[:cookies]
         configure_http_request(http_request)
         http_request
       end

@@ -96,6 +96,25 @@ module Savon
         expect(resulting_hash).to eq good_result
         expect(xml).to eq good_xml
       end
+
+      context "when converted keys differ in case from schema element names (issue #895)" do
+        # The default key converter turns :entity_ids into "entityIds" while the
+        # schema defines "EntityIds"; the schema lookups must still resolve.
+        let(:key_converter) { nil }
+        let(:types) { { %w[GetAdExtensionsAssociationsRequest EntityIds] => "ArrayOflong" } }
+        let(:used_namespaces) { { %w[ArrayOflong long] => "ins0" } }
+
+        it "still resolves the element namespace through the type definitions" do
+          message = described_class.new(types, used_namespaces, key_converter)
+          resulting_hash = message.to_hash({ entity_ids: [{ long: 8_177_659_860_409 }] },
+                                           ["GetAdExtensionsAssociationsRequest"])
+
+          expect(resulting_hash).to eq({ entity_ids: [{ "ins0:long" => "8177659860409" }] })
+
+          xml = Gyoku.xml(resulting_hash, key_converter: key_converter)
+          expect(xml).to include("<ins0:long>8177659860409</ins0:long>")
+        end
+      end
     end
   end
 end

@@ -1,12 +1,22 @@
 # frozen_string_literal: true
 
+require "savon/addressing"
 require "savon/header"
 require "savon/message"
+require "savon/effective_options"
 require "nokogiri"
 require "builder"
 require "gyoku"
 
 module Savon
+  # Builds the SOAP request for an operation: the XML envelope, or
+  # a multipart/related message when the request carries attachments
+  # (SOAP with Attachments, https://www.w3.org/TR/SOAP-attachments).
+  #
+  # It owns the envelope structure, its namespace declarations, and the body,
+  # and signs the document when a WSSE signature is present. Message-body
+  # serialization is delegated to {Savon::Message}, the Header element to
+  # {Savon::Header}, and Hash-to-XML conversion to Gyoku.
   class Builder
     attr_reader :multipart
 
@@ -25,15 +35,23 @@ module Savon
       2 => "application/soap+xml"
     }.freeze
 
-    WSA_NAMESPACE = "http://www.w3.org/2005/08/addressing"
+    # @deprecated Use {Savon::Addressing::NAMESPACE} instead. This alias will
+    #   be removed in Savon 3.0.
+    WSA_NAMESPACE = Addressing::NAMESPACE
 
+    # @param operation_name [Symbol] the SOAP operation being called
+    # @param wsdl [Wasabi::Document] the parsed WSDL, or an empty document when
+    #   the client was configured without one
+    # @param globals [Savon::GlobalOptions] client-level options
+    # @param locals [Savon::LocalOptions] per-request options
     def initialize(operation_name, wsdl, globals, locals)
       @operation_name = operation_name
 
       @wsdl      = wsdl
       @globals   = globals
       @locals    = locals
-      @signature = @locals[:wsse_signature] || @globals[:wsse_signature]
+      @effective = EffectiveOptions.new(operation_name, wsdl, globals, locals)
+      @signature = @effective.wsse_signature
 
       @types = convert_type_definitions_to_hash
       @used_namespaces = convert_type_namespaces_to_hash
@@ -50,7 +68,7 @@ module Savon
       if @signature
         @signature.document = xml_result
 
-        2.times do
+        3.times do
           @header = nil
           @signature.document = build_xml
         end
@@ -67,8 +85,12 @@ module Savon
       end
     end
 
+    # Returns the XML attributes of the envelope's Header element, provided
+    # by the header's sections.
+    #
+    # @return [Hash{String => String}]
     def header_attributes
-      @globals[:use_wsa_headers] ? { 'xmlns:wsa' => WSA_NAMESPACE } : {}
+      header.attributes
     end
 
     def body_attributes
@@ -107,7 +129,7 @@ module Savon
       @internal_namespace_count ||= 0
 
       unless (identifier = namespace_by_uri(uri))
-        wsdl_identifier = @wsdl.document? ? @wsdl.parser.namespaces.key(uri) : nil
+        wsdl_identifier = wsdl_namespace_identifier(uri)
         # The prefix may already be taken by the target namespace or a user-supplied
         # :namespaces override - fall back to ins0, ins1... rather than overwriting it.
         wsdl_identifier = nil if wsdl_identifier && namespaces.key?("xmlns:#{wsdl_identifier}")
@@ -117,6 +139,12 @@ module Savon
       end
 
       [path, identifier]
+    end
+
+    def wsdl_namespace_identifier(uri)
+      return unless @wsdl.document?
+
+      @wsdl.parser.namespaces.find { |key, value| value == uri && !key.downcase.start_with?("xml") }&.first
     end
 
     def namespaces_with_globals
@@ -144,7 +172,7 @@ module Savon
     end
 
     def header
-      @header ||= Header.new(@globals, @locals)
+      @header ||= Header.new(@globals, @effective)
     end
 
     def namespaced_message_tag
@@ -171,7 +199,7 @@ module Savon
         break if @locals[:message].nil?
 
         message_locals = @locals[:message][StringUtils.snakecase(message).to_sym]
-        message_content = Message.new(message_tag, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
+        message_content = Message.new(type.last, namespace_identifier, @types, @used_namespaces, message_locals, :unqualified, @globals[:convert_request_keys_to], @globals[:unwrap]).to_s
         messages += "<#{message} xsi:type=\"#{type.join(':')}\">#{message_content}</#{message}>"
       end
       messages
@@ -219,10 +247,7 @@ module Savon
     end
 
     def namespace_by_uri(uri)
-      namespaces.each do |candidate_identifier, candidate_uri|
-        return candidate_identifier.gsub(/^xmlns:/, '') if candidate_uri == uri
-      end
-      nil
+      namespaces.key(uri)&.delete_prefix("xmlns:")
     end
 
     def builder

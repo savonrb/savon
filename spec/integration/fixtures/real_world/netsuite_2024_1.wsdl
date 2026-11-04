@@ -1,0 +1,2531 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:tns="urn:platform_2024_1.webservices.netsuite.com" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:platformMsgs="urn:messages_2024_1.platform.webservices.netsuite.com" xmlns:platformFaults="urn:faults_2024_1.platform.webservices.netsuite.com" targetNamespace="urn:platform_2024_1.webservices.netsuite.com">
+	<documentation>
+		Release Status: Generally Available
+	</documentation>
+	<types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+			<xsd:import namespace="urn:core_2024_1.platform.webservices.netsuite.com" schemaLocation="../../xsd/platform/v2024_1_0/core.xsd"/>
+			<xsd:import namespace="urn:faults_2024_1.platform.webservices.netsuite.com" schemaLocation="../../xsd/platform/v2024_1_0/faults.xsd"/>
+			<xsd:import namespace="urn:messages_2024_1.platform.webservices.netsuite.com" schemaLocation="../../xsd/platform/v2024_1_0/messages.xsd"/>
+			<xsd:import namespace="urn:common_2024_1.platform.webservices.netsuite.com" schemaLocation="../../xsd/platform/v2024_1_0/common.xsd"/>
+			<xsd:import namespace="urn:scheduling_2024_1.activities.webservices.netsuite.com" schemaLocation="../../xsd/activities/v2024_1_0/scheduling.xsd"/>
+			<xsd:import namespace="urn:types.scheduling_2024_1.activities.webservices.netsuite.com" schemaLocation="../../xsd/activities/v2024_1_0/schedulingTypes.xsd"/>
+			<xsd:import namespace="urn:communication_2024_1.general.webservices.netsuite.com" schemaLocation="../../xsd/general/v2024_1_0/communication.xsd"/>
+			<xsd:import namespace="urn:types.communication_2024_1.general.webservices.netsuite.com" schemaLocation="../../xsd/general/v2024_1_0/communicationTypes.xsd"/>
+			<xsd:import namespace="urn:relationships_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/relationships.xsd"/>
+			<xsd:import namespace="urn:types.relationships_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/relationshipTypes.xsd"/>
+			<xsd:import namespace="urn:support_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/support.xsd"/>
+			<xsd:import namespace="urn:types.support_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/supportTypes.xsd"/>
+			<xsd:import namespace="urn:accounting_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/accounting.xsd"/>
+			<xsd:import namespace="urn:types.accounting_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/accountingTypes.xsd"/>
+			<xsd:import namespace="urn:sales_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/sales.xsd"/>
+			<xsd:import namespace="urn:types.sales_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/saleTypes.xsd"/>
+			<xsd:import namespace="urn:purchases_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/purchases.xsd"/>
+			<xsd:import namespace="urn:customers_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/customers.xsd"/>
+			<xsd:import namespace="urn:financial_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/financial.xsd"/>
+			<xsd:import namespace="urn:bank_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/bank.xsd"/>
+			<xsd:import namespace="urn:inventory_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/inventory.xsd"/>
+			<xsd:import namespace="urn:types.inventory_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/inventoryTypes.xsd"/>
+			<xsd:import namespace="urn:general_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/general.xsd"/>
+			<xsd:import namespace="urn:customization_2024_1.setup.webservices.netsuite.com" schemaLocation="../../xsd/setup/v2024_1_0/customization.xsd"/>
+			<xsd:import namespace="urn:types.customization_2024_1.setup.webservices.netsuite.com" schemaLocation="../../xsd/setup/v2024_1_0/customizationTypes.xsd"/>
+			<xsd:import namespace="urn:employees_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/employees.xsd"/>
+			<xsd:import namespace="urn:types.employees_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/employeeTypes.xsd"/>
+			<xsd:import namespace="urn:filecabinet_2024_1.documents.webservices.netsuite.com" schemaLocation="../../xsd/documents/v2024_1_0/fileCabinet.xsd"/>
+			<xsd:import namespace="urn:types.filecabinet_2024_1.documents.webservices.netsuite.com" schemaLocation="../../xsd/documents/v2024_1_0/fileCabinetTypes.xsd"/>
+			<xsd:import namespace="urn:website_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/website.xsd"/>
+			<xsd:import namespace="urn:types.website_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/websiteTypes.xsd"/>
+			<xsd:import namespace="urn:employees_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/employees.xsd"/>
+			<xsd:import namespace="urn:marketing_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/marketing.xsd"/>
+			<xsd:import namespace="urn:types.marketing_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/marketingTypes.xsd"/>
+			<xsd:import namespace="urn:demandplanning_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/demandPlanning.xsd"/>
+			<xsd:import namespace="urn:types.demandplanning_2024_1.transactions.webservices.netsuite.com" schemaLocation="../../xsd/transactions/v2024_1_0/demandPlanningTypes.xsd"/>
+			<xsd:import namespace="urn:supplychain_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/supplyChain.xsd"/>
+			<xsd:import namespace="urn:types.supplychain_2024_1.lists.webservices.netsuite.com" schemaLocation="../../xsd/lists/v2024_1_0/supplyChainTypes.xsd"/>
+		</xsd:schema>
+	</types>
+	<message name="headers">
+		<part name="applicationInfo" element="platformMsgs:applicationInfo"/>
+		<part name="partnerInfo" element="platformMsgs:partnerInfo"/>
+		<part name="documentInfo" element="platformMsgs:documentInfo"/>
+		<part name="preferences" element="platformMsgs:preferences"/>
+		<part name="searchPreferences" element="platformMsgs:searchPreferences"/>
+		<part name="tokenPassport" element="platformMsgs:tokenPassport"/>
+	</message>
+	<message name="changePasswordRequest">
+		<part name="parameters" element="platformMsgs:changePassword"/>
+	</message>
+	<message name="changePasswordResponse">
+		<part name="parameters" element="platformMsgs:changePasswordResponse"/>
+	</message>
+	<message name="changeEmailRequest">
+		<part name="parameters" element="platformMsgs:changeEmail"/>
+	</message>
+	<message name="changeEmailResponse">
+		<part name="parameters" element="platformMsgs:changeEmailResponse"/>
+	</message>
+	<message name="addRequest">
+		<part name="parameters" element="platformMsgs:add"/>
+	</message>
+	<message name="addResponse">
+		<part name="parameters" element="platformMsgs:addResponse"/>
+	</message>
+	<message name="deleteRequest">
+		<part name="parameters" element="platformMsgs:delete"/>
+	</message>
+	<message name="deleteResponse">
+		<part name="parameters" element="platformMsgs:deleteResponse"/>
+	</message>
+	<message name="searchRequest">
+		<part name="parameters" element="platformMsgs:search"/>
+	</message>
+	<message name="searchResponse">
+		<part name="parameters" element="platformMsgs:searchResponse"/>
+	</message>
+	<message name="searchMoreWithIdRequest">
+		<part name="parameters" element="platformMsgs:searchMoreWithId"/>
+	</message>
+	<message name="searchMoreWithIdResponse">
+		<part name="parameters" element="platformMsgs:searchMoreWithIdResponse"/>
+	</message>
+	<message name="updateRequest">
+		<part name="parameters" element="platformMsgs:update"/>
+	</message>
+	<message name="updateResponse">
+		<part name="parameters" element="platformMsgs:updateResponse"/>
+	</message>
+	<message name="upsertRequest">
+		<part name="parameters" element="platformMsgs:upsert"/>
+	</message>
+	<message name="upsertResponse">
+		<part name="parameters" element="platformMsgs:upsertResponse"/>
+	</message>
+	<message name="addListRequest">
+		<part name="parameters" element="platformMsgs:addList"/>
+	</message>
+	<message name="addListResponse">
+		<part name="parameters" element="platformMsgs:addListResponse"/>
+	</message>
+	<message name="deleteListRequest">
+		<part name="parameters" element="platformMsgs:deleteList"/>
+	</message>
+	<message name="deleteListResponse">
+		<part name="parameters" element="platformMsgs:deleteListResponse"/>
+	</message>
+	<message name="updateListRequest">
+		<part name="parameters" element="platformMsgs:updateList"/>
+	</message>
+	<message name="updateListResponse">
+		<part name="parameters" element="platformMsgs:updateListResponse"/>
+	</message>
+	<message name="upsertListRequest">
+		<part name="parameters" element="platformMsgs:upsertList"/>
+	</message>
+	<message name="upsertListResponse">
+		<part name="parameters" element="platformMsgs:upsertListResponse"/>
+	</message>
+	<message name="getRequest">
+		<part name="parameters" element="platformMsgs:get"/>
+	</message>
+	<message name="getResponse">
+		<part name="parameters" element="platformMsgs:getResponse"/>
+	</message>
+	<message name="getListRequest">
+		<part name="parameters" element="platformMsgs:getList"/>
+	</message>
+	<message name="getListResponse">
+		<part name="parameters" element="platformMsgs:getListResponse"/>
+	</message>
+	<message name="getAllRequest">
+		<part name="parameters" element="platformMsgs:getAll"/>
+	</message>
+	<message name="getAllResponse">
+		<part name="parameters" element="platformMsgs:getAllResponse"/>
+	</message>
+	<message name="getSavedSearchRequest">
+		<part name="parameters" element="platformMsgs:getSavedSearch"/>
+	</message>
+	<message name="getSavedSearchResponse">
+		<part name="parameters" element="platformMsgs:getSavedSearchResponse"/>
+	</message>
+	<message name="getCustomizationIdRequest">
+		<part name="parameters" element="platformMsgs:getCustomizationId"/>
+	</message>
+	<message name="getCustomizationIdResponse">
+		<part name="parameters" element="platformMsgs:getCustomizationIdResponse"/>
+	</message>
+	<message name="initializeRequest">
+		<part name="parameters" element="platformMsgs:initialize"/>
+	</message>
+	<message name="initializeResponse">
+		<part name="parameters" element="platformMsgs:initializeResponse"/>
+	</message>
+	<message name="initializeListRequest">
+		<part name="parameters" element="platformMsgs:initializeList"/>
+	</message>
+	<message name="initializeListResponse">
+		<part name="parameters" element="platformMsgs:initializeListResponse"/>
+	</message>
+	<message name="getSelectValueRequest">
+		<part name="parameters" element="platformMsgs:getSelectValue"/>
+	</message>
+	<message name="getSelectValueResponse">
+		<part name="parameters" element="platformMsgs:getSelectValueResponse"/>
+	</message>
+	<message name="getItemAvailabilityRequest">
+		<part name="parameters" element="platformMsgs:getItemAvailability"/>
+	</message>
+	<message name="getItemAvailabilityResponse">
+		<part name="parameters" element="platformMsgs:getItemAvailabilityResponse"/>
+	</message>
+	<message name="getBudgetExchangeRateRequest">
+		<part name="parameters" element="platformMsgs:getBudgetExchangeRate"/>
+	</message>
+	<message name="getBudgetExchangeRateResponse">
+		<part name="parameters" element="platformMsgs:getBudgetExchangeRateResponse"/>
+	</message>
+	<message name="getCurrencyRateRequest">
+		<part name="parameters" element="platformMsgs:getCurrencyRate"/>
+	</message>
+	<message name="getCurrencyRateResponse">
+		<part name="parameters" element="platformMsgs:getCurrencyRateResponse"/>
+	</message>
+	<message name="getDataCenterUrlsRequest">
+		<part name="parameters" element="platformMsgs:getDataCenterUrls"/>
+	</message>
+	<message name="getDataCenterUrlsResponse">
+		<part name="parameters" element="platformMsgs:getDataCenterUrlsResponse"/>
+	</message>
+	<message name="getPostingTransactionSummaryRequest">
+		<part name="parameters" element="platformMsgs:getPostingTransactionSummary"/>
+	</message>
+	<message name="getPostingTransactionSummaryResponse">
+		<part name="parameters" element="platformMsgs:getPostingTransactionSummaryResponse"/>
+	</message>
+	<message name="getServerTimeRequest">
+		<part name="parameters" element="platformMsgs:getServerTime"/>
+	</message>
+	<message name="getServerTimeResponse">
+		<part name="parameters" element="platformMsgs:getServerTimeResponse"/>
+	</message>
+	<message name="attachRequest">
+		<part name="parameters" element="platformMsgs:attach"/>
+	</message>
+	<message name="attachResponse">
+		<part name="parameters" element="platformMsgs:attachResponse"/>
+	</message>
+	<message name="detachRequest">
+		<part name="parameters" element="platformMsgs:detach"/>
+	</message>
+	<message name="detachResponse">
+		<part name="parameters" element="platformMsgs:detachResponse"/>
+	</message>
+	<message name="getAccountGovernanceInfoRequest">
+		<part name="parameters" element="platformMsgs:getAccountGovernanceInfo"/>
+	</message>
+	<message name="getAccountGovernanceInfoResponse">
+		<part name="parameters" element="platformMsgs:getAccountGovernanceInfoResponse"/>
+	</message>
+	<message name="getIntegrationGovernanceInfoRequest">
+		<part name="parameters" element="platformMsgs:getIntegrationGovernanceInfo"/>
+	</message>
+	<message name="getIntegrationGovernanceInfoResponse">
+		<part name="parameters" element="platformMsgs:getIntegrationGovernanceInfoResponse"/>
+	</message>
+	<message name="updateInviteeStatusRequest">
+		<part name="parameters" element="platformMsgs:updateInviteeStatus"/>
+	</message>
+	<message name="updateInviteeStatusResponse">
+		<part name="parameters" element="platformMsgs:updateInviteeStatusResponse"/>
+	</message>
+	<message name="updateInviteeStatusListRequest">
+		<part name="parameters" element="platformMsgs:updateInviteeStatusList"/>
+	</message>
+	<message name="updateInviteeStatusListResponse">
+		<part name="parameters" element="platformMsgs:updateInviteeStatusListResponse"/>
+	</message>
+	<message name="asyncAddListRequest">
+		<part name="parameters" element="platformMsgs:asyncAddList"/>
+	</message>
+	<message name="asyncUpdateListRequest">
+		<part name="parameters" element="platformMsgs:asyncUpdateList"/>
+	</message>
+	<message name="asyncUpsertListRequest">
+		<part name="parameters" element="platformMsgs:asyncUpsertList"/>
+	</message>
+	<message name="asyncDeleteListRequest">
+		<part name="parameters" element="platformMsgs:asyncDeleteList"/>
+	</message>
+	<message name="asyncGetListRequest">
+		<part name="parameters" element="platformMsgs:asyncGetList"/>
+	</message>
+	<message name="asyncInitializeListRequest">
+		<part name="parameters" element="platformMsgs:asyncInitializeList"/>
+	</message>
+	<message name="asyncSearchRequest">
+		<part name="parameters" element="platformMsgs:asyncSearch"/>
+	</message>
+	<message name="getAsyncResultRequest">
+		<part name="parameters" element="platformMsgs:getAsyncResult"/>
+	</message>
+	<message name="getAsyncResultResponse">
+		<part name="parameters" element="platformMsgs:getAsyncResultResponse"/>
+	</message>
+	<message name="asyncAddListResponse">
+		<part name="parameters" element="platformMsgs:asyncAddListResponse"/>
+	</message>
+	<message name="asyncUpdateListResponse">
+		<part name="parameters" element="platformMsgs:asyncUpdateListResponse"/>
+	</message>
+	<message name="asyncUpsertListResponse">
+		<part name="parameters" element="platformMsgs:asyncUpsertListResponse"/>
+	</message>
+	<message name="asyncDeleteListResponse">
+		<part name="parameters" element="platformMsgs:asyncDeleteListResponse"/>
+	</message>
+	<message name="asyncGetListResponse">
+		<part name="parameters" element="platformMsgs:asyncGetListResponse"/>
+	</message>
+	<message name="asyncInitializeListResponse">
+		<part name="parameters" element="platformMsgs:asyncInitializeListResponse"/>
+	</message>
+	<message name="asyncSearchResponse">
+		<part name="parameters" element="platformMsgs:asyncSearchResponse"/>
+	</message>
+	<message name="checkAsyncStatusResponse">
+		<part name="parameters" element="platformMsgs:checkAsyncStatusResponse"/>
+	</message>
+	<message name="checkAsyncStatusRequest">
+		<part name="parameters" element="platformMsgs:checkAsyncStatus"/>
+	</message>
+	<message name="InsufficientPermissionFault">
+		<part name="fault" element="platformFaults:insufficientPermissionFault"/>
+	</message>
+	<message name="InvalidAccountFault">
+		<part name="fault" element="platformFaults:invalidAccountFault"/>
+	</message>
+	<message name="InvalidCredentialsFault">
+		<part name="fault" element="platformFaults:invalidCredentialsFault"/>
+	</message>
+	<message name="InvalidSessionFault">
+		<part name="fault" element="platformFaults:invalidSessionFault"/>
+	</message>
+	<message name="InvalidVersionFault">
+		<part name="fault" element="platformFaults:invalidVersionFault"/>
+	</message>
+	<message name="ExceededConcurrentRequestLimitFault">
+		<part name="fault" element="platformFaults:exceededConcurrentRequestLimitFault"/>
+	</message>
+	<message name="ExceededRequestLimitFault">
+		<part name="fault" element="platformFaults:exceededRequestLimitFault"/>
+	</message>
+	<message name="ExceededUsageLimitFault">
+		<part name="fault" element="platformFaults:exceededUsageLimitFault"/>
+	</message>
+	<message name="ExceededRecordCountFault">
+		<part name="fault" element="platformFaults:exceededRecordCountFault"/>
+	</message>
+	<message name="ExceededRequestSizeFault">
+		<part name="fault" element="platformFaults:exceededRequestSizeFault"/>
+	</message>
+	<message name="UnexpectedErrorFault">
+		<part name="fault" element="platformFaults:unexpectedErrorFault"/>
+	</message>
+	<message name="AsyncFault">
+		<part name="fault" element="platformFaults:asyncFault"/>
+	</message>
+	<message name="getDeletedRequest">
+		<part name="parameters" element="platformMsgs:getDeleted"/>
+	</message>
+	<message name="getDeletedResponse">
+		<part name="parameters" element="platformMsgs:getDeletedResponse"/>
+	</message>
+	<portType name="NetSuitePortType">
+		<operation name="changePassword">
+			<input name="changePasswordRequest" message="tns:changePasswordRequest"/>
+			<output name="changePasswordResponse" message="tns:changePasswordResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidAccountFault" message="tns:InvalidAccountFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidVersionFault" message="tns:InvalidVersionFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="changeEmail">
+			<input name="changeEmailRequest" message="tns:changeEmailRequest"/>
+			<output name="changeEmailResponse" message="tns:changeEmailResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidAccountFault" message="tns:InvalidAccountFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidVersionFault" message="tns:InvalidVersionFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="add">
+			<input name="addRequest" message="tns:addRequest"/>
+			<output name="addResponse" message="tns:addResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="delete">
+			<input name="deleteRequest" message="tns:deleteRequest"/>
+			<output name="deleteResponse" message="tns:deleteResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="search">
+			<input name="searchRequest" message="tns:searchRequest"/>
+			<output name="searchResponse" message="tns:searchResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="searchMoreWithId">
+			<input name="searchMoreWithIdRequest" message="tns:searchMoreWithIdRequest"/>
+			<output name="searchMoreWithIdResponse" message="tns:searchMoreWithIdResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="update">
+			<input name="updateRequest" message="tns:updateRequest"/>
+			<output name="updateResponse" message="tns:updateResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="upsert">
+			<input name="upsertRequest" message="tns:upsertRequest"/>
+			<output name="upsertResponse" message="tns:upsertResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="addList">
+			<input name="addListRequest" message="tns:addListRequest"/>
+			<output name="addListResponse" message="tns:addListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="deleteList">
+			<input name="deleteListRequest" message="tns:deleteListRequest"/>
+			<output name="deleteListResponse" message="tns:deleteListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="updateList">
+			<input name="updateListRequest" message="tns:updateListRequest"/>
+			<output name="updateListResponse" message="tns:updateListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="upsertList">
+			<input name="upsertListRequest" message="tns:upsertListRequest"/>
+			<output name="upsertListResponse" message="tns:upsertListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="get">
+			<input name="getRequest" message="tns:getRequest"/>
+			<output name="getResponse" message="tns:getResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getList">
+			<input name="getListRequest" message="tns:getListRequest"/>
+			<output name="getListResponse" message="tns:getListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getAll">
+			<input name="getAllRequest" message="tns:getAllRequest"/>
+			<output name="getAllResponse" message="tns:getAllResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getSavedSearch">
+			<input name="getSavedSearchRequest" message="tns:getSavedSearchRequest"/>
+			<output name="getSavedSearchResponse" message="tns:getSavedSearchResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getCustomizationId">
+			<input name="getCustomizationIdRequest" message="tns:getCustomizationIdRequest"/>
+			<output name="getCustomizationIdResponse" message="tns:getCustomizationIdResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="initialize">
+			<input name="initializeRequest" message="tns:initializeRequest"/>
+			<output name="initializeResponse" message="tns:initializeResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="initializeList">
+			<input name="initializeListRequest" message="tns:initializeListRequest"/>
+			<output name="initializeListResponse" message="tns:initializeListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getSelectValue">
+			<input name="getSelectValueRequest" message="tns:getSelectValueRequest"/>
+			<output name="getSelectValueResponse" message="tns:getSelectValueResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getItemAvailability">
+			<input name="getItemAvailabilityRequest" message="tns:getItemAvailabilityRequest"/>
+			<output name="getItemAvailabilityResponse" message="tns:getItemAvailabilityResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getBudgetExchangeRate">
+			<input name="getBudgetExchangeRateRequest" message="tns:getBudgetExchangeRateRequest"/>
+			<output name="getBudgetExchangeRateResponse" message="tns:getBudgetExchangeRateResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getCurrencyRate">
+			<input name="getCurrencyRateRequest" message="tns:getCurrencyRateRequest"/>
+			<output name="getCurrencyRateResponse" message="tns:getCurrencyRateResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getDataCenterUrls">
+			<input name="getDataCenterUrlsRequest" message="tns:getDataCenterUrlsRequest"/>
+			<output name="getDataCenterUrlsResponse" message="tns:getDataCenterUrlsResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getPostingTransactionSummary">
+			<input name="getPostingTransactionSummaryRequest" message="tns:getPostingTransactionSummaryRequest"/>
+			<output name="getPostingTransactionSummaryResponse" message="tns:getPostingTransactionSummaryResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getServerTime">
+			<input name="getServerTimeRequest" message="tns:getServerTimeRequest"/>
+			<output name="getServerTimeResponse" message="tns:getServerTimeResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="attach">
+			<input name="attachRequest" message="tns:attachRequest"/>
+			<output name="attachResponse" message="tns:attachResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="detach">
+			<input name="detachRequest" message="tns:detachRequest"/>
+			<output name="detachResponse" message="tns:detachResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="updateInviteeStatus">
+			<input name="updateInviteeStatusRequest" message="tns:updateInviteeStatusRequest"/>
+			<output name="updateInviteeStatusResponse" message="tns:updateInviteeStatusResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="updateInviteeStatusList">
+			<input name="updateInviteeStatusListRequest" message="tns:updateInviteeStatusListRequest"/>
+			<output name="updateInviteeStatusListResponse" message="tns:updateInviteeStatusListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncAddList">
+			<input name="asyncAddListRequest" message="tns:asyncAddListRequest"/>
+			<output name="asyncAddListResponse" message="tns:asyncAddListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncUpdateList">
+			<input name="asyncUpdateListRequest" message="tns:asyncUpdateListRequest"/>
+			<output name="asyncUpdateListResponse" message="tns:asyncUpdateListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncUpsertList">
+			<input name="asyncUpsertListRequest" message="tns:asyncUpsertListRequest"/>
+			<output name="asyncUpsertListResponse" message="tns:asyncUpsertListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncDeleteList">
+			<input name="asyncDeleteListRequest" message="tns:asyncDeleteListRequest"/>
+			<output name="asyncDeleteListResponse" message="tns:asyncDeleteListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncGetList">
+			<input name="asyncGetListRequest" message="tns:asyncGetListRequest"/>
+			<output name="asyncGetListResponse" message="tns:asyncGetListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncInitializeList">
+			<input name="asyncInitializeListRequest" message="tns:asyncInitializeListRequest"/>
+			<output name="asyncInitializeListResponse" message="tns:asyncInitializeListResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="asyncSearch">
+			<input name="asyncSearchRequest" message="tns:asyncSearchRequest"/>
+			<output name="asyncSearchResponse" message="tns:asyncSearchResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getAsyncResult">
+			<input name="getAsyncResultRequest" message="tns:getAsyncResultRequest"/>
+			<output name="getAsyncResultResponse" message="tns:getAsyncResultResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+			<fault name="AsyncFault" message="tns:AsyncFault"/>
+		</operation>
+		<operation name="checkAsyncStatus">
+			<input name="checkAsyncStatusRequest" message="tns:checkAsyncStatusRequest"/>
+			<output name="checkAsyncStatusResponse" message="tns:checkAsyncStatusResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+			<fault name="AsyncFault" message="tns:AsyncFault"/>
+		</operation>
+		<operation name="getDeleted">
+			<input name="getDeletedRequest" message="tns:getDeletedRequest"/>
+			<output name="getDeletedResponse" message="tns:getDeletedResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="ExceededRecordCountFault" message="tns:ExceededRecordCountFault"/>
+			<fault name="ExceededRequestSizeFault" message="tns:ExceededRequestSizeFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getAccountGovernanceInfo">
+			<input name="getAccountGovernanceInfoRequest" message="tns:getAccountGovernanceInfoRequest"/>
+			<output name="getAccountGovernanceInfoResponse" message="tns:getAccountGovernanceInfoResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+		<operation name="getIntegrationGovernanceInfo">
+			<input name="getIntegrationGovernanceInfoRequest" message="tns:getIntegrationGovernanceInfoRequest"/>
+			<output name="getIntegrationGovernanceInfoResponse" message="tns:getIntegrationGovernanceInfoResponse"/>
+			<fault name="InsufficientPermissionFault" message="tns:InsufficientPermissionFault"/>
+			<fault name="InvalidSessionFault" message="tns:InvalidSessionFault"/>
+			<fault name="InvalidCredentialsFault" message="tns:InvalidCredentialsFault"/>
+			<fault name="ExceededConcurrentRequestLimitFault" message="tns:ExceededConcurrentRequestLimitFault"/>
+			<fault name="ExceededRequestLimitFault" message="tns:ExceededRequestLimitFault"/>
+			<fault name="ExceededUsageLimitFault" message="tns:ExceededUsageLimitFault"/>
+			<fault name="UnexpectedErrorFault" message="tns:UnexpectedErrorFault"/>
+		</operation>
+	</portType>
+	<binding name="NetSuiteBinding" type="tns:NetSuitePortType">
+		<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+		<operation name="changePassword">
+			<soap:operation soapAction="changePassword"/>
+			<input name="changePasswordRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="changePasswordResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidAccountFault">
+				<soap:fault name="InvalidAccountFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidVersionFault">
+				<soap:fault name="InvalidVersionFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="changeEmail">
+			<soap:operation soapAction="changeEmail"/>
+			<input name="changeEmailRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="changeEmailResponse">
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidAccountFault">
+				<soap:fault name="InvalidAccountFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidVersionFault">
+				<soap:fault name="InvalidVersionFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="add">
+			<soap:operation soapAction="add"/>
+			<input name="addRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="addResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="delete">
+			<soap:operation soapAction="delete"/>
+			<input name="deleteRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="deleteResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="search">
+			<soap:operation soapAction="search"/>
+			<input name="searchRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="searchPreferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="searchResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="searchMoreWithId">
+			<soap:operation soapAction="searchMoreWithId"/>
+			<input name="searchMoreWithIdRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="searchPreferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="searchMoreWithIdResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="update">
+			<soap:operation soapAction="update"/>
+			<input name="updateRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="updateResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="upsert">
+			<soap:operation soapAction="upsert"/>
+			<input name="upsertRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="upsertResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="addList">
+			<soap:operation soapAction="addList"/>
+			<input name="addListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="addListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="deleteList">
+			<soap:operation soapAction="deleteList"/>
+			<input name="deleteListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="deleteListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="updateList">
+			<soap:operation soapAction="updateList"/>
+			<input name="updateListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="updateListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="upsertList">
+			<soap:operation soapAction="upsertList"/>
+			<input name="upsertListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="upsertListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="get">
+			<soap:operation soapAction="get"/>
+			<input name="getRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getList">
+			<soap:operation soapAction="getList"/>
+			<input name="getListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getAll">
+			<soap:operation soapAction="getAll"/>
+			<input name="getAllRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getAllResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getSavedSearch">
+			<soap:operation soapAction="getSavedSearch"/>
+			<input name="getSavedSearchRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getSavedSearchResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getCustomizationId">
+			<soap:operation soapAction="getCustomizationId"/>
+			<input name="getCustomizationIdRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getCustomizationIdResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="initialize">
+			<soap:operation soapAction="initialize"/>
+			<input name="initializeRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="initializeResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="initializeList">
+			<soap:operation soapAction="initializeList"/>
+			<input name="initializeListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="initializeListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getSelectValue">
+			<soap:operation soapAction="getSelectValue"/>
+			<input name="getSelectValueRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getSelectValueResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getItemAvailability">
+			<soap:operation soapAction="getItemAvailability"/>
+			<input name="getItemAvailabilityRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getItemAvailabilityResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getBudgetExchangeRate">
+			<soap:operation soapAction="getBudgetExchangeRate"/>
+			<input name="getBudgetExchangeRateRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getBudgetExchangeRateResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getCurrencyRate">
+			<soap:operation soapAction="getCurrencyRate"/>
+			<input name="getCurrencyRateRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getCurrencyRateResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getDataCenterUrls">
+			<soap:operation soapAction="getDataCenterUrls"/>
+			<input name="getDataCenterUrlsRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getDataCenterUrlsResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getPostingTransactionSummary">
+			<soap:operation soapAction="getPostingTransactionSummary"/>
+			<input name="getPostingTransactionSummaryRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getPostingTransactionSummaryResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getServerTime">
+			<soap:operation soapAction="getServerTime"/>
+			<input name="getServerTimeRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getServerTimeResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="attach">
+			<soap:operation soapAction="attach"/>
+			<input name="attachRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="attachResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="detach">
+			<soap:operation soapAction="detach"/>
+			<input name="detachRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="detachResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="updateInviteeStatus">
+			<soap:operation soapAction="updateInviteeStatus"/>
+			<input name="updateInviteeStatusRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="updateInviteeStatusResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="updateInviteeStatusList">
+			<soap:operation soapAction="updateInviteeStatusList"/>
+			<input name="updateInviteeStatusListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="updateInviteeStatusListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncAddList">
+			<soap:operation soapAction="asyncAddList"/>
+			<input name="asyncAddListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncAddListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncUpdateList">
+			<soap:operation soapAction="asyncUpdateList"/>
+			<input name="asyncUpdateListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncUpdateListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncUpsertList">
+			<soap:operation soapAction="asyncUpsertList"/>
+			<input name="asyncUpsertListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncUpsertListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncDeleteList">
+			<soap:operation soapAction="asyncDeleteList"/>
+			<input name="asyncDeleteListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncDeleteListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncGetList">
+			<soap:operation soapAction="asyncGetList"/>
+			<input name="asyncGetListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncGetListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncInitializeList">
+			<soap:operation soapAction="asyncInitializeList"/>
+			<input name="asyncInitializeListRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncInitializeListResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="asyncSearch">
+			<soap:operation soapAction="asyncSearch"/>
+			<input name="asyncSearchRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="searchPreferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="asyncSearchResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getAsyncResult">
+			<soap:operation soapAction="getAsyncResult"/>
+			<input name="getAsyncResultRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getAsyncResultResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+			<fault name="AsyncFault">
+				<soap:fault name="AsyncFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="checkAsyncStatus">
+			<soap:operation soapAction="checkAsyncStatus"/>
+			<input name="checkAsyncStatusRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="checkAsyncStatusResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+			<fault name="AsyncFault">
+				<soap:fault name="AsyncFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getDeleted">
+			<soap:operation soapAction="getDeleted"/>
+			<input name="getDeletedRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:header message="tns:headers" part="preferences" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getDeletedResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRecordCountFault">
+				<soap:fault name="ExceededRecordCountFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestSizeFault">
+				<soap:fault name="ExceededRequestSizeFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getAccountGovernanceInfo">
+			<soap:operation soapAction="getAccountGovernanceInfo"/>
+			<input name="getAccountGovernanceInfoRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getAccountGovernanceInfoResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+		<operation name="getIntegrationGovernanceInfo">
+			<soap:operation soapAction="getIntegrationGovernanceInfo"/>
+			<input name="getIntegrationGovernanceInfoRequest">
+				<soap:header message="tns:headers" part="tokenPassport" use="literal"/>
+				<soap:header message="tns:headers" part="applicationInfo" use="literal"/>
+				<soap:header message="tns:headers" part="partnerInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</input>
+			<output name="getIntegrationGovernanceInfoResponse">
+				<soap:header message="tns:headers" part="documentInfo" use="literal"/>
+				<soap:body use="literal"/>
+			</output>
+			<fault name="InsufficientPermissionFault">
+				<soap:fault name="InsufficientPermissionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidSessionFault">
+				<soap:fault name="InvalidSessionFault" use="literal"/>
+			</fault>
+			<fault name="InvalidCredentialsFault">
+				<soap:fault name="InvalidCredentialsFault" use="literal"/>
+			</fault>
+			<fault name="ExceededConcurrentRequestLimitFault">
+				<soap:fault name="ExceededConcurrentRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededRequestLimitFault">
+				<soap:fault name="ExceededRequestLimitFault" use="literal"/>
+			</fault>
+			<fault name="ExceededUsageLimitFault">
+				<soap:fault name="ExceededUsageLimitFault" use="literal"/>
+			</fault>
+			<fault name="UnexpectedErrorFault">
+				<soap:fault name="UnexpectedErrorFault" use="literal"/>
+			</fault>
+		</operation>
+	</binding>
+	<service name="NetSuiteService">
+		<port name="NetSuitePort" binding="tns:NetSuiteBinding">
+			<soap:address location="https://webservices.netsuite.com/services/NetSuitePort_2024_1"/>
+		</port>
+	</service>
+</definitions>

@@ -13,11 +13,13 @@ module Savon
 
     # Accepts one or more SOAP operations and generates both class and instance methods named
     # after the given operations. Each generated method accepts an optional SOAP message Hash.
+    # Raises ArgumentError for reserved model method names, before defining any methods.
     def operations(*operations)
-      operations.each do |operation|
-        define_class_operation(operation)
-        define_instance_operation(operation)
+      operations.map { |operation| [operation, operation_method_name(operation)] }.each do |operation, method_name|
+        define_class_operation(operation, method_name)
+        define_instance_operation(method_name)
       end
+      operations
     end
 
     def all_operations
@@ -27,21 +29,38 @@ module Savon
     private
 
     # Defines a class-level SOAP operation.
-    def define_class_operation(operation)
-      class_operation_module.module_eval %{
-        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
-          client.call #{operation.inspect}, locals
-        end
-      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
+    def define_class_operation(operation, method_name)
+      class_operation_module.define_method(method_name) do |locals = {}|
+        client.call operation, locals
+      end
     end
 
     # Defines an instance-level SOAP operation.
-    def define_instance_operation(operation)
-      instance_operation_module.module_eval %{
-        def #{StringUtils.snakecase(operation.to_s)}(locals = {})
-          self.class.#{StringUtils.snakecase(operation.to_s)} locals
-        end
-      }, __FILE__, __LINE__ - 4 # -4 points to the line where the eval string starts
+    def define_instance_operation(method_name)
+      instance_operation_module.define_method(method_name) do |locals = {}|
+        self.class.public_send(method_name, locals)
+      end
+    end
+
+    # Returns the generated Ruby method name for a SOAP operation.
+    def operation_method_name(operation)
+      method_name = StringUtils.snakecase(operation.to_s).to_sym
+      # Re-registering an operation stays allowed; any other name must not shadow a method the model already responds to.
+      return method_name if generated_operation_names.include?(method_name)
+
+      reserved_methods = instance_methods + private_instance_methods +
+                         singleton_class.instance_methods + singleton_class.private_instance_methods
+      raise ArgumentError, "SOAP operation #{operation.inspect} conflicts with reserved Savon::Model method #{method_name.inspect}" if reserved_methods.include?(method_name)
+
+      method_name
+    end
+
+    # Names of operations already turned into methods on this model. The builder methods
+    # (client, global, raise_initialization_error!) live in the same modules but are not
+    # operations, so they stay reserved.
+    def generated_operation_names
+      (class_operation_module.instance_methods(false) + instance_operation_module.instance_methods(false)).uniq -
+        %i[client global raise_initialization_error!]
     end
 
     # Class methods.

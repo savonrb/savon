@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xs="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://example.com/service"
+             targetNamespace="http://example.com/service">
+  <types>
+    <xs:schema targetNamespace="http://schemas.xmlsoap.org/wsdl/" elementFormDefault="qualified">
+      <xs:element name="Op">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="A" type="xs:string"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </types>
+  <message name="OpRequest">
+    <part name="parameters" element="Op"/>
+  </message>
+  <portType name="ServicePortType">
+    <operation name="Op">
+      <input message="tns:OpRequest"/>
+    </operation>
+  </portType>
+  <binding name="ServiceBinding" type="tns:ServicePortType">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <operation name="Op">
+      <soap:operation soapAction="Op" style="document"/>
+      <input><soap:body use="literal"/></input>
+    </operation>
+  </binding>
+  <service name="Service">
+    <port name="ServicePort" binding="tns:ServiceBinding">
+      <soap:address location="http://example.com/service"/>
+    </port>
+  </service>
+</definitions>

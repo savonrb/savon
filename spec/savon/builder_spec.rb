@@ -123,12 +123,120 @@ RSpec.describe Savon::Builder do
         signature = certs.private_key.sign(OpenSSL::Digest.new('SHA1'), signed_info)
         expect(Base64.encode64(signature).gsub("\n", '')).to eq(signature_value)
       end
+
+      # The signature object is consumed in two places. The builder signs the
+      # document and the header emits the wsse:BinarySecurityToken via Akami, so
+      # both must resolve to the same effective signature. A local signature
+      # overrides a global one.
+      context "when a local :wsse_signature is also set" do
+        let(:local_key) { OpenSSL::PKey::RSA.new(2048) }
+        let(:local_cert) do
+          OpenSSL::X509::Certificate.new.tap do |c|
+            c.version    = 2
+            c.serial     = 2
+            c.subject    = OpenSSL::X509::Name.parse("/CN=local-signature")
+            c.issuer     = c.subject
+            c.public_key = local_key.public_key
+            c.not_before = Time.now
+            c.not_after  = Time.now + 3600
+            c.sign(local_key, OpenSSL::Digest.new("SHA256"))
+          end
+        end
+        let(:local_signature) do
+          Akami::WSSE::Signature.new(
+            Akami::WSSE::Certs.new(cert_string: local_cert.to_pem, private_key_string: local_key.to_pem)
+          )
+        end
+        let(:locals) { Savon::LocalOptions.new(wsse_signature: local_signature) }
+
+        it "embeds the local certificate, not the global one" do
+          output       = builder.to_s
+          local_token  = Base64.strict_encode64(local_cert.to_der)
+          global_token = Base64.strict_encode64(OpenSSL::X509::Certificate.new(File.read(cert)).to_der)
+
+          expect(output).to include(local_token)
+          expect(output).not_to include(global_token)
+        end
+      end
+
+      context "when the local :wsse_signature is false" do
+        let(:locals) { Savon::LocalOptions.new(wsse_signature: false) }
+
+        it "falls back to the global signature" do
+          global_token = Base64.strict_encode64(OpenSSL::X509::Certificate.new(File.read(cert)).to_der)
+
+          expect(builder.to_s).to include(global_token)
+        end
+      end
+    end
+  end
+
+  describe "with a WSDL operation that has typed message parts" do
+    let(:locals) { Savon::LocalOptions.new(message: { username: "luke", password: "secret" }) }
+
+    before do
+      wsdl.stubs(:soap_input).returns(
+        "authenticate" => { "username" => %w[xsd string], "password" => %w[xsd string] }
+      )
+    end
+
+    it "builds the body from the typed parts with xsi:type attributes" do
+      body = builder.to_s
+
+      expect(body).to include('<username xsi:type="xsd:string">luke</username>')
+      expect(body).to include('<password xsi:type="xsd:string">secret</password>')
+    end
+
+    it "builds an empty body when no message was given" do
+      builder = described_class.new(:authenticate, wsdl, globals, Savon::LocalOptions.new)
+
+      expect(builder.to_s).not_to include("xsi:type")
+    end
+  end
+
+  describe "with a blank :env_namespace" do
+    before do
+      globals[:env_namespace] = ""
+    end
+
+    it "omits the namespace prefix from the envelope" do
+      body = builder.to_s
+
+      expect(body).to include("<Envelope")
+      expect(body).to include("<Body>")
+      expect(body).not_to include("<env:Envelope")
+      expect(body).not_to include("<env:Body>")
+    end
+
+    it "declares the SOAP namespace without a prefix" do
+      expect(builder.to_s).to include('xmlns="http://schemas.xmlsoap.org/soap/envelope/"')
     end
   end
 
   describe '#body_attributes' do
     it 'is not nil' do
       expect(builder.body_attributes).to eq({})
+    end
+  end
+
+  describe "#header_attributes" do
+    it "declares the wsa prefix when :use_wsa_headers is set" do
+      globals[:use_wsa_headers] = true
+
+      expect(builder.header_attributes).to eq(
+        "xmlns:wsa" => "http://www.w3.org/2005/08/addressing"
+      )
+    end
+
+    it "declares nothing otherwise" do
+      expect(builder.header_attributes).to eq({})
+    end
+  end
+
+  describe "WSA_NAMESPACE" do
+    # The constant is public since 2.12 and stays available as an alias.
+    it "keeps the deprecated alias of the WS-Addressing namespace" do
+      expect(described_class::WSA_NAMESPACE).to eq(Savon::Addressing::NAMESPACE)
     end
   end
 
@@ -170,6 +278,12 @@ RSpec.describe Savon::Builder do
         expect(xml.scan('xmlns:article=').length).to eq(1)
       end
 
+      it "reuses the prefix already declared for a type's namespace URI" do
+        locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
+        xml = described_class.new(:Save, multi_wsdl, globals, locals_with_msg).to_s
+        expect(xml).to include("<wsdl:article><article:author>Test</article:author>")
+      end
+
       it "every prefix used in the body is declared in the envelope" do
         locals_with_msg = Savon::LocalOptions.new(message: { article: { Author: "Test", Title: "Article" } })
         builder = described_class.new(:Save, multi_wsdl, globals, locals_with_msg)
@@ -179,6 +293,192 @@ RSpec.describe Savon::Builder do
         expect(used_prefixes).not_to be_empty
         expect(used_prefixes - declared_prefixes).to be_empty
       end
+    end
+
+    context "with a schema whose targetNamespace is the WSDL root's default namespace" do
+      subject(:default_builder) { described_class.new(:op, default_wsdl, globals, locals_with_msg) }
+
+      let(:default_wsdl)    { Wasabi::Document.new Fixture.wsdl(:default_namespace_target) }
+      let(:locals_with_msg) { Savon::LocalOptions.new(message: { a: "1" }) }
+
+      it "falls back to an insN prefix instead of the reserved xmlns prefix" do
+        xml = default_builder.to_s
+        expect(xml).not_to include("xmlns:xmlns")
+        expect(xml).to include('xmlns:ins0="http://schemas.xmlsoap.org/wsdl/"')
+        expect(xml).to include("<ins0:a>1</ins0:a>")
+      end
+
+      it "produces namespace-well-formed XML" do
+        expect(Nokogiri::XML(default_builder.to_s, &:strict).errors).to be_empty
+      end
+
+      it "reuses another prefix the WSDL declares for the same URI" do
+        wsdl_xml = Fixture.wsdl(:default_namespace_target).sub("xmlns:soap=", 'xmlns:def="http://schemas.xmlsoap.org/wsdl/" xmlns:soap=')
+        xml = described_class.new(:op, Wasabi::Document.new(wsdl_xml), globals, locals_with_msg).to_s
+        expect(xml).not_to include("xmlns:xmlns")
+        expect(xml).to include("<def:a>1</def:a>")
+      end
+    end
+  end
+
+  describe "ordering the message with order!: :use_schema" do
+    let(:wsdl) { Wasabi::Document.new Fixture.wsdl(:schema_order) }
+
+    def body_for(message)
+      locals = Savon::LocalOptions.new(message: message)
+      described_class.new(:place_order, wsdl, globals, locals).to_s[%r{<tns:PlaceOrder>.*</tns:PlaceOrder>}]
+    end
+
+    it "orders each level of the message like the schema sequence" do
+      message = { total: 9, address: { zip: "75001", street: "1 Main St", city: "Paris" }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city><tns:zip>75001</tns:zip></tns:address>" \
+        "<tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "places an optional element given by the caller at its schema position" do
+      message = { total: 9, note: "fragile", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note>fragile</tns:note><tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "raises for keys unknown to the schema" do
+      message = { gift: true, total: 9, coupon: "XMAS", customer: "alice", order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for gift, coupon in PlaceOrder:/)
+    end
+
+    it "raises for an element inside an xs:choice, which Wasabi doesn't record" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St" }, order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, /no schema element for phone in Address:/)
+    end
+
+    it "orders an element inside an xs:choice with an explicit order! on its level" do
+      message = { customer: "alice", address: { phone: "0102030405", street: "1 Main St", order!: %i[street phone] }, order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:phone>0102030405</tns:phone></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders keys whose value Gyoku writes unescaped" do
+      message = { total: 9, note!: "<b>fragile</b>", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note><b>fragile</b></tns:note><tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders keys of several words whose value Gyoku writes unescaped" do
+      message = { total: 9, gift_note!: "<b>happy birthday</b>", customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:giftNote><b>happy birthday</b></tns:giftNote>" \
+        "<tns:total>9</tns:total></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves an element given with content! and attributes as it is" do
+      message = { note: [{ content!: "fragile", "@lang" => "en" }], customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer><tns:note lang=\"en\">fragile</tns:note></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves attributes out of the order" do
+      message = { customer: "alice", address: { "@kind" => "home", city: "Paris", street: "1 Main St" }, order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address kind=\"home\"><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "keeps an explicit order! given as a string key on a nested hash" do
+      message = { address: { zip: "75001", city: "Paris", "order!" => %i[zip city] }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:zip>75001</tns:zip><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "raises for a level the schema doesn't describe" do
+      message = { customer: "alice", gift: { wrapping: "red", card: "yes" }, order!: :use_schema }
+
+      expect { body_for(message) }.to raise_error(Savon::Error, %r{no schema sequence for PlaceOrder/gift})
+    end
+
+    it "keeps an explicit order! given on a nested hash" do
+      message = { address: { zip: "75001", city: "Paris", order!: %i[zip city] }, customer: "alice", order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:zip>75001</tns:zip><tns:city>Paris</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "orders every hash of an array" do
+      message = { customer: "alice", address: [{ city: "Paris", street: "1 Main St" }, { city: "Lyon", street: "2 Side St" }], order!: :use_schema }
+
+      expect(body_for(message)).to eq(
+        "<tns:PlaceOrder><tns:customer>alice</tns:customer>" \
+        "<tns:address><tns:street>1 Main St</tns:street><tns:city>Paris</tns:city></tns:address>" \
+        "<tns:address><tns:street>2 Side St</tns:street><tns:city>Lyon</tns:city></tns:address></tns:PlaceOrder>"
+      )
+    end
+
+    it "leaves the caller's message untouched" do
+      message = { total: 9, customer: "alice", order!: :use_schema }
+
+      expect { body_for(message) }.not_to(change { message })
+    end
+
+    it "orders the content of a message part like its type" do
+      wsdl.stubs(:document?).returns(true)
+      wsdl.stubs(:soap_input).returns("PlaceOrder" => { "Address" => %w[tns Address] })
+      message = { address: { zip: "75001", city: "Paris", street: "1 Main St", order!: :use_schema } }
+      locals = Savon::LocalOptions.new(message: message)
+
+      expect(described_class.new(:place_order, wsdl, globals, locals).to_s).to include(
+        "<street>1 Main St</street><city>Paris</city><zip>75001</zip>"
+      )
+    end
+
+    context "with a schema whose elements are unqualified" do
+      let(:wsdl) do
+        Wasabi::Document.new Fixture.wsdl(:schema_order).sub('elementFormDefault="qualified"', 'elementFormDefault="unqualified"')
+      end
+
+      it "orders each level of the message like the schema sequence" do
+        message = { total: 9, address: { zip: "75001", street: "1 Main St", city: "Paris" }, customer: "alice", order!: :use_schema }
+
+        expect(body_for(message)).to eq(
+          "<tns:PlaceOrder><customer>alice</customer>" \
+          "<address><street>1 Main St</street><city>Paris</city><zip>75001</zip></address>" \
+          "<total>9</total></tns:PlaceOrder>"
+        )
+      end
+
+      it "keeps the caller's order without :use_schema" do
+        expect(body_for({ total: 9, customer: "alice" })).to eq(
+          "<tns:PlaceOrder><total>9</total><customer>alice</customer></tns:PlaceOrder>"
+        )
+      end
+    end
+
+    it "keeps the caller's order without :use_schema" do
+      expect(body_for({ total: 9, customer: "alice" })).to eq(
+        "<tns:PlaceOrder><tns:total>9</tns:total><tns:customer>alice</tns:customer></tns:PlaceOrder>"
+      )
     end
   end
 end

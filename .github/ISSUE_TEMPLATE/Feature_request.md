@@ -24,3 +24,7 @@ about: Suggest a new feature for savon
 
 **Are you willing to work on this yourself?**
 yes
+
+---
+
+By opening this issue, I confirm that my participation follows Savon's [Code of Conduct](https://github.com/savonrb/savon/blob/main/CODE_OF_CONDUCT.md).
