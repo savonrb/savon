@@ -334,7 +334,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "with SOAP 1.2" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:repeat), log: false, soap_version: 2) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:repeat), log: false, soap_version: 2) }
 
       it "sends requests with content-type application/soap+xml" do
         req = operation.request(attachments: attachments)
@@ -352,7 +352,7 @@ RSpec.describe Savon::Operation do
     end
 
     context "MTOM" do
-      let(:globals) { Savon::GlobalOptions.new(endpoint: @server.url(:multipart), log: false) }
+      let(:globals) { Savon::GlobalOptions.new(endpoint: integration_server.url(:multipart), log: false) }
 
       it "sends SOAP 1.1 request headers with MTOM content-type metadata" do
         req = operation.request(mtom: true, attachments: attachments)
@@ -364,7 +364,7 @@ RSpec.describe Savon::Operation do
 
       it "sends SOAP 1.2 request headers with MTOM content-type metadata" do
         globals = Savon::GlobalOptions.new(
-          endpoint: @server.url(:multipart),
+          endpoint: integration_server.url(:multipart),
           log: false,
           soap_version: 2
         )
