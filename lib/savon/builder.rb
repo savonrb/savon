@@ -329,19 +329,24 @@ module Savon
       if @locals[:attachments].is_a? Hash
         # hash example: { 'att1' => '/path/to/att1', 'att2' => '/path/to/att2' }
         @locals[:attachments].each do |identifier, attachment|
+          identifier = attachment[:content_id] if attachment.is_a?(Hash) && attachment[:content_id]
           add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       elsif @locals[:attachments].is_a? Array
         # array example: [ '/path/to/att1', '/path/to/att2' ]
         # array example: [ { filename: 'att1.xml', content: '<x/>' }, { filename: 'att2.xml', content: '<y/>' } ]
         @locals[:attachments].each do |attachment|
-          add_attachment_to_multipart_message(multipart_message, attachment, attachment.is_a?(String) ? File.basename(attachment) : attachment[:filename])
+          identifier = attachment.is_a?(String) ? File.basename(attachment) : (attachment[:content_id] || attachment[:filename])
+          add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       end
     end
 
     def add_attachment_to_multipart_message(multipart_message, attachment, identifier)
-      multipart_message.add_file attachment.clone
+      # :content_id only selects the Content-ID header; the mail part itself
+      # takes its filename from :filename, so it must not reach add_file.
+      file = attachment.is_a?(Hash) ? attachment.reject { |key, _| key == :content_id } : attachment
+      multipart_message.add_file file.clone
       multipart_message.parts.last.content_id = multipart_message.parts.last.content_location = identifier.to_s
     end
   end

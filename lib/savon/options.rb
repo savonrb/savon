@@ -533,7 +533,10 @@ module Savon
     #
     # should pass an Array or a Hash; items should be path strings or
     #  { filename: 'file.name', content: 'content' } objects
-    # The Content-ID in multipart message sections will be the filename or the key if Hash is given
+    # The Content-ID in multipart message sections will be the filename or the key if Hash is given.
+    # An attachment hash may set content_id: to use a different Content-ID, e.g. when the
+    # filename holds characters that are invalid in a header, or when two attachments
+    # share a filename. Without content_id:, the Content-ID defaults to the filename or key.
     #
     # usage examples:
     #

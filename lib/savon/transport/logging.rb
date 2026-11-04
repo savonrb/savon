@@ -53,9 +53,17 @@ module Savon
       end
 
       def body_to_log(body)
-        LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml])
-                  .to_s
-                  .encode(@globals[:encoding], invalid: :replace, undef: :replace)
+        message = LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
+
+        # A multipart body is binary-tagged, so transcoding it would replace
+        # every non-ASCII byte, including valid text in the XML part. When the
+        # bytes are valid in the log encoding, just relabel them instead.
+        if message.encoding == Encoding::BINARY
+          relabeled = message.dup.force_encoding(@globals[:encoding])
+          message = relabeled if relabeled.valid_encoding?
+        end
+
+        message.encode(@globals[:encoding], invalid: :replace, undef: :replace)
       end
     end
   end

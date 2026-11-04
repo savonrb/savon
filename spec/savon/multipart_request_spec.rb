@@ -79,6 +79,36 @@ RSpec.describe Savon::Builder do
     end
   end
 
+  it "uses content_id: for the Content-ID instead of the filename" do
+    locals = {
+      attachments: [
+        { filename: 'my report (1).pdf', content_id: 'report-1@example', content: '<xml>abc1</xml>' },
+        { filename: 'my report (1).pdf', content_id: 'report-2@example', content: '<xml>abc2</xml>' }
+      ]
+    }
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+    request_body = builder.to_s
+
+    expect(request_body).to include('Content-ID: <report-1@example>')
+    expect(request_body).to include('Content-ID: <report-2@example>')
+    expect(request_body).not_to include('Content-ID: <my report (1).pdf>')
+    expect(request_body).to include(Base64.encode64('<xml>abc1</xml>').strip)
+    expect(request_body).to include(Base64.encode64('<xml>abc2</xml>').strip)
+  end
+
+  it "uses content_id: for the Content-ID of a hash attachment" do
+    locals = {
+      attachments: {
+        'doc1@example' => { filename: 'doc1.xml', content_id: 'other@example', content: '<xml>abc1</xml>' }
+      }
+    }
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+    request_body = builder.to_s
+
+    expect(request_body).to include('Content-ID: <other@example>')
+    expect(request_body).not_to include('Content-ID: <doc1@example>')
+  end
+
   it "does not mutate caller-provided XML encoding for MTOM requests" do
     envelope = '<soap:Envelope><soap:Body><tns:operation1/></soap:Body></soap:Envelope>'.encode(Encoding::UTF_8).freeze
     locals = {

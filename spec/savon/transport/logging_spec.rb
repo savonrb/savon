@@ -30,6 +30,17 @@ RSpec.describe Savon::Transport::Logging do
     expect(message.encoding).to eq(Encoding::UTF_8)
   end
 
+  it "keeps non-latin text in binary-tagged multipart bodies" do
+    body = +"--boundary\r\nContent-Type: application/xop+xml\r\n\r\n<root>\u043F\u0440\u0438\u0432\u0435\u0442</root>"
+    body.force_encoding("BINARY")
+
+    message = transport.logged_body(body)
+
+    expect(message).to include("<root>\u043F\u0440\u0438\u0432\u0435\u0442</root>")
+    expect(message).to be_valid_encoding
+    expect(message.encoding).to eq(Encoding::UTF_8)
+  end
+
   it "replaces invalid bytes in binary multipart bodies" do
     body = +"--boundary\r\nContent-Type: application/octet-stream\r\n\r\n"
     body << "\xFF".b

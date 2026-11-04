@@ -23,6 +23,8 @@ Metrics/AbcSize:
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
   Max: 220
+  Exclude:
+    - 'lib/savon/builder.rb'
 
 # Offense count: 6
 # Configuration parameters: AllowedMethods, AllowedPatterns.
