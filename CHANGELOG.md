@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [2.18.0] - 2026-11-05
 
 ### Added
 
@@ -20,6 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 * `Builder` no longer reuses a reserved `xml`-prefixed identifier from the WSDL namespace map. When a schema's `targetNamespace` matched the WSDL root's default namespace, requests declared `xmlns:xmlns` and used elements like `<xmlns:Op>`, so the envelope was not namespace-well-formed. Such namespaces now get another prefix the WSDL declares for the same URI, or `ins0`, `ins1`, … if there is none.
+
+* Elements whose types live in another namespace now keep their own prefix instead of `tns:` ([#895](https://github.com/savonrb/savon/issues/895)). Strict services rejected those messages. The type lookup missed because message keys pass through the key converter first (`:entity_ids` becomes `entityIds` while the schema defines `EntityIds`), so every element fell back to `tns:`. The lookup now tries a case-insensitive match when an exact match misses.
+
+* A document with a WSSE signature is built three times instead of twice, which signed timestamps need ([#1079](https://github.com/savonrb/savon/pull/1079)). See [akami#25](https://github.com/savonrb/akami/pull/25).
 
 ### Changed
 
