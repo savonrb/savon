@@ -499,7 +499,8 @@ module Savon
       defaults = {
         advanced_typecasting: true,
         response_parser: :nokogiri,
-        multipart: false
+        multipart: false,
+        mtom: false
       }
 
       super defaults.merge(options)
@@ -532,7 +533,10 @@ module Savon
     #
     # should pass an Array or a Hash; items should be path strings or
     #  { filename: 'file.name', content: 'content' } objects
-    # The Content-ID in multipart message sections will be the filename or the key if Hash is given
+    # The Content-ID in multipart message sections will be the filename or the key if Hash is given.
+    # An attachment hash may set content_id: to use a different Content-ID, e.g. when the
+    # filename holds characters that are invalid in a header, or when two attachments
+    # share a filename. Without content_id:, the Content-ID defaults to the filename or key.
     #
     # usage examples:
     #
@@ -560,6 +564,17 @@ module Savon
     # The Content-ID is important if you want to refer to the attachments from the SOAP request
     def attachments(attachments)
       @options[:attachments] = attachments
+    end
+
+    # Emit outbound MTOM/XOP request framing for attachments.
+    #
+    # This is a low-level framing option. Savon does not rewrite normal base64 XML
+    # into XOP or process inbound MTOM responses. Callers must provide XML with
+    # xop:Include href="cid:..." references and matching attachment Content-IDs.
+    # It has no effect without attachments. An attachment hash may set
+    # content_id: to choose its Content-ID independently of its filename.
+    def mtom(mtom)
+      @options[:mtom] = mtom
     end
 
     # Value of the SOAPAction HTTP header.

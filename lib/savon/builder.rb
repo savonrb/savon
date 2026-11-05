@@ -30,6 +30,11 @@ module Savon
       2 => "http://www.w3.org/2003/05/soap-envelope"
     }.freeze
 
+    SOAP_XOP_REQUEST_TYPE = {
+      1 => "text/xml",
+      2 => "application/soap+xml"
+    }.freeze
+
     # @deprecated Use {Savon::Addressing::NAMESPACE} instead. This alias will
     #   be removed in Savon 3.0.
     WSA_NAMESPACE = Addressing::NAMESPACE
@@ -280,15 +285,31 @@ module Savon
 
       # the mail.body.encoded algorithm reorders the parts, default order is [ "text/plain", "text/enriched", "text/html" ]
       # should redefine the sort order, because the soap request xml should be the first
-      multipart_message.body.set_sort_order ["text/xml"]
+      multipart_message.body.set_sort_order(
+        @locals[:mtom] ? ["application/xop+xml", "text/xml"] : ["text/xml"]
+      )
 
       multipart_message.body.encoded(multipart_message.content_transfer_encoding)
     end
 
     def init_multipart_message(message_xml)
       multipart_message = Mail.new
+
+      # MTOM differs from general SOAP attachments:
+      # 1. binary encoding
+      # 2. application/xop+xml mime type
+      if @locals[:mtom]
+        type = "application/xop+xml; charset=#{@globals[:encoding]}; " \
+               "type=\"#{SOAP_XOP_REQUEST_TYPE[@globals[:soap_version]]}\""
+
+        multipart_message.transport_encoding = 'binary'
+        message_xml = message_xml.dup.force_encoding('BINARY')
+      else
+        type = 'text/xml'
+      end
+
       xml_part = Mail::Part.new do
-        content_type 'text/xml'
+        content_type type
         body message_xml
         # in Content-Type the start parameter is recommended (RFC 2387)
         content_id '<soap-request-body@soap>'
@@ -308,19 +329,43 @@ module Savon
       if @locals[:attachments].is_a? Hash
         # hash example: { 'att1' => '/path/to/att1', 'att2' => '/path/to/att2' }
         @locals[:attachments].each do |identifier, attachment|
+          explicit = attachment.is_a?(Hash) && attachment.key?(:content_id)
+          identifier = attachment[:content_id] if explicit
+          validate_content_id!(identifier, explicit: explicit)
           add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       elsif @locals[:attachments].is_a? Array
         # array example: [ '/path/to/att1', '/path/to/att2' ]
         # array example: [ { filename: 'att1.xml', content: '<x/>' }, { filename: 'att2.xml', content: '<y/>' } ]
         @locals[:attachments].each do |attachment|
-          add_attachment_to_multipart_message(multipart_message, attachment, attachment.is_a?(String) ? File.basename(attachment) : attachment[:filename])
+          explicit = attachment.is_a?(Hash) && attachment.key?(:content_id)
+          identifier = attachment.is_a?(String) ? File.basename(attachment) : (attachment[:content_id] || attachment[:filename])
+          validate_content_id!(identifier, explicit: explicit)
+          add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       end
     end
 
+    # Content-IDs are matched against xop:Include hrefs, and the mail library cuts the header at the first
+    # space, so an ID with non-ASCII characters, spaces or header punctuation silently stops matching.
+    # Fail fast when the caller chose the ID or the request is MTOM; for plain attachments, whose default
+    # filename IDs predate this check, warn instead so current users do not break.
+    def validate_content_id!(identifier, explicit:)
+      id = identifier.to_s
+      return if !id.empty? && id.ascii_only? && id !~ /[\s()<>,;:"\[\]]/
+
+      message = "Invalid Content-ID #{id.inspect}: use ASCII without spaces or ()<>,;:\"[]. " \
+                "Set content_id: on the attachment to choose a valid ID."
+      raise ArgumentError, message if explicit || @locals[:mtom]
+
+      warn "#{message} The filename is used as-is.", uplevel: 1
+    end
+
     def add_attachment_to_multipart_message(multipart_message, attachment, identifier)
-      multipart_message.add_file attachment.clone
+      # :content_id only selects the Content-ID header; the mail part itself
+      # takes its filename from :filename, so it must not reach add_file.
+      file = attachment.is_a?(Hash) ? attachment.reject { |key, _| key == :content_id } : attachment
+      multipart_message.add_file file.clone
       multipart_message.parts.last.content_id = multipart_message.parts.last.content_location = identifier.to_s
     end
   end
