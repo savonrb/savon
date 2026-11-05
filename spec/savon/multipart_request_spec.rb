@@ -92,8 +92,46 @@ RSpec.describe Savon::Builder do
     expect(request_body).to include('Content-ID: <report-1@example>')
     expect(request_body).to include('Content-ID: <report-2@example>')
     expect(request_body).not_to include('Content-ID: <my report (1).pdf>')
+    # Content-Location follows the Content-ID, not the filename.
+    expect(request_body).to match(/^Content-Location: report-1@example\s$/)
+    expect(request_body).to match(/^Content-Location: report-2@example\s$/)
     expect(request_body).to include(Base64.encode64('<xml>abc1</xml>').strip)
     expect(request_body).to include(Base64.encode64('<xml>abc2</xml>').strip)
+  end
+
+  it "raises for an explicit content_id: that is not a valid Content-ID" do
+    locals = {
+      attachments: [
+        { filename: 'a.pdf', content_id: 'has space@y', content: '<xml>abc1</xml>' }
+      ]
+    }
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+
+    expect { builder.to_s }.to raise_error(ArgumentError, /Invalid Content-ID "has space@y"/)
+  end
+
+  it "raises for an MTOM attachment whose filename is not a valid Content-ID" do
+    locals = {
+      mtom: true,
+      xml: '<soap:Envelope><soap:Body><tns:operation1/></soap:Body></soap:Envelope>',
+      attachments: [
+        { filename: 'my report (1).pdf', content: '<xml>abc1</xml>' }
+      ]
+    }
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+
+    expect { builder.to_s }.to raise_error(ArgumentError, /Invalid Content-ID "my report \(1\).pdf"/)
+  end
+
+  it "warns instead of raising for a plain attachment whose filename is not a valid Content-ID" do
+    locals = {
+      attachments: [
+        { filename: 'my report (1).pdf', content: '<xml>abc1</xml>' }
+      ]
+    }
+    builder = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals))
+
+    expect { builder.to_s }.to output(/Invalid Content-ID "my report \(1\).pdf"/).to_stderr
   end
 
   it "uses content_id: for the Content-ID of a hash attachment" do
@@ -107,6 +145,8 @@ RSpec.describe Savon::Builder do
 
     expect(request_body).to include('Content-ID: <other@example>')
     expect(request_body).not_to include('Content-ID: <doc1@example>')
+    # Content-Location follows the Content-ID, not the filename.
+    expect(request_body).to match(/^Content-Location: other@example\s$/)
   end
 
   it "does not mutate caller-provided XML encoding for MTOM requests" do

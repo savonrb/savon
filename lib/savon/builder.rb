@@ -329,17 +329,36 @@ module Savon
       if @locals[:attachments].is_a? Hash
         # hash example: { 'att1' => '/path/to/att1', 'att2' => '/path/to/att2' }
         @locals[:attachments].each do |identifier, attachment|
-          identifier = attachment[:content_id] if attachment.is_a?(Hash) && attachment[:content_id]
+          explicit = attachment.is_a?(Hash) && attachment.key?(:content_id)
+          identifier = attachment[:content_id] if explicit
+          validate_content_id!(identifier, explicit: explicit)
           add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       elsif @locals[:attachments].is_a? Array
         # array example: [ '/path/to/att1', '/path/to/att2' ]
         # array example: [ { filename: 'att1.xml', content: '<x/>' }, { filename: 'att2.xml', content: '<y/>' } ]
         @locals[:attachments].each do |attachment|
+          explicit = attachment.is_a?(Hash) && attachment.key?(:content_id)
           identifier = attachment.is_a?(String) ? File.basename(attachment) : (attachment[:content_id] || attachment[:filename])
+          validate_content_id!(identifier, explicit: explicit)
           add_attachment_to_multipart_message(multipart_message, attachment, identifier)
         end
       end
+    end
+
+    # Content-IDs are matched against xop:Include hrefs, and the mail library cuts the header at the first
+    # space, so an ID with non-ASCII characters, spaces or header punctuation silently stops matching.
+    # Fail fast when the caller chose the ID or the request is MTOM; for plain attachments, whose default
+    # filename IDs predate this check, warn instead so current users do not break.
+    def validate_content_id!(identifier, explicit:)
+      id = identifier.to_s
+      return if !id.empty? && id.ascii_only? && id !~ /[\s()<>,;:"\[\]]/
+
+      message = "Invalid Content-ID #{id.inspect}: use ASCII without spaces or ()<>,;:\"[]. " \
+                "Set content_id: on the attachment to choose a valid ID."
+      raise ArgumentError, message if explicit || @locals[:mtom]
+
+      warn "#{message} The filename is used as-is.", uplevel: 1
     end
 
     def add_attachment_to_multipart_message(multipart_message, attachment, identifier)
