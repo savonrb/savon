@@ -571,6 +571,8 @@ module Savon
     # This is a low-level framing option. Savon does not rewrite normal base64 XML
     # into XOP or process inbound MTOM responses. Callers must provide XML with
     # xop:Include href="cid:..." references and matching attachment Content-IDs.
+    # It has no effect without attachments. An attachment hash may set
+    # content_id: to choose its Content-ID independently of its filename.
     def mtom(mtom)
       @options[:mtom] = mtom
     end

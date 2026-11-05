@@ -66,6 +66,25 @@ See [Authentication](https://savonrb.com/version2/globals.html) on the website f
 
 Savon uses [HTTPI](https://github.com/savonrb/httpi) for HTTP by default. Since v2.17.0 you can opt-in to use Faraday by passing `transport: :faraday` which exposes the Faraday connection at `client.faraday` for you to configure. Savon is only adding some SOAP-specifics on top.
 
+### MTOM/XOP attachments
+
+To send a binary file with MTOM, pass a pre-built envelope with an `xop:Include` reference, set `mtom: true`, and give the matching attachment. The Content-ID must match the `cid:` href; set `content_id:` on the attachment when it differs from the filename:
+
+```ruby
+client.call(:upload,
+  xml: <<~XML,
+    <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"
+                   xmlns:xop="http://www.w3.org/2004/08/xop/include">
+      <soap:Body>
+        <tns:upload><tns:file><xop:Include href="cid:doc1@example"/></tns:file></tns:upload>
+      </soap:Body>
+    </soap:Envelope>
+  XML
+  mtom: true,
+  attachments: [{ filename: "report.pdf", content_id: "doc1@example", content: File.binread("report.pdf") }]
+)
+```
+
 ## Ruby support
 
 Savon 2.x requires Ruby >= 3.0.0, kept as the lower bound for backward compatibility. Note that Ruby 3.0–3.3 are EOL or security-only. Ruby 3.4+ is the minimum version with active maintenance.
@@ -84,7 +103,7 @@ Callers on 2.13.0–2.15.x may see specific post-2.12.1 behaviors restored to th
 
 **WSDL imports are not followed.** Savon parses only the root WSDL document via [Wasabi](https://github.com/savonrb/wasabi). Messages, port types, and bindings defined in imported files are invisible to Savon. If you control the WSDL, merge the imported elements into the root document and pass that to Savon as a string. If you need full import support, the [WSDL](https://rubygems.org/gems/wsdl) gem is an alternative.
 
-**MTOM/XOP support is request framing only.** Savon can emit outbound MTOM/XOP request framing, but it does not rewrite normal base64 XML into XOP, generate `xop:Include` nodes, validate references, infer MIME types from XML, or deserialize inbound MTOM responses. Callers provide the `xop:Include` XML and matching attachment Content-IDs.
+**MTOM/XOP support is request framing only.** Savon can emit outbound MTOM/XOP request framing, but it does not rewrite normal base64 XML into XOP, generate `xop:Include` nodes, validate references, infer MIME types from XML, or deserialize inbound MTOM responses. Callers provide the `xop:Include` XML and matching attachment Content-IDs. `mtom: true` without `attachments` has no effect. For SOAP 1.2, the action is still sent as a `SOAPAction` header, as elsewhere in Savon, rather than as the `action=` parameter of the start-info media type.
 
 ## Contributing
 
