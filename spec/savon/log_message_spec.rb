@@ -62,6 +62,57 @@ RSpec.describe Savon::LogMessage do
     expect(message).to include("<password>***FILTERED***</password>")
   end
 
+  it "keeps a declaration-less document with blank lines inside it" do
+    message = log_message("<root>\n\n<child>secret</child>\n</root>", [:child], false).to_s
+
+    expect(message).to include("<root>")
+    expect(message).to include("<child>***FILTERED***</child>")
+    expect(message).not_to include("secret")
+  end
+
+  it "filters a multipart body whose XML part follows a long whitespace run" do
+    padding = " " * 50_000
+    multipart = "--MIME_boundary\r\n" \
+                "Content-ID: <soap-request-body@soap>\r\n" \
+                "Content-Type: text/xml\r\n" \
+                "\r\n" \
+                "#{padding}<root><password>secret</password></root>"
+
+    message = log_message(multipart, [:password], false).to_s
+    expect(message).to include("<password>***FILTERED***</password>")
+    expect(message).not_to include("secret")
+  end
+
+  it "finds the XML part past a preamble before the headers" do
+    multipart = "preamble\r\n" \
+                "\r\n" \
+                "--MIME_boundary\r\n" \
+                "Content-ID: <soap-request-body@soap>\r\n" \
+                "Content-Type: text/xml\r\n" \
+                "\r\n" \
+                "<root><password>secret</password></root>"
+
+    message = log_message(multipart, [:password], false).to_s
+    expect(message).to include("<password>***FILTERED***</password>")
+    expect(message).not_to include("secret")
+  end
+
+  it "finds the XML part of a nested multipart body" do
+    multipart = "--outer\r\n" \
+                "Content-ID: <outer@example>\r\n" \
+                "Content-Type: multipart/related\r\n" \
+                "\r\n" \
+                "--inner\r\n" \
+                "Content-ID: <inner@example>\r\n" \
+                "Content-Type: text/xml\r\n" \
+                "\r\n" \
+                "<root><password>secret</password></root>"
+
+    message = log_message(multipart, [:password], false).to_s
+    expect(message).to include("<password>***FILTERED***</password>")
+    expect(message).not_to include("secret")
+  end
+
   it "trims a multipart preamble before pretty printing" do
     multipart = "--MIME_boundary\r\n" \
                 "Content-Type: text/xml\r\n" \
