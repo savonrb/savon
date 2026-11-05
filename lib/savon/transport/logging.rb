@@ -55,13 +55,10 @@ module Savon
       def body_to_log(body)
         message = LogMessage.new(body, @globals[:filters], @globals[:pretty_print_xml]).to_s
 
-        # A multipart body is binary-tagged, so transcoding it would replace
-        # every non-ASCII byte, including valid text in the XML part. When the
-        # bytes are valid in the log encoding, just relabel them instead.
-        if message.encoding == Encoding::BINARY
-          relabeled = message.dup.force_encoding(@globals[:encoding])
-          message = relabeled if relabeled.valid_encoding?
-        end
+        # A multipart body is tagged binary only so its parts can be concatenated: the text parts are already in the
+        # log encoding. Transcoding from ASCII-8BIT would replace every non-ASCII byte, the text included, so relabel
+        # the bytes and replace only those that are invalid in the log encoding (the binary attachments).
+        return message.dup.force_encoding(@globals[:encoding]).scrub if message.encoding == Encoding::BINARY
 
         message.encode(@globals[:encoding], invalid: :replace, undef: :replace)
       end

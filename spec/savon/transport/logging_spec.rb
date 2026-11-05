@@ -41,6 +41,17 @@ RSpec.describe Savon::Transport::Logging do
     expect(message.encoding).to eq(Encoding::UTF_8)
   end
 
+  it "keeps the text of a multipart body that carries a binary attachment" do
+    body = "--b\r\nContent-Type: application/xop+xml\r\n\r\n<a>\u0412\u044B\u043F\u0438\u0441\u043A\u0430</a>\r\n--b\r\n\r\n".b +
+           "%PDF-\xFF\xFE\x80".b + "\r\n--b--".b
+
+    message = transport.logged_body(body)
+
+    expect(message).to be_valid_encoding
+    expect(message.encoding).to eq(Encoding::UTF_8)
+    expect(message).to include("<a>\u0412\u044B\u043F\u0438\u0441\u043A\u0430</a>")
+  end
+
   it "replaces invalid bytes in binary multipart bodies" do
     body = +"--boundary\r\nContent-Type: application/octet-stream\r\n\r\n"
     body << "\xFF".b
