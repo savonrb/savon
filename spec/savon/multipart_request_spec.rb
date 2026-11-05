@@ -182,6 +182,20 @@ RSpec.describe Savon::Builder do
     end
   end
 
+  it "applies log filters to the XML part of a built multipart request" do
+    locals = {
+      xml: %(<?xml version="1.0" encoding="UTF-8"?><Envelope><password>secret</password></Envelope>),
+      mtom: true,
+      attachments: [{ filename: "a.txt", content: "plain" }]
+    }
+    body = described_class.new(:operation1, no_wsdl, globals, Savon::LocalOptions.new(locals)).to_s
+
+    logged = Savon::LogMessage.new(body, [:password], false).to_s
+
+    expect(logged).to include("<password>***FILTERED***</password>")
+    expect(logged).not_to include("secret")
+  end
+
   def mtom_request_body(soap_namespace:, globals:)
     envelope = <<~XML
       <soap:Envelope xmlns:soap="#{soap_namespace}"
