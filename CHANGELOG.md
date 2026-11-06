@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-* `Savon::Model.operations` and `.all_operations` now reject names that normalize to reserved model methods with `ArgumentError`, before defining any methods. This prevents a WSDL operation named `client` from overwriting the client accessor and causing unbounded recursion. Call operations with reserved names explicitly through `model.client.call(:client, ...)`.
+* `Savon::Model.operations` and `.all_operations` now reject names that normalize to reserved model methods with `ArgumentError`, before defining any methods ([GHSA-x99v-rwvj-g9p5](https://github.com/savonrb/savon/security/advisories/GHSA-x99v-rwvj-g9p5)). This prevents a WSDL operation named `client` from overwriting the client accessor and causing unbounded recursion. Call operations with reserved names explicitly through `model.client.call(:client, ...)`. Thanks to @arpitjain099 for securely disclosing this.
 
 ## [2.17.4] - 2026-07-03
 
