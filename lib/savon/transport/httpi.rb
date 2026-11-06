@@ -3,6 +3,7 @@
 require "httpi"
 require "savon/transport/logging"
 require "savon/transport/response"
+require "savon/transport/header_validation"
 
 module Savon
   module Transport
@@ -14,6 +15,7 @@ module Savon
     #   * request execution
     class HTTPI
       include Logging
+      include HeaderValidation
 
       # @param globals [Savon::GlobalOptions] the client-level options
       def initialize(globals)
@@ -62,6 +64,8 @@ module Savon
 
         # soap_headers are lowest priority
         soap_headers.each do |k, v| headers[k] ||= v end
+
+        validate_soap_action_header!(headers)
 
         http_request = ::HTTPI::Request.new
         http_request.url = url

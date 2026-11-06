@@ -84,6 +84,74 @@ RSpec.describe Savon::Transport::HTTPI do
       globals.write_timeout(5)
       expect(transport.to_httpi_request(url, {}, body, locals).write_timeout).to eq(5)
     end
+
+    # GHSA-57m8-w3r7-5p3w: the resolved SOAPAction is validated after the merge,
+    # so #call (via #post) and #request alike reject an injected header.
+    context "when the resolved SOAPAction contains control characters" do
+      it "raises for an interior CR/LF" do
+        soap_headers = { "SOAPAction" => %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError, /illegal control characters \(CR, LF, or NUL\)/)
+      end
+
+      it "raises for a trailing newline" do
+        soap_headers = { "SOAPAction" => %("urn:action\n") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a bare carriage return" do
+        soap_headers = { "SOAPAction" => %("urn:legit\rX-Injected: evil") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a NUL byte" do
+        soap_headers = { "SOAPAction" => %("urn:action\0") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      # HTTPI keeps a Symbol key apart from the default String key,
+      # so the httpclient adapter would send both headers.
+      it "raises for a Symbol SOAPAction key" do
+        soap_headers = { SOAPAction: %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a differently cased SOAPAction key" do
+        soap_headers = { "soapaction" => %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "does not validate other headers" do
+        soap_headers = { "X-Other" => "a\r\nb" }
+        expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+          .not_to raise_error
+      end
+    end
+
+    it "does not raise for a clean SOAPAction" do
+      soap_headers = { "SOAPAction" => %("urn:clean-action") }
+      expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+        .not_to raise_error
+    end
+
+    # The httpclient adapter sends these values as-is,
+    # so validation must not turn them into a new error.
+    it "does not raise for a non-String SOAPAction" do
+      soap_headers = { "SOAPAction" => 123 }
+      expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+        .not_to raise_error
+    end
+
+    it "does not raise for a SOAPAction with invalid UTF-8 bytes" do
+      soap_headers = { "SOAPAction" => (+"urn:\xFF").force_encoding(Encoding::UTF_8) }
+      expect { transport.to_httpi_request(url, soap_headers, body, locals) }
+        .not_to raise_error
+    end
   end
 
   describe "#post" do

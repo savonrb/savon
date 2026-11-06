@@ -2,6 +2,7 @@
 
 require "savon/transport/logging"
 require "savon/transport/response"
+require "savon/transport/header_validation"
 
 module Savon
   module Transport
@@ -15,6 +16,7 @@ module Savon
     # the caller's responsibility via client.faraday before any call is made.
     class Faraday
       include Logging
+      include HeaderValidation
 
       # @param connection [Faraday::Connection] the memoized connection from client.faraday
       # @param globals    [Savon::GlobalOptions] the client-level options
@@ -78,6 +80,8 @@ module Savon
 
         # soap_headers are lowest priority
         soap_headers.each do |k, v| headers[k] ||= v end
+
+        validate_soap_action_header!(headers)
 
         cookie_header = format_cookies(locals[:cookies])
         headers["Cookie"] = cookie_header if cookie_header

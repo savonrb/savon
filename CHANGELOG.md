@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Security
+
+* The outbound `SOAPAction` header now rejects control characters to prevent HTTP header injection ([GHSA-57m8-w3r7-5p3w](https://github.com/savonrb/savon/security/advisories/GHSA-57m8-w3r7-5p3w)). A crafted WSDL can encode a carriage return or line feed in its `soapAction` attribute as the character references `&#13;` and `&#10;`, which survive XML attribute normalization and reach the header as real control characters. The httpclient adapter sent such a header unchecked, so it split on the wire and let an attacker inject further request headers. HTTPI picks httpclient automatically whenever the gem is installed, so the default configuration was affected. Both transports now validate the outgoing headers before the request is sent. A `SOAPAction` containing CR, LF, or NUL raises `Savon::InvalidHeaderError`, whether it comes from the WSDL, the `:soap_action` option, or the `:headers` option under any key spelling. With the net/http adapter, CR and LF used to raise net/http's own `ArgumentError`. A leading or trailing newline in a `:headers` value was stripped silently, and NUL was sent as-is. All of these now raise `Savon::InvalidHeaderError`. Thanks to @SDX442 for securely disclosing this.
+
 ## [2.18.0] - 2026-11-05
 
 ### Added
@@ -15,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 
-* `Savon::Model.operations` and `.all_operations` no longer rely on a hand-maintained list of reserved names. The guard now derives its denylist from the model's own ancestor chains — every method instances respond to plus every method the class object responds to — so a WSDL operation can never shadow an existing method. This closes the `class`/`public_send` bypass (unbounded recursion via the generated `self.class.public_send(...)` bodies, hijacked reflective dispatch) and the whole class of follow-on reports (`new`, `freeze`, `send`, …) by construction instead of one advisory at a time. Re-registering an already-defined operation is still allowed; anything else that collides raises `ArgumentError`. Call such operations explicitly through `model.client.call(:operation, ...)`.
+* `Savon::Model.operations` and `.all_operations` no longer rely on a hand-maintained list of reserved names ([GHSA-hjvq-xxqv-7jxh](https://github.com/savonrb/savon/security/advisories/GHSA-hjvq-xxqv-7jxh)). The guard now derives its denylist from the model's own ancestor chains — every method instances respond to plus every method the class object responds to — so a WSDL operation can never shadow an existing method. This closes the `class`/`public_send` bypass (unbounded recursion via the generated `self.class.public_send(...)` bodies, hijacked reflective dispatch) and the whole class of follow-on reports (`new`, `freeze`, `send`, …) by construction instead of one advisory at a time. Re-registering an already-defined operation is still allowed; anything else that collides raises `ArgumentError`. Call such operations explicitly through `model.client.call(:operation, ...)`. Thanks to @manus-pi for securely disclosing this.
 
 ### Fixed
 

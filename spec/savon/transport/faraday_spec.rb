@@ -166,5 +166,51 @@ RSpec.describe Savon::Transport::Faraday do
       Savon::LogMessage.expects(:new).never
       described_class.new(logging_conn, globals_logging).post(url, {}, body, locals)
     end
+
+    # GHSA-57m8-w3r7-5p3w: the resolved SOAPAction is validated before the request is sent,
+    # so an injected header never reaches the connection.
+    context "when the resolved SOAPAction contains control characters" do
+      it "raises for an interior CR/LF" do
+        soap_headers = { "SOAPAction" => %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError, /illegal control characters \(CR, LF, or NUL\)/)
+      end
+
+      it "raises for a trailing newline" do
+        soap_headers = { "SOAPAction" => %("urn:action\n") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a bare carriage return" do
+        soap_headers = { "SOAPAction" => %("urn:legit\rX-Injected: evil") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a Symbol SOAPAction key" do
+        soap_headers = { SOAPAction: %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a differently cased SOAPAction key" do
+        soap_headers = { "soapaction" => %("urn:legit\r\nX-Injected: evil") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+
+      it "raises for a NUL byte" do
+        soap_headers = { "SOAPAction" => %("urn:action\0") }
+        expect { transport.post(url, soap_headers, body, locals) }
+          .to raise_error(Savon::InvalidHeaderError)
+      end
+    end
+
+    it "does not raise for a clean SOAPAction" do
+      stubs.post("/soap") do [200, {}, "ok"] end
+      soap_headers = { "SOAPAction" => %("urn:clean-action") }
+      expect { transport.post(url, soap_headers, body, locals) }.not_to raise_error
+    end
   end
 end

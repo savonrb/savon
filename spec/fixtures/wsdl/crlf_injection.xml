@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<wsdl:definitions name="CrlfInjectionService" targetNamespace="http://v1.example.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://v1.example.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://v1.example.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="authenticate" type="tns:authenticate" />
+      <xs:complexType name="authenticate">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="user" type="xs:string" />
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="authenticate">
+    <wsdl:part element="tns:authenticate" name="parameters" />
+  </wsdl:message>
+  <wsdl:portType name="CrlfInjectionWebService">
+    <wsdl:operation name="authenticate">
+      <wsdl:input message="tns:authenticate" name="authenticate" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CrlfInjectionServiceSoapBinding" type="tns:CrlfInjectionWebService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="authenticate">
+      <soap:operation soapAction="urn:legit&#13;&#10;X-Injected: evil" style="document" />
+      <wsdl:input name="authenticate">
+        <soap:body use="literal" />
+      </wsdl:input>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CrlfInjectionService">
+    <wsdl:port binding="tns:CrlfInjectionServiceSoapBinding" name="CrlfInjectionPort">
+      <soap:address location="http://example.com/crlf/1.0/Service" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

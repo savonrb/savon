@@ -7,6 +7,10 @@ module Savon
   UnknownOperationError = Class.new(Error)
   InvalidResponseError  = Class.new(Error)
 
+  # Raised when a resolved HTTP header value cannot be sent safely,
+  # for example a SOAPAction carrying control characters from a crafted WSDL.
+  InvalidHeaderError    = Class.new(Error)
+
   def self.client(globals = {}, &block)
     Client.new(globals, &block)
   end
